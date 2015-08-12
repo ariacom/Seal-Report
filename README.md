@@ -1,4 +1,4 @@
 # Seal-Report
 Open Database Reporting Tool
 
-Soon
+Coming Soon fresh from the Irish sea !
