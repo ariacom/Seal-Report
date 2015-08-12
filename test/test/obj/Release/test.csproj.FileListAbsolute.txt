@@ -1,0 +1,7 @@
+C:\Users\eric\Documents\GitHub\Seal-Report\test\test\bin\Release\test.exe.config
+C:\Users\eric\Documents\GitHub\Seal-Report\test\test\bin\Release\test.exe
+C:\Users\eric\Documents\GitHub\Seal-Report\test\test\bin\Release\test.pdb
+C:\Users\eric\Documents\GitHub\Seal-Report\test\test\obj\Release\test.Properties.Resources.resources
+C:\Users\eric\Documents\GitHub\Seal-Report\test\test\obj\Release\test.csproj.GenerateResource.Cache
+C:\Users\eric\Documents\GitHub\Seal-Report\test\test\obj\Release\test.exe
+C:\Users\eric\Documents\GitHub\Seal-Report\test\test\obj\Release\test.pdb
