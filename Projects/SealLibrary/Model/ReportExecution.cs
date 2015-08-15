@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
-// This code is licensed under GNU General Public License version 3, http://www.gnu.org/licenses/gpl-3.0.en.html.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
 using System.Collections.Generic;
@@ -489,12 +489,15 @@ namespace Seal.Model
                 if (!Report.Cancel) buildTables(model);
                 Report.LogMessage("Model '{0}': Building totals...", model.Name);
                 if (!Report.Cancel) buildTotals(model);
-                //Custom scripts
-                if (!Report.Cancel && model.HasCellScript) handleCustomScripts(model);
+                //Scripts
+                if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
                 //Series 
                 if (!Report.Cancel && model.HasSerie) buildSeries(model);
                 //Final sort
                 if (!Report.Cancel) finalSort(model);
+                //Final script
+                if (!Report.Cancel) handleFinalScript(model);
+
             }
             catch (Exception ex)
             {
@@ -1018,28 +1021,28 @@ namespace Seal.Model
         }
 
 
-        private void executeCellScript(ResultCell cell, Dictionary<string, string> compilationKeys)
+        private void executeCellScript(ResultCell cell)
         {
             string script = cell.Element.CellScript;
             try
             {
-                if (!compilationKeys.ContainsKey(script))
+                if (!_cellCompilationKeys.ContainsKey(script))
                 {
                     string newKey = Guid.NewGuid().ToString();
                     Helper.CompileRazor(script, typeof(ResultCell), newKey);
-                    compilationKeys.Add(script, newKey);
+                    _cellCompilationKeys.Add(script, newKey);
                 }
-                string key = compilationKeys[script];
-                if (!string.IsNullOrEmpty(key)) Razor.Run(compilationKeys[script], cell);
+                string key = _cellCompilationKeys[script];
+                if (!string.IsNullOrEmpty(key)) Razor.Run(_cellCompilationKeys[script], cell);
             }
             catch (Exception ex)
             {
                 Report.ExecutionMessages += string.Format("Error got when executing Cell Script for '{0}'\r\n{1}\r\n", cell.Element.DisplayNameEl, ex.Message);
-                if (!compilationKeys.ContainsKey(script)) compilationKeys.Add(script, "");
+                if (!_cellCompilationKeys.ContainsKey(script)) _cellCompilationKeys.Add(script, "");
             }
         }
 
-        void handleCustomScripts(ReportModel model, ResultPage page, ResultTable table, Dictionary<string, string> compilationKeys)
+        void handleCustomScripts(ReportModel model, ResultPage page, ResultTable table)
         {
             for (int row = 0; row < table.Lines.Count; row++)
             {
@@ -1054,29 +1057,32 @@ namespace Seal.Model
                         cell.ContextTable = table;
                         cell.ContextPage = page;
                         cell.ContextModel = model;
-                        executeCellScript(cell, compilationKeys);
+                        executeCellScript(cell);
                     }
                 }
             }
         }
 
-        Dictionary<string, string> _compilationKeys = null;
+        Dictionary<string, string> _cellCompilationKeys = null;
 
-        private void handleCustomScripts(ReportModel model)
+        private void handleCellScript(ReportModel model)
         {
-            _compilationKeys = new Dictionary<string, string>();
-
+            _cellCompilationKeys = new Dictionary<string, string>();
             foreach (ResultPage page in model.Pages)
             {
                 if (Report.Cancel) break;
 
-                handleCustomScripts(model, page, page.DataTable, _compilationKeys);
+                handleCustomScripts(model, page, page.DataTable);
                //We do not handle Page table as calculations will be done in the summary table, as the cells are shared amongst Page and Summary
                 //handleCustomScripts(model, page, page.PageTable, _compilationKeys);
             }
-            handleCustomScripts(model, null, model.SummaryTable, _compilationKeys);
+            handleCustomScripts(model, null, model.SummaryTable);
         }
 
+        private void handleFinalScript(ReportModel model)
+        {
+            model.ExecuteLoadScript(model.FinalScript, "Final Script", model);
+        }
 
         private void buildSeries(ReportModel model)
         {
@@ -1144,7 +1150,7 @@ namespace Seal.Model
                             serieValue.Yvalue.ContextTable = page.DataTable;
                             serieValue.Yvalue.ContextPage = page;
                             serieValue.Yvalue.ContextModel = model;
-                            executeCellScript(serieValue.Yvalue, _compilationKeys);
+                            executeCellScript(serieValue.Yvalue);
                         }
                     }
                 }

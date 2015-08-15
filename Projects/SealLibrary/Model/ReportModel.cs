@@ -1,7 +1,8 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
-// This code is licensed under GNU General Public License version 3, http://www.gnu.org/licenses/gpl-3.0.en.html.
+// Copyright 2015 (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0
 //
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,7 @@ namespace Seal.Model
 
                 GetProperty("PreLoadScript").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("LoadScript").SetIsBrowsable(true);
+                GetProperty("FinalScript").SetIsBrowsable(true);
                 if (Source.IsNoSQL)
                 {
                     GetProperty("LoadScript").SetDisplayName("Load Script");
@@ -150,6 +152,14 @@ namespace Seal.Model
             set { _loadScript = value; }
         }
 
+        string _finalScript;
+        [Category("Model Definition"), DisplayName("Final Script"), Description("Optional Razor Script to modify the model after its generation."), Id(5, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string FinalScript
+        {
+            get { return _finalScript; }
+            set { _finalScript = value; }
+        }
 
         string _sqlSelect;
         [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement."), Id(2, 2)]
@@ -852,7 +862,7 @@ namespace Seal.Model
                 if (!orderColumns.Contains(element.SQLColumn) && element.IsSorted)
                 {
                     string ascdesc = element.SortOrder.Contains(SortOrderConverter.kAscendantSortKeyword) ? " ASC" : " DESC";
-                    Helper.AddValue(ref orderClause, ",", (Source.IsNoSQL ? element.SQLColumnName: element.SQLColumn) + ascdesc); //If NoSQL, the Data View can not be sorted with aggregate...
+                    Helper.AddValue(ref orderClause, ",", (Source.IsNoSQL ? element.SQLColumnName : element.SQLColumn) + ascdesc); //If NoSQL, the Data View can not be sorted with aggregate...
                     Helper.AddValue(ref orderClauseName, ",", element.SQLColumnName + ascdesc);
                     orderColumns.Add(element.SQLColumn);
                 }
@@ -910,6 +920,21 @@ namespace Seal.Model
             }
         }
 
+        public void ExecuteLoadScript(string script, string name, object model)
+        {
+            if (!string.IsNullOrEmpty(script))
+            {
+                try
+                {
+                    Helper.ParseRazor(script, model);
+                }
+                catch (Exception razorException)
+                {
+                    throw new Exception(string.Format("Error when executing '{0}'.\r\n{1}", name, razorException.Message));
+                }
+            }
+        }
+
 
         public static Dictionary<string, ReportModel> RunningModels = new Dictionary<string, ReportModel>();
         void checkRunningModels(string key)
@@ -920,7 +945,7 @@ namespace Seal.Model
                 {
                     //check if we can reuse the current running query: same source, same connection string and same pre/Post SQL
                     ReportModel runningModel = RunningModels[key];
-                    if (Source == runningModel.Source 
+                    if (Source == runningModel.Source
                         && Connection.FullConnectionString == runningModel.Connection.FullConnectionString
                         && string.IsNullOrEmpty(runningModel.ExecutionError)
                         && ((PreSQL == null && runningModel.PreSQL == null) || (PreSQL.ToLower().Trim() == runningModel.PreSQL.ToLower().Trim()))
@@ -963,17 +988,7 @@ namespace Seal.Model
             Pages.Clear();
 
             //Pre-load script
-            if (!Source.IsNoSQL && !string.IsNullOrEmpty(PreLoadScript))
-            {
-                try
-                {
-                    Helper.ParseRazor(PreLoadScript, this);
-                }
-                catch (Exception razorException)
-                {
-                    throw new Exception(string.Format("Unexpected error when executing Pre Load Script.\r\n{0}", razorException.Message));
-                }
-            }
+            if (!Source.IsNoSQL) ExecuteLoadScript(PreLoadScript, "Pre Load Script", this);
 
             BuildSQL();
 
@@ -981,9 +996,9 @@ namespace Seal.Model
             ResultTable = null;
             _command = null;
 
-            //No SQL
             if (Source.IsNoSQL && Elements.Count > 0 && !Report.Cancel)
             {
+                //No SQL
                 try
                 {
                     Source.MetaData.MasterTable.Log = Report;
@@ -1010,7 +1025,7 @@ namespace Seal.Model
                     if (execWhereClause.Length > 0 || execOrderByClause.Length > 0)
                     {
                         //make a copy first
-                        ResultTable = ResultTable.Copy(); 
+                        ResultTable = ResultTable.Copy();
                         var dataView = new DataView(ResultTable);
                         dataView.RowFilter = execWhereClause.ToString();
                         dataView.Sort = execOrderByClause.ToString();
@@ -1072,72 +1087,61 @@ namespace Seal.Model
                         connection.Close();
                         _command = null;
                         ExecutionDuration = Convert.ToInt32((DateTime.Now - ExecutionDate).TotalSeconds);
-
-                        if (Report.Cancel) return;
-
-                        //If enum, set enum values directly in the table
-                        bool hasEnum = false;
-                        List<ReportElement> specialSortByPositionElements = new List<ReportElement>();
-                        foreach (var element in Elements)
-                        {
-                            if (element.IsEnum)
-                            {
-                                hasEnum = true;
-                                DataColumn col = ResultTable.Columns[element.SQLColumnName];
-                                DataColumn newcol = new DataColumn("_seal_dummy_temp_col_", typeof(string));
-                                ResultTable.Columns.Add(newcol);
-
-                                foreach (DataRow row in ResultTable.Rows)
-                                {
-                                    //to sort by position, we add 6 digits as a prefix
-                                    if (element.IsSorted && element.MetaColumn.Enum.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
-                                    row[newcol] = element.GetEnumSortValue(row[col].ToString(), false);
-                                }
-                                ResultTable.Columns.Remove(col);
-                                newcol.ColumnName = element.SQLColumnName;
-                            }
-                        }
-
-                        if (Report.Cancel) return;
-
-                        if (hasEnum)
-                        {
-                            //this re-sort the result with enum values...
-                            DataView dv = new DataView(ResultTable, null, execOrderByNameClause.ToString(), DataViewRowState.CurrentRows);
-                            ResultTable = dv.ToTable();
-
-                            if (Report.Cancel) return;
-
-                            //remove the 6 digits used for special sort
-                            foreach (var element in specialSortByPositionElements)
-                            {
-                                DataColumn col = ResultTable.Columns[element.SQLColumnName];
-                                foreach (DataRow row in ResultTable.Rows)
-                                {
-                                    string newValue = row[col].ToString();
-                                    if (newValue.Length > 5) row[col] = newValue.Substring(6);
-                                }
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(LoadScript))
-                        {
-                            try
-                            {
-                                Helper.ParseRazor(LoadScript, this);
-                            }
-                            catch (Exception razorException)
-                            {
-                                ExecutionError = string.Format("Unexpected error when executing Post Load Script.\r\n{0}", razorException.Message);
-                            }
-                        }
-
                     }
                 }
                 catch (Exception ex)
                 {
                     ExecutionError = string.Format("Unexpected error when executing the following SQL statement:\r\n{0}\r\n\r\nError detail:\r\n{1}", _sql, ex.Message);
                 }
+
+                if (Report.Cancel) return;
+
+                //If enum, set enum values directly in the table
+                bool hasEnum = false;
+                List<ReportElement> specialSortByPositionElements = new List<ReportElement>();
+                foreach (var element in Elements)
+                {
+                    if (element.IsEnum)
+                    {
+                        hasEnum = true;
+                        DataColumn col = ResultTable.Columns[element.SQLColumnName];
+                        DataColumn newcol = new DataColumn("_seal_dummy_temp_col_", typeof(string));
+                        ResultTable.Columns.Add(newcol);
+
+                        foreach (DataRow row in ResultTable.Rows)
+                        {
+                            //to sort by position, we add 6 digits as a prefix
+                            if (element.IsSorted && element.MetaColumn.Enum.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
+                            row[newcol] = element.GetEnumSortValue(row[col].ToString(), false);
+                        }
+                        ResultTable.Columns.Remove(col);
+                        newcol.ColumnName = element.SQLColumnName;
+                    }
+                }
+
+                if (Report.Cancel) return;
+
+                if (hasEnum)
+                {
+                    //this re-sort the result with enum values...
+                    DataView dv = new DataView(ResultTable, null, execOrderByNameClause.ToString(), DataViewRowState.CurrentRows);
+                    ResultTable = dv.ToTable();
+
+                    if (Report.Cancel) return;
+
+                    //remove the 6 digits used for special sort
+                    foreach (var element in specialSortByPositionElements)
+                    {
+                        DataColumn col = ResultTable.Columns[element.SQLColumnName];
+                        foreach (DataRow row in ResultTable.Rows)
+                        {
+                            string newValue = row[col].ToString();
+                            if (newValue.Length > 5) row[col] = newValue.Substring(6);
+                        }
+                    }
+                }
+
+                ExecuteLoadScript(LoadScript, "Post Load Script", this);
             }
             _resultTableAvailable = true;
         }
@@ -1239,7 +1243,7 @@ namespace Seal.Model
             table.Columns.Add(new DataColumn("distance", typeof(int)));
             table.Columns.Add(new DataColumn("distance_text", typeof(string)));
 
-           
+
             string url = "https://maps.googleapis.com/maps/api/directions/xml?origin=Toronto&destination=Montreal";
 
             var webRequest = System.Net.WebRequest.Create(url);
