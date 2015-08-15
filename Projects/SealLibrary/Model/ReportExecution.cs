@@ -210,7 +210,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler)
+                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution)
                     {
                         //check input restrictions
                         CheckInputRestrictions();
