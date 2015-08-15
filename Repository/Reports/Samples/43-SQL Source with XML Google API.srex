@@ -47,6 +47,7 @@
 @using System.Xml
 @using System.Xml.Linq
 @using System.Net
+@using System.Globalization
 @{
     ReportModel model = Model;
     DataTable table = model.ResultTable;
@@ -73,20 +74,46 @@
 			var reader = new StreamReader(responseStream);
 			var xmlResponse = System.Xml.Linq.XElement.Parse(reader.ReadToEnd());
 			var status = xmlResponse.Element("status").Value;
-			if (status.ToLower() == "ok")
+			if (!string.IsNullOrEmpty(status) &amp;&amp; status.ToLower() == "ok")
 			{
-				row[lat.SQLColumnName] = float.Parse(xmlResponse.Elements("result").First().Element("geometry").Element("location").Element("lat").Value);
-				row[lng.SQLColumnName] = float.Parse(xmlResponse.Elements("result").First().Element("geometry").Element("location").Element("lng").Value);
+				row[lat.SQLColumnName] = double.Parse(xmlResponse.Elements("result").First().Element("geometry").Element("location").Element("lat").Value, CultureInfo.InvariantCulture);
+				row[lng.SQLColumnName] = double.Parse(xmlResponse.Elements("result").First().Element("geometry").Element("location").Element("lng").Value, CultureInfo.InvariantCulture);
 			}
 			else 
 			{
-				row[lat.SQLColumnName] = "No result found";
-				row[lng.SQLColumnName] = "No result found";
+				row[lat.SQLColumnName] = DBNull.Value;
+				row[lng.SQLColumnName] = DBNull.Value;
 			}
 		}
     }
 }
 </LoadScript>
+      <FinalScript>@using Seal.Model
+@using System.Data
+@{
+    ReportModel model = Model;
+ 	ReportExecutionLog log = model.Report;
+
+    //Final script executed to modify the model result tables after its generation
+    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    log.LogMessage("Modifying result values with the 'Final Script'...");
+    ResultTable summaryTable = model.SummaryTable;
+    foreach (ResultPage page in model.Pages)
+    {
+        ResultTable dataTable = page.DataTable;
+    	ResultTable pageTable = page.PageTable;
+
+        // e.g to change the last line of the Data Tables
+        dataTable.Lines[dataTable.Lines.Count - 1][0].Value = "Maximum";
+		for (int i=0;i&lt; dataTable.Lines[0].Length; i++)
+	    {
+		    string style =  "background:orange;" + (i &gt; 0 ? "text-align:right;" : "");
+		    dataTable.Lines[dataTable.Lines.Count - 1][i].FinalCssStyle = style;
+	    }
+    }
+
+}
+</FinalScript>
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
@@ -233,24 +260,24 @@
           <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>b0a62923-cb34-463c-94f7-4eb37fc3ca2e</GUID>
-          <Name>Employees.Country</Name>
+          <GUID>b88b668a-7cd2-4a1e-9194-2df5a51c7c66</GUID>
+          <Name>Employees.City</Name>
           <Type>Numeric</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <DisplayName>Latitude from Google</DisplayName>
           <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <NumericStandardFormat>Custom</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>N0</Format>
+          <Format>N6</Format>
           <HasHTMLTags xsi:nil="true" />
-          <PivotPosition>Row</PivotPosition>
+          <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Numeric</TypeEd>
-          <AggregateFunction>Count</AggregateFunction>
+          <AggregateFunction>Max</AggregateFunction>
           <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -259,24 +286,54 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
-          <SQL />
+          <MetaColumnGUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</MetaColumnGUID>
+          <SQL>1.2</SQL>
+          <CellScript />
         </ReportElement>
         <ReportElement>
-          <GUID>b0a62923-cb34-463c-94f7-4eb37fc3ca2e</GUID>
-          <Name>Employees.Country</Name>
+          <GUID>4a0993ea-5ac8-4615-a2a3-ce4bd12a2181</GUID>
+          <Name>Employees.City</Name>
           <Type>Numeric</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <DisplayName>Longitude from Google</DisplayName>
           <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <NumericStandardFormat>Custom</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>N0</Format>
+          <Format>N6</Format>
           <HasHTMLTags xsi:nil="true" />
-          <PivotPosition>Row</PivotPosition>
+          <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Numeric</TypeEd>
+          <AggregateFunction>Max</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</MetaColumnGUID>
+          <SQL>1.2</SQL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5ce4f08b-93c3-4a9a-b6c4-986bcbbe6238</GUID>
+          <Name>Employees.Country</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Page</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
           <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
@@ -290,7 +347,6 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
-          <SQL />
         </ReportElement>
       </Elements>
       <Restriction />
