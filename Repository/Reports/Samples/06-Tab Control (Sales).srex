@@ -1,0 +1,1585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c442caec-d4a3-4c97-8b7b-f60bd12633cb</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>879f4f0c-3c94-4979-a867-825f45b161a6</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>39495a50-7728-465c-8580-e7725952f20a</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>5837ccad-1f72-4939-bd25-46a6805eefc3</GUID>
+      <Name>sales per category</Name>
+      <SourceGUID>879f4f0c-3c94-4979-a867-825f45b161a6</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <SqlSelect />
+      <SqlFrom />
+      <SqlGroupBy />
+      <SqlOrderBy />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <ShowDuplicateRows>false</ShowDuplicateRows>
+      <Elements>
+        <ReportElement>
+          <GUID>720d7e09-2856-4389-ab10-27c0d6e1c01d</GUID>
+          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Page</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5a2c2558-41da-4341-9458-6b220d85f1e0</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Axis</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9b7d6c0e-a460-4f65-8f09-d8f58729a0db</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>1 Descendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>StackedColumn</SerieType>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>269464f1-ab94-44cc-8977-364289069f5d</GUID>
+          <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>N0</Format>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>712e8132-212d-412b-89fe-3bfae5b227b4</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>N0</Format>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>StackedColumn</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Secondary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[9cee2193-de69-4e88-8b73-e5640252037e]
+AND [ca2098df-8535-45a8-99b6-5a8a8b735c65]
+AND [cae28800-9387-49da-864c-9b5d3c644866]
+AND [80edbfe0-a400-4a92-bfe4-72f28f027a22]
+AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>9cee2193-de69-4e88-8b73-e5640252037e</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>ca2098df-8535-45a8-99b6-5a8a8b735c65</GUID>
+          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>cae28800-9387-49da-864c-9b5d3c644866</GUID>
+          <Name>Employees.FirstName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>80edbfe0-a400-4a92-bfe4-72f28f027a22</GUID>
+          <Name>Customers.Country</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>5375d4de-2616-4d28-bb30-16e1f6b88869</GUID>
+          <Name>Customers.CompanyName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Contains</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+    <ReportModel>
+      <GUID>54edbed7-9dce-4ff7-9609-3192bf5add66</GUID>
+      <Name>sales per employee</Name>
+      <SourceGUID>879f4f0c-3c94-4979-a867-825f45b161a6</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <SqlSelect />
+      <SqlFrom />
+      <SqlGroupBy />
+      <SqlOrderBy />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <ShowDuplicateRows>false</ShowDuplicateRows>
+      <Elements>
+        <ReportElement>
+          <GUID>720d7e09-2856-4389-ab10-27c0d6e1c01d</GUID>
+          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Page</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>99219991-94ad-4126-81bb-630bfccfdf10</GUID>
+          <Name>Employees.FirstName + ' ' + Employees.LastName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Axis</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9b7d6c0e-a460-4f65-8f09-d8f58729a0db</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>N0</Format>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>1 Descendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>StackedColumn</SerieType>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>91cfe3a6-67de-4680-a8b3-76969b65fa7d</GUID>
+          <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>N0</Format>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>712e8132-212d-412b-89fe-3bfae5b227b4</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>StackedColumn</SerieType>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Secondary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[9cee2193-de69-4e88-8b73-e5640252037e]
+AND [ca2098df-8535-45a8-99b6-5a8a8b735c65]
+AND [cae28800-9387-49da-864c-9b5d3c644866]
+AND [67a5eec1-daf0-4bb9-93bd-521072889d38]
+AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>9cee2193-de69-4e88-8b73-e5640252037e</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>ca2098df-8535-45a8-99b6-5a8a8b735c65</GUID>
+          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>cae28800-9387-49da-864c-9b5d3c644866</GUID>
+          <Name>Employees.FirstName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>67a5eec1-daf0-4bb9-93bd-521072889d38</GUID>
+          <Name>Customers.Country</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>d06c797f-f9f7-48f3-a289-54355fc5e159</GUID>
+          <Name>Customers.CompanyName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Contains</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+    <ReportModel>
+      <GUID>0a24cc8f-4110-46a6-a4ed-7b0d08198a47</GUID>
+      <Name>sales per country</Name>
+      <SourceGUID>879f4f0c-3c94-4979-a867-825f45b161a6</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <SqlSelect />
+      <SqlFrom />
+      <SqlGroupBy />
+      <SqlOrderBy />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <ShowDuplicateRows>false</ShowDuplicateRows>
+      <Elements>
+        <ReportElement>
+          <GUID>720d7e09-2856-4389-ab10-27c0d6e1c01d</GUID>
+          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Page</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8cf48643-487f-4eed-9972-8f46e29bb38d</GUID>
+          <Name>Customers.Country</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Axis</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9b7d6c0e-a460-4f65-8f09-d8f58729a0db</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>N0</Format>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>1 Descendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>StackedColumn</SerieType>
+          <Nvd3Serie>Line</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>583a2375-23f2-469c-a700-0fa072e5c9a5</GUID>
+          <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>N0</Format>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>Line</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>712e8132-212d-412b-89fe-3bfae5b227b4</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>StackedColumn</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Secondary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[9cee2193-de69-4e88-8b73-e5640252037e]
+AND [ca2098df-8535-45a8-99b6-5a8a8b735c65]
+AND [cae28800-9387-49da-864c-9b5d3c644866]
+AND [67a5eec1-daf0-4bb9-93bd-521072889d38]
+AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>9cee2193-de69-4e88-8b73-e5640252037e</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>ca2098df-8535-45a8-99b6-5a8a8b735c65</GUID>
+          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>cae28800-9387-49da-864c-9b5d3c644866</GUID>
+          <Name>Employees.FirstName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>67a5eec1-daf0-4bb9-93bd-521072889d38</GUID>
+          <Name>Customers.Country</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>e02cc36e-3b4a-44fb-a7bd-8f139a7ed384</GUID>
+          <Name>Customers.CompanyName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Contains</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+    <ReportModel>
+      <GUID>67dfa309-0cfa-44a6-9f60-d1876ee6a9cc</GUID>
+      <Name>sales per year</Name>
+      <SourceGUID>879f4f0c-3c94-4979-a867-825f45b161a6</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <SqlSelect />
+      <SqlFrom />
+      <SqlGroupBy />
+      <SqlOrderBy />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <ShowDuplicateRows>false</ShowDuplicateRows>
+      <Elements>
+        <ReportElement>
+          <GUID>720d7e09-2856-4389-ab10-27c0d6e1c01d</GUID>
+          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Axis</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9b7d6c0e-a460-4f65-8f09-d8f58729a0db</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>N0</Format>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>1 Descendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Row</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Doughnut</SerieType>
+          <Nvd3Serie>StackedAreaChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>64eb904b-4559-47b3-8d2e-2ac0263db0e6</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Column</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[9cee2193-de69-4e88-8b73-e5640252037e]
+AND [ca2098df-8535-45a8-99b6-5a8a8b735c65]
+AND [cae28800-9387-49da-864c-9b5d3c644866]
+AND [80edbfe0-a400-4a92-bfe4-72f28f027a22]
+AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>9cee2193-de69-4e88-8b73-e5640252037e</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>ca2098df-8535-45a8-99b6-5a8a8b735c65</GUID>
+          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>cae28800-9387-49da-864c-9b5d3c644866</GUID>
+          <Name>Employees.FirstName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>80edbfe0-a400-4a92-bfe4-72f28f027a22</GUID>
+          <Name>Customers.Country</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>5375d4de-2616-4d28-bb30-16e1f6b88869</GUID>
+          <Name>Customers.CompanyName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Contains</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Views>
+    <ReportView>
+      <GUID>f103be78-8f5b-4040-bc4f-d9b645b795c4</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>5d327c49-f35a-4d7b-a844-c0a100eaa033</GUID>
+          <Name>Tab Control View</Name>
+          <Views>
+            <ReportView>
+              <GUID>673c586f-f2cd-465d-a12a-73a5a36d3af3</GUID>
+              <Name>Per category</Name>
+              <Views>
+                <ReportView>
+                  <GUID>9bf4e31a-ca4c-4f82-8fb8-ef2a1189b8b6</GUID>
+                  <Name>Model HTML View</Name>
+                  <Views />
+                  <ModelGUID>5837ccad-1f72-4939-bd25-46a6805eefc3</ModelGUID>
+                  <TemplateName>Model HTML</TemplateName>
+                  <ThemeName />
+                  <UseCustomConfiguration>false</UseCustomConfiguration>
+                  <CustomConfiguration />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <CustomTemplate />
+                  <Parameters />
+                  <CSS>
+                    <Parameter>
+                      <Name>summary</Name>
+                      <Value />
+                    </Parameter>
+                  </CSS>
+                  <SortOrder>1</SortOrder>
+                  <CultureName />
+                  <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Chart Size="600, 400"&gt;
+  &lt;Series&gt;
+    &lt;Series Name="Amount(9b7d6c0e-a460-4f65-8f09-d8f58729a0db)" ChartArea="ChartArea1" LabelFormat="N2" IsValueShownAsLabel="True" Legend="Legend1" ChartType="StackedColumn"&gt;
+    &lt;/Series&gt;
+    &lt;Series Name="Quantity(712e8132-212d-412b-89fe-3bfae5b227b4)" ChartArea="ChartArea1" LabelFormat="N0" IsValueShownAsLabel="True" Legend="Legend1" YAxisType="Secondary" ChartType="StackedColumn"&gt;
+    &lt;/Series&gt;
+  &lt;/Series&gt;
+  &lt;Legends&gt;
+    &lt;Legend Name="Legend1"&gt;
+    &lt;/Legend&gt;
+  &lt;/Legends&gt;
+  &lt;Titles&gt;
+    &lt;Title Name="Title1" Visible="False"&gt;
+    &lt;/Title&gt;
+  &lt;/Titles&gt;
+  &lt;ChartAreas&gt;
+    &lt;ChartArea Name="ChartArea1"&gt;
+    &lt;/ChartArea&gt;
+  &lt;/ChartAreas&gt;
+&lt;/Chart&gt;</ChartConfigurationXml>
+                  <PdfConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <ThemeName />
+              <UseCustomConfiguration>false</UseCustomConfiguration>
+              <CustomConfiguration />
+              <UseCustomTemplate>false</UseCustomTemplate>
+              <CustomTemplate />
+              <Parameters />
+              <CSS />
+              <SortOrder>1</SortOrder>
+              <CultureName />
+              <PdfConfigurations />
+            </ReportView>
+            <ReportView>
+              <GUID>dd3673f1-1080-44fb-9ef5-576c4f8f85bc</GUID>
+              <Name>Per employee</Name>
+              <Views>
+                <ReportView>
+                  <GUID>057eb836-3b35-4777-b26b-4f42dfcffb0c</GUID>
+                  <Name>Model HTML View</Name>
+                  <Views />
+                  <ModelGUID>54edbed7-9dce-4ff7-9609-3192bf5add66</ModelGUID>
+                  <TemplateName>Model HTML</TemplateName>
+                  <ThemeName />
+                  <UseCustomConfiguration>false</UseCustomConfiguration>
+                  <CustomConfiguration />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <CustomTemplate />
+                  <Parameters />
+                  <CSS />
+                  <SortOrder>1</SortOrder>
+                  <CultureName />
+                  <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Chart Size="600, 400"&gt;
+  &lt;Series&gt;
+    &lt;Series Name="Amount(9b7d6c0e-a460-4f65-8f09-d8f58729a0db)" ChartArea="ChartArea1" LabelFormat="N2" IsValueShownAsLabel="True" Legend="Legend1" ChartType="StackedColumn"&gt;
+    &lt;/Series&gt;
+    &lt;Series Name="Quantity(712e8132-212d-412b-89fe-3bfae5b227b4)" ChartArea="ChartArea1" LabelFormat="N0" IsValueShownAsLabel="True" Legend="Legend1" YAxisType="Secondary" ChartType="StackedColumn"&gt;
+    &lt;/Series&gt;
+  &lt;/Series&gt;
+  &lt;Legends&gt;
+    &lt;Legend Name="Legend1"&gt;
+    &lt;/Legend&gt;
+  &lt;/Legends&gt;
+  &lt;Titles&gt;
+    &lt;Title Name="Title1" Visible="False"&gt;
+    &lt;/Title&gt;
+  &lt;/Titles&gt;
+  &lt;ChartAreas&gt;
+    &lt;ChartArea Name="ChartArea1"&gt;
+    &lt;/ChartArea&gt;
+  &lt;/ChartAreas&gt;
+&lt;/Chart&gt;</ChartConfigurationXml>
+                  <PdfConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <ThemeName />
+              <UseCustomConfiguration>false</UseCustomConfiguration>
+              <CustomConfiguration />
+              <UseCustomTemplate>false</UseCustomTemplate>
+              <CustomTemplate />
+              <Parameters />
+              <CSS />
+              <SortOrder>2</SortOrder>
+              <CultureName />
+              <PdfConfigurations />
+            </ReportView>
+            <ReportView>
+              <GUID>7fba25d8-7cb0-4390-b3a5-5385766446df</GUID>
+              <Name>Per country</Name>
+              <Views>
+                <ReportView>
+                  <GUID>97621ac8-7ea4-4db7-83e2-972387883c2c</GUID>
+                  <Name>Model HTML View</Name>
+                  <Views />
+                  <ModelGUID>0a24cc8f-4110-46a6-a4ed-7b0d08198a47</ModelGUID>
+                  <TemplateName>Model HTML</TemplateName>
+                  <ThemeName />
+                  <UseCustomConfiguration>false</UseCustomConfiguration>
+                  <CustomConfiguration />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <CustomTemplate />
+                  <Parameters />
+                  <CSS>
+                    <Parameter>
+                      <Name>page</Name>
+                      <Value />
+                    </Parameter>
+                  </CSS>
+                  <SortOrder>1</SortOrder>
+                  <CultureName />
+                  <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Chart Size="600, 400"&gt;
+  &lt;Series&gt;
+    &lt;Series Name="Amount(9b7d6c0e-a460-4f65-8f09-d8f58729a0db)" ChartArea="ChartArea1" LabelFormat="N2" IsValueShownAsLabel="True" Legend="Legend1" ChartType="StackedColumn"&gt;
+    &lt;/Series&gt;
+    &lt;Series Name="Quantity(712e8132-212d-412b-89fe-3bfae5b227b4)" ChartArea="ChartArea1" LabelFormat="N0" IsValueShownAsLabel="True" Legend="Legend1" YAxisType="Secondary" ChartType="StackedColumn"&gt;
+    &lt;/Series&gt;
+  &lt;/Series&gt;
+  &lt;Legends&gt;
+    &lt;Legend Name="Legend1"&gt;
+    &lt;/Legend&gt;
+  &lt;/Legends&gt;
+  &lt;Titles&gt;
+    &lt;Title Name="Title1" Visible="False"&gt;
+    &lt;/Title&gt;
+  &lt;/Titles&gt;
+  &lt;ChartAreas&gt;
+    &lt;ChartArea Name="ChartArea1"&gt;
+    &lt;/ChartArea&gt;
+  &lt;/ChartAreas&gt;
+&lt;/Chart&gt;</ChartConfigurationXml>
+                  <PdfConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <ThemeName />
+              <UseCustomConfiguration>false</UseCustomConfiguration>
+              <CustomConfiguration />
+              <UseCustomTemplate>false</UseCustomTemplate>
+              <CustomTemplate />
+              <Parameters />
+              <CSS />
+              <SortOrder>3</SortOrder>
+              <CultureName />
+              <PdfConfigurations />
+            </ReportView>
+            <ReportView>
+              <GUID>ab69a3c7-a445-4951-a5cf-36ee7dbe7570</GUID>
+              <Name>Sales per Year</Name>
+              <Views>
+                <ReportView>
+                  <GUID>86ecfb9b-e1d0-46ae-b3f5-0cab7705bb23</GUID>
+                  <Name>Model HTML View</Name>
+                  <Views />
+                  <ModelGUID>67dfa309-0cfa-44a6-9f60-d1876ee6a9cc</ModelGUID>
+                  <TemplateName>Model HTML</TemplateName>
+                  <ThemeName />
+                  <UseCustomConfiguration>false</UseCustomConfiguration>
+                  <CustomConfiguration />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <CustomTemplate />
+                  <Parameters />
+                  <CSS />
+                  <SortOrder>1</SortOrder>
+                  <CultureName />
+                  <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Chart Size="400, 300"&gt;
+  &lt;Series&gt;
+    &lt;Series Name="Amount(9b7d6c0e-a460-4f65-8f09-d8f58729a0db)" ChartArea="ChartArea1" LabelFormat="N2" IsValueShownAsLabel="True" Legend="Legend1" ChartType="Doughnut"&gt;
+    &lt;/Series&gt;
+  &lt;/Series&gt;
+  &lt;Legends&gt;
+    &lt;Legend Name="Legend1"&gt;
+    &lt;/Legend&gt;
+  &lt;/Legends&gt;
+  &lt;Titles&gt;
+    &lt;Title Name="Title1" Visible="False"&gt;
+    &lt;/Title&gt;
+  &lt;/Titles&gt;
+  &lt;ChartAreas&gt;
+    &lt;ChartArea Name="ChartArea1"&gt;
+      &lt;Area3DStyle Enable3D="True" /&gt;
+    &lt;/ChartArea&gt;
+  &lt;/ChartAreas&gt;
+&lt;/Chart&gt;</ChartConfigurationXml>
+                  <PdfConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <ThemeName />
+              <UseCustomConfiguration>false</UseCustomConfiguration>
+              <CustomConfiguration />
+              <UseCustomTemplate>false</UseCustomTemplate>
+              <CustomTemplate />
+              <Parameters />
+              <CSS />
+              <SortOrder>0</SortOrder>
+              <CultureName />
+              <PdfConfigurations />
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <CustomConfiguration />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <CustomTemplate />
+          <Parameters />
+          <CSS />
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <PdfConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <CustomConfiguration />
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <CustomTemplate />
+      <Parameters>
+        <Parameter>
+          <Name>report_description</Name>
+          <Value>A simple Tab Control with 4 pages</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <CSS />
+      <SortOrder>1</SortOrder>
+      <CultureName />
+      <PdfConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <ViewGUID>f103be78-8f5b-4040-bc4f-d9b645b795c4</ViewGUID>
+  <Schedules />
+</Report>

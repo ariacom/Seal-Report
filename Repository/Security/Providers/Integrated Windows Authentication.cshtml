@@ -1,0 +1,48 @@
+﻿@using Seal.Model;
+@{
+    SecurityProvider provider = Model;
+
+    //If true, a login window is displayed to prompt user and password
+    provider.PromptUserPassword = false;
+
+    //Parameters for this provider
+    provider.Parameters.Add(new SecurityParameter() { Name = "add_windows_groups", BoolValue = false, DisplayName = "Add security groups matching Windows groups", Description = "If true, the user will belong to the security groups having the name of his Windows groups." });
+    provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_skip_domain", BoolValue = true, DisplayName = "Groups matching: Skip domain name", Description = "If true, the Windows-Security groups matching is done without the domain name." });
+    provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_ad_context", BoolValue = false, DisplayName = "Groups matching: Method used to get the Windows groups", Enums = new string[] { "", "Machine", "Domain" }, Description = "Select the context type used to get the Windows Groups. If empty, Windows Identity is used instead of Active Directory." });
+    
+    provider.Script = @"@using Seal.Model;
+@using System.Net;
+@{
+    SecurityUser user = Model;
+	//Integrated Windows authentication: check IPrincipal and set name and groups...
+	//IIS Authentication must be configured with Windows Authentication enabled, Anonymous Authentication disabled
+	//user.WebPrincipal -> may be used for integrated windows authentication
+
+    if (user.WebPrincipal != null && user.WebPrincipal.Identity.IsAuthenticated) 
+    {
+        user.Name = user.WebPrincipal.Identity.Name;
+		if (user.Security.GetBoolValue(""add_windows_groups""))
+		{
+			user.AddWindowsGroupToSecurityGroup(user.Security.GetBoolValue(""windows_groups_skip_domain""), user.Security.GetValue(""windows_groups_ad_context""));
+		}
+		else 
+		{
+			user.AddDefaultSecurityGroup();
+		}
+		
+		if (user.SecurityGroups.Count == 0)		
+		{
+			user.Error = ""The user is authenticated but he does not belong to any security group."";        
+		}
+
+        //User default culture, theme and logo can be also overwritten with
+        //SetDefaultCulture(group.Culture);
+        //SetDefaultTheme(group.Theme);
+        //SetDefaultLogoName(group.LogoName);  
+    }
+    else 
+    {
+        user.Error = ""The user is not authenticated by Windows. Check that IIS Authentication is configured with Windows Authentication enabled and Anonymous Authentication disabled..."";        
+    }
+}";
+}

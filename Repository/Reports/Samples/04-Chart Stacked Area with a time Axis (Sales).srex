@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>59e06fc0-6cef-43f4-85f3-100a1d5885f2</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>55dc8e4b-9040-4547-a15d-3ccc6286f66b</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <_metaSourceName>Northwind</_metaSourceName>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</GUID>
+      <Name>model</Name>
+      <Elements>
+        <ReportElement>
+          <GUID>32f79895-2da2-4b75-a2d8-36e73707e925</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <_pivotPosition>Column</_pivotPosition>
+          <PivotPosition>Column</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f0230abd-11f3-4b6d-839c-27c19d02ae55</GUID>
+          <Name>Orders.OrderDate</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <_pivotPosition>Row</_pivotPosition>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Max</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Axis</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>318e4a99-855d-4c84-aa77-f45b5439b8d9</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <_pivotPosition>Data</_pivotPosition>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>RowColumn</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>StackedColumn</SerieType>
+          <Nvd3Serie>StackedAreaChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>None</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <IsDataPlaceHolderRow>true</IsDataPlaceHolderRow>
+      <_sql>SELECT
+  Products.CategoryID AS C0,
+  Orders.OrderDate AS C1,
+  Sum((1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice) AS C2
+FROM 
+(Products INNER JOIN 
+([Order Details] INNER JOIN Orders
+ ON Orders.OrderID = [Order Details].OrderID)
+ ON Products.ProductID = [Order Details].ProductID)
+WHERE Products.CategoryID IN (1,2,3,4,5)
+AND Orders.OrderDate Between 34394 AND 41713,3469301968
+GROUP BY Products.CategoryID,Orders.OrderDate
+ORDER BY Orders.OrderDate ASC,Products.CategoryID ASC,Sum((1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice) ASC
+</_sql>
+      <SourceGUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <SqlSelect>&lt;Default Clause&gt;</SqlSelect>
+      <SqlFrom>&lt;Default Clause&gt;</SqlFrom>
+      <SqlGroupBy>&lt;Default Clause&gt;</SqlGroupBy>
+      <SqlOrderBy>&lt;Default Clause&gt;</SqlOrderBy>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <ShowDuplicateRows>false</ShowDuplicateRows>
+      <Restriction>[4e191487-5f6f-4509-be97-b1e1b731ef2b]
+AND [6fa5bf7a-d627-4b4c-a8e9-f00a9fc7c81d]
+</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>4e191487-5f6f-4509-be97-b1e1b731ef2b</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <_pivotPosition>Row</_pivotPosition>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>ShortDate</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Numeric0</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>6fa5bf7a-d627-4b4c-a8e9-f00a9fc7c81d</GUID>
+          <Name>Orders.OrderDate</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <_pivotPosition>Row</_pivotPosition>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Max</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>Between</Operator>
+          <EnumValues />
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>1995-03-01T00:00:00</Date1>
+          <Date2>1995-04-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+          <Date2Keyword />
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Views>
+    <ReportView>
+      <GUID>2194db7c-bdea-459c-b055-d2e630d7f829</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>d8cb2182-2ec0-48d7-8659-68002b6b35f9</GUID>
+          <Name>Model HTML View</Name>
+          <Views />
+          <ModelGUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <CustomConfiguration />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <CustomTemplate />
+          <Parameters>
+            <Parameter>
+              <Name>chart_show_all_axis_labels</Name>
+              <Value>True</Value>
+            </Parameter>
+          </Parameters>
+          <CSS>
+            <Parameter>
+              <Name>nvd3_chart</Name>
+              <Value>height:500px; width:900px;</Value>
+            </Parameter>
+          </CSS>
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <ChartConfigurationXml />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <CustomConfiguration />
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <CustomTemplate />
+      <Parameters>
+        <Parameter>
+          <Name>report_description</Name>
+          <Value>Sample of chart having 2 series and a splitter.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
+  <Schedules />
+</Report>

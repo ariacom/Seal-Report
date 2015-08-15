@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>8ac134e3-601f-4c1e-b6f7-aea0b6c37e6f</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>55dc8e4b-9040-4547-a15d-3ccc6286f66b</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</GUID>
+      <Name>model</Name>
+      <SourceGUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <SqlSelect />
+      <SqlFrom />
+      <SqlGroupBy />
+      <SqlOrderBy />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <ShowDuplicateRows>false</ShowDuplicateRows>
+      <Elements>
+        <ReportElement>
+          <GUID>3e8c1b78-2884-4638-ae2c-80b8ab544abe</GUID>
+          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Page</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2cfaeb17-5ba9-486e-85ec-dc349855b9ed</GUID>
+          <Name>Shippers.CompanyName</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Column</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>SplitterBoth</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>318e4a99-855d-4c84-aa77-f45b5439b8d9</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>RowColumn</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>StackedColumn</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f4fa164a-efe8-4597-bcc3-cdb124cc0975</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format>0</Format>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>RowColumn</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Spline</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Secondary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>None</SerieSortType>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6c333c9b-0303-40fe-87be-f89d161ec0a7</GUID>
+          <Name>DatePart('m',[Orders.OrderDate],1,0)</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>Axis</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[4e191487-5f6f-4509-be97-b1e1b731ef2b]
+</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>4e191487-5f6f-4509-be97-b1e1b731ef2b</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <Prompt>None</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>ShortDate</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Numeric0</NumericStandardFormatRe>
+          <FormatRe />
+          <Operator>Equal</Operator>
+          <EnumValues>
+            <string>1</string>
+            <string>2</string>
+            <string>3</string>
+            <string>4</string>
+            <string>5</string>
+          </EnumValues>
+          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+      <FromTables>
+        <MetaTable>
+          <GUID>691ae384-bd74-4708-93a7-abea6ed56e55</GUID>
+          <Name>Orders</Name>
+          <DynamicColumns>false</DynamicColumns>
+          <Type>TABLE</Type>
+          <MustRefresh>false</MustRefresh>
+          <IgnorePrePostError>false</IgnorePrePostError>
+          <Columns>
+            <MetaColumn>
+              <GUID>b5dee061-380a-4dac-a74d-fd573de1a07c</GUID>
+              <Name>Orders.Freight</Name>
+              <Type>Numeric</Type>
+              <Category>Orders</Category>
+              <DisplayName>Freight</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>4a3f4d69-3781-4679-8797-f425478de0d9</GUID>
+              <Name>Orders.OrderDate</Name>
+              <Type>DateTime</Type>
+              <Category>Orders</Category>
+              <DisplayName>Order Date</DisplayName>
+              <Format>d</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>12ce241a-1f80-4b69-a023-66df46152046</GUID>
+              <Name>Orders.OrderID</Name>
+              <Type>Numeric</Type>
+              <Category>Orders</Category>
+              <DisplayName>Order ID</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>ab168a45-6852-44b7-8eff-378968669f14</GUID>
+              <Name>Orders.RequiredDate</Name>
+              <Type>DateTime</Type>
+              <Category>Orders</Category>
+              <DisplayName>Required Date</DisplayName>
+              <Format>d</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>2003a407-ab31-4514-bc83-8e9479c42e2d</GUID>
+              <Name>Orders.ShipAddress</Name>
+              <Type>Text</Type>
+              <Category>Orders</Category>
+              <DisplayName>Ship Address</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>e93c456c-40d9-494e-ba21-711177339870</GUID>
+              <Name>Orders.ShipCity</Name>
+              <Type>Text</Type>
+              <Category>Orders</Category>
+              <DisplayName>Ship City</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</GUID>
+              <Name>Orders.ShipCountry</Name>
+              <Type>Text</Type>
+              <Category>Orders</Category>
+              <DisplayName>Ship Country</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>8ccab7ae-77ad-4cb9-9345-d176a463c21b</GUID>
+              <Name>Orders.ShipName</Name>
+              <Type>Text</Type>
+              <Category>Orders</Category>
+              <DisplayName>Ship Name</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>ce574340-1504-4bf7-9228-c64f79cf9803</GUID>
+              <Name>Orders.ShippedDate</Name>
+              <Type>DateTime</Type>
+              <Category>Orders</Category>
+              <DisplayName>Shipped Date</DisplayName>
+              <Format>d</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</GUID>
+              <Name>Orders.ShipPostalCode</Name>
+              <Type>Text</Type>
+              <Category>Orders</Category>
+              <DisplayName>Ship Postal Code</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>1b2d846d-976f-49ac-b514-cc5b448d7b18</GUID>
+              <Name>Orders.ShipRegion</Name>
+              <Type>Text</Type>
+              <Category>Orders</Category>
+              <DisplayName>Ship Region</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>74282c63-b2a2-4c5c-b59f-e4cac9730f32</GUID>
+              <Name>Orders.ShipVia</Name>
+              <Type>Numeric</Type>
+              <Category>Orders</Category>
+              <DisplayName>Ship Via</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>64369c69-f298-466f-a241-d7388b2b0e80</GUID>
+              <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
+              <Type>Numeric</Type>
+              <Category>Orders</Category>
+              <DisplayName>Order Year</DisplayName>
+              <Format>0</Format>
+              <NumericStandardFormat>Default</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>057c81db-d2c0-4938-9a64-6d6d33668baa</GUID>
+              <Name>DatePart('m',[Orders.OrderDate],1,0)</Name>
+              <Type>Numeric</Type>
+              <Category>Orders</Category>
+              <DisplayName>Order Month</DisplayName>
+              <Format>0</Format>
+              <NumericStandardFormat>Default</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+          </Columns>
+        </MetaTable>
+        <MetaTable>
+          <GUID>44179bfc-3a4a-4568-8137-364f06941c23</GUID>
+          <Name>Shippers</Name>
+          <DynamicColumns>false</DynamicColumns>
+          <Type>TABLE</Type>
+          <MustRefresh>false</MustRefresh>
+          <IgnorePrePostError>false</IgnorePrePostError>
+          <Columns>
+            <MetaColumn>
+              <GUID>9026a76c-6c06-4240-8320-cf6debcc73ca</GUID>
+              <Name>Shippers.CompanyName</Name>
+              <Type>Text</Type>
+              <Category>Shippers</Category>
+              <DisplayName>Company Name</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>f1689c68-6619-4c2b-8b1f-5b0b9a66ace7</GUID>
+              <Name>Shippers.Phone</Name>
+              <Type>Text</Type>
+              <Category>Shippers</Category>
+              <DisplayName>Phone</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>d56fe600-8f12-411b-b4cc-a73152d2e040</GUID>
+              <Name>Shippers.ShipperID</Name>
+              <Type>Numeric</Type>
+              <Category>Shippers</Category>
+              <DisplayName>Shipper ID</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+          </Columns>
+        </MetaTable>
+        <MetaTable>
+          <GUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</GUID>
+          <Name>[Order Details]</Name>
+          <DynamicColumns>false</DynamicColumns>
+          <Type>TABLE</Type>
+          <MustRefresh>false</MustRefresh>
+          <IgnorePrePostError>false</IgnorePrePostError>
+          <Columns>
+            <MetaColumn>
+              <GUID>f2cf72ab-afdc-4d0e-ba73-80c3d6f47eea</GUID>
+              <Name>100*[Order Details].Discount</Name>
+              <Type>Numeric</Type>
+              <Category>Order Details</Category>
+              <DisplayName>Discount Rate</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>cb20a340-73d5-4e52-b7fc-59dab043c176</GUID>
+              <Name>[Order Details].Quantity</Name>
+              <Type>Numeric</Type>
+              <Category>Order Details</Category>
+              <DisplayName>Quantity</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</GUID>
+              <Name>[Order Details].UnitPrice</Name>
+              <Type>Numeric</Type>
+              <Category>Order Details</Category>
+              <DisplayName>Unit Price</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>067548ce-bc83-48b8-8212-aa359bd12f9b</GUID>
+              <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+              <Type>Numeric</Type>
+              <Category>Order Details</Category>
+              <DisplayName>Amount</DisplayName>
+              <Format>N2</Format>
+              <NumericStandardFormat>Numeric2</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>a63be915-3593-4377-8155-5ab3a78f45ba</GUID>
+              <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+              <Type>Numeric</Type>
+              <Category>Order Details</Category>
+              <DisplayName>Discount</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+          </Columns>
+        </MetaTable>
+        <MetaTable>
+          <GUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</GUID>
+          <Name>Products</Name>
+          <DynamicColumns>false</DynamicColumns>
+          <Type>TABLE</Type>
+          <MustRefresh>false</MustRefresh>
+          <IgnorePrePostError>false</IgnorePrePostError>
+          <Columns>
+            <MetaColumn>
+              <GUID>b372adcc-127b-4044-98ba-12d9b94af34c</GUID>
+              <Name>Products.Discontinued</Name>
+              <Type>Numeric</Type>
+              <Category>Products</Category>
+              <DisplayName>Discontinued</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</GUID>
+              <Name>Products.ProductName</Name>
+              <Type>Text</Type>
+              <Category>Products</Category>
+              <DisplayName>Product Name</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</GUID>
+              <Name>Products.QuantityPerUnit</Name>
+              <Type>Text</Type>
+              <Category>Products</Category>
+              <DisplayName>Quantity Per Unit</DisplayName>
+              <Format />
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>75715efd-6f8a-48ba-8f8e-2297d956d184</GUID>
+              <Name>Products.ReorderLevel</Name>
+              <Type>Numeric</Type>
+              <Category>Products</Category>
+              <DisplayName>Reorder Level</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</GUID>
+              <Name>Products.UnitPrice</Name>
+              <Type>Numeric</Type>
+              <Category>Products</Category>
+              <DisplayName>Unit Price</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</GUID>
+              <Name>Products.UnitsInStock</Name>
+              <Type>Numeric</Type>
+              <Category>Products</Category>
+              <DisplayName>Units In Stock</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>6fa87b3b-048f-4680-9516-35679cba84bf</GUID>
+              <Name>Products.UnitsOnOrder</Name>
+              <Type>Numeric</Type>
+              <Category>Products</Category>
+              <DisplayName>Units On Order</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</GUID>
+              <Name>Products.CategoryID</Name>
+              <Type>Numeric</Type>
+              <Category>Products</Category>
+              <DisplayName>Category</DisplayName>
+              <Format>N0</Format>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <EnumGUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</EnumGUID>
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+          </Columns>
+        </MetaTable>
+      </FromTables>
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Views>
+    <ReportView>
+      <GUID>2194db7c-bdea-459c-b055-d2e630d7f829</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>d8cb2182-2ec0-48d7-8659-68002b6b35f9</GUID>
+          <Name>Model HTML View</Name>
+          <Views />
+          <ModelGUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <CustomConfiguration />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <CustomTemplate />
+          <Parameters />
+          <CSS>
+            <Parameter>
+              <Name>chart</Name>
+            </Parameter>
+          </CSS>
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Chart Palette="None" Size="900, 400"&gt;
+  &lt;Series&gt;
+    &lt;Series Name="Amount(318e4a99-855d-4c84-aa77-f45b5439b8d9)" ChartArea="ChartArea1" LabelFormat="N2" Legend="Legend1" ChartType="StackedColumn"&gt;
+    &lt;/Series&gt;
+    &lt;Series Name="Quantity(f4fa164a-efe8-4597-bcc3-cdb124cc0975)" ChartArea="ChartArea1" LabelFormat="N0" Legend="Legend1" ChartType="Spline" YAxisType="Secondary" IsValueShownAsLabel="True"&gt;
+    &lt;/Series&gt;
+  &lt;/Series&gt;
+  &lt;Legends&gt;
+    &lt;Legend Name="Legend1"&gt;
+    &lt;/Legend&gt;
+  &lt;/Legends&gt;
+  &lt;Titles&gt;
+    &lt;Title Name="Title1" Visible="False"&gt;
+    &lt;/Title&gt;
+  &lt;/Titles&gt;
+  &lt;ChartAreas&gt;
+    &lt;ChartArea Name="ChartArea1" BackColor="255, 192, 128" BackGradientStyle="TopBottom"&gt;
+      &lt;AxisY&gt;
+        &lt;LabelStyle Format="N2" /&gt;
+      &lt;/AxisY&gt;
+      &lt;AxisY2&gt;
+        &lt;LabelStyle Format="N0" /&gt;
+      &lt;/AxisY2&gt;
+    &lt;/ChartArea&gt;
+  &lt;/ChartAreas&gt;
+&lt;/Chart&gt;</ChartConfigurationXml>
+          <PdfConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <CustomConfiguration />
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <CustomTemplate />
+      <Parameters>
+        <Parameter>
+          <Name>report_description</Name>
+          <Value>Sample of chart having 2 series and a splitter.</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+      <PdfConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
+  <Schedules />
+</Report>

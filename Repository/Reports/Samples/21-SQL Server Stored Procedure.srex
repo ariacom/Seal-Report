@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>3b658fbd-4e19-43ce-8984-4aead559bcea</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>fe99f8b1-b350-45f0-ac22-81a692b3d1cb</GUID>
+      <Name>Local SQL Server</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections>
+        <MetaConnection>
+          <GUID>dcf46694-a629-4e80-8389-e236cff363cd</GUID>
+          <Name>connection</Name>
+          <DatabaseType>Standard</DatabaseType>
+          <ConnectionString>Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Data Source=(local)</ConnectionString>
+          <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
+          <UserName />
+          <Password />
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>dcf46694-a629-4e80-8389-e236cff363cd</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>25251b97-97bf-422e-98ff-bb3ef99743e3</GUID>
+            <Name>OPENROWSET('SQLNCLI', 'Server=(local);Trusted_Connection=yes;', 'EXEC sp_who')</Name>
+            <Alias>SpWhoTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns>
+              <MetaColumn>
+                <GUID>4b6b822f-27f9-4e4a-98e5-770f69022fb0</GUID>
+                <Name>SpWhoTable.spid</Name>
+                <Type>Numeric</Type>
+                <Category>Who</Category>
+                <DisplayName>Spid</DisplayName>
+                <Format>N0</Format>
+                <NumericStandardFormat>Numeric0</NumericStandardFormat>
+                <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>51d787cb-22c2-4f97-817c-995783ff8577</GUID>
+                <Name>SpWhoTable.ecid</Name>
+                <Type>Numeric</Type>
+                <Category>Who</Category>
+                <DisplayName>Ecid</DisplayName>
+                <Format>N0</Format>
+                <NumericStandardFormat>Numeric0</NumericStandardFormat>
+                <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b0189e4c-2e81-4a79-bdfd-ca63bc2cc975</GUID>
+                <Name>SpWhoTable.status</Name>
+                <Type>Text</Type>
+                <Category>Who</Category>
+                <DisplayName>Status</DisplayName>
+                <Format />
+                <NumericStandardFormat>Numeric0</NumericStandardFormat>
+                <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>370bc8de-847c-4500-b1e6-df11309d95b7</GUID>
+                <Name>SpWhoTable.loginame</Name>
+                <Type>Text</Type>
+                <Category>Who</Category>
+                <DisplayName>Login Name</DisplayName>
+                <Format />
+                <NumericStandardFormat>Numeric0</NumericStandardFormat>
+                <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>69fd28fb-927f-4ee2-928a-abe06e6e7ea6</GUID>
+                <Name>SpWhoTable.hostname</Name>
+                <Type>Text</Type>
+                <Category>Who</Category>
+                <DisplayName>Hostname</DisplayName>
+                <Format />
+                <NumericStandardFormat>Numeric0</NumericStandardFormat>
+                <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>9254b370-4da5-459b-928a-617aa9de58c6</GUID>
+                <Name>SpWhoTable.blk</Name>
+                <Type>Text</Type>
+                <Category>Who</Category>
+                <DisplayName>Blk</DisplayName>
+                <Format />
+                <NumericStandardFormat>Numeric0</NumericStandardFormat>
+                <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>9ad76134-d853-4cc4-a9a5-08fe6d35ac03</GUID>
+                <Name>SpWhoTable.dbname</Name>
+                <Type>Text</Type>
+                <Category>Who</Category>
+                <DisplayName>DatabaseName</DisplayName>
+                <Format />
+                <NumericStandardFormat>Numeric0</NumericStandardFormat>
+                <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>0b4fe459-dea9-4620-bd09-4cf186ba287b</GUID>
+                <Name>SpWhoTable.cmd</Name>
+                <Type>Text</Type>
+                <Category>Who</Category>
+                <DisplayName>Cmd</DisplayName>
+                <Format />
+                <NumericStandardFormat>Numeric0</NumericStandardFormat>
+                <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>117d346f-3969-4fdc-855d-d848d1083bb9</GUID>
+                <Name>SpWhoTable.request_id</Name>
+                <Type>Numeric</Type>
+                <Category>Who</Category>
+                <DisplayName>Request id</DisplayName>
+                <Format>N0</Format>
+                <NumericStandardFormat>Numeric0</NumericStandardFormat>
+                <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>a0f6f556-099b-49b1-b0a0-cccfc8dfd259</GUID>
+      <Name>model</Name>
+      <Elements>
+        <ReportElement>
+          <GUID>62ddf826-b53b-4c40-a3f4-52e552efb4fa</GUID>
+          <Name>SpWhoTable.dbname</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <_pivotPosition>Row</_pivotPosition>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>9ad76134-d853-4cc4-a9a5-08fe6d35ac03</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>71d8f5c0-0250-4aff-8c04-4fd79eca0356</GUID>
+          <Name>SpWhoTable.loginame</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <_pivotPosition>Row</_pivotPosition>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>370bc8de-847c-4500-b1e6-df11309d95b7</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1191875e-921f-4341-befe-204bba1b7fed</GUID>
+          <Name>SpWhoTable.cmd</Name>
+          <Type>Default</Type>
+          <Category>Master</Category>
+          <Format />
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <_pivotPosition>Row</_pivotPosition>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>0b4fe459-dea9-4620-bd09-4cf186ba287b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <IsDataPlaceHolderRow>true</IsDataPlaceHolderRow>
+      <_sql>SELECT
+  #TestTable.assignedDate AS C0,
+  #TestTable2.callID AS C1
+FROM 
+(#TestTable INNER JOIN #TestTable2
+ ON #TestTable.CallID=#TestTable2.Callid)
+ORDER BY #TestTable.assignedDate ASC,#TestTable2.callID ASC
+</_sql>
+      <SourceGUID>fe99f8b1-b350-45f0-ac22-81a692b3d1cb</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <SqlSelect>&lt;Default Clause&gt;</SqlSelect>
+      <SqlFrom>&lt;Default Clause&gt;</SqlFrom>
+      <SqlGroupBy>&lt;Default Clause&gt;</SqlGroupBy>
+      <SqlOrderBy>&lt;Default Clause&gt;</SqlOrderBy>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <ShowDuplicateRows>false</ShowDuplicateRows>
+      <Restriction />
+      <Restrictions />
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Views>
+    <ReportView>
+      <GUID>4bcef94e-cfb5-477b-ba05-bb4be90f9f98</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>48f5d5cd-6bd0-4800-8bda-e3d12c851cce</GUID>
+          <Name>Model HTML View</Name>
+          <Views />
+          <ModelGUID>a0f6f556-099b-49b1-b0a0-cccfc8dfd259</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <CustomConfiguration />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <CustomTemplate />
+          <Parameters>
+            <Parameter>
+              <Name>invert_data_tables</Name>
+              <Value>False</Value>
+            </Parameter>
+            <Parameter>
+              <Name>show_page_separator</Name>
+              <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>chart_show_all_axis_labels</Name>
+              <Value>False</Value>
+            </Parameter>
+            <Parameter>
+              <Name>data_tables_enabled</Name>
+              <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>data_tables_sort_enabled</Name>
+              <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>data_tables_filter_enabled</Name>
+              <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>data_tables_pagination_enabled</Name>
+              <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>data_tables_pagination_size</Name>
+              <Value>50</Value>
+            </Parameter>
+            <Parameter>
+              <Name>data_tables_show_information</Name>
+              <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>data_tables_show_processing</Name>
+              <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>summary_table_caption</Name>
+            </Parameter>
+            <Parameter>
+              <Name>page_table_caption</Name>
+            </Parameter>
+            <Parameter>
+              <Name>data_table_caption</Name>
+            </Parameter>
+            <Parameter>
+              <Name>print_break_after_page</Name>
+              <Value>False</Value>
+            </Parameter>
+            <Parameter>
+              <Name>display_summary_totals</Name>
+              <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>display_page_totals</Name>
+              <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>add_summary_totals_totals</Name>
+              <Value>True</Value>
+            </Parameter>
+          </Parameters>
+          <CSS>
+            <Parameter>
+              <Name>page</Name>
+            </Parameter>
+            <Parameter>
+              <Name>summary</Name>
+            </Parameter>
+            <Parameter>
+              <Name>page_table</Name>
+            </Parameter>
+            <Parameter>
+              <Name>chart</Name>
+            </Parameter>
+            <Parameter>
+              <Name>data_table</Name>
+            </Parameter>
+          </CSS>
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Chart Size="600, 400"&gt;
+  &lt;Series&gt;
+    &lt;Series Name="1960(029ec6a2-8391-4a65-8cc4-17eaea2e259e)" ChartArea="ChartArea1" LabelFormat="N0" IsValueShownAsLabel="True" Legend="Legend1" ChartType="Bar" CustomProperties="CollectedThreshold=4"&gt;
+    &lt;/Series&gt;
+    &lt;Series Name="1961(cbbb9f77-da3f-4651-b836-845ceb62189f)" ChartArea="ChartArea1" LabelFormat="N0" IsValueShownAsLabel="True" Legend="Legend1" ChartType="Bar"&gt;
+    &lt;/Series&gt;
+  &lt;/Series&gt;
+  &lt;Legends&gt;
+    &lt;Legend Name="Legend1"&gt;
+    &lt;/Legend&gt;
+  &lt;/Legends&gt;
+  &lt;Titles&gt;
+    &lt;Title Name="Title1" Visible="False"&gt;
+    &lt;/Title&gt;
+  &lt;/Titles&gt;
+  &lt;ChartAreas&gt;
+    &lt;ChartArea Name="ChartArea1"&gt;
+      &lt;Area3DStyle Enable3D="True" /&gt;
+    &lt;/ChartArea&gt;
+  &lt;/ChartAreas&gt;
+&lt;/Chart&gt;</ChartConfigurationXml>
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <CustomConfiguration />
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <CustomTemplate />
+      <Parameters>
+        <Parameter>
+          <Name>report_description</Name>
+          <Value>This report demontrates the use of the result set returned by a stored procedure in a local SQL Server.
+Note that to use OPENROWSET to define your table, you must configure your SQL Server with the following commands:
+sp_configure 'show advanced options', 1;
+RECONFIGURE;
+sp_configure 'Ad Hoc Distributed Queries', 1;
+RECONFIGURE;
+</Value>
+        </Parameter>
+        <Parameter>
+          <Name>restriction_button</Name>
+          <Value>True</Value>
+        </Parameter>
+        <Parameter>
+          <Name>information_button</Name>
+          <Value>True</Value>
+        </Parameter>
+        <Parameter>
+          <Name>message_button</Name>
+          <Value>False</Value>
+        </Parameter>
+        <Parameter>
+          <Name>result_button</Name>
+          <Value>False</Value>
+        </Parameter>
+        <Parameter>
+          <Name>display_messages</Name>
+          <Value>True</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>False</Value>
+        </Parameter>
+        <Parameter>
+          <Name>print_layout</Name>
+          <Value>False</Value>
+        </Parameter>
+        <Parameter>
+          <Name>print_show_table_border</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <ViewGUID>4bcef94e-cfb5-477b-ba05-bb4be90f9f98</ViewGUID>
+  <Schedules />
+</Report>

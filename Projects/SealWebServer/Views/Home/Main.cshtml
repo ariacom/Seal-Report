@@ -1,0 +1,23 @@
+@using Seal.Model
+@{
+    Repository repository = Model as Repository;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html>
+<head>
+    <link href="Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+	<meta http-equiv="Content-Type" content="charset=iso-8859-1"/>
+	<title>@repository.Configuration.WebProductName</title>
+</head>
+
+<frameset cols="260,*" rows="100%" >
+	<frame name="menu" src="Menu" "marginwidth="0" marginheight="0" frameborder="0" noresize="noresize" scrolling="no"/>
+	<frame name="detail" src="Detail" marginwidth="0" marginheight="0" frameborder="1" noresize="noresize" scrolling="yes"/>
+	<noframes>
+		<h2>Sorry.</h2>
+		<p><b>The browser you're using may not support "frames", which are required to use Seal Report.</b></p>
+	</noframes>
+</frameset>
+
+</html>

@@ -1,0 +1,42 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+        
+    //Template Name
+    Template.Name = "Report";
+
+    //If for model, the Model parameter object used for the parsing is the Model instead of the Report
+    Template.ForModel = false;
+
+    //True if the template uses Theme values
+    Template.UseThemeValues = true;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "report_description", Type = ViewParameterType.Text, DisplayName = "Report description", Description = "A report description displayed in the information panel" });
+    Template.Parameters.Add(new Parameter() { Name = "restriction_button", DisplayName = "Show restrictions", BoolValue = true, Description = "If true, show the restriction panel if the report has prompted restrictions" });
+    Template.Parameters.Add(new Parameter() { Name = "information_button", DisplayName = "Show report information", BoolValue = false, Description = "If true, show the report execution information panel" });
+    Template.Parameters.Add(new Parameter() { Name = "message_button", DisplayName = "Show execution messages", BoolValue = false, Description = "If true, show the report execution messages panel" });
+    Template.Parameters.Add(new Parameter() { Name = "result_button", DisplayName = "Show view results panel", BoolValue = false, Description = "If true, show the view results panel" });
+    Template.Parameters.Add(new Parameter() { Name = "converter_button", DisplayName = "Show converter buttons in view results panel", BoolValue = true, Description = "If true, the PDF and Excel converter buttons are displayed" });
+    Template.Parameters.Add(new Parameter() { Name = "display_messages", DisplayName = "Display execution messages panel and button", BoolValue = true, Description = "If true, the execution messages button and panel is displayed" });
+    Template.Parameters.Add(new Parameter() { Name = "force_execution", DisplayName = "Force execution", BoolValue = false, Description = "If true, force the report to be executed directly the first time even if some restrictions are prompted" });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.PrintLayoutParameter, DisplayName = "Print: Use print layout", BoolValue = false, Description = "If true, the report result is generated with a print layout" });
+    Template.Parameters.Add(new Parameter() { Name = "print_show_table_border", DisplayName = "Print: Show table borders", BoolValue = true, Description = "If true, table borders are displayed for the print layout" });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.PDFLayoutParameter, DisplayName = "PDF: Convert HTML to PDF", BoolValue = false, Description = "If true, the PDF document is always generated and displayed when the report is executed" });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.ExcelLayoutParameter, DisplayName = "Excel: Convert to Excel", BoolValue = false, Description = "If true, the Excel document is always generated and displayed when the report is executed" });
+
+    //CSS
+    Template.CSS.Add(new Parameter() { Name = "header", DisplayName = "Header", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report header", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "result", DisplayName = "Result", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the view result buttons", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "message", DisplayName = "Message", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report message", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "information", DisplayName = "Information", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report information", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "view", DisplayName = "View", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the full View", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "body_font_family", DisplayName = "Body font family",Value="Verdana, Arial, Helvetica, sans-serif", Description = "Font family used for the general texts of the report", Enums = ReportViewTemplate.DefaultFontFamily, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "body_font_size", DisplayName = "Body font size", Value = "10pt", Description = "Font size used for the general texts of the report", Enums = ReportViewTemplate.DefaultFontSize, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "table_font_family", DisplayName = "Table font family", Value = "Verdana, Arial, Helvetica, sans-serif", Description = "Font family used for the texts in tables", Enums = ReportViewTemplate.DefaultFontFamily, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "table_font_size", DisplayName = "Table font size", Value = "10pt", Description = "Font size used the texts in tables", Enums = ReportViewTemplate.DefaultFontSize, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "additional_css", DisplayName = "Additional CSS", Type = ViewParameterType.String, Description = "Additional CSS inserted in the page", Enums = new string[] { "table {margin: 10px; border: 2px;}",".title { font-weight:bold; font-size: 16pt;" }, UseOnlyEnumValues = false });
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>();
+}

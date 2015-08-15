@@ -1,0 +1,1630 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MetaSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c15b5e0c-ba34-4a1b-98b4-c5876f2210eb</GUID>
+  <Name>Databank Worldbank</Name>
+  <ConnectionFolder />
+  <TableFolder />
+  <CategoryFolder />
+  <JoinFolder />
+  <EnumFolder />
+  <Connections>
+    <MetaConnection>
+      <GUID>30ff1d27-9506-4840-a834-5e23eeec253f</GUID>
+      <Name>databank.worldbank.org_health_population</Name>
+      <DatabaseType>MSExcel</DatabaseType>
+      <ConnectionString>Provider=MSDASQL.1;Extended Properties="DBQ=%SEALREPOSITORY%\Databases\databank.worldbank.org_health_population.xlsx;Driver={Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)};"</ConnectionString>
+      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
+    </MetaConnection>
+  </Connections>
+  <ConnectionGUID>30ff1d27-9506-4840-a834-5e23eeec253f</ConnectionGUID>
+  <IsDefault>false</IsDefault>
+  <IgnorePrePostError>false</IgnorePrePostError>
+  <MetaData>
+    <Tables>
+      <MetaTable>
+        <GUID>a9a8217e-554a-419f-b16c-27df45d74fdd</GUID>
+        <Name>[Country$]</Name>
+        <DynamicColumns>false</DynamicColumns>
+        <Type>SYSTEM TABLE</Type>
+        <MustRefresh>false</MustRefresh>
+        <IgnorePrePostError>false</IgnorePrePostError>
+        <Columns>
+          <MetaColumn>
+            <GUID>cbe42307-a264-4ff9-b3e9-70a86a84b7f7</GUID>
+            <Name>[Country$].Code</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Code</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>0906339e-ccb4-4ebb-82d0-fee0f8f03d56</GUID>
+            <Name>[Country$].[Long Name]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Long  Name</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>dfc5f75b-b67e-4b85-992a-dd2e3f85ee98</GUID>
+            <Name>[Country$].[Income Group]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Income Group</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <EnumGUID>5e021483-121e-4d1e-ba08-38f7c7e5bce9</EnumGUID>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>56fdd148-8ee3-4c5a-a10f-a2f67888697d</GUID>
+            <Name>[Country$].Region</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Region</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <EnumGUID>92d11f3d-c338-476f-92ab-21d986891978</EnumGUID>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>19956de3-12f7-495a-847d-f9810519e381</GUID>
+            <Name>[Country$].[Lending category]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Lending category</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b07f854f-c215-4888-8711-eb2ff178514a</GUID>
+            <Name>[Country$].[Other groups]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Other groups</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>0ebaf90c-b47e-4dba-98a7-60f55ebf8dd2</GUID>
+            <Name>[Country$].[Currency Unit]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Currency  Unit</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>c79a249c-4a46-4254-9ef3-6faa446d428e</GUID>
+            <Name>[Country$].[Latest population census]</Name>
+            <Type>Numeric</Type>
+            <Category>Country</Category>
+            <DisplayName>Latest population census</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>2b450ef9-199d-4f37-ae0d-3089d7d46d95</GUID>
+            <Name>[Country$].[Latest household survey]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Latest household survey</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b8e04504-5321-43ee-8867-8c45b5ff3896</GUID>
+            <Name>[Country$].[Special Notes]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Special  Notes</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>0aed7bff-c03f-4f6a-ade0-456ef8f8e21e</GUID>
+            <Name>[Country$].[National accounts base year]</Name>
+            <Type>Numeric</Type>
+            <Category>Country</Category>
+            <DisplayName>National accounts base year</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f84c3fcf-36a2-4984-9291-809621873f30</GUID>
+            <Name>[Country$].[National accounts reference year]</Name>
+            <Type>Numeric</Type>
+            <Category>Country</Category>
+            <DisplayName>National accounts reference year</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>5e2573b9-aab8-4b22-a364-f1c1da0c6b87</GUID>
+            <Name>[Country$].[System of National Accounts]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>System of National  Accounts</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f95bc68b-aadb-43a0-83b6-852b9308a1d3</GUID>
+            <Name>[Country$].[SNA price valuation]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>SNA price valuation</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>fb15b634-5fc6-438a-a335-e8e83ea5293a</GUID>
+            <Name>[Country$].[Alternative conversion factor]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Alternative conversion factor</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f705aeab-8e99-4d8d-aa83-acfecc7338f2</GUID>
+            <Name>[Country$].[PPP survey year]</Name>
+            <Type>Numeric</Type>
+            <Category>Country</Category>
+            <DisplayName>PPP survey year</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b72bef11-a610-4f1a-a843-50cf8ca1dc60</GUID>
+            <Name>[Country$].[Balance of Payments Manual in use]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Balance of Payments  Manual in use</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3c8667ad-5269-438b-a131-337b1778aa36</GUID>
+            <Name>[Country$].[External debt Reporting status]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>External debt Reporting status</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>17e8a193-aa10-494e-9f81-81748d23868b</GUID>
+            <Name>[Country$].[System of trade]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>System of trade</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>0a81b63e-98c1-4512-a1b9-1a0bb1cd20c6</GUID>
+            <Name>[Country$].[Government Accounting concept]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Government  Accounting concept</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3a07a919-0cbb-4863-9685-c14240837101</GUID>
+            <Name>[Country$].[IMF data dissemination standard]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>IMF data dissemination standard</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>c6f9b1ee-d8db-48f3-8210-7ece08d338d6</GUID>
+            <Name>[Country$].[Source of most recent Income and expenditure data]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Source of most recent Income and expenditure data</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f5504d58-cb76-414d-82de-620e27c86b16</GUID>
+            <Name>[Country$].[Vital registration complete]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Vital registration complete</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>51144b6f-4d47-4d62-addd-3974d56cffc4</GUID>
+            <Name>[Country$].[Latest agricultural census]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Latest agricultural census</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>cbf584a4-4e6c-49ce-9d5c-351a4a812970</GUID>
+            <Name>[Country$].[Latest industrial data]</Name>
+            <Type>Numeric</Type>
+            <Category>Country</Category>
+            <DisplayName>Latest industrial data</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>516bb333-8943-441a-9f07-412fc4f8b1b0</GUID>
+            <Name>[Country$].[Latest trade data]</Name>
+            <Type>Numeric</Type>
+            <Category>Country</Category>
+            <DisplayName>Latest trade data</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>26e64ad5-ebb0-4d00-b834-b14a95902cbe</GUID>
+            <Name>[Country$].[Latest water withdrawal data]</Name>
+            <Type>Numeric</Type>
+            <Category>Country</Category>
+            <DisplayName>Latest water withdrawal data</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>c0497ccd-4be8-4a2d-a15e-24b0634e031d</GUID>
+            <Name>[Country$].[2-alpha code]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>2-alpha code</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>c65101bf-6075-4e49-ad82-a11193db8c85</GUID>
+            <Name>[Country$].[WB-2 code]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>WB-2 code</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8d792bfb-edb4-4265-a19a-a777dd33a107</GUID>
+            <Name>[Country$].[Table Name]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Table  Name</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7b9a81b5-72e2-4999-9cd1-f2595ef3f392</GUID>
+            <Name>[Country$].[Short Name]</Name>
+            <Type>Text</Type>
+            <Category>Country</Category>
+            <DisplayName>Country</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <EnumGUID>62fa1431-3df9-4b40-ab83-fb922bb0440a</EnumGUID>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>18f35910-ac45-490a-87e6-b1362878257b</GUID>
+        <Name>[Data$]</Name>
+        <DynamicColumns>false</DynamicColumns>
+        <Type>SYSTEM TABLE</Type>
+        <MustRefresh>false</MustRefresh>
+        <IgnorePrePostError>false</IgnorePrePostError>
+        <Columns>
+          <MetaColumn>
+            <GUID>07f8a78c-697f-4597-bdca-66f8ba47f7b9</GUID>
+            <Name>[Data$].Year</Name>
+            <Type>Numeric</Type>
+            <Category>Data</Category>
+            <DisplayName>Year</DisplayName>
+            <NumericStandardFormat>Default</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>5c5cb293-e228-453d-a5b0-7bc56c37b31c</GUID>
+            <Name>[Data$].Value</Name>
+            <Type>Numeric</Type>
+            <Category>Data</Category>
+            <DisplayName>Value</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>7b948239-d63c-489a-b29d-43b16ef095f7</GUID>
+        <Name>[FootNote$]</Name>
+        <DynamicColumns>false</DynamicColumns>
+        <Type>SYSTEM TABLE</Type>
+        <MustRefresh>false</MustRefresh>
+        <IgnorePrePostError>false</IgnorePrePostError>
+        <Columns>
+          <MetaColumn>
+            <GUID>23c32689-6dd6-43d0-9a9e-6f34b067831c</GUID>
+            <Name>[FootNote$].Type</Name>
+            <Type>Text</Type>
+            <Category>FootNote</Category>
+            <DisplayName>Type</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>1b48666f-990a-46d2-8d9c-067bed853848</GUID>
+            <Name>[FootNote$].CountryCode</Name>
+            <Type>Text</Type>
+            <Category>FootNote</Category>
+            <DisplayName>Country Code</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>faa63cca-5ddd-407e-85ae-e38d17242be4</GUID>
+            <Name>[FootNote$].SeriesCode</Name>
+            <Type>Text</Type>
+            <Category>FootNote</Category>
+            <DisplayName>Series Code</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>fae3ab91-45d7-4b34-a302-079658214665</GUID>
+            <Name>[FootNote$].TimeCode</Name>
+            <Type>Text</Type>
+            <Category>FootNote</Category>
+            <DisplayName>Time Code</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>e4dd0d85-8879-408a-a547-ece79e048382</GUID>
+            <Name>[FootNote$].DESCRIPTION</Name>
+            <Type>Text</Type>
+            <Category>FootNote</Category>
+            <DisplayName>DESCRIPTION</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>19f944bc-fa13-4437-8233-754df73aba41</GUID>
+        <Name>[Series$]</Name>
+        <DynamicColumns>false</DynamicColumns>
+        <Type>SYSTEM TABLE</Type>
+        <MustRefresh>false</MustRefresh>
+        <IgnorePrePostError>false</IgnorePrePostError>
+        <Columns>
+          <MetaColumn>
+            <GUID>7cc7ca60-f403-4c47-aa34-c6ee0e41cf78</GUID>
+            <Name>[Series$].Code</Name>
+            <Type>Text</Type>
+            <Category>Series</Category>
+            <DisplayName>Code</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>ed6bd64c-ac69-4790-9655-04544f281a6f</GUID>
+            <Name>[Series$].[Indicator Name]</Name>
+            <Type>Text</Type>
+            <Category>Series</Category>
+            <DisplayName>Indicator</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <EnumGUID>03f12b43-4ca0-4144-b6b5-7f64715b5de5</EnumGUID>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>1af4209b-7d4f-4f41-9b97-81f16aaf315b</GUID>
+            <Name>[Series$].[Short definition]</Name>
+            <Type>Numeric</Type>
+            <Category>Series</Category>
+            <DisplayName>Short definition</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>07145dd9-d054-4942-a20c-8ed5910fa7ef</GUID>
+            <Name>[Series$].[Long definition]</Name>
+            <Type>Numeric</Type>
+            <Category>Series</Category>
+            <DisplayName>Long definition</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>057cb99b-69b2-49c9-9523-cea299b6bb58</GUID>
+            <Name>[Series$].Source</Name>
+            <Type>Numeric</Type>
+            <Category>Series</Category>
+            <DisplayName>Source</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>08f712b9-571f-4e40-ad09-2e0f7ad06138</GUID>
+            <Name>[Series$].Topic</Name>
+            <Type>Text</Type>
+            <Category>Series</Category>
+            <DisplayName>Topic</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>9871ca72-7ac1-4983-8480-6a84a372f444</GUID>
+            <Name>[Series$].Periodicity</Name>
+            <Type>Text</Type>
+            <Category>Series</Category>
+            <DisplayName>Periodicity</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>e5cd2ab8-ee3b-41e8-8cbc-bf8be8013ac8</GUID>
+            <Name>[Series$].[Aggregation method]</Name>
+            <Type>Text</Type>
+            <Category>Series</Category>
+            <DisplayName>Aggregation method</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8c67a93e-83fb-4152-a0ce-537f3da7c645</GUID>
+            <Name>[Series$].[Statistical concept and methodology]</Name>
+            <Type>Numeric</Type>
+            <Category>Series</Category>
+            <DisplayName>Statistical concept and methodology</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>4549b0cd-0bf1-444f-a523-3b6ba4d2ded3</GUID>
+            <Name>[Series$].[Development relevance]</Name>
+            <Type>Numeric</Type>
+            <Category>Series</Category>
+            <DisplayName>Development relevance</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f6c4a264-9b49-4c2a-b772-7ee035d80eda</GUID>
+            <Name>[Series$].[Limitations and exceptions]</Name>
+            <Type>Numeric</Type>
+            <Category>Series</Category>
+            <DisplayName>Limitations and exceptions</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>ff3b1014-b343-4b90-8f6e-5209bdc307a3</GUID>
+            <Name>[Series$].[General comments]</Name>
+            <Type>Text</Type>
+            <Category>Series</Category>
+            <DisplayName>General comments</DisplayName>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags>false</HasHTMLTags>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+    </Tables>
+    <Joins>
+      <MetaJoin>
+        <GUID>b5353b08-4d84-4e1a-9afd-9c7fb80b8dd0</GUID>
+        <Name>Data Indicator</Name>
+        <LeftTableGUID>18f35910-ac45-490a-87e6-b1362878257b</LeftTableGUID>
+        <RightTableGUID>19f944bc-fa13-4437-8233-754df73aba41</RightTableGUID>
+        <Clause>[Data$].[Indicator Code] = [Series$].[Code]</Clause>
+        <JoinType>Inner</JoinType>
+        <IsBiDirectional>true</IsBiDirectional>
+      </MetaJoin>
+      <MetaJoin>
+        <GUID>b31e4074-a098-4eed-a8bb-bc93e1ac8f07</GUID>
+        <Name>Data Country</Name>
+        <LeftTableGUID>18f35910-ac45-490a-87e6-b1362878257b</LeftTableGUID>
+        <RightTableGUID>a9a8217e-554a-419f-b16c-27df45d74fdd</RightTableGUID>
+        <Clause>[Data$].[Country Code] = [Country$].[Code]</Clause>
+        <JoinType>Inner</JoinType>
+        <IsBiDirectional>true</IsBiDirectional>
+      </MetaJoin>
+    </Joins>
+    <Enums>
+      <MetaEnum>
+        <GUID>5e021483-121e-4d1e-ba08-38f7c7e5bce9</GUID>
+        <Name>Income Group</Name>
+        <DefaultSQL>select col1,col2 from table order by col2</DefaultSQL>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>false</IsDbRefresh>
+        <UsePosition>false</UsePosition>
+        <Sql>SELECT DISTINCT 
+[Country$].[Income Group] 
+FROM [Country$] 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>High income: nonOECD</Id>
+            <Val>High income: nonOECD</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>High income: OECD</Id>
+            <Val>High income: OECD</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Low income</Id>
+            <Val>Low income</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Lower middle income</Id>
+            <Val>Lower middle income</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Upper middle income</Id>
+            <Val>Upper middle income</Val>
+          </MetaEV>
+        </Values>
+        <Width>160</Width>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>92d11f3d-c338-476f-92ab-21d986891978</GUID>
+        <Name>Region</Name>
+        <DefaultSQL>select col1,col2 from table order by col2</DefaultSQL>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>false</IsDbRefresh>
+        <UsePosition>false</UsePosition>
+        <Sql>SELECT DISTINCT 
+[Country$].Region 
+FROM [Country$] 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>East Asia &amp; Pacific</Id>
+            <Val>East Asia &amp; Pacific</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Europe &amp; Central Asia</Id>
+            <Val>Europe &amp; Central Asia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Latin America &amp; Caribbean</Id>
+            <Val>Latin America &amp; Caribbean</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Middle East &amp; North Africa</Id>
+            <Val>Middle East &amp; North Africa</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>North America</Id>
+            <Val>North America</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>South Asia</Id>
+            <Val>South Asia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Sub-Saharan Africa</Id>
+            <Val>Sub-Saharan Africa</Val>
+          </MetaEV>
+        </Values>
+        <Width>160</Width>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>03f12b43-4ca0-4144-b6b5-7f64715b5de5</GUID>
+        <Name>Indicator</Name>
+        <DefaultSQL>select col1,col2 from table order by col2</DefaultSQL>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>true</IsDbRefresh>
+        <UsePosition>false</UsePosition>
+        <Sql>SELECT DISTINCT 
+[Series$].[Indicator Name] 
+FROM [Series$] 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>Population ages 0-14 (% of total)</Id>
+            <Val>Population ages 0-14 (% of total)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Population ages 15-64 (% of total)</Id>
+            <Val>Population ages 15-64 (% of total)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Population ages 65 and above (% of total)</Id>
+            <Val>Population ages 65 and above (% of total)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Population growth (annual %)</Id>
+            <Val>Population growth (annual %)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Population, female (% of total)</Id>
+            <Val>Population, female (% of total)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Population, total</Id>
+            <Val>Population, total</Val>
+          </MetaEV>
+        </Values>
+        <Width>160</Width>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>62fa1431-3df9-4b40-ab83-fb922bb0440a</GUID>
+        <Name>Country</Name>
+        <DefaultSQL>select col1,col2 from table order by col2</DefaultSQL>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>false</IsDbRefresh>
+        <UsePosition>false</UsePosition>
+        <Sql>SELECT DISTINCT 
+[Country$].[Short Name] 
+FROM [Country$] 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>Afghanistan</Id>
+            <Val>Afghanistan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Albania</Id>
+            <Val>Albania</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Algeria</Id>
+            <Val>Algeria</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>American Samoa</Id>
+            <Val>American Samoa</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Andorra</Id>
+            <Val>Andorra</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Angola</Id>
+            <Val>Angola</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Antigua and Barbuda</Id>
+            <Val>Antigua and Barbuda</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Argentina</Id>
+            <Val>Argentina</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Armenia</Id>
+            <Val>Armenia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Aruba</Id>
+            <Val>Aruba</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Australia</Id>
+            <Val>Australia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Austria</Id>
+            <Val>Austria</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Azerbaijan</Id>
+            <Val>Azerbaijan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Bahrain</Id>
+            <Val>Bahrain</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Bangladesh</Id>
+            <Val>Bangladesh</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Barbados</Id>
+            <Val>Barbados</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Belarus</Id>
+            <Val>Belarus</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Belgium</Id>
+            <Val>Belgium</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Belize</Id>
+            <Val>Belize</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Benin</Id>
+            <Val>Benin</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Bermuda</Id>
+            <Val>Bermuda</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Bhutan</Id>
+            <Val>Bhutan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Bolivia</Id>
+            <Val>Bolivia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Bosnia and Herzegovina</Id>
+            <Val>Bosnia and Herzegovina</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Botswana</Id>
+            <Val>Botswana</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Brazil</Id>
+            <Val>Brazil</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Brunei</Id>
+            <Val>Brunei</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Bulgaria</Id>
+            <Val>Bulgaria</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Burkina Faso</Id>
+            <Val>Burkina Faso</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Burundi</Id>
+            <Val>Burundi</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Cabo Verde</Id>
+            <Val>Cabo Verde</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Cambodia</Id>
+            <Val>Cambodia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Cameroon</Id>
+            <Val>Cameroon</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Canada</Id>
+            <Val>Canada</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Cayman Islands</Id>
+            <Val>Cayman Islands</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Central African Republic</Id>
+            <Val>Central African Republic</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Chad</Id>
+            <Val>Chad</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Channel Islands</Id>
+            <Val>Channel Islands</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Chile</Id>
+            <Val>Chile</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>China</Id>
+            <Val>China</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Colombia</Id>
+            <Val>Colombia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Comoros</Id>
+            <Val>Comoros</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Congo</Id>
+            <Val>Congo</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Costa Rica</Id>
+            <Val>Costa Rica</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Côte d'Ivoire</Id>
+            <Val>Côte d'Ivoire</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Croatia</Id>
+            <Val>Croatia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Cuba</Id>
+            <Val>Cuba</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Curaçao</Id>
+            <Val>Curaçao</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Cyprus</Id>
+            <Val>Cyprus</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Czech Republic</Id>
+            <Val>Czech Republic</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Dem. People's Rep. Korea</Id>
+            <Val>Dem. People's Rep. Korea</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Dem. Rep. Congo</Id>
+            <Val>Dem. Rep. Congo</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Denmark</Id>
+            <Val>Denmark</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Djibouti</Id>
+            <Val>Djibouti</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Dominica</Id>
+            <Val>Dominica</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Dominican Republic</Id>
+            <Val>Dominican Republic</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Ecuador</Id>
+            <Val>Ecuador</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Egypt</Id>
+            <Val>Egypt</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>El Salvador</Id>
+            <Val>El Salvador</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Equatorial Guinea</Id>
+            <Val>Equatorial Guinea</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Eritrea</Id>
+            <Val>Eritrea</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Estonia</Id>
+            <Val>Estonia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Ethiopia</Id>
+            <Val>Ethiopia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Faeroe Islands</Id>
+            <Val>Faeroe Islands</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Fiji</Id>
+            <Val>Fiji</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Finland</Id>
+            <Val>Finland</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>France</Id>
+            <Val>France</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>French Polynesia</Id>
+            <Val>French Polynesia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Gabon</Id>
+            <Val>Gabon</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Georgia</Id>
+            <Val>Georgia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Germany</Id>
+            <Val>Germany</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Ghana</Id>
+            <Val>Ghana</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Greece</Id>
+            <Val>Greece</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Greenland</Id>
+            <Val>Greenland</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Grenada</Id>
+            <Val>Grenada</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Guam</Id>
+            <Val>Guam</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Guatemala</Id>
+            <Val>Guatemala</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Guinea</Id>
+            <Val>Guinea</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Guinea-Bissau</Id>
+            <Val>Guinea-Bissau</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Guyana</Id>
+            <Val>Guyana</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Haiti</Id>
+            <Val>Haiti</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Honduras</Id>
+            <Val>Honduras</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Hong Kong SAR, China</Id>
+            <Val>Hong Kong SAR, China</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Hungary</Id>
+            <Val>Hungary</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Iceland</Id>
+            <Val>Iceland</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>India</Id>
+            <Val>India</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Indonesia</Id>
+            <Val>Indonesia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Iran</Id>
+            <Val>Iran</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Iraq</Id>
+            <Val>Iraq</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Ireland</Id>
+            <Val>Ireland</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Isle of Man</Id>
+            <Val>Isle of Man</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Israel</Id>
+            <Val>Israel</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Italy</Id>
+            <Val>Italy</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Jamaica</Id>
+            <Val>Jamaica</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Japan</Id>
+            <Val>Japan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Jordan</Id>
+            <Val>Jordan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Kazakhstan</Id>
+            <Val>Kazakhstan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Kenya</Id>
+            <Val>Kenya</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Kiribati</Id>
+            <Val>Kiribati</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Korea</Id>
+            <Val>Korea</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Kosovo</Id>
+            <Val>Kosovo</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Kuwait</Id>
+            <Val>Kuwait</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Kyrgyz Republic</Id>
+            <Val>Kyrgyz Republic</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Lao PDR</Id>
+            <Val>Lao PDR</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Latvia</Id>
+            <Val>Latvia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Lebanon</Id>
+            <Val>Lebanon</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Lesotho</Id>
+            <Val>Lesotho</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Liberia</Id>
+            <Val>Liberia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Libya</Id>
+            <Val>Libya</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Liechtenstein</Id>
+            <Val>Liechtenstein</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Lithuania</Id>
+            <Val>Lithuania</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Luxembourg</Id>
+            <Val>Luxembourg</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Macao SAR, China</Id>
+            <Val>Macao SAR, China</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Macedonia</Id>
+            <Val>Macedonia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Madagascar</Id>
+            <Val>Madagascar</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Malawi</Id>
+            <Val>Malawi</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Malaysia</Id>
+            <Val>Malaysia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Maldives</Id>
+            <Val>Maldives</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Mali</Id>
+            <Val>Mali</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Malta</Id>
+            <Val>Malta</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Marshall Islands</Id>
+            <Val>Marshall Islands</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Mauritania</Id>
+            <Val>Mauritania</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Mauritius</Id>
+            <Val>Mauritius</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Mexico</Id>
+            <Val>Mexico</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Micronesia</Id>
+            <Val>Micronesia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Moldova</Id>
+            <Val>Moldova</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Monaco</Id>
+            <Val>Monaco</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Mongolia</Id>
+            <Val>Mongolia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Montenegro</Id>
+            <Val>Montenegro</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Morocco</Id>
+            <Val>Morocco</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Mozambique</Id>
+            <Val>Mozambique</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Myanmar</Id>
+            <Val>Myanmar</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Namibia</Id>
+            <Val>Namibia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Nepal</Id>
+            <Val>Nepal</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Netherlands</Id>
+            <Val>Netherlands</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>New Caledonia</Id>
+            <Val>New Caledonia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>New Zealand</Id>
+            <Val>New Zealand</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Nicaragua</Id>
+            <Val>Nicaragua</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Niger</Id>
+            <Val>Niger</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Nigeria</Id>
+            <Val>Nigeria</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Northern Mariana Islands</Id>
+            <Val>Northern Mariana Islands</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Norway</Id>
+            <Val>Norway</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Oman</Id>
+            <Val>Oman</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Pakistan</Id>
+            <Val>Pakistan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Palau</Id>
+            <Val>Palau</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Panama</Id>
+            <Val>Panama</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Papua New Guinea</Id>
+            <Val>Papua New Guinea</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Paraguay</Id>
+            <Val>Paraguay</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Peru</Id>
+            <Val>Peru</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Philippines</Id>
+            <Val>Philippines</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Poland</Id>
+            <Val>Poland</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Portugal</Id>
+            <Val>Portugal</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Puerto Rico</Id>
+            <Val>Puerto Rico</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Qatar</Id>
+            <Val>Qatar</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Romania</Id>
+            <Val>Romania</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Russia</Id>
+            <Val>Russia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Rwanda</Id>
+            <Val>Rwanda</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Samoa</Id>
+            <Val>Samoa</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>San Marino</Id>
+            <Val>San Marino</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>São Tomé and Principe</Id>
+            <Val>São Tomé and Principe</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Saudi Arabia</Id>
+            <Val>Saudi Arabia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Senegal</Id>
+            <Val>Senegal</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Serbia</Id>
+            <Val>Serbia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Seychelles</Id>
+            <Val>Seychelles</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Sierra Leone</Id>
+            <Val>Sierra Leone</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Singapore</Id>
+            <Val>Singapore</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Sint Maarten (Dutch part)</Id>
+            <Val>Sint Maarten (Dutch part)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Slovak Republic</Id>
+            <Val>Slovak Republic</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Slovenia</Id>
+            <Val>Slovenia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Solomon Islands</Id>
+            <Val>Solomon Islands</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Somalia</Id>
+            <Val>Somalia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>South Africa</Id>
+            <Val>South Africa</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>South Sudan</Id>
+            <Val>South Sudan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Spain</Id>
+            <Val>Spain</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Sri Lanka</Id>
+            <Val>Sri Lanka</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>St. Kitts and Nevis</Id>
+            <Val>St. Kitts and Nevis</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>St. Lucia</Id>
+            <Val>St. Lucia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>St. Martin (French part)</Id>
+            <Val>St. Martin (French part)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>St. Vincent and the Grenadines</Id>
+            <Val>St. Vincent and the Grenadines</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Sudan</Id>
+            <Val>Sudan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Suriname</Id>
+            <Val>Suriname</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Swaziland</Id>
+            <Val>Swaziland</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Sweden</Id>
+            <Val>Sweden</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Switzerland</Id>
+            <Val>Switzerland</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Syrian Arab Republic</Id>
+            <Val>Syrian Arab Republic</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Tajikistan</Id>
+            <Val>Tajikistan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Tanzania</Id>
+            <Val>Tanzania</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Thailand</Id>
+            <Val>Thailand</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>The Bahamas</Id>
+            <Val>The Bahamas</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>The Gambia</Id>
+            <Val>The Gambia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Timor-Leste</Id>
+            <Val>Timor-Leste</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Togo</Id>
+            <Val>Togo</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Tonga</Id>
+            <Val>Tonga</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Trinidad and Tobago</Id>
+            <Val>Trinidad and Tobago</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Tunisia</Id>
+            <Val>Tunisia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Turkey</Id>
+            <Val>Turkey</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Turkmenistan</Id>
+            <Val>Turkmenistan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Turks and Caicos Islands</Id>
+            <Val>Turks and Caicos Islands</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Tuvalu</Id>
+            <Val>Tuvalu</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Uganda</Id>
+            <Val>Uganda</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Ukraine</Id>
+            <Val>Ukraine</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>United Arab Emirates</Id>
+            <Val>United Arab Emirates</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>United Kingdom</Id>
+            <Val>United Kingdom</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>United States</Id>
+            <Val>United States</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Uruguay</Id>
+            <Val>Uruguay</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Uzbekistan</Id>
+            <Val>Uzbekistan</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Vanuatu</Id>
+            <Val>Vanuatu</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Venezuela</Id>
+            <Val>Venezuela</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Vietnam</Id>
+            <Val>Vietnam</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Virgin Islands</Id>
+            <Val>Virgin Islands</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>West Bank and Gaza</Id>
+            <Val>West Bank and Gaza</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Yemen</Id>
+            <Val>Yemen</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Zambia</Id>
+            <Val>Zambia</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Zimbabwe</Id>
+            <Val>Zimbabwe</Val>
+          </MetaEV>
+        </Values>
+        <Width>160</Width>
+      </MetaEnum>
+    </Enums>
+  </MetaData>
+</MetaSource>

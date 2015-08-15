@@ -1,0 +1,19 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = "Tab Page";
+
+    //If for model, the Model parameter object used for the parsing is the Model instead of the Report
+    Template.ForModel = false;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "tab_description", Type = ViewParameterType.Text, DisplayName = "Tab page description", Description = "A description displayed in the tab page" });
+
+    //CSS
+    Template.CSS.Add(new Parameter() { Name = "tab_page", DisplayName = "Tab page", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Tab", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Tab Control" };
+}

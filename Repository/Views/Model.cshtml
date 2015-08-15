@@ -1,0 +1,303 @@
+﻿@using System.Data
+@using Seal.Model
+@using Seal.Helpers
+@{
+    ReportModel ReportModel = Model;
+    Repository Repository = ReportModel.Report.Repository;
+    Report Report = ReportModel.Report;
+    ReportView View = ReportModel.Report.View;
+    if (View.GetBoolValue("invert_data_tables"))
+    {
+        ReportModel.InvertDataTables();
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var dataTables = $('#@View.ViewId .data_table');
+        try {
+            if (dataTables != null && @Helper.ToJS(View.GetBoolValue("data_tables_enabled")) && !@Helper.ToJS(Report.PrintLayout))
+            {
+                dataTables.dataTable({
+                    "sDom": '<"dataTableTop"lfpri>t',
+                    "aoColumnDefs": [{ "bSortable": false, "aTargets": ["firstcell"]}],
+                    "oLanguage": {
+                        "sProcessing": "@Report.Translate("Processing...")",
+                        "sLengthMenu": "@Report.Translate("Show _MENU_ rows")",
+                        "sZeroRecords": "@Report.Translate("No row")",
+                        "sInfo": "@Report.Translate("Showing _START_ to _END_ of _TOTAL_")",
+                        "sInfoEmpty": "@Report.Translate("Showing 0 to 0 of 0")",
+                        "sInfoFiltered": "@Report.Translate("(filtered from _MAX_)")",
+                        "sInfoPostFix": "",
+                        "sSearch": "@Report.Translate("Filter:")",
+                        "oPaginate": {
+                            "sFirst": "|&lt;",
+                            "sPrevious": "&lt;&lt;",
+                            "sNext": ">>",
+                            "sLast": ">|"
+            }
+            },
+                    "bSort": @Helper.ToJS(View.GetBoolValue("data_tables_sort_enabled")),
+                    "aaSorting": [],
+                    "bPaginate": @Helper.ToJS(View.GetBoolValue("data_tables_pagination_enabled")),
+                    "sPaginationType": "full_numbers",
+                    "iDisplayLength": @View.GetValue("data_tables_pagination_size"),
+                    "bInfo": @Helper.ToJS(View.GetBoolValue("data_tables_show_information")),
+                    "bFilter": @Helper.ToJS(View.GetBoolValue("data_tables_filter_enabled")),
+                    "bProcessing": @Helper.ToJS(View.GetBoolValue("data_tables_show_processing")),
+                    "bAutoWidth": false
+            });
+        }
+    }
+    catch (e) { };
+    });
+</script>
+
+
+<div id='@View.ViewId' class='view' style='@View.GetCSS("view")'>
+
+    @if (Model.Pages.Count > 1 && View.GetBoolValue("show_summary_table"))
+    {
+        bool isFirst = true;
+        <div class='summary_div' style='@View.GetCSS("summary")'>
+            <table class='summary_table' style='@View.GetCSS("summary_table")'>
+                @if (View.HasValue("summary_table_caption"))
+                {
+                    <caption align="bottom" style="caption-side: bottom;">@Raw(View.GetHtmlValue("summary_table_caption"))</caption>
+                }
+                @for (int row = 0; row < ReportModel.SummaryTable.Lines.Count; row++)
+                {
+                    ResultCell[] line = ReportModel.SummaryTable.Lines[row];
+                    if (View.DisplaySummaryRow(row))
+                    {
+                        <tr>
+                            @for (int col = 0; col < line.Length; col++)
+                            {
+                                if (!View.GetBoolValue("display_summary_totals") && line[col].IsTotal)
+                                {
+                                    continue;
+                                }
+
+                                <td class='@(isFirst || (row - 1 == ReportModel.Pages.Count) ? "summary_title" : "cell_value")' style='@line[col].CellCssStyle'>
+                                    @Raw(line[col].HTMLValue)
+                                </td>
+                            }
+                            <td class='@(isFirst ? "summary_title" : "cell_value")' style="text-align:center;">
+                                @if (!isFirst)
+                                {
+                                    if (row - 1 < ReportModel.Pages.Count)
+                                    {
+                                        ResultPage page = ReportModel.Pages[row - 1];
+                                        <a href="#@(View.ViewId+page.PageId)">@row</a>
+                                    }
+                                }
+                                else
+                                {
+                                    isFirst = false;
+                                    @Report.Translate("Page")
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+        if (View.GetBoolValue("show_page_separator"))
+        {
+            <hr style="display: block;" />
+        }
+    }
+
+    @foreach (ResultPage page in Model.Pages)
+    {
+        if (Report.PrintLayout && View.GetBoolValue("print_break_after_page") && page != Model.Pages[0])
+        {
+            <div style="page-break-after: always;"></div>
+        }
+        <div class='page_div' style='@View.GetCSS("page")'>
+
+            <a name="@(View.ViewId + page.PageId)"></a>
+            @if (page.PageTable != null && page.PageTable.Lines.Count == 2 && page.PageTable.Lines[0].Length > 0 && View.GetBoolValue("show_page_tables"))
+            {
+                <div class='page_table_div' style='@View.GetCSS("page_table")'>
+                    <table class='page_table' style='@View.GetCSS("page_table_table")'>
+                        @if (View.HasValue("page_table_caption"))
+                        {
+                            <caption align="bottom" style="caption-side: bottom;">@Raw(View.GetHtmlValue("page_table_caption"))</caption>
+                        }
+                        @for (int i = 0; i < page.PageTable.Lines[0].Length; i++)
+                        {
+                            ResultCell header = page.PageTable.Lines[0][i];
+                            ResultCell value = page.PageTable.Lines[1][i];
+                            if (!View.GetBoolValue("display_page_totals") && header.IsTotal)
+                            {
+                                break;
+                            }
+                            <tr>
+                                <th class='cell_title'>
+                                    @Raw(header.HTMLValue)
+                                </th>
+                                <td class='cell_value' style='@value.CellCssStyle'>
+                                    @Raw(value.HTMLValue)
+                                </td>
+                            </tr>
+
+                        }
+                    </table>
+                </div>
+            }
+            @if (ReportModel.HasSerie && View.GetBoolValue("show_charts"))
+            {
+                bool chartOk = false;
+                string chartName = string.Format("c_{0}{1}", View.ViewId, page.PageId);
+                if (View.InitPageChart(page))
+                {
+                    if (ReportModel.HasNVD3Serie)
+                    {
+                        //NVD3 Chart
+                        <div id='@chartName' class='chart_div' style='@View.GetCSS("chart")'>
+                            <svg style="@View.GetCSS("nvd3_chart")" />
+                        </div>
+                        <script>
+                            nv.addGraph(function() {
+                                var series = new Array();
+                                @foreach (ResultSerie serie in page.Series)
+                        {
+                            string multiChartOption = (page.NVD3ChartType == "multiChart" ? string.Format(",type :'{0}', yAxis : {1}", serie.NVD3MultiChartType, ((int)serie.Element.YAxisType + 1)) : "");
+                            <text>series.push({key: '@Raw(Helper.ToJS(serie.SerieDisplayName))', values:  [@Raw(serie.NVD3SerieValues)] @Raw(multiChartOption) });</text>
+                        }
+
+                                var chartType = '@page.NVD3ChartType';
+                                var xLabels=[@Raw(page.NVD3XLabels)];
+                                var XValueFormatter = function(value) {
+                                    if (@Helper.ToJS(page.NVD3IsNumericAxis)) return d3.format('@page.NVD3XAxisFormat')(value).valueFormat();
+                                    if (@Helper.ToJS(page.NVD3IsDateTimeAxis)) return d3.time.format('@page.NVD3XAxisFormat')(new Date(value));
+                                    return xLabels[value];
+                                }
+                                var YPrimaryValueFormatter = function(value) {
+                                    if (@Helper.ToJS(page.NVD3PrimaryYIsDateTime)) return d3.time.format('@page.NVD3PrimaryYAxisFormat')(new Date(value));
+                                    return d3.format('@page.NVD3PrimaryYAxisFormat')(value).valueFormat();
+                                }
+                                var YSecondaryValueFormatter = function(value) {
+                                    if (@Helper.ToJS(page.NVD3SecondaryYIsDateTime)) return d3.time.format('@page.NVD3SecondaryYAxisFormat')(new Date(value));
+                                    return d3.format('@page.NVD3SecondaryYAxisFormat')(value).valueFormat();
+                                }
+                                var chart = nv.models.@(page.NVD3ChartType)();
+                                var svg = d3.select('#@chartName svg');
+                                var svgJQ = $("#@chartName svg");
+                                var chartTitle = '@Raw(Helper.ToJS(Report.TranslateGeneral(View.GetValue("chart_nvd3_title"))))';
+
+                                if (chart.reduceXTicks != null) chart.reduceXTicks(!@Helper.ToJS(View.GetBoolValue("chart_show_all_axis_labels")));
+                                @Raw(View.NVD3Configuration)
+                                svg
+                                    .datum(@(page.NVD3ChartType != "pieChart" ? "series" : "series[0].values"))
+                                                            .transition().duration(200)
+                                                            .call(chart)
+                                ;
+
+                                if (nvd3Charts != null) nvd3Charts.push(chart);
+                                nvd3Translate($("#@(chartName) g.nv-controlsWrap text.nv-legend-text"));
+                                nvd3TranslateAxis($("#@(chartName) g.legendWrap text.nv-legend-text"));
+                                return chart;
+                            }
+                            ,function(){
+                                d3.selectAll("#@chartName").on('click', function(){ nvd3Translate($("#@(chartName) g.nv-controlsWrap text.nv-legend-text")); nvd3TranslateAxis($("#@(chartName) g.legendWrap text.nv-legend-text")); });
+                            })
+                        </script>
+                                chartOk = true;
+                    }
+                    else
+                    {
+                        //Microsoft chart
+                        <div id='@chartName' class='chart_div' style='@View.GetCSS("chart")'>
+                            @if (View.GetBoolValue("chart_show_all_axis_labels") && page.Chart.ChartAreas.Count > 0)
+                            {
+                                page.Chart.ChartAreas[0].AxisX.Interval = 1;
+                                page.Chart.ChartAreas[0].AxisX2.Interval = 1;
+                            }
+
+                            @if (View.GenerateMicrosoftChartImage(page))
+                            {
+                                chartOk = true;
+                                <img src='@page.ChartFileName' style='@View.GetCSS("chart_chart")' />
+                            }
+                        </div>
+                    }
+                }
+                if (!chartOk)
+                {
+                    <p class="error_message">@Raw(Helper.ToHtml(View.Error))</p>
+                    View.Error = "";
+                }
+            }
+
+            @if (page.DataTable != null && View.GetBoolValue("show_data_tables"))
+            {
+                bool dataTitleHeader = true;
+                <div class='data_table_div' style='@View.GetCSS("data_table")'>
+                    <table class='data_table' style='@View.GetCSS("data_table_table")'>
+                        @if (View.HasValue("data_table_caption"))
+                        {
+                            <caption align="bottom" style="caption-side: bottom;">@Raw(View.GetHtmlValue("data_table_caption"))</caption>
+                        }
+                        <thead>
+                            @for (int row = 0; row < page.DataTable.BodyStartRow; row++)
+                            {
+                                ResultCell[] line = page.DataTable.Lines[row];
+                                <tr>
+                                    @for (int col = 0; col < line.Length; col++)
+                                    {
+                                        string className = "cell_title";
+                                        ResultCell cell = line[col];
+                                        //Check if at least a value in the headers, this force data title to 'cell_value' css
+                                        if (row > 0 && !cell.IsTitle)
+                                        {
+                                            dataTitleHeader = false;
+                                        }
+                                        if (row > 0 && !cell.IsTitle || ((cell.Class == "data_title" || cell.Class == "data_title_total") && !dataTitleHeader))
+                                        {
+                                            className = cell.IsTotal ? "cell_value_total" : "cell_value";
+                                        }
+                                        <th class='@className' style='@cell.CellCssStyle'>@Raw(cell.HTMLValue)</th>
+                                    }
+                                </tr>
+                            }
+                        </thead>
+                        <tbody>
+                            @for (int row = page.DataTable.BodyStartRow; row < page.DataTable.BodyEndRow; row++)
+                            {
+                                ResultCell[] line = page.DataTable.Lines[row];
+                                <tr class="@((row-page.DataTable.BodyStartRow)%2 == 1 ? "" : "odd")">
+                                    @for (int col = 0; col < line.Length; col++)
+                                    {
+                                        ResultCell cell = line[col];
+                                        string className = cell.IsTitle && col == 0 ? "cell_title" : "cell_value";
+                                        className = cell.IsTotal ? "cell_value_total" : className;
+                                        <td class='@className' style='@cell.CellCssStyle'>@Raw(cell.HTMLValue)</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            @for (int row = page.DataTable.BodyEndRow; row < page.DataTable.Lines.Count; row++)
+                            {
+                                ResultCell[] line = page.DataTable.Lines[row];
+                                <tr>
+                                    @for (int col = 0; col < line.Length; col++)
+                                    {
+                                        ResultCell cell = line[col];
+                                        <td class='cell_value_total' style='@cell.CellCssStyle'>@Raw(cell.HTMLValue)</td>
+                                    }
+                                </tr>
+                            }
+                        </tfoot>
+                    </table>
+                </div>
+            }
+            @if (View.GetBoolValue("show_page_separator"))
+            {
+                <hr style="display: block;" />
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,546 @@
+﻿@using System.Data
+@using Seal.Model
+@using Seal.Helpers
+@using System.IO
+@using System.Diagnostics
+@using System.Web
+
+@{ Report Report = Model; ReportView View = Report.View; Repository Repository = Report.Repository; }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel='shortcut icon' href='@Model.AttachImageFile("favicon.ico")' type='image/x-icon' />
+    <title>
+        @Report.ExecutionName
+    </title>
+    @Raw(Report.AttachScriptFile("jquery-1.9.1.min.js", "http://code.jquery.com/jquery-1.9.1.min.js"))
+    @Raw(Report.AttachScriptFile("jquery-ui-1.10.3.min.js", "http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"))
+    @Raw(Report.AttachScriptFile("jquery.dataTables.min.js", "http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"))
+    @Raw(Report.AttachScriptFile("jquery.multiple.select.js"))
+    @Raw(Report.AttachScriptFile("datepicker.js"))
+
+
+    @Raw(Report.AttachCSSFile("jquery-ui.css", "http://codeorigin.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"))
+    @Raw(Report.AttachCSSFile("seal.css"))
+    @Raw(Report.AttachCSSFile("multiple-select.css"))
+
+    @if (Report.HasNVD3Chart)
+    {
+        <text>
+            @Raw(Report.AttachScriptFile("d3.v3.min.js"))
+            @Raw(Report.AttachScriptFile("nv.d3.min.js"))
+            @Raw(Report.AttachCSSFile("nv.d3.min.css"))
+        </text>
+        <script>
+            function nvd3TranslateText(text)
+            {
+                @foreach (RepositoryTranslation translation in Report.Repository.Translations.Where(i => i.Context == "NVD3"))
+                {
+                <text>
+                if (text == '@Raw(Helper.ToJS(translation.Reference))') return '@Raw(Helper.ToJS(Report.ContextTranslate("NVD3", translation.Reference)))';
+                </text>
+                }
+                return text;
+            }
+
+            function nvd3Translate(texts)
+            {
+                for (var i=0; i<texts.length; i++) $(texts[i]).text(nvd3TranslateText($(texts[i]).text()));
+            }
+
+            function nvd3TranslateTextAxis(text)
+            {
+                var suffix = "(right axis)";
+                var index = text.lastIndexOf(suffix);
+                if (index != -1 && index == text.length - suffix.length) return text.substr(0, index) + nvd3TranslateText(suffix);
+                return text;
+            }
+            function nvd3TranslateAxis(texts)
+            {
+                for (var i=0; i<texts.length; i++) $(texts[i]).text(nvd3TranslateTextAxis($(texts[i]).text()));
+            }
+
+            var nvd3Charts = [];
+            function nvd3UpdateCharts()
+            {
+                for (var i=0;i<nvd3Charts.length;i++) nvd3Charts[i].update();
+                nvd3Translate($("g.nv-controlsWrap text.nv-legend-text"));
+                nvd3TranslateAxis($("g.legendWrap text.nv-legend-text"));
+            }
+            nv.utils.windowResize(nvd3UpdateCharts);
+        </script>
+    }
+
+    <style type="text/css">
+        body { font-family: @View.GetCSS("body_font_family"); font-size: @View.GetCSS("body_font_size"); }
+        table { font-family: @View.GetCSS("table_font_family"); font-size: @View.GetCSS("table_font_size"); }
+
+		.title { font-weight: bold; color: @View.GetThemeValue("title_text_color"); font-size: 12pt; margin-left: 4px;}
+
+		/* tables */
+        .cell_title { background: @View.GetThemeValue("title_color"); font-weight: bold; padding: .4em; vertical-align: middle; color: @View.GetThemeValue("title_cell_text_color"); }
+        .cell_value { background: @View.GetThemeValue("value_color"); padding: .4em; }
+        .cell_value_odd { background: @View.GetThemeValue("value_odd_color"); padding: .4em; }
+        .cell_value_total { background: @View.GetThemeValue("total_color"); font-weight: bold; padding: .4em; white-space: nowrap; }
+
+        /* specific data tables */
+        .data_table, .page_table { background-color: @View.GetThemeValue("table_background_color");}
+
+        tr.odd td.row_value, tr.odd td.col_value, tr.odd td.cell_value { background: @View.GetThemeValue("value_odd_color");}
+        tr.odd { background: @View.GetThemeValue("value_color");}
+
+        .data_table thead .sorting_asc {
+	        background-image: url('@Report.AttachImageFile("sort_asc.png")');
+	        background-repeat:no-repeat; background-position:right;	padding: .4em 18px .4em .4em;
+        }
+        .data_table thead .sorting_desc {
+	        background-image: url('@Report.AttachImageFile("sort_desc.png")');
+	        background-repeat:no-repeat; background-position:right;	padding: .4em 18px .4em .4em;
+        }
+        .data_table thead .sorting {
+	        background-image: url('@Report.AttachImageFile("sort_both.png")');
+	        background-repeat:no-repeat; background-position:right; padding: .4em 18px .4em .4em;
+        }
+
+        @@media print
+        { /* print option */
+          .page_table, .data_table, .summary_table { empty-cells: show; display: table; border-collapse: collapse;}
+          .page_table td img, .data_table td img, .data_table th img {display:none; }
+          div.dataTables_paginate, div.dataTables_filter, div.dataTables_length, div.dataTables_info { display: none;}
+           .page_table th, .page_table td, .data_table td, .data_table th, .summary_table td {border: @(View.GetBoolValue("print_show_table_border") ? "1" : "0")px solid black; }
+        }
+
+        @View.GetCSS("additional_css")
+    </style>
+
+    <script type="text/javascript">
+        var generateHTMLDisplay =  @Helper.ToJS(Report.GenerateHTMLDisplay);
+
+        var urlPrefix = "@Report.WebUrl";
+        var headerFormId = "#" + "@ReportExecution.HtmlId_header_form";
+        var executionTimer = null;
+        var hasRestrictions = @Helper.ToJS(Report.HasRestrictions);
+        var hasErrors = @Helper.ToJS(Report.HasErrors);
+        var showRestrictions = (hasRestrictions && @Helper.ToJS(View.GetBoolValue("restriction_button")));
+        var showResult = @Helper.ToJS(View.GetBoolValue("result_button"));
+        var showInformation = @Helper.ToJS(View.GetBoolValue("information_button"));
+        var showMessage = @Helper.ToJS(View.GetBoolValue("message_button"));
+        var displayMessages = @Helper.ToJS(View.GetBoolValue("display_messages"));
+        var forceExecution = @Helper.ToJS(View.GetBoolValue("force_execution"));
+        var restrictionsToShow = @Report.NumberOfRestrictionValuesToShow;
+        var isExecuting = @Helper.ToJS(Report.IsExecuting);
+        var isCancel = @Helper.ToJS(Report.Cancel);
+        var printLayout = @Helper.ToJS(Report.PrintLayout);
+
+        var showButtonIds = ["#result", "#information", "#message", "#restriction"];
+        var showButtonInitValues = [showResult, hasErrors || showInformation, showMessage, showRestrictions];
+        var showButtonLabels = ["@Report.Translate("report result panel")", "@Report.Translate("report information")", "@Report.Translate("execution messages")", "@Report.Translate("report restrictions")"];
+        var showButtonIcons = ["ui-icon-circle-triangle-e", "ui-icon-info", "ui-icon-gear", "ui-icon-zoomin"];
+
+        //datatables and globalization
+        var availableDateKeywords = ["@Raw(Report.Translate("Now"))", "@Raw(Report.Translate("Today"))", "@Raw((Report.Translate("Today") + "-1"))", "@Raw(Report.Translate("ThisWeek"))", "@Raw((Report.Translate("ThisWeek") + "-1"))", "@Raw(Report.Translate("ThisMonth"))", "@Raw((Report.Translate("ThisMonth") + "-1"))", "@Raw(Report.Translate("ThisYear"))", "@Raw((Report.Translate("ThisYear") + "-1"))"];
+        var shortDateFormat = '@View.CultureInfo.DateTimeFormat.ShortDatePattern';
+        var isUSdate = shortDateFormat.match(/^m/i);
+        var dateSeparator = '@View.CultureInfo.DateTimeFormat.DateSeparator';
+        var decimalSeparator = '@View.CultureInfo.NumberFormat.NumberDecimalSeparator';
+        var thousandSeparator = '@Raw(Helper.ToJS(View.CultureInfo.NumberFormat.NumberGroupSeparator))';
+        var currencySymbol = '@Raw(Helper.ToJS(@View.CultureInfo.NumberFormat.CurrencySymbol))';
+    </script>
+    @Raw(Report.AttachScriptFile("common.js"))
+    <script type="text/javascript">
+        function executeTimer() {
+            if (executionTimer != null) {
+                $(headerFormId).attr("action", urlPrefix+"@ReportExecution.ActionRefreshReport");
+                if (urlPrefix != "") {
+                    $.post( urlPrefix+"@ReportExecution.ActionRefreshReport", { execution_guid : "@Report.WebExecutionGUID" })
+                .done(function( data ) {
+                    if (data.result_url != null && data.result_url != "") {
+                        window.location.assign(data.result_url);
+                    }
+                    else if (data.processing_message != null && data.execution_messages != null) {
+                        $("#" + "@ReportExecution.HtmlId_processing_message").html(data.processing_message);
+                        if (displayMessages) $("#" + "@ReportExecution.HtmlId_execution_messages").html(data.execution_messages);
+                    }
+                    else if (data.error != null) {
+                        $("#" + "@ReportExecution.HtmlId_processing_message").html(data.error);
+                        clearInterval(executionTimer);
+                        $("#wait_image").css("display", "none");
+                        $("#execute_button").css("display", "none");
+                    }
+                });
+                }
+                else {
+                    $(headerFormId).submit();
+                }
+            }
+        }
+
+        function executeReport() {
+            if (hasErrors || isCancel) $("#information_div").css("display", "none");
+            var url = "";
+            if (executionTimer == null) {
+                $("#" + "@ReportExecution.HtmlId_processing_message").html("@Report.Translate("Starting execution...")");
+                $("#" + "@ReportExecution.HtmlId_processing_message").css("display", "inline");
+                $("#wait_image").css("display", "inline");
+                $("#execute_button").button({ label: "@Report.Translate("Cancel")" });
+                url = urlPrefix+"@ReportExecution.ActionExecuteReport";
+                executionTimer = setInterval(function () { executeTimer() }, 1200);
+            }
+            else {
+                url = urlPrefix+"@ReportExecution.ActionCancelReport";
+                $("#form_action").val("@ReportExecution.ActionCancelReport");
+            }
+            if (urlPrefix != "") {
+                $.post( url, $(headerFormId).serialize() );
+            }
+            else {
+                $(headerFormId).attr("action", url);
+                $(headerFormId).submit();
+            }
+            $('.view_result').attr("disabled" ,'disabled');
+            $('#restriction_div').attr("disabled" ,'disabled');
+            $('#restriction_div input').attr("disabled" ,'disabled');
+            $('.view').css("display", "none");
+        }
+
+        function setButtonLabels() {
+            for (var i = 0; i < showButtonIds.length; i++) {
+                if ($(showButtonIds[i] + "_button") != null) {
+                    var isVisible = $(showButtonIds[i] + "_button").prop("checked");
+                    $(showButtonIds[i] + "_button").button({ label: (!isVisible ? "@Report.Translate("Hide")" : "@Report.Translate("Show")")+ " " + showButtonLabels[i] });
+                }
+            }
+        }
+
+        function submitViewParameter(viewId, parameterName, parameterValue)
+        {
+            $("#" + "@ReportExecution.HtmlId_parameter_view_id").val(viewId);
+            $("#" + "@ReportExecution.HtmlId_parameter_view_name").val(parameterName);
+            $("#" + "@ReportExecution.HtmlId_parameter_view_value").val(parameterValue);
+            if (generateHTMLDisplay) {
+                if (urlPrefix != "") {
+                    $.post( urlPrefix + "@ReportExecution.ActionUpdateViewParameter", {  execution_guid : "@Report.WebExecutionGUID", parameter_view_id : viewId, parameter_view_name: parameterName, parameter_view_value : parameterValue});
+                }
+                else {
+                    $(headerFormId).attr("action", "@ReportExecution.ActionUpdateViewParameter");
+                    $(headerFormId).submit();
+                }
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            mainInit();
+
+            if (isCancel) {
+                $("#" + "@ReportExecution.HtmlId_processing_message").css("display", "inline");
+                $("#" + "@ReportExecution.HtmlId_processing_message").text("@Raw(Report.Translate("Report has been cancelled"))");
+            }
+
+            //datepicker
+            $( ".datepicker" ).datepicker({ constrainInput: false });
+            var languageName = '@View.CultureInfo.EnglishName';
+            if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("French")))) $.datepicker.setDefaults($.datepicker.regional['fr']);
+            else if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("German")))) $.datepicker.setDefaults($.datepicker.regional['de']);
+            else if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("Spanish")))) $.datepicker.setDefaults($.datepicker.regional['es']);
+            else if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("Italian")))) $.datepicker.setDefaults($.datepicker.regional['it']);
+            else if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("English"))) && !isUSdate) $.datepicker.setDefaults($.datepicker.regional['en']);
+            else $.datepicker.setDefaults($.datepicker.regional['']);
+            $.datepicker.setDefaults({ dateFormat: '@(View.CultureInfo.DateTimeFormat.ShortDatePattern.Replace("M", "m").Replace("yy", "y"))' });
+        });
+
+        $( document ).ready(function() {
+            if (!isCancel) $("#" + "@ReportExecution.HtmlId_processing_message").css("display", "none");
+            $("#" + "@ReportExecution.HtmlId_header_form").css("display", "inline");
+            $("#button_toolbar").css("display", "inline");
+
+            for (var i = 0; i < showButtonIds.length; i++) {
+                if ($(showButtonIds[i] + "_button") != null) {
+                    $(showButtonIds[i] + "_button").attr("disabled" , false);
+                    $(showButtonIds[i] + "_button").button({
+                        text: false,
+                        icons: { primary: showButtonIcons[i] }
+                    })
+                    .click(function () {
+                        $("#body_div").animate({ scrollTop: 0 }, "slow");
+                        if ($(this).attr("id") == "home_button") return;
+                        var divId = $(this).attr("id").replace("_button", "_div");
+                        if (window.chrome)
+                        {
+                            if($("#" + divId).css('display') == 'none') $("#" + divId).show();
+                            else $("#" + divId).hide();
+                        }
+                        else {
+                            $("#" + divId).toggle("blind");
+                        }
+                        setButtonLabels();
+                        submitViewParameter("@View.ViewId", $(this).attr("id"), !$(this).prop("checked"));
+                    });
+                    $(showButtonIds[i] + "_div").css("display", (showButtonInitValues[i] ? "inline" : "none"));
+                    $(showButtonIds[i] + "_button").prop("checked", !showButtonInitValues[i]);
+                    $(showButtonIds[i] + "_button").button("refresh");
+                }
+            }
+            $("#home_button").button({text: false, label:"@Report.Translate("Back to top")", icons: { primary: "ui-icon-home" } })
+            .click(function () {
+                $("#body_div").animate({ scrollTop: 0 }, "slow");
+            });
+
+            if ((forceExecution || !hasRestrictions) && !isExecuting && !isCancel) executeReport();
+            if (!hasRestrictions) $('#restriction_button, label[for="restriction_button"]').hide();
+
+            //multiselect -> small ajustements
+            $(".enum").multipleSelect({
+                isopen: true,
+                filter: true,
+                maxHeight: 95,
+                selectAllText: "@Report.Translate("Select All")"
+            });
+            $(".ms-drop").css("z-index", "0");
+            $(".ms-choice").css("cursor", "default");
+            $(".ms-choice>div").css("display", "none");
+
+            setButtonLabels();
+
+        });
+    </script>
+    @Raw(Report.AttachScriptFile("dataTables.js"))
+</head>
+<body>
+    <div id="header_div" style="width: 100%; @(Report.UseFixedHTMLHeader ? "position:absolute; width:100%; height:54px;" : View.GetCSS("header"))">
+        <div style="display: inline; float: left; vertical-align: middle;">
+            <img src='@Report.AttachImageFile(Report.Repository.Configuration.LogoName)' title="Logo" alt="Logo" />
+            <span class="title">@Report.ExecutionName</span> <span id="@ReportExecution.HtmlId_processing_message" class="info_message" style="margin-left:20px; display:@(Report.PrintLayout ? "none" : "inline")">@Report.Translate("Processing...")</span>
+        </div>
+        @if (Report.UseFixedHTMLHeader)
+        {
+            <div id="buttons_div">
+                <img id="wait_image" alt="@Report.Translate("Processing")" src='@Report.GetImageFile("wait.gif")' />
+                <div id="button_toolbar" class="ui-widget-header ui-corner-all" style="display: none;">
+                    <span id="show_button_span">
+                        @if (Report.GenerateHTMLDisplay)
+                        {
+                            <input type="checkbox" id="restriction_button" /><label for="restriction_button"></label>
+                            if (Report.IsBasicHTMLWithNoOutput)
+                            {
+                                <input type="checkbox" id="result_button" /><label for="result_button"></label>
+                            }
+                        }
+                        @if (View.GetBoolValue("display_messages"))
+                        {
+                            <input type="checkbox" id="message_button" /><label for="message_button"></label>
+                        }
+                        <input type="checkbox" id="information_button" /><label for="information_button"></label>
+                    </span>
+                    <button id="home_button" /><label for="home_button"></label>
+                    @if (Report.GenerateHTMLDisplay)
+                    {
+                        <button id="execute_button" style="width: 80px;">@Report.Translate("Execute")</button>
+                    }
+                </div>
+            </div>
+        }
+        <hr style="margin:0px;display: block; @(Report.UseFixedHTMLHeader ? "position:absolute; top:53px;" : "")" />
+    </div>
+    <div id="body_div" style='@(Report.UseFixedHTMLHeader ? "overflow:auto; position:absolute; width:100%; top:54px; bottom:0;" : "")'>
+        @if (Report.GenerateHTMLDisplay)
+        {
+            if (Report.IsBasicHTMLWithNoOutput)
+            {
+                <div id="result_div" style="display:none; @View.GetCSS("result")">
+                    <button id="@ReportExecution.ActionViewHtmlResult" class="view_result">@Report.Translate("View HTML Result")</button>
+                    <button id="@ReportExecution.ActionViewPrintResult" class="view_result">@Report.Translate("View Print Result")</button>
+                    @if (View.GetBoolValue("converter_button"))
+                    {
+                        <button id="@ReportExecution.ActionViewPDFResult" class="view_result">@Report.Translate("View PDF Result")</button>
+                        <button id="@ReportExecution.ActionViewExcelResult" class="view_result">@Report.Translate("View Excel Result")</button>
+                    }
+                    <hr style="display: block;" />
+                </div>
+        <!--result_div-->
+            }
+
+            <form id="@ReportExecution.HtmlId_header_form" method="post" action="" style="display: none">
+                <!--header_div-->
+                <div id="restriction_div">
+                    <table>
+                        <tr>
+                            <td style="vertical-align: top;">
+                                <table>
+                                    @foreach (ReportRestriction restriction in Report.ExecutionCommonRestrictions.Where(i => !i.IsEnum))
+                                    {
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                @restriction.DisplayNameElTranslated
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                <select class="operator_select" id="@restriction.OperatorHtmlId" name="@restriction.OperatorHtmlId" size="1" style="display:@(restriction.HasOperator ? "block" : "none");">
+                                                    @foreach (Operator op in restriction.AllowedDisplayOperators)
+                                                    {
+                                                        <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetOperatorLabel(op)))</option>
+                                                    }
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input class="@(restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"))" name="@(restriction.ValueHtmlId)_1" id="@(restriction.ValueHtmlId)_1" value="@Report.TranslateRestriction(restriction, restriction.Value1Html)" />
+                                                <input class="@(restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"))" name="@(restriction.ValueHtmlId)_2" id="@(restriction.ValueHtmlId)_2" value="@Report.TranslateRestriction(restriction, restriction.Value2Html)" />
+                                                <input class="@(restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"))" name="@(restriction.ValueHtmlId)_3" id="@(restriction.ValueHtmlId)_3" value="@Report.TranslateRestriction(restriction, restriction.Value3Html)" />
+                                                <input class="@(restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"))" name="@(restriction.ValueHtmlId)_4" id="@(restriction.ValueHtmlId)_4" value="@Report.TranslateRestriction(restriction, restriction.Value4Html)" />
+                                                <input type="button" value="+" class="more_restrictions" name="@(restriction.HtmlIndex)_MoreButton" id="@(restriction.HtmlIndex)_MoreButton" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+<td>
+                                @foreach (ReportRestriction restriction in Report.ExecutionCommonRestrictions.Where(i => i.IsEnumRE))
+                                {
+                                    <div style="height: @(Report.HasOnlyRestrictionsWithNoOperator ? 165 : 205)px; display: inline; float: left; padding-left: 10px;">
+                                        <span style="display: block; margin-right: 5px;">@restriction.DisplayNameElTranslated</span>
+                                        <select id="@restriction.OperatorHtmlId" name="@restriction.OperatorHtmlId" size="1" style="display:@(restriction.HasOperator ? "block" : "none"); margin-bottom:2px; ">
+                                            @foreach (Operator op in restriction.AllowedDisplayOperators)
+                                            {
+                                                <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetOperatorLabel(op)))</option>
+                                            }
+                                        </select>
+                                        <select class="enum" multiple="multiple" name="@(restriction.OptionValueHtmlId)" id="@(restriction.HtmlIndex)" style="width: @Math.Max(restriction.EnumRE.Width,100)px; display: block;">
+                                            @for (int i = 0; i < restriction.EnumRE.Values.Count; i++)
+                                            {
+                                                var enumDef = restriction.EnumRE.Values[i];
+                                                <option id='@(restriction.OptionHtmlId + i.ToString())' value='@(restriction.OptionHtmlId + i.ToString())' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Val))</option>
+                                            }
+                                        </select>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                    <hr style="display: block;" />
+                </div>
+                <!--restriction_div-->
+                <input type="hidden" name="@ReportExecution.HtmlId_parameter_view_id" id="@ReportExecution.HtmlId_parameter_view_id" value="" />
+                <input type="hidden" name="@ReportExecution.HtmlId_parameter_view_name" id="@ReportExecution.HtmlId_parameter_view_name" value="" />
+                <input type="hidden" name="@ReportExecution.HtmlId_parameter_view_value" id="@ReportExecution.HtmlId_parameter_view_value" value="" />
+
+                <input type="hidden" name="execution_guid" id="execution_guid" value="@Report.WebExecutionGUID" />
+            </form>
+        }
+
+        @if (View.GetBoolValue("display_messages"))
+        {
+            <div id="message_div" style="display: none; @View.GetCSS("message")">
+                <span id="@ReportExecution.HtmlId_execution_messages">@Raw(Helper.ToHtml(Report.ExecutionMessages))</span>
+                <hr style="display: block;" />
+            </div>
+        <!--message_div-->
+        }
+        <div id="information_div" style="display: none; @View.GetCSS("information")">
+            <span id="restriction_messages"></span>
+            @if (!Report.Cancel)
+            {
+                if (!string.IsNullOrEmpty(Report.ExecutionErrors))
+                {
+                    <p class="error_message">@Raw(Helper.ToHtml(Report.ExecutionErrors))</p>
+                }
+                else if (Report.Status != ReportStatus.NotExecuted)
+                {
+                    <div style="display: inline; float: left; margin-left:4px;">
+                        <b>@Report.Translate("Execution date")</b>: @Report.ExecutionStartDate.ToString("d", Report.ExecutionView.CultureInfo)  @Report.ExecutionStartDate.ToString("t", Report.ExecutionView.CultureInfo)
+                    </div>
+                    <div style="display: inline; float: right; margin-right: 4px;">
+                        <b>@Report.Translate("Execution duration")</b>: @Report.ExecutionModelDuration.Seconds @Report.Translate("second(s)")
+                    </div>
+                    if (View.HasValue("report_description"))
+                    {
+                        <div style="display: block; clear: both; margin-left: 4px;">
+                            <b>@Report.Translate("Description")</b>:<br />@Raw(View.GetHtmlValue("report_description"))
+                        </div>
+                    }
+                    <table class='data_table' style="margin-left: 2px;">
+                        <tr>
+                            <th class='cell_title'>@Report.Translate("Model")</th>
+                            <th class='cell_title'>@Report.Translate("Records")</th>
+                            <th class='cell_title'>@Report.Translate("Pages")</th>
+                            <th class='cell_title'>@Report.Translate("Duration")</th>
+                            <th class='cell_title'>@Report.Translate("Restrictions")</th>
+                        </tr>
+                        @foreach (ReportModel item in Model.Models.Where(i => i.ResultTable != null && i.Pages != null))
+                        {
+                            <tr>
+                                <td class='cell_value_odd'>@item.Name (@item.Connection.Name)</td>
+                                <td class='cell_value_odd' style="text-align: center;">@item.ResultTable.Rows.Count</td>
+                                <td class='cell_value_odd' style="text-align: center;">@item.Pages.Count</td>
+                                <td class='cell_value_odd' style="text-align: center;">@item.ExecutionDuration</td>
+                                <td class='cell_value_odd'>@Raw(Helper.ToHtml(item.RestrictionText))</td>
+                            </tr>
+                        }
+                    </table>
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(Report.ExecutionErrors))
+                {
+                    <p class="error_message">@Raw(Helper.ToHtml(Report.WebExecutionErrors))</p>
+                }
+                else
+                {
+                    <p class="info_message">@Raw(Helper.ToHtml(Report.Translate("Report has been cancelled")))</p>
+                }
+            }
+            @if (Report.IsExecuting)
+            {
+                <hr style="display: block;" />
+            }
+        </div>
+        <!--information_div-->
+        <div id='@View.ViewId' class='view' style='@View.GetCSS("view");'>
+            @if (Report.IsExecuting && !Report.Cancel && (Report.Status == ReportStatus.RenderingResult || Report.IsBasicHTMLWithNoOutput))
+            {
+                @Raw(Report.ExecutionView.ParseChildren())
+
+                if (!string.IsNullOrEmpty(Report.ExecutionView.Error))
+                {
+                    <p class='error_message'>@Raw(Helper.ToHtml(Report.ExecutionView.Error))</p>
+                }
+            }
+            else if (Report.ForOutput && Report.Status == ReportStatus.RenderingDisplay)
+            {
+                <div style="margin:4px">
+                    @Raw(Helper.ToHtml(Report.OutputToExecute.Information))
+                    @if (!string.IsNullOrEmpty(Report.ResultFilePath) && !Report.HasErrors)
+                    {
+                        string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ViewOutputResult?execution_guid=" + Report.WebExecutionGUID : "file:///" + Report.ResultFilePath;
+                        <a style="display:block;margin-top:10px" href="@url" target="_new">@Report.Translate("View report result file")</a><br />
+                    }
+                </div>
+            }
+            else if (Report.HasExternalViewer && Report.Status == ReportStatus.RenderingDisplay)
+            {
+                if (!string.IsNullOrEmpty(Report.ResultFilePath) && !Report.HasErrors)
+                {
+                    string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ViewOutputResult?execution_guid=" + Report.WebExecutionGUID : "file:///" + Report.ResultFilePath;
+                    <div style="margin:4px">
+                        @Raw(Helper.ToHtml(Report.Translate("The report has been generated.")))
+                        <a style="display:block;margin-top:10px" href="@url" target="_new">@Report.Translate("View report result file")</a><br />
+                        @if (!string.IsNullOrEmpty(Report.WebUrl))
+                        {
+                            <script>
+                                var win = window.open("@url", '_blank');
+                                win.focus();
+                            </script>
+                        }
+                    </div>
+                }
+            }
+
+        </div>
+        <!--view-->
+
+    </div>
+</body>
+</html>

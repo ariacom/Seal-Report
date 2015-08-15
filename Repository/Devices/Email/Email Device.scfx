@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OutputEmailDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>d84b6d14-cab2-4d90-b9e1-2cf65f471441</GUID>
+  <Name>Email Device</Name>
+  <FullName>Email Device (EMail)</FullName>
+  <Server>aSmtpServer</Server>
+  <Port>25</Port>
+  <UserName />
+  <Password />
+  <SenderEmail>takeAdive@sealreport.org</SenderEmail>
+  <DeliveryMethod>Network</DeliveryMethod>
+  <EnableSsl>false</EnableSsl>
+  <Timeout>100000</Timeout>
+  <UseDefaultCredentials>false</UseDefaultCredentials>
+</OutputEmailDevice>

@@ -1,0 +1,80 @@
+@using System.Data
+@using Seal.Model
+@using Seal.Helpers
+@{ Report Report = Model; ReportView View = Report.View; Repository Repository = Report.Repository; }
+
+<script>
+    $(function () {
+        if (!@Helper.ToJS(Report.PrintLayout))  {
+            $("#@(View.ViewId)_tab_control").tabs({
+            active: @View.GetNumericValue("tab_selected_index"),
+            heightStyle: "content",
+            activate: function(event, ui) {
+                    submitViewParameter("@View.ViewId", "tab_selected_index", $("#@(View.ViewId)_tab_control").tabs('option', 'active'));
+            @if (Report.HasNVD3Chart)
+            {
+                    //redraw nvd3 charts
+                    <text>nvd3UpdateCharts();</text>
+            }
+        }
+        });
+
+        /* vertical */
+        var tabPosition = "@View.GetValue("tab_position")";
+        if (tabPosition=="Vertical")
+        {
+            $("#@(View.ViewId)_tab_control").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
+            $("#@(View.ViewId)_tab_control li").removeClass("ui-corner-top").addClass("ui-corner-left");
+        }
+        else if (tabPosition=="Bottom")
+        {
+            // bottom
+            $(".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *")
+              .removeClass("ui-corner-all ui-corner-top")
+              .addClass("ui-corner-bottom");
+
+            // move the nav to the bottom
+            $(".tabs-bottom .ui-tabs-nav").appendTo(".tabs-bottom");
+        }
+    }
+    });
+</script>
+
+
+<div class="tabs@(View.GetValue("tab_position") == "Bottom" ? "-bottom" : "")" id="@(View.ViewId)_tab_control" style='@View.GetCSS("tab_control")'>
+    @if (!Report.PrintLayout)
+    {
+        <ul>
+            @foreach (ReportView childView in View.Views.OrderBy(i => i.SortOrderFull))
+            {
+                <li><a href='#@(childView.ViewId)_tab_page'>@childView.ViewName</a></li>
+            }
+        </ul>
+    }
+
+    @if (Report.IsExecuting && !Report.Cancel)
+    {
+        List<ReportView> views = View.Views.OrderBy(i => i.SortOrderFull).ToList();
+        foreach (ReportView childView in views)
+        {
+            if (Report.PrintLayout && View.GetBoolValue("print_break_after_view") && childView != views[0])
+            {
+                <div style="page-break-after:always;"></div>
+            }
+
+            if (Report.PrintLayout)
+            {
+                <p class="title">@childView.ViewName</p>
+            }
+
+            @Raw(childView.Parse())
+
+            if (!string.IsNullOrEmpty(childView.Error))
+            {
+                <p class='error_message'>@Raw(Helper.ToHtml(childView.Error))</p>
+            }
+        }
+    }
+    <div style="clear:both;"></div>
+</div>
+<!--_tab_control-->
