@@ -1,0 +1,15 @@
+﻿@using Seal.Model;
+@{
+    SecurityProvider provider = Model;
+
+    //If true, a login window is displayed to prompt user and password
+    provider.PromptUserPassword = false;
+
+    provider.Script = @"@using Seal.Model;
+@{
+    SecurityUser user = Model;
+	//No security: use the default security group
+    user.Name = ""Anonymous"";
+	user.AddDefaultSecurityGroup();
+}";    
+}

@@ -1,0 +1,26 @@
+﻿@using Seal.Model;
+@{
+    SecurityProvider provider = Model;
+
+    //If true, a login window is displayed to prompt user and password
+    provider.PromptUserPassword = true;
+
+    //Parameters for this provider
+
+    provider.Script = @"@using Seal.Model
+@using Seal.Helpers
+@{
+    SecurityUser user = Model;
+	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
+	//user.WebUserName -> user name from the login screen
+	//user.WebPassword -> password from the login screen
+
+	user.Name = user.WebUserName; //Display name
+	
+    //security check can be hardcoded
+	if (user.WebUserName == ""userName"" && user.WebPassword == ""password"")
+	{
+		user.AddDefaultSecurityGroup();
+	}
+}";    
+}

@@ -1,0 +1,44 @@
+﻿@using System.Data
+@using Seal.Model
+@using Seal.Helpers
+@{
+    ReportModel ReportModel = Model;
+    Repository Repository = ReportModel.Report.Repository;
+    Report Report = ReportModel.Report;
+    ReportView View = ReportModel.Report.View;
+    if (View.GetBoolValue("invert_data_tables"))
+    {
+        ReportModel.InvertDataTables();
+    }
+    string separator = View.GetValue("csv_separator");
+    bool useFormat = View.GetBoolValue("use_display_format");
+}
+@foreach (ResultPage page in Model.Pages)
+{
+    if (page.PageTable != null && page.PageTable.Lines.Count == 2 && page.PageTable.Lines[0].Length > 0)
+    {
+        for (int i = 0; i < page.PageTable.Lines[0].Length; i++)
+        {
+            ResultCell header = page.PageTable.Lines[0][i];
+            ResultCell value = page.PageTable.Lines[1][i];
+            @Raw(header.CSVValue(false, separator) + value.CSVValue(useFormat, separator) + "\r\n")
+        }
+    }
+    if (page.DataTable != null)
+    {
+        for (int row = 0; row < page.DataTable.Lines.Count; row++)
+        {
+            ResultCell[] line = page.DataTable.Lines[row];
+            for (int col = 0; col < line.Length; col++)
+            {
+                @Raw(line[col].CSVValue(useFormat, separator))
+            }
+            @Raw("\r\n")
+        }
+    }
+}
+
+@if (Model.Pages.Count == 0)
+{
+    @Report.Translate("No record");
+}

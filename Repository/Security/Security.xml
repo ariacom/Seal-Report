@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProviderName>No Security</ProviderName>
+  <UseCustomScript>false</UseCustomScript>
+  <Script />
+  <Parameters />
+  <Groups>
+    <SecurityGroup>
+      <Name>Default Group</Name>
+      <Folders>
+        <SecurityFolder>
+          <Path>\</Path>
+          <UseSubFolders>true</UseSubFolders>
+          <PublicationType>ExecuteOutput</PublicationType>
+          <DescriptionFile />
+          <SearchPattern />
+          <ExpandSubFolders>true</ExpandSubFolders>
+        </SecurityFolder>
+      </Folders>
+      <Culture />
+    </SecurityGroup>
+  </Groups>
+</SealSecurity>

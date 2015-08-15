@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>91d37b6f-f58c-488c-a305-2180eaf51d33</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>6b5d05e5-a4b7-4cea-a30c-dbe48c670ecb</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>d2de6de2-ccc6-4fff-a4b6-fd6f988eea37</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>f2f99268-d508-4fbe-954d-a4859fb22cab</GUID>
+      <Name>model</Name>
+      <SourceGUID>6b5d05e5-a4b7-4cea-a30c-dbe48c670ecb</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <PreLoadScript />
+      <LoadScript />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>71b3b79c-3f65-4f9a-b571-b1c3d38fbf4a</GUID>
+          <Name>Employees.Country</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Column</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cd851739-cbde-4998-a9c5-40c75e4a6f51</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Max</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a4562ccd-9853-41f8-9f90-5cc554385b29</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>RowColumn</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>None</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1915b2e8-d808-4cd6-a2dd-5f378d501f92</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayName>Progression</DisplayName>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>Row</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>None</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <CellScript>@using Seal.Model
+@{
+    ResultCell cell = Model;
+	/*
+    cell.ContextRow indicates the current row (type = int)
+    cell.ContextCol indicates the current column (type = int)
+    cell.ContextTable is the current table, summary or data (type = ResultTable)
+    cell.ContextPage is the current result page (type = ResultPage), null for SummaryTable
+    cell.ContextIsSummaryTable indicates if the current table is the SummaryTable (and not the DataTable)
+    cell.ContextCurrentLine is the current line of the table (type = ResultCell[]), null for SummaryTable
+    cell.IsTotal indicates if it is a total cell
+    cell.IsTotalTotal indicates if it is a total of total cell
+    cell.IsTitle indicates if it is a title cell
+    cell.IsSerie indicates if the cell is used for series, in this case, ContextRow and ContextCol is the common row and col used for the dimension values
+	
+	To customize your calculation and cell display, you can assign
+	cell.Value (type = object) is the cell value
+	cell.FinalValue (type = string) is the final string used for the table cell
+	cell.FinalCssStyle (type = string) is the final CSS style used for the table cell
+	
+	e.g. to calculate a progression
+	if (cell.ContextRow == cell.ContextTable.Lines.Count - 1)
+	{
+		//No progression for last table line (summary or data)
+		cell.Value = null;		
+	}
+	else if (!cell.IsTitle &amp;&amp; cell.ContextRow &gt; 0)
+	{
+		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][cell.ContextCol-1].DoubleValue;
+		var currentValue = cell.ContextTable.Lines[cell.ContextRow][cell.ContextCol-1].DoubleValue;
+		cell.Value = 100*(currentValue - previousValue)/previousValue;
+	}
+
+	e.g. to change the cell style
+	if (cell.DoubleValue &lt; 0)
+	{
+		cell.FinalCssStyle = "font-weight:bold;color:red;text-align:right;";
+	}
+	else if (cell.DoubleValue &gt;50)
+	{
+		cell.FinalValue = string.Format("&lt;span style='font-size:12pt;'&gt;&amp;#9786;&lt;/span&gt; {0:N0} %", cell.DoubleValue);
+		cell.FinalCssStyle = "color:green;text-align:right;";
+	}		
+
+	e.g. to display the cell context
+	cell.FinalValue = string.Format("Row={0} Col={1} Title={2} Summary={3} Page={4} Data", cell.ContextRow, cell.ContextCol, cell.IsTitle, cell.ContextIsSummaryTable);
+	*/
+	
+	if (cell.IsSerie &amp;&amp; cell.ContextRow &gt; 0 &amp;&amp; cell.ContextCol == -1)
+	{
+		//For serie, ContextRow and ContextCol is the common row and col used for the dimension values
+		//In this case, we use the values of the Total (column before last)
+		var colIndex = cell.ContextCurrentLine.Length - 3;		
+		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][colIndex].DoubleValue;
+		var currentValue = cell.ContextTable.Lines[cell.ContextRow][colIndex].DoubleValue;
+		//Calculate the progression
+		cell.Value = 100*(currentValue - previousValue)/previousValue;
+	}
+	else if (cell.ContextRow == cell.ContextTable.Lines.Count - 1)
+	{
+		//No progression for last table line (summary or data)
+		cell.Value = null;		
+	}
+	else if (!cell.IsTitle &amp;&amp; cell.ContextRow &gt; 0)
+	{
+		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][cell.ContextCol-1].DoubleValue;
+		var currentValue = cell.ContextTable.Lines[cell.ContextRow][cell.ContextCol-1].DoubleValue;
+		//Calculate the progression
+		cell.Value = 100*(currentValue - previousValue)/previousValue;
+		if (cell.Value != null)
+		{
+			cell.FinalValue = string.Format("{0:N0} %", cell.DoubleValue);
+		}
+		//Format
+		if (cell.DoubleValue &lt; 0)
+		{
+			cell.FinalCssStyle = "font-weight:bold;color:red;text-align:right;";
+		}
+		else if (cell.DoubleValue &gt;50)
+		{
+			cell.FinalValue = string.Format("&lt;span style='font-size:12pt;'&gt;&amp;#9786;&lt;/span&gt; {0:N0} %", cell.DoubleValue);
+			cell.FinalCssStyle = "color:green;text-align:right;";
+		}		
+	}
+}
+</CellScript>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1915b2e8-d808-4cd6-a2dd-5f378d501f92</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayName>Running</DisplayName>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>Row</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>None</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <CellScript>@using Seal.Model
+@{
+    ResultCell cell = Model;
+    //cell.ContextRow indicates the current row (int)
+    //cell.ContextCol indicates the current column (int)
+    //cell.ContextTable is the current table (ResultTable)
+    //cell.ContextPage is the current result page (ResultPage)
+    //cell.ContextIsPageTable indicates if the current table is the PageTable (and not the DataTable)
+    
+    //cell.IsTotal indicates if it is a total cell
+    //cell.IsTitle indicates if it is a title cell
+	/*
+	if (cell.ContextIsPageTable) 
+	{
+		cell.Value = null;
+		return;
+	}
+	*/
+	//bool isValue = !cell.IsTitle &amp;&amp; !cell.IsSerie &amp;&amp; !cell.IsTotalTotal;
+	
+	if (cell.ContextRow == cell.ContextTable.Lines.Count - 1)
+	{
+		//No running totals for last table line (summary or data)
+		cell.Value = null;		
+	}
+	else if (!cell.IsTitle &amp;&amp; cell.ContextRow &gt; 0/* &amp;&amp; !cell.IsTotalTotal*/)
+	{
+		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][cell.ContextCol].DoubleValue;
+		var currentValue = cell.ContextTable.Lines[cell.ContextRow][cell.ContextCol-2].DoubleValue;
+		//Calculate the running total
+		cell.Value = currentValue + (previousValue != null ? previousValue : 0);
+	}	
+	
+    //Example to calculate the ratio between the 2 previous total cells in the result table:
+    /*if (totalCell.ContextIndex &gt; 1) 
+    {
+        totalCell.Value = totalCell.ContextLine[totalCell.ContextIndex - 2].DoubleValue / totalCell.ContextLine[totalCell.ContextIndex - 1].DoubleValue;
+    }*/
+}
+</CellScript>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4f957ce2-453c-464f-a398-d3fc00850acc</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), 1, 1)</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Page</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Max</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[cb0ec4ed-77de-4b3d-a518-fc2118ffca87]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>cb0ec4ed-77de-4b3d-a518-fc2118ffca87</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), 1, 1)</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Max</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <Prompt>None</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>0</FormatRe>
+          <Operator>GreaterEqual</Operator>
+          <EnumValues />
+          <Date1>1995-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks />
+  <Views>
+    <ReportView>
+      <GUID>16af14fb-10bb-44e4-ba73-09a9cb908f89</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>dc51213c-2ffe-4c4a-a531-4f29c65835f2</GUID>
+          <Name>Model HTML View</Name>
+          <Views />
+          <ModelGUID>f2f99268-d508-4fbe-954d-a4859fb22cab</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <Parameters />
+          <CSS />
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <ChartConfigurationXml />
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <Parameters />
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <ViewGUID>16af14fb-10bb-44e4-ba73-09a9cb908f89</ViewGUID>
+  <Schedules />
+</Report>

@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>0582a722-ab1c-4e87-b20e-35189cff4173</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>335fdb91-e0dc-4d8d-8a96-4b4085c0c9d9</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>97d647a1-6ab3-4ab8-901e-2ba76f605c17</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>1d295c02-fced-4538-b48b-25b6d2741656</GUID>
+      <Name>model</Name>
+      <SourceGUID>335fdb91-e0dc-4d8d-8a96-4b4085c0c9d9</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <LoadScript>@using Seal.Model
+@using Seal.Helpers
+@using System.Data
+@using System.IO
+@using System.Web
+@using System.Xml
+@using System.Xml.Linq
+@using System.Net
+@{
+    ReportModel model = Model;
+    DataTable table = model.ResultTable;
+	ReportExecutionLog log = model.Report;
+
+    //Modify values in the current result table freshly loaded from the database, rows can also be added and deleted.
+    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    log.LogMessage("Modifying table...");
+    foreach (DataRow row in table.Rows)
+    {
+		ReportElement address = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Address");
+		ReportElement city = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "City");
+		ReportElement po = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Postal Code");
+		ReportElement country = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Country");
+		ReportElement lat = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Latitude from Google");
+		ReportElement lng = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Longitude from Google");
+		if (lat != null &amp;&amp; lng != null) 
+		{			
+			string url = string.Format("https://maps.googleapis.com/maps/api/geocode/xml?address={0}+{1}+{2}+{3}", row[address.SQLColumnName], row[city.SQLColumnName], row[po.SQLColumnName], row[country.SQLColumnName]);
+
+			log.LogMessage("Calling " + url);
+			var webRequest = System.Net.WebRequest.Create(url);
+			var responseStream = webRequest.GetResponse().GetResponseStream();
+			var reader = new StreamReader(responseStream);
+			var xmlResponse = System.Xml.Linq.XElement.Parse(reader.ReadToEnd());
+			var status = xmlResponse.Element("status").Value;
+			if (status.ToLower() == "ok")
+			{
+				row[lat.SQLColumnName] = float.Parse(xmlResponse.Elements("result").First().Element("geometry").Element("location").Element("lat").Value);
+				row[lng.SQLColumnName] = float.Parse(xmlResponse.Elements("result").First().Element("geometry").Element("location").Element("lng").Value);
+			}
+			else 
+			{
+				row[lat.SQLColumnName] = "No result found";
+				row[lng.SQLColumnName] = "No result found";
+			}
+		}
+    }
+}
+</LoadScript>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>a73676cd-2cae-40fd-ba96-639e17f33e37</GUID>
+          <Name>Employees.LastName</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c9e6ae02-fe80-4d07-b033-547b0ef3ebcf</GUID>
+          <Name>Employees.Address</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>a17dc90f-cf54-4da1-b655-019a5ca175ed</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>eea85c61-54ae-4f37-90b7-a83c12a8df83</GUID>
+          <Name>Employees.PostalCode</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayName />
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6b6fa5e3-3bd5-4098-af9f-010796d08074</GUID>
+          <Name>Employees.City</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>424cb01b-ad02-40b4-851e-606105c82e50</GUID>
+          <Name>Employees.Country</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b0a62923-cb34-463c-94f7-4eb37fc3ca2e</GUID>
+          <Name>Employees.Country</Name>
+          <Type>Numeric</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayName>Latitude from Google</DisplayName>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Numeric</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
+          <SQL />
+        </ReportElement>
+        <ReportElement>
+          <GUID>b0a62923-cb34-463c-94f7-4eb37fc3ca2e</GUID>
+          <Name>Employees.Country</Name>
+          <Type>Numeric</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayName>Longitude from Google</DisplayName>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Numeric</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
+          <SQL />
+        </ReportElement>
+      </Elements>
+      <Restriction />
+      <Restrictions />
+      <AggregateRestriction />
+      <AggregateRestrictions />
+      <FromTables>
+        <MetaTable>
+          <GUID>61152bde-427a-4113-8f7d-322a1280bede</GUID>
+          <Name>Employees</Name>
+          <DynamicColumns>false</DynamicColumns>
+          <KeepColumnNames>false</KeepColumnNames>
+          <Type>TABLE</Type>
+          <MustRefresh>false</MustRefresh>
+          <IgnorePrePostError>false</IgnorePrePostError>
+          <Columns>
+            <MetaColumn>
+              <GUID>a17dc90f-cf54-4da1-b655-019a5ca175ed</GUID>
+              <Name>Employees.Address</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Address</DisplayName>
+              <DisplayOrder>6</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</GUID>
+              <Name>Employees.BirthDate</Name>
+              <Type>DateTime</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Birth Date</DisplayName>
+              <DisplayOrder>4</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>d</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</GUID>
+              <Name>Employees.City</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>City</DisplayName>
+              <DisplayOrder>7</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</GUID>
+              <Name>Employees.Country</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Country</DisplayName>
+              <DisplayOrder>10</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</EnumGUID>
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>9af39b8d-8b3a-4db2-a093-8abac0fb8e62</GUID>
+              <Name>Employees.Extension</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Extension</DisplayName>
+              <DisplayOrder>12</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>da2dbe92-e90c-4415-b354-1bc589839048</GUID>
+              <Name>Employees.LastName</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Employee Name</DisplayName>
+              <DisplayOrder>1</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID>f2611e98-b25e-450d-a9cc-6811dda32d94</EnumGUID>
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>b4a7f5d4-1045-4c67-b724-578e116ceff5</GUID>
+              <Name>Employees.HireDate</Name>
+              <Type>DateTime</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Hire Date</DisplayName>
+              <DisplayOrder>5</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>d</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>9b0f675f-fbb0-4f9c-9dca-9e15039e75ec</GUID>
+              <Name>Employees.HomePhone</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Home Phone</DisplayName>
+              <DisplayOrder>11</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>0a5fef96-fd6b-4d51-bff0-59d458533a57</GUID>
+              <Name>Employees.Notes</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Notes</DisplayName>
+              <DisplayOrder>14</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>3aae4bf3-59e8-4773-887e-1661d6b39ae7</GUID>
+              <Name>Employees.Photo</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Photo</DisplayName>
+              <DisplayOrder>13</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</GUID>
+              <Name>Employees.PostalCode</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Postal Code</DisplayName>
+              <DisplayOrder>9</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>80720d2a-0ebf-457b-8539-6eb07205c6c9</GUID>
+              <Name>Employees.Region</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Region</DisplayName>
+              <DisplayOrder>8</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>a042cb87-8838-46a8-a679-3e49f666a7b7</GUID>
+              <Name>Employees.ReportsTo</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Reports To</DisplayName>
+              <DisplayOrder>15</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>793c07a5-b7bd-41ae-bdea-506ad244005e</GUID>
+              <Name>Employees.Title</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Title</DisplayName>
+              <DisplayOrder>2</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>4d365f0e-0e2a-4a58-8411-11fd6d8900db</GUID>
+              <Name>Employees.TitleOfCourtesy</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Employees</Category>
+              <DisplayName>Title Of Courtesy</DisplayName>
+              <DisplayOrder>3</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+            </MetaColumn>
+          </Columns>
+        </MetaTable>
+      </FromTables>
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks />
+  <Views>
+    <ReportView>
+      <GUID>043a9782-171d-4b3f-af62-f698ef1a7261</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>d43bfc85-d228-40bd-a312-168c01c05691</GUID>
+          <Name>Model HTML View</Name>
+          <Views />
+          <ModelGUID>1d295c02-fced-4538-b48b-25b6d2741656</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <Parameters />
+          <CSS />
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <ChartConfigurationXml />
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <Parameters />
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+    <ReportView>
+      <GUID>034a4642-bb17-4a2f-a6c8-bfed2d903416</GUID>
+      <Name>view Excel</Name>
+      <Views>
+        <ReportView>
+          <GUID>fb911edc-c891-48a5-a35b-9b521993e082</GUID>
+          <Name>Model CSV Excel View</Name>
+          <Views />
+          <ModelGUID>1d295c02-fced-4538-b48b-25b6d2741656</ModelGUID>
+          <TemplateName>Model CSV Excel</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <Parameters />
+          <CSS />
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <Parameters />
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <ViewGUID>043a9782-171d-4b3f-af62-f698ef1a7261</ViewGUID>
+  <Schedules />
+</Report>

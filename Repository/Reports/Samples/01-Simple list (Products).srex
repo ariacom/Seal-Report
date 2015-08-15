@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>a41f0ad3-16f9-4766-b9d3-33f882fad04f</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>70370890-3da6-4c57-bad7-3729570efef5</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>5c919d36-900b-4c36-9902-9103ef9604e5</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>031b29cc-df91-4adc-982a-dbbd8e662393</GUID>
+      <Name>model</Name>
+      <SourceGUID>70370890-3da6-4c57-bad7-3729570efef5</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <SqlSelect />
+      <SqlFrom />
+      <SqlGroupBy />
+      <SqlOrderBy />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <ShowDuplicateRows>false</ShowDuplicateRows>
+      <Elements>
+        <ReportElement>
+          <GUID>c07250de-6eed-4c24-bb70-333599f7fa3c</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <Format />
+          <EnumGUID />
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Page</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>741c7301-94d5-4876-9f73-8e12db3653e5</GUID>
+          <Name>Products.ProductName</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>eeaee07b-f5e2-4705-b956-e2dd9b09ad06</GUID>
+          <Name>Products.QuantityPerUnit</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <Format />
+          <EnumGUID />
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6d4742f7-4813-4559-a220-6f83a6a309ab</GUID>
+          <Name>Products.UnitPrice</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <Format />
+          <EnumGUID />
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>22f44cf2-f0c3-4d07-9ee7-72a5712f396e</GUID>
+          <Name>Products.UnitsInStock</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <Format />
+          <EnumGUID />
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>645cbd50-4920-4b4a-af78-f30aaafc78b8</GUID>
+          <Name>Products.UnitsOnOrder</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <Format />
+          <EnumGUID />
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>6fa87b3b-048f-4680-9516-35679cba84bf</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction />
+      <Restrictions />
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks />
+  <Views>
+    <ReportView>
+      <GUID>53b70185-5682-4d65-abad-089630729ca2</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>2fb686d5-851e-480f-b2aa-3408f092e483</GUID>
+          <Name>Model HTML View</Name>
+          <Views />
+          <ModelGUID>031b29cc-df91-4adc-982a-dbbd8e662393</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <CustomConfiguration />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <CustomTemplate />
+          <Parameters>
+            <Parameter>
+              <Name>nvd3_chart_configuration</Name>
+              <Value>//Refer to http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
+chart
+.color(d3.scale.category10().range())
+.margin({top: 30, right: 60, bottom: 40, left: 70})
+.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
+;
+//Axis fortmat
+if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
+if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
+//For line with focus
+if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
+if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
+//For multichart
+if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
+if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
+
+if (chart.showXAxis != null) chart.showXAxis(true);
+if (chart.showYAxis != null) chart.showYAxis(true);
+
+if (chart.showDistX != null) chart.showDistX(true);
+if (chart.showDistY != null) chart.showDistY(true);
+
+var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
+if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
+if (chart.showLegend != null) chart.showLegend(true);
+if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
+//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
+//if (chart.isArea != null) chart.isArea(true); //for Line 
+
+//Special for Pie
+if (chartType == 'pieChart') {
+    chart
+    .margin({top: 10, right: 60, bottom: 10, left: 70})
+    .x(function(d) { return xLabels[d.x]})
+    .showLabels(true)     
+    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
+    .donut(true)          
+    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
+    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
+    ;
+}
+</Value>
+            </Parameter>
+          </Parameters>
+          <CSS />
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Chart Palette="Excel" Size="600, 400"&gt;
+  &lt;Legends&gt;
+    &lt;Legend Name="Legend1"&gt;
+    &lt;/Legend&gt;
+  &lt;/Legends&gt;
+  &lt;Titles&gt;
+    &lt;Title Name="Title1" Visible="False"&gt;
+    &lt;/Title&gt;
+  &lt;/Titles&gt;
+  &lt;ChartAreas&gt;
+    &lt;ChartArea Name="ChartArea1"&gt;
+    &lt;/ChartArea&gt;
+  &lt;/ChartAreas&gt;
+&lt;/Chart&gt;</ChartConfigurationXml>
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <CustomConfiguration />
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <CustomTemplate />
+      <Parameters>
+        <Parameter>
+          <Name>report_description</Name>
+          <Value>Simple list with a break per product category.</Value>
+        </Parameter>
+      </Parameters>
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+      <PdfConfigurations />
+      <ExcelConfigurations>
+        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript&gt;@using Winnovative.ExcelLib
+@using SealExcelConverter
+@{	
+	//Full documentation of the converter at http://www.winnovative-software.com/excel-library.aspx
+    ExcelConverter converter = Model;
+
+    converter.UseCellStyle = true; //If true, the styles are applied on the cells.
+    converter.ShowTitle = false; //If true, the title is inserted in the Sheet.
+    converter.ShowMessage = false; //If true, the execution messages are inserted in the Sheet.
+    converter.ShowInformation = false; //If true, the information message is inserted in the Sheet.
+
+    converter.NewSheet = NewSheetType.Automatic; //Specify if a new Excel Sheet is created for this view, starting at the first cell.Can be NewSheetType.Automatic, NewSheetType.NewSheet, NewSheetType.KeepSheet
+    converter.ChartWidth = 15; //Specify the number of cells in widthused for the chart.
+    converter.ChartHeight = 20; //Specify the number of cells in height used for the chart.
+    converter.NewSheetPerPage = true; //If true, a new Sheet is created for each new page values.
+    converter.UseElementFormat = true; //If true, the format of the element is kept in the Sheet.
+
+}&lt;/ConfigurationScript&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+      </ExcelConfigurations>
+    </ReportView>
+    <ReportView>
+      <GUID>65a6caa8-228a-4f73-b54a-529547070a0f</GUID>
+      <Name>view Excel</Name>
+      <Views>
+        <ReportView>
+          <GUID>a2d32cd1-b3b1-4cda-84fc-95413f09e044</GUID>
+          <Name>Model CSV Excel View</Name>
+          <Views />
+          <ModelGUID>031b29cc-df91-4adc-982a-dbbd8e662393</ModelGUID>
+          <TemplateName>Model CSV Excel</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <CustomConfiguration />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <CustomTemplate />
+          <Parameters />
+          <CSS />
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <CustomConfiguration />
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <CustomTemplate />
+      <Parameters />
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <ViewGUID>53b70185-5682-4d65-abad-089630729ca2</ViewGUID>
+  <Schedules />
+</Report>

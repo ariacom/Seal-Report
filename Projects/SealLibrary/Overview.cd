@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Seal.Model.Report" Collapsed="true">
+    <Position X="2" Y="3.5" Width="1.5" />
+    <Members>
+      <Field Name="_models" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Sources" Type="Seal.Model.ReportSource" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.75" Y="3.5" />
+        <Point X="2.75" Y="0.688" />
+        <Point X="5.75" Y="0.688" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Models" Type="Seal.Model.ReportModel" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.25" Y="3.5" />
+        <Point X="3.25" Y="2.596" />
+        <Point X="5.75" Y="2.596" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Outputs" Type="Seal.Model.ReportOutput" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.312" Y="4.062" />
+        <Point X="3.312" Y="5.346" />
+        <Point X="5.75" Y="5.346" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Tasks" Type="Seal.Model.ReportTask" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3" Y="3.5" />
+        <Point X="3" Y="1.846" />
+        <Point X="4" Y="1.846" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>BxjztXqkwBKRpKwgM5QHggVTzPoXgMqIcSl9JK0EOBQ=</HashCode>
+      <FileName>Model\Report.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_models" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Sources" />
+      <Property Name="Models" />
+      <Property Name="Outputs" />
+      <Property Name="Views" />
+      <Property Name="Schedules" />
+      <Property Name="Tasks" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.ReportOutput" Collapsed="true">
+    <Position X="5.75" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>SCAEEAwgAAAMAySBQCgMDCAB4FCJoOgAEACKAIxEoBA=</HashCode>
+      <FileName>Model\ReportOutput.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Device" />
+      <Property Name="View" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Seal.Model.ReportModel" Collapsed="true">
+    <Position X="5.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>REQIJQEZxtosYak3QAUeiBoAERkNEFQkACihAJgCWAA=</HashCode>
+      <FileName>Model\ReportModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Source" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Seal.Model.ReportSource" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQEEAAAAAAIABIBIwAEAEQAAAAgAAAAg=</HashCode>
+      <FileName>Model\ReportSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.ReportSchedule" Collapsed="true">
+    <Position X="5.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAgCAAAQIEAIQACAJAmJCAAExPAAAFBAAEAIAAAAAgA=</HashCode>
+      <FileName>Model\ReportSchedule.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Output" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Seal.Model.ReportViewTemplate" Collapsed="true">
+    <Position X="8.5" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAcQAAACAeAUGAACBCAAQIAAIAIQAAgIBQDEABFAo=</HashCode>
+      <FileName>Model\ReportViewTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.Theme" Collapsed="true">
+    <Position X="8.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgIQAAAAAAAQAAAAACAEQAAAAAIAAAAABgAABAgCA=</HashCode>
+      <FileName>Model\Theme.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.MetaSource" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAMQMgAAJSAQEEFAQCBJEAgBUANHACgEBCAKgBtAA=</HashCode>
+      <FileName>Model\MetaSource.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MetaData" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Connections" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.MetaTable" Collapsed="true">
+    <Position X="13" Y="1.75" Width="1.5" />
+    <Members>
+      <Field Name="_columns" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AgAgEQEAAtJAAQQAQAQCIBQA4BEAIEAYAQBAAOgQgAA=</HashCode>
+      <FileName>Model\MetaTable.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_columns" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Columns" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.MetaConnection" Collapsed="true">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAYAESAAAgAAAQAAEAAIIAQAABEAIEEKQaKAAIBAAAA=</HashCode>
+      <FileName>Model\MetaConnection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.MetaData" Collapsed="true">
+    <Position X="10.5" Y="1.75" Width="1.5" />
+    <AssociationLine Name="Enums" Type="Seal.Model.MetaEnum" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.812" Y="2.312" />
+        <Point X="11.812" Y="3.096" />
+        <Point X="13" Y="3.096" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAACACACAAQQAAAQAMAAAKAAAAAAAAAAA=</HashCode>
+      <FileName>Model\MetaData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Tables" />
+      <Property Name="Joins" />
+      <Property Name="Enums" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.MetaEnum" Collapsed="true">
+    <Position X="13" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADAAGAAAAlAEAQCAQAAAIEYAIBAAIEACAIQgAIgAACA=</HashCode>
+      <FileName>Model\MetaEnum.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.MetaJoin" Collapsed="true">
+    <Position X="13" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgEAgCAkEAQQAAAAgAIAQAABAIIEAgAABAAIiAEIE=</HashCode>
+      <FileName>Model\MetaJoin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.MetaColumn" Collapsed="true">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEECEAAAAkAABVSQACAgAgQAEJgAJEAAAQAAIICAKEA=</HashCode>
+      <FileName>Model\MetaColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.OutputDevice" Collapsed="true">
+    <Position X="10.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAACAAIAAAgAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Model\OutputDevice.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.ReportView" Collapsed="true">
+    <Position X="5.75" Y="3.75" Width="1.5" />
+    <AssociationLine Name="Views" Type="Seal.Model.ReportView" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.688" Y="3.75" />
+        <Point X="6.688" Y="3.408" />
+        <Point X="7.188" Y="3.408" />
+        <Point X="7.188" Y="3.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>I0ClVCbUZMOsCSCUphRJGXZCBDIDIkKUQcwxFJlCEUY=</HashCode>
+      <FileName>Model\ReportView.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Template" />
+      <Property Name="Theme" />
+      <Property Name="Model" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="Views" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="Seal.Model.ReportTask" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAFAIAQgAAAYUEAAgACJAACRAAMFAUwADAIZggCQA=</HashCode>
+      <FileName>Model\ReportTask.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Source" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

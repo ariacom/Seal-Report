@@ -1,0 +1,90 @@
+﻿@using Seal.Model
+@using SealWebServer.Models
+@{
+    MenuModel menuModel = Model as MenuModel;
+    Repository repository = menuModel.Repository;
+    SecurityUser user = menuModel.User;
+    string info = repository.TranslateWeb("Version") + ": " + Repository.ProductVersion;
+}
+
+@helper ShowTree(string folder, bool isFirst, Repository repository, SecurityUser user)
+{
+    SecurityFolder securityFolder = user.FindSecurityFolder(folder);
+    if (securityFolder == null && !user.IsParentSecurityFolder(folder))
+    {
+        return;
+    }
+
+    <li class="@(isFirst || securityFolder.ExpandSubFolders ? "liOpen" : "liClosed")">
+        <img src="@(isFirst ? "Images/folderHome.gif" : "Images/folder.png")" />
+        <a href="Detail?Folder=@HttpUtility.UrlEncode(folder)" target="detail">@(isFirst ? repository.TranslateWeb(Path.GetFileName(folder)) : repository.TranslateFolderName(folder))</a>
+        @if (Directory.GetDirectories(folder).Length > 0)
+        {
+            <ul>
+                @foreach (string subFolder in Directory.GetDirectories(folder))
+                {
+                    @ShowTree(subFolder, false, repository, user)
+                }
+            </ul>
+        }
+    </li>
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @if (repository.Configuration.IsLocal)
+    {
+        <script type='text/javascript' src='~/Scripts/jquery-1.9.1.min.js'></script>
+        <script type='text/javascript' src='~/Scripts/jquery-ui-1.10.3.min.js'></script>
+        <script type='text/javascript' src='~/Scripts/jquery.dataTables.min.js'></script>
+        <link href='~/Scripts/jquery-ui.css' rel='stylesheet' type='text/css' />
+    }
+    else
+    {
+        <script type='text/javascript' src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+        <script type='text/javascript' src='http://code.jquery.com/ui/1.10.3/jquery-ui.min.js'></script>
+        <script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js'></script>
+        <link href='http://codeorigin.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css' rel='stylesheet' type='text/css' />
+    }
+    <script src="~/Scripts/mktree.js" type="text/javascript"></script>
+
+    <link href="~/Scripts/sealWeb.css" rel="styleSheet" type="text/css" />
+    <link href="~/Scripts/mktree.css" rel="styleSheet" type="text/css" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).tooltip();
+        });
+    </script>
+</head>
+<body class="menu_body">
+    <div class="corner menu_title">
+        <img src="~/Images/favicon.ico" title="@info" />&nbsp;&nbsp;@repository.Configuration.WebProductName
+    </div>
+    <div class="corner">
+        @if (user.IsAuthenticated)
+        {
+            <ul class="mktree" id="domain.folders">
+                @ShowTree(repository.ReportsFolder, true, repository, user)
+            </ul>
+            <hr />
+            <img src="~/Images/search.gif" />
+            <a href="Detail?Folder=*" target="detail" title="@repository.TranslateWeb("Display all reports in the repository")" style="font-weight: bold;">@repository.TranslateWeb("All reports and files")</a>
+        }
+        @if (user.IsAuthenticated)
+        { 
+        <hr />
+        }
+        <img src="~/Images/home.gif" />
+        <a href="Main" target="_top" title="@repository.TranslateWeb("Reload the folders and the report list")" style="font-weight: bold;">@repository.TranslateWeb("Home")</a>
+
+        @if (user.IsAuthenticated && user.Security.PromptUserPassword)
+        {
+                <hr />
+                <img src="~/Images/logout.gif" />
+                <a href="Logout" target="_top" title="@repository.TranslateWeb("Logout the user")">@repository.TranslateWeb("Logout")</a>
+        }
+    </div>
+</body>
+</html>

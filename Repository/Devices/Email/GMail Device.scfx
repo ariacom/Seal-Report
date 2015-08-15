@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OutputEmailDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c6394c4c-d4f2-41dd-81dc-ec14c35d0a64</GUID>
+  <Name>GMail Device</Name>
+  <FullName>GMail Device (EMail)</FullName>
+  <Server>smtp.gmail.com</Server>
+  <Port>587</Port>
+  <UserName>userName@gmail.com</UserName>
+  <Password />
+  <SenderEmail>userName@gmail.com</SenderEmail>
+  <DeliveryMethod>Network</DeliveryMethod>
+  <EnableSsl>true</EnableSsl>
+  <Timeout>100000</Timeout>
+  <UseDefaultCredentials>false</UseDefaultCredentials>
+</OutputEmailDevice>

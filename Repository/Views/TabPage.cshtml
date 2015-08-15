@@ -1,0 +1,26 @@
+@using System.Data
+@using Seal.Model
+@using Seal.Helpers
+@{ Report Report = Model; ReportView View = Report.View; Repository Repository = Report.Repository; }
+
+<div id="@(View.ViewId)_tab_page" style='@View.GetCSS("tab_page")'>
+    @if (View.HasValue("tab_description"))
+    {
+        <div style="margin-left: 4px;">
+            @Raw(View.GetHtmlValue("tab_description"))
+        </div>
+    }
+
+    @if (Report.IsExecuting && !Report.Cancel)
+    {
+        foreach (ReportView view in View.Views.OrderBy(i => i.SortOrderFull))
+        {
+            @Raw(view.Parse())
+            if (!string.IsNullOrEmpty(view.Error))
+            {
+                <p class='error_message'>@Raw(Helper.ToHtml(view.Error))</p>
+            }
+        }
+    }
+    <div style="clear:both;"></div>
+</div> <!--_tab_page-->
