@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealReportDesigner", "SealReportDesigner\SealReportDesigner.csproj", "{5E5FBBF8-5E9E-434D-984B-621CDFC68A13}"
 EndProject
@@ -16,10 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealWebServer", "SealWebServer\SealWebServer.csproj", "{4E1489D9-4D02-4566-9B22-635A2A1881F9}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -79,16 +75,6 @@ Global
 		{4E1489D9-4D02-4566-9B22-635A2A1881F9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4E1489D9-4D02-4566-9B22-635A2A1881F9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4E1489D9-4D02-4566-9B22-635A2A1881F9}.Release|x86.ActiveCfg = Release|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A18F656B-917C-453C-9A0C-33A882915184}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
