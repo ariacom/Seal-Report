@@ -1,7 +1,7 @@
 ﻿using Seal.Model;
 //
 // Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
-// This code is licensed under GNU General Public License version 3, http://www.gnu.org/licenses/gpl-3.0.en.html.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
 using System.Collections.Generic;
@@ -35,8 +35,8 @@ Visit our Web site, take a dive and join the Seal community...
 
 Copyright(c) Seal Report, Eric Pfirsch (sealreport@gmail.com).
 
-Seal Report is licensed under GNU General Public License version 3.
-http://www.gnu.org/licenses/gpl-3.0.en.html.
+Seal Report is licensed under the Apache License, Version 2.0.
+http://www.apache.org/licenses/LICENSE-2.0.
 ";
             }
             this.textBoxDescription.Text = text;

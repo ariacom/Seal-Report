@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
-// This code is licensed under GNU General Public License version 3, http://www.gnu.org/licenses/gpl-3.0.en.html.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
 using System.Collections.Generic;
@@ -37,6 +37,7 @@ namespace Seal.Forms
     ReportElement element = cell.Element;
     ReportModel reportModel = element.Model;
     Report report = reportModel.Report;
+    //Script executed to modify a result cell 
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
 	/*
     cell.ContextRow indicates the current row (type = int)
@@ -91,7 +92,8 @@ namespace Seal.Forms
     MetaTable metaTable = Model;
 	ReportExecutionLog log = metaTable;
 
-    //Define the table columns 
+    //Script executed to define the result table columns that will be loaded by the 'Load Script'
+    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
     DataTable table = new DataTable();
     table.Columns.Add(new DataColumn(""numberCol"", typeof(int)));
     table.Columns.Add(new DataColumn(""stringCol"", typeof(string)));
@@ -108,8 +110,10 @@ namespace Seal.Forms
     DataTable table = metaTable.NoSQLTable;
 	ReportExecutionLog log = metaTable;
 
-    //Insert values in the table, values must match the table columns definition
+    //Default Script executed to fill the model result table from a non SQL source (if the model 'Load Script' is empty)
+    //Insert values in the table, values must match the table columns defined in 'Definition Script'
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    log.LogMessage(""Adding table rows with the default table 'Load Script'..."");
     table.Rows.Add(123, ""a string value"", DateTime.Now);
     table.Rows.Add(124, ""another string value"", DateTime.Now);
     log.LogMessage(""{0} record(s) loaded"", table.Rows.Count);
@@ -123,16 +127,18 @@ namespace Seal.Forms
     DataTable table = model.ResultTable;
 	ReportExecutionLog log = model.Report;
 
-    //Modify values in the current result table freshly loaded from the database, rows can also be added and deleted.
+    //Script executed to modify the model result table after it has been loaded from the database
+    //Modify values in the current result table, rows can also be added and deleted.
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    log.LogMessage(""Modifying table..."");
+    log.LogMessage(""Modifying table with the model 'Post Load Script'..."");
     foreach (DataRow row in table.Rows)
     {
-        //Change the values of the column displaying the City element
+        /* e.g. Change the values of the column displaying the City element
 		ReportElement element = model.Elements.FirstOrDefault(i => i.DisplayNameEl == ""City"");
 		if (element != null && !row.IsNull(element.SQLColumnName)) {
 			row[element.SQLColumnName] = string.Format(""New value for '{0}'"", row[element.SQLColumnName]);
 		}
+        */
     }
 }
 ";
@@ -144,8 +150,10 @@ namespace Seal.Forms
     DataTable table = model.ResultTable;
 	ReportExecutionLog log = model.Report;
 
-    //Insert values in the table, values must match the table columns definition
+    //Script executed to fill the model result table from a non SQL source
+    //Insert values in the table, values must match the table columns defined in the source table 'Definition Script'
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    log.LogMessage(""Adding table rows with the model 'Load Script'..."");
     table.Rows.Add(123, ""a string value"", DateTime.Now);
     table.Rows.Add(124, ""another string value"", DateTime.Now);
     log.LogMessage(""{0} record(s) loaded"", table.Rows.Count);
@@ -160,12 +168,45 @@ namespace Seal.Forms
     List<ReportElement> elements = model.Elements;
     List<ReportRestriction> restrictions = model.Restrictions;
 
-    //Change the model restrictions or elements here before the result table is loaded from the database
+    //Script executed before the model result table is loaded from the database
+    //You can change the model restrictions or elements before the loaded
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    log.LogMessage(""Processing Pre Load Script"");
-    //restrictions[0].Value1 = ""1994""; restrictions[0].Date1 = DateTime.Now.AddYears(-20);
+    log.LogMessage(""Processing the model 'Pre Load Script'"");
+    //restrictions[0].Value1 = ""1994""; 
+    //restrictions[0].Date1 = DateTime.Now.AddYears(-20);
+    //model.GetRestrictionByName(""Order Year"").Value1 = ""2015"";
 }
 ";
+
+
+        const string razorTableFinalScriptTemplate = @"@using Seal.Model
+@using System.Data
+@{
+    ReportModel model = Model;
+ 	ReportExecutionLog log = model.Report;
+
+    //Final script executed to modify the model result tables after its generation
+    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    log.LogMessage(""Modifying result values with the 'Final Script'..."");
+    ResultTable summaryTable = model.SummaryTable;
+    foreach (ResultPage page in model.Pages)
+    {
+        ResultTable dataTable = page.DataTable;
+    	ResultTable pageTable = page.PageTable;
+
+        /* e.g to change the last line of the Data Tables
+        dataTable.Lines[dataTable.Lines.Count - 1][0].Value = ""Maximum"";
+		for (int i=0;i< dataTable.Lines[0].Length; i++)
+	    {
+		    string style =  ""background:orange;"" + (i > 0 ? ""text-align:right;"" : """");
+		    dataTable.Lines[dataTable.Lines.Count - 1][i].FinalCssStyle = style;
+	    }
+        */
+    }
+
+}
+";
+
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             if (context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
@@ -341,6 +382,13 @@ namespace Seal.Forms
                         frm.Text = "Edit the script executed before table load";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
+                   else if (context.PropertyDescriptor.Name == "FinalScript")
+                   {
+                       template = razorTableFinalScriptTemplate;
+                       frm.TypeForCheckSyntax = typeof(ReportModel);
+                       frm.Text = "Edit the final script executed for the model";
+                       frm.textBox.ConfigurationManager.Language = "cs";
+                   }
                    else if (context.PropertyDescriptor.Name == "LoadScript")
                    {
                        if (((ReportModel)context.Instance).Source.IsNoSQL)

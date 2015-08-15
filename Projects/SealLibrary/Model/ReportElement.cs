@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
-// This code is licensed under GNU General Public License version 3, http://www.gnu.org/licenses/gpl-3.0.en.html.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
 using System.Collections.Generic;
@@ -474,7 +474,7 @@ namespace Seal.Model
 
 
         string _cellScript;
-        [Category("Advanced"), DisplayName("Custom Cell Script"), Description("If not empty, a custom razor script is executed to calculate the cell value and CSS."), Id(3, 5)]
+        [Category("Advanced"), DisplayName("Cell Script"), Description("If not empty, the script is executed to calculate custom cell value and CSS."), Id(3, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string CellScript
         {
