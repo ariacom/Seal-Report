@@ -25,6 +25,8 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.Xml.Serialization;
 using System.DirectoryServices.Protocols;
+using System.Xml.Linq;
+using System.ServiceModel.Syndication;
 
 namespace Seal.Helpers
 {
@@ -336,16 +338,18 @@ namespace Seal.Helpers
         static DataTable dummy2 = null;
         static OleDbConnection dummy3 = null;
         static LdapConnection dummy4 = null;
-        static System.ServiceModel.Syndication.SyndicationFeed dummy5 = null;
-
+        static SyndicationFeed dummy5 = null;
+        static XDocument dummy6 = null;
 
         static public void LoadRazorAssemblies()
         {
-            if (dummy == null) dummy = new HtmlString(""); //Force the load of System.Web
-            if (dummy2 == null) dummy2 = new DataTable(); //Force the load of System.Data
-            if (dummy3 == null) dummy3 = new OleDbConnection(); //Force the load of the assembly
-            if (dummy4 == null) dummy4 = new LdapConnection("");//Force the load of the assembly
-            if (dummy5 == null) dummy5 = new System.ServiceModel.Syndication.SyndicationFeed(); //Force the load of the assembly
+            //Force the load of the assemblies
+            if (dummy == null) dummy = new HtmlString("");
+            if (dummy2 == null) dummy2 = new DataTable(); 
+            if (dummy3 == null) dummy3 = new OleDbConnection(); 
+            if (dummy4 == null) dummy4 = new LdapConnection("");
+            if (dummy5 == null) dummy5 = new SyndicationFeed(); 
+            if (dummy6 == null) dummy6 = new XDocument(); 
         }
 
         static public string ParseRazor(string script, object model)
