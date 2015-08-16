@@ -1034,7 +1034,7 @@ namespace Seal.Model
                 }
                 catch (Exception ex)
                 {
-                    ExecutionError = string.Format("Got unexpected error when building NoSQL Table:\r\n{0}\r\n", ex.Message);
+                    throw new Exception(string.Format("Got unexpected error when building NoSQL Table:\r\n{0}\r\n", ex.Message));
                 }
             }
             else if (!string.IsNullOrEmpty(_sql) && !Report.Cancel)
@@ -1091,7 +1091,7 @@ namespace Seal.Model
                 }
                 catch (Exception ex)
                 {
-                    ExecutionError = string.Format("Unexpected error when executing the following SQL statement:\r\n{0}\r\n\r\nError detail:\r\n{1}", _sql, ex.Message);
+                    throw new Exception(string.Format("Unexpected error when executing the following SQL statement:\r\n{0}\r\n\r\nError detail:\r\n{1}", _sql, ex.Message));
                 }
 
                 if (Report.Cancel) return;

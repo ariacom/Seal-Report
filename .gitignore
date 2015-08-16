@@ -38,8 +38,11 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+
+#specific for Seal
 work/
-[Pp]ackages
+[Pp]ackages/
+temp/
 
 
 # =========================

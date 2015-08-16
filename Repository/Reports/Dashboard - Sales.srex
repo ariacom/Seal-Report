@@ -13,6 +13,7 @@
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -164,6 +165,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -202,6 +204,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -240,6 +243,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -286,6 +290,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -428,6 +433,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -466,6 +472,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -504,6 +511,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -550,6 +558,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -693,6 +702,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -731,6 +741,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -769,6 +780,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -815,6 +827,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -929,6 +942,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -967,6 +981,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -1005,6 +1020,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -1051,6 +1067,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -1194,6 +1211,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -1232,6 +1250,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -1270,6 +1289,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -1316,6 +1336,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -1459,6 +1480,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -1497,6 +1519,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -1535,6 +1558,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -1581,6 +1605,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -1723,6 +1748,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -1761,6 +1787,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -1799,6 +1826,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -1845,6 +1873,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -1987,6 +2016,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -2025,6 +2055,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -2063,6 +2094,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -2109,6 +2141,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -2272,6 +2305,75 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
         </ReportElement>
+        <ReportElement>
+          <GUID>7771a722-e61e-4177-ac02-85d335f246c8</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayName>Progression</DisplayName>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Percentage0</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>P0</Format>
+          <HasHTMLTags>false</HasHTMLTags>
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>None</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <CellScript>@using Seal.Model
+@{
+    ResultCell cell = Model;
+    //cell.ContextRow indicates the current row (int)
+    //cell.ContextCol indicates the current column (int)
+    //cell.ContextTable is the current table (ResultTable)
+    //cell.ContextPage is the current result page (ResultPage)
+    //cell.ContextIsPageTable indicates if the current table is the PageTable (and not the DataTable)
+    
+    //cell.IsTotal indicates if it is a total cell
+    //cell.IsTitle indicates if it is a title cell
+	bool isValue = !cell.IsTitle &amp;&amp; !cell.IsTotal;
+	
+	if (cell.IsTotal)
+	{
+	}	
+	else if (isValue &amp;&amp; cell.ContextRow &gt; 0)
+	{
+		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][1].DoubleValue;
+		var currentValue = cell.ContextTable.Lines[cell.ContextRow][1].DoubleValue;
+		//Calculate the progression
+		cell.Value = (currentValue - previousValue)/previousValue;
+		if (cell.DoubleValue &lt; 0)
+		{
+			cell.FinalCssStyle = "font-weight:bold;color:red;text-align:right;";
+		}
+		else if (cell.DoubleValue &gt; 0.5)
+		{
+			cell.FinalValue = string.Format("&lt;span style='font-size:12pt;'&gt;&amp;#9786;&lt;/span&gt; {0:P0}", cell.DoubleValue);
+			cell.FinalCssStyle = "color:green;text-align:right;";
+		}		
+	}
+	
+    //Example to calculate the ratio between the 2 previous total cells in the result table:
+    /*if (totalCell.ContextIndex &gt; 1) 
+    {
+        totalCell.Value = totalCell.ContextLine[totalCell.ContextIndex - 2].DoubleValue / totalCell.ContextLine[totalCell.ContextIndex - 1].DoubleValue;
+    }*/
+}
+</CellScript>
+        </ReportElement>
       </Elements>
       <Restriction>[7f1daf82-610d-4f74-8aa2-e6ddb5640406]
 AND [47db8b07-89a1-4cbf-ace9-9335fb2585f3]
@@ -2310,6 +2412,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -2348,6 +2451,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -2386,6 +2490,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -2432,6 +2537,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -2574,6 +2680,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -2612,6 +2719,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -2650,6 +2758,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -2696,6 +2805,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -2838,6 +2948,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -2876,6 +2987,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -2914,6 +3026,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -2960,6 +3073,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -3271,6 +3385,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -3309,6 +3424,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -3347,6 +3463,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Belgium</string>
@@ -3393,6 +3510,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -3537,7 +3655,7 @@ if (chartTitle.length &gt; 0) {
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:570px; page-break-inside:avoid;</Value>
+                      <Value>height:290px; width:570px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
@@ -3740,7 +3858,7 @@ if (chartTitle.length &gt; 0) {
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:500px; page-break-inside:avoid;</Value>
+                      <Value>height:290px; width:450px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
