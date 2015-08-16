@@ -1,5 +1,3 @@
-##Work in progress...
-
 <a href="http://www.sealreport.org" target=_blank>Seal Report</a> offers a complete framework for producing every day reports and dashboards from any database.
 
 The product focuses on an **easy installation** and **report design**: Once setup, reports can be built and published in a minute. 
@@ -35,4 +33,4 @@ A free portal to publish and share your **Open Data** in **professional reports*
 ![Web Report Server](http://sealreport.org/Images/webServer.png)
 
 ##License
-Seal Report is Licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">the Apache License, Version 2.0</a>
+Seal Report is licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">the Apache License, Version 2.0</a>
