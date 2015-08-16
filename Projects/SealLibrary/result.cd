@@ -1,23 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Seal.Model.ReportModel" Collapsed="true">
-    <Position X="1.75" Y="2" Width="1.5" />
+    <Position X="2" Y="2" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
     </Compartments>
-    <NestedTypes>
-      <Class Name="Seal.Model.ReportModel.JoinPath" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Model\ReportModel.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
-    </NestedTypes>
+    <AssociationLine Name="Pages" Type="Seal.Model.ResultPage" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.438" Y="2.691" />
+        <Point X="3.438" Y="4.031" />
+        <Point X="4.75" Y="4.031" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="SummaryTable" Type="Seal.Model.ResultTable" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.125" Y="2.691" />
+        <Point X="3.125" Y="5.531" />
+        <Point X="5.25" Y="5.531" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>RMQIJQHZxtosYak9QAUeiBkQMVkNEFBkACihAJhGWAQ=</HashCode>
       <FileName>Model\ReportModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="ResultTable" />
+      <Field Name="SummaryTable" />
       <Property Name="Source" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
@@ -27,7 +36,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Seal.Model.Report" Collapsed="true">
-    <Position X="1.25" Y="0.5" Width="2.5" />
+    <Position X="1" Y="0.5" Width="2.25" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -56,6 +65,12 @@
   </Class>
   <Class Name="Seal.Model.ResultPage" Collapsed="true">
     <Position X="4.75" Y="3.75" Width="2" />
+    <AssociationLine Name="PageTable" Type="Seal.Model.ResultTable" FixedToPoint="true">
+      <Path>
+        <Point X="6.438" Y="4.312" />
+        <Point X="6.438" Y="5.25" />
+      </Path>
+    </AssociationLine>
     <AssociationLine Name="DataTable" Type="Seal.Model.ResultTable" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="5.438" Y="4.312" />
@@ -64,23 +79,17 @@
         <Point X="5.438" Y="5.25" />
       </Path>
     </AssociationLine>
-    <AssociationLine Name="PageTable" Type="Seal.Model.ResultTable" FixedToPoint="true">
-      <Path>
-        <Point X="6.438" Y="4.312" />
-        <Point X="6.438" Y="5.25" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAAGAACAAgCAgEAgAAiACEQAQAQgAAAAAACAAAoiBBU=</HashCode>
       <FileName>Model\ResultPage.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="DataTable" />
       <Field Name="PageTable" />
+      <Field Name="DataTable" />
     </ShowAsAssociation>
   </Class>
   <Class Name="System.Data.DataTable" Collapsed="true">
-    <Position X="2" Y="5.75" Width="1.5" />
+    <Position X="1" Y="6" Width="1.5" />
     <TypeIdentifier />
     <Lollipop Position="0.2" />
   </Class>
@@ -101,12 +110,12 @@
       <FileName>Model\ResultTable.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Field Name="Lines" />
       <Field Name="TotalCells" />
+      <Field Name="Lines" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Seal.Model.ResultCell">
-    <Position X="7.5" Y="3.75" Width="1.5" />
+    <Position X="7.5" Y="3.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Properties" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
