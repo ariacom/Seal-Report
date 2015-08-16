@@ -1,8 +1,5 @@
 ##Work in progress...
 
-**Quick start guides**  for building reports are available at the [Seal Report](http://www.sealreport.org) Web site.
-
-
 [Seal Report](http://www.sealreport.org) offers a complete framework for producing every day reports and dashboards from any database.
 
 The product focuses on an **easy installation** and **report design**: Once setup, reports can be built and published in a minute. 
@@ -22,10 +19,10 @@ A **live demonstration** of the [Web Report Server](http://demo.sealreport.org) 
 
 **Quick start guides**  for building reports are available at the [Seal Report](http://www.sealreport.org) Web site.
 
-Use the [url:Seal Report forum|http://forum.sealreport.org] to get free support, information and hints on the product.
+Use the [Seal Report forum](http://forum.sealreport.org) to get free support, information and hints on the product.
 
-The product is also used by another open project to publish Open Data: [url:Open Report Hub|http://openreporthub.com].
-A free portal to publish and share your *Open Data* in *professional reports*. 
+The product is also used by another open project to publish Open Data: [Open Report Hub](http://openreporthub.com).
+A free portal to publish and share your **Open Data** in **professional reports**. 
 
 # Screen shots
 ## Report Designer
