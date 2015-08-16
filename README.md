@@ -19,7 +19,7 @@ A **live demonstration** of the [Web Report Server](http://demo.sealreport.org) 
 
 **Quick start guides**  for building reports are available at the [Seal Report](http://www.sealreport.org) Web site.
 
-Use the [Seal Report forum](http://forum.sealreport.org) to get free support, information and hints on the product.
+Use the [Seal Report forum](http://forum.sealreport.org) to get free support, information and hints on the product or read the [Wiki](https://github.com/ariacom/Seal-Report/wiki) for technical documentation.
 
 The product is also used by another open project to publish Open Data: [Open Report Hub](http://openreporthub.com).
 A free portal to publish and share your **Open Data** in **professional reports**. 
