@@ -270,6 +270,7 @@
     <None Include="..\..\Repository\Views\Report.config.cshtml">
       <Link>Views\Report.config.cshtml</Link>
     </None>
+    <None Include="Result.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\AboutBoxForm.resx">
