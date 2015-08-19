@@ -13,6 +13,7 @@
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -20,6 +21,7 @@
             <GUID>8f6f898a-b156-422e-8ffd-2040da8e7b77</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
             <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
@@ -41,6 +43,7 @@
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -48,6 +51,7 @@
             <GUID>509563f6-f3fd-4dcf-9be8-8e53e5c92496</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
             <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
@@ -79,6 +83,7 @@
       </Connections>
       <ConnectionGUID>d28d79a7-bc64-40ac-b205-4c0d5fd381cf</ConnectionGUID>
       <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -86,6 +91,7 @@
             <GUID>ab9fab1f-1c50-4154-804e-c04a2fcf7350</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
             <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
@@ -105,7 +111,6 @@
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
-      <ShowDuplicateRows>false</ShowDuplicateRows>
       <Elements />
       <Restriction />
       <Restrictions />
@@ -119,10 +124,6 @@
       <GUID>27bcb127-6bb1-431a-a9aa-f8ff5d319473</GUID>
       <Name>Backup msdb</Name>
       <CancelReport>false</CancelReport>
-      <Message>
-        <Capacity>16</Capacity>
-        <Length>0</Length>
-      </Message>
       <DbInfoMessage>
         <Capacity>16</Capacity>
         <Length>0</Length>
@@ -133,7 +134,7 @@
       <SQL>@using Seal.Model
 @{
 //--Simply backup msdb SQLServer database to a file...
-ReportTask task= Model;
+ReportTask task = Model;
 string result = @"BACKUP DATABASE msdb TO DISK='C:\temp\backup_msdb_" + DateTime.Now.ToShortDateString() + ".bak' WITH INIT, MEDIANAME = 'msdb'";
 }
 @Raw(result)</SQL>
@@ -163,6 +164,7 @@ string result = @"BACKUP DATABASE msdb TO DISK='C:\temp\backup_msdb_" + DateTime
       <SortOrder>0</SortOrder>
       <CultureName />
       <PdfConfigurations />
+      <ExcelConfigurations />
     </ReportView>
   </Views>
   <DisplayName />
