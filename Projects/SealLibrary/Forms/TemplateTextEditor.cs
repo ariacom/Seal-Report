@@ -206,7 +206,6 @@ namespace Seal.Forms
 
 }
 ";
-
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             if (context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
@@ -258,6 +257,7 @@ namespace Seal.Forms
                     List<string> samples = new List<string>();
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Refresh Data Sources enumerated lists\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.RefreshRepositoryEnums();\r\n}");
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Load a table from an Excel file, may need ODBC Office 2007 Drivers\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.LoadTableFromExcel(@\"c:\\temp\\loadFolder\", @\"c:\\temp\\excelFile.xlsx\", \"ExcelTabName\", \"DestinationTableName\", false /* true to load in all connections */);\r\n}");
+                    samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Load a table from a CSV file\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.LoadTableFromCSV(@\"c:\\temp\\loadFolder\", @\"c:\\temp\\aCSVFile.csv\", \"DestinationTableName\", null /* separator may be specified here */, false /* true to load in all connections */);\r\n}");
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Load a table from a source table located in an external data source\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.LoadTableFromExternalSource(\"SourceConnectionString\", \"SourceSelectStatement\", \"DestinationTableName\", false /* true to load in all connections */, \"OptionalSourceCheckSelect\", \"OptionalDestinationCheckSelect\");\r\n}");
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Execute a program and display Standard Output and Errors\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.ExecuteProcess(@\"executablePath\");\r\n}");
                     frm.SetSamples(samples);

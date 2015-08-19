@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.Data.OleDb;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -31,6 +32,8 @@ namespace Seal.Helpers
         public int ColumnCharLength = 400;
         public int InsertBurstSize = 500;
         public string ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
+        public Encoding DefaultEncoding = Encoding.Default;
+
         public bool DebugMode = false;
         public StringBuilder DebugLog = new StringBuilder();
         public int SelectTimeout = 0;
@@ -91,7 +94,53 @@ namespace Seal.Helpers
             string connectionString = string.Format(ExcelOdbcDriver, excelPath);
             string sql = string.Format("select * from [{0}$]", Helper.IfNullOrEmpty(tabName, "Sheet1"));
             return OdbcLoadDataTable(connectionString, sql);
+        }
 
+        public DataTable LoadDataTableFromCSV(string csvPath, char? separator = null)
+        {
+            DataTable result = null;
+            bool isHeader = true;
+            Regex regexp = null;
+            List<string> languages = new List<string>();
+
+            foreach (string line in File.ReadAllLines(csvPath, DefaultEncoding))
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                
+                if (regexp == null)
+                {
+                    string exp = "(?<=^|,)(\"(?:[^\"]|\"\")*\"|[^,]*)";
+                    if (separator == null)
+                    {
+                        //use the first line to determine the separator between , and ;
+                        separator = ',';
+                        if (line.Split(';').Length > line.Split(',').Length) separator = ';';
+                    }
+                    if (separator != ',') exp = exp.Replace(',', separator.Value);
+                    regexp = new Regex(exp);
+                }
+
+                MatchCollection collection = regexp.Matches(line);
+                if (isHeader)
+                {
+                    result = new DataTable();
+                    for (int i = 0; i < collection.Count; i++)
+                    {
+                        result.Columns.Add(new DataColumn(collection[i].Value, typeof(string)));
+                    }
+                    isHeader = false;
+                }
+                else
+                {
+                    var row = result.Rows.Add();
+                    for (int i = 0; i < collection.Count && i < result.Columns.Count; i++)
+                    {
+                        row[i] = collection[i].Value;
+                    }
+                }
+            }
+
+            return result;
         }
 
         public void SetDatabaseDefaultConfiguration(DatabaseType type)
@@ -115,18 +164,29 @@ namespace Seal.Helpers
             }
         }
 
+        void executeCommand(DbCommand command)
+        {
+            if (DebugMode) DebugLog.AppendLine("Executing SQL Command\r\n" + command.CommandText);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Error executing SQL:\r\n{0}\r\n\r\n{1}", command.CommandText, ex.Message));
+            }
+        }
+
         public void CreateTable(DbCommand command, DataTable table)
         {
             try
             {
                 command.CommandText = string.Format("drop table {0}", CleanName(table.TableName));
-                if (DebugMode) DebugLog.AppendLine("Executing SQL Command\r\n" + command.CommandText);
-                command.ExecuteNonQuery();
+                executeCommand(command);
             }
             catch { }
             command.CommandText = GetTableCreateCommand(table);
-            if (DebugMode) DebugLog.AppendLine("Executing SQL Command\r\n" + command.CommandText);
-            command.ExecuteNonQuery();
+            executeCommand(command);
         }
 
         public void InsertTable(DbCommand command, DataTable table, string dateTimeFormat, bool deleteFirst)
@@ -139,7 +199,7 @@ namespace Seal.Helpers
                 if (deleteFirst)
                 {
                     command.CommandText = string.Format("delete from {0}", CleanName(table.TableName));
-                    command.ExecuteNonQuery();
+                    executeCommand(command);
                 }
 
                 StringBuilder sql = new StringBuilder("");
@@ -151,8 +211,7 @@ namespace Seal.Helpers
                     if (cnt % InsertBurstSize == 0)
                     {
                         command.CommandText = GetInsertCommand(sql.ToString());
-                        if (DebugMode) DebugLog.AppendLine("Executing SQL Command\r\n" + command.CommandText);
-                        command.ExecuteNonQuery();
+                        executeCommand(command);
                         sql = new StringBuilder("");
                     }
                 }
@@ -160,8 +219,7 @@ namespace Seal.Helpers
                 if (sql.Length != 0)
                 {
                     command.CommandText = GetInsertCommand(sql.ToString());
-                    if (DebugMode) DebugLog.AppendLine("Executing SQL Command\r\n" + command.CommandText);
-                    command.ExecuteNonQuery();
+                    executeCommand(command);
                 }
                 transaction.Commit();
             }
