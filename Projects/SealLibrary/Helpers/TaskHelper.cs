@@ -160,6 +160,54 @@ namespace Seal.Helpers
             }
         }
 
+        public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator=null, bool useAllConnections = false)
+        {
+            bool result = false;
+            try
+            {
+                if (CheckForNewFileSource(loadFolder, sourceCsvPath))
+                {
+                    LoadTableFromCSV(sourceCsvPath, destinationTableName, separator, useAllConnections);
+                    File.Copy(sourceCsvPath, Path.Combine(loadFolder, Path.GetFileName(sourceCsvPath)), true);
+                    result = true;
+                }
+                else
+                {
+                    Log.LogMessage("No import done");
+                }
+            }
+            finally
+            {
+                LogDebug();
+            }
+            return result;
+        }
+
+        public void LoadTableFromCSV(string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false)
+        {
+            try
+            {
+                string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceCsvPath);
+                Log.LogMessage("Starting Loading CSV Table from '{0}'", sourcePath);
+                DataTable table = DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator);
+                table.TableName = destinationTableName;
+                foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
+                {
+                    if (_task.CancelReport) break;
+                    Log.LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
+                    DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
+                    Log.LogMessage("Dropping and creating table '{0}'", destinationTableName);
+                    DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
+                    Log.LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                    DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
+                }
+            }
+            finally
+            {
+                LogDebug();
+            }
+        }
+
         public bool LoadTableFromExternalSource(string sourceConnectionString, string sourceSelectStatement, string destinationTableName, bool useAllConnections = false, string sourceCheckSelect = "", string destinationCheckSelect = "")
         {
             bool result = false;
