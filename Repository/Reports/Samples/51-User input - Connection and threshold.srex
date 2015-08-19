@@ -340,8 +340,8 @@ AND [4650d6dc-a54f-4156-b0e2-e6fa4641f1e5]
     <ReportOutput>
       <GUID>795d46d0-8a5e-4699-a65a-fc849b0ecc06</GUID>
       <Name>test output with custom connection</Name>
-      <FolderPath>%SEALREPOSITORY%\Reports\</FolderPath>
-      <FileName>51 Pre Load - Connection and threshold selection</FileName>
+      <FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath>
+      <FileName>51-User input - Connection and threshold_{0:yyyy_MM_dd}</FileName>
       <EmailHtmlBody>false</EmailHtmlBody>
       <EmailMessagesInBody>false</EmailMessagesInBody>
       <EmailZipAttachments>false</EmailZipAttachments>
