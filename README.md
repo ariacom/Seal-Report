@@ -44,4 +44,4 @@ A free portal to publish and share your **Open Data** in **professional reports*
 * Visual Studio 2013 with MVC 4
 
 ##License
-Seal Report is licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">the Apache License, Version 2.0</a>
+Seal Report is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>
