@@ -190,6 +190,7 @@ namespace Seal.Model
                 }
             }
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
             return path;
         }
 
@@ -328,10 +329,10 @@ namespace Seal.Model
 
         public bool MustReload()
         {
-            if (File.GetLastWriteTime(Configuration.FilePath) != Configuration.LastModification) return true;
-            if (File.GetLastWriteTime(Security.FilePath) != Security.LastModification) return true;
+            if (Configuration.FilePath != null && File.GetLastWriteTime(Configuration.FilePath) != Configuration.LastModification) return true;
+            if (Security.FilePath != null && File.GetLastWriteTime(Security.FilePath) != Security.LastModification) return true;
             foreach (var item in Sources) if (File.GetLastWriteTime(item.FilePath) != item.LastModification) return true;
-            foreach (var item in Devices.Where(i => i is OutputEmailDevice)) if (File.GetLastWriteTime(item.FilePath) != ((OutputEmailDevice)item).LastModification) return true;
+            foreach (var item in Devices.Where(i => i is OutputEmailDevice)) if (item.FilePath != null && File.GetLastWriteTime(item.FilePath) != ((OutputEmailDevice)item).LastModification) return true;
             return false;
         }
 
