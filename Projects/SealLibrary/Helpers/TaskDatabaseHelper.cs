@@ -21,6 +21,10 @@ namespace Seal.Helpers
     public delegate string CustomGetTableColumnValues(DataRow row, string dateTimeFormat);
     public delegate string CustomGetTableColumnValue(DataRow row, DataColumn col, string datetimeFormat);
 
+    public delegate DataTable CustomLoadDataTable(string connectionString, string sql);
+    public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "");
+    public delegate DataTable CustomLoadDataTableFromCSV(string csvPath, char? separator = null);
+
     public class TaskDatabaseHelper
     {
         //Config, may be overwritten
@@ -45,6 +49,11 @@ namespace Seal.Helpers
 
         public CustomGetTableColumnValues MyGetTableColumnValues = null;
         public CustomGetTableColumnValue MyGetTableColumnValue = null;
+
+        public CustomLoadDataTable MyLoadDataTable = null;
+        public CustomLoadDataTableFromExcel MyLoadDataTableFromExcel = null;
+        public CustomLoadDataTableFromCSV MyLoadDataTableFromCSV = null;
+
 
         string _defaultColumnCharType = "";
         string _defaultColumnNumericType = "";
@@ -78,6 +87,8 @@ namespace Seal.Helpers
 
         public DataTable LoadDataTable(string connectionString, string sql)
         {
+            if (MyLoadDataTable != null) return MyLoadDataTable(connectionString, sql);
+            
             DataTable table = new DataTable();
             DbDataAdapter adapter = null;
             var connection = Helper.DbConnectionFromConnectionString(connectionString);
@@ -91,6 +102,8 @@ namespace Seal.Helpers
 
         public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "")
         {
+            if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(excelPath, tabName);
+
             string connectionString = string.Format(ExcelOdbcDriver, excelPath);
             string sql = string.Format("select * from [{0}$]", Helper.IfNullOrEmpty(tabName, "Sheet1"));
             return OdbcLoadDataTable(connectionString, sql);
@@ -98,6 +111,8 @@ namespace Seal.Helpers
 
         public DataTable LoadDataTableFromCSV(string csvPath, char? separator = null)
         {
+            if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
+            
             DataTable result = null;
             bool isHeader = true;
             Regex regexp = null;
@@ -106,7 +121,7 @@ namespace Seal.Helpers
             foreach (string line in File.ReadAllLines(csvPath, DefaultEncoding))
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                
+
                 if (regexp == null)
                 {
                     string exp = "(?<=^|,)(\"(?:[^\"]|\"\")*\"|[^,]*)";
