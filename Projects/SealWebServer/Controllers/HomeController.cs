@@ -478,7 +478,7 @@ namespace SealWebServer.Controllers
                     else if (report.Status == ReportStatus.Executed)
                     {
                         Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Viewing result of report {1} for user '{0}'", WebUser.Name, report.FilePath);
-                        if (report.HasErrors) Helper.WriteLogEntryWeb(EventLogEntryType.Error, "Report {0} execution errors:\r\n{1}", WebUser.Name, report.ExecutionErrors);
+                        if (report.HasErrors) Helper.WriteLogEntryWeb(EventLogEntryType.Error, "Report {0} ({1}) execution errors:\r\n{2}", report.FilePath, WebUser.Name, report.ExecutionErrors);
                         string filePath = report.ForOutput || report.HasExternalViewer ? report.HTMLDisplayFilePath : report.ResultFilePath;
                         if (!System.IO.File.Exists(filePath)) throw new Exception("Error: Result file path does not exists...");
                         return Json(new { result_url = report.WebTempUrl + Path.GetFileName(filePath) }); ;

@@ -206,6 +206,17 @@ namespace Seal.Forms
 
 }
 ";
+
+        const string razorCommunTasksTemplate = @"@using Sytem.Text
+@functions {
+    //During execution, this script will be copied at the end of all task scripts of the report...
+    public string MyConvertString(string input) {
+        return input.Replace(""__"",""_"");
+    }
+}
+";
+
+
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             if (context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
@@ -218,7 +229,7 @@ namespace Seal.Forms
             if (svc != null)
             {
                 var frm = new TemplateTextEditorForm();
-            
+
                 string template = "";
                 string valueToEdit = (value == null ? "" : value.ToString());
                 if (context.Instance is ReportView)
@@ -254,6 +265,7 @@ namespace Seal.Forms
                     frm.TypeForCheckSyntax = typeof(ReportTask);
                     frm.Text = "Edit task script";
                     frm.textBox.ConfigurationManager.Language = "cs";
+                    frm.TextToAddForCheck = ((ReportTask)context.Instance).Report.CommunTaskScript; 
                     List<string> samples = new List<string>();
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Refresh Data Sources enumerated lists\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.RefreshRepositoryEnums();\r\n}");
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Load a table from an Excel file, may need ODBC Office 2007 Drivers\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.LoadTableFromExcel(@\"c:\\temp\\loadFolder\", @\"c:\\temp\\excelFile.xlsx\", \"ExcelTabName\", \"DestinationTableName\", false /* true to load in all connections */);\r\n}");
@@ -375,35 +387,42 @@ namespace Seal.Forms
                 }
                 else if (context.Instance is ReportModel)
                 {
-                   if (context.PropertyDescriptor.Name == "PreLoadScript")
+                    if (context.PropertyDescriptor.Name == "PreLoadScript")
                     {
                         template = razorModelPreLoadScriptTemplateNoSQL;
                         frm.TypeForCheckSyntax = typeof(ReportModel);
                         frm.Text = "Edit the script executed before table load";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
-                   else if (context.PropertyDescriptor.Name == "FinalScript")
-                   {
-                       template = razorTableFinalScriptTemplate;
-                       frm.TypeForCheckSyntax = typeof(ReportModel);
-                       frm.Text = "Edit the final script executed for the model";
-                       frm.textBox.ConfigurationManager.Language = "cs";
-                   }
-                   else if (context.PropertyDescriptor.Name == "LoadScript")
-                   {
-                       if (((ReportModel)context.Instance).Source.IsNoSQL)
-                       {
-                           frm.Text = "Edit the script executed after table load";
-                           template = razorModelLoadScriptTemplateNoSQL;
-                       }
-                       else
-                       {
-                           frm.Text = "Edit the script to load the table";
-                           template = razorModelLoadScriptTemplate;
-                       }
-                       frm.TypeForCheckSyntax = typeof(ReportModel);
-                       frm.textBox.ConfigurationManager.Language = "cs";
-                   }
+                    else if (context.PropertyDescriptor.Name == "FinalScript")
+                    {
+                        template = razorTableFinalScriptTemplate;
+                        frm.TypeForCheckSyntax = typeof(ReportModel);
+                        frm.Text = "Edit the final script executed for the model";
+                        frm.textBox.ConfigurationManager.Language = "cs";
+                    }
+                    else if (context.PropertyDescriptor.Name == "LoadScript")
+                    {
+                        if (((ReportModel)context.Instance).Source.IsNoSQL)
+                        {
+                            frm.Text = "Edit the script executed after table load";
+                            template = razorModelLoadScriptTemplateNoSQL;
+                        }
+                        else
+                        {
+                            frm.Text = "Edit the script to load the table";
+                            template = razorModelLoadScriptTemplate;
+                        }
+                        frm.TypeForCheckSyntax = typeof(ReportModel);
+                        frm.textBox.ConfigurationManager.Language = "cs";
+                    }
+                }
+                else if (context.Instance is TasksFolder)
+                {
+                    template = razorCommunTasksTemplate;
+                    frm.TypeForCheckSyntax = typeof(ReportTask);
+                    frm.Text = "Edit the script that will be added to all task scripts";
+                    frm.textBox.ConfigurationManager.Language = "cs";
                 }
 
                 if (!string.IsNullOrEmpty(template) && string.IsNullOrWhiteSpace(valueToEdit))

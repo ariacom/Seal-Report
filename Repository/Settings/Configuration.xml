@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <DefaultConnectionString>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%SEALREPOSITORY%\Databases\Northwind.mdb;Persist Security Info=False</DefaultConnectionString>
+  <DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString>
   <TaskFolderName>Seal Report</TaskFolderName>
   <DefaultCulture />
   <IsLocal>false</IsLocal>
   <LogoName>logo.jpg</LogoName>
+  <LogMode>OneFilePerDay</LogMode>
   <WebProductName>Seal Report</WebProductName>
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>
   <WebApplicationName>/Seal</WebApplicationName>
-  <WebPublicationDirectory>C:\inetpub\wwwroot\Seal</WebPublicationDirectory>
+  <WebPublicationDirectory />
 </SealServerConfiguration>

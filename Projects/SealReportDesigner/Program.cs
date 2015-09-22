@@ -10,6 +10,7 @@ using System.Threading;
 using Microsoft.Win32.TaskScheduler;
 using Seal.Model;
 using System.IO;
+using Seal.Forms;
 
 namespace Seal
 {
@@ -30,7 +31,40 @@ namespace Seal
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ReportDesigner());
+
+            bool execute = (args.Length >= 1 && args[0].ToLower() == "/e");
+            bool executeOutputOrView = (args.Length >= 1 && args[0].ToLower() == "/x");
+            string reportToOpen = null;
+            if (args.Length >= 2 && File.Exists(args[1])) reportToOpen = args[1];
+
+            if ((execute || executeOutputOrView) && reportToOpen != null)
+            {
+                //Execute only
+                var report = Report.LoadFromFile(reportToOpen, Repository.Create());
+                string outputGUID = null, viewGUID = null;
+                if (executeOutputOrView)
+                {
+                    string guid = (args.Length >= 3 ? args[2] : "");
+                    if (!string.IsNullOrEmpty(guid))
+                    {
+                        if (report.Views.Exists(i => i.GUID == guid)) viewGUID = guid;
+                        if (report.Outputs.Exists(i => i.GUID == guid)) outputGUID = guid;
+                    }
+                    else
+                    {
+                        //by default execute first output
+                        if (report.Outputs.Count > 0) outputGUID = report.Outputs[0].GUID;
+                    }
+                }
+                var reportViewer = new ReportViewerForm(true, Properties.Settings.Default.ShowScriptErrors);
+                reportViewer.ViewReport(report, report.Repository, false, viewGUID, outputGUID, report.FilePath);
+                Application.Run();
+            }
+            else
+            {
+                Application.Run(new ReportDesigner());
+            }
+
         }
 
         private static void ExceptionHandler(object sender, ThreadExceptionEventArgs t)

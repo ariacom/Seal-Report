@@ -102,7 +102,7 @@
         private System.Windows.Forms.ToolStrip mainToolStrip;
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.ToolStripButton closeToolStripButton;
-        public System.Windows.Forms.WebBrowser webBrowser;
+        private System.Windows.Forms.WebBrowser webBrowser;
 
     }
 }

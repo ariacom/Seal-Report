@@ -32,6 +32,7 @@ namespace Seal.Forms
         string _url;
 
         bool _reportDone = false;
+        bool _exitOnClose = false;
 
         public bool CanRender
         {
@@ -72,16 +73,23 @@ namespace Seal.Forms
             return result;
         }
 
-        public ReportViewerForm()
+        public ReportViewerForm(bool exitOnClose, bool showScriptErrors)
         {
             InitializeComponent();
 
             ShowIcon = true;
             Icon = Repository.ProductIcon;
+
+            webBrowser.ScriptErrorsSuppressed = !showScriptErrors;
+            _exitOnClose = exitOnClose;
         }
 
         public void ViewReport(Report report, Repository repository, bool render, string viewGUID, string outputGUID, string originalFilePath)
         {
+            Show();
+            Text = Path.GetFileNameWithoutExtension(originalFilePath) + " - " + Repository.SealRootProductName + " Report Viewer";
+            BringToFront();
+
             Report previousReport = _report;
 
             _report = report;
@@ -248,6 +256,8 @@ namespace Seal.Forms
             if (_report != null && _report.IsExecuting) _report.CancelExecution();
             LastSize = Size;
             LastLocation = Location;
+
+            if (_exitOnClose) Application.Exit();
         }
 
         private void ReportViewerForm_Load(object sender, EventArgs e)
