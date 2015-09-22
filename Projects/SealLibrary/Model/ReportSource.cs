@@ -169,6 +169,12 @@ namespace Seal.Model
                     Report.LoadErrors += string.Format("Unable to find repository source for '{0}' (GUID {1}). Check the data source files in the repository folder.\r\n", Name, MetaSourceGUID);
                 }
             }
+
+            if (Connections.Count == 0)
+            {
+                Connections.Add(MetaConnection.Create(this));
+                ConnectionGUID = Connections[0].GUID;
+            }
         }
 
         public void RefreshEnumsOnDbConnection()

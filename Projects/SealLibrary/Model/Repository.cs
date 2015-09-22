@@ -399,6 +399,11 @@ namespace Seal.Model
             get { return Path.Combine(_path, "Reports"); }
         }
 
+        public string LogsFolder
+        {
+            get { return Path.Combine(_path, "Logs"); }
+        }
+
         public string ViewImagesFolder
         {
             get { return Path.Combine(ViewsFolder, "Images"); }
@@ -601,7 +606,6 @@ namespace Seal.Model
 
         #endregion
 
-
         #region Web publishing
         //Web publishing
         public string WebApplicationPath;
@@ -680,7 +684,5 @@ namespace Seal.Model
         }
 
         #endregion
-
-
     }
 }

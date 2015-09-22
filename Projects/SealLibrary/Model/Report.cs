@@ -57,11 +57,20 @@ namespace Seal.Model
             set { _outputs = value; }
         }
 
+
+
         private List<ReportTask> _taks = new List<ReportTask>();
         public List<ReportTask> Tasks
         {
             get { return _taks; }
             set { _taks = value; }
+        }
+
+        private string _communTaskScript = "";
+        public string CommunTaskScript
+        {
+            get { return _communTaskScript; }
+            set { _communTaskScript = value; }
         }
 
         private List<ReportView> _views = new List<ReportView>();
@@ -1310,6 +1319,8 @@ namespace Seal.Model
             }
         }
 
+
+
         //Log Interface implementation
         public void LogMessage(string message, params object[] args)
         {
@@ -1323,6 +1334,7 @@ namespace Seal.Model
                 ExecutionMessages += string.Format("Error logging {0}\r\n{1}\r\n", message, ex.Message);
             }
         }
+        #region Translation Helpers
 
         //Helpers for translations
         public string TranslateDisplayName(string displayName)
@@ -1348,5 +1360,44 @@ namespace Seal.Model
             if (FilePath.Length < Repository.ReportsFolder.Length) return reference;
             return Repository.RepositoryTranslate("ReportGeneral", FilePath.Substring(Repository.ReportsFolder.Length), reference);
         }
+        #endregion
+
+        #region Log
+
+        static bool PurgeIsDone = false;
+        public void LogExecution()
+        {
+            try
+            {
+                if (Repository.Configuration.LogDays <= 0) return;
+
+                if (!Directory.Exists(Repository.LogsFolder)) Directory.CreateDirectory(Repository.LogsFolder);
+
+                string logFileName = Path.Combine(Repository.LogsFolder, string.Format("log_{0:yyyy_MM_dd}.txt", DateTime.Now));
+                string log = string.Format("********************\r\nExecution of '{0}' on {1} {2}\r\n{3}********************\r\n", FilePath, DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), ExecutionMessages);
+                File.AppendAllText(logFileName, log);
+
+                if (!PurgeIsDone)
+                {
+                    PurgeIsDone = true;
+                    foreach (var file in Directory.GetFiles(Repository.LogsFolder, "log_*"))
+                    {
+                        //purge old files...
+                        if (File.GetLastWriteTime(file).AddDays(Repository.Configuration.LogDays) < DateTime.Now)
+                        {
+                            try
+                            {
+                                File.Delete(file);
+                            }
+                            catch { };
+                        }
+                    }
+                }
+            }
+            catch {}
+        }
+
+        #endregion
+
     }
 }

@@ -63,7 +63,6 @@ namespace Seal
 
         ModelPanel modelPanel = new ModelPanel();
         ViewPanel viewPanel = new ViewPanel();
-
         Repository _repository;
         ReportViewerForm _reportViewer = null;
 
@@ -100,40 +99,40 @@ namespace Seal
 
         private void ReportDesigner_Load(object sender, EventArgs e)
         {
-            KeyPreview = true;
+                KeyPreview = true;
 
-            //Set event handler for sub-property grids...
-            EntityCollectionEditor.MyPropertyValueChanged += mainPropertyGrid_PropertyValueChanged;
+                //Set event handler for sub-property grids...
+                EntityCollectionEditor.MyPropertyValueChanged += mainPropertyGrid_PropertyValueChanged;
 
-            //handle program args
-            string[] args = Environment.GetCommandLineArgs();
-            bool open = (args.Length >= 2 && args[1].ToLower() == "/o");
-            string reportToOpen = null;
-            if (args.Length >= 3 && File.Exists(args[2])) reportToOpen = args[2];
+                //handle program args
+                string[] args = Environment.GetCommandLineArgs();
+                bool open = (args.Length >= 2 && args[1].ToLower() == "/o");
+                string reportToOpen = null;
+                if (args.Length >= 3 && File.Exists(args[2])) reportToOpen = args[2];
 
-            //MRU = most recent used reports
-            if (Properties.Settings.Default.MRU == null) Properties.Settings.Default.MRU = new System.Collections.Specialized.StringCollection();
-            if (!open && Properties.Settings.Default.MRU.Count > 0 && File.Exists(Properties.Settings.Default.MRU[0]))
-            {
-                open = true;
-                reportToOpen = Properties.Settings.Default.MRU[0];
-            }
+                //MRU = most recent used reports
+                if (Properties.Settings.Default.MRU == null) Properties.Settings.Default.MRU = new System.Collections.Specialized.StringCollection();
+                if (!open && Properties.Settings.Default.MRU.Count > 0 && File.Exists(Properties.Settings.Default.MRU[0]))
+                {
+                    open = true;
+                    reportToOpen = Properties.Settings.Default.MRU[0];
+                }
 
-            showScriptErrorsToolStripMenuItem.Checked = Properties.Settings.Default.ShowScriptErrors;
-            if (!Helper.IsMachineAdministrator()) Properties.Settings.Default.SchedulesWithCurrentUser = true;
-            schedulesWithCurrentUserToolStripMenuItem.Checked = Properties.Settings.Default.SchedulesWithCurrentUser;
+                showScriptErrorsToolStripMenuItem.Checked = Properties.Settings.Default.ShowScriptErrors;
+                if (!Helper.IsMachineAdministrator()) Properties.Settings.Default.SchedulesWithCurrentUser = true;
+                schedulesWithCurrentUserToolStripMenuItem.Checked = Properties.Settings.Default.SchedulesWithCurrentUser;
 
-            if (open)
-            {
-                if (!string.IsNullOrEmpty(reportToOpen)) openReport(reportToOpen);
-                else newToolStripMenuItem_Click(null, null);
-            }
-            else
-            {
-                _repository = Repository.Create();
-                IsModified = false;
-                init();
-            }
+                if (open)
+                {
+                    if (!string.IsNullOrEmpty(reportToOpen)) openReport(reportToOpen);
+                    else newToolStripMenuItem_Click(null, null);
+                }
+                else
+                {
+                    _repository = Repository.Create();
+                    IsModified = false;
+                    init();
+                }
             if (_repository == null)
             {
                 _repository = new Repository();
@@ -227,7 +226,7 @@ namespace Seal
                 }
                 viewTN.ExpandAll();
 
-                TreeNode tasksTN = new TreeNode("Tasks") { Tag = new TasksFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
+                TreeNode tasksTN = new TreeNode("Tasks") { Tag = new TasksFolder() { Report = Report }, ImageIndex = 2, SelectedImageIndex = 2 };
                 mainTreeView.Nodes.Add(tasksTN);
                 foreach (var task in _report.Tasks)
                 {
@@ -1237,14 +1236,8 @@ namespace Seal
 
             if (_reportViewer == null || !_reportViewer.Visible)
             {
-                _reportViewer = new ReportViewerForm();
-                _reportViewer.webBrowser.ScriptErrorsSuppressed = !Properties.Settings.Default.ShowScriptErrors;
-                _reportViewer.Show();
+                _reportViewer = new ReportViewerForm(false, Properties.Settings.Default.ShowScriptErrors);
             }
-
-            _reportViewer.Text = Path.GetFileNameWithoutExtension(_report.FilePath) + " - " + Repository.SealRootProductName + " Report Viewer";
-            _reportViewer.BringToFront();
-
             _reportViewer.ViewReport(_report.Clone(), _repository, render, viewGUID, outputGUID, _report.FilePath);
             _canRender = true;
             FileHelper.PurgeTempApplicationDirectory();

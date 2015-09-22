@@ -267,6 +267,8 @@ namespace Seal.Model
             {
                 Report.Status = ReportStatus.Executed;
                 Report.ExecutionEndDate = DateTime.Now;
+
+                Report.LogExecution();
             }
         }
 

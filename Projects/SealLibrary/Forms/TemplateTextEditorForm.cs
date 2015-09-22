@@ -21,6 +21,8 @@ namespace Seal.Forms
     {
         public ReportView View;
         public Type TypeForCheckSyntax = null;
+        public string TextToAddForCheck = "";
+
         ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...");
 
         static Size? LastSize = null;
@@ -75,7 +77,9 @@ namespace Seal.Forms
             string error = "";
             try
             {
-                Helper.CompileRazor(textBox.Text, TypeForCheckSyntax, "acachename");
+                string script = textBox.Text;
+                if (!string.IsNullOrEmpty(TextToAddForCheck)) script += "\r\n" + TextToAddForCheck;
+                Helper.CompileRazor(script, TypeForCheckSyntax, "acachename");
             }
             catch (TemplateCompilationException ex)
             {

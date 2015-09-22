@@ -45,6 +45,7 @@ namespace Seal.Model
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
                 GetProperty("WebProductName").SetIsBrowsable(!ForPublication);
+                GetProperty("LogDays").SetIsBrowsable(!ForPublication);
 
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
@@ -99,6 +100,15 @@ namespace Seal.Model
         {
             get { return _logoName; }
             set { _logoName = value; }
+        }
+
+
+        int _logDays = 30;
+        [Category("Log Settings"), DisplayName("Log days to keep"), Description("Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled."), Id(1, 2)]
+        public int LogDays
+        {
+            get { return _logDays; }
+            set { _logDays = value; }
         }
 
         string _webProductName = "Seal Report";

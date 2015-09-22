@@ -161,6 +161,11 @@ namespace Seal.Model
             set { _script = value; }
         }
 
+        public string FullScript
+        {
+            get { return _script + (string.IsNullOrEmpty(Report.CommunTaskScript) ? "" : "\r\n" + Report.CommunTaskScript); }
+        }
+
         bool _ignoreError;
         [Category("Options"), DisplayName("Ignore Errors"), Description("If true, errors occuring during the task execution are ignored and the report execution continues."), Id(1, 2)]
         public bool IgnoreError
@@ -304,7 +309,7 @@ namespace Seal.Model
             if (!Report.Cancel && !string.IsNullOrEmpty(Script))
             {
                 Report.LogMessage("Executing Script...");
-                string result = Helper.ParseRazor(Script, this);
+                string result = Helper.ParseRazor(FullScript, this);
                 if (result == "0")
                 {
                     Report.LogMessage("Script returns 0, the report is cancelled.");

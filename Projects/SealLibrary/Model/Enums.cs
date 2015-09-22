@@ -315,4 +315,16 @@ namespace Seal.Model
         Last,
     }
 
+
+    public enum LogMode
+    {
+        [Description("No log")]
+        None,
+        [Description("Log in one file per day")]
+        OneFilePerDay,
+        [Description("Log in one file per report")]
+        OneFilePerReport,
+        [Description("Log in one file per execution")]
+        OneFilePerExecution,
+    }
 }

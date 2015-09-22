@@ -169,6 +169,7 @@
     <Compile Include="DynamicTypeDescriptor\StandardValueEditorUI.designer.cs">
       <DependentUpon>StandardValueEditorUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TasksFolder.cs" />
     <Compile Include="Forms\ViewFolder.cs" />
     <Compile Include="Helpers\CryptoHelper.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />

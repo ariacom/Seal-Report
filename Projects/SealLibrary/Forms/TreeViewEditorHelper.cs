@@ -26,7 +26,6 @@ namespace Seal.Forms
     }
 
     public class SourceFolder : ITreeSort { public int GetSort() { return 0; } }
-    public class TasksFolder : ITreeSort { public int GetSort() { return 1; } }
     public class ModelFolder : ITreeSort { public int GetSort() { return 2; } }
     public class OutputFolder : ITreeSort { public int GetSort() { return 4; } }
     public class ScheduleFolder : ITreeSort { public int GetSort() { return 5; } }
