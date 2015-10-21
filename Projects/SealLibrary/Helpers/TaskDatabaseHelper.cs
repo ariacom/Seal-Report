@@ -33,7 +33,7 @@ namespace Seal.Helpers
         public string ColumnDateTimeType = "";
         public string InsertStartCommand = "";
         public string InsertEndCommand = "";
-        public int ColumnCharLength = 400;
+        public int ColumnCharLength = 0; //= means auto size
         public int InsertBurstSize = 500;
         public string ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
         public Encoding DefaultEncoding = Encoding.Default;
@@ -266,6 +266,15 @@ namespace Seal.Helpers
                 {
                     int len = col.MaxLength;
                     if (len <= 0) len = ColumnCharLength;
+                    if (ColumnCharLength <= 0)
+                    {
+                        //auto size
+                        len = 1;
+                        foreach (DataRow row in table.Rows)
+                        {
+                            if (row[col].ToString().Length > len) len = row[col].ToString().Length + 1;
+                        }
+                    }
                     result.AppendFormat("{0}({1})", Helper.IfNullOrEmpty(ColumnCharType, _defaultColumnCharType), len);
                 }
                 result.Append(" NULL");
@@ -328,7 +337,6 @@ namespace Seal.Helpers
             else
             {
                 string res = row[col].ToString().Replace("\r", " ").Replace("\n", " ");
-                if (res.Length > ColumnCharLength) res = res.Substring(0, ColumnCharLength - 1);
                 result.Append(Helper.QuoteSingle(res));
             }
 
