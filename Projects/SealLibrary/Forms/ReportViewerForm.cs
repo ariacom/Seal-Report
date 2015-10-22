@@ -224,6 +224,64 @@ namespace Seal.Forms
                         if (File.Exists(resultPath)) Process.Start(resultPath);
                         cancelNavigation = true;
                         break;
+
+                    case ReportExecution.ActionDrillReport:
+                        string nav = HeaderForm.GetAttribute(ReportExecution.HtmlId_navigation_name);
+                        string src = HttpUtility.ParseQueryString(nav).Get("src");
+                        string dst = HttpUtility.ParseQueryString(nav).Get("dst");
+                        string val = HttpUtility.ParseQueryString(nav).Get("val");
+
+                        string destLabel = "", srcRestriction = "";
+                        foreach (var model in _report.Models)
+                        {
+                            ReportElement element = model.Elements.FirstOrDefault(i => i.MetaColumnGUID == src);
+                            if (element != null)
+                            {
+                                element.ChangeColumnGUID(dst);
+                                destLabel = element.DisplayNameElTranslated;
+                                if (val != null)
+                                {
+                                    //Add restriction 
+                                    ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
+                                    restriction.Source = model.Source;
+                                    restriction.Model = model;
+                                    restriction.MetaColumnGUID = src;
+                                    restriction.SetDefaults();
+                                    restriction.Operator = Operator.Equal;
+                                    if (restriction.IsEnum) restriction.EnumValues.Add(val);
+                                    else restriction.Value1 = val;
+                                    model.Restrictions.Add(restriction);
+                                    if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) AND ", model.Restriction);
+                                    model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+
+                                    srcRestriction = restriction.DisplayText;
+                                }
+                                else
+                                {
+                                    var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
+                                    foreach (var restr in restrictions)
+                                    {
+                                        model.Restrictions.Remove(restr);
+                                        model.Restriction = model.Restriction.Replace(ReportRestriction.kStartRestrictionChar + restr.GUID + ReportRestriction.kStopRestrictionChar, "1=1");
+                                    }
+                                }
+                            }
+                        }
+
+
+                        //create HTML result for navigation
+                        string htmlPath = _execution.GenerateHTMLResult();
+                        if (_report.NavigationLinks.Count == 0) _report.NavigationLinks.Add(new NavigationLink() { Href = htmlPath, Text = ">>" });
+                        else _report.NavigationLinks[_report.NavigationLinks.Count - 1].Href = htmlPath;
+
+                        string linkText = destLabel;
+                        if (!string.IsNullOrEmpty(srcRestriction)) linkText += string.Format(" [{0}]", srcRestriction);
+                        _report.NavigationLinks.Add(new NavigationLink() { Href = "#", Text = linkText });
+
+                        cancelNavigation = true;
+                        _reportDone = false;
+                        Execute();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -243,7 +301,8 @@ namespace Seal.Forms
         {
             if (HeaderForm != null)
             {
-                string action = HeaderForm.GetAttribute("action");
+                //Get action from the form
+                string action = HeaderForm.GetAttribute(ReportExecution.ActionCommand);
                 if (e.Url.AbsolutePath.EndsWith(action)) e.Cancel = processAction(action);
             }
         }

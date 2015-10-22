@@ -151,86 +151,88 @@
     </script>
     @Raw(Report.AttachScriptFile("common.js"))
     <script type="text/javascript">
-        function executeTimer() {
-            if (executionTimer != null) {
-                $(headerFormId).attr("action", urlPrefix+"@ReportExecution.ActionRefreshReport");
-                if (urlPrefix != "") {
-                    $.post( urlPrefix+"@ReportExecution.ActionRefreshReport", { execution_guid : "@Report.WebExecutionGUID" })
-                .done(function( data ) {
-                    if (data.result_url != null && data.result_url != "") {
-                        window.location.assign(data.result_url);
-                    }
-                    else if (data.processing_message != null && data.execution_messages != null) {
-                        $("#" + "@ReportExecution.HtmlId_processing_message").html(data.processing_message);
-                        if (displayMessages) $("#" + "@ReportExecution.HtmlId_execution_messages").html(data.execution_messages);
-                    }
-                    else if (data.error != null) {
-                        $("#" + "@ReportExecution.HtmlId_processing_message").html(data.error);
-                        clearInterval(executionTimer);
-                        $("#wait_image").css("display", "none");
-                        $("#execute_button").css("display", "none");
-                    }
-                });
-                }
-                else {
-                    $(headerFormId).submit();
-                }
-            }
-        }
-
-        function executeReport() {
-            if (hasErrors || isCancel) $("#information_div").css("display", "none");
-            var url = "";
-            if (executionTimer == null) {
-                $("#" + "@ReportExecution.HtmlId_processing_message").html("@Report.Translate("Starting execution...")");
-                $("#" + "@ReportExecution.HtmlId_processing_message").css("display", "inline");
-                $("#wait_image").css("display", "inline");
-                $("#execute_button").button({ label: "@Report.Translate("Cancel")" });
-                url = urlPrefix+"@ReportExecution.ActionExecuteReport";
-                executionTimer = setInterval(function () { executeTimer() }, 1200);
-            }
-            else {
-                url = urlPrefix+"@ReportExecution.ActionCancelReport";
-                $("#form_action").val("@ReportExecution.ActionCancelReport");
-            }
+    function executeTimer() {
+        if (executionTimer != null) {
+            $(headerFormId).attr("action", urlPrefix+"@ReportExecution.ActionRefreshReport");
             if (urlPrefix != "") {
-                $.post( url, $(headerFormId).serialize() );
+                $.post( urlPrefix+"@ReportExecution.ActionRefreshReport", { execution_guid : "@Report.WebExecutionGUID" })
+            .done(function( data ) {
+                if (data.result_url != null && data.result_url != "") {
+                    window.location.assign(data.result_url);
+                }
+                else if (data.processing_message != null && data.execution_messages != null) {
+                    $("#" + "@ReportExecution.HtmlId_processing_message").html(data.processing_message);
+                    if (displayMessages) $("#" + "@ReportExecution.HtmlId_execution_messages").html(data.execution_messages);
+                }
+                else if (data.error != null) {
+                    $("#" + "@ReportExecution.HtmlId_processing_message").html(data.error);
+                    clearInterval(executionTimer);
+                    $("#wait_image").css("display", "none");
+                    $("#execute_button").css("display", "none");
+                }
+            });
             }
             else {
-                $(headerFormId).attr("action", url);
                 $(headerFormId).submit();
             }
-            $('.view_result').attr("disabled" ,'disabled');
-            $('#restriction_div').attr("disabled" ,'disabled');
-            $('#restriction_div input').attr("disabled" ,'disabled');
-            $('.view').css("display", "none");
         }
+    }
 
-        function setButtonLabels() {
-            for (var i = 0; i < showButtonIds.length; i++) {
-                if ($(showButtonIds[i] + "_button") != null) {
-                    var isVisible = $(showButtonIds[i] + "_button").prop("checked");
-                    $(showButtonIds[i] + "_button").button({ label: (!isVisible ? "@Report.Translate("Hide")" : "@Report.Translate("Show")")+ " " + showButtonLabels[i] });
-                }
+    function executeReport(nav) {
+        if (hasErrors || isCancel) $("#information_div").css("display", "none");
+        var url = "";
+        if (executionTimer == null) {
+            $("#" + "@ReportExecution.HtmlId_processing_message").html("@Report.Translate("Starting execution...")");
+            $("#" + "@ReportExecution.HtmlId_processing_message").css("display", "inline");
+            $("#wait_image").css("display", "inline");
+            $("#execute_button").button({ label: "@Report.Translate("Cancel")" });
+            //            url = urlPrefix+"@ReportExecution.ActionExecuteReport";
+            url = urlPrefix + (nav == null ? "@ReportExecution.ActionExecuteReport" : "@ReportExecution.ActionDrillReport");
+            executionTimer = setInterval(function () { executeTimer() }, 1200);
+        }
+        else {
+            url = urlPrefix+"@ReportExecution.ActionCancelReport";
+            $("#form_action").val("@ReportExecution.ActionCancelReport");
+        }
+        if (urlPrefix != "") {
+            $.post(url, $(headerFormId).serialize());
+        }
+        else {
+            $(headerFormId).attr("@ReportExecution.ActionCommand", url);
+            $(headerFormId).attr("nav", nav);
+            $(headerFormId).submit();
+        }
+        $('.view_result').attr("disabled" ,'disabled');
+        $('#restriction_div').attr("disabled" ,'disabled');
+        $('#restriction_div input').attr("disabled" ,'disabled');
+        $('.view').css("display", "none");
+    }
+
+    function setButtonLabels() {
+        for (var i = 0; i < showButtonIds.length; i++) {
+            if ($(showButtonIds[i] + "_button") != null) {
+                var isVisible = $(showButtonIds[i] + "_button").prop("checked");
+                $(showButtonIds[i] + "_button").button({ label: (!isVisible ? "@Report.Translate("Hide")" : "@Report.Translate("Show")")+ " " + showButtonLabels[i] });
             }
         }
+    }
 
-        function submitViewParameter(viewId, parameterName, parameterValue)
-        {
-            $("#" + "@ReportExecution.HtmlId_parameter_view_id").val(viewId);
-            $("#" + "@ReportExecution.HtmlId_parameter_view_name").val(parameterName);
-            $("#" + "@ReportExecution.HtmlId_parameter_view_value").val(parameterValue);
-            if (generateHTMLDisplay) {
-                if (urlPrefix != "") {
-                    $.post( urlPrefix + "@ReportExecution.ActionUpdateViewParameter", {  execution_guid : "@Report.WebExecutionGUID", parameter_view_id : viewId, parameter_view_name: parameterName, parameter_view_value : parameterValue});
-                }
-                else {
-                    $(headerFormId).attr("action", "@ReportExecution.ActionUpdateViewParameter");
-                    $(headerFormId).submit();
-                }
+    function submitViewParameter(viewId, parameterName, parameterValue)
+    {
+        $("#" + "@ReportExecution.HtmlId_parameter_view_id").val(viewId);
+        $("#" + "@ReportExecution.HtmlId_parameter_view_name").val(parameterName);
+        $("#" + "@ReportExecution.HtmlId_parameter_view_value").val(parameterValue);
+        if (generateHTMLDisplay) {
+            if (urlPrefix != "") {
+                $.post( urlPrefix + "@ReportExecution.ActionUpdateViewParameter", {  execution_guid : "@Report.WebExecutionGUID", parameter_view_id : viewId, parameter_view_name: parameterName, parameter_view_value : parameterValue});
+            }
+            else {
+                $(headerFormId).attr("action", "@ReportExecution.ActionUpdateViewParameter");
+                $(headerFormId).submit();
             }
         }
-    </script>
+    }
+</script>
 
     <script type="text/javascript">
         $(function () {
@@ -300,12 +302,40 @@
                 maxHeight: 95,
                 selectAllText: "@Report.Translate("Select All")"
             });
-            $(".ms-drop").css("z-index", "0");
-            $(".ms-choice").css("cursor", "default");
-            $(".ms-choice>div").css("display", "none");
 
             setButtonLabels();
 
+            $("body").append("<ul id='nav_menu'/>");
+            $("#nav_menu").menu();
+            $(".cell_value").mouseenter(function() {
+                if ($(this).attr("navigation") != null)
+                {
+                    $("#nav_menu").empty();
+                    $("#nav_menu").append($(this).attr("navigation"));
+                    $('#nav_menu li').click(function(e)
+                    {
+                        executeReport($(this).attr("nav"));
+                        $("#nav_menu").css("display", "none");
+                    });
+                    $("#nav_menu").menu("refresh");
+
+                    $("#nav_menu").css("display", "inline");
+                    $("#nav_menu").css("top", $(this).offset().top + $(this).height());
+                    $("#nav_menu").css("left", $(this).offset().left + $(this).width() + 5);
+                }
+            });
+
+            $( ".cell_value" ).mouseleave(function() {
+                $("#nav_menu").css("display", "none");
+            });
+
+            $( "#nav_menu" ).mouseenter(function() {
+                $("#nav_menu").css("display", "inline");
+            });
+
+            $( "#nav_menu" ).mouseleave(function() {
+                $("#nav_menu").css("display", "none");
+            });
         });
     </script>
     @Raw(Report.AttachScriptFile("dataTables.js"))
@@ -336,7 +366,7 @@
                         }
                         <input type="checkbox" id="information_button" /><label for="information_button"></label>
                     </span>
-                    <button id="home_button" /><label for="home_button"></label>
+                    <button id="home_button"><label for="home_button"></label></button>
                     @if (Report.GenerateHTMLDisplay)
                     {
                         <button id="execute_button" style="width: 80px;">@Report.Translate("Execute")</button>
@@ -363,6 +393,13 @@
                 </div>
         <!--result_div-->
             }
+            <div id="navigation_div" style="display:@(Report.NavigationLinks.Count>0 ? "inline":"none"); @View.GetCSS("navigation")">
+                @foreach (NavigationLink link in Report.NavigationLinks)
+                {
+                    <a href="@link.Href">@link.Text</a> 
+                }
+                <hr style="display: block;" />
+            </div>
 
             <form id="@ReportExecution.HtmlId_header_form" method="post" action="" style="display: none">
                 <!--header_div-->
@@ -396,7 +433,7 @@
                                     }
                                 </table>
                             </td>
-<td>
+                            <td>
                                 @foreach (ReportRestriction restriction in Report.ExecutionCommonRestrictions.Where(i => i.IsEnumRE))
                                 {
                                     <div style="height: @(Report.HasOnlyRestrictionsWithNoOperator ? 165 : 205)px; display: inline; float: left; padding-left: 10px;">

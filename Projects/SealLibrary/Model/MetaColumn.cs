@@ -37,6 +37,8 @@ namespace Seal.Model
                 GetProperty("Format").SetIsBrowsable(true);
                 GetProperty("EnumGUID").SetIsBrowsable(true);
                 GetProperty("HasHTMLTags").SetIsBrowsable(true);
+                GetProperty("DrillChildren").SetIsBrowsable(true);
+                GetProperty("DrillChildren").SetDisplayName("Drill Children: " + (_drillChildren.Count == 0 ? "None" : _drillChildren.Count.ToString() + " Items(s)"));
 
                 GetProperty("HelperCheckColumn").SetIsBrowsable(IsSQL);
                 GetProperty("HelperCreateEnum").SetIsBrowsable(true);
@@ -269,6 +271,15 @@ namespace Seal.Model
                 }
                 return _metaTable;
             }
+        }
+
+        List<string> _drillChildren = new List<string>();
+        [Category("Drill"), DisplayName("Drill Children"), Description("Defines the child columns to navigate from this column with the drill feature."), Id(1, 4)]
+        [Editor(typeof(ColumnsSelector), typeof(UITypeEditor))]
+        public List<string> DrillChildren
+        {
+            get { return _drillChildren; }
+            set { _drillChildren = value; }
         }
 
         #region Helpers

@@ -128,7 +128,7 @@ namespace Seal.Controls
             if (ModelPanel.RestrictionGrid.SelectedObject != null)
             {
                 ReportRestriction restriction = (ReportRestriction)ModelPanel.RestrictionGrid.SelectedObject;
-                restrictionsTextBox.Selection.Text = kStartRestrictionChar + restriction.DisplayRestriction + kStopRestrictionChar;
+                restrictionsTextBox.Selection.Text = ReportRestriction.kStartRestrictionChar + restriction.DisplayRestriction + ReportRestriction.kStopRestrictionChar;
                 restrictionsTextBox.Caret.Position -= 1;
                 highlightRestriction(false);
             }
@@ -145,10 +145,10 @@ namespace Seal.Controls
             bool startOk = false, endOk = false;
             while (--startPos >= 0)
             {
-                if (text[startPos] == kStopRestrictionChar) break;
-                if (text[startPos] == kStartRestrictionChar)
+                if (text[startPos] == ReportRestriction.kStopRestrictionChar) break;
+                if (text[startPos] == ReportRestriction.kStartRestrictionChar)
                 {
-                    if (startPos == 0 || (startPos > 0 && (text[startPos - 1]) != kStartRestrictionChar))
+                    if (startPos == 0 || (startPos > 0 && (text[startPos - 1]) != ReportRestriction.kStartRestrictionChar))
                     {
                         startOk = true;
                         break;
@@ -160,10 +160,10 @@ namespace Seal.Controls
             {
                 while (endPos < text.Length)
                 {
-                    if (text[endPos] == kStartRestrictionChar) break;
-                    if (text[endPos] == kStopRestrictionChar)
+                    if (text[endPos] == ReportRestriction.kStartRestrictionChar) break;
+                    if (text[endPos] == ReportRestriction.kStopRestrictionChar)
                     {
-                        if (endPos == text.Length - 1 || (endPos < text.Length - 1 && (text[endPos + 1]) != kStopRestrictionChar))
+                        if (endPos == text.Length - 1 || (endPos < text.Length - 1 && (text[endPos + 1]) != ReportRestriction.kStopRestrictionChar))
                         {
                             endOk = true;
                             break;
@@ -185,9 +185,6 @@ namespace Seal.Controls
 
             return result;
         }
-
-        const char kStartRestrictionChar = '[';
-        const char kStopRestrictionChar = ']';
 
         int getUtfCharLen(byte c)
         {
@@ -392,7 +389,7 @@ namespace Seal.Controls
                     if (restrictionsTextBox.Text.Last() != '\n') insertedText = "\r\n";
                     insertedText += "AND ";
                 }
-                insertedText += kStartRestrictionChar + restriction.DisplayRestriction + kStopRestrictionChar;
+                insertedText += ReportRestriction.kStartRestrictionChar + restriction.DisplayRestriction + ReportRestriction.kStopRestrictionChar;
                 restrictionsTextBox.Selection.Text = insertedText;
                 restrictionsTextBox.Caret.Position -= 1;
                 highlightRestriction(false);

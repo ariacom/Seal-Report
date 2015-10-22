@@ -258,7 +258,13 @@
                                         {
                                             className = cell.IsTotal ? "cell_value_total" : "cell_value";
                                         }
-                                        <th class='@className' style='@cell.CellCssStyle'>@Raw(cell.HTMLValue)</th>
+                                        string navigation = "";
+                                        foreach (var link in cell.Links)
+                                        {
+                                            navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1} {2}</a></li>", link.Href, Report.Translate("Drill To"), Repository.TranslateElement(cell.Element, link.Text));
+                                        }
+                                        navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
+                                        <th class='@className' style='@cell.CellCssStyle' @Raw(navigation)>@Raw(cell.HTMLValue)</th>
                                     }
                                 </tr>
                             }
@@ -273,7 +279,13 @@
                                         ResultCell cell = line[col];
                                         string className = cell.IsTitle && col == 0 ? "cell_title" : "cell_value";
                                         className = cell.IsTotal ? "cell_value_total" : className;
-                                        <td class='@className' style='@cell.CellCssStyle'>@Raw(cell.HTMLValue)</td>
+                                        string navigation = "";
+                                        foreach (var link in cell.Links)
+                                        {
+                                            navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1} {2}</a></li>", link.Href, Report.Translate("Drill To"), Repository.TranslateElement(cell.Element, link.Text));
+                                        }
+                                        navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
+                                        <td class='@className' style='@cell.CellCssStyle'@Raw(navigation)>@Raw(cell.HTMLValue)</td>
                                     }
                                 </tr>
                             }

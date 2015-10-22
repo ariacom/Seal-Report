@@ -11,6 +11,12 @@ using Seal.Helpers;
 
 namespace Seal.Model
 {
+    public class NavigationLink
+    {
+        public string Href = "";
+        public string Text = "";
+    }
+
     public class ResultCell
     {
         public object Value;
@@ -132,7 +138,7 @@ namespace Seal.Model
                         }
                     }
                 }
-                
+
                 if (Element != null && !Element.IsEnum && string.IsNullOrEmpty(result))
                 {
                     if (Element.IsNumeric || Element.IsDateTime) result = "text-align:right;";
@@ -185,6 +191,57 @@ namespace Seal.Model
             return 0;
         }
 
+        List<NavigationLink> _links = null;
+        public List<NavigationLink> Links
+        {
+            get
+            {
+                if (_links == null)
+                {
+                    _links = new List<NavigationLink>();
+                    if (Element != null)
+                    {
+                        //Get child links
+                        var metaData = Element.Source.MetaData;
+                        foreach (string childGUID in Element.MetaColumn.DrillChildren)
+                        {
+                            var child = metaData.GetColumnFromGUID(childGUID);
+                            if (child != null)
+                            {
+                                NavigationLink link = new NavigationLink();
+                                //string server = Element.Source.Repository.WebApplicationPath;
+                                //if (string.IsNullOrEmpty(server)) server = "http://w3.localhost";
+                                string val = RawDisplayValue;
+                                if (Element.IsEnum)
+                                {
+                                    var enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == val);
+                                    if (enumValue != null) val = enumValue.Id;
+                                }
+                                // link.Href = string.Format("{0}?{1}={2}&src={3}&dst={4}&val={5}", server, ReportExecution.ActionCommand, ReportExecution.ActionDrillReport, Element.MetaColumnGUID, childGUID, val);
+                                link.Href = string.Format("src={0}&dst={1}&val={2}", Element.MetaColumnGUID, childGUID, val);
+                                link.Text = child.DisplayName;
+                                _links.Add(link);
+                            }
+                        }
+
+                        //Get parent link
+                        foreach (MetaTable table in Element.Source.MetaData.Tables)
+                        {
+                            var parentColumn = table.Columns.FirstOrDefault(i => i.DrillChildren.Contains(Element.MetaColumnGUID));
+                            if (parentColumn != null)
+                            {
+                                NavigationLink link = new NavigationLink();
+                                link.Href = string.Format("src={0}&dst={1}", Element.MetaColumnGUID, parentColumn.GUID);
+                                link.Text = parentColumn.DisplayName;
+                                _links.Add(link);
+                            }
+                        }
+                    }
+                }
+                return _links;
+            }
+        }
+
 
         //Context to be used for cell script...
         public ReportModel ContextModel;
@@ -195,7 +252,7 @@ namespace Seal.Model
 
         public ResultCell[] ContextCurrentLine
         {
-            get { return ContextTable != null && ContextRow != -1 ? ContextTable.Lines[ContextRow] : null ; }
+            get { return ContextTable != null && ContextRow != -1 ? ContextTable.Lines[ContextRow] : null; }
         }
 
         public bool ContextIsSummaryTable

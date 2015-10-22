@@ -20,6 +20,7 @@
   </Connections>
   <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
   <IsDefault>false</IsDefault>
+  <IsNoSQL>false</IsNoSQL>
   <IgnorePrePostError>false</IgnorePrePostError>
   <MetaData>
     <Tables>
@@ -28,6 +29,7 @@
         <Name>Customers</Name>
         <Sql />
         <DynamicColumns>false</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <MustRefresh>false</MustRefresh>
         <IgnorePrePostError>false</IgnorePrePostError>
@@ -45,6 +47,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</GUID>
@@ -59,6 +62,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</GUID>
@@ -73,6 +77,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>8741bf0f-13e4-401c-bb1d-67c027a7c780</GUID>
@@ -87,6 +92,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>ecab8418-c406-4837-8fdb-7341c9b45f56</GUID>
@@ -101,6 +107,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</GUID>
@@ -115,6 +122,7 @@
             <Format />
             <EnumGUID>07cc4a5b-1550-4fc2-9f9f-e05e21e496d2</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>9cdc0eb2-eb64-4b96-8ea9-0405736b4809</GUID>
@@ -129,6 +137,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>add7d793-5327-4604-997d-cdfeb474b09a</GUID>
@@ -143,6 +152,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>e24a016c-11d6-4b7c-9319-c1ad5864841c</GUID>
@@ -157,6 +167,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>7386da67-f083-4527-a303-aa24de5f7d13</GUID>
@@ -171,6 +182,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -178,6 +190,7 @@
         <GUID>61152bde-427a-4113-8f7d-322a1280bede</GUID>
         <Name>Employees</Name>
         <DynamicColumns>false</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <MustRefresh>false</MustRefresh>
         <IgnorePrePostError>false</IgnorePrePostError>
@@ -195,6 +208,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</GUID>
@@ -209,6 +223,7 @@
             <Format>d</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</GUID>
@@ -223,6 +238,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</GUID>
@@ -237,6 +253,7 @@
             <Format />
             <EnumGUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>9af39b8d-8b3a-4db2-a093-8abac0fb8e62</GUID>
@@ -251,6 +268,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>da2dbe92-e90c-4415-b354-1bc589839048</GUID>
@@ -265,6 +283,7 @@
             <Format />
             <EnumGUID>f2611e98-b25e-450d-a9cc-6811dda32d94</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>b4a7f5d4-1045-4c67-b724-578e116ceff5</GUID>
@@ -279,6 +298,7 @@
             <Format>d</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>9b0f675f-fbb0-4f9c-9dca-9e15039e75ec</GUID>
@@ -293,6 +313,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>0a5fef96-fd6b-4d51-bff0-59d458533a57</GUID>
@@ -307,6 +328,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>3aae4bf3-59e8-4773-887e-1661d6b39ae7</GUID>
@@ -321,6 +343,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</GUID>
@@ -335,6 +358,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>80720d2a-0ebf-457b-8539-6eb07205c6c9</GUID>
@@ -349,6 +373,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>a042cb87-8838-46a8-a679-3e49f666a7b7</GUID>
@@ -363,6 +388,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>793c07a5-b7bd-41ae-bdea-506ad244005e</GUID>
@@ -377,6 +403,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>4d365f0e-0e2a-4a58-8411-11fd6d8900db</GUID>
@@ -391,6 +418,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -398,6 +426,7 @@
         <GUID>691ae384-bd74-4708-93a7-abea6ed56e55</GUID>
         <Name>Orders</Name>
         <DynamicColumns>false</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <MustRefresh>false</MustRefresh>
         <IgnorePrePostError>false</IgnorePrePostError>
@@ -415,6 +444,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>4a3f4d69-3781-4679-8797-f425478de0d9</GUID>
@@ -429,6 +459,7 @@
             <Format>d</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>12ce241a-1f80-4b69-a023-66df46152046</GUID>
@@ -443,6 +474,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>ab168a45-6852-44b7-8eff-378968669f14</GUID>
@@ -457,6 +489,7 @@
             <Format>d</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>2003a407-ab31-4514-bc83-8e9479c42e2d</GUID>
@@ -471,6 +504,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>e93c456c-40d9-494e-ba21-711177339870</GUID>
@@ -485,6 +519,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</GUID>
@@ -499,6 +534,7 @@
             <Format />
             <EnumGUID>fcf64fca-579d-4b79-be22-3c2059989ec3</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>8ccab7ae-77ad-4cb9-9345-d176a463c21b</GUID>
@@ -513,6 +549,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>ce574340-1504-4bf7-9228-c64f79cf9803</GUID>
@@ -527,6 +564,7 @@
             <Format>d</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</GUID>
@@ -541,6 +579,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>1b2d846d-976f-49ac-b514-cc5b448d7b18</GUID>
@@ -555,6 +594,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>74282c63-b2a2-4c5c-b59f-e4cac9730f32</GUID>
@@ -569,6 +609,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>64369c69-f298-466f-a241-d7388b2b0e80</GUID>
@@ -583,6 +624,7 @@
             <Format>yyyy</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>057c81db-d2c0-4938-9a64-6d6d33668baa</GUID>
@@ -597,6 +639,7 @@
             <Format>MM/yyyy</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -604,6 +647,7 @@
         <GUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</GUID>
         <Name>Products</Name>
         <DynamicColumns>false</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <MustRefresh>false</MustRefresh>
         <IgnorePrePostError>false</IgnorePrePostError>
@@ -621,6 +665,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</GUID>
@@ -635,6 +680,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</GUID>
@@ -649,6 +695,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>75715efd-6f8a-48ba-8f8e-2297d956d184</GUID>
@@ -663,6 +710,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</GUID>
@@ -677,6 +725,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</GUID>
@@ -691,6 +740,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>6fa87b3b-048f-4680-9516-35679cba84bf</GUID>
@@ -705,6 +755,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</GUID>
@@ -719,6 +770,11 @@
             <Format>N0</Format>
             <EnumGUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren>
+              <string>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</string>
+              <string>20ed0b7a-87dd-4aaa-8d48-feab848e396b</string>
+              <string>087ed2f1-b58b-4407-9291-8329ee5dbfe1</string>
+            </DrillChildren>
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -726,6 +782,7 @@
         <GUID>44179bfc-3a4a-4568-8137-364f06941c23</GUID>
         <Name>Shippers</Name>
         <DynamicColumns>false</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <MustRefresh>false</MustRefresh>
         <IgnorePrePostError>false</IgnorePrePostError>
@@ -743,6 +800,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>f1689c68-6619-4c2b-8b1f-5b0b9a66ace7</GUID>
@@ -757,6 +815,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>d56fe600-8f12-411b-b4cc-a73152d2e040</GUID>
@@ -771,6 +830,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -778,6 +838,7 @@
         <GUID>a5d69c87-8ce9-44cf-b2bc-4ebb88daf0cf</GUID>
         <Name>Suppliers</Name>
         <DynamicColumns>false</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <MustRefresh>false</MustRefresh>
         <IgnorePrePostError>false</IgnorePrePostError>
@@ -795,6 +856,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>e2113646-4a55-4077-8d34-a22bdef1354b</GUID>
@@ -809,6 +871,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</GUID>
@@ -823,6 +886,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>7e3f60fc-66fc-4b35-aa56-ef06b4a6bf22</GUID>
@@ -837,6 +901,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>8415fa94-cbf0-4d9b-ab58-816e11da991e</GUID>
@@ -851,6 +916,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>70328799-b9e4-4e93-b851-88be7514c802</GUID>
@@ -865,6 +931,7 @@
             <Format />
             <EnumGUID>c94b4e37-2c8a-4f34-965f-004b888f5c66</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>7bbbcb86-86b6-4223-b894-8c70f76c63f9</GUID>
@@ -879,6 +946,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>1ce1064f-a9f9-4f90-b2cf-2885169e8e73</GUID>
@@ -893,6 +961,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>41e673d0-7852-43d0-9ef4-c64649f9020a</GUID>
@@ -907,6 +976,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>addf0212-9876-4747-919d-830cb40d2506</GUID>
@@ -921,6 +991,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>2a916fcb-3346-4edf-bcf1-3a15c88b29f8</GUID>
@@ -935,6 +1006,7 @@
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</GUID>
@@ -949,6 +1021,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -956,6 +1029,7 @@
         <GUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</GUID>
         <Name>[Order Details]</Name>
         <DynamicColumns>false</DynamicColumns>
+        <KeepColumnNames>false</KeepColumnNames>
         <Type>TABLE</Type>
         <MustRefresh>false</MustRefresh>
         <IgnorePrePostError>false</IgnorePrePostError>
@@ -973,6 +1047,7 @@
             <Format>N2</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>cb20a340-73d5-4e52-b7fc-59dab043c176</GUID>
@@ -987,6 +1062,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</GUID>
@@ -1001,6 +1077,7 @@
             <Format>N2</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>067548ce-bc83-48b8-8212-aa359bd12f9b</GUID>
@@ -1015,6 +1092,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
           <MetaColumn>
             <GUID>a63be915-3593-4377-8155-5ab3a78f45ba</GUID>
@@ -1029,6 +1107,7 @@
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
           </MetaColumn>
         </Columns>
       </MetaTable>

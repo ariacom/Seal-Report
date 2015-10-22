@@ -179,7 +179,7 @@ namespace SealWebServer.Controllers
             }
         }
 
-        public ActionResult SetUserInfo(string culture)
+        public ActionResult ActionSetUserInfo(string culture)
         {
             try
             {
@@ -321,7 +321,7 @@ namespace SealWebServer.Controllers
             {
                 return HandleException(ex);
             }
-            return Content(string.Format("Error: Report file not found.\r\n{0}", path));
+            return Content("Error: Report file not found.\r\n");
         }
 
         public ActionResult ViewFile(string path)
@@ -350,7 +350,7 @@ namespace SealWebServer.Controllers
             {
                 return HandleException(ex);
             }
-            return Content(string.Format("Error: File not found.\r\n{0}", path));
+            return Content("Error: File not found.\r\n");
         }
 
         string RenderRazorViewToString(string viewName, object model)
@@ -390,7 +390,7 @@ namespace SealWebServer.Controllers
             {
                 return HandleException(ex);
             }
-            return Content(string.Format("Error: Report file not found.\r\n{0}", report));
+            return Content("Error: Report file not found.\r\n");
         }
 
         public ActionResult InitUserPreferences()

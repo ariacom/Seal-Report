@@ -79,3 +79,11 @@ html[xmlns] .dataTables_wrapper { display: block; }
 .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
 .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
 .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
+
+/* navigation menu*/
+#nav_menu {width:200px; display:none; position:fixed; z-index:50;}
+
+/* multi select */
+.ms-drop {z-index:0;}
+.ms-choice {cursor:default;}
+.ms-choice>div {display:none;}

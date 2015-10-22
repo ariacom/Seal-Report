@@ -108,6 +108,7 @@
     <Compile Include="Forms\SmartCopyForm.Designer.cs">
       <DependentUpon>SmartCopyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ColumnsSelector.cs" />
     <Compile Include="Forms\ToolsHelper.cs" />
     <Compile Include="Forms\ToolStripEditorHelper.cs" />
     <Compile Include="Forms\EntityCollectionEditor.cs" />
