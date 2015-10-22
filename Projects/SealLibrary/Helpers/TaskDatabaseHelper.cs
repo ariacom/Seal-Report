@@ -118,7 +118,22 @@ namespace Seal.Helpers
             Regex regexp = null;
             List<string> languages = new List<string>();
 
-            foreach (string line in File.ReadAllLines(csvPath, DefaultEncoding))
+            string[] lines = null;
+            try
+            {
+                lines = File.ReadAllLines(csvPath, DefaultEncoding);
+            }
+            catch
+            {
+                //Try by copying the file...
+                string newPath = FileHelper.GetTempUniqueFileName(csvPath);
+                File.Copy(csvPath, newPath);
+                lines = File.ReadAllLines(newPath, DefaultEncoding);
+                FileHelper.PurgeTempApplicationDirectory();
+            }
+            
+
+            foreach (string line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
 

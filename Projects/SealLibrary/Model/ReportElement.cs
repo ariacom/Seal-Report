@@ -420,6 +420,12 @@ namespace Seal.Model
             set { _metaColumnGUID = value; }
         }
 
+        public void ChangeColumnGUID(string guid)
+        {
+            _metaColumn = null;
+            _metaColumnGUID = guid;
+        }
+
         MetaColumn _metaColumn = null;
         [XmlIgnore, Browsable(false)]
         public MetaColumn MetaColumn

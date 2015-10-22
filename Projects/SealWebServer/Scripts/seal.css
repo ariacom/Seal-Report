@@ -1,6 +1,6 @@
 /* common */
 body { font-family: Verdana, Arial, Helvetica, sans-serif;background: white; font-size:10pt; color:#212121; width:100%; height:100%;}
-hr { width: 100%; clear:both;border-right:0;border-left:0; padding: 0 0;}	
+hr { width: 100%; clear:both;border-right:0;border-left:0; margin:4px;padding: 0 0;}	
 table { margin: 0.2em 0 .2em 0; border: 1px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; }
 tr {page-break-inside : avoid;}
 thead {display: table-header-group;}
@@ -54,6 +54,7 @@ div.dataTables_processing {	float: left; font-weight: bold;	color: orange; paddi
 .data_table thead .sorting_asc,.data_table thead .sorting_desc,.data_table thead .sorting  {cursor: pointer; *cursor: hand;}
 
 div#information_div { margin: 4px;}
+div#message_div { margin: 4px;}
 div.dataTables_paginate, div.dataTables_filter, div.dataTables_length { float: left;}
 div.dataTables_length { padding-right: 50px;}
 div.dataTables_info { font-style: italic; float: left;}
@@ -78,3 +79,11 @@ html[xmlns] .dataTables_wrapper { display: block; }
 .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
 .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
 .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
+
+/* navigation menu*/
+#nav_menu {width:200px; display:none; position:fixed; z-index:50;}
+
+/* multi select */
+.ms-drop {z-index:0;}
+.ms-choice {cursor:default;}
+.ms-choice>div {display:none;}

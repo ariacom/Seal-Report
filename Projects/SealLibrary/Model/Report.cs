@@ -1279,6 +1279,16 @@ namespace Seal.Model
             get { return (!PrintLayout && !ForPDFConversion) || GenerateHTMLDisplay; }
         }
 
+
+        [XmlIgnore]
+        List<NavigationLink> _navigationLinks = new List<NavigationLink>();
+        public List<NavigationLink> NavigationLinks
+        {
+            get { return _navigationLinks; }
+            set { _navigationLinks = value; }
+        }
+
+
         public void UpdateViewParameter(string viewId, string parameterName, string parameterValue)
         {
             ReportView view = ExecutionView.GetView(viewId);
