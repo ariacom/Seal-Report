@@ -27,6 +27,8 @@ namespace Seal.Model
     public class ReportExecution
     {
         //Actions Keywords...
+        public const string ActionCommand = "action";
+
         public const string ActionExecuteReport = "ActionExecuteReport";
         public const string ActionRefreshReport = "ActionRefreshReport";
         public const string ActionCancelReport = "ActionCancelReport";
@@ -35,6 +37,9 @@ namespace Seal.Model
         public const string ActionViewPrintResult = "ActionViewPrintResult";
         public const string ActionViewPDFResult = "ActionViewPDFResult";
         public const string ActionViewExcelResult = "ActionViewExcelResult";
+        public const string ActionDrillReport = "ActionDrillReport";
+        public const string ActionLogin = "ActionLogin";
+        public const string ActionSetUserInfo = "ActionSetUserInfo";        
 
         //Html Ids Keywords
         public const string HtmlId_header_form = "header_form";
@@ -43,6 +48,7 @@ namespace Seal.Model
         public const string HtmlId_parameter_view_id = "parameter_view_id";
         public const string HtmlId_parameter_view_name = "parameter_view_name";
         public const string HtmlId_parameter_view_value = "parameter_view_value";
+        public const string HtmlId_navigation_name = "nav";
 
 
         public Report Report;

@@ -5,11 +5,11 @@
     Repository repository = user.Security.Repository;
 }
 <input type="hidden" autofocus="autofocus" />
-<form id="userInfoForm" action="SetUserInfo" method="post" target="_top">
+<form id="userInfoForm" action="@ReportExecution.SetUserInfo" method="post" target="_top">
     <div class="dataTables_wrapper">
         <table class="data_table">
             <tr class="even"><th class="cell_value">@repository.TranslateWeb("User Name")</th><td class="cell_value">@user.Name</td></tr>
-            <tr class="odd"><th class ="cell_value">@repository.TranslateWeb("User Groups")</th><td class="cell_value">@user.SecurityGroupsDisplay</td></tr>
+            <tr class="odd"><th class="cell_value">@repository.TranslateWeb("User Groups")</th><td class="cell_value">@user.SecurityGroupsDisplay</td></tr>
             <tr class="even">
                 <th class="cell_value">@repository.TranslateWeb("Culture")</th>
                 <td class="cell_value">
@@ -22,7 +22,7 @@
                 </td>
             </tr>
         </table>
-        </div>
+    </div>
 </form>
 
 

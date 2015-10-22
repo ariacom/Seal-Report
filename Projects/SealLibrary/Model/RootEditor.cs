@@ -62,6 +62,11 @@ namespace Seal.Model
             }
         }
 
+        public void UpdateEditor()
+        {
+            UpdateEditorAttributes();
+        }
+
         #endregion
     }
 }

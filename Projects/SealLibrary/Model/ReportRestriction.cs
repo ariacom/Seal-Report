@@ -117,6 +117,9 @@ namespace Seal.Model
         }
         #endregion
 
+        public const char kStartRestrictionChar = '[';
+        public const char kStopRestrictionChar = ']';
+
         public static ReportRestriction CreateReportRestriction()
         {
             return new ReportRestriction() { GUID = Guid.NewGuid().ToString(), _type = ColumnType.Default, _numericStandardFormat = NumericStandardFormat.Default, _datetimeStandardFormat = DateTimeStandardFormat.Default };

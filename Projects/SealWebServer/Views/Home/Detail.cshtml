@@ -86,19 +86,19 @@
     </style>
 
     <script type="text/javascript">
-        //format for datatables
-        var shortDateFormat = '@repository.CultureInfo.DateTimeFormat.ShortDatePattern';
-        var isUSdate = shortDateFormat.match(/^m/i);
-        var dateSeparator = '@repository.CultureInfo.DateTimeFormat.DateSeparator';
-        var decimalSeparator = '@repository.CultureInfo.NumberFormat.NumberDecimalSeparator';
+    //format for datatables
+    var shortDateFormat = '@repository.CultureInfo.DateTimeFormat.ShortDatePattern';
+    var isUSdate = shortDateFormat.match(/^m/i);
+    var dateSeparator = '@repository.CultureInfo.DateTimeFormat.DateSeparator';
+    var decimalSeparator = '@repository.CultureInfo.NumberFormat.NumberDecimalSeparator';
 
-        function login() {
-            $("#loginForm").attr("action", "Login");
-            $("#loginForm").submit();
-        }
+    function login() {
+        $("#loginForm").attr("@ReportExecution.ActionCommand", "@ReportExecution.ActionLogin");
+        $("#loginForm").submit();
+    }
 
-        function setUserInfo() {
-            $("#userInfoForm").attr("action", "SetUserInfo");
+    function setUserInfo() {
+        $("#userInfoForm").attr("@ReportExecution.ActionCommand", "@ReportExecution.ActionSetUserInfo");
             $("#userInfoForm").submit();
         }
 
@@ -111,126 +111,126 @@
                 minWidth: 400,
                 height: "auto",
                 closeText: "@repository.TranslateWeb("Close")"
-            });
-
-            $(".viewOutputDialog").dialog({
-                modal: true,
-                autoOpen: false,
-                minWidth: 500,
-                height: "auto",
-                closeText: "@repository.TranslateWeb("Close")"
-            });
-
-            $("#userPreferencesDialog").dialog({
-                modal: true,
-                autoOpen: false,
-                minWidth: 600,
-                width: "auto",
-                height: "auto",
-                closeText: "@repository.TranslateWeb("Cancel")",
-                buttons: {
-                    "@repository.TranslateWeb("Save")" : setUserInfo,
-                    "@repository.TranslateWeb("Cancel")": function() {
-                        $( this ).dialog( "close" );
-                    }
-                }
-            });
-
-            $("#userInfo").click(function(){ openUserPreferencesDialog();})
-
-            dialog = $("#loginDialog").dialog({
-                autoOpen: false,
-                minWidth: 350,
-                height: "auto",
-                modal: true,
-                closeText: "@repository.TranslateWeb("Close")",
-                buttons: {
-                    "@repository.TranslateWeb("Login")": login
-                }
-            });
-            $('#loginDialog').keypress(function(e) {
-                if (e.keyCode == $.ui.keyCode.ENTER) {
-                    login();
-                }
-            });
-
-            var dataTables = $('.data_table');
-            try {
-                if (dataTables != null && true && !false) {
-                    dataTables.dataTable({
-                        "sDom": '<"dataTableTop"lfpri>t',
-                        "aoColumnDefs": [{ "bSortable": false, "aTargets": ["firstcell"] }],
-                        "oLanguage": {
-                            "sProcessing": "@repository.TranslateReport("Processing...")",
-                            "sLengthMenu": "@repository.TranslateReport("Show _MENU_ reports")",
-                            "sZeroRecords": "@repository.TranslateReport("No reports")",
-                            "sInfo": "@repository.TranslateReport("Showing _START_ to _END_ of _TOTAL_")",
-                            "sInfoEmpty": "@repository.TranslateReport("Showing 0 to 0 of 0")",
-                            "sInfoFiltered": "@repository.TranslateReport("(filtered from _MAX_)")",
-                            "sInfoPostFix": "",
-                            "sSearch": "@repository.TranslateReport("Filter:")",
-                            "oPaginate": {
-                                "sFirst": "|&lt;",
-                                "sPrevious": "&lt;&lt;",
-                                "sNext": ">>",
-                                "sLast": ">|"
-                            }
-                        },
-                        "bSort": true,
-                        "aaSorting": [],
-                        "bPaginate": true,
-                        "sPaginationType": "full_numbers",
-                        "iDisplayLength": 50,
-                        "bInfo": true,
-                        "bFilter": true,
-                        "bProcessing": true,
-                        "bAutoWidth": false,
-                        "aoColumnDefs": [
-                            {
-                                "bSortable": false,
-                                "aTargets": [1]
-                            }
-                        ]
-                    });
-                }
-            }
-            catch (e) { };
-
-            openDialogs();
         });
 
-        function openViewOutputDialog(source) {
-            $("#waitViewOutputDialog").dialog("open");
-            $.post("InitExecuteReportViewOutput", { report: $(source).attr("id") })
-            .done(function (data) {
-                $("#waitViewOutputDialog").dialog("close");
-                $("#viewOutputDialog").html(data);
-                $("#viewOutputDialog").dialog("open");
-                $("#viewOutputDialog").tooltip();
-                $('#viewOutputDialog a').blur();
-            });
-        }
+        $(".viewOutputDialog").dialog({
+            modal: true,
+            autoOpen: false,
+            minWidth: 500,
+            height: "auto",
+            closeText: "@repository.TranslateWeb("Close")"
+        });
 
-        function openUserPreferencesDialog() {
-            $.post("InitUserPreferences")
-            .done(function (data) {
-                $("#userPreferencesDialog").html(data);
-                $("#userPreferencesDialog").dialog("open");
-                $("#userPreferencesDialog").tooltip();
-                $('#userPreferencesDialog a').blur();
-            });
-        }
+        $("#userPreferencesDialog").dialog({
+            modal: true,
+            autoOpen: false,
+            minWidth: 600,
+            width: "auto",
+            height: "auto",
+            closeText: "@repository.TranslateWeb("Cancel")",
+            buttons: {
+                "@repository.TranslateWeb("Save")" : setUserInfo,
+                "@repository.TranslateWeb("Cancel")": function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        });
 
-        function openDialogs() {
-            if (@Helper.ToJS(!user.IsAuthenticated && repository.Security.PromptUserPassword))
-            {
-                $("#loginDialog").dialog("open");
+        $("#userInfo").click(function(){ openUserPreferencesDialog();})
+
+        dialog = $("#loginDialog").dialog({
+            autoOpen: false,
+            minWidth: 350,
+            height: "auto",
+            modal: true,
+            closeText: "@repository.TranslateWeb("Close")",
+            buttons: {
+                "@repository.TranslateWeb("Login")": login
+            }
+        });
+        $('#loginDialog').keypress(function(e) {
+            if (e.keyCode == $.ui.keyCode.ENTER) {
+                login();
+            }
+        });
+
+        var dataTables = $('.data_table');
+        try {
+            if (dataTables != null && true && !false) {
+                dataTables.dataTable({
+                    "sDom": '<"dataTableTop"lfpri>t',
+                    "aoColumnDefs": [{ "bSortable": false, "aTargets": ["firstcell"] }],
+                    "oLanguage": {
+                        "sProcessing": "@repository.TranslateReport("Processing...")",
+                        "sLengthMenu": "@repository.TranslateReport("Show _MENU_ reports")",
+                        "sZeroRecords": "@repository.TranslateReport("No reports")",
+                        "sInfo": "@repository.TranslateReport("Showing _START_ to _END_ of _TOTAL_")",
+                        "sInfoEmpty": "@repository.TranslateReport("Showing 0 to 0 of 0")",
+                        "sInfoFiltered": "@repository.TranslateReport("(filtered from _MAX_)")",
+                        "sInfoPostFix": "",
+                        "sSearch": "@repository.TranslateReport("Filter:")",
+                        "oPaginate": {
+                            "sFirst": "|&lt;",
+                            "sPrevious": "&lt;&lt;",
+                            "sNext": ">>",
+                            "sLast": ">|"
+                        }
+                    },
+                    "bSort": true,
+                    "aaSorting": [],
+                    "bPaginate": true,
+                    "sPaginationType": "full_numbers",
+                    "iDisplayLength": 50,
+                    "bInfo": true,
+                    "bFilter": true,
+                    "bProcessing": true,
+                    "bAutoWidth": false,
+                    "aoColumnDefs": [
+                        {
+                            "bSortable": false,
+                            "aTargets": [1]
+                        }
+                    ]
+                });
+            }
         }
-        else if (@Helper.ToJS(!string.IsNullOrEmpty(user.Error)))
+        catch (e) { };
+
+        openDialogs();
+    });
+
+    function openViewOutputDialog(source) {
+        $("#waitViewOutputDialog").dialog("open");
+        $.post("InitExecuteReportViewOutput", { report: $(source).attr("id") })
+        .done(function (data) {
+            $("#waitViewOutputDialog").dialog("close");
+            $("#viewOutputDialog").html(data);
+            $("#viewOutputDialog").dialog("open");
+            $("#viewOutputDialog").tooltip();
+            $('#viewOutputDialog a').blur();
+        });
+    }
+
+    function openUserPreferencesDialog() {
+        $.post("InitUserPreferences")
+        .done(function (data) {
+            $("#userPreferencesDialog").html(data);
+            $("#userPreferencesDialog").dialog("open");
+            $("#userPreferencesDialog").tooltip();
+            $('#userPreferencesDialog a').blur();
+        });
+    }
+
+    function openDialogs() {
+        if (@Helper.ToJS(!user.IsAuthenticated && repository.Security.PromptUserPassword))
         {
-            $("#errorDialog").dialog("open");
-        }
-        }
+            $("#loginDialog").dialog("open");
+    }
+    else if (@Helper.ToJS(!string.IsNullOrEmpty(user.Error)))
+    {
+        $("#errorDialog").dialog("open");
+    }
+    }
     </script>
     <script type='text/javascript' src='~/Scripts/dataTables.js'></script>
 </head>

@@ -196,13 +196,13 @@
 
         #endregion
 
-        private System.Windows.Forms.ToolStripTextBox filterToolStripTextBox;
-        private System.Windows.Forms.ToolStripButton sortToolStripButton;
+        public System.Windows.Forms.ToolStripTextBox filterToolStripTextBox;
+        public System.Windows.Forms.ToolStripButton sortToolStripButton;
         private System.Windows.Forms.ToolStripLabel filterToolStripLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton okToolStripButton;
-        private System.Windows.Forms.ToolStripButton cancelToolStripButton;
-        private System.Windows.Forms.ToolStripButton selectAllToolStripButton;
+        public System.Windows.Forms.ToolStripButton okToolStripButton;
+        public System.Windows.Forms.ToolStripButton cancelToolStripButton;
+        public System.Windows.Forms.ToolStripButton selectAllToolStripButton;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         public System.Windows.Forms.ToolStrip mainToolStrip;
