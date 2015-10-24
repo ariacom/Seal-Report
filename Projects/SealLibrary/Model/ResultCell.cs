@@ -219,7 +219,8 @@ namespace Seal.Model
                                 }
                                 // link.Href = string.Format("{0}?{1}={2}&src={3}&dst={4}&val={5}", server, ReportExecution.ActionCommand, ReportExecution.ActionDrillReport, Element.MetaColumnGUID, childGUID, val);
                                 link.Href = string.Format("src={0}&dst={1}&val={2}", Element.MetaColumnGUID, childGUID, val);
-                                link.Text = child.DisplayName;
+                                link.Text = Element.Source.Report.Translate("Drill >") + " " + Element.Source.Report.Repository.RepositoryTranslate("Element", child.Category + '.' + child.DisplayName, child.DisplayName);
+
                                 _links.Add(link);
                             }
                         }
@@ -232,7 +233,7 @@ namespace Seal.Model
                             {
                                 NavigationLink link = new NavigationLink();
                                 link.Href = string.Format("src={0}&dst={1}", Element.MetaColumnGUID, parentColumn.GUID);
-                                link.Text = parentColumn.DisplayName;
+                                link.Text = Element.Source.Report.Translate("Drill <") + " " + Element.Source.Report.Repository.RepositoryTranslate("Element", parentColumn.Category + '.' + parentColumn.DisplayName, parentColumn.DisplayName);
                                 _links.Add(link);
                             }
                         }

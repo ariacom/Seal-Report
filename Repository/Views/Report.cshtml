@@ -45,33 +45,9 @@
                 }
                 return text;
             }
-
-            function nvd3Translate(texts)
-            {
-                for (var i=0; i<texts.length; i++) $(texts[i]).text(nvd3TranslateText($(texts[i]).text()));
-            }
-
-            function nvd3TranslateTextAxis(text)
-            {
-                var suffix = "(right axis)";
-                var index = text.lastIndexOf(suffix);
-                if (index != -1 && index == text.length - suffix.length) return text.substr(0, index) + nvd3TranslateText(suffix);
-                return text;
-            }
-            function nvd3TranslateAxis(texts)
-            {
-                for (var i=0; i<texts.length; i++) $(texts[i]).text(nvd3TranslateTextAxis($(texts[i]).text()));
-            }
-
-            var nvd3Charts = [];
-            function nvd3UpdateCharts()
-            {
-                for (var i=0;i<nvd3Charts.length;i++) nvd3Charts[i].update();
-                nvd3Translate($("g.nv-controlsWrap text.nv-legend-text"));
-                nvd3TranslateAxis($("g.legendWrap text.nv-legend-text"));
-            }
-            nv.utils.windowResize(nvd3UpdateCharts);
         </script>
+
+        @Raw(Report.AttachScriptFile("nvd3.js"))
     }
 
     <style type="text/css">
@@ -120,10 +96,10 @@
         var generateHTMLDisplay =  @Helper.ToJS(Report.GenerateHTMLDisplay);
 
         var urlPrefix = "@Report.WebUrl";
-        var headerFormId = "#" + "@ReportExecution.HtmlId_header_form";
         var executionTimer = null;
         var hasRestrictions = @Helper.ToJS(Report.HasRestrictions);
         var hasErrors = @Helper.ToJS(Report.HasErrors);
+        var hasNavigation = @Helper.ToJS(Report.NavigationLinks.Count>0 && Report.IsDrilling); 
         var showRestrictions = (hasRestrictions && @Helper.ToJS(View.GetBoolValue("restriction_button")));
         var showResult = @Helper.ToJS(View.GetBoolValue("result_button"));
         var showInformation = @Helper.ToJS(View.GetBoolValue("information_button"));
@@ -135,13 +111,29 @@
         var isCancel = @Helper.ToJS(Report.Cancel);
         var printLayout = @Helper.ToJS(Report.PrintLayout);
 
-        var showButtonIds = ["#result", "#information", "#message", "#restriction"];
+        var rootViewId = '@View.ViewId';
+        var webExecutionGUID = '@Report.WebExecutionGUID';
+
+        //text
+        var startingExecText = '@Report.Translate("Starting execution...")';
+        var cancelText = '@Report.Translate("Cancel")';
+        var showText = '@Report.Translate("Show")';
+        var hideText = '@Report.Translate("Hide")';
+        var reportCancelledText = '@Raw(Report.Translate("Report has been cancelled"))';
+        var backToTopText = '@Report.Translate("Back to top")';
+        var navigationText = '@Report.Translate("Navigation")';
+        var selectAllText = '@Report.Translate("Select All")';
+
+        //buttons
+        var showButtonIds = ['#result', '#information', '#message', '#restriction'];
         var showButtonInitValues = [showResult, hasErrors || showInformation, showMessage, showRestrictions];
-        var showButtonLabels = ["@Report.Translate("report result panel")", "@Report.Translate("report information")", "@Report.Translate("execution messages")", "@Report.Translate("report restrictions")"];
-        var showButtonIcons = ["ui-icon-circle-triangle-e", "ui-icon-info", "ui-icon-gear", "ui-icon-zoomin"];
+        var showButtonLabels = ['@Report.Translate("report result panel")', '@Report.Translate("report information")', '@Report.Translate("execution messages")', '@Report.Translate("report restrictions")'];
+        var showButtonIcons = ['ui-icon-circle-triangle-e', 'ui-icon-info', 'ui-icon-gear', 'ui-icon-zoomin'];
 
         //datatables and globalization
-        var availableDateKeywords = ["@Raw(Report.Translate("Now"))", "@Raw(Report.Translate("Today"))", "@Raw((Report.Translate("Today") + "-1"))", "@Raw(Report.Translate("ThisWeek"))", "@Raw((Report.Translate("ThisWeek") + "-1"))", "@Raw(Report.Translate("ThisMonth"))", "@Raw((Report.Translate("ThisMonth") + "-1"))", "@Raw(Report.Translate("ThisYear"))", "@Raw((Report.Translate("ThisYear") + "-1"))"];
+        var languageName = '@View.CultureInfo.EnglishName';
+        var dateFormat = '@(View.CultureInfo.DateTimeFormat.ShortDatePattern.Replace("M", "m").Replace("yy", "y"))';
+        var availableDateKeywords = ['@Raw(Report.Translate("Now"))', '@Raw(Report.Translate("Today"))', '@Raw((Report.Translate("Today") + "-1"))', '@Raw(Report.Translate("ThisWeek"))', '@Raw((Report.Translate("ThisWeek") + "-1"))', '@Raw(Report.Translate("ThisMonth"))', '@Raw((Report.Translate("ThisMonth") + "-1"))', '@Raw(Report.Translate("ThisYear"))', '@Raw((Report.Translate("ThisYear") + "-1"))'];
         var shortDateFormat = '@View.CultureInfo.DateTimeFormat.ShortDatePattern';
         var isUSdate = shortDateFormat.match(/^m/i);
         var dateSeparator = '@View.CultureInfo.DateTimeFormat.DateSeparator';
@@ -150,201 +142,16 @@
         var currencySymbol = '@Raw(Helper.ToJS(@View.CultureInfo.NumberFormat.CurrencySymbol))';
     </script>
     @Raw(Report.AttachScriptFile("common.js"))
-    <script type="text/javascript">
-    function executeTimer() {
-        if (executionTimer != null) {
-            $(headerFormId).attr("action", urlPrefix+"@ReportExecution.ActionRefreshReport");
-            if (urlPrefix != "") {
-                $.post( urlPrefix+"@ReportExecution.ActionRefreshReport", { execution_guid : "@Report.WebExecutionGUID" })
-            .done(function( data ) {
-                if (data.result_url != null && data.result_url != "") {
-                    window.location.assign(data.result_url);
-                }
-                else if (data.processing_message != null && data.execution_messages != null) {
-                    $("#" + "@ReportExecution.HtmlId_processing_message").html(data.processing_message);
-                    if (displayMessages) $("#" + "@ReportExecution.HtmlId_execution_messages").html(data.execution_messages);
-                }
-                else if (data.error != null) {
-                    $("#" + "@ReportExecution.HtmlId_processing_message").html(data.error);
-                    clearInterval(executionTimer);
-                    $("#wait_image").css("display", "none");
-                    $("#execute_button").css("display", "none");
-                }
-            });
-            }
-            else {
-                $(headerFormId).submit();
-            }
-        }
-    }
 
-    function executeReport(nav) {
-        if (hasErrors || isCancel) $("#information_div").css("display", "none");
-        var url = "";
-        if (executionTimer == null) {
-            $("#" + "@ReportExecution.HtmlId_processing_message").html("@Report.Translate("Starting execution...")");
-            $("#" + "@ReportExecution.HtmlId_processing_message").css("display", "inline");
-            $("#wait_image").css("display", "inline");
-            $("#execute_button").button({ label: "@Report.Translate("Cancel")" });
-            //            url = urlPrefix+"@ReportExecution.ActionExecuteReport";
-            url = urlPrefix + (nav == null ? "@ReportExecution.ActionExecuteReport" : "@ReportExecution.ActionDrillReport");
-            executionTimer = setInterval(function () { executeTimer() }, 1200);
-        }
-        else {
-            url = urlPrefix+"@ReportExecution.ActionCancelReport";
-            $("#form_action").val("@ReportExecution.ActionCancelReport");
-        }
-        if (urlPrefix != "") {
-            $.post(url, $(headerFormId).serialize());
-        }
-        else {
-            $(headerFormId).attr("@ReportExecution.ActionCommand", url);
-            $(headerFormId).attr("nav", nav);
-            $(headerFormId).submit();
-        }
-        $('.view_result').attr("disabled" ,'disabled');
-        $('#restriction_div').attr("disabled" ,'disabled');
-        $('#restriction_div input').attr("disabled" ,'disabled');
-        $('.view').css("display", "none");
-    }
-
-    function setButtonLabels() {
-        for (var i = 0; i < showButtonIds.length; i++) {
-            if ($(showButtonIds[i] + "_button") != null) {
-                var isVisible = $(showButtonIds[i] + "_button").prop("checked");
-                $(showButtonIds[i] + "_button").button({ label: (!isVisible ? "@Report.Translate("Hide")" : "@Report.Translate("Show")")+ " " + showButtonLabels[i] });
-            }
-        }
-    }
-
-    function submitViewParameter(viewId, parameterName, parameterValue)
-    {
-        $("#" + "@ReportExecution.HtmlId_parameter_view_id").val(viewId);
-        $("#" + "@ReportExecution.HtmlId_parameter_view_name").val(parameterName);
-        $("#" + "@ReportExecution.HtmlId_parameter_view_value").val(parameterValue);
-        if (generateHTMLDisplay) {
-            if (urlPrefix != "") {
-                $.post( urlPrefix + "@ReportExecution.ActionUpdateViewParameter", {  execution_guid : "@Report.WebExecutionGUID", parameter_view_id : viewId, parameter_view_name: parameterName, parameter_view_value : parameterValue});
-            }
-            else {
-                $(headerFormId).attr("action", "@ReportExecution.ActionUpdateViewParameter");
-                $(headerFormId).submit();
-            }
-        }
-    }
-</script>
-
-    <script type="text/javascript">
-        $(function () {
-            mainInit();
-
-            if (isCancel) {
-                $("#" + "@ReportExecution.HtmlId_processing_message").css("display", "inline");
-                $("#" + "@ReportExecution.HtmlId_processing_message").text("@Raw(Report.Translate("Report has been cancelled"))");
-            }
-
-            //datepicker
-            $( ".datepicker" ).datepicker({ constrainInput: false });
-            var languageName = '@View.CultureInfo.EnglishName';
-            if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("French")))) $.datepicker.setDefaults($.datepicker.regional['fr']);
-            else if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("German")))) $.datepicker.setDefaults($.datepicker.regional['de']);
-            else if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("Spanish")))) $.datepicker.setDefaults($.datepicker.regional['es']);
-            else if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("Italian")))) $.datepicker.setDefaults($.datepicker.regional['it']);
-            else if (@(Helper.ToJS(View.CultureInfo.EnglishName.StartsWith("English"))) && !isUSdate) $.datepicker.setDefaults($.datepicker.regional['en']);
-            else $.datepicker.setDefaults($.datepicker.regional['']);
-            $.datepicker.setDefaults({ dateFormat: '@(View.CultureInfo.DateTimeFormat.ShortDatePattern.Replace("M", "m").Replace("yy", "y"))' });
-        });
-
-        $( document ).ready(function() {
-            if (!isCancel) $("#" + "@ReportExecution.HtmlId_processing_message").css("display", "none");
-            $("#" + "@ReportExecution.HtmlId_header_form").css("display", "inline");
-            $("#button_toolbar").css("display", "inline");
-
-            for (var i = 0; i < showButtonIds.length; i++) {
-                if ($(showButtonIds[i] + "_button") != null) {
-                    $(showButtonIds[i] + "_button").attr("disabled" , false);
-                    $(showButtonIds[i] + "_button").button({
-                        text: false,
-                        icons: { primary: showButtonIcons[i] }
-                    })
-                    .click(function () {
-                        $("#body_div").animate({ scrollTop: 0 }, "slow");
-                        if ($(this).attr("id") == "home_button") return;
-                        var divId = $(this).attr("id").replace("_button", "_div");
-                        if (window.chrome)
-                        {
-                            if($("#" + divId).css('display') == 'none') $("#" + divId).show();
-                            else $("#" + divId).hide();
-                        }
-                        else {
-                            $("#" + divId).toggle("blind");
-                        }
-                        setButtonLabels();
-                        submitViewParameter("@View.ViewId", $(this).attr("id"), !$(this).prop("checked"));
-                    });
-                    $(showButtonIds[i] + "_div").css("display", (showButtonInitValues[i] ? "inline" : "none"));
-                    $(showButtonIds[i] + "_button").prop("checked", !showButtonInitValues[i]);
-                    $(showButtonIds[i] + "_button").button("refresh");
-                }
-            }
-            $("#home_button").button({text: false, label:"@Report.Translate("Back to top")", icons: { primary: "ui-icon-home" } })
-            .click(function () {
-                $("#body_div").animate({ scrollTop: 0 }, "slow");
-            });
-
-            if ((forceExecution || !hasRestrictions) && !isExecuting && !isCancel) executeReport();
-            if (!hasRestrictions) $('#restriction_button, label[for="restriction_button"]').hide();
-
-            //multiselect -> small ajustements
-            $(".enum").multipleSelect({
-                isopen: true,
-                filter: true,
-                maxHeight: 95,
-                selectAllText: "@Report.Translate("Select All")"
-            });
-
-            setButtonLabels();
-
-            $("body").append("<ul id='nav_menu'/>");
-            $("#nav_menu").menu();
-            $(".cell_value").mouseenter(function() {
-                if ($(this).attr("navigation") != null)
-                {
-                    $("#nav_menu").empty();
-                    $("#nav_menu").append($(this).attr("navigation"));
-                    $('#nav_menu li').click(function(e)
-                    {
-                        executeReport($(this).attr("nav"));
-                        $("#nav_menu").css("display", "none");
-                    });
-                    $("#nav_menu").menu("refresh");
-
-                    $("#nav_menu").css("display", "inline");
-                    $("#nav_menu").css("top", $(this).offset().top + $(this).height());
-                    $("#nav_menu").css("left", $(this).offset().left + $(this).width() + 5);
-                }
-            });
-
-            $( ".cell_value" ).mouseleave(function() {
-                $("#nav_menu").css("display", "none");
-            });
-
-            $( "#nav_menu" ).mouseenter(function() {
-                $("#nav_menu").css("display", "inline");
-            });
-
-            $( "#nav_menu" ).mouseleave(function() {
-                $("#nav_menu").css("display", "none");
-            });
-        });
-    </script>
     @Raw(Report.AttachScriptFile("dataTables.js"))
 </head>
 <body>
     <div id="header_div" style="width: 100%; @(Report.UseFixedHTMLHeader ? "position:absolute; width:100%; height:54px;" : View.GetCSS("header"))">
         <div style="display: inline; float: left; vertical-align: middle;">
             <img src='@Report.AttachImageFile(Report.Repository.Configuration.LogoName)' title="Logo" alt="Logo" />
-            <span class="title">@Report.ExecutionName</span> <span id="@ReportExecution.HtmlId_processing_message" class="info_message" style="margin-left:20px; display:@(Report.PrintLayout ? "none" : "inline")">@Report.Translate("Processing...")</span>
+            <span class="title">@Report.ExecutionName</span>
+            <button id="nav_button"></button>
+            <span id="processing_message" class="info_message" style="margin-left:20px; display:@(Report.PrintLayout ? "none" : "inline")">@Report.Translate("Processing...")</span>
         </div>
         @if (Report.UseFixedHTMLHeader)
         {
@@ -366,7 +173,7 @@
                         }
                         <input type="checkbox" id="information_button" /><label for="information_button"></label>
                     </span>
-                    <button id="home_button"><label for="home_button"></label></button>
+                    <button id="home_button"></button>
                     @if (Report.GenerateHTMLDisplay)
                     {
                         <button id="execute_button" style="width: 80px;">@Report.Translate("Execute")</button>
@@ -382,26 +189,19 @@
             if (Report.IsBasicHTMLWithNoOutput)
             {
                 <div id="result_div" style="display:none; @View.GetCSS("result")">
-                    <button id="@ReportExecution.ActionViewHtmlResult" class="view_result">@Report.Translate("View HTML Result")</button>
-                    <button id="@ReportExecution.ActionViewPrintResult" class="view_result">@Report.Translate("View Print Result")</button>
+                    <button id="ActionViewHtmlResult" class="view_result">@Report.Translate("View HTML Result")</button>
+                    <button id="ActionViewPrintResult" class="view_result">@Report.Translate("View Print Result")</button>
                     @if (View.GetBoolValue("converter_button"))
                     {
-                        <button id="@ReportExecution.ActionViewPDFResult" class="view_result">@Report.Translate("View PDF Result")</button>
-                        <button id="@ReportExecution.ActionViewExcelResult" class="view_result">@Report.Translate("View Excel Result")</button>
+                        <button id="ActionViewPDFResult" class="view_result">@Report.Translate("View PDF Result")</button>
+                        <button id="ActionViewExcelResult" class="view_result">@Report.Translate("View Excel Result")</button>
                     }
                     <hr style="display: block;" />
                 </div>
         <!--result_div-->
             }
-            <div id="navigation_div" style="display:@(Report.NavigationLinks.Count>0 ? "inline":"none"); @View.GetCSS("navigation")">
-                @foreach (NavigationLink link in Report.NavigationLinks)
-                {
-                    <a href="@link.Href">@link.Text</a> 
-                }
-                <hr style="display: block;" />
-            </div>
 
-            <form id="@ReportExecution.HtmlId_header_form" method="post" action="" style="display: none">
+            <form id="header_form" method="post" action="" style="display: none">
                 <!--header_div-->
                 <div id="restriction_div">
                     <table>
@@ -459,18 +259,21 @@
                     <hr style="display: block;" />
                 </div>
                 <!--restriction_div-->
-                <input type="hidden" name="@ReportExecution.HtmlId_parameter_view_id" id="@ReportExecution.HtmlId_parameter_view_id" value="" />
-                <input type="hidden" name="@ReportExecution.HtmlId_parameter_view_name" id="@ReportExecution.HtmlId_parameter_view_name" value="" />
-                <input type="hidden" name="@ReportExecution.HtmlId_parameter_view_value" id="@ReportExecution.HtmlId_parameter_view_value" value="" />
+                <input type="hidden" name="parameter_view_id" id="parameter_view_id" value="" />
+                <input type="hidden" name="parameter_view_name" id="parameter_view_name" value="" />
+                <input type="hidden" name="parameter_view_value" id="parameter_view_value" value="" />
 
                 <input type="hidden" name="execution_guid" id="execution_guid" value="@Report.WebExecutionGUID" />
             </form>
         }
-
+        else
+        {
+            <form id="header_form" method="post" action="" style="display: none" />
+        }
         @if (View.GetBoolValue("display_messages"))
         {
             <div id="message_div" style="display: none; @View.GetCSS("message")">
-                <span id="@ReportExecution.HtmlId_execution_messages">@Raw(Helper.ToHtml(Report.ExecutionMessages))</span>
+                <span id="execution_messages">@Raw(Helper.ToHtml(Report.ExecutionMessages))</span>
                 <hr style="display: block;" />
             </div>
         <!--message_div-->
@@ -577,7 +380,6 @@
 
         </div>
         <!--view-->
-
     </div>
 </body>
 </html>

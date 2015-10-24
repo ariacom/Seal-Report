@@ -411,6 +411,8 @@ namespace Seal.Model
         }
         [XmlIgnore]
         public List<string> ExecutionAttachedFiles = new List<string>();
+        [XmlIgnore]
+        public bool IsDrilling = false; //It true, do evaluate restrictions prompted...
 
         //Output management
         [XmlIgnore]
@@ -1287,7 +1289,6 @@ namespace Seal.Model
             get { return _navigationLinks; }
             set { _navigationLinks = value; }
         }
-
 
         public void UpdateViewParameter(string viewId, string parameterName, string parameterValue)
         {
