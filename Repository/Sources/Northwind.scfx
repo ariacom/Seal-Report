@@ -122,7 +122,9 @@
             <Format />
             <EnumGUID>07cc4a5b-1550-4fc2-9f9f-e05e21e496d2</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
-            <DrillChildren />
+            <DrillChildren>
+              <string>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</string>
+            </DrillChildren>
           </MetaColumn>
           <MetaColumn>
             <GUID>9cdc0eb2-eb64-4b96-8ea9-0405736b4809</GUID>
@@ -771,8 +773,6 @@
             <EnumGUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren>
-              <string>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</string>
-              <string>20ed0b7a-87dd-4aaa-8d48-feab848e396b</string>
               <string>087ed2f1-b58b-4407-9291-8329ee5dbfe1</string>
             </DrillChildren>
           </MetaColumn>
