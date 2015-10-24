@@ -272,6 +272,12 @@
     <None Include="..\..\Repository\Views\Report.config.cshtml">
       <Link>Views\Report.config.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\Scripts\common.js">
+      <Link>Views\Scripts\common.js</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Scripts\nvd3.js">
+      <Link>Views\Scripts\nvd3.js</Link>
+    </None>
     <None Include="Result.cd" />
   </ItemGroup>
   <ItemGroup>

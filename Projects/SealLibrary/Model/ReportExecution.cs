@@ -39,7 +39,8 @@ namespace Seal.Model
         public const string ActionViewExcelResult = "ActionViewExcelResult";
         public const string ActionDrillReport = "ActionDrillReport";
         public const string ActionLogin = "ActionLogin";
-        public const string ActionSetUserInfo = "ActionSetUserInfo";        
+        public const string ActionSetUserInfo = "ActionSetUserInfo";
+        public const string ActionGetNavigationLinks = "ActionGetNavigationLinks";        
 
         //Html Ids Keywords
         public const string HtmlId_header_form = "header_form";
@@ -48,7 +49,8 @@ namespace Seal.Model
         public const string HtmlId_parameter_view_id = "parameter_view_id";
         public const string HtmlId_parameter_view_name = "parameter_view_name";
         public const string HtmlId_parameter_view_value = "parameter_view_value";
-        public const string HtmlId_navigation_name = "nav";
+        public const string HtmlId_navigation_attribute_name = "nav";
+        public const string HtmlId_navigation_menu = "nav_menu";
 
 
         public Report Report;
@@ -216,7 +218,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution)
+                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution && !Report.IsDrilling)
                     {
                         //check input restrictions
                         CheckInputRestrictions();
@@ -489,7 +491,9 @@ namespace Seal.Model
                 }
 
                 //For DEV: Simulate long query
-                //Thread.Sleep(5000);
+#if DEBUG
+               //Thread.Sleep(5000);
+#endif
                 model.SetColumnsName();
                 Report.LogMessage("Model '{0}': Building pages...", model.Name);
                 if (!Report.Cancel) buildPages(model);
@@ -1578,7 +1582,7 @@ namespace Seal.Model
             return Report.ExecutionView.ConvertToExcel(path);
         }
 
-        public bool IsConvertingToExcel = false; //It true, do not run the report again as we are using the result tables...
+        public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...
 
         //cache management of template compilation
         public static List<string> CompiledViews = new List<string>();

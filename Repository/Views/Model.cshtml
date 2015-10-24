@@ -250,20 +250,20 @@
                                         string className = "cell_title";
                                         ResultCell cell = line[col];
                                         //Check if at least a value in the headers, this force data title to 'cell_value' css
-                                        if (row > 0 && !cell.IsTitle)
-                                        {
-                                            dataTitleHeader = false;
-                                        }
+                                        dataTitleHeader = ((row > 0 && !cell.IsTitle) ? false : true);
                                         if (row > 0 && !cell.IsTitle || ((cell.Class == "data_title" || cell.Class == "data_title_total") && !dataTitleHeader))
                                         {
                                             className = cell.IsTotal ? "cell_value_total" : "cell_value";
                                         }
                                         string navigation = "";
-                                        foreach (var link in cell.Links)
+                                        if (Report.GenerateHTMLDisplay)
                                         {
-                                            navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1} {2}</a></li>", link.Href, Report.Translate("Drill To"), Repository.TranslateElement(cell.Element, link.Text));
+                                            foreach (var link in cell.Links)
+                                            {
+                                                navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1}</a></li>", link.Href, link.Text);
+                                            }
+                                            navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
                                         }
-                                        navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
                                         <th class='@className' style='@cell.CellCssStyle' @Raw(navigation)>@Raw(cell.HTMLValue)</th>
                                     }
                                 </tr>
@@ -280,11 +280,14 @@
                                         string className = cell.IsTitle && col == 0 ? "cell_title" : "cell_value";
                                         className = cell.IsTotal ? "cell_value_total" : className;
                                         string navigation = "";
-                                        foreach (var link in cell.Links)
+                                        if (Report.GenerateHTMLDisplay)
                                         {
-                                            navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1} {2}</a></li>", link.Href, Report.Translate("Drill To"), Repository.TranslateElement(cell.Element, link.Text));
+                                            foreach (var link in cell.Links)
+                                            {
+                                                navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1}</a></li>", link.Href, link.Text);
+                                            }
+                                            navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
                                         }
-                                        navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
                                         <td class='@className' style='@cell.CellCssStyle'@Raw(navigation)>@Raw(cell.HTMLValue)</td>
                                     }
                                 </tr>

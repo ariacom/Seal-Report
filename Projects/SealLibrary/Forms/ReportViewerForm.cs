@@ -169,6 +169,7 @@ namespace Seal.Forms
                                 }
                             }
                         }
+                        _report.IsDrilling = false;
                         Execute();
                         break;
 
@@ -183,8 +184,12 @@ namespace Seal.Forms
                         }
                         else if (!_reportDone)
                         {
+                            //Set last drill path if any
+                            if (_report.NavigationLinks.Count > 0) _report.NavigationLinks.Last().Href = _report.ResultFilePath;
+
                             cancelNavigation = true;
                             _reportDone = true;
+                            _report.IsDrilling = false;
                             _url = "file:///" + _report.HTMLDisplayFilePath;
                             webBrowser.Navigate(_url);
                         }
@@ -226,21 +231,24 @@ namespace Seal.Forms
                         break;
 
                     case ReportExecution.ActionDrillReport:
-                        string nav = HeaderForm.GetAttribute(ReportExecution.HtmlId_navigation_name);
+                        string nav = HeaderForm.GetAttribute(ReportExecution.HtmlId_navigation_attribute_name);
                         string src = HttpUtility.ParseQueryString(nav).Get("src");
                         string dst = HttpUtility.ParseQueryString(nav).Get("dst");
                         string val = HttpUtility.ParseQueryString(nav).Get("val");
 
                         string destLabel = "", srcRestriction = "";
+                        bool drillDone = false;
                         foreach (var model in _report.Models)
                         {
                             ReportElement element = model.Elements.FirstOrDefault(i => i.MetaColumnGUID == src);
                             if (element != null)
                             {
+                                drillDone = true;
                                 element.ChangeColumnGUID(dst);
                                 destLabel = element.DisplayNameElTranslated;
                                 if (val != null)
                                 {
+                                    destLabel = "> " + destLabel;
                                     //Add restriction 
                                     ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
                                     restriction.Source = model.Source;
@@ -258,6 +266,7 @@ namespace Seal.Forms
                                 }
                                 else
                                 {
+                                    destLabel = "< " + destLabel;
                                     var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
                                     foreach (var restr in restrictions)
                                     {
@@ -268,19 +277,44 @@ namespace Seal.Forms
                             }
                         }
 
+                        if (drillDone)
+                        {
+                            NavigationLink lastLink = null;
+                            if (_report.NavigationLinks.Count == 0)
+                            {
+                                lastLink = new NavigationLink();
+                                _report.NavigationLinks.Add(lastLink);
+                            }
+                            else lastLink = _report.NavigationLinks.Last();
 
-                        //create HTML result for navigation
-                        string htmlPath = _execution.GenerateHTMLResult();
-                        if (_report.NavigationLinks.Count == 0) _report.NavigationLinks.Add(new NavigationLink() { Href = htmlPath, Text = ">>" });
-                        else _report.NavigationLinks[_report.NavigationLinks.Count - 1].Href = htmlPath;
+                            //create HTML result for navigation -> NavigationLinks must have one link to activate the button
+                            _report.IsDrilling = true;
+                            string htmlPath = _execution.GenerateHTMLResult();
+                            lastLink.Href = htmlPath;
+                            if (string.IsNullOrEmpty(lastLink.Text)) lastLink.Text = _report.ExecutionName;
 
-                        string linkText = destLabel;
-                        if (!string.IsNullOrEmpty(srcRestriction)) linkText += string.Format(" [{0}]", srcRestriction);
-                        _report.NavigationLinks.Add(new NavigationLink() { Href = "#", Text = linkText });
+                            string linkText = string.Format("{0} {1}", _report.ExecutionName, destLabel);
+                            if (!string.IsNullOrEmpty(srcRestriction)) linkText += string.Format(" [{0}]", srcRestriction);
+                            _report.NavigationLinks.Add(new NavigationLink() { Href = "#", Text = linkText });
+                        }
 
                         cancelNavigation = true;
                         _reportDone = false;
                         Execute();
+                        break;
+
+                    case ReportExecution.ActionGetNavigationLinks:
+                        cancelNavigation = true;
+                        HtmlElement navMenu = webBrowser.Document.All[ReportExecution.HtmlId_navigation_menu];
+                        if (navMenu != null)
+                        {
+                            string links = "";
+                            foreach (var link in _report.NavigationLinks)
+                            {
+                                links += string.Format("<li><a href='{0}'>{1}</a></li>", link.Href, HttpUtility.HtmlEncode(link.Text));
+                            }
+                            navMenu.SetAttribute("innerHTML", links);
+                        }
                         break;
                 }
             }
