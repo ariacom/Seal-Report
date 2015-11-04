@@ -41,13 +41,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>Address</DisplayName>
-            <DisplayOrder>4</DisplayOrder>
+            <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</GUID>
@@ -56,13 +57,16 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>City</DisplayName>
-            <DisplayOrder>5</DisplayOrder>
+            <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
-            <DrillChildren />
+            <DrillChildren>
+              <string>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</string>
+            </DrillChildren>
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</GUID>
@@ -71,13 +75,22 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>Customer</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
+            <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports>
+              <SubReport>
+                <Name>Customers Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Customers Detail.srex</Path>
+                <Restrictions>
+                  <string>d937c8fc-64a6-415f-a77f-d3d1914e406d</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
           </MetaColumn>
           <MetaColumn>
             <GUID>8741bf0f-13e4-401c-bb1d-67c027a7c780</GUID>
@@ -86,13 +99,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>Customer Contact</DisplayName>
-            <DisplayOrder>2</DisplayOrder>
+            <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>ecab8418-c406-4837-8fdb-7341c9b45f56</GUID>
@@ -101,13 +115,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>Contact Title</DisplayName>
-            <DisplayOrder>3</DisplayOrder>
+            <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</GUID>
@@ -116,7 +131,7 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>Customer Country</DisplayName>
-            <DisplayOrder>8</DisplayOrder>
+            <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
@@ -125,6 +140,7 @@
             <DrillChildren>
               <string>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</string>
             </DrillChildren>
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>9cdc0eb2-eb64-4b96-8ea9-0405736b4809</GUID>
@@ -133,13 +149,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>Fax</DisplayName>
-            <DisplayOrder>10</DisplayOrder>
+            <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>add7d793-5327-4604-997d-cdfeb474b09a</GUID>
@@ -148,13 +165,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>Phone</DisplayName>
-            <DisplayOrder>9</DisplayOrder>
+            <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>e24a016c-11d6-4b7c-9319-c1ad5864841c</GUID>
@@ -163,13 +181,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>Postal Code</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
+            <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>7386da67-f083-4527-a303-aa24de5f7d13</GUID>
@@ -178,13 +197,29 @@
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
             <DisplayName>Region</DisplayName>
-            <DisplayOrder>6</DisplayOrder>
+            <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>d937c8fc-64a6-415f-a77f-d3d1914e406d</GUID>
+            <Name>Customers.CustomerID</Name>
+            <Type>Text</Type>
+            <IsAggregate>false</IsAggregate>
+            <Category>Customers</Category>
+            <DisplayName>Customer ID</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format />
+            <HasHTMLTags xsi:nil="true" />
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -204,13 +239,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Address</DisplayName>
-            <DisplayOrder>6</DisplayOrder>
+            <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</GUID>
@@ -219,13 +255,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Birth Date</DisplayName>
-            <DisplayOrder>4</DisplayOrder>
+            <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>d</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</GUID>
@@ -234,13 +271,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>City</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
+            <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</GUID>
@@ -249,13 +287,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Country</DisplayName>
-            <DisplayOrder>10</DisplayOrder>
+            <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>9af39b8d-8b3a-4db2-a093-8abac0fb8e62</GUID>
@@ -264,13 +303,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Extension</DisplayName>
-            <DisplayOrder>12</DisplayOrder>
+            <DisplayOrder>13</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>da2dbe92-e90c-4415-b354-1bc589839048</GUID>
@@ -279,13 +319,22 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Employee Name</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
+            <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID>f2611e98-b25e-450d-a9cc-6811dda32d94</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports>
+              <SubReport>
+                <Name>Employees Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Employees Detail.srex</Path>
+                <Restrictions>
+                  <string>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
           </MetaColumn>
           <MetaColumn>
             <GUID>b4a7f5d4-1045-4c67-b724-578e116ceff5</GUID>
@@ -294,13 +343,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Hire Date</DisplayName>
-            <DisplayOrder>5</DisplayOrder>
+            <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>d</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>9b0f675f-fbb0-4f9c-9dca-9e15039e75ec</GUID>
@@ -309,13 +359,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Home Phone</DisplayName>
-            <DisplayOrder>11</DisplayOrder>
+            <DisplayOrder>12</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>0a5fef96-fd6b-4d51-bff0-59d458533a57</GUID>
@@ -324,13 +375,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Notes</DisplayName>
-            <DisplayOrder>14</DisplayOrder>
+            <DisplayOrder>15</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>3aae4bf3-59e8-4773-887e-1661d6b39ae7</GUID>
@@ -339,13 +391,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Photo</DisplayName>
-            <DisplayOrder>13</DisplayOrder>
+            <DisplayOrder>14</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</GUID>
@@ -354,13 +407,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Postal Code</DisplayName>
-            <DisplayOrder>9</DisplayOrder>
+            <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>80720d2a-0ebf-457b-8539-6eb07205c6c9</GUID>
@@ -369,13 +423,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Region</DisplayName>
-            <DisplayOrder>8</DisplayOrder>
+            <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>a042cb87-8838-46a8-a679-3e49f666a7b7</GUID>
@@ -384,13 +439,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Reports To</DisplayName>
-            <DisplayOrder>15</DisplayOrder>
+            <DisplayOrder>16</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>793c07a5-b7bd-41ae-bdea-506ad244005e</GUID>
@@ -399,13 +455,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Title</DisplayName>
-            <DisplayOrder>2</DisplayOrder>
+            <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>4d365f0e-0e2a-4a58-8411-11fd6d8900db</GUID>
@@ -414,13 +471,29 @@
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
             <DisplayName>Title Of Courtesy</DisplayName>
-            <DisplayOrder>3</DisplayOrder>
+            <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</GUID>
+            <Name>Employees.EmployeeID</Name>
+            <Type>Numeric</Type>
+            <IsAggregate>false</IsAggregate>
+            <Category>Employees</Category>
+            <DisplayName>Employee ID</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags xsi:nil="true" />
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -447,6 +520,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>4a3f4d69-3781-4679-8797-f425478de0d9</GUID>
@@ -462,6 +536,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>12ce241a-1f80-4b69-a023-66df46152046</GUID>
@@ -477,6 +552,15 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports>
+              <SubReport>
+                <Name>Orders Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Orders Detail.srex</Path>
+                <Restrictions>
+                  <string>12ce241a-1f80-4b69-a023-66df46152046</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
           </MetaColumn>
           <MetaColumn>
             <GUID>ab168a45-6852-44b7-8eff-378968669f14</GUID>
@@ -492,6 +576,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>2003a407-ab31-4514-bc83-8e9479c42e2d</GUID>
@@ -507,6 +592,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>e93c456c-40d9-494e-ba21-711177339870</GUID>
@@ -522,6 +608,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</GUID>
@@ -537,6 +624,7 @@
             <EnumGUID>fcf64fca-579d-4b79-be22-3c2059989ec3</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>8ccab7ae-77ad-4cb9-9345-d176a463c21b</GUID>
@@ -552,6 +640,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>ce574340-1504-4bf7-9228-c64f79cf9803</GUID>
@@ -567,6 +656,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</GUID>
@@ -582,6 +672,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>1b2d846d-976f-49ac-b514-cc5b448d7b18</GUID>
@@ -597,6 +688,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>74282c63-b2a2-4c5c-b59f-e4cac9730f32</GUID>
@@ -612,6 +704,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>64369c69-f298-466f-a241-d7388b2b0e80</GUID>
@@ -626,7 +719,10 @@
             <Format>yyyy</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
-            <DrillChildren />
+            <DrillChildren>
+              <string>057c81db-d2c0-4938-9a64-6d6d33668baa</string>
+            </DrillChildren>
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>057c81db-d2c0-4938-9a64-6d6d33668baa</GUID>
@@ -642,6 +738,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -661,13 +758,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
             <DisplayName>Discontinued</DisplayName>
-            <DisplayOrder>8</DisplayOrder>
+            <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</GUID>
@@ -676,13 +774,22 @@
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
             <DisplayName>Product Name</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
+            <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports>
+              <SubReport>
+                <Name>Products Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Products Detail.srex</Path>
+                <Restrictions>
+                  <string>087ed2f1-b58b-4407-9291-8329ee5dbfe1</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
           </MetaColumn>
           <MetaColumn>
             <GUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</GUID>
@@ -691,13 +798,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
             <DisplayName>Quantity Per Unit</DisplayName>
-            <DisplayOrder>3</DisplayOrder>
+            <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>75715efd-6f8a-48ba-8f8e-2297d956d184</GUID>
@@ -706,13 +814,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
             <DisplayName>Reorder Level</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
+            <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</GUID>
@@ -721,13 +830,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
             <DisplayName>Unit Price</DisplayName>
-            <DisplayOrder>4</DisplayOrder>
+            <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</GUID>
@@ -736,13 +846,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
             <DisplayName>Units In Stock</DisplayName>
-            <DisplayOrder>5</DisplayOrder>
+            <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>6fa87b3b-048f-4680-9516-35679cba84bf</GUID>
@@ -751,13 +862,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
             <DisplayName>Units On Order</DisplayName>
-            <DisplayOrder>6</DisplayOrder>
+            <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</GUID>
@@ -766,7 +878,7 @@
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
             <DisplayName>Category</DisplayName>
-            <DisplayOrder>2</DisplayOrder>
+            <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -775,6 +887,22 @@
             <DrillChildren>
               <string>087ed2f1-b58b-4407-9291-8329ee5dbfe1</string>
             </DrillChildren>
+            <SubReports />
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>d0a693f9-e276-4e6d-9ac2-d4d031610430</GUID>
+            <Name>Products.ProductID</Name>
+            <Type>Numeric</Type>
+            <IsAggregate>false</IsAggregate>
+            <Category>Products</Category>
+            <DisplayName>Product ID</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags xsi:nil="true" />
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -801,6 +929,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>f1689c68-6619-4c2b-8b1f-5b0b9a66ace7</GUID>
@@ -816,6 +945,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>d56fe600-8f12-411b-b4cc-a73152d2e040</GUID>
@@ -831,6 +961,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -857,6 +988,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>e2113646-4a55-4077-8d34-a22bdef1354b</GUID>
@@ -872,6 +1004,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</GUID>
@@ -887,6 +1020,15 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports>
+              <SubReport>
+                <Name>Suppliers Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Suppliers Detail.srex</Path>
+                <Restrictions>
+                  <string>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
           </MetaColumn>
           <MetaColumn>
             <GUID>7e3f60fc-66fc-4b35-aa56-ef06b4a6bf22</GUID>
@@ -902,6 +1044,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>8415fa94-cbf0-4d9b-ab58-816e11da991e</GUID>
@@ -917,6 +1060,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>70328799-b9e4-4e93-b851-88be7514c802</GUID>
@@ -931,7 +1075,10 @@
             <Format />
             <EnumGUID>c94b4e37-2c8a-4f34-965f-004b888f5c66</EnumGUID>
             <HasHTMLTags>false</HasHTMLTags>
-            <DrillChildren />
+            <DrillChildren>
+              <string>e2113646-4a55-4077-8d34-a22bdef1354b</string>
+            </DrillChildren>
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>7bbbcb86-86b6-4223-b894-8c70f76c63f9</GUID>
@@ -947,6 +1094,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>1ce1064f-a9f9-4f90-b2cf-2885169e8e73</GUID>
@@ -962,6 +1110,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>41e673d0-7852-43d0-9ef4-c64649f9020a</GUID>
@@ -977,6 +1126,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>addf0212-9876-4747-919d-830cb40d2506</GUID>
@@ -992,6 +1142,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>2a916fcb-3346-4edf-bcf1-3a15c88b29f8</GUID>
@@ -1007,6 +1158,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</GUID>
@@ -1022,6 +1174,7 @@
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
         </Columns>
       </MetaTable>
@@ -1041,13 +1194,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
             <DisplayName>Discount Rate</DisplayName>
-            <DisplayOrder>3</DisplayOrder>
+            <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric2</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N2</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>cb20a340-73d5-4e52-b7fc-59dab043c176</GUID>
@@ -1056,13 +1210,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
             <DisplayName>Quantity</DisplayName>
-            <DisplayOrder>2</DisplayOrder>
+            <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</GUID>
@@ -1071,13 +1226,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
             <DisplayName>Unit Price</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
+            <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric2</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N2</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>067548ce-bc83-48b8-8212-aa359bd12f9b</GUID>
@@ -1086,13 +1242,14 @@
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
             <DisplayName>Amount</DisplayName>
-            <DisplayOrder>4</DisplayOrder>
+            <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>a63be915-3593-4377-8155-5ab3a78f45ba</GUID>
@@ -1101,13 +1258,44 @@
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
             <DisplayName>Discount</DisplayName>
-            <DisplayOrder>5</DisplayOrder>
+            <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
+            <SubReports />
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>10f4d9b4-4bc3-4564-b982-db23ba7655a1</GUID>
+            <Name>[Order Details].OrderID</Name>
+            <Type>Numeric</Type>
+            <IsAggregate>false</IsAggregate>
+            <Category>Order Details</Category>
+            <DisplayName>Order ID</DisplayName>
+            <DisplayOrder>1</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags xsi:nil="true" />
+            <DrillChildren />
+            <SubReports />
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>5b9cbdc8-230b-4c0d-b9df-81e5ebbf7da7</GUID>
+            <Name>[Order Details].ProductID</Name>
+            <Type>Numeric</Type>
+            <IsAggregate>false</IsAggregate>
+            <Category>Order Details</Category>
+            <DisplayName>Product ID</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <NumericStandardFormat>Numeric0</NumericStandardFormat>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>N0</Format>
+            <HasHTMLTags xsi:nil="true" />
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
         </Columns>
       </MetaTable>

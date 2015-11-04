@@ -350,6 +350,7 @@ namespace Seal.Model
                 if (!Directory.Exists(SecurityFolder)) Directory.CreateDirectory(SecurityFolder);
                 if (!Directory.Exists(SecurityProvidersFolder)) Directory.CreateDirectory(SecurityProvidersFolder);
                 if (!Directory.Exists(AssembliesFolder)) Directory.CreateDirectory(AssembliesFolder);
+                if (!Directory.Exists(SubReportsFolder)) Directory.CreateDirectory(SubReportsFolder);
             }
             catch { }
         }
@@ -417,6 +418,11 @@ namespace Seal.Model
         public string AssembliesFolder
         {
             get { return Path.Combine(_path, "Assemblies"); }
+        }
+
+        public string SubReportsFolder
+        {
+            get { return Path.Combine(_path, "SubReports"); }
         }
 
         public string TranslationsPath

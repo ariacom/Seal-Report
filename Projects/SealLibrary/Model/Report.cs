@@ -412,7 +412,7 @@ namespace Seal.Model
         [XmlIgnore]
         public List<string> ExecutionAttachedFiles = new List<string>();
         [XmlIgnore]
-        public bool IsDrilling = false; //It true, do evaluate restrictions prompted...
+        public bool IsNavigating = false; //It true, do evaluate restrictions prompted...
 
         //Output management
         [XmlIgnore]

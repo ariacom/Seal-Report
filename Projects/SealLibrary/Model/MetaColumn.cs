@@ -39,7 +39,12 @@ namespace Seal.Model
                 GetProperty("HasHTMLTags").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetDisplayName("Drill Children: " + (_drillChildren.Count == 0 ? "None" : _drillChildren.Count.ToString() + " Items(s)"));
+                GetProperty("SubReports").SetIsBrowsable(true);
+                GetProperty("SubReports").SetDisplayName("Sub-Reports: " + (_subReports.Count == 0 ? "None" : _subReports.Count.ToString() + " Items(s)"));
 
+                GetProperty("HelperCreateSubReport").SetIsBrowsable(IsSQL);
+                GetProperty("HelperAddSubReport").SetIsBrowsable(IsSQL);
+                GetProperty("HelperOpenSubReportFolder").SetIsBrowsable(IsSQL);
                 GetProperty("HelperCheckColumn").SetIsBrowsable(IsSQL);
                 GetProperty("HelperCreateEnum").SetIsBrowsable(true);
                 GetProperty("HelperShowValues").SetIsBrowsable(true);
@@ -52,6 +57,9 @@ namespace Seal.Model
                 //Read only
                 GetProperty("Format").SetIsReadOnly((Type == ColumnType.Numeric && NumericStandardFormat != NumericStandardFormat.Custom) || (Type == ColumnType.DateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom));
 
+                GetProperty("HelperCreateSubReport").SetIsReadOnly(true);
+                GetProperty("HelperAddSubReport").SetIsReadOnly(true);
+                GetProperty("HelperOpenSubReportFolder").SetIsReadOnly(true);
                 GetProperty("HelperCheckColumn").SetIsReadOnly(true);
                 GetProperty("HelperCreateEnum").SetIsReadOnly(true);
                 GetProperty("HelperShowValues").SetIsReadOnly(true);
@@ -273,6 +281,13 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        public string FullDisplayName
+        {
+            get { return string.Format("{0}.{1}", MetaTable.Name, _displayName); }
+        }
+
+
         List<string> _drillChildren = new List<string>();
         [Category("Drill"), DisplayName("Drill Children"), Description("Defines the child columns to navigate from this column with the drill feature."), Id(1, 4)]
         [Editor(typeof(ColumnsSelector), typeof(UITypeEditor))]
@@ -280,6 +295,36 @@ namespace Seal.Model
         {
             get { return _drillChildren; }
             set { _drillChildren = value; }
+        }
+
+        List<SubReport> _subReports = new List<SubReport>();
+        [Category("Sub-Reports"), DisplayName("Sub Reports"), Description("Defines sub-reports to navigate from this column."), Id(1, 5)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<SubReport> SubReports
+        {
+            get { return _subReports; }
+            set { _subReports = value; }
+        }
+
+        [Category("Sub-Reports"), DisplayName("Create a Sub-Report"), Description("Create a first Sub-Report to display the detail of this table."), Id(2, 5)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperCreateSubReport
+        {
+            get { return "<Click to create a first Sub-Report to display the detail of this table>"; }
+        }
+
+        [Category("Sub-Reports"), DisplayName("Add an existing Sub-Report"), Description("Add an existing Sub-Report to this column."), Id(2, 5)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperAddSubReport
+        {
+            get { return "<Click to add an existing Sub-Report to this column>"; }
+        }
+
+        [Category("Sub-Reports"), DisplayName("Open Sub-Report folder"), Description("Open the Sub-Report folder in Windows Explorer."), Id(3, 5)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperOpenSubReportFolder
+        {
+            get { return "<Click to open the Sub-Report folder in Windows Explorer>"; }
         }
 
         #region Helpers

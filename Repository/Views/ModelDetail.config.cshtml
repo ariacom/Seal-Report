@@ -1,0 +1,29 @@
+﻿@using Seal.Model;
+@using System.Drawing;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = ReportViewTemplate.ModelDetailHTMLName;
+
+    //If for model, the Model parameter object used for the parsing is the Model instead of the Report
+    Template.ForModel = true;
+
+    //Default chart configuration
+    Template.ChartConfigurationXML = "<?xml version=\"1.0\" encoding=\"utf-16\"?><Chart Size=\"600, 400\"><Legends><Legend Name=\"Legend1\"></Legend></Legends><Titles><Title Name=\"Title1\" Visible=\"False\"></Title></Titles><ChartAreas><ChartArea Name=\"ChartArea1\"></ChartArea></ChartAreas></Chart>";
+    
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "page_table_caption", DisplayName = "Page table caption", Description = "Optional caption or title displayed at the bottom of the page table" });
+    Template.Parameters.Add(new Parameter() { Name = "data_table_caption", DisplayName = "Data table caption", Description = "Optional caption or title displayed at the bottom of the data table" });
+ 
+    //CSS
+    Template.CSS.Add(new Parameter() { Name = "view", DisplayName = "View", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the full View", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "page", DisplayName = "Page", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Page of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "page_table", DisplayName = "Page table container", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Page table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "page_table_table", DisplayName = "Page table", Type = ViewParameterType.String, Description = "CSS style for the Page table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "data_table", DisplayName = "Data table container", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Data table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.CSS.Add(new Parameter() { Name = "data_table_table", DisplayName = "Data table", Type = ViewParameterType.String, Description = "CSS style for the Data table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Report", "Tab Page" };
+}

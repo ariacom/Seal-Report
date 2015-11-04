@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using Seal.Converter;
 using Seal.Helpers;
+using System.Web;
 
 namespace Seal.Model
 {
@@ -90,6 +91,22 @@ namespace Seal.Model
                 return null;
             }
         }
+
+        public string NavigationValue
+        {
+            get
+            {
+                string result = RawDisplayValue;
+                if (Element.IsEnum)
+                {
+                    var enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == result);
+                    if (enumValue != null) result = enumValue.Id;
+                }
+                return result;
+            }
+        }
+
+        public List<ResultCell> SubReportValues = new List<ResultCell>();
 
         public DateTime? DateTimeValue
         {
@@ -199,7 +216,7 @@ namespace Seal.Model
                 if (_links == null)
                 {
                     _links = new List<NavigationLink>();
-                    if (Element != null)
+                    if (!IsTotal && !IsTotalTotal && Element != null)
                     {
                         //Get child links
                         var metaData = Element.Source.MetaData;
@@ -211,14 +228,8 @@ namespace Seal.Model
                                 NavigationLink link = new NavigationLink();
                                 //string server = Element.Source.Repository.WebApplicationPath;
                                 //if (string.IsNullOrEmpty(server)) server = "http://w3.localhost";
-                                string val = RawDisplayValue;
-                                if (Element.IsEnum)
-                                {
-                                    var enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == val);
-                                    if (enumValue != null) val = enumValue.Id;
-                                }
                                 // link.Href = string.Format("{0}?{1}={2}&src={3}&dst={4}&val={5}", server, ReportExecution.ActionCommand, ReportExecution.ActionDrillReport, Element.MetaColumnGUID, childGUID, val);
-                                link.Href = string.Format("src={0}&dst={1}&val={2}", Element.MetaColumnGUID, childGUID, val);
+                                link.Href = string.Format("src={0}&dst={1}&val={2}", Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue));
                                 link.Text = Element.Source.Report.Translate("Drill >") + " " + Element.Source.Report.Repository.RepositoryTranslate("Element", child.Category + '.' + child.DisplayName, child.DisplayName);
 
                                 _links.Add(link);
@@ -237,6 +248,26 @@ namespace Seal.Model
                                 _links.Add(link);
                             }
                         }
+
+                        //Get sub reports links
+                        foreach (var subreport in Element.MetaColumn.SubReports)
+                        {
+                            NavigationLink link = new NavigationLink();
+                            link.Href = string.Format("sre={0}", subreport.Path);
+                            int index = 1;
+                            foreach (var guid in subreport.Restrictions)
+                            {
+                                var cellValue = SubReportValues.FirstOrDefault(i => i.Element.MetaColumnGUID == guid);
+                                if (cellValue != null)
+                                {
+                                    link.Href += string.Format("&res{0}={1}&val{0}={2}", index, guid, HttpUtility.UrlEncode(cellValue.NavigationValue));
+                                    index++;
+                                }
+                            }
+                            link.Text = subreport.Name;
+                            _links.Add(link);
+                        }
+
                     }
                 }
                 return _links;

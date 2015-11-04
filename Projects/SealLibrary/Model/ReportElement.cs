@@ -529,6 +529,9 @@ namespace Seal.Model
             set { _model = value; }
         }
 
+        [XmlIgnore, Browsable(false)]
+        public bool IsForNavigation = false;
+
         public string GetNVD3Format(CultureInfo culture)
         {
             //try to convert from .net to d3 format... from https://github.com/mbostock/d3/wiki/Formatting

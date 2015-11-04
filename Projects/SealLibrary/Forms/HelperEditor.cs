@@ -17,6 +17,8 @@ using Seal.Helpers;
 using System.Threading;
 using System.Security.Principal;
 using System.Net.Mail;
+using System.Data.OleDb;
+using System.Data;
 
 namespace Seal.Forms
 {
@@ -176,7 +178,7 @@ namespace Seal.Forms
                         initEntity(result);
                         setModified();
                     }
-                    if (context.PropertyDescriptor.Name == "HelperShowValues")
+                    else if (context.PropertyDescriptor.Name == "HelperShowValues")
                     {
                         try
                         {
@@ -195,6 +197,127 @@ namespace Seal.Forms
                         {
                             Cursor.Current = Cursors.Default;
                         }
+                    }
+                    else if (context.PropertyDescriptor.Name == "HelperCreateSubReport")
+                    {
+                        Report report = Report.Create(_metaColumn.Source.Repository);
+                        ReportModel model = report.Models[0];
+                        model.SourceGUID = report.Sources.First(i => i.MetaSourceGUID == _metaColumn.MetaTable.Source.GUID).GUID;
+                        //Add all the element of the table
+                        foreach (var el in _metaColumn.MetaTable.Columns)
+                        {
+                            ReportElement element = ReportElement.Create();
+                            element.MetaColumnGUID = el.GUID;
+                            element.Name = el.Name;
+                            element.PivotPosition = (el == _metaColumn ? PivotPosition.Page : PivotPosition.Row);
+                            model.Elements.Add(element);
+                        }
+
+                        string path = Path.Combine(_metaColumn.MetaTable.Source.Repository.SubReportsFolder, Helper.CleanFileName(_metaColumn.MetaTable.Name + " Detail.") + Repository.SealReportFileExtension);
+                        path = FileHelper.GetUniqueFileName(path);
+                        var sr = new SubReport() { Path = path.Replace(_metaColumn.Source.Repository.RepositoryPath, Repository.SealRepositoryKeyword), Name = _metaColumn.MetaTable.Name + " Detail" };
+
+                        //And the restriction, try to find out the table primary keys
+                        try
+                        {
+                            DataTable schemaTables = ((OleDbConnection)_metaColumn.Source.GetOpenConnection()).GetOleDbSchemaTable(OleDbSchemaGuid.Primary_Keys, null);
+                            Helper.DisplayDataTable(schemaTables);
+                            foreach (DataRow row in schemaTables.Rows)
+                            {
+                                string schema = "";
+                                if (schemaTables.Columns.Contains("TABLE_SCHEMA")) schema = row["TABLE_SCHEMA"].ToString();
+                                else if (schemaTables.Columns.Contains("TABLE_SCHEM")) schema = row["TABLE_SCHEM"].ToString();
+                                string fullName = (!string.IsNullOrEmpty(schema) ? _metaColumn.Source.GetTableName(schema) + "." : "") + _metaColumn.Source.GetTableName(row["TABLE_NAME"].ToString());
+                                if (row["TABLE_NAME"].ToString() == _metaColumn.MetaTable.Name || fullName == _metaColumn.MetaTable.Name)
+                                {
+                                    var col = _metaColumn.MetaTable.Columns.FirstOrDefault(i => i.Name.ToLower() == row["COLUMN_NAME"].ToString().ToLower() || i.Name.ToLower().EndsWith("." + row["COLUMN_NAME"].ToString().ToLower()));
+                                    if (col != null)
+                                    {
+                                        sr.Restrictions.Add(col.GUID);
+                                    }
+                                    else
+                                    {
+                                        //not all pk available....
+                                        sr.Restrictions.Clear();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        catch { }
+
+                        string message = "";
+                        if (sr.Restrictions.Count == 0)
+                        {
+                            //no PK found, we add the value itself...
+                            sr.Restrictions.Add(_metaColumn.GUID);
+                            message = "The Sub-Report restriction is based on the Column.";
+                        }
+                        else
+                        {
+                            message = "The Sub-Report restrictions are based on the table Primary Keys.";
+                        }
+
+                        foreach (var guid in sr.Restrictions)
+                        {
+                            ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
+                            restriction.MetaColumnGUID = guid;
+                            restriction.PivotPosition = PivotPosition.Row;
+                            restriction.Prompt = PromptType.Prompt;
+                            restriction.Operator = Operator.Equal;
+                            model.Restrictions.Add(restriction);
+                            if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction += "\r\nAND ";
+                            model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+                        }
+
+                        report.SaveToFile(path);
+                        _metaColumn.SubReports.Add(sr);
+
+                        if (MessageBox.Show(string.Format("A Sub-Report named '{0}' has been created in the dedicated Repository folder.\r\n{1}\r\nDo you want to edit it using a new Report Designer ?", Path.GetFileName(path), message), "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                        {
+                            Process.Start(path);
+                        };
+
+                        _metaColumn.UpdateEditor();
+                        setModified();
+                    }
+                    else if (context.PropertyDescriptor.Name == "HelperAddSubReport")
+                    {
+                        OpenFileDialog dlg = new OpenFileDialog();
+                        dlg.Filter = string.Format(Repository.SealRootProductName + " Reports files (*.{0})|*.{0}|All files (*.*)|*.*", Repository.SealReportFileExtension);
+                        dlg.Title = "Select a Sub-Report having prompted restrictions";
+                        dlg.CheckFileExists = true;
+                        dlg.CheckPathExists = true;
+                        dlg.InitialDirectory = _metaColumn.Source.Repository.SubReportsFolder;
+                        if (dlg.ShowDialog() == DialogResult.OK)
+                        {
+                            Report report = Report.LoadFromFile(dlg.FileName, _metaColumn.Source.Repository);
+                            var sr = new SubReport() { Path = report.FilePath.Replace(_metaColumn.Source.Repository.RepositoryPath, Repository.SealRepositoryKeyword), Name = Path.GetFileNameWithoutExtension(dlg.FileName) };
+
+                            foreach (var model in report.Models.Where(i => i.Source.MetaSourceGUID == _metaColumn.Source.GUID))
+                            {
+                                foreach (var restriction in model.Restrictions.Where(i => i.Prompt == PromptType.Prompt))
+                                {
+                                    var col = _metaColumn.MetaTable.Columns.FirstOrDefault(i => i.GUID == restriction.MetaColumnGUID);
+                                    if (col != null)
+                                    {
+                                        sr.Restrictions.Add(col.GUID);
+                                    }
+                                }
+                            }
+
+                            if (sr.Restrictions.Count == 0) throw new Exception("Unable to add this Sub-Report:\r\nThe report does no contain any prompted restriction belonging to the table...");
+
+                            _metaColumn.SubReports.Add(sr);
+                            MessageBox.Show(string.Format("The Sub-Report named '{0}' has been added with {1} restriction(s).", Path.GetFileName(dlg.FileName), sr.Restrictions.Count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            _metaColumn.UpdateEditor();
+                            setModified();
+                        }
+                    }
+                    else if (context.PropertyDescriptor.Name == "HelperOpenSubReportFolder")
+                    {
+                        Process.Start(_metaColumn.Source.Repository.SubReportsFolder);
                     }
                 }
                 else if (_metaJoin != null)

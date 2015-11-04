@@ -33,6 +33,7 @@ div  button { margin:4px;}
 caption {font-weight: bold;}
 
 .datepicker { text-align:right; width:70px; }
+
 .numeric_input { text-align:right; width:70px; }
 .text_input { width:70px; }
 
@@ -81,7 +82,7 @@ html[xmlns] .dataTables_wrapper { display: block; }
 .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
 
 /* navigation menu*/
-#nav_menu {width:200px; display:none; position:fixed; z-index:50;}
+#nav_menu {width:200px; display:none; position:fixed; z-index:20000;}
 
 /* multi select */
 .ms-drop {z-index:0;}

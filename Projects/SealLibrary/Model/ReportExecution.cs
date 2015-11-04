@@ -37,10 +37,10 @@ namespace Seal.Model
         public const string ActionViewPrintResult = "ActionViewPrintResult";
         public const string ActionViewPDFResult = "ActionViewPDFResult";
         public const string ActionViewExcelResult = "ActionViewExcelResult";
-        public const string ActionDrillReport = "ActionDrillReport";
+        public const string ActionNavigate = "ActionNavigate";
         public const string ActionLogin = "ActionLogin";
         public const string ActionSetUserInfo = "ActionSetUserInfo";
-        public const string ActionGetNavigationLinks = "ActionGetNavigationLinks";        
+        public const string ActionGetNavigationLinks = "ActionGetNavigationLinks";
 
         //Html Ids Keywords
         public const string HtmlId_header_form = "header_form";
@@ -218,7 +218,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution && !Report.IsDrilling)
+                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution && !Report.IsNavigating)
                     {
                         //check input restrictions
                         CheckInputRestrictions();
@@ -492,7 +492,7 @@ namespace Seal.Model
 
                 //For DEV: Simulate long query
 #if DEBUG
-               //Thread.Sleep(5000);
+                //Thread.Sleep(5000);
 #endif
                 model.SetColumnsName();
                 Report.LogMessage("Model '{0}': Building pages...", model.Name);
@@ -679,6 +679,8 @@ namespace Seal.Model
             model.SummaryTable = new ResultTable();
             model.SummaryTable.Lines.Add(headerPageValues);
 
+            bool hasSubReports = model.Elements.Exists(i => i.MetaColumn.SubReports.Count > 0);
+
             foreach (ResultPage page in model.Pages)
             {
                 if (Report.Cancel) break;
@@ -763,7 +765,26 @@ namespace Seal.Model
 
                     line = new ResultCell[width];
                     //Row values
-                    for (int i = 0; i < row.Length; i++) line[i] = row[i];
+                    for (int i = 0; i < row.Length && i < width; i++) line[i] = row[i];
+
+                    //Set navigation values if any
+                    for (int i = 0; i < width && hasSubReports; i++) 
+                    {
+                        if (line[i] != null && line[i].Element != null && line[i].Element.MetaColumn != null)
+                        {
+                            foreach (var subreport in line[i].Element.MetaColumn.SubReports)
+                            {
+                                foreach (var guid in subreport.Restrictions)
+                                {
+                                    for (int j = 0; j < row.Length; j++)
+                                    {
+                                        if (guid == row[j].Element.MetaColumnGUID) line[i].SubReportValues.Add(row[j]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     //Data values
                     List<ResultData> datas = null;
                     if (row.Length == 0 && page.Datas.Count > 0)
@@ -1015,7 +1036,7 @@ namespace Seal.Model
                     if (!line0[i].IsTotal)
                     {
                         //empty cell
-                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true,  Value = "" };
+                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true, Value = "" };
                     }
                     else
                     {
@@ -1085,7 +1106,7 @@ namespace Seal.Model
                 if (Report.Cancel) break;
 
                 handleCustomScripts(model, page, page.DataTable);
-               //We do not handle Page table as calculations will be done in the summary table, as the cells are shared amongst Page and Summary
+                //We do not handle Page table as calculations will be done in the summary table, as the cells are shared amongst Page and Summary
                 //handleCustomScripts(model, page, page.PageTable, _compilationKeys);
             }
             handleCustomScripts(model, null, model.SummaryTable);
@@ -1120,7 +1141,7 @@ namespace Seal.Model
                         string primarySplitterValues = Helper.ConcatCellValues(GetSplitterSerieCells(AxisType.Primary, data.Row, data.Column, model), ",");
                         string secondarySplitterValues = Helper.ConcatCellValues(GetSplitterSerieCells(AxisType.Secondary, data.Row, data.Column, model), ",");
 
-                        foreach ( var dataCell in data.Data.Where(i => i.Element.IsSerie))
+                        foreach (var dataCell in data.Data.Where(i => i.Element.IsSerie))
                         {
                             var serieElement = dataCell.Element;
                             ResultCell[] xValues = (serieElement.XAxisType == AxisType.Primary ? xPrimaryDimensions : xSecondaryDimensions);
@@ -1228,7 +1249,7 @@ namespace Seal.Model
         {
             return
             (from element in model.Elements
-             where element.PivotPosition == position
+             where element.PivotPosition == position && !element.IsForNavigation
              select new ResultCell() { Element = element, IsTitle = true, Value = element.DisplayNameEl }).ToArray();
         }
 
