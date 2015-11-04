@@ -550,6 +550,29 @@ namespace Seal.Model
 
                 InitReferences();
 
+                //Add element for sub-reports
+                foreach (var el in Elements.Where(i => i.MetaColumn.SubReports.Count > 0).ToList())
+                {
+                    foreach (var subreport in el.MetaColumn.SubReports)
+                    {
+                        foreach (var guid in subreport.Restrictions)
+                        {
+                            if (!Elements.Exists(i => i.MetaColumnGUID == guid))
+                            {
+                                //Add the element
+                                ReportElement element = ReportElement.Create();
+                                element.Source = Source;
+                                element.Model = this;
+                                element.MetaColumnGUID = guid;
+                                element.PivotPosition = PivotPosition.Row;
+                                element.IsForNavigation = true;
+                                Elements.Add(element);
+                            }
+                        }
+                    }
+                }
+
+
                 execSelectClause = new StringBuilder();
                 execFromClause = new StringBuilder();
                 execWhereClause = new StringBuilder(Restriction);
@@ -990,9 +1013,10 @@ namespace Seal.Model
             //Pre-load script
             if (!Source.IsNoSQL) ExecuteLoadScript(PreLoadScript, "Pre Load Script", this);
 
+            ExecutionError = "";
+
             BuildSQL();
 
-            ExecutionError = "";
             ResultTable = null;
             _command = null;
 

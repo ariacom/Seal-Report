@@ -42,7 +42,8 @@ namespace Seal.Forms
             // Getting the default layout of the Collection Editor...
             CollectionForm collectionForm = base.CreateCollectionForm();
 
-            bool allowAddRemove = false;
+            bool allowAdd = false;
+            bool allowRemove = false;
             Form frmCollectionEditorForm = collectionForm as Form;
             frmCollectionEditorForm.HelpButton = false;
             frmCollectionEditorForm.Text = "Collection Editor";
@@ -56,14 +57,22 @@ namespace Seal.Forms
             else if (CollectionItemType == typeof(SecurityGroup))
             {
                 frmCollectionEditorForm.Text = "Security Groups Collection Editor";
-                allowAddRemove = true;
+                allowAdd = true;
+                allowRemove = true;
                 _useHandlerInterface = false;
             }
             else if (CollectionItemType == typeof(SecurityFolder))
             {
                 frmCollectionEditorForm.Text = "Security Folders Collection Editor";
-                allowAddRemove = true;
+                allowAdd = true;
+                allowRemove = true;
                 _useHandlerInterface = false;
+            }
+            else if (CollectionItemType == typeof(SubReport))
+            {
+                frmCollectionEditorForm.Text = "Sub-Reports Collection Editor";
+                allowRemove = true;
+                _useHandlerInterface = true;
             }
 
             TableLayoutPanel tlpLayout = frmCollectionEditorForm.Controls[0] as TableLayoutPanel;
@@ -82,7 +91,7 @@ namespace Seal.Forms
             }
 
             //Hide Add/Remove -> Get the forms type
-            if (!allowAddRemove)
+            if (!allowRemove)
             {
                 Type formType = frmCollectionEditorForm.GetType();
                 FieldInfo fieldInfo = formType.GetField("removeButton", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -91,7 +100,12 @@ namespace Seal.Forms
                     System.Windows.Forms.Control removeButton = (System.Windows.Forms.Control)fieldInfo.GetValue(frmCollectionEditorForm);
                     removeButton.Hide();
                 }
-                fieldInfo = formType.GetField("addButton", BindingFlags.NonPublic | BindingFlags.Instance);
+            }
+
+            if (!allowAdd)
+            {
+                Type formType = frmCollectionEditorForm.GetType();
+                FieldInfo fieldInfo = formType.GetField("addButton", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (fieldInfo != null)
                 {
                     System.Windows.Forms.Control addButton = (System.Windows.Forms.Control)fieldInfo.GetValue(frmCollectionEditorForm);
@@ -100,6 +114,8 @@ namespace Seal.Forms
             }
             return collectionForm;
         }
+
+
 
         void propertyGrid_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
         {
@@ -111,6 +127,22 @@ namespace Seal.Forms
             if (HelperEditor.HandlerInterface != null && _useHandlerInterface) HelperEditor.HandlerInterface.SetModified();
         }
 
+
+        protected override object CreateInstance(Type itemType)
+        {
+
+            object instance = Activator.CreateInstance(itemType, true);
+
+            if (HelperEditor.HandlerInterface != null && _useHandlerInterface) HelperEditor.HandlerInterface.SetModified();
+            return instance;
+        }
+
+        protected override void DestroyInstance(object instance)
+        {
+            if (HelperEditor.HandlerInterface != null && _useHandlerInterface) HelperEditor.HandlerInterface.SetModified();
+            base.DestroyInstance(instance);
+        }
+
         protected override string GetDisplayText(object value)
         {
             string result = "";
@@ -119,6 +151,7 @@ namespace Seal.Forms
             else if (value is Parameter) result = ((Parameter)value).DisplayName;
             else if (value is SecurityGroup) result = ((SecurityGroup)value).Name;
             else if (value is SecurityFolder) result = ((SecurityFolder)value).Path;
+            else if (value is SubReport) result = ((SubReport)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
 

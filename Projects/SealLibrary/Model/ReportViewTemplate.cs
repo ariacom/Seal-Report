@@ -17,6 +17,7 @@ namespace Seal.Model
     public class ReportViewTemplate
     {
         public const string ModelHTMLName = "Model HTML";
+        public const string ModelDetailHTMLName = "Model Detail HTML";
         public const string ModelCSVExcelName = "Model CSV Excel";
         public static readonly string[] DefaultCSS = { "display:none;", "display:inline; float:left;", "position:absolute; top:50px; left:500px;", "height: 600px; width: 400px;", "text-align:center;", "display:inline-block;", "page-break-after: always;" };
         public static readonly string[] DefaultFontSize = { "30pt", "24pt", "16pt", "14pt", "12pt", "10pt", "8pt", "6pt" };

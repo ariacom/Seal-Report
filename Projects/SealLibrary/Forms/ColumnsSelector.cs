@@ -40,7 +40,7 @@ namespace Seal.Forms
                         }
                     }
 
-                    var frm = new MultipleSelectForm("Select the child columns", cols, "Name");
+                    var frm = new MultipleSelectForm("Select the child columns", cols, "FullDisplayName");
                     //select existing values
                     for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
                     {

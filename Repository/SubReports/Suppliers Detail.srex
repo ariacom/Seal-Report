@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>9632d3e3-3e71-4166-8212-48d6109c4cca</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>4dc7f2b9-601d-46a3-b96c-f435b987c957</GUID>
+      <Name>Databank Worldbank (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>32c9a026-2100-4b6c-964d-2748a73c07b6</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>c15b5e0c-ba34-4a1b-98b4-c5876f2210eb</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>8faa1716-d8d6-4202-825b-091b8158a4ed</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>71aa2ad1-d61b-48b7-9321-9ab2b3b2c6da</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>513bfb52-009f-4702-a9d2-9d9df07145a4</GUID>
+      <Name>RSS No SQL Source (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IsNoSQL>true</IsNoSQL>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables />
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>1e4d2a6f-db16-4bad-8799-d7551f035e05</GUID>
+      <Name>model</Name>
+      <SourceGUID>8faa1716-d8d6-4202-825b-091b8158a4ed</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <Elements>
+        <ReportElement>
+          <GUID>1df9e68b-c548-49df-bdd7-112b31421515</GUID>
+          <Name>Suppliers.Address</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>24c64479-ab3a-462d-a3e5-eddd4be4dcc9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4bd5fef4-6bdb-4d87-be14-05f4788d0243</GUID>
+          <Name>Suppliers.City</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>e2113646-4a55-4077-8d34-a22bdef1354b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>005aaca1-bc94-4293-a1b4-6a729bc9cb97</GUID>
+          <Name>Suppliers.CompanyName</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Page</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7d71882e-992b-44f8-a573-fa702dc84252</GUID>
+          <Name>Suppliers.ContactName</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>7e3f60fc-66fc-4b35-aa56-ef06b4a6bf22</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ab08637d-c022-4f44-9f72-de4c14e57f5d</GUID>
+          <Name>Suppliers.ContactTitle</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>8415fa94-cbf0-4d9b-ab58-816e11da991e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9de1dfb3-9d8c-4d07-b09d-22146deea2cf</GUID>
+          <Name>Suppliers.Country</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>70328799-b9e4-4e93-b851-88be7514c802</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8244074e-efed-4cc3-a4bb-d84422d81c0c</GUID>
+          <Name>Suppliers.Fax</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>7bbbcb86-86b6-4223-b894-8c70f76c63f9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>31fb9bc6-1580-48de-918d-7d4873a4b3ad</GUID>
+          <Name>Suppliers.HomePage</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>1ce1064f-a9f9-4f90-b2cf-2885169e8e73</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>65e7cf47-92a0-4acb-8429-5971083283b7</GUID>
+          <Name>Suppliers.Phone</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>41e673d0-7852-43d0-9ef4-c64649f9020a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2286e684-4978-42d8-b281-640075a0954e</GUID>
+          <Name>Suppliers.PostalCode</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>addf0212-9876-4747-919d-830cb40d2506</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b0e5fb48-a105-433f-a8f5-1e8ef4650955</GUID>
+          <Name>Suppliers.Region</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>2a916fcb-3346-4edf-bcf1-3a15c88b29f8</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2d2b6d2b-d3dd-41d0-bba3-11b4f0efd747</GUID>
+          <Name>Suppliers.SupplierID</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[c89db8cb-62ef-4cbb-bd93-b15c010b5643]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>c89db8cb-62ef-4cbb-bd93-b15c010b5643</GUID>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
+          <Operator>Equal</Operator>
+          <EnumValues />
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks />
+  <CommunTaskScript />
+  <Views>
+    <ReportView>
+      <GUID>fe6e4d42-db48-4964-8f46-f8b70bfe86d1</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>85144d84-72ac-4f50-8d0f-2692f9b3e263</GUID>
+          <Name>Model HTML View</Name>
+          <Views />
+          <ModelGUID>1e4d2a6f-db16-4bad-8799-d7551f035e05</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <Parameters />
+          <CSS />
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <ChartConfigurationXml />
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <Parameters />
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+    <ReportView>
+      <GUID>5b44bbe2-03d9-4bcb-bd17-9ba8ff1a750c</GUID>
+      <Name>view Excel</Name>
+      <Views>
+        <ReportView>
+          <GUID>3f3cd717-0843-42af-84ce-2f5c01e57d66</GUID>
+          <Name>Model CSV Excel View</Name>
+          <Views />
+          <ModelGUID>1e4d2a6f-db16-4bad-8799-d7551f035e05</ModelGUID>
+          <TemplateName>Model CSV Excel</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <Parameters />
+          <CSS />
+          <SortOrder>1</SortOrder>
+          <CultureName />
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <Parameters />
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <CultureName />
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <ViewGUID>fe6e4d42-db48-4964-8f46-f8b70bfe86d1</ViewGUID>
+  <Schedules />
+  <NavigationLinks />
+</Report>

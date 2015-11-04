@@ -99,7 +99,7 @@
         var executionTimer = null;
         var hasRestrictions = @Helper.ToJS(Report.HasRestrictions);
         var hasErrors = @Helper.ToJS(Report.HasErrors);
-        var hasNavigation = @Helper.ToJS(Report.NavigationLinks.Count>0 && Report.IsDrilling); 
+        var hasNavigation = @Helper.ToJS(Report.NavigationLinks.Count>0 && (Report.IsNavigating || Report.GenerateHTMLDisplay)); 
         var showRestrictions = (hasRestrictions && @Helper.ToJS(View.GetBoolValue("restriction_button")));
         var showResult = @Helper.ToJS(View.GetBoolValue("result_button"));
         var showInformation = @Helper.ToJS(View.GetBoolValue("information_button"));
@@ -150,7 +150,7 @@
         <div style="display: inline; float: left; vertical-align: middle;">
             <img src='@Report.AttachImageFile(Report.Repository.Configuration.LogoName)' title="Logo" alt="Logo" />
             <span class="title">@Report.ExecutionName</span>
-            <button id="nav_button"></button>
+            <button id="nav_button" style="display:none;"></button>
             <span id="processing_message" class="info_message" style="margin-left:20px; display:@(Report.PrintLayout ? "none" : "inline")">@Report.Translate("Processing...")</span>
         </div>
         @if (Report.UseFixedHTMLHeader)

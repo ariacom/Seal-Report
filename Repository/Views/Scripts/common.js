@@ -120,6 +120,7 @@ function initButtons() {
                     $("#header_form").attr("action", "ActionGetNavigationLinks");
                     $("#header_form").submit();
                     $("#nav_menu").menu("refresh");
+                    $("#nav_menu").css("width", "360");
                     $("#nav_menu").css("display", "inline");
                     $("#nav_menu").css("top", $(this).offset().top + $(this).height());
                     $("#nav_menu").css("left", $(this).offset().left);
@@ -140,10 +141,12 @@ function initNavMenu() {
                 $("#nav_menu").css("display", "none");
             });
             $("#nav_menu").menu("refresh");
+            $("#nav_menu").css("width", "180");
+
 
             $("#nav_menu").css("display", "inline");
-            $("#nav_menu").css("top", $(this).offset().top + $(this).height());
-            $("#nav_menu").css("left", $(this).offset().left + $(this).width() - 5);
+            $("#nav_menu").css("top", $(this).offset().top + $(this).height() + 5);
+            $("#nav_menu").css("left", $(this).offset().left );
         }
     });
 
@@ -195,7 +198,7 @@ function executeReport(nav) {
         $("#processing_message").css("display", "inline");
         $("#wait_image").css("display", "inline");
         $("#execute_button").button({ label: cancelText });
-        url = urlPrefix + (nav == null ? "ActionExecuteReport" : "ActionDrillReport");
+        url = urlPrefix + (nav == null ? "ActionExecuteReport" : "ActionNavigate");
         executionTimer = setInterval(function () { executeTimer() }, 1200);
     }
     else {
@@ -265,6 +268,7 @@ $(document).ready(function () {
         maxHeight: 95,
         selectAllText: selectAllText
     });
+    $(".ms-drop").css("z-index","0");
 
     setButtonLabels();
 
