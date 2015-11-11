@@ -1252,6 +1252,24 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
+        public bool IsDrillEnabled
+        {
+            get
+            {
+                return ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter);
+            }
+        }
+
+        [XmlIgnore]
+        public bool IsSubReportsEnabled
+        {
+            get
+            {
+                return ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter);
+            }
+        }
+
+        [XmlIgnore]
         public bool SkipImageAttachment
         {
             get
@@ -1347,29 +1365,33 @@ namespace Seal.Model
         }
         #region Translation Helpers
 
+        string TranslationFilePath
+        {
+            get
+            {
+                return FilePath.Replace(Repository.ReportsFolder, "").Replace(Repository.SubReportsFolder, string.Format("\\..\\{0}", Path.GetFileNameWithoutExtension(Repository.SubReportsFolder)));
+            }
+        }
+
         //Helpers for translations
         public string TranslateDisplayName(string displayName)
         {
-            if (FilePath.Length < Repository.ReportsFolder.Length) return displayName;
-            return Repository.RepositoryTranslate("ReportDisplayName", FilePath.Substring(Repository.ReportsFolder.Length), displayName);
+            return Repository.RepositoryTranslate("ReportDisplayName", TranslationFilePath, displayName);
         }
 
         public string TranslateViewName(string viewName)
         {
-            if (FilePath.Length < Repository.ReportsFolder.Length) return viewName;
-            return Repository.RepositoryTranslate("ReportViewName", FilePath.Substring(Repository.ReportsFolder.Length), viewName);
+            return Repository.RepositoryTranslate("ReportViewName", TranslationFilePath, viewName);
         }
 
         public string TranslateOutputName(string outputName)
         {
-            if (FilePath.Length < Repository.ReportsFolder.Length) return outputName;
-            return Repository.RepositoryTranslate("ReportOutputName", FilePath.Substring(Repository.ReportsFolder.Length), outputName);
+            return Repository.RepositoryTranslate("ReportOutputName", TranslationFilePath, outputName);
         }
 
         public string TranslateGeneral(string reference)
         {
-            if (FilePath.Length < Repository.ReportsFolder.Length) return reference;
-            return Repository.RepositoryTranslate("ReportGeneral", FilePath.Substring(Repository.ReportsFolder.Length), reference);
+            return Repository.RepositoryTranslate("ReportGeneral", TranslationFilePath, reference);
         }
         #endregion
 

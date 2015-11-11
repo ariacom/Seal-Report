@@ -39,6 +39,7 @@ namespace Seal.Model
                 GetProperty("HasHTMLTags").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetDisplayName("Drill Children: " + (_drillChildren.Count == 0 ? "None" : _drillChildren.Count.ToString() + " Items(s)"));
+                GetProperty("DrillUpOnlyIfDD").SetIsBrowsable(true);
                 GetProperty("SubReports").SetIsBrowsable(true);
                 GetProperty("SubReports").SetDisplayName("Sub-Reports: " + (_subReports.Count == 0 ? "None" : _subReports.Count.ToString() + " Items(s)"));
 
@@ -296,6 +297,16 @@ namespace Seal.Model
             get { return _drillChildren; }
             set { _drillChildren = value; }
         }
+
+        bool _drillUpOnlyIfDD = false;
+        [Category("Drill"), DisplayName("Drill Up only if drill down occured."), Description("If true, Drill Up is activated only if a drill down occured."), Id(2, 4)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public bool DrillUpOnlyIfDD
+        {
+            get { return _drillUpOnlyIfDD; }
+            set { _drillUpOnlyIfDD = value; }
+        }
+
 
         List<SubReport> _subReports = new List<SubReport>();
         [Category("Sub-Reports"), DisplayName("Sub Reports"), Description("Defines sub-reports to navigate from this column."), Id(1, 5)]

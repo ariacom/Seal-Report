@@ -141,7 +141,6 @@ namespace Seal.Model
             }
         }
 
-
         [Browsable(false)]
         private PivotPosition _pivotPosition = PivotPosition.Row;
         public PivotPosition PivotPosition
@@ -487,6 +486,25 @@ namespace Seal.Model
             get { return _cellScript; }
             set { _cellScript = value; }
         }
+
+        bool _drillEnabled = true;
+        [Category("Advanced"), DisplayName("Drill Enabled"), Description("If true, drill navigation is enabled for the column."), Id(3, 6)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public bool DrillEnabled
+        {
+            get { return _drillEnabled; }
+            set { _drillEnabled = value; }
+        }
+
+        bool _subReportsEnabled = true;
+        [Category("Advanced"), DisplayName("Sub-Reports Enabled"), Description("If true, Sub-Report navigation is enabled for the column."), Id(3, 8)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public bool SubReportsEnabled
+        {
+            get { return _subReportsEnabled; }
+            set { _subReportsEnabled = value; }
+        }
+
 
 
         [XmlIgnore, Browsable(false)]

@@ -88,3 +88,7 @@ html[xmlns] .dataTables_wrapper { display: block; }
 .ms-drop {z-index:0;}
 .ms-choice {cursor:default;}
 .ms-choice>div {display:none;}
+
+/* cell detail */
+.cell_detail_title {color:black;font-weight:bold;text-align:left;vertical-align:top;}
+.cell_detail_value {text-align:left;}

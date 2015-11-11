@@ -146,7 +146,7 @@ function initNavMenu() {
 
             $("#nav_menu").css("display", "inline");
             $("#nav_menu").css("top", $(this).offset().top + $(this).height() + 5);
-            $("#nav_menu").css("left", $(this).offset().left );
+            $("#nav_menu").css("left", $(this).offset().left);
         }
     });
 
@@ -213,9 +213,9 @@ function executeReport(nav) {
         $("#header_form").attr("nav", nav);
         $("#header_form").submit();
     }
-    $('.view_result').attr("disabled", 'disabled');
-    $('#restriction_div').attr("disabled", 'disabled');
-    $('#restriction_div input').attr("disabled", 'disabled');
+    $('.view_result').attr("disabled", "disabled");
+    $('#restriction_div').attr("disabled", "disabled");
+    $('#restriction_div input').attr("disabled", "disabled");
     $('.view').css("display", "none");
 }
 
@@ -268,7 +268,7 @@ $(document).ready(function () {
         maxHeight: 95,
         selectAllText: selectAllText
     });
-    $(".ms-drop").css("z-index","0");
+    $(".ms-drop").css("z-index", "0");
 
     setButtonLabels();
 

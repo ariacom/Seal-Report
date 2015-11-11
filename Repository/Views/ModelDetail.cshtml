@@ -19,25 +19,22 @@
             @if (page.PageTable != null && page.PageTable.Lines.Count == 2 && page.PageTable.Lines[0].Length > 0)
             {
                 <div class='page_table_div' style='@View.GetCSS("page_table")'>
-                    <table class='page_table' style='@View.GetCSS("page_table_table")'>
-                        @if (View.HasValue("page_table_caption"))
-                        {
-                            <caption align="bottom" style="caption-side: bottom;">@Raw(View.GetHtmlValue("page_table_caption"))</caption>
-                        }
+                    <table style='@View.GetCSS("page_table_table")'>
                         <tr>
                             @for (int i = 0; i < page.PageTable.Lines[0].Length; i++)
                             {
                                 ResultCell header = page.PageTable.Lines[0][i];
                                 ResultCell value = page.PageTable.Lines[1][i];
-                                <th class='cell_title'>@Raw(header.HTMLValue)</th>
-                                <td class='cell_value' style='@value.CellCssStyle'>@Raw(value.HTMLValue)</td>
+                                <!--<th class='cell_title'>@Raw(header.HTMLValue)</th>-->
+                                <td class='cell_title' style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
                             }
                         </tr>
                     </table>
                 </div>
+                
+                <hr style="display: block;" />
             }
 
-            <hr style="display: block;" />
 
             @if (page.DataTable != null && page.DataTable.Lines.Count == 2)
             {
@@ -45,19 +42,14 @@
                 ResultCell[] titles = page.DataTable.Lines[0];
                 ResultCell[] values = page.DataTable.Lines[1];
                 <div class='data_table_div' style='@View.GetCSS("data_table")'>
-                    <table class='data_table' style='@View.GetCSS("data_table_table")'>
-                        @if (View.HasValue("data_table_caption"))
-                        {
-                            <caption align="bottom" style="caption-side: bottom;">@Raw(View.GetHtmlValue("data_table_caption"))</caption>
-                        }
-
+                    <table style='@View.GetCSS("data_table_table")'>
                         @for (int row = 0; row < titles.Length; row++)
                         {
                             ResultCell title = titles[row];
                             ResultCell value = values[row];
                             <tr>
-                                <th class='cell_title' style='@title.CellCssStyle'>@Raw(title.HTMLValue)</th>
-                                <td class='cell_value' style='@value.CellCssStyle'>@Raw(value.HTMLValue)</td>
+                                <th class='cell_detail_title' style='@title.FinalCssStyle'>@Raw(title.HTMLValue):</th>
+                                <td class='cell_detail_value' style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
                             </tr>
                         }
                     </table>

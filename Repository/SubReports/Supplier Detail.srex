@@ -1,39 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GUID>2f47849c-8876-4942-8367-085a0486e05b</GUID>
+  <GUID>9900d759-a0e0-45cd-bdcc-aa536aca9c37</GUID>
   <Sources>
     <ReportSource>
-      <GUID>5f14588c-d5ca-4765-b3e5-14bd4847125a</GUID>
-      <Name>Databank Worldbank (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
-      <Connections />
-      <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>false</IsNoSQL>
-      <IgnorePrePostError>false</IgnorePrePostError>
-      <MetaData>
-        <Tables>
-          <MetaTable>
-            <GUID>3307c596-1761-4819-968a-a5312932a72e</GUID>
-            <Alias>SealMasterTable</Alias>
-            <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
-            <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
-            <Columns />
-          </MetaTable>
-        </Tables>
-        <Joins />
-        <Enums />
-      </MetaData>
-      <MetaSourceGUID>c15b5e0c-ba34-4a1b-98b4-c5876f2210eb</MetaSourceGUID>
-    </ReportSource>
-    <ReportSource>
-      <GUID>ab069b33-03aa-4ab6-9343-3a4a40f17827</GUID>
+      <GUID>f1c0bc6c-3139-4120-a245-b7b656a8e492</GUID>
       <Name>Northwind (Repository)</Name>
       <ConnectionFolder />
       <TableFolder />
@@ -48,7 +18,7 @@
       <MetaData>
         <Tables>
           <MetaTable>
-            <GUID>b2bf468e-0341-44a3-b648-ca34fdd5217f</GUID>
+            <GUID>beef2e20-98b9-4df0-9834-28f879fcbf8e</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
             <KeepColumnNames>false</KeepColumnNames>
@@ -62,98 +32,20 @@
       </MetaData>
       <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
     </ReportSource>
-    <ReportSource>
-      <GUID>837ac133-021d-4d38-9202-a859f7073957</GUID>
-      <Name>RSS No SQL Source (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
-      <Connections />
-      <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>true</IsNoSQL>
-      <IgnorePrePostError>false</IgnorePrePostError>
-      <MetaData>
-        <Tables />
-        <Joins />
-        <Enums />
-      </MetaData>
-      <MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID>
-    </ReportSource>
   </Sources>
   <Models>
     <ReportModel>
-      <GUID>18115556-7420-4f6d-b4a6-1ad01a1ec401</GUID>
+      <GUID>6e36c2dd-3f02-4b10-a714-2472d06aeaca</GUID>
       <Name>model</Name>
-      <SourceGUID>ab069b33-03aa-4ab6-9343-3a4a40f17827</SourceGUID>
+      <SourceGUID>f1c0bc6c-3139-4120-a245-b7b656a8e492</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
-          <GUID>3420a89a-047e-4f2f-ac93-0f46d09a79f5</GUID>
-          <Name>Orders.Freight</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
-          <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
-          <HasHTMLTags xsi:nil="true" />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>b5dee061-380a-4dac-a74d-fd573de1a07c</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>3642955c-5dfe-4e54-91ba-8778fee5e61c</GUID>
-          <Name>Orders.OrderDate</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
-          <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
-          <HasHTMLTags xsi:nil="true" />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>6bec5947-a88e-4139-82a7-be293d6d87fa</GUID>
-          <Name>Orders.OrderID</Name>
+          <GUID>ca251cc1-4918-47c4-a408-91d275bd5664</GUID>
+          <Name>Suppliers.CompanyName</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -179,11 +71,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+          <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>7077de04-6b25-48b1-960a-9d483a9b8ebe</GUID>
-          <Name>Orders.RequiredDate</Name>
+          <GUID>1a6bd396-730d-4e0d-ad2e-a33cd6960ebd</GUID>
+          <Name>Suppliers.ContactName</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -209,11 +101,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>ab168a45-6852-44b7-8eff-378968669f14</MetaColumnGUID>
+          <MetaColumnGUID>7e3f60fc-66fc-4b35-aa56-ef06b4a6bf22</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>a3a2444f-2ab4-4c8f-b828-7c4a595b782f</GUID>
-          <Name>Orders.ShipAddress</Name>
+          <GUID>c447cad7-e57c-4f55-9007-fbc06ddba350</GUID>
+          <Name>Suppliers.ContactTitle</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -239,11 +131,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>2003a407-ab31-4514-bc83-8e9479c42e2d</MetaColumnGUID>
+          <MetaColumnGUID>8415fa94-cbf0-4d9b-ab58-816e11da991e</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>019d69ff-a0cc-4eb5-b320-3aba29623c73</GUID>
-          <Name>Orders.ShipCity</Name>
+          <GUID>eca6fe0f-1631-4f7f-8487-0e4e3f72be0c</GUID>
+          <Name>Suppliers.Address</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -269,11 +161,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>e93c456c-40d9-494e-ba21-711177339870</MetaColumnGUID>
+          <MetaColumnGUID>24c64479-ab3a-462d-a3e5-eddd4be4dcc9</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>3fc7585a-a826-40e4-a470-b1d781f16c78</GUID>
-          <Name>Orders.ShipCountry</Name>
+          <GUID>02781245-76bc-4a95-8d9a-dff08aeec88e</GUID>
+          <Name>Suppliers.City</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -299,11 +191,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>fb90a16e-80c8-42c8-9f3b-20becb7a65d7</MetaColumnGUID>
+          <MetaColumnGUID>e2113646-4a55-4077-8d34-a22bdef1354b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>02208811-8525-4ddb-a7e5-8307bcb9c61a</GUID>
-          <Name>Orders.ShipName</Name>
+          <GUID>08f5d7dc-54e4-4582-9271-dda28b718497</GUID>
+          <Name>Suppliers.Region</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -329,11 +221,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>8ccab7ae-77ad-4cb9-9345-d176a463c21b</MetaColumnGUID>
+          <MetaColumnGUID>2a916fcb-3346-4edf-bcf1-3a15c88b29f8</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>cceff0af-8d60-45dc-8c35-4a61c8f167e3</GUID>
-          <Name>Orders.ShippedDate</Name>
+          <GUID>c349854d-8bfa-44ef-b88d-31b7e399dbc8</GUID>
+          <Name>Suppliers.PostalCode</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -359,11 +251,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>ce574340-1504-4bf7-9228-c64f79cf9803</MetaColumnGUID>
+          <MetaColumnGUID>addf0212-9876-4747-919d-830cb40d2506</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>c8f67658-9490-4fcf-8b20-6e94184344f3</GUID>
-          <Name>Orders.ShipPostalCode</Name>
+          <GUID>6cbcb043-d76e-44e4-958d-048995990040</GUID>
+          <Name>Suppliers.Country</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -389,11 +281,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>48ac690b-7231-4b21-b2da-80e96c3aa61e</MetaColumnGUID>
+          <MetaColumnGUID>70328799-b9e4-4e93-b851-88be7514c802</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>4c87dee3-0cf8-4c00-af37-d2c5e871cea7</GUID>
-          <Name>Orders.ShipRegion</Name>
+          <GUID>f6a03326-12bb-41ab-8341-6b08e986c191</GUID>
+          <Name>Suppliers.Phone</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -419,11 +311,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>1b2d846d-976f-49ac-b514-cc5b448d7b18</MetaColumnGUID>
+          <MetaColumnGUID>41e673d0-7852-43d0-9ef4-c64649f9020a</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>2ccac143-3acb-48ab-9f93-409738f9d6c1</GUID>
-          <Name>Orders.ShipVia</Name>
+          <GUID>d264c522-62ef-4296-b9cc-279bc02f4e49</GUID>
+          <Name>Suppliers.Fax</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -449,11 +341,11 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>74282c63-b2a2-4c5c-b59f-e4cac9730f32</MetaColumnGUID>
+          <MetaColumnGUID>7bbbcb86-86b6-4223-b894-8c70f76c63f9</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>d5449d72-855b-4355-b28e-621b60d7d9d8</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), 1, 1)</Name>
+          <GUID>57433f82-0f2a-4ade-a7c6-9965ecf64ea0</GUID>
+          <Name>Suppliers.HomePage</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -479,43 +371,13 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>e952a79d-f482-499b-a69d-05b3f9c1f413</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
-          <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
-          <HasHTMLTags xsi:nil="true" />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <MetaColumnGUID>1ce1064f-a9f9-4f90-b2cf-2885169e8e73</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[ffe32857-7ce6-42a9-a477-cd463bc0ec98]</Restriction>
+      <Restriction>[07a14dd4-4b0b-4bb9-9e64-273d0c658930]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>ffe32857-7ce6-42a9-a477-cd463bc0ec98</GUID>
+          <GUID>07a14dd4-4b0b-4bb9-9e64-273d0c658930</GUID>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -540,7 +402,7 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+          <MetaColumnGUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -555,6 +417,7 @@
           <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
+      <AggregateRestriction />
       <AggregateRestrictions />
     </ReportModel>
   </Models>
@@ -563,49 +426,15 @@
   <CommunTaskScript />
   <Views>
     <ReportView>
-      <GUID>f40fffa2-8d58-4f05-9f5a-f087dd5fe83a</GUID>
+      <GUID>35ee2aee-eb9d-4646-8191-ed2225ead5ed</GUID>
       <Name>view</Name>
       <Views>
         <ReportView>
-          <GUID>defb868a-e857-4dd3-a94a-bf61bb12749a</GUID>
-          <Name>Model HTML View</Name>
+          <GUID>91c6966e-1b56-4e10-8223-4af0333c5650</GUID>
+          <Name>Model Detail HTML View</Name>
           <Views />
-          <ModelGUID>18115556-7420-4f6d-b4a6-1ad01a1ec401</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <UseCustomTemplate>false</UseCustomTemplate>
-          <Parameters />
-          <CSS />
-          <SortOrder>1</SortOrder>
-          <CultureName />
-          <ChartConfigurationXml />
-          <PdfConfigurations />
-          <ExcelConfigurations />
-        </ReportView>
-      </Views>
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
-      <Parameters />
-      <CSS />
-      <SortOrder>0</SortOrder>
-      <CultureName />
-      <PdfConfigurations />
-      <ExcelConfigurations />
-    </ReportView>
-    <ReportView>
-      <GUID>ea5323b8-c552-4b3b-bea4-ac40c018969c</GUID>
-      <Name>view Excel</Name>
-      <Views>
-        <ReportView>
-          <GUID>e7f9eca8-d5c1-4ad5-95c8-ed0ba251f5fd</GUID>
-          <Name>Model CSV Excel View</Name>
-          <Views />
-          <ModelGUID>18115556-7420-4f6d-b4a6-1ad01a1ec401</ModelGUID>
-          <TemplateName>Model CSV Excel</TemplateName>
+          <ModelGUID>6e36c2dd-3f02-4b10-a714-2472d06aeaca</ModelGUID>
+          <TemplateName>Model Detail HTML</TemplateName>
           <ThemeName />
           <UseCustomConfiguration>false</UseCustomConfiguration>
           <UseCustomTemplate>false</UseCustomTemplate>
@@ -622,7 +451,12 @@
       <ThemeName />
       <UseCustomConfiguration>false</UseCustomConfiguration>
       <UseCustomTemplate>false</UseCustomTemplate>
-      <Parameters />
+      <Parameters>
+        <Parameter>
+          <Name>restriction_button</Name>
+          <Value>False</Value>
+        </Parameter>
+      </Parameters>
       <CSS />
       <SortOrder>0</SortOrder>
       <CultureName />
@@ -631,7 +465,7 @@
     </ReportView>
   </Views>
   <DisplayName />
-  <ViewGUID>f40fffa2-8d58-4f05-9f5a-f087dd5fe83a</ViewGUID>
+  <ViewGUID>bce7d72f-f8b8-4ee4-a08d-50273b50557c</ViewGUID>
   <Schedules />
   <NavigationLinks />
 </Report>

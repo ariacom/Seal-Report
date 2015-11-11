@@ -280,6 +280,13 @@ namespace Seal.Model
             }
         }
 
+        public void SetNavigationValue(string val)
+        {
+            if (IsEnum) EnumValues.Add(val);
+            else if (IsDateTime) Date1 = DateTime.FromOADate(double.Parse(val, CultureInfo.InvariantCulture));
+            else Value1 = val;
+        }
+
         [XmlIgnore]
         public List<Operator> AllowedOperators
         {

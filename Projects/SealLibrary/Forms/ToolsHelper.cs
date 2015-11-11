@@ -454,6 +454,18 @@ namespace Seal.Forms
                     }
                 }
 
+                log.Log("Adding Sub-Report names in context: SubReport\r\n");
+                foreach (var table in Source.MetaData.Tables)
+                {
+                    foreach (var element in table.Columns)
+                    {
+                        foreach (var subReport in element.SubReports)
+                        {
+                            translations.AppendFormat("SubReport{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(element.Category + '.' + element.DisplayName), subReport.Name, extraSeparators);
+                        }
+                    }
+                }
+
                 string fileName = FileHelper.GetUniqueFileName(Path.Combine(repository.SettingsFolder, Helper.CleanFileName(string.Format("RepositoryTranslations_{0}_WORK.csv", Source.Name))));
                 File.WriteAllText(fileName, translations.ToString(), Encoding.UTF8);
 

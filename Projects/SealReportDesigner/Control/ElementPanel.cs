@@ -136,6 +136,7 @@ namespace Seal.Controls
                     source.Controls.Remove(button);
                     element.PivotPosition = Position;
                     element.InitEditor();
+                    element.SetDefaults();
                     _modelPanel.Model.CheckSeries();
                     source.RedrawPanel();
                     Controls.Add(button);

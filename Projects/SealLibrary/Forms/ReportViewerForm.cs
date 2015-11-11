@@ -237,7 +237,7 @@ namespace Seal.Forms
                         bool navigationDone = false;
                         Report lastReport = _report;
                         ReportExecution lastExecution = _execution;
-                        string destLabel = "", srcRestriction = "";
+                        string destLabel = "", srcRestriction = "", srcGUID = "";
 
                         if (!string.IsNullOrEmpty(sre))
                         {
@@ -246,12 +246,6 @@ namespace Seal.Forms
                             _report = Report.LoadFromFile(path, _report.Repository);
                             _report.NavigationLinks.AddRange(lastReport.NavigationLinks);
 
-                            /*        if (!File.Exists(path))
-                                    {
-                                        cancelNavigation = true;
-                                        break;
-                                    }
-                                    */
                             int index = 1;
                             while (true)
                             {
@@ -262,12 +256,7 @@ namespace Seal.Forms
                                 {
                                     foreach (var restriction in model.Restrictions.Where(i => i.MetaColumnGUID == res && i.Prompt == PromptType.Prompt))
                                     {
-                                        if (restriction.IsEnum)
-                                        {
-                                            restriction.EnumValues.Clear();
-                                            restriction.EnumValues.Add(val);
-                                        }
-                                        else restriction.Value1 = val;
+                                        restriction.SetNavigationValue(val);
                                     }
                                 }
                                 index++;
@@ -304,13 +293,13 @@ namespace Seal.Forms
                                         restriction.MetaColumnGUID = src;
                                         restriction.SetDefaults();
                                         restriction.Operator = Operator.Equal;
-                                        if (restriction.IsEnum) restriction.EnumValues.Add(val);
-                                        else restriction.Value1 = val;
+                                        restriction.SetNavigationValue(val);
                                         model.Restrictions.Add(restriction);
                                         if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) AND ", model.Restriction);
                                         model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
 
                                         srcRestriction = restriction.DisplayText;
+                                        srcGUID = restriction.MetaColumnGUID;
                                     }
                                     else
                                     {
@@ -351,7 +340,7 @@ namespace Seal.Forms
 
                             string linkText = string.Format("{0} {1}", _report.ExecutionName, destLabel);
                             if (!string.IsNullOrEmpty(srcRestriction)) linkText += string.Format(" [{0}]", srcRestriction);
-                            _report.NavigationLinks.Add(new NavigationLink() { Href = "#", Text = linkText });
+                            _report.NavigationLinks.Add(new NavigationLink() { Href = "#", Text = linkText, Src = srcGUID });
                         }
 
                         cancelNavigation = true;
