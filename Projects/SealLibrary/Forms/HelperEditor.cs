@@ -201,10 +201,19 @@ namespace Seal.Forms
                     else if (context.PropertyDescriptor.Name == "HelperCreateSubReport")
                     {
                         Report report = Report.Create(_metaColumn.Source.Repository);
+                        //Only on detail view
+                        report.Views.Clear();
+                        report.AddView(ReportViewTemplate.ModelDetailHTMLName);
+                        report.Views[0].InitParameters(true);
+                        report.Views[0].Parameters.First(i => i.Name == "restriction_button").BoolValue = false; 
+
+                        report.Sources.RemoveAll(i => i.MetaSourceGUID != _metaColumn.MetaTable.Source.GUID);
+
+                        //And one model
                         ReportModel model = report.Models[0];
-                        model.SourceGUID = report.Sources.First(i => i.MetaSourceGUID == _metaColumn.MetaTable.Source.GUID).GUID;
+                        model.SourceGUID = report.Sources[0].GUID;
                         //Add all the element of the table
-                        foreach (var el in _metaColumn.MetaTable.Columns)
+                        foreach (var el in _metaColumn.MetaTable.Columns.OrderBy(i => i.DisplayOrder))
                         {
                             ReportElement element = ReportElement.Create();
                             element.MetaColumnGUID = el.GUID;
@@ -213,10 +222,12 @@ namespace Seal.Forms
                             model.Elements.Add(element);
                         }
 
-                        string path = Path.Combine(_metaColumn.MetaTable.Source.Repository.SubReportsFolder, Helper.CleanFileName(_metaColumn.MetaTable.Name + " Detail.") + Repository.SealReportFileExtension);
+                        string entityName = _metaColumn.MetaTable.Name;
+                        if (entityName.EndsWith("s")) entityName = entityName.Substring(0, entityName.Length - 1);
+                        string path = Path.Combine(_metaColumn.MetaTable.Source.Repository.SubReportsFolder, Helper.CleanFileName(entityName + " Detail.") + Repository.SealReportFileExtension);
                         path = FileHelper.GetUniqueFileName(path);
-                        var sr = new SubReport() { Path = path.Replace(_metaColumn.Source.Repository.RepositoryPath, Repository.SealRepositoryKeyword), Name = _metaColumn.MetaTable.Name + " Detail" };
 
+                        var sr = new SubReport() { Path = path.Replace(_metaColumn.Source.Repository.RepositoryPath, Repository.SealRepositoryKeyword), Name = entityName + " Detail" };
                         //And the restriction, try to find out the table primary keys
                         try
                         {

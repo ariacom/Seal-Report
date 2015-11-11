@@ -9,15 +9,10 @@ using System.Text;
 using Seal.Converter;
 using Seal.Helpers;
 using System.Web;
+using System.Globalization;
 
 namespace Seal.Model
 {
-    public class NavigationLink
-    {
-        public string Href = "";
-        public string Text = "";
-    }
-
     public class ResultCell
     {
         public object Value;
@@ -101,6 +96,10 @@ namespace Seal.Model
                 {
                     var enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == result);
                     if (enumValue != null) result = enumValue.Id;
+                }
+                else if (Element.IsDateTime && Value is DateTime)
+                {
+                    result = ((DateTime)Value).ToOADate().ToString(CultureInfo.InvariantCulture);
                 }
                 return result;
             }
@@ -216,58 +215,68 @@ namespace Seal.Model
                 if (_links == null)
                 {
                     _links = new List<NavigationLink>();
-                    if (!IsTotal && !IsTotalTotal && Element != null)
+                    if (!IsTitle && !IsTotal && !IsTotalTotal && Element != null)
                     {
-                        //Get child links
-                        var metaData = Element.Source.MetaData;
-                        foreach (string childGUID in Element.MetaColumn.DrillChildren)
+                        var report = Element.Source.Report;
+                        if (report.IsDrillEnabled)
                         {
-                            var child = metaData.GetColumnFromGUID(childGUID);
-                            if (child != null)
+                            //Get Drill child links
+                            var metaData = Element.Source.MetaData;
+                            foreach (string childGUID in Element.MetaColumn.DrillChildren)
                             {
-                                NavigationLink link = new NavigationLink();
-                                //string server = Element.Source.Repository.WebApplicationPath;
-                                //if (string.IsNullOrEmpty(server)) server = "http://w3.localhost";
-                                // link.Href = string.Format("{0}?{1}={2}&src={3}&dst={4}&val={5}", server, ReportExecution.ActionCommand, ReportExecution.ActionDrillReport, Element.MetaColumnGUID, childGUID, val);
-                                link.Href = string.Format("src={0}&dst={1}&val={2}", Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue));
-                                link.Text = Element.Source.Report.Translate("Drill >") + " " + Element.Source.Report.Repository.RepositoryTranslate("Element", child.Category + '.' + child.DisplayName, child.DisplayName);
+                                var child = metaData.GetColumnFromGUID(childGUID);
+                                if (child != null)
+                                {
+                                    NavigationLink link = new NavigationLink();
+                                    link.Href = string.Format("src={0}&dst={1}&val={2}", Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue));
+                                    link.Text = HttpUtility.HtmlEncode(report.Translate("Drill >") + " " + report.Repository.RepositoryTranslate("Element", child.Category + '.' + child.DisplayName, child.DisplayName));
 
-                                _links.Add(link);
+                                    _links.Add(link);
+                                }
                             }
-                        }
 
-                        //Get parent link
-                        foreach (MetaTable table in Element.Source.MetaData.Tables)
-                        {
-                            var parentColumn = table.Columns.FirstOrDefault(i => i.DrillChildren.Contains(Element.MetaColumnGUID));
-                            if (parentColumn != null)
+                            //Get drill parent link
+                            //Element.MetaColumn.DillUpOnlyIfDD
+                            foreach (MetaTable table in Element.Source.MetaData.Tables)
                             {
-                                NavigationLink link = new NavigationLink();
-                                link.Href = string.Format("src={0}&dst={1}", Element.MetaColumnGUID, parentColumn.GUID);
-                                link.Text = Element.Source.Report.Translate("Drill <") + " " + Element.Source.Report.Repository.RepositoryTranslate("Element", parentColumn.Category + '.' + parentColumn.DisplayName, parentColumn.DisplayName);
-                                _links.Add(link);
+                                var parentColumn = table.Columns.FirstOrDefault(i => i.DrillChildren.Contains(Element.MetaColumnGUID));
+                                if (parentColumn != null)
+                                {
+                                    if (Element.MetaColumn.DrillUpOnlyIfDD)
+                                    {
+                                        //check that the drill down occured
+                                        if (!report.NavigationLinks.Exists(i => i.Src == parentColumn.GUID)) continue;
+                                    }
+
+                                    NavigationLink link = new NavigationLink();
+                                    link.Href = string.Format("src={0}&dst={1}", Element.MetaColumnGUID, parentColumn.GUID);
+                                    link.Text = HttpUtility.HtmlEncode(report.Translate("Drill <") + " " + report.Repository.RepositoryTranslate("Element", parentColumn.Category + '.' + parentColumn.DisplayName, parentColumn.DisplayName));
+                                    _links.Add(link);
+                                }
                             }
                         }
 
                         //Get sub reports links
-                        foreach (var subreport in Element.MetaColumn.SubReports)
+                        if (Element.Source.Report.IsSubReportsEnabled)
                         {
-                            NavigationLink link = new NavigationLink();
-                            link.Href = string.Format("sre={0}", subreport.Path);
-                            int index = 1;
-                            foreach (var guid in subreport.Restrictions)
+                            foreach (var subreport in Element.MetaColumn.SubReports.Where(i => i.Restrictions.Count > 0))
                             {
-                                var cellValue = SubReportValues.FirstOrDefault(i => i.Element.MetaColumnGUID == guid);
-                                if (cellValue != null)
+                                NavigationLink link = new NavigationLink();
+                                link.Href = string.Format("sre={0}", subreport.Path);
+                                int index = 1;
+                                foreach (var guid in subreport.Restrictions)
                                 {
-                                    link.Href += string.Format("&res{0}={1}&val{0}={2}", index, guid, HttpUtility.UrlEncode(cellValue.NavigationValue));
-                                    index++;
+                                    var cellValue = SubReportValues.FirstOrDefault(i => i.Element.MetaColumnGUID == guid);
+                                    if (cellValue != null)
+                                    {
+                                        link.Href += string.Format("&res{0}={1}&val{0}={2}", index, guid, HttpUtility.UrlEncode(cellValue.NavigationValue));
+                                        index++;
+                                    }
                                 }
+                                link.Text = report.Repository.RepositoryTranslate("SubReport", Element.MetaColumn.Category + '.' + Element.MetaColumn.DisplayName, subreport.Name);
+                                _links.Add(link);
                             }
-                            link.Text = subreport.Name;
-                            _links.Add(link);
                         }
-
                     }
                 }
                 return _links;

@@ -539,6 +539,32 @@ namespace Seal.Model
             foreach (ReportElement element in Elements) element.SQLColumnName = Source.IsNoSQL ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
         }
 
+        void AddSubReportsElements()
+        {
+            //Add elements for sub-reports
+            foreach (var el in Elements.Where(i => i.MetaColumn.SubReports.Count > 0).ToList())
+            {
+                foreach (var subreport in el.MetaColumn.SubReports)
+                {
+                    foreach (var guid in subreport.Restrictions)
+                    {
+                        if (!Elements.Exists(i => i.MetaColumnGUID == guid))
+                        {
+                            //Add the element
+                            ReportElement element = ReportElement.Create();
+                            element.Source = Source;
+                            element.Model = this;
+                            element.MetaColumnGUID = guid;
+                            element.PivotPosition = PivotPosition.Row;
+                            element.IsForNavigation = true;
+                            element.SortOrder = SortOrderConverter.kNoSortKeyword;
+                            Elements.Add(element);
+                        }
+                    }
+                }
+            }
+        }
+
         public void BuildSQL()
         {
             try
@@ -548,30 +574,9 @@ namespace Seal.Model
 
                 if (Source.MetaData == null) return;
 
+                AddSubReportsElements();
+
                 InitReferences();
-
-                //Add element for sub-reports
-                foreach (var el in Elements.Where(i => i.MetaColumn.SubReports.Count > 0).ToList())
-                {
-                    foreach (var subreport in el.MetaColumn.SubReports)
-                    {
-                        foreach (var guid in subreport.Restrictions)
-                        {
-                            if (!Elements.Exists(i => i.MetaColumnGUID == guid))
-                            {
-                                //Add the element
-                                ReportElement element = ReportElement.Create();
-                                element.Source = Source;
-                                element.Model = this;
-                                element.MetaColumnGUID = guid;
-                                element.PivotPosition = PivotPosition.Row;
-                                element.IsForNavigation = true;
-                                Elements.Add(element);
-                            }
-                        }
-                    }
-                }
-
 
                 execSelectClause = new StringBuilder();
                 execFromClause = new StringBuilder();

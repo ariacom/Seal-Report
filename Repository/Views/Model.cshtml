@@ -12,6 +12,23 @@
     }
 }
 
+@functions
+{
+    string GetNavigation(ResultCell cell)
+    {
+        string navigation = "";
+        if (((ReportModel)Model).Report.GenerateHTMLDisplay)
+        {
+            foreach (var link in cell.Links)
+            {
+                navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1}</a></li>", link.Href, link.Text);
+            }
+            navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
+        }
+        return navigation;
+    }
+}
+
 <script type="text/javascript">
     $(document).ready(function () {
         var dataTables = $('#@View.ViewId .data_table');
@@ -78,7 +95,7 @@
                                     continue;
                                 }
 
-                                <td class='@(isFirst || (row - 1 == ReportModel.Pages.Count) ? "summary_title" : "cell_value")' style='@line[col].CellCssStyle'>
+                                <td class='@(isFirst || (row - 1 == ReportModel.Pages.Count) ? "summary_title" : "cell_value")' style='@line[col].CellCssStyle'@Raw(GetNavigation(line[col]))>
                                     @Raw(line[col].HTMLValue)
                                 </td>
                             }
@@ -137,7 +154,7 @@
                                 <th class='cell_title'>
                                     @Raw(header.HTMLValue)
                                 </th>
-                                <td class='cell_value' style='@value.CellCssStyle'>
+                                <td class='cell_value' style='@value.CellCssStyle'@Raw(GetNavigation(value))>
                                     @Raw(value.HTMLValue)
                                 </td>
                             </tr>
@@ -231,7 +248,7 @@
                 }
             }
 
-            @if (page.DataTable != null && View.GetBoolValue("show_data_tables"))
+            @if (page.DataTable != null && page.DataTable.Lines.Count > 0 && page.DataTable.Lines[0].Length > 0 && View.GetBoolValue("show_data_tables"))
             {
                 bool dataTitleHeader = true;
                 <div class='data_table_div' style='@View.GetCSS("data_table")'>
@@ -255,16 +272,7 @@
                                         {
                                             className = cell.IsTotal ? "cell_value_total" : "cell_value";
                                         }
-                                        string navigation = "";
-                                        if (Report.GenerateHTMLDisplay)
-                                        {
-                                            foreach (var link in cell.Links)
-                                            {
-                                                navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1}</a></li>", link.Href, link.Text);
-                                            }
-                                            navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
-                                        }
-                                        <th class='@className' style='@cell.CellCssStyle' @Raw(navigation)>@Raw(cell.HTMLValue)</th>
+                                        <th class='@className' style='@cell.CellCssStyle' @Raw(GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
                                     }
                                 </tr>
                             }
@@ -279,16 +287,7 @@
                                         ResultCell cell = line[col];
                                         string className = cell.IsTitle && col == 0 ? "cell_title" : "cell_value";
                                         className = cell.IsTotal ? "cell_value_total" : className;
-                                        string navigation = "";
-                                        if (Report.GenerateHTMLDisplay)
-                                        {
-                                            foreach (var link in cell.Links)
-                                            {
-                                                navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1}</a></li>", link.Href, link.Text);
-                                            }
-                                            navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
-                                        }
-                                        <td class='@className' style='@cell.CellCssStyle'@Raw(navigation)>@Raw(cell.HTMLValue)</td>
+                                        <td class='@className' style='@cell.CellCssStyle'@Raw(GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
                                     }
                                 </tr>
                             }

@@ -592,8 +592,31 @@ namespace Seal.Model
             }
         }
 
+        private void setSubReportNavigation(ResultCell[] cellsToAssign, int len, ResultCell[] cellValues)
+        {
+            for (int i = 0; i < len && _processSubReports; i++)
+            {
+                if (cellsToAssign[i] != null && cellsToAssign[i].Element != null && cellsToAssign[i].Element.MetaColumn != null)
+                {
+                    foreach (var subreport in cellsToAssign[i].Element.MetaColumn.SubReports)
+                    {
+                        foreach (var guid in subreport.Restrictions)
+                        {
+                            for (int j = 0; j < cellValues.Length; j++)
+                            {
+                                if (guid == cellValues[j].Element.MetaColumnGUID) cellsToAssign[i].SubReportValues.Add(cellValues[j]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        bool _processSubReports = false;
         private void buildPages(ReportModel model)
         {
+            _processSubReports = model.Elements.Exists(i => i.MetaColumn.SubReports.Count > 0);
+
             model.Pages.Clear();
             if (model.ResultTable == null) return;
 
@@ -628,6 +651,9 @@ namespace Seal.Model
                     //Create Page table
                     currentPage.Pages = pageValues;
                     model.Pages.Add(currentPage);
+
+                    //Set navigation values if any
+                    setSubReportNavigation(pageValues, pageValues.Length, rowValues);
                 }
 
                 //Set values in page
@@ -679,8 +705,6 @@ namespace Seal.Model
             model.SummaryTable = new ResultTable();
             model.SummaryTable.Lines.Add(headerPageValues);
 
-            bool hasSubReports = model.Elements.Exists(i => i.MetaColumn.SubReports.Count > 0);
-
             foreach (ResultPage page in model.Pages)
             {
                 if (Report.Cancel) break;
@@ -691,6 +715,8 @@ namespace Seal.Model
                 page.PageTable = new ResultTable();
                 page.PageTable.Lines.Add(headerPageValues);
                 page.PageTable.Lines.Add(page.Pages);
+
+
                 //Data table
                 page.DataTable = new ResultTable();
 
@@ -768,22 +794,7 @@ namespace Seal.Model
                     for (int i = 0; i < row.Length && i < width; i++) line[i] = row[i];
 
                     //Set navigation values if any
-                    for (int i = 0; i < width && hasSubReports; i++) 
-                    {
-                        if (line[i] != null && line[i].Element != null && line[i].Element.MetaColumn != null)
-                        {
-                            foreach (var subreport in line[i].Element.MetaColumn.SubReports)
-                            {
-                                foreach (var guid in subreport.Restrictions)
-                                {
-                                    for (int j = 0; j < row.Length; j++)
-                                    {
-                                        if (guid == row[j].Element.MetaColumnGUID) line[i].SubReportValues.Add(row[j]);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    setSubReportNavigation(line, width, row);
 
                     //Data values
                     List<ResultData> datas = null;

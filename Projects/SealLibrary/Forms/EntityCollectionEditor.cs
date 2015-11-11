@@ -24,10 +24,18 @@ namespace Seal.Forms
         public delegate void ViewParameterPropertyValueChangedEventHandler(object sender, PropertyValueChangedEventArgs e);
         public static event ViewParameterPropertyValueChangedEventHandler MyPropertyValueChanged;
 
+        RootComponent _component = null;
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
+            if (context.Instance is RootComponent) _component = (RootComponent) context.Instance;
+
             if (context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
             return UITypeEditorEditStyle.Modal;
+        }
+
+        void SetModified()
+        {
+            if (HelperEditor.HandlerInterface != null && _useHandlerInterface) HelperEditor.HandlerInterface.SetModified();
         }
 
         // Inherit the default constructor from the standard
@@ -124,7 +132,7 @@ namespace Seal.Forms
             {
                 EntityCollectionEditor.MyPropertyValueChanged(this, e);
             }
-            if (HelperEditor.HandlerInterface != null && _useHandlerInterface) HelperEditor.HandlerInterface.SetModified();
+            SetModified();
         }
 
 
@@ -132,15 +140,16 @@ namespace Seal.Forms
         {
 
             object instance = Activator.CreateInstance(itemType, true);
-
-            if (HelperEditor.HandlerInterface != null && _useHandlerInterface) HelperEditor.HandlerInterface.SetModified();
+            SetModified();
+            if (_component != null) _component.UpdateEditor();
             return instance;
         }
 
         protected override void DestroyInstance(object instance)
         {
-            if (HelperEditor.HandlerInterface != null && _useHandlerInterface) HelperEditor.HandlerInterface.SetModified();
             base.DestroyInstance(instance);
+            SetModified();
+            if (_component != null) _component.UpdateEditor();
         }
 
         protected override string GetDisplayText(object value)
@@ -154,6 +163,5 @@ namespace Seal.Forms
             else if (value is SubReport) result = ((SubReport)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
-
     }
 }
