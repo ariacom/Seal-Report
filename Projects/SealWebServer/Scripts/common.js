@@ -120,13 +120,22 @@ function initButtons() {
                     $("#header_form").attr("action", "ActionGetNavigationLinks");
                     $("#header_form").submit();
                     $("#nav_menu").menu("refresh");
-                    $("#nav_menu").css("width", "360");
+                    setNavMenuSize()
                     $("#nav_menu").css("display", "inline");
                     $("#nav_menu").css("top", $(this).offset().top + $(this).height());
                     $("#nav_menu").css("left", $(this).offset().left);
                 }
             });
     $("#nav_button").css("display", hasNavigation ? "inline" : "none");
+}
+
+function setNavMenuSize()
+{
+    var maxLen = 8;
+    $('#nav_menu').children().each(function () {
+        if ($(this).text().length > maxLen) maxLen = $(this).text().length;
+    });
+    $("#nav_menu").css("width", 7*maxLen);
 }
 
 function initNavMenu() {
@@ -141,8 +150,7 @@ function initNavMenu() {
                 $("#nav_menu").css("display", "none");
             });
             $("#nav_menu").menu("refresh");
-            $("#nav_menu").css("width", "180");
-
+            setNavMenuSize();
 
             $("#nav_menu").css("display", "inline");
             $("#nav_menu").css("top", $(this).offset().top + $(this).height() + 5);

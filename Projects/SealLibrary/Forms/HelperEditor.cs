@@ -198,6 +198,39 @@ namespace Seal.Forms
                             Cursor.Current = Cursors.Default;
                         }
                     }
+                    else if (context.PropertyDescriptor.Name == "HelperCreateDrillDates")
+                    {
+                        var year = _metaColumn.MetaTable.Source.AddColumn(_metaColumn.MetaTable);
+                        year.DisplayName = _metaColumn.DisplayName + " Year";
+                        year.Type = ColumnType.DateTime;
+                        year.DateTimeStandardFormat = DateTimeStandardFormat.Custom;
+                        year.Format = "yyyy";
+                        var month = _metaColumn.MetaTable.Source.AddColumn(_metaColumn.MetaTable);
+                        month.DisplayName = _metaColumn.DisplayName + " Month";
+                        month.Type = ColumnType.DateTime;
+                        month.DateTimeStandardFormat = DateTimeStandardFormat.Custom;
+                        month.Format = "MM/yyyy";
+                        if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.Oracle)
+                        {
+                            year.Name = string.Format("trunc({0},'year')", _metaColumn.Name);
+                            month.Name = string.Format("trunc({0},'month')", _metaColumn.Name);
+                        }
+                        else if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.MSSQLServer)
+                        {
+                            year.Name = string.Format("select dateadd(dd, -day({0}) + 1, dateadd(mm, -month({0}) + 1, cast({0} as Date)))", _metaColumn.Name);
+                            month.Name = string.Format("select dateadd(dd, -day({0}) + 1, cast({0} as Date))", _metaColumn.Name);
+                        }
+                        else if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.MSAccess)
+                        {
+                            year.Name = string.Format("DateSerial(DatePart('yyyy',{0}), 1, 1)", _metaColumn.Name);
+                            month.Name = string.Format("DateSerial(DatePart('yyyy',{0}), DatePart('m',{0}), 1)", _metaColumn.Name);
+                        }
+                        year.DrillChildren.Add(month.GUID);
+                        month.DrillChildren.Add(_metaColumn.GUID);
+                        initEntity(_metaColumn.MetaTable);
+                        setModified();
+                        MessageBox.Show("A 'Year' column and a 'Month' column have been added to the table with a drill hierarchy.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                     else if (context.PropertyDescriptor.Name == "HelperCreateSubReport")
                     {
                         Report report = Report.Create(_metaColumn.Source.Repository);
