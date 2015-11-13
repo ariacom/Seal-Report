@@ -28,6 +28,8 @@ namespace Seal.Model
         MSAccess,
         [Description("MS Excel")]
         MSExcel,
+        [Description("MS SQLServer")]
+        MSSQLServer,
     }
 
     public enum ColumnType

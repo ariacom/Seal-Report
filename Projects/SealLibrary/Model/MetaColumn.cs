@@ -49,6 +49,7 @@ namespace Seal.Model
                 GetProperty("HelperCheckColumn").SetIsBrowsable(IsSQL);
                 GetProperty("HelperCreateEnum").SetIsBrowsable(true);
                 GetProperty("HelperShowValues").SetIsBrowsable(true);
+                GetProperty("HelperCreateDrillDates").SetIsBrowsable(Type == ColumnType.DateTime && (Source.Connection.DatabaseType == DatabaseType.MSAccess || Source.Connection.DatabaseType == DatabaseType.Oracle || Source.Connection.DatabaseType == DatabaseType.MSSQLServer));
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
 
@@ -361,9 +362,15 @@ namespace Seal.Model
             get { return "<Click to show the column values>"; }
         }
 
+        [Category("Helpers"), DisplayName("Create Date Columns for Drill"), Description("Create automatically a 'Year' column and a 'Month' column to drill down to the date."), Id(4, 10)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperCreateDrillDates
+        {
+            get { return "<Click to create a 'Year' and a 'Month' column>"; }
+        }
 
         string _information;
-        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message ther column has been checked."), Id(4, 10)]
+        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message ther column has been checked."), Id(5, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
         public string Information
         {
@@ -372,7 +379,7 @@ namespace Seal.Model
         }
 
         string _error;
-        [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(5, 10)]
+        [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(6, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
         public string Error
         {

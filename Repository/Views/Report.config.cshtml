@@ -24,8 +24,8 @@
     Template.Parameters.Add(new Parameter() { Name = "print_show_table_border", DisplayName = "Print: Show table borders", BoolValue = true, Description = "If true, table borders are displayed for the print layout" });
     Template.Parameters.Add(new Parameter() { Name = Parameter.PDFLayoutParameter, DisplayName = "PDF: Convert HTML to PDF", BoolValue = false, Description = "If true, the PDF document is always generated and displayed when the report is executed" });
     Template.Parameters.Add(new Parameter() { Name = Parameter.ExcelLayoutParameter, DisplayName = "Excel: Convert to Excel", BoolValue = false, Description = "If true, the Excel document is always generated and displayed when the report is executed" });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.DrillEnabledParameter, DisplayName = "Drill Enabled", BoolValue = false, Description = "If true, the Drill navigation is enabled" });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Sub-Reports Enabled", BoolValue = false, Description = "If true, the Sub-Reports navigation is enabled" });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.DrillEnabledParameter, DisplayName = "Drill Enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled" });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled" });
 
     //CSS
     Template.CSS.Add(new Parameter() { Name = "header", DisplayName = "Header", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report header", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });

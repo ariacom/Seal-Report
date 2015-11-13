@@ -94,6 +94,11 @@ namespace Seal.Forms
             {
                 result = DatabaseType.MSExcel;
             }
+            else if (connectionString.ToLower().Contains("sqlncli"))
+            {
+                result = DatabaseType.MSSQLServer;
+            }
+            
             return result;
         }
 
