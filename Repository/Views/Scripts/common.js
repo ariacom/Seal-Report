@@ -113,14 +113,25 @@ function initButtons() {
         });
     $("#nav_button").button({ text: false, label: navigationText, icons: { primary: "ui-icon-newwin" } })
             .mouseenter(function () {
+                $("#nav_menu").empty();
                 if (urlPrefix != "") {
+                    $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: webExecutionGUID })
+                    .done(function (data) {
+                        if (data.links != null && data.links != "") {
+                            $("#nav_menu").html(data.links);
+                            $("#nav_menu").menu("refresh");
+                            setNavMenuSizeAndPosition()
+                            $("#nav_menu").css("display", "inline");
+                            $("#nav_menu").css("top", $("#nav_button").offset().top + $("#nav_button").height());
+                            $("#nav_menu").css("left", $("#nav_button").offset().left);
+                        }
+                    });
                 }
                 else {
-                    $("#nav_menu").empty();
                     $("#header_form").attr("action", "ActionGetNavigationLinks");
                     $("#header_form").submit();
                     $("#nav_menu").menu("refresh");
-                    setNavMenuSize()
+                    setNavMenuSizeAndPosition()
                     $("#nav_menu").css("display", "inline");
                     $("#nav_menu").css("top", $(this).offset().top + $(this).height());
                     $("#nav_menu").css("left", $(this).offset().left);
@@ -129,13 +140,22 @@ function initButtons() {
     $("#nav_button").css("display", hasNavigation ? "inline" : "none");
 }
 
-function setNavMenuSize()
-{
+function setNavMenuSize() {
+    var menu = $("#nav_menu");
     var maxLen = 8;
-    $('#nav_menu').children().each(function () {
+    menu.children().each(function () {
         if ($(this).text().length > maxLen) maxLen = $(this).text().length;
     });
-    $("#nav_menu").css("width", 7*maxLen);
+    menu.css("width", 7 * maxLen);
+}
+
+function setNavMenuSizeAndPosition() {
+    var menu = $("#nav_menu");
+    menu.menu("refresh");
+    setNavMenuSize();
+    menu.css("display", "inline");
+    menu.css("top", $("#nav_button").offset().top + $("#nav_button").height());
+    menu.css("left", $("#nav_button").offset().left);
 }
 
 function initNavMenu() {
@@ -213,12 +233,13 @@ function executeReport(nav) {
         url = urlPrefix + "ActionCancelReport";
         $("#form_action").val("ActionCancelReport");
     }
+
+    $("#navigation_id").val(nav);
     if (urlPrefix != "") {
         $.post(url, $("#header_form").serialize());
     }
     else {
         $("#header_form").attr("action", url);
-        $("#header_form").attr("nav", nav);
         $("#header_form").submit();
     }
     $('.view_result').attr("disabled", "disabled");

@@ -26,6 +26,8 @@ namespace Seal.Forms
         Report _report;
         ReportExecution _execution;
 
+        Dictionary<string, ReportExecution> _executions = new Dictionary<string, ReportExecution>();
+
         static Size? LastSize = null;
         static Point? LastLocation = null;
 
@@ -153,6 +155,13 @@ namespace Seal.Forms
                 switch (action)
                 {
                     case ReportExecution.ActionExecuteReport:
+                        string executionGUID = webBrowser.Document.All[ReportExecution.HtmlId_execution_guid].GetAttribute("value");
+                        if (_executions.ContainsKey(executionGUID))
+                        {
+                            _execution = _executions[executionGUID];
+                            _report = _execution.Report;
+                        }
+
                         cancelNavigation = true;
                         _reportDone = false;
                         if (webBrowser.Document != null)
@@ -185,9 +194,8 @@ namespace Seal.Forms
                         }
                         else if (!_reportDone)
                         {
-                            //Set last drill path if any
-                            if (_report.NavigationLinks.Count > 0) _report.NavigationLinks.Last().Href = _report.ResultFilePath;
-
+                            //Set last navigation path if any
+                            _report.SetLastNavigationLink();
                             cancelNavigation = true;
                             _reportDone = true;
                             _report.IsNavigating = false;
@@ -232,135 +240,21 @@ namespace Seal.Forms
                         break;
 
                     case ReportExecution.ActionNavigate:
-                        string nav = HeaderForm.GetAttribute(ReportExecution.HtmlId_navigation_attribute_name);
-                        string sre = HttpUtility.ParseQueryString(nav).Get("sre");
-                        bool navigationDone = false;
-                        Report lastReport = _report;
-                        ReportExecution lastExecution = _execution;
-                        string destLabel = "", srcRestriction = "", srcGUID = "";
+                        string nav = webBrowser.Document.All[ReportExecution.HtmlId_navigation_id].GetAttribute("value");
+                        _execution = _execution.Navigate(nav);
+                        _report = _execution.Report;
+                        _executions.Add(_report.ExecutionGUID, _execution);
 
-                        if (!string.IsNullOrEmpty(sre))
-                        {
-                            //Sub-Report
-                            string path = sre.Replace(Repository.SealRepositoryKeyword, _report.Repository.RepositoryPath);
-                            _report = Report.LoadFromFile(path, _report.Repository);
-                            _report.NavigationLinks.AddRange(lastReport.NavigationLinks);
-
-                            int index = 1;
-                            while (true)
-                            {
-                                string res = HttpUtility.ParseQueryString(nav).Get("res" + index.ToString());
-                                string val = HttpUtility.ParseQueryString(nav).Get("val" + index.ToString());
-                                if (string.IsNullOrEmpty(res) || string.IsNullOrEmpty(val)) break;
-                                foreach (var model in _report.Models)
-                                {
-                                    foreach (var restriction in model.Restrictions.Where(i => i.MetaColumnGUID == res && i.Prompt == PromptType.Prompt))
-                                    {
-                                        restriction.SetNavigationValue(val);
-                                    }
-                                }
-                                index++;
-                            }
-                            _canRender = false;
-                            _execution = new ReportExecution() { Report = _report };
-                            _report.InitForExecution();
-                            navigationDone = true;
-                        }
-                        else
-                        {
-                            //Drill
-                            string src = HttpUtility.ParseQueryString(nav).Get("src");
-                            string dst = HttpUtility.ParseQueryString(nav).Get("dst");
-                            string val = HttpUtility.ParseQueryString(nav).Get("val");
-
-                            foreach (var model in _report.Models)
-                            {
-                                ReportElement element = model.Elements.FirstOrDefault(i => i.MetaColumnGUID == src);
-                                if (element != null)
-                                {
-                                    navigationDone = true;
-                                    //If the dest element is already in the model, we can remove it
-                                    if (model.Elements.Exists(i => i.MetaColumnGUID == dst && i.PivotPosition == element.PivotPosition)) model.Elements.Remove(element);
-                                    else element.ChangeColumnGUID(dst);
-                                    destLabel = element.DisplayNameElTranslated;
-                                    if (val != null)
-                                    {
-                                        destLabel = "> " + destLabel;
-                                        //Add restriction 
-                                        ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
-                                        restriction.Source = model.Source;
-                                        restriction.Model = model;
-                                        restriction.MetaColumnGUID = src;
-                                        restriction.SetDefaults();
-                                        restriction.Operator = Operator.Equal;
-                                        restriction.SetNavigationValue(val);
-                                        model.Restrictions.Add(restriction);
-                                        if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) AND ", model.Restriction);
-                                        model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
-
-                                        srcRestriction = restriction.DisplayText;
-                                        srcGUID = restriction.MetaColumnGUID;
-                                    }
-                                    else
-                                    {
-                                        destLabel = "< " + destLabel;
-                                        var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
-                                        foreach (var restr in restrictions)
-                                        {
-                                            model.Restrictions.Remove(restr);
-                                            model.Restriction = model.Restriction.Replace(ReportRestriction.kStartRestrictionChar + restr.GUID + ReportRestriction.kStopRestrictionChar, "1=1");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (navigationDone)
-                        {
-                            NavigationLink lastLink = null;
-                            if (_report.NavigationLinks.Count == 0)
-                            {
-                                lastLink = new NavigationLink();
-                                _report.NavigationLinks.Add(lastLink);
-                            }
-                            else lastLink = _report.NavigationLinks.Last();
-
-                            //create HTML result for navigation -> NavigationLinks must have one link to activate the button
-                            _report.IsNavigating = true;
-                            _canRender = false;
-
-                            if (lastReport != _report)
-                            {
-                                lastReport.IsNavigating = true;
-                                if (lastReport.NavigationLinks.Count == 0) lastReport.NavigationLinks.Add(lastLink);
-                            }
-
-                            lastLink.Href = lastExecution.GenerateHTMLResult();
-                            if (string.IsNullOrEmpty(lastLink.Text)) lastLink.Text = lastReport.ExecutionName;
-
-                            string linkText = string.Format("{0} {1}", _report.ExecutionName, destLabel);
-                            if (!string.IsNullOrEmpty(srcRestriction)) linkText += string.Format(" [{0}]", srcRestriction);
-                            _report.NavigationLinks.Add(new NavigationLink() { Href = "#", Text = linkText, Src = srcGUID });
-                        }
-
+                        _canRender = false;
                         cancelNavigation = true;
                         _reportDone = false;
                         Execute();
-
                         break;
 
                     case ReportExecution.ActionGetNavigationLinks:
                         cancelNavigation = true;
                         HtmlElement navMenu = webBrowser.Document.All[ReportExecution.HtmlId_navigation_menu];
-                        if (navMenu != null)
-                        {
-                            string links = "";
-                            foreach (var link in _report.NavigationLinks)
-                            {
-                                links += string.Format("<li><a href='{0}'>{1}</a></li>", link.Href, HttpUtility.HtmlEncode(link.Text));
-                            }
-                            navMenu.SetAttribute("innerHTML", links);
-                        }
+                        if (navMenu != null) navMenu.SetAttribute("innerHTML", _report.GetNavigationLinksHTML());
                         break;
                 }
             }
