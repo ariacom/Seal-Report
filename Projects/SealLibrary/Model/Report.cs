@@ -237,7 +237,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public string WebExecutionGUID = "";
+        public string ExecutionGUID = "";
 
         [XmlIgnore]
         public string DisplayFolder
@@ -412,7 +412,7 @@ namespace Seal.Model
         [XmlIgnore]
         public List<string> ExecutionAttachedFiles = new List<string>();
         [XmlIgnore]
-        public bool IsNavigating = false; //It true, do evaluate restrictions prompted...
+        public bool IsNavigating = false; //It false, do evaluate restrictions prompted...
 
         //Output management
         [XmlIgnore]
@@ -1308,6 +1308,27 @@ namespace Seal.Model
             set { _navigationLinks = value; }
         }
 
+        public void SetLastNavigationLink()
+        {
+            //Set last navigation path if any
+            if (NavigationLinks.Count > 0)
+            {
+                var lastLink = NavigationLinks.Last();
+                lastLink.Href = ResultFilePath;
+                if (!string.IsNullOrEmpty(WebUrl)) lastLink.Href = WebTempUrl + Path.GetFileName(lastLink.Href);
+            }
+        }
+
+        public string GetNavigationLinksHTML()
+        {
+            string links = "";
+            foreach (var link in NavigationLinks)
+            {
+                links += string.Format("<li><a href='{0}'>{1}</a></li>", link.Href, HttpUtility.HtmlEncode(link.Text));
+            }
+            return links;
+        }
+
         public void UpdateViewParameter(string viewId, string parameterName, string parameterValue)
         {
             ReportView view = ExecutionView.GetView(viewId);
@@ -1431,6 +1452,5 @@ namespace Seal.Model
         }
 
         #endregion
-
     }
 }

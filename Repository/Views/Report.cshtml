@@ -112,7 +112,7 @@
         var printLayout = @Helper.ToJS(Report.PrintLayout);
 
         var rootViewId = '@View.ViewId';
-        var webExecutionGUID = '@Report.WebExecutionGUID';
+        var webExecutionGUID = '@Report.ExecutionGUID';
 
         //text
         var startingExecText = '@Report.Translate("Starting execution...")';
@@ -263,7 +263,8 @@
                 <input type="hidden" name="parameter_view_name" id="parameter_view_name" value="" />
                 <input type="hidden" name="parameter_view_value" id="parameter_view_value" value="" />
 
-                <input type="hidden" name="execution_guid" id="execution_guid" value="@Report.WebExecutionGUID" />
+                <input type="hidden" name="execution_guid" id="execution_guid" value="@Report.ExecutionGUID" />
+                <input type="hidden" name="navigation_id" id="navigation_id" value="" />
             </form>
         }
         else
@@ -354,7 +355,7 @@
                     @Raw(Helper.ToHtml(Report.OutputToExecute.Information))
                     @if (!string.IsNullOrEmpty(Report.ResultFilePath) && !Report.HasErrors)
                     {
-                        string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ViewOutputResult?execution_guid=" + Report.WebExecutionGUID : "file:///" + Report.ResultFilePath;
+                        string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ViewOutputResult?execution_guid=" + Report.ExecutionGUID : "file:///" + Report.ResultFilePath;
                         <a style="display:block;margin-top:10px" href="@url" target="_new">@Report.Translate("View report result file")</a><br />
                     }
                 </div>
@@ -363,7 +364,7 @@
             {
                 if (!string.IsNullOrEmpty(Report.ResultFilePath) && !Report.HasErrors)
                 {
-                    string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ViewOutputResult?execution_guid=" + Report.WebExecutionGUID : "file:///" + Report.ResultFilePath;
+                    string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ViewOutputResult?execution_guid=" + Report.ExecutionGUID : "file:///" + Report.ResultFilePath;
                     <div style="margin:4px">
                         @Raw(Helper.ToHtml(Report.Translate("The report has been generated.")))
                         <a style="display:block;margin-top:10px" href="@url" target="_new">@Report.Translate("View report result file")</a><br />

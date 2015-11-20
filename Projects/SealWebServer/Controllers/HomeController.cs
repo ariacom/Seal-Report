@@ -286,7 +286,7 @@ namespace SealWebServer.Controllers
 
                     Repository repository = Repository.CreateFast();
                     Report reportToExecute = Report.LoadFromFile(filePath, repository);
-                    reportToExecute.WebExecutionGUID = Guid.NewGuid().ToString();
+                    reportToExecute.ExecutionGUID = Guid.NewGuid().ToString();
                     reportToExecute.ExecutionContext = ReportExecutionContext.WebReport;
                     reportToExecute.SecurityContext = WebUser;
                     reportToExecute.CurrentViewGUID = reportToExecute.ViewGUID;
@@ -303,7 +303,7 @@ namespace SealWebServer.Controllers
                     if (!string.IsNullOrEmpty(viewGUID)) reportToExecute.CurrentViewGUID = viewGUID;
 
                     ReportExecution execution = new ReportExecution() { Report = reportToExecute };
-                    Session[reportToExecute.WebExecutionGUID] = execution;
+                    Session[reportToExecute.ExecutionGUID] = execution;
                     int index = Request.Url.OriginalString.ToLower().IndexOf("initexecutereport");
                     if (index == -1) throw new Exception("Invalid URL");
                     reportToExecute.WebUrl = Request.Url.OriginalString.Substring(0, index);
@@ -314,7 +314,7 @@ namespace SealWebServer.Controllers
 
                     reportToExecute.InitForExecution();
                     execution.RenderHTMLDisplayForViewer();
-                    return Redirect(reportToExecute.WebTempUrl + Path.GetFileName(execution.Report.HTMLDisplayFilePath));
+                    return Redirect(reportToExecute.WebTempUrl + Path.GetFileName(reportToExecute.HTMLDisplayFilePath));
                 }
             }
             catch (Exception ex)
@@ -381,7 +381,7 @@ namespace SealWebServer.Controllers
 
                     Repository repository = Repository;
                     Report reportToExecute = Report.LoadFromFile(filePath, repository);
-                    reportToExecute.WebExecutionGUID = Guid.NewGuid().ToString();
+                    reportToExecute.ExecutionGUID = Guid.NewGuid().ToString();
                     reportToExecute.SecurityContext = WebUser;
                     return Content(RenderRazorViewToString("ExecuteViewOutput", reportToExecute));
                 }
@@ -454,6 +454,57 @@ namespace SealWebServer.Controllers
             return null;
         }
 
+        public ActionResult ActionNavigate(string execution_guid)
+        {
+            try
+            {
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
+                {
+                    ReportExecution execution = Session[execution_guid] as ReportExecution;
+                    Report report = execution.Report;
+
+                    string nav = Request.Form[ReportExecution.HtmlId_navigation_id];
+                    execution = execution.Navigate(nav);
+                    Session[execution_guid] = execution;
+
+                    Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Navigation report {1} for user '{0}'", WebUser.Name, report.FilePath);
+
+                    execution.RenderHTMLDisplayForViewer();
+                    return Redirect(execution.Report.WebTempUrl + Path.GetFileName(execution.Report.HTMLDisplayFilePath));
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+
+            return null;
+        }
+
+        public ActionResult ActionGetNavigationLinks(string execution_guid)
+        {
+            try
+            {
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
+                {
+                    ReportExecution execution = Session[execution_guid] as ReportExecution;
+                    Report report = execution.Report;
+
+                    return Json(new { links = report.GetNavigationLinksHTML() });
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+
+            return null;
+        }
+
         public ActionResult ActionRefreshReport(string execution_guid)
         {
             string error = "";
@@ -477,6 +528,9 @@ namespace SealWebServer.Controllers
                     }
                     else if (report.Status == ReportStatus.Executed)
                     {
+                        //Set last navigation path if any
+                        report.SetLastNavigationLink();
+
                         Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Viewing result of report {1} for user '{0}'", WebUser.Name, report.FilePath);
                         if (report.HasErrors) Helper.WriteLogEntryWeb(EventLogEntryType.Error, "Report {0} ({1}) execution errors:\r\n{2}", report.FilePath, WebUser.Name, report.ExecutionErrors);
                         string filePath = report.ForOutput || report.HasExternalViewer ? report.HTMLDisplayFilePath : report.ResultFilePath;

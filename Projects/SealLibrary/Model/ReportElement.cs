@@ -423,6 +423,10 @@ namespace Seal.Model
         {
             _metaColumn = null;
             _metaColumnGUID = guid;
+            _type = ColumnType.Default;
+            _numericStandardFormat = NumericStandardFormat.Default;
+            _datetimeStandardFormat = DateTimeStandardFormat.Default;
+            _displayName = "";
         }
 
         MetaColumn _metaColumn = null;
