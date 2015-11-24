@@ -1,0 +1,148 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web;
+
+namespace Seal.Model
+{
+    public class NavigationContext
+    {
+        public Dictionary<string, Navigation> Navigations = new Dictionary<string, Navigation>();
+
+        public ReportExecution Navigate(string navigation, Report rootReport)
+        {
+            string reportPath = HttpUtility.ParseQueryString(navigation).Get("rpa");
+            string destLabel = "", srcRestriction = "", srcGUID = "";
+            Report newReport = null;
+
+            if (Navigations.Count(i => i.Value.Execution.RootReport == rootReport) == 1)
+            {
+                //For the first navigation, we update the JS file in the result to show up the button
+                string html = File.ReadAllText(rootReport.ResultFilePath);
+                html = html.Replace("var hasNavigation = false;/*SRKW do not modify*/", "var hasNavigation = true;");
+                rootReport.ResultFilePath = Helpers.FileHelper.GetUniqueFileName(rootReport.ResultFilePath);
+                File.WriteAllText(rootReport.ResultFilePath, html, System.Text.Encoding.UTF8);
+                rootReport.IsNavigating = true;
+                rootReport.HasNavigation = true;
+
+                Navigations.First(i => i.Value.Execution.RootReport == rootReport).Value.Link.Href = !string.IsNullOrEmpty(rootReport.WebUrl) ? rootReport.WebTempUrl + Path.GetFileName(rootReport.ResultFilePath) : rootReport.ResultFilePath;
+
+            }
+
+            if (!string.IsNullOrEmpty(reportPath))
+            {
+                //Sub-Report
+                string path = reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath);
+                newReport = Report.LoadFromFile(path, rootReport.Repository);
+
+                int index = 1;
+                while (true)
+                {
+                    string res = HttpUtility.ParseQueryString(navigation).Get("res" + index.ToString());
+                    string val = HttpUtility.ParseQueryString(navigation).Get("val" + index.ToString());
+                    if (string.IsNullOrEmpty(res) || string.IsNullOrEmpty(val)) break;
+                    foreach (var model in newReport.Models)
+                    {
+                        foreach (var restriction in model.Restrictions.Where(i => i.MetaColumnGUID == res && i.Prompt == PromptType.Prompt))
+                        {
+                            restriction.SetNavigationValue(val);
+                            srcRestriction = restriction.GeNavigationDisplayValue();
+                        }
+                    }
+                    index++;
+                }
+            }
+            else
+            {
+                //Drill
+                string executionGuid = HttpUtility.ParseQueryString(navigation).Get("exe");
+                if (!Navigations.ContainsKey(executionGuid)) throw new Exception("Missing execution GUID");
+                newReport = Navigations[executionGuid].Execution.Report.Clone();
+                newReport.ExecutionGUID = Guid.NewGuid().ToString();
+                string src = HttpUtility.ParseQueryString(navigation).Get("src");
+                string dst = HttpUtility.ParseQueryString(navigation).Get("dst");
+                string val = HttpUtility.ParseQueryString(navigation).Get("val");
+                newReport.DrillParents.Add(src);
+
+                foreach (var model in newReport.Models)
+                {
+                    ReportElement element = model.Elements.FirstOrDefault(i => i.MetaColumnGUID == src);
+                    if (element != null)
+                    {
+                        //If the dest element is already in the model, we can remove it
+                        if (model.Elements.Exists(i => i.MetaColumnGUID == dst && i.PivotPosition == element.PivotPosition)) model.Elements.Remove(element);
+                        else element.ChangeColumnGUID(dst);
+                        destLabel = element.DisplayNameElTranslated;
+                        if (val != null)
+                        {
+                            //Add restriction 
+                            ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
+                            restriction.Source = model.Source;
+                            restriction.Model = model;
+                            restriction.MetaColumnGUID = src;
+                            restriction.SetDefaults();
+                            restriction.Operator = Operator.Equal;
+                            restriction.SetNavigationValue(val);
+                            model.Restrictions.Add(restriction);
+                            if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) AND ", model.Restriction);
+                            model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+
+                            srcRestriction = restriction.GeNavigationDisplayValue();
+                            srcGUID = restriction.MetaColumnGUID;
+                        }
+                        else
+                        {
+                            var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
+                            foreach (var restr in restrictions)
+                            {
+                                model.Restrictions.Remove(restr);
+                                model.Restriction = model.Restriction.Replace(ReportRestriction.kStartRestrictionChar + restr.GUID + ReportRestriction.kStopRestrictionChar, "1=1");
+                            }
+                        }
+                    }
+                }
+            }
+
+            newReport.WebUrl = rootReport.WebUrl;
+            newReport.IsNavigating = true;
+            newReport.HasNavigation = true;
+
+            if (!string.IsNullOrEmpty(srcRestriction)) newReport.DisplayName = string.Format("{0} > {1}", newReport.ExecutionName, srcRestriction);
+            else newReport.DisplayName = string.Format("{0} < {1}", newReport.ExecutionName, destLabel);
+
+            return new ReportExecution() { Report = newReport, RootReport = rootReport };
+        }
+
+        public void SetNavigation(ReportExecution execution)
+        {
+            Navigation navigation = null;
+            if (!Navigations.ContainsKey(execution.Report.ExecutionGUID))
+            {
+                navigation = new Navigation() { Execution = execution };
+                Navigations.Add(execution.Report.ExecutionGUID, navigation);
+            }
+            else
+            {
+                navigation = Navigations[execution.Report.ExecutionGUID];
+            }
+            //navigation.Origin = 
+            navigation.Link = new NavigationLink() { Text = execution.Report.ExecutionName };
+            navigation.Link.Href = !string.IsNullOrEmpty(execution.Report.WebUrl) ? execution.Report.WebTempUrl + Path.GetFileName(execution.Report.ResultFilePath) : execution.Report.ResultFilePath;
+
+            //set root report here
+            if (execution.RootReport == null) execution.RootReport = execution.Report;
+        }
+
+        public string GetNavigationLinksHTML(Report rootReport)
+        {
+            string links = "";
+            foreach (var navigation in Navigations.Values.Where(i => i.Execution.RootReport == rootReport))
+            {
+                links += string.Format("<li><a href='{0}'>{1}</a></li>", HttpUtility.HtmlEncode(navigation.Link.Href), HttpUtility.HtmlEncode(navigation.Link.Text));
+            }
+            return links;
+        }
+    }
+}

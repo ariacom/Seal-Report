@@ -25,8 +25,7 @@ namespace Seal.Forms
     {
         Report _report;
         ReportExecution _execution;
-
-        Dictionary<string, ReportExecution> _executions = new Dictionary<string, ReportExecution>();
+        NavigationContext _navigation = new NavigationContext();
 
         static Size? LastSize = null;
         static Point? LastLocation = null;
@@ -156,9 +155,9 @@ namespace Seal.Forms
                 {
                     case ReportExecution.ActionExecuteReport:
                         string executionGUID = webBrowser.Document.All[ReportExecution.HtmlId_execution_guid].GetAttribute("value");
-                        if (_executions.ContainsKey(executionGUID))
+                        if (_navigation.Navigations.ContainsKey(executionGUID))
                         {
-                            _execution = _executions[executionGUID];
+                            _execution = _navigation.Navigations[executionGUID].Execution;
                             _report = _execution.Report;
                         }
 
@@ -194,8 +193,7 @@ namespace Seal.Forms
                         }
                         else if (!_reportDone)
                         {
-                            //Set last navigation path if any
-                            _report.SetLastNavigationLink();
+                            _navigation.SetNavigation(_execution);
                             cancelNavigation = true;
                             _reportDone = true;
                             _report.IsNavigating = false;
@@ -241,9 +239,8 @@ namespace Seal.Forms
 
                     case ReportExecution.ActionNavigate:
                         string nav = webBrowser.Document.All[ReportExecution.HtmlId_navigation_id].GetAttribute("value");
-                        _execution = _execution.Navigate(nav);
+                        _execution = _navigation.Navigate(nav, _execution.RootReport);
                         _report = _execution.Report;
-                        _executions.Add(_report.ExecutionGUID, _execution);
 
                         _canRender = false;
                         cancelNavigation = true;
@@ -254,7 +251,7 @@ namespace Seal.Forms
                     case ReportExecution.ActionGetNavigationLinks:
                         cancelNavigation = true;
                         HtmlElement navMenu = webBrowser.Document.All[ReportExecution.HtmlId_navigation_menu];
-                        if (navMenu != null) navMenu.SetAttribute("innerHTML", _report.GetNavigationLinksHTML());
+                        if (navMenu != null) navMenu.SetAttribute("innerHTML", _navigation.GetNavigationLinksHTML(_execution.RootReport));
                         break;
                 }
             }

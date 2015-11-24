@@ -1077,6 +1077,7 @@ namespace Seal.Model
         {
             Dictionary<object, object> result = new Dictionary<object, object>();
             bool hasNVD3Pie = Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.PieChart && i.PivotPosition == PivotPosition.Data);
+            bool orderAsc = true;
             foreach (var dimensions in XDimensions)
             {
                 //One value -> set the raw value, several values -> concat the display value
@@ -1093,8 +1094,11 @@ namespace Seal.Model
                     }
                 }
                 else result.Add(dimensions, Helper.ConcatCellValues(dimensions, ","));
+
+                if (dimensions.Length > 0 && dimensions[0].Element.SortOrder.Contains(SortOrderConverter.kAutomaticDescSortKeyword)) orderAsc = false;
             }
-            return result;
+
+            return orderAsc ? result.OrderBy(i => i.Value).ToDictionary(i => i.Key, i => i.Value) : result.OrderByDescending(i => i.Value).ToDictionary(i => i.Key, i => i.Value);
         }
 
         private void initChartXValues(ResultPage page)

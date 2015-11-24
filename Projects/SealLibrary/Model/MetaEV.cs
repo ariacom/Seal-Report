@@ -18,7 +18,6 @@ namespace Seal.Model
    public class MetaEV
     {
         string _identifier;
-
         [Category("Definition"), DisplayName("Identifier"), Description("The database value of the enumerated value")]
         public string Id
         {
@@ -27,7 +26,6 @@ namespace Seal.Model
         }
 
         string _value;
-
         [Category("Definition"), DisplayName("Value"), Description("The display value of the enumerated value")]
         public string Val
         {

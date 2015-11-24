@@ -980,6 +980,10 @@
           <Name>restriction_button</Name>
           <Value>False</Value>
         </Parameter>
+        <Parameter>
+          <Name>drill_enabled</Name>
+          <Value>False</Value>
+        </Parameter>
       </Parameters>
       <CSS />
       <SortOrder>0</SortOrder>
@@ -991,5 +995,4 @@
   <DisplayName />
   <ViewGUID>34aa5765-a5de-4be9-82e0-efe8ab26eff0</ViewGUID>
   <Schedules />
-  <NavigationLinks />
 </Report>
