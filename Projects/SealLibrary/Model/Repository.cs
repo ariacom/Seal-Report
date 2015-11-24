@@ -529,9 +529,11 @@ namespace Seal.Model
             return RepositoryTranslate("Element", element.MetaColumn.Category + '.' + element.DisplayNameEl, reference);
         }
 
-        public string TranslateEnum(string instance, string reference)
+        public string EnumDisplayValue(MetaEnum instance, string id)
         {
-            return RepositoryTranslate("Enum", instance, reference);
+            string result = instance.GetDisplayValue(id);
+            if (instance.Translate) result = RepositoryTranslate("Enum", instance.Name, result);
+            return result;
         }
 
         public string TranslateFolderName(string path)

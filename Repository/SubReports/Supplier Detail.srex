@@ -55,6 +55,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Page</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -72,6 +73,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>1a6bd396-730d-4e0d-ad2e-a33cd6960ebd</GUID>
@@ -85,6 +88,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -102,6 +106,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>7e3f60fc-66fc-4b35-aa56-ef06b4a6bf22</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>c447cad7-e57c-4f55-9007-fbc06ddba350</GUID>
@@ -115,6 +121,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -132,6 +139,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>8415fa94-cbf0-4d9b-ab58-816e11da991e</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>eca6fe0f-1631-4f7f-8487-0e4e3f72be0c</GUID>
@@ -145,6 +154,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -162,6 +172,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>24c64479-ab3a-462d-a3e5-eddd4be4dcc9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>02781245-76bc-4a95-8d9a-dff08aeec88e</GUID>
@@ -175,6 +187,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -192,6 +205,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>e2113646-4a55-4077-8d34-a22bdef1354b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>08f5d7dc-54e4-4582-9271-dda28b718497</GUID>
@@ -205,6 +220,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -222,6 +238,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>2a916fcb-3346-4edf-bcf1-3a15c88b29f8</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>c349854d-8bfa-44ef-b88d-31b7e399dbc8</GUID>
@@ -235,6 +253,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -252,6 +271,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>addf0212-9876-4747-919d-830cb40d2506</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>6cbcb043-d76e-44e4-958d-048995990040</GUID>
@@ -265,6 +286,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -282,6 +304,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>70328799-b9e4-4e93-b851-88be7514c802</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>f6a03326-12bb-41ab-8341-6b08e986c191</GUID>
@@ -295,6 +319,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -312,6 +337,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>41e673d0-7852-43d0-9ef4-c64649f9020a</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>d264c522-62ef-4296-b9cc-279bc02f4e49</GUID>
@@ -325,6 +352,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -342,6 +370,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>7bbbcb86-86b6-4223-b894-8c70f76c63f9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>57433f82-0f2a-4ade-a7c6-9965ecf64ea0</GUID>
@@ -355,6 +385,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
@@ -372,6 +403,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>1ce1064f-a9f9-4f90-b2cf-2885169e8e73</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[07a14dd4-4b0b-4bb9-9e64-273d0c658930]</Restriction>
@@ -387,6 +420,7 @@
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
@@ -403,6 +437,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>cb2d76cc-e7b2-4c08-a41c-8a4642ce1213</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -456,6 +492,10 @@
           <Name>restriction_button</Name>
           <Value>False</Value>
         </Parameter>
+        <Parameter>
+          <Name>drill_enabled</Name>
+          <Value>False</Value>
+        </Parameter>
       </Parameters>
       <CSS />
       <SortOrder>0</SortOrder>
@@ -465,7 +505,6 @@
     </ReportView>
   </Views>
   <DisplayName />
-  <ViewGUID>bce7d72f-f8b8-4ee4-a08d-50273b50557c</ViewGUID>
+  <ViewGUID>35ee2aee-eb9d-4646-8191-ed2225ead5ed</ViewGUID>
   <Schedules />
-  <NavigationLinks />
 </Report>

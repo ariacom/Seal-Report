@@ -25,6 +25,7 @@ namespace SealWebServer.Controllers
         public const string SessionRepository = "SessionRepository";
         public const string SessionLastFolder = "SessionLastFolder";
         public const string SessionUser = "SessionUser";
+        public const string SessionNavigationContext = "SessionNavigationContext";
         public const string SealCultureCookieName = "SealReport_Culture_Name";
 
         Repository Repository
@@ -62,6 +63,21 @@ namespace SealWebServer.Controllers
             return user;
         }
 
+        NavigationContext NavigationContext
+        {
+            get
+            {
+                NavigationContext result = Session[SessionNavigationContext] as NavigationContext;
+                if (result == null)
+                {
+                    result = new NavigationContext();
+                    Session[SessionNavigationContext] = result;
+
+                }
+                return result;
+            }
+        }
+
         ContentResult HandleException(Exception ex)
         {
             Helper.WriteLogEntryWeb(EventLogEntryType.Error, "Unexpected error got:\r\n{0}\r\n\r\n{1}\r\n\r\n{2}", ex.Message, Request.Url.OriginalString, ex.StackTrace);
@@ -84,6 +100,18 @@ namespace SealWebServer.Controllers
             WebUser.WebPrincipal = User;
             WebUser.Authenticate();
             Helper.WriteLogEntryWeb(WebUser.IsAuthenticated ? EventLogEntryType.SuccessAudit : EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
+        }
+
+        ContentResult GetContentResult(string filePath)
+        {
+            Response.Clear();
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.AppendHeader("title", Path.GetFileName(filePath));
+            Response.AddHeader("content-disposition", "inline;filename=\"" + Path.GetFileName(filePath) + "\"");
+            Response.ContentType = "text/html";
+            Response.Cache.SetLastModified(DateTime.Now);
+            return Content(System.IO.File.ReadAllText(filePath));
         }
 
         public ActionResult Main()
@@ -145,6 +173,7 @@ namespace SealWebServer.Controllers
             {
                 CreateRepository();
                 CreateWebUser();
+
                 WebUser.WebPrincipal = User;
                 WebUser.WebUserName = user_name;
                 WebUser.WebPassword = password;
@@ -286,7 +315,6 @@ namespace SealWebServer.Controllers
 
                     Repository repository = Repository.CreateFast();
                     Report reportToExecute = Report.LoadFromFile(filePath, repository);
-                    reportToExecute.ExecutionGUID = Guid.NewGuid().ToString();
                     reportToExecute.ExecutionContext = ReportExecutionContext.WebReport;
                     reportToExecute.SecurityContext = WebUser;
                     reportToExecute.CurrentViewGUID = reportToExecute.ViewGUID;
@@ -314,7 +342,7 @@ namespace SealWebServer.Controllers
 
                     reportToExecute.InitForExecution();
                     execution.RenderHTMLDisplayForViewer();
-                    return Redirect(reportToExecute.WebTempUrl + Path.GetFileName(reportToExecute.HTMLDisplayFilePath));
+                    return GetContentResult(reportToExecute.HTMLDisplayFilePath);
                 }
             }
             catch (Exception ex)
@@ -381,7 +409,6 @@ namespace SealWebServer.Controllers
 
                     Repository repository = Repository;
                     Report reportToExecute = Report.LoadFromFile(filePath, repository);
-                    reportToExecute.ExecutionGUID = Guid.NewGuid().ToString();
                     reportToExecute.SecurityContext = WebUser;
                     return Content(RenderRazorViewToString("ExecuteViewOutput", reportToExecute));
                 }
@@ -409,15 +436,17 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionExecuteReport(string execution_guid)
         {
+            Debug.WriteLine(string.Format("ActionExecuteReport {0}", execution_guid));
+
             try
             {
+
                 if (!CheckAuthentication()) return Content(_loginContent);
 
                 if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
                     Report report = execution.Report;
-
 
                     Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting report {1} for user '{0}'", WebUser.Name, report.FilePath);
 
@@ -442,6 +471,7 @@ namespace SealWebServer.Controllers
                     }
 
                     while (execution.IsConvertingToExcel) Thread.Sleep(100);
+                    report.IsNavigating = false;
                     execution.Execute();
                     return null;
                 }
@@ -456,6 +486,8 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionNavigate(string execution_guid)
         {
+            Debug.WriteLine(string.Format("ActionNavigate {0}", execution_guid));
+
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -463,16 +495,22 @@ namespace SealWebServer.Controllers
                 if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
-                    Report report = execution.Report;
 
                     string nav = Request.Form[ReportExecution.HtmlId_navigation_id];
-                    execution = execution.Navigate(nav);
-                    Session[execution_guid] = execution;
+                    execution = NavigationContext.Navigate(nav, execution.RootReport);
+                    Report report = execution.Report;
+                    Session[report.ExecutionGUID] = execution;
 
                     Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Navigation report {1} for user '{0}'", WebUser.Name, report.FilePath);
 
+                    report.ExecutionContext = ReportExecutionContext.WebReport;
+                    report.SecurityContext = WebUser;
+                    report.CurrentViewGUID = report.ViewGUID;
+
+                    report.InitForExecution();
                     execution.RenderHTMLDisplayForViewer();
-                    return Redirect(execution.Report.WebTempUrl + Path.GetFileName(execution.Report.HTMLDisplayFilePath));
+
+                    return Json(new { result_url = report.WebTempUrl + Path.GetFileName(report.HTMLDisplayFilePath) }); ;
                 }
             }
             catch (Exception ex)
@@ -494,7 +532,7 @@ namespace SealWebServer.Controllers
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
                     Report report = execution.Report;
 
-                    return Json(new { links = report.GetNavigationLinksHTML() });
+                    return Json(new { links = NavigationContext.GetNavigationLinksHTML(execution.RootReport) });
                 }
             }
             catch (Exception ex)
@@ -507,6 +545,8 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionRefreshReport(string execution_guid)
         {
+            Debug.WriteLine(string.Format("ActionRefreshReport {0}", execution_guid));
+
             string error = "";
             try
             {
@@ -528,8 +568,7 @@ namespace SealWebServer.Controllers
                     }
                     else if (report.Status == ReportStatus.Executed)
                     {
-                        //Set last navigation path if any
-                        report.SetLastNavigationLink();
+                        NavigationContext.SetNavigation(execution);
 
                         Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Viewing result of report {1} for user '{0}'", WebUser.Name, report.FilePath);
                         if (report.HasErrors) Helper.WriteLogEntryWeb(EventLogEntryType.Error, "Report {0} ({1}) execution errors:\r\n{2}", report.FilePath, WebUser.Name, report.ExecutionErrors);

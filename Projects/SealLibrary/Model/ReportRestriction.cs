@@ -596,7 +596,7 @@ namespace Seal.Model
                 {
                     foreach (string enumValue in EnumValues)
                     {
-                        Helper.AddValue(ref result, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, Model.Report.Repository.TranslateEnum(EnumRE.Name, GetEnumDisplayValue(enumValue)));
+                        Helper.AddValue(ref result, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, Model.Report.Repository.EnumDisplayValue(EnumRE, enumValue));
                     }
                 }
                 return result;
@@ -614,13 +614,20 @@ namespace Seal.Model
             else if (IsDateTime)
             {
                 if (date == DateTime.MinValue) date = DateTime.Now;
-                result = Helper.QuoteSingle(ElementDisplayValue(date));
+                result = "'" + ElementDisplayValue(date)  + "'";
             }
             else
             {
                 if (string.IsNullOrEmpty(value)) value = "";
-                result = Helper.QuoteSingle(ElementDisplayValue(value));
+                result = "'" + ElementDisplayValue(value) + "'";
             }
+            return result;
+        }
+
+        public string GeNavigationDisplayValue()
+        {
+            var result = IsEnum ? EnumDisplayValue : GetDisplayValue(Value1, Date1);
+            if (result.Length > 2 && result[0] == '\'' && result[result.Length-1] == '\'') result = result.Substring(1, result.Length - 2);
             return result;
         }
 
@@ -639,9 +646,9 @@ namespace Seal.Model
             return result;
         }
 
-        public string GetEnumDisplayValue(string enumValue)
+        public string GetEnumDisplayValue(string id)
         {
-            return EnumRE.GetDisplayValue(enumValue);
+            return Model.Report.Repository.EnumDisplayValue(EnumRE, id);
         }
 
         public bool IsGreaterSmallerOperator
@@ -868,6 +875,7 @@ namespace Seal.Model
             }
         }
 
+
         [XmlIgnore]
         string _displayText;
         public string DisplayText
@@ -937,14 +945,7 @@ namespace Seal.Model
         string GetHtmlValue(string value, string keyword, DateTime date)
         {
             string result = "";
-            if (IsEnum)
-            {
-                foreach (string enumValue in EnumValues)
-                {
-                    Helper.AddValue(ref result, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetEnumDisplayValue(enumValue));
-                }
-            }
-            else if (IsNumeric)
+            if (IsNumeric)
             {
                 if (string.IsNullOrEmpty(value)) result = "";
                 else result = ElementDisplayValue(value);

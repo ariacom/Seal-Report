@@ -74,6 +74,8 @@ Report;Invalid date;;Date invalide;Data non valida
 Report;Invalid numeric value;;Valeur numérique invalide;Valore numerico non corretto
 Report;"Page &p; of &P;";;"Page &p; de &P;";"Pagina &p; de &P;"
 Report;Charts;;Graphes;Grafici
+Report;Drill >;;Navigation >;Navigation >
+Report;Drill <;;Navigation <;Navigation <
 Web;Close;;Fermer;Chiuso
 Web;Display all reports in the repository;;Affiche tous les rapports du Repository;Mostra tutti i report del repertorio
 Web;All reports and files;;Tous les rapports et fichiers;Tutti i reports e files

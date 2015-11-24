@@ -181,6 +181,8 @@
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Model\CategoryFolder.cs" />
+    <Compile Include="Model\Navigation.cs" />
+    <Compile Include="Model\NavigationContext.cs" />
     <Compile Include="Model\NavigationLink.cs" />
     <Compile Include="Model\OutputEMailDevice.cs" />
     <Compile Include="Model\OutputFolderDevice.cs" />

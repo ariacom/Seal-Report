@@ -258,10 +258,11 @@ namespace Seal.Model
             MetaEV value = null;
             if (useDisplayValue) value = MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == enumValue);
             else value = MetaColumn.Enum.Values.FirstOrDefault(i => i.Id == enumValue);
+
             if (value != null)
             {
                 string sortPrefix = elementSortPosition ? string.Format("{0:000000}", MetaColumn.Enum.Values.LastIndexOf(value)) : "";
-                result = sortPrefix + value.Val;
+                result = sortPrefix + Model.Report.Repository.EnumDisplayValue(MetaColumn.Enum, value.Id);
             }
             return result;
         }

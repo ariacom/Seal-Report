@@ -50,7 +50,6 @@ namespace Seal.Model
                 {
                     if (Value == null) return "";
                     if (IsTitle) return Element.Model.Report.Repository.TranslateElement(Element, Value.ToString());
-                    if (Element.IsEnum && Element.MetaColumn.Enum != null && Element.MetaColumn.Enum.Translate) return Element.Model.Report.Repository.TranslateEnum(Element.MetaColumn.Enum.Name, Value.ToString());
                     if (Value is IFormattable) return ((IFormattable)Value).ToString(Element.FormatEl, Element.Model.Report.ExecutionView.CultureInfo);
                 }
                 catch { }
@@ -94,7 +93,9 @@ namespace Seal.Model
                 string result = RawDisplayValue;
                 if (Element.IsEnum)
                 {
-                    var enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == result);
+                    MetaEV enumValue = null;
+                    if (Element.MetaColumn.Enum.Translate) enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => Element.Model.Report.Repository.EnumDisplayValue(Element.MetaColumn.Enum, i.Id) == result);
+                    else enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == result);
                     if (enumValue != null) result = enumValue.Id;
                 }
                 else if (Element.IsDateTime && Value is DateTime)
@@ -212,6 +213,14 @@ namespace Seal.Model
         {
             get
             {
+                //exe : execution guid of the source report
+                //src : guid element source for drill
+                //dst : guid element destination for drill
+                //val : value of the restriction
+                //res : guid element for a restriction
+                //rpa : report path for sub-report
+ 
+
                 if (_links == null)
                 {
                     _links = new List<NavigationLink>();
@@ -228,7 +237,7 @@ namespace Seal.Model
                                 if (child != null)
                                 {
                                     NavigationLink link = new NavigationLink();
-                                    link.Href = string.Format("src={0}&dst={1}&val={2}", Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue));
+                                    link.Href = string.Format("exe={0}&src={1}&dst={2}&val={3}", report.ExecutionGUID, Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue));
                                     link.Text = HttpUtility.HtmlEncode(report.Translate("Drill >") + " " + report.Repository.RepositoryTranslate("Element", child.Category + '.' + child.DisplayName, child.DisplayName));
 
                                     _links.Add(link);
@@ -245,11 +254,11 @@ namespace Seal.Model
                                     if (Element.MetaColumn.DrillUpOnlyIfDD)
                                     {
                                         //check that the drill down occured
-                                        if (!report.NavigationLinks.Exists(i => i.Src == parentColumn.GUID)) continue;
+                                        if (!report.DrillParents.Contains(parentColumn.GUID)) continue;
                                     }
 
                                     NavigationLink link = new NavigationLink();
-                                    link.Href = string.Format("src={0}&dst={1}", Element.MetaColumnGUID, parentColumn.GUID);
+                                    link.Href = string.Format("exe={0}&src={1}&dst={2}", report.ExecutionGUID, Element.MetaColumnGUID, parentColumn.GUID);
                                     link.Text = HttpUtility.HtmlEncode(report.Translate("Drill <") + " " + report.Repository.RepositoryTranslate("Element", parentColumn.Category + '.' + parentColumn.DisplayName, parentColumn.DisplayName));
                                     _links.Add(link);
                                 }
@@ -262,7 +271,7 @@ namespace Seal.Model
                             foreach (var subreport in Element.MetaColumn.SubReports.Where(i => i.Restrictions.Count > 0))
                             {
                                 NavigationLink link = new NavigationLink();
-                                link.Href = string.Format("sre={0}", subreport.Path);
+                                link.Href = string.Format("rpa={0}", HttpUtility.UrlEncode(subreport.Path));
                                 int index = 1;
                                 foreach (var guid in subreport.Restrictions)
                                 {

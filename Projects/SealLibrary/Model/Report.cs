@@ -237,7 +237,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public string ExecutionGUID = "";
+        public string ExecutionGUID = Guid.NewGuid().ToString();
 
         [XmlIgnore]
         public string DisplayFolder
@@ -411,8 +411,12 @@ namespace Seal.Model
         }
         [XmlIgnore]
         public List<string> ExecutionAttachedFiles = new List<string>();
+
         [XmlIgnore]
-        public bool IsNavigating = false; //It false, do evaluate restrictions prompted...
+        public bool IsNavigating = false; //If false, do evaluate restrictions prompted...
+
+        [XmlIgnore]
+        public bool HasNavigation = false; //If true, navigation must be activated...
 
         //Output management
         [XmlIgnore]
@@ -454,7 +458,11 @@ namespace Seal.Model
             {
                 ReportView result = Views.FirstOrDefault(i => i.GUID == CurrentViewGUID);
                 if (result == null) result = Views.FirstOrDefault(i => i.GUID == ViewGUID);
-                if (result == null) result = Views.FirstOrDefault();
+                if (result == null)
+                {
+                    result = Views.FirstOrDefault();
+                    ViewGUID = result.GUID;
+                }
                 return result;
             }
         }
@@ -593,7 +601,6 @@ namespace Seal.Model
 
                 //Refresh enums
                 foreach (ReportSource source in result.Sources) source.RefreshEnumsOnDbConnection();
-
             }
             catch (Exception ex)
             {
@@ -1299,35 +1306,8 @@ namespace Seal.Model
             get { return (!PrintLayout && !ForPDFConversion) || GenerateHTMLDisplay; }
         }
 
-
         [XmlIgnore]
-        List<NavigationLink> _navigationLinks = new List<NavigationLink>();
-        public List<NavigationLink> NavigationLinks
-        {
-            get { return _navigationLinks; }
-            set { _navigationLinks = value; }
-        }
-
-        public void SetLastNavigationLink()
-        {
-            //Set last navigation path if any
-            if (NavigationLinks.Count > 0)
-            {
-                var lastLink = NavigationLinks.Last();
-                lastLink.Href = ResultFilePath;
-                if (!string.IsNullOrEmpty(WebUrl)) lastLink.Href = WebTempUrl + Path.GetFileName(lastLink.Href);
-            }
-        }
-
-        public string GetNavigationLinksHTML()
-        {
-            string links = "";
-            foreach (var link in NavigationLinks)
-            {
-                links += string.Format("<li><a href='{0}'>{1}</a></li>", link.Href, HttpUtility.HtmlEncode(link.Text));
-            }
-            return links;
-        }
+        public List<string> DrillParents = new List<string>();
 
         public void UpdateViewParameter(string viewId, string parameterName, string parameterValue)
         {
@@ -1369,8 +1349,6 @@ namespace Seal.Model
             }
         }
 
-
-
         //Log Interface implementation
         public void LogMessage(string message, params object[] args)
         {
@@ -1384,6 +1362,7 @@ namespace Seal.Model
                 ExecutionMessages += string.Format("Error logging {0}\r\n{1}\r\n", message, ex.Message);
             }
         }
+
         #region Translation Helpers
 
         string TranslationFilePath

@@ -55,7 +55,8 @@ namespace Seal.Model
         public const string HtmlId_navigation_menu = "nav_menu";
 
 
-        public Report Report;
+        public Report Report = null;
+        public Report RootReport = null;
 
         Thread _executeThread;
 
@@ -1644,6 +1645,7 @@ namespace Seal.Model
 
         #region Navigation
 
+        /*
         public ReportExecution Navigate(string navigation)
         {
             ReportExecution result = this;
@@ -1748,7 +1750,7 @@ namespace Seal.Model
 
             return result;
         }
-
+        */
         #endregion
 
 

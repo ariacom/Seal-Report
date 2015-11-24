@@ -111,9 +111,10 @@ function initButtons() {
         .click(function () {
             $("#body_div").animate({ scrollTop: 0 }, "slow");
         });
-    $("#nav_button").button({ text: false, label: navigationText, icons: { primary: "ui-icon-newwin" } })
+    $("#nav_button").button({ text: false, label: ">", icons: { primary: "ui-icon-newwin" } })
             .mouseenter(function () {
                 $("#nav_menu").empty();
+                if ($("#nav_button").attr("disabled") == "disabled") return;
                 if (urlPrefix != "") {
                     $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: webExecutionGUID })
                     .done(function (data) {
@@ -146,7 +147,7 @@ function setNavMenuSize() {
     menu.children().each(function () {
         if ($(this).text().length > maxLen) maxLen = $(this).text().length;
     });
-    menu.css("width", 7 * maxLen);
+    menu.css("width", 8 * maxLen);
 }
 
 function setNavMenuSizeAndPosition() {
@@ -196,21 +197,21 @@ function executeTimer() {
         $("#header_form").attr("action", urlPrefix + "ActionRefreshReport");
         if (urlPrefix != "") {
             $.post(urlPrefix + "ActionRefreshReport", { execution_guid: webExecutionGUID })
-		.done(function (data) {
-		    if (data.result_url != null && data.result_url != "") {
-		        window.location.assign(data.result_url);
-		    }
-		    else if (data.processing_message != null && data.execution_messages != null) {
-		        $("#processing_message").html(data.processing_message);
-		        if (displayMessages) $("#execution_messages").html(data.execution_messages);
-		    }
-		    else if (data.error != null) {
-		        $("#processing_message").html(data.error);
-		        clearInterval(executionTimer);
-		        $("#wait_image").css("display", "none");
-		        $("#execute_button").css("display", "none");
-		    }
-		});
+		        .done(function (data) {
+		            if (data.result_url != null && data.result_url != "") {
+		                window.location.assign(data.result_url);
+		            }
+		            else if (data.processing_message != null && data.execution_messages != null) {
+		                $("#processing_message").html(data.processing_message);
+		                if (displayMessages) $("#execution_messages").html(data.execution_messages);
+		            }
+		            else if (data.error != null) {
+		                $("#processing_message").html(data.error);
+		                clearInterval(executionTimer);
+		                $("#wait_image").css("display", "none");
+		                $("#execute_button").css("display", "none");
+		            }
+		        });
         }
         else {
             $("#header_form").submit();
@@ -236,7 +237,12 @@ function executeReport(nav) {
 
     $("#navigation_id").val(nav);
     if (urlPrefix != "") {
-        $.post(url, $("#header_form").serialize());
+        $.post(url, $("#header_form").serialize())
+            .done(function (data) {
+        	    if (data.result_url != null && data.result_url != "") {
+        		    window.location.assign(data.result_url);
+        	    }
+            });
     }
     else {
         $("#header_form").attr("action", url);
@@ -246,6 +252,7 @@ function executeReport(nav) {
     $('#restriction_div').attr("disabled", "disabled");
     $('#restriction_div input').attr("disabled", "disabled");
     $('.view').css("display", "none");
+    $("#nav_button").attr("disabled", "disabled");
 }
 
 
