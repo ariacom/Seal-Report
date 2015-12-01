@@ -13,6 +13,7 @@
       <Connections />
       <ConnectionGUID>30ff1d27-9506-4840-a834-5e23eeec253f</ConnectionGUID>
       <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables />
@@ -35,23 +36,28 @@
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
-      <ShowDuplicateRows>false</ShowDuplicateRows>
       <Elements>
         <ReportElement>
           <GUID>8feb1d0d-a15f-4eea-a6fc-c37eacdbb7f3</GUID>
           <Name>[Data$].Year</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format>0</Format>
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>Axis</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -61,22 +67,30 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>07f8a78c-697f-4597-bdca-66f8ba47f7b9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>b57abde6-eb47-47b7-939d-f693d8563595</GUID>
           <Name>[Country$].Region</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>Splitter</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -87,23 +101,31 @@
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>56fdd148-8ee3-4c5a-a10f-a2f67888697d</MetaColumnGUID>
           <SQL />
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>95a98f63-0d7e-437a-8a0a-045e88759a1c</GUID>
           <Name>[Data$].Value</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <DisplayName>Population (Mi)</DisplayName>
-          <Format>0</Format>
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>Column</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>NVD3Serie</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -114,6 +136,8 @@
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>5c5cb293-e228-453d-a5b0-7bc56c37b31c</MetaColumnGUID>
           <SQL>Sum([Data$].Value)/1000000</SQL>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[9af33a94-9ecb-4710-8e74-c91cde44f618]
@@ -125,16 +149,22 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <GUID>9af33a94-9ecb-4710-8e74-c91cde44f618</GUID>
           <Name>[Series$].[Indicator Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -145,16 +175,18 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>ed6bd64c-ac69-4790-9655-04544f281a6f</MetaColumnGUID>
           <SQL />
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>None</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Population, total</string>
           </EnumValues>
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -164,16 +196,22 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <GUID>8c73528d-a621-4245-85e3-7a80edb2fa8c</GUID>
           <Name>[Country$].Region</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -183,14 +221,16 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>56fdd148-8ee3-4c5a-a10f-a2f67888697d</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -200,16 +240,22 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <GUID>f11c5639-5ff1-4e23-97c3-e23a422894a0</GUID>
           <Name>[Country$].[Income Group]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -219,14 +265,16 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>dfc5f75b-b67e-4b85-992a-dd2e3f85ee98</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -236,16 +284,22 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <GUID>dfdeb470-4e96-43de-bc78-534e44688c8e</GUID>
           <Name>[Country$].[Short Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -255,14 +309,16 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>7b9a81b5-72e2-4999-9cd1-f2595ef3f392</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -284,23 +340,28 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
-      <ShowDuplicateRows>false</ShowDuplicateRows>
       <Elements>
         <ReportElement>
           <GUID>8feb1d0d-a15f-4eea-a6fc-c37eacdbb7f3</GUID>
           <Name>[Data$].Year</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format>0</Format>
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>Axis</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -310,22 +371,30 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>07f8a78c-697f-4597-bdca-66f8ba47f7b9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>b57abde6-eb47-47b7-939d-f693d8563595</GUID>
           <Name>[Country$].Region</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -335,22 +404,30 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>56fdd148-8ee3-4c5a-a10f-a2f67888697d</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>4f1157fa-c3e6-4d52-83a4-629e1630f673</GUID>
           <Name>[Country$].[Income Group]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -360,22 +437,30 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>dfc5f75b-b67e-4b85-992a-dd2e3f85ee98</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>5bdb527c-81d9-48e3-ade0-85556f2c50e5</GUID>
           <Name>[Series$].[Indicator Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>Splitter</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -385,23 +470,31 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>ed6bd64c-ac69-4790-9655-04544f281a6f</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>95a98f63-0d7e-437a-8a0a-045e88759a1c</GUID>
           <Name>[Data$].Value</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <DisplayName>Ages</DisplayName>
-          <Format>0</Format>
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Avg</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>Row</ShowTotal>
           <TotalAggregateFunction>Avg</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>NVD3Serie</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -411,6 +504,8 @@ AND [dfdeb470-4e96-43de-bc78-534e44688c8e]</Restriction>
           <SerieSortOrder>Descending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>5c5cb293-e228-453d-a5b0-7bc56c37b31c</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[9af33a94-9ecb-4710-8e74-c91cde44f618]
@@ -422,16 +517,22 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <GUID>9af33a94-9ecb-4710-8e74-c91cde44f618</GUID>
           <Name>[Series$].[Indicator Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -441,18 +542,20 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>ed6bd64c-ac69-4790-9655-04544f281a6f</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>None</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Population ages 0-14 (% of total)</string>
             <string>Population ages 15-64 (% of total)</string>
             <string>Population ages 65 and above (% of total)</string>
           </EnumValues>
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -462,16 +565,22 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <GUID>fa76c57b-a8a8-411d-88d2-1a379d7f1506</GUID>
           <Name>[Country$].Region</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -481,14 +590,16 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>56fdd148-8ee3-4c5a-a10f-a2f67888697d</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -498,16 +609,22 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <GUID>9f33a87e-efbb-49fa-b8d2-6bf15b1e5f03</GUID>
           <Name>[Country$].[Income Group]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -517,14 +634,16 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>dfc5f75b-b67e-4b85-992a-dd2e3f85ee98</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -534,16 +653,22 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <GUID>cb5b14db-beff-4eac-99ef-73e676d60cc0</GUID>
           <Name>[Country$].[Short Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -553,14 +678,16 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>7b9a81b5-72e2-4999-9cd1-f2595ef3f392</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -582,23 +709,28 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
-      <ShowDuplicateRows>false</ShowDuplicateRows>
       <Elements>
         <ReportElement>
           <GUID>8feb1d0d-a15f-4eea-a6fc-c37eacdbb7f3</GUID>
           <Name>[Data$].Year</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format>0</Format>
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>Axis</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -608,22 +740,30 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>07f8a78c-697f-4597-bdca-66f8ba47f7b9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>a2b8b32e-8d3f-4801-afeb-32e1b015b819</GUID>
           <Name>[Country$].[Income Group]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>Splitter</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -633,23 +773,31 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>dfc5f75b-b67e-4b85-992a-dd2e3f85ee98</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>95a98f63-0d7e-437a-8a0a-045e88759a1c</GUID>
           <Name>[Data$].Value</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <DisplayName>Population (Mi)</DisplayName>
-          <Format>0</Format>
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>Column</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>NVD3Serie</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -660,6 +808,8 @@ AND [cb5b14db-beff-4eac-99ef-73e676d60cc0]</Restriction>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>5c5cb293-e228-453d-a5b0-7bc56c37b31c</MetaColumnGUID>
           <SQL>Sum([Data$].Value)/1000000</SQL>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[9af33a94-9ecb-4710-8e74-c91cde44f618]
@@ -671,16 +821,22 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <GUID>9af33a94-9ecb-4710-8e74-c91cde44f618</GUID>
           <Name>[Series$].[Indicator Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -691,16 +847,18 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>ed6bd64c-ac69-4790-9655-04544f281a6f</MetaColumnGUID>
           <SQL />
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>None</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Population, total</string>
           </EnumValues>
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -710,16 +868,22 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <GUID>0ab8a281-c52b-4026-8585-450a8c5f700a</GUID>
           <Name>[Country$].[Income Group]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -729,14 +893,16 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>dfc5f75b-b67e-4b85-992a-dd2e3f85ee98</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -746,16 +912,22 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <GUID>96013b78-41e5-4be6-84d7-4cca39b32c41</GUID>
           <Name>[Country$].Region</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -765,14 +937,16 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>56fdd148-8ee3-4c5a-a10f-a2f67888697d</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -782,16 +956,22 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <GUID>2d2b0c8c-8730-4c33-b133-36dad2c4bf3e</GUID>
           <Name>[Country$].[Short Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -801,14 +981,16 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>7b9a81b5-72e2-4999-9cd1-f2595ef3f392</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -830,23 +1012,28 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
-      <ShowDuplicateRows>false</ShowDuplicateRows>
       <Elements>
         <ReportElement>
           <GUID>8feb1d0d-a15f-4eea-a6fc-c37eacdbb7f3</GUID>
           <Name>[Data$].Year</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format>0</Format>
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>Axis</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -856,22 +1043,30 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>07f8a78c-697f-4597-bdca-66f8ba47f7b9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>f3b96ca5-996c-468f-8cd6-5262b6f21fb6</GUID>
           <Name>[Country$].[Short Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -881,23 +1076,31 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>7b9a81b5-72e2-4999-9cd1-f2595ef3f392</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>95a98f63-0d7e-437a-8a0a-045e88759a1c</GUID>
           <Name>[Data$].Value</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <DisplayName>Population (Mi)</DisplayName>
-          <Format>0</Format>
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>Column</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>NVD3Serie</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -908,6 +1111,8 @@ AND [2d2b0c8c-8730-4c33-b133-36dad2c4bf3e]</Restriction>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>5c5cb293-e228-453d-a5b0-7bc56c37b31c</MetaColumnGUID>
           <SQL>Sum([Data$].Value)/1000000</SQL>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[9af33a94-9ecb-4710-8e74-c91cde44f618]
@@ -919,16 +1124,22 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
           <GUID>9af33a94-9ecb-4710-8e74-c91cde44f618</GUID>
           <Name>[Series$].[Indicator Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -939,16 +1150,18 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>ed6bd64c-ac69-4790-9655-04544f281a6f</MetaColumnGUID>
           <SQL />
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>None</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues>
             <string>Population, total</string>
           </EnumValues>
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -958,16 +1171,22 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
           <GUID>0ab8a281-c52b-4026-8585-450a8c5f700a</GUID>
           <Name>[Country$].[Income Group]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -977,14 +1196,16 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>dfc5f75b-b67e-4b85-992a-dd2e3f85ee98</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -994,16 +1215,22 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
           <GUID>96013b78-41e5-4be6-84d7-4cca39b32c41</GUID>
           <Name>[Country$].Region</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -1013,14 +1240,16 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>56fdd148-8ee3-4c5a-a10f-a2f67888697d</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -1030,16 +1259,22 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
           <GUID>07e758b5-e2b4-42ca-b37c-bc748a05242f</GUID>
           <Name>[Country$].[Short Name]</Name>
           <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <Format />
+          <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
           <ShowTotal>No</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <SerieDefinition>None</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
@@ -1049,14 +1284,16 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>7b9a81b5-72e2-4999-9cd1-f2595ef3f392</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
+          <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -1068,6 +1305,8 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
     </ReportModel>
   </Models>
   <Outputs />
+  <Tasks />
+  <CommunTaskScript />
   <Views>
     <ReportView>
       <GUID>cb9ebf20-a9fd-4763-973a-4ebc3b4a9e06</GUID>
@@ -1090,54 +1329,7 @@ AND [07e758b5-e2b4-42ca-b37c-bc748a05242f]</Restriction>
                   <ThemeName />
                   <UseCustomConfiguration>false</UseCustomConfiguration>
                   <UseCustomTemplate>false</UseCustomTemplate>
-                  <Parameters>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>//Refer to http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-chart
-.color(d3.scale.category10().range())
-.margin({top: 30, right: 60, bottom: 40, left: 80})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis fortmat
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    .margin({top: 10, right: 60, bottom: 10, left: 70})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CSS>
                     <Parameter>
                       <Name>nvd3_chart</Name>
@@ -1147,6 +1339,8 @@ if (chartType == 'pieChart') {
                   <SortOrder>1</SortOrder>
                   <CultureName />
                   <ChartConfigurationXml />
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -1157,6 +1351,8 @@ if (chartType == 'pieChart') {
               <CSS />
               <SortOrder>0</SortOrder>
               <CultureName />
+              <PdfConfigurations />
+              <ExcelConfigurations />
             </ReportView>
             <ReportView>
               <GUID>938958eb-c003-40e5-ac36-482814b26f11</GUID>
@@ -1171,54 +1367,7 @@ if (chartType == 'pieChart') {
                   <ThemeName />
                   <UseCustomConfiguration>false</UseCustomConfiguration>
                   <UseCustomTemplate>false</UseCustomTemplate>
-                  <Parameters>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>//Refer to http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-chart
-.color(d3.scale.category10().range())
-.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis fortmat
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    .margin({top: 10, right: 60, bottom: 10, left: 70})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CSS>
                     <Parameter>
                       <Name>nvd3_chart</Name>
@@ -1228,6 +1377,8 @@ if (chartType == 'pieChart') {
                   <SortOrder>1</SortOrder>
                   <CultureName />
                   <ChartConfigurationXml />
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -1238,6 +1389,8 @@ if (chartType == 'pieChart') {
               <CSS />
               <SortOrder>3</SortOrder>
               <CultureName />
+              <PdfConfigurations />
+              <ExcelConfigurations />
             </ReportView>
             <ReportView>
               <GUID>5e102bcb-0a0a-4eb9-915f-6fc81e6adbec</GUID>
@@ -1252,54 +1405,7 @@ if (chartType == 'pieChart') {
                   <ThemeName />
                   <UseCustomConfiguration>false</UseCustomConfiguration>
                   <UseCustomTemplate>false</UseCustomTemplate>
-                  <Parameters>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>//Refer to http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-chart
-.color(d3.scale.category10().range())
-.margin({top: 30, right: 60, bottom: 40, left: 80})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis fortmat
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    .margin({top: 10, right: 60, bottom: 10, left: 70})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CSS>
                     <Parameter>
                       <Name>nvd3_chart</Name>
@@ -1309,6 +1415,8 @@ if (chartType == 'pieChart') {
                   <SortOrder>1</SortOrder>
                   <CultureName />
                   <ChartConfigurationXml />
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -1319,6 +1427,8 @@ if (chartType == 'pieChart') {
               <CSS />
               <SortOrder>1</SortOrder>
               <CultureName />
+              <PdfConfigurations />
+              <ExcelConfigurations />
             </ReportView>
             <ReportView>
               <GUID>34f2b87b-d2bd-49f3-8dab-a979315727e4</GUID>
@@ -1333,54 +1443,7 @@ if (chartType == 'pieChart') {
                   <ThemeName />
                   <UseCustomConfiguration>false</UseCustomConfiguration>
                   <UseCustomTemplate>false</UseCustomTemplate>
-                  <Parameters>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>//Refer to http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-chart
-.color(d3.scale.category10().range())
-.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis fortmat
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    .margin({top: 10, right: 60, bottom: 10, left: 70})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CSS>
                     <Parameter>
                       <Name>nvd3_chart</Name>
@@ -1390,6 +1453,8 @@ if (chartType == 'pieChart') {
                   <SortOrder>1</SortOrder>
                   <CultureName />
                   <ChartConfigurationXml />
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -1400,6 +1465,8 @@ if (chartType == 'pieChart') {
               <CSS />
               <SortOrder>2</SortOrder>
               <CultureName />
+              <PdfConfigurations />
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>
@@ -1410,6 +1477,8 @@ if (chartType == 'pieChart') {
           <CSS />
           <SortOrder>1</SortOrder>
           <CultureName />
+          <PdfConfigurations />
+          <ExcelConfigurations />
         </ReportView>
       </Views>
       <ModelGUID />
@@ -1430,6 +1499,8 @@ if (chartType == 'pieChart') {
       <CSS />
       <SortOrder>0</SortOrder>
       <CultureName />
+      <PdfConfigurations />
+      <ExcelConfigurations />
     </ReportView>
   </Views>
   <DisplayName />

@@ -55,6 +55,8 @@
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -71,6 +73,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>7220dd5f-9bd6-4c9a-847c-86d94a1a2545</GUID>
@@ -84,6 +88,8 @@
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -100,6 +106,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>a33b5c21-c0d9-4da8-9bb8-2a5f650c84de</GUID>
@@ -114,6 +122,8 @@
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -130,6 +140,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[f4429620-6256-4f49-accc-f657c442499b]
@@ -149,6 +161,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -164,6 +178,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -189,6 +205,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -204,6 +222,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -229,6 +249,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -244,6 +266,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -277,6 +301,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -292,6 +318,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -330,6 +358,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -346,6 +376,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>0553dda5-083b-40d4-9170-bc1bcb405a0f</GUID>
@@ -359,6 +391,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -375,6 +409,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>AxisLabel</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>7c831bd0-26b2-477b-86da-b81452ae9924</GUID>
@@ -388,6 +424,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -404,6 +442,8 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[2a138eb8-4b80-4b35-9155-7f32503301e4]
@@ -424,6 +464,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -439,6 +481,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -464,6 +508,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -479,6 +525,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -504,6 +552,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -519,6 +569,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -552,6 +604,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -567,6 +621,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -605,6 +661,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -621,6 +679,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>2070cca7-f9da-47b6-98c3-f9df3fca117b</GUID>
@@ -634,6 +694,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -650,6 +712,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>bc5e0a63-fd7a-43da-9a0d-a8fc7a67f1c2</GUID>
@@ -664,6 +728,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -680,6 +746,8 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[632e5d54-adb8-43fb-84c9-d69251342b2e]
@@ -700,6 +768,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -715,6 +785,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -740,6 +812,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -755,6 +829,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -780,6 +856,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -795,6 +873,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -828,6 +908,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -843,6 +925,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -881,6 +965,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -897,6 +983,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>a5a3e339-bffb-4316-a3a1-d99c58da5ca7</GUID>
@@ -910,6 +998,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -926,6 +1016,8 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[c4419e84-df29-4aae-8c5a-5b17a72bff2b]
@@ -946,6 +1038,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -961,6 +1055,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -986,6 +1082,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1001,6 +1099,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1026,6 +1126,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1041,6 +1143,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1074,6 +1178,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1089,6 +1195,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1127,6 +1235,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1143,6 +1253,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>c9b970ed-6f2c-48c2-9d60-8ee45eb61c74</GUID>
@@ -1156,6 +1268,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1172,6 +1286,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>b4495332-0935-4f1b-afaf-afd3ce0d5823</GUID>
@@ -1186,6 +1302,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1202,6 +1320,8 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[b985b961-8d98-4046-92d9-0320a121414f]
@@ -1222,6 +1342,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -1237,6 +1359,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1262,6 +1386,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1277,6 +1403,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1302,6 +1430,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1317,6 +1447,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1350,6 +1482,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1365,6 +1499,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1403,6 +1539,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1419,6 +1557,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>3a8403a6-82ff-4793-ba50-3234956685dd</GUID>
@@ -1432,6 +1572,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1448,6 +1590,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>5e20baa3-7f58-40c4-a95c-6f7734e7d82f</GUID>
@@ -1462,6 +1606,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1478,6 +1624,8 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[3423014d-082a-4901-b958-dd5ddcf8bf8e]
@@ -1498,6 +1646,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -1513,6 +1663,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1538,6 +1690,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1553,6 +1707,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1578,6 +1734,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1593,6 +1751,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1626,6 +1786,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1641,6 +1803,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1679,6 +1843,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1695,6 +1861,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>dd89083a-9c96-42e2-a3ef-5c94110df7b0</GUID>
@@ -1708,6 +1876,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1724,6 +1894,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>c264175f-d469-4d4e-8876-1f9d94031e07</GUID>
@@ -1737,6 +1909,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1753,6 +1927,8 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[e1ae1e37-50d4-4bb1-a14e-35f2f5b6586e]
@@ -1773,6 +1949,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -1788,6 +1966,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1813,6 +1993,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1828,6 +2010,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1853,6 +2037,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1868,6 +2054,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1901,6 +2089,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -1916,6 +2106,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -1954,6 +2146,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1970,6 +2164,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>ab307418-10c3-497d-917a-0f8f8e1ae4f6</GUID>
@@ -1983,6 +2179,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -1999,6 +2197,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>0232112c-12d5-43a4-9660-c8de3ceba030</GUID>
@@ -2012,6 +2212,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2028,6 +2230,8 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[c878699a-64b7-44a4-8d8b-cddb1faa5fe3]
@@ -2048,6 +2252,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -2063,6 +2269,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2088,6 +2296,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -2103,6 +2313,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2128,6 +2340,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -2143,6 +2357,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2176,6 +2392,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -2191,6 +2409,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2229,6 +2449,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2245,6 +2467,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>7771a722-e61e-4177-ac02-85d335f246c8</GUID>
@@ -2259,6 +2483,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2275,6 +2501,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>7771a722-e61e-4177-ac02-85d335f246c8</GUID>
@@ -2289,6 +2517,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format>P0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2305,6 +2535,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>78eda211-103f-4437-88bc-84a1dc486943</GUID>
@@ -2318,6 +2550,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2334,6 +2568,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>78eda211-103f-4437-88bc-84a1dc486943</GUID>
@@ -2348,6 +2584,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format>P0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2364,6 +2602,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>7771a722-e61e-4177-ac02-85d335f246c8</GUID>
@@ -2378,6 +2618,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Format>P0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2434,6 +2676,8 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
     }*/
 }
 </CellScript>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[7f1daf82-610d-4f74-8aa2-e6ddb5640406]
@@ -2454,6 +2698,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -2469,6 +2715,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2494,6 +2742,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -2509,6 +2759,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2534,6 +2786,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -2549,6 +2803,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2582,6 +2838,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -2597,6 +2855,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2635,6 +2895,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2651,6 +2913,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>8dc528c8-d6d7-4535-9843-1918cb269b09</GUID>
@@ -2664,6 +2928,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2680,6 +2946,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>226b39b7-6664-403a-ab55-2394f79f9542</GUID>
@@ -2693,6 +2961,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2709,6 +2979,8 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[139b7e91-50ba-495e-a228-bc7bf1c04e36]
@@ -2729,6 +3001,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -2744,6 +3018,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2769,6 +3045,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -2784,6 +3062,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2809,6 +3089,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -2824,6 +3106,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2857,6 +3141,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -2872,6 +3158,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -2910,6 +3198,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2926,6 +3216,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>4b6d522f-cd73-438b-b34c-3326df08d0e0</GUID>
@@ -2939,6 +3231,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2955,6 +3249,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>6b9e24b9-94d6-408a-a836-545f54257f5a</GUID>
@@ -2968,6 +3264,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -2984,6 +3282,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[b41d42e9-490c-4c6c-9df6-d73f4e709b42]
@@ -3004,6 +3304,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -3019,6 +3321,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -3044,6 +3348,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -3059,6 +3365,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -3084,6 +3392,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -3099,6 +3409,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -3132,6 +3444,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -3147,6 +3461,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -3185,6 +3501,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -3201,6 +3519,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>36208fce-87bc-4b0b-9059-bb6d0998c02e</GUID>
@@ -3214,6 +3534,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -3230,6 +3552,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>e8efe4ba-4f25-41a5-af2b-9d1f2217daf5</GUID>
@@ -3243,6 +3567,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -3259,6 +3585,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>7b209750-6b32-4b61-ae59-de20a90eb313</GUID>
@@ -3272,6 +3600,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -3288,6 +3618,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>5995f6df-51c8-4ed4-896d-db54b09213e2</GUID>
@@ -3301,6 +3633,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -3317,6 +3651,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>5ec53375-b1ef-4ed7-889b-9903f2d9591e</GUID>
@@ -3330,6 +3666,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -3346,6 +3684,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>3db82952-623a-4911-bb3d-9258f04ce07f</GUID>
@@ -3359,6 +3699,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -3375,6 +3717,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>d5edbd23-500d-4c0b-8f8b-aed37b719679</GUID>
@@ -3389,6 +3733,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -3405,6 +3751,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>eeefaf8e-e3b2-4b37-8240-c2fda6bf5937</GUID>
@@ -3419,6 +3767,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -3435,6 +3785,8 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[5f8a32a8-e7fa-4edf-a4d5-3dc47aca708e]
@@ -3454,6 +3806,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -3469,6 +3823,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -3494,6 +3850,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -3509,6 +3867,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -3534,6 +3894,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -3549,6 +3911,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -3582,6 +3946,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
@@ -3597,6 +3963,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
@@ -3678,61 +4046,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Value>False</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-.margin({top: 30, right: 60, bottom: 40, left: 90})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text').attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length)).attr('y', svgJQ.height()-10).style('font-weight', 'bold').style('font-size', '14px').text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
-                    </Parameter>
-                    <Parameter>
                       <Name>chart_nvd3_title</Name>
                       <Value>Sales per category and country</Value>
                     </Parameter>
@@ -3783,59 +4096,6 @@ if (chartTitle.length &gt; 0) {
                       <Name>data_tables_show_processing</Name>
                       <Value>False</Value>
                     </Parameter>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-//Title 
-//svg.append('text').attr('x', 250).attr('y', 390).style('font-weight', 'bold').style('font-size', '14px').text('My chart title');
-
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
-                    </Parameter>
                   </Parameters>
                   <CSS>
                     <Parameter>
@@ -3878,62 +4138,6 @@ if (chartType == 'pieChart') {
                     <Parameter>
                       <Name>data_tables_show_processing</Name>
                       <Value>False</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-//.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-chart.showControls(false);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text').attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length)).attr('y', svgJQ.height()-10).style('font-weight', 'bold').style('font-size', '14px').text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
@@ -4003,61 +4207,6 @@ if (chartTitle.length &gt; 0) {
                       <Value>False</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text').attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length)).attr('y', svgJQ.height()-10).style('font-weight', 'bold').style('font-size', '14px').text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
-                    </Parameter>
-                    <Parameter>
                       <Name>chart_nvd3_title</Name>
                       <Value>Sales per category and employee</Value>
                     </Parameter>
@@ -4108,59 +4257,6 @@ if (chartTitle.length &gt; 0) {
                       <Name>data_tables_show_processing</Name>
                       <Value>False</Value>
                     </Parameter>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-//Title 
-//svg.append('text').attr('x', 250).attr('y', 390).style('font-weight', 'bold').style('font-size', '14px').text('My chart title');
-
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
-                    </Parameter>
                   </Parameters>
                   <CSS>
                     <Parameter>
@@ -4203,60 +4299,6 @@ if (chartType == 'pieChart') {
                     <Parameter>
                       <Name>data_tables_show_processing</Name>
                       <Value>False</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-//.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text').attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length)).attr('y', svgJQ.height()-15).style('font-weight', 'bold').style('font-size', '14px').text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
@@ -4312,65 +4354,6 @@ if (chartTitle.length &gt; 0) {
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
                       <Value>Sales per category per month</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-//.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text')
-    .attr('x', Math.max(1,svgJQ.width()/2 - 2*chartTitle.length))
-    .attr('y', svgJQ.height()-15)
-    .style('font-weight', 'bold')
-    .style('font-size', '14px')
-    .text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4450,66 +4433,6 @@ if (chartTitle.length &gt; 0) {
                       <Name>show_data_tables</Name>
                       <Value>False</Value>
                     </Parameter>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-//.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-chart.showControls(false);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text')
-    .attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length))
-    .attr('y', svgJQ.height()-10)
-    .style('font-weight', 'bold')
-    .style('font-size', '14px')
-    .text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
-                    </Parameter>
                   </Parameters>
                   <CSS>
                     <Parameter>
@@ -4568,65 +4491,6 @@ if (chartTitle.length &gt; 0) {
                     <Parameter>
                       <Name>data_tables_show_processing</Name>
                       <Value>False</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-//.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text')
-    .attr('x', Math.max(1,svgJQ.width()/2 - 2*chartTitle.length))
-    .attr('y', svgJQ.height()-15)
-    .style('font-weight', 'bold')
-    .style('font-size', '14px')
-    .text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
@@ -4688,60 +4552,6 @@ if (chartTitle.length &gt; 0) {
                       <Value>False</Value>
                     </Parameter>
                     <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-//.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text').attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length)).attr('y', svgJQ.height()-15).style('font-weight', 'bold').style('font-size', '14px').text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
-                    </Parameter>
-                    <Parameter>
                       <Name>chart_nvd3_title</Name>
                       <Value>Sales per employee</Value>
                     </Parameter>
@@ -4779,66 +4589,6 @@ if (chartTitle.length &gt; 0) {
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
                       <Value>Sales and discounts per month</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-//.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-//if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-chart.showControls(false);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text')
-    .attr('x', Math.max(1,svgJQ.width()/2 - 2*chartTitle.length))
-    .attr('y', svgJQ.height()-15)
-    .style('font-weight', 'bold')
-    .style('font-size', '14px')
-    .text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4929,60 +4679,6 @@ if (chartTitle.length &gt; 0) {
                     <Parameter>
                       <Name>data_tables_show_processing</Name>
                       <Value>False</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>nvd3_chart_configuration</Name>
-                      <Value>chart
-.color(d3.scale.category10().range())
-//.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;'+x+'\x3C/p&gt;\x3Cp&gt;\x3Cb&gt;'+y+'\x3C/b&gt;\x3C/p&gt;' ; })
-;
-//Axis format
-if (chart.xAxis != null &amp;&amp; chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null &amp;&amp; chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null &amp;&amp; chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null &amp;&amp; chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
-//For multichart
-if (chart.yAxis1 != null &amp;&amp; chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null &amp;&amp; chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 &amp;&amp; (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null &amp;&amp; !hideControls) chart.showControls(true);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3&gt;'+key+'\x3C/h3&gt;\x3Cp&gt;\x3Cb&gt;'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b&gt;\x3C/p&gt;' ; })
-    ;
-}
-
-//Title 
-if (chartTitle.length &gt; 0) {
-	svg.append('text').attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length)).attr('y', svgJQ.height()-15).style('font-weight', 'bold').style('font-size', '14px').text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-</Value>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
@@ -5306,5 +5002,4 @@ if (chartTitle.length &gt; 0) {
   <DisplayName />
   <ViewGUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</ViewGUID>
   <Schedules />
-  <NavigationLinks />
 </Report>

@@ -161,6 +161,7 @@ namespace Seal.Model
             }
         }
 
+
         private string[] _enums = null;
         [XmlIgnore]
         public string[] Enums

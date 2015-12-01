@@ -11,7 +11,7 @@
 
     //Default chart configuration
     Template.ChartConfigurationXML = "<?xml version=\"1.0\" encoding=\"utf-16\"?><Chart Size=\"600, 400\"><Legends><Legend Name=\"Legend1\"></Legend></Legends><Titles><Title Name=\"Title1\" Visible=\"False\"></Title></Titles><ChartAreas><ChartArea Name=\"ChartArea1\"></ChartArea></ChartAreas></Chart>";
-    
+
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "invert_data_tables", DisplayName = "Invert Data Tables", BoolValue = false, Description = "If true, the columns and rows of the data table are swapped from their original presentation" });
     Template.Parameters.Add(new Parameter() { Name = "show_summary_table", DisplayName = "Show Summary table", BoolValue = true, Description = "If true, the summary table is displayed" });
@@ -33,23 +33,26 @@
     Template.Parameters.Add(new Parameter() { Name = "display_summary_totals", DisplayName = "Totals: Display totals in summary table", BoolValue = true, Description = "If true, the totals are displayed in the summary table" });
     Template.Parameters.Add(new Parameter() { Name = "display_page_totals", DisplayName = "Totals: Display totals in page table", BoolValue = true, Description = "If true, the totals are displayed in the page table" });
     Template.Parameters.Add(new Parameter() { Name = "add_summary_totals_totals", DisplayName = "Totals: Add the total of totals line in summary table", BoolValue = true, Description = "If true, a line containing the totals is added at the end of the summary table" });
-    Template.Parameters.Add(new Parameter() { Name = "chart_nvd3_title", DisplayName = "NVD3 Chart Title", Description = "Optional title displayed at the bottom of the NVD3 chart" });
     Template.Parameters.Add(new Parameter() { Name = "chart_show_all_axis_labels", DisplayName = "Chart show all axis labels", BoolValue = false, Description = "If true, force all axis labels to be shown. For NVD3 Chart, the option is only valid for Bar chart." });
 
-    
-    
-    Template.Parameters.Add(new Parameter() { 
-        Name = Parameter.NVD3ConfigurationParameter, Category = ViewParameterCategory.NVD3, EditorLanguage="js", DisplayName = "NVD3 Chart Configuration", Description = "The JavaScript to create and configure the NVD3 chart. The Width and Height are configured in a dedicated CSS parameter.", TextValue = @"chart
+    //NVD3 Chart
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "nvd3_chart_configuration",
+        Category = ViewParameterCategory.NVD3,
+        EditorLanguage = "js",
+        DisplayName = "Main Script",
+        Description = "The JavaScript to create and configure the NVD3 chart. The Width and Height are configured in a dedicated CSS parameter.",
+        TextValue = @"chart
 .color(d3.scale.category10().range())
 //.margin({top: 30, right: 60, bottom: 40, left: 70})
-.tooltipContent(function(key, x, y, e, graph) { return '\x3Ch3>'+key+'\x3C/h3>\x3Cp>'+x+'\x3C/p>\x3Cp>\x3Cb>'+y+'\x3C/b>\x3C/p>' ; })
 ;
 //Axis format
 if (chart.xAxis != null && chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
 if (chart.yAxis != null && chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
 //For line with focus
-if (chart.x2Axis != null && chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);                                
-if (chart.y2Axis != null && chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);                                
+if (chart.x2Axis != null && chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);
+if (chart.y2Axis != null && chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);
 //For multichart
 if (chart.yAxis1 != null && chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
 if (chart.yAxis2 != null && chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
@@ -60,44 +63,85 @@ if (chart.showYAxis != null) chart.showYAxis(true);
 if (chart.showDistX != null) chart.showDistX(true);
 if (chart.showDistY != null) chart.showDistY(true);
 
-var hideControls = (chartType == 'scatterChart' || (series.length == 1 && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null && !hideControls) chart.showControls(true);
-if (chart.showControls != null && (printLayout || xLabels.length<=1)) chart.showControls(false);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.stacked != null) chart.stacked(true); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line 
-if (chart.interpolate != null) chart.interpolate('cardinal');
-
-//Special for Pie
-if (chartType == 'pieChart') {
-    chart
-    //.margin({top: 10, right: 10, bottom: 10, left: 10})
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)     
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)          
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    .tooltipContent(function(key, y, e, graph) { return '\x3Ch3>'+key+'\x3C/h3>\x3Cp>\x3Cb>'+YPrimaryValueFormatter(y.normalizeNumeric())+'\x3C/b>\x3C/p>' ; })
-    ;
+if (chartType != 'discreteBarChart') {
+	chart.tooltip.headerFormatter(function(d, i) {
+	   return chart.xAxis.tickFormat()(d, i);
+	});
+	chart.tooltip.keyFormatter(function(d, i) {
+	   if (d == null) return '';
+	   return nvd3TranslateTextAxis(d);
+	});
 }
 
-//Title 
-if (chartTitle.length > 0) {
-	svg.append('text')
+if (chartType == 'stackedAreaChart') {
+	chart.interactiveLayer.tooltip.headerFormatter(function(d, i) {
+	   return d;
+	});
+}
+
+//More information at http://nvd3.org/ and https://nvd3-community.github.io/nvd3/
+"
+    });
+
+    Template.Parameters.Add(new Parameter() { Name = "chart_nvd3_title", Category = ViewParameterCategory.NVD3, DisplayName = "Chart Title", Description = "Optional title displayed at the bottom of the NVD3 chart" });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_hide_controls", Category = ViewParameterCategory.NVD3, DisplayName = "Force Hide Controls", BoolValue = false, Description = "If true, controls (depending on chart type) to interact with the series are hidden" });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_show_legend", Category = ViewParameterCategory.NVD3, DisplayName = "Show Legend", BoolValue = true, Description = "If true, the legend is displayed in the chart" });
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "nvd3_pie_configuration",
+        Category = ViewParameterCategory.NVD3,
+        DisplayName = "Pie Chart configuration",
+        Description = "Custom script to configure the Pie chart",
+        EditorLanguage = "js",
+        TextValue = @"if (chartType == 'pieChart') {
+    chart
+    .x(function(d) { return xLabels[d.x]})
+    .showLabels(true)
+    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
+    .donut(true)
+    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
+    ;
+}",
+    });
+
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "nvd3_title_configuration",
+        Category = ViewParameterCategory.NVD3,
+        DisplayName = "Title configuration",
+        Description = "Custom script to configure the title",
+        EditorLanguage = "js",
+        TextValue = @"if (chartTitle.length > 0) {
+    svg.append('text')
     .attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length))
-    .attr('y', svgJQ.height()-10)
+    .attr('y', svgJQ.height()+ (chartType == 'lineWithFocusChart' ? 10 : -6))
     .style('font-weight', 'bold')
     .style('font-size', '14px')
     .text(chartTitle);
-}
-
-//More information at http://nvd3.org/ and http://cmaurer.github.io/angularjs-nvd3-directives/index.html
-"
+}",
     });
- 
+
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "nvd3_additional_options",
+        Category = ViewParameterCategory.NVD3,
+        DisplayName = "Additional options",
+        Description = "Custom script to configure chart option",
+        EditorLanguage = "js",
+        TextValue = @"var hideControls = (chartType == 'scatterChart' || (series.length == 1 && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
+if (chart.showControls != null) chart.showControls(!hideControls);
+if (chart.showLegend != null) chart.showLegend(true);
+if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
+//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
+if (chart.stacked != null && chartType == 'multiBarChart') chart.stacked(false); //for Bar
+//if (chart.isArea != null) chart.isArea(true); //for Line
+if (chart.interpolate != null) chart.interpolate('cardinal');
+if (chart.staggerLabels != null) chart.staggerLabels(true);
+if (chart.reduceXTicks != null) chart.reduceXTicks(!showAllAxisLabels);
+}",
+    });
+
     //CSS
     Template.CSS.Add(new Parameter() { Name = "view", DisplayName = "View", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the full View", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
     Template.CSS.Add(new Parameter() { Name = "page", DisplayName = "Page", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Page of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
@@ -110,7 +154,8 @@ if (chartTitle.length > 0) {
     Template.CSS.Add(new Parameter() { Name = "data_table", DisplayName = "Data table container", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Data table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
     Template.CSS.Add(new Parameter() { Name = "data_table_table", DisplayName = "Data table", Type = ViewParameterType.String, Description = "CSS style for the Data table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
     Template.CSS.Add(new Parameter() { Name = "nvd3_chart", EditorLanguage = "css", DisplayName = "NVD3 Chart", TextValue = "height:400px; width:600px; page-break-inside:avoid;", Description = "CSS style for the SVG tag defining the NVD3 Chart of the model" });
-    
+
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Tab Page" };
 }
+  

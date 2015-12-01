@@ -95,8 +95,11 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is ReportView)
             {
-                if (((ReportView)SelectedEntity).CSS.Count > 0) AddHelperButton("Edit CSS", "Edit the CSS parameters of the view", Keys.F8);
-                if (((ReportView)SelectedEntity).Parameters.Count > 0) AddHelperButton("Edit Parameters", "Edit the parameters of the view", Keys.F7);
+                var view = (ReportView)SelectedEntity;
+                if (view.NVD3Parameters.Count > 0 && view.Model != null && view.Model.HasNVD3Serie) AddHelperButton("NVD3 Chart", "Edit the NVD3 Chart configuration values", Keys.F10);
+                if (view.DataTableParameters.Count > 0) AddHelperButton("Data Table", "Edit the Data Table configuration values", Keys.F9);
+                if (view.CSS.Count > 0) AddHelperButton("Edit CSS", "Edit the CSS parameters of the view", Keys.F8);
+                if (view.Parameters.Count > 0) AddHelperButton("Edit Parameters", "Edit the parameters of the view", Keys.F7);
             }
             else if (SelectedEntity is ReportSchedule)
             {
@@ -225,6 +228,8 @@ namespace Seal.Forms
                     {
                         if (key == Keys.F7) EditProperty("General Parameters");
                         else if (key == Keys.F8) EditProperty("CSS");
+                        else if (key == Keys.F9) EditProperty("Data Table Configuration");
+                        else if (key == Keys.F10) EditProperty("NVD3 Chart Configuration");
                     }
                     else if (SelectedEntity is ReportSchedule)
                     {

@@ -114,6 +114,7 @@ function initButtons() {
     $("#nav_button").button({ text: false, label: ">", icons: { primary: "ui-icon-newwin" } })
             .mouseenter(function () {
                 $("#nav_menu").empty();
+                if ($("#nav_button").attr("disabled") == "disabled") return;
                 if (urlPrefix != "") {
                     $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: webExecutionGUID })
                     .done(function (data) {
@@ -146,7 +147,7 @@ function setNavMenuSize() {
     menu.children().each(function () {
         if ($(this).text().length > maxLen) maxLen = $(this).text().length;
     });
-    menu.css("width", 8 * maxLen);
+    menu.css("width", 8 * maxLen + 10);
 }
 
 function setNavMenuSizeAndPosition() {
@@ -251,6 +252,7 @@ function executeReport(nav) {
     $('#restriction_div').attr("disabled", "disabled");
     $('#restriction_div input').attr("disabled", "disabled");
     $('.view').css("display", "none");
+    $("#nav_button").attr("disabled", "disabled");
 }
 
 

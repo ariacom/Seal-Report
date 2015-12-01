@@ -229,8 +229,8 @@ namespace Seal.Model
         LineWithFocusChart,
         [Description("Cumulative Line")]
         CumulativeLineChart,
-        [Description("Discrete Bar")]
-        DiscreteBarChart,
+       [Description("Discrete Bar")]
+       DiscreteBarChart,
     };
 
     public enum SerieSortType
@@ -270,7 +270,6 @@ namespace Seal.Model
         Boolean,
         Enum,
         Text,
-        JavaScript,
     }
 
     public enum ViewParameterCategory

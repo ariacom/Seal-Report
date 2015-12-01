@@ -34,6 +34,7 @@ namespace Seal.Model
                 if (Element.Nvd3Serie == NVD3SerieDefinition.Line) return "line";
                 else if (Element.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart) return "area";
                 else if (Element.Nvd3Serie == NVD3SerieDefinition.MultiBarChart) return "bar";
+                else if (Element.Nvd3Serie == NVD3SerieDefinition.ScatterChart) return "scatter";
                 return "";
             }
         }

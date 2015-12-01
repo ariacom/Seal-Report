@@ -334,10 +334,14 @@ namespace Seal.Model
                         if (!Report.SchedulesWithCurrentUser)
                         {
                             //By default we use system account...
-                            taskDefinition.Principal.UserId = "SYSTEM";
                             taskDefinition.Principal.RunLevel = TaskRunLevel.Highest;
+                            _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, taskDefinition, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
                         }
-                        _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, taskDefinition, TaskCreation.CreateOrUpdate, null);
+                        else
+                        {
+                            //default user
+                            _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, taskDefinition);
+                        }
                     }
                     SynchronizeTask();
                 }
