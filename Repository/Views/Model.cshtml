@@ -95,7 +95,7 @@
                                     continue;
                                 }
 
-                                <td class='@(isFirst || (row - 1 == ReportModel.Pages.Count) ? "summary_title" : "cell_value")' style='@line[col].CellCssStyle'@Raw(GetNavigation(line[col]))>
+                                <td class='@(isFirst || (row - 1 == ReportModel.Pages.Count) ? "summary_title" : "cell_value")' style='@line[col].CellCssStyle' @Raw(GetNavigation(line[col]))>
                                     @Raw(line[col].HTMLValue)
                                 </td>
                             }
@@ -154,7 +154,7 @@
                                 <th class='cell_title'>
                                     @Raw(header.HTMLValue)
                                 </th>
-                                <td class='cell_value' style='@value.CellCssStyle'@Raw(GetNavigation(value))>
+                                <td class='cell_value' style='@value.CellCssStyle' @Raw(GetNavigation(value))>
                                     @Raw(value.HTMLValue)
                                 </td>
                             </tr>
@@ -202,14 +202,17 @@
                                 var chart = nv.models.@(page.NVD3ChartType)();
                                 var svg = d3.select('#@chartName svg');
                                 var svgJQ = $("#@chartName svg");
-                                var chartTitle = '@Raw(Helper.ToJS(Report.TranslateGeneral(View.GetValue("chart_nvd3_title"))))';
 
-                                if (chart.reduceXTicks != null) chart.reduceXTicks(!@Helper.ToJS(View.GetBoolValue("chart_show_all_axis_labels")));
-                                @Raw(View.NVD3Configuration)
+                                var showAllAxisLabels = @Helper.ToJS(View.GetBoolValue("chart_show_all_axis_labels"));
+                                @Raw(View.GetValue("nvd3_chart_configuration"))
+                                @Raw(View.GetValue("nvd3_pie_configuration"))
+                                @Raw(View.GetValue("nvd3_additional_options"))
+                                var chartTitle = '@Raw(Helper.ToJS(Report.TranslateGeneral(View.GetValue("chart_nvd3_title"))))';
+                                @Raw(View.GetValue("nvd3_title_configuration"))
                                 svg
                                     .datum(@(page.NVD3ChartType != "pieChart" ? "series" : "series[0].values"))
-                                                            .transition().duration(200)
-                                                            .call(chart)
+                                    .transition().duration(200)
+                                    .call(chart)
                                 ;
 
                                 if (nvd3Charts != null) nvd3Charts.push(chart);
@@ -221,7 +224,7 @@
                                 d3.selectAll("#@chartName").on('click', function(){ nvd3Translate($("#@(chartName) g.nv-controlsWrap text.nv-legend-text")); nvd3TranslateAxis($("#@(chartName) g.legendWrap text.nv-legend-text")); });
                             })
                         </script>
-                                chartOk = true;
+        chartOk = true;
                     }
                     else
                     {
@@ -287,7 +290,7 @@
                                         ResultCell cell = line[col];
                                         string className = cell.IsTitle && col == 0 ? "cell_title" : "cell_value";
                                         className = cell.IsTotal ? "cell_value_total" : className;
-                                        <td class='@className' style='@cell.CellCssStyle'@Raw(GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
+                                        <td class='@className' style='@cell.CellCssStyle' @Raw(GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
                                     }
                                 </tr>
                             }

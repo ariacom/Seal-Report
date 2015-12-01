@@ -72,8 +72,8 @@ namespace Seal.Model
                 GetProperty("ChartAxisY2").SetIsBrowsable(hasMSChartConfig);
                 GetProperty("ChartSeries").SetIsBrowsable(hasMSChartConfig);
                 GetProperty("ChartArea").SetIsBrowsable(hasMSChartConfig);
-                bool hasNVD3Config = (Model != null && Model.HasNVD3Serie && NVD3ConfigurationParameter != null);
-                GetProperty("NVD3Configuration").SetIsBrowsable(hasNVD3Config);
+                bool hasNVD3Config = (Model != null && Model.HasNVD3Serie && NVD3Parameters.Count > 0);
+                GetProperty("NVD3Parameters").SetIsBrowsable(hasNVD3Config);
 
                 //Read only
                 GetProperty("TemplateName").SetIsReadOnly(true);
@@ -84,13 +84,6 @@ namespace Seal.Model
                 GetProperty("HelperReloadConfiguration").SetIsBrowsable(true);
                 GetProperty("HelperResetParameters").SetIsBrowsable(true);
                 GetProperty("HelperResetChartConfiguration").SetIsBrowsable(hasMSChartConfig);
-                if (hasNVD3Config)
-                {
-                    bool isConfigDefault = false;
-                    var defaultValue = Template.Parameters.FirstOrDefault(i => i.Name == Parameter.NVD3ConfigurationParameter);
-                    isConfigDefault = (NVD3ConfigurationParameter != null && defaultValue != null && NVD3ConfigurationParameter.Value == defaultValue.Value);
-                    GetProperty("HelperResetNVD3ChartConfiguration").SetIsBrowsable(!isConfigDefault);
-                }
                 GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(AllowPDFConversion);
                 GetProperty("HelperResetExcelConfigurations").SetIsBrowsable(true);
                 GetProperty("Information").SetIsBrowsable(true);
@@ -489,30 +482,17 @@ namespace Seal.Model
             set { }
         }
 
+        [DisplayName("NVD3 Chart Configuration"), Description("The configuration values for the NV3 Chart."), Category("View parameters"), Id(4, 4)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
-        public Parameter NVD3ConfigurationParameter
+        public List<Parameter> NVD3Parameters
         {
-            get { return _parameters.FirstOrDefault(i => i.Name == Parameter.NVD3ConfigurationParameter); }
-        }
-
-        [DisplayName("NVD3 Chart Configuration"), Description("The JavaScript to create and configure the NVD3 chart. The Width and Height are configured in a dedicated CSS parameter."), Category("View parameters"), Id(3, 4)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        [XmlIgnore]
-        public string NVD3Configuration
-        {
-            get
-            {
-                return NVD3ConfigurationParameter != null ? NVD3ConfigurationParameter.TextValue : "";
-            }
-            set
-            {
-                if (NVD3ConfigurationParameter != null) NVD3ConfigurationParameter.TextValue = value;
-                UpdateEditorAttributes();
-            }
+            get { return _parameters.Where(i => i.Category == ViewParameterCategory.NVD3).ToList(); }
+            set { }
         }
 
         List<Parameter> _css = new List<Parameter>();
-        [DisplayName("CSS"), Description("The custom CSS values for the view."), Category("View parameters"), Id(4, 4)]
+        [DisplayName("CSS"), Description("The custom CSS values for the view."), Category("View parameters"), Id(5, 4)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<Parameter> CSS
         {
@@ -831,13 +811,6 @@ namespace Seal.Model
             get { return "<Click to reset the Microsoft Chart configuration to default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset NVD3 Chart configuration"), Description("Reset the NVD3 Chart configuration to its default value."), Id(4, 10)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-        public string HelperResetNVD3ChartConfiguration
-        {
-            get { return "<Click to reset the NVD3 Chart configuration to its default value>"; }
-        }
-
         [Category("Helpers"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to default values."), Id(5, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetPDFConfigurations
@@ -1066,7 +1039,7 @@ namespace Seal.Model
                         if (page.Chart != null) page.Chart.ChartAreas[0].AxisX.LabelStyle.Format = dimensions[0].Element.FormatEl;
                         page.NVD3IsNumericAxis = dimensions[0].Element.IsNumeric;
                         page.NVD3IsDateTimeAxis = dimensions[0].Element.IsDateTime;
-                        page.NVD3XAxisFormat = dimensions[0].Element.GetNVD3Format(CultureInfo);
+                        page.NVD3XAxisFormat = dimensions[0].Element.GetNVD3Format(CultureInfo, page.NVD3ChartType);
                     }
                 }
             }
@@ -1204,12 +1177,12 @@ namespace Seal.Model
 
                 if (string.IsNullOrEmpty(page.NVD3PrimaryYAxisFormat) && resultSerie.Element.YAxisType == AxisType.Primary)
                 {
-                    page.NVD3PrimaryYAxisFormat = resultSerie.Element.GetNVD3Format(CultureInfo);
+                    page.NVD3PrimaryYAxisFormat = resultSerie.Element.GetNVD3Format(CultureInfo, page.NVD3ChartType);
                     page.NVD3PrimaryYIsDateTime = resultSerie.Element.IsDateTime;
                 }
                 else if (string.IsNullOrEmpty(page.NVD3SecondaryYAxisFormat) && resultSerie.Element.YAxisType == AxisType.Secondary)
                 {
-                    page.NVD3SecondaryYAxisFormat = resultSerie.Element.GetNVD3Format(CultureInfo);
+                    page.NVD3SecondaryYAxisFormat = resultSerie.Element.GetNVD3Format(CultureInfo, page.NVD3ChartType);
                     page.NVD3SecondaryYIsDateTime = resultSerie.Element.IsDateTime;
                 }
                 //Fill Serie

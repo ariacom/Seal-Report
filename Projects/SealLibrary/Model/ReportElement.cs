@@ -555,7 +555,7 @@ namespace Seal.Model
         [XmlIgnore, Browsable(false)]
         public bool IsForNavigation = false;
 
-        public string GetNVD3Format(CultureInfo culture)
+        public string GetNVD3Format(CultureInfo culture, string NVD3ChartType)
         {
             //try to convert from .net to d3 format... from https://github.com/mbostock/d3/wiki/Formatting
             if (IsNumeric)

@@ -251,13 +251,6 @@ namespace Seal.Forms
                         frm.TypeForCheckSyntax = typeof(ReportViewTemplate);
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
-                    else if (context.PropertyDescriptor.Name == "NVD3Configuration")
-                    {
-                        frm.Text = frm.View.NVD3ConfigurationParameter.DisplayName;
-                        var param = frm.View.Template.Parameters.FirstOrDefault(i => i.Name == Parameter.NVD3ConfigurationParameter);
-                        if (param != null) template = param.TextValue;
-                        frm.textBox.ConfigurationManager.Language = (string.IsNullOrEmpty(frm.View.NVD3ConfigurationParameter.EditorLanguage) ? "" : frm.View.NVD3ConfigurationParameter.EditorLanguage);
-                    }
                 }
                 else if (context.Instance is ReportTask)
                 {
@@ -285,6 +278,7 @@ namespace Seal.Forms
                 else if (context.Instance is Parameter)
                 {
                     Parameter parameter = context.Instance as Parameter;
+                    template = parameter.ConfigValue;
                     frm.Text = parameter.DisplayName;
                     frm.textBox.ConfigurationManager.Language = (string.IsNullOrEmpty(parameter.EditorLanguage) ? "" : parameter.EditorLanguage);
                 }

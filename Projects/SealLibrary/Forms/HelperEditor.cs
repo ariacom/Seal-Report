@@ -387,16 +387,6 @@ namespace Seal.Forms
                         _reportView.ResetChartConfiguration();
                         setModified();
                     }
-                    else if (context.PropertyDescriptor.Name == "HelperResetNVD3ChartConfiguration")
-                    {
-                        var defaultValue = _reportView.Template.Parameters.FirstOrDefault(i => i.Name == Parameter.NVD3ConfigurationParameter);
-                        if (_reportView.NVD3ConfigurationParameter != null && defaultValue != null)
-                        {
-                            _reportView.NVD3Configuration = defaultValue.TextValue;
-                            _reportView.Information = Helper.FormatMessage("NVD3 Chart configuration has been reset");
-                            setModified();
-                        }
-                    }
                     else if (context.PropertyDescriptor.Name == "HelperResetPDFConfigurations")
                     {
                         _reportView.PdfConfigurations = new List<string>();
