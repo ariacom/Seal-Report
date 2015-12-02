@@ -83,6 +83,8 @@ namespace Seal.Model
                 //Helpers
                 GetProperty("HelperReloadConfiguration").SetIsBrowsable(true);
                 GetProperty("HelperResetParameters").SetIsBrowsable(true);
+                GetProperty("HelperResetCSSParameters").SetIsBrowsable(true);
+                GetProperty("HelperResetNVD3Parameters").SetIsBrowsable(hasNVD3Config);
                 GetProperty("HelperResetChartConfiguration").SetIsBrowsable(hasMSChartConfig);
                 GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(AllowPDFConversion);
                 GetProperty("HelperResetExcelConfigurations").SetIsBrowsable(true);
@@ -129,11 +131,10 @@ namespace Seal.Model
                 Parameter parameter = parameters.FirstOrDefault(i => i.Name == configParameter.Name);
                 if (parameter == null)
                 {
-                    parameter = new Parameter() { Name = configParameter.Name };
-                    parameter.Value = configParameter.Value;
+                    parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
                     parameters.Add(parameter);
                 }
-                if (resetValues && parameter.Name != Parameter.NVD3ConfigurationParameter) parameter.Value = configParameter.Value;
+                if (resetValues) parameter.Value = configParameter.Value;
                 parameter.Enums = configParameter.Enums;
                 parameter.Description = configParameter.Description;
                 parameter.Type = configParameter.Type;
@@ -179,7 +180,7 @@ namespace Seal.Model
         }
 
 
-        public void InitParameters(bool resetValues)
+        public void InitParameters(bool resetValues, bool cssOnly = false, bool nvd3Only = false)
         {
             if (Report == null || Template == null) return;
 
@@ -189,8 +190,19 @@ namespace Seal.Model
 
             if (string.IsNullOrEmpty(_error) && !string.IsNullOrEmpty(Template.Error)) _error = string.Format("Error parsing configuration of template '{0}':\r\nError:{1}\r\nPath:{2}", _template.Name, Template.Error, Template.ConfigurationPath);
 
-            InitParameters(Template.Parameters, _parameters, resetValues);
-            InitParameters(Template.CSS, _css, resetValues);
+            if (!cssOnly && !nvd3Only)
+            {
+                InitParameters(Template.Parameters, _parameters, resetValues);
+                InitParameters(Template.CSS, _css, resetValues);
+            }
+            else if (cssOnly)
+            {
+                InitParameters(Template.CSS, _css, resetValues);
+            }
+            else if (nvd3Only)
+            {
+                InitParameters(Template.Parameters.Where(i => i.Category == ViewParameterCategory.NVD3).ToList(), _parameters.Where(i => i.Category == ViewParameterCategory.NVD3).ToList(), resetValues);
+            }
 
             if (!string.IsNullOrEmpty(_error)) _information = "Error loading the configuration";
             else
@@ -797,11 +809,25 @@ namespace Seal.Model
             get { return "<Click to reload the template configuration and refresh the parameters>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset parameter values"), Description("Reset parameters to their default values."), Id(2, 10)]
+        [Category("Helpers"), DisplayName("Reset parameter values"), Description("Reset parameters (including Data Tables and NVD3 Chart configuration) to their default values."), Id(2, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetParameters
         {
             get { return "<Click to reset the view parameters to their default values>"; }
+        }
+
+        [Category("Helpers"), DisplayName("Reset CSS values"), Description("Reset CSS to their default values."), Id(3, 10)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperResetCSSParameters
+        {
+            get { return "<Click to reset the view CSS values to their default values>"; }
+        }
+
+        [Category("Helpers"), DisplayName("Reset NVD3 Chart values"), Description("Reset NVD3 Chart values to their default values."), Id(3, 10)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperResetNVD3Parameters
+        {
+            get { return "<Click to reset the view NVD3 Chart values to their default values>"; }
         }
 
         [Category("Helpers"), DisplayName("Reset Microsoft Chart configuration"), Description("Reset the Microsoft Chart configuration to default values."), Id(3, 10)]
@@ -811,14 +837,14 @@ namespace Seal.Model
             get { return "<Click to reset the Microsoft Chart configuration to default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to default values."), Id(5, 10)]
+        [Category("Helpers"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to its default value."), Id(5, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetPDFConfigurations
         {
             get { return "<Click to reset the PDF configuration values to default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to default values."), Id(6, 10)]
+        [Category("Helpers"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to its default value."), Id(6, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetExcelConfigurations
         {

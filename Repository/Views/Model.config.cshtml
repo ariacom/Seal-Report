@@ -36,17 +36,19 @@
     Template.Parameters.Add(new Parameter() { Name = "chart_show_all_axis_labels", DisplayName = "Chart show all axis labels", BoolValue = false, Description = "If true, force all axis labels to be shown. For NVD3 Chart, the option is only valid for Bar chart." });
 
     //NVD3 Chart
+    Template.Parameters.Add(new Parameter() { Name = "chart_nvd3_title", Category = ViewParameterCategory.NVD3, DisplayName = "Chart Title", Description = "Optional title displayed at the bottom of the NVD3 chart" });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_hide_controls", Category = ViewParameterCategory.NVD3, DisplayName = "Force Hide Controls", BoolValue = false, Description = "If true, controls (depending on chart type) to interact with the series are hidden" });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_show_legend", Category = ViewParameterCategory.NVD3, DisplayName = "Show Legend", BoolValue = true, Description = "If true, the legend is displayed in the chart" });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_bar_stacked", Category = ViewParameterCategory.NVD3, DisplayName = "Bar Stacked", BoolValue = false, Description = "If true, the Bar in chart are stacked (only for Bar chart)" });
+
     Template.Parameters.Add(new Parameter()
     {
         Name = "nvd3_chart_configuration",
         Category = ViewParameterCategory.NVD3,
         EditorLanguage = "js",
-        DisplayName = "Main Script",
+        DisplayName = "Script: Root Script",
         Description = "The JavaScript to create and configure the NVD3 chart. The Width and Height are configured in a dedicated CSS parameter.",
-        TextValue = @"chart
-.color(d3.scale.category10().range())
-//.margin({top: 30, right: 60, bottom: 40, left: 70})
-;
+        TextValue = @"chart.color(d3.scale.category10().range());
 //Axis format
 if (chart.xAxis != null && chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
 if (chart.yAxis != null && chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
@@ -65,17 +67,11 @@ if (chart.showDistY != null) chart.showDistY(true);
 
 if (chartType != 'discreteBarChart') {
 	chart.tooltip.headerFormatter(function(d, i) {
-	   return chart.xAxis.tickFormat()(d, i);
+        return chart.xAxis.tickFormat()(d, i);
 	});
 	chart.tooltip.keyFormatter(function(d, i) {
-	   if (d == null) return '';
-	   return nvd3TranslateTextAxis(d);
-	});
-}
-
-if (chartType == 'stackedAreaChart') {
-	chart.interactiveLayer.tooltip.headerFormatter(function(d, i) {
-	   return d;
+        if (d == null) return '';
+        return nvd3TranslateTextAxis(d);
 	});
 }
 
@@ -83,62 +79,98 @@ if (chartType == 'stackedAreaChart') {
 "
     });
 
-    Template.Parameters.Add(new Parameter() { Name = "chart_nvd3_title", Category = ViewParameterCategory.NVD3, DisplayName = "Chart Title", Description = "Optional title displayed at the bottom of the NVD3 chart" });
-    Template.Parameters.Add(new Parameter() { Name = "nvd3_hide_controls", Category = ViewParameterCategory.NVD3, DisplayName = "Force Hide Controls", BoolValue = false, Description = "If true, controls (depending on chart type) to interact with the series are hidden" });
-    Template.Parameters.Add(new Parameter() { Name = "nvd3_show_legend", Category = ViewParameterCategory.NVD3, DisplayName = "Show Legend", BoolValue = true, Description = "If true, the legend is displayed in the chart" });
     Template.Parameters.Add(new Parameter()
     {
-        Name = "nvd3_pie_configuration",
+        Name = "nvd3_script_margin",
         Category = ViewParameterCategory.NVD3,
-        DisplayName = "Pie Chart configuration",
+        DisplayName = "Script: Margins definition",
+        Description = "Custom script to configure chart margins",
+        EditorLanguage = "js",
+        TextValue = @"//chart.margin({top: 30, left: 70, bottom: 40, right: 60});
+",
+    });
+
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "nvd3_script_options",
+        Category = ViewParameterCategory.NVD3,
+        DisplayName = "Script: Chart options",
+        Description = "Custom script to configure chart option",
+        EditorLanguage = "js",
+        TextValue = @"var hideControls = (forceHideControls || chartType == 'scatterChart' || (series.length == 1 && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
+if (chart.showControls != null) chart.showControls(!hideControls);
+if (chart.showLegend != null) chart.showLegend(showLegend);
+if (chart.stacked != null && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')) chart.stacked(barStacked); //for Bar
+if (chart.reduceXTicks != null) chart.reduceXTicks(!showAllAxisLabels);
+
+if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
+if (chart.interpolate != null) chart.interpolate('cardinal');
+if (chart.staggerLabels != null) chart.staggerLabels(true);
+",
+    });
+
+
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "nvd3_script_additional",
+        Category = ViewParameterCategory.NVD3,
+        DisplayName = "Script: Additional options",
+        Description = "Custom script to configure additional chart option",
+        EditorLanguage = "js",
+        TextValue = @"//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
+//if (chart.isArea != null) chart.isArea(true); //for Line
+",
+    });
+
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "nvd3_script_pie",
+        Category = ViewParameterCategory.NVD3,
+        DisplayName = "Script: Pie Chart configuration",
         Description = "Custom script to configure the Pie chart",
         EditorLanguage = "js",
-        TextValue = @"if (chartType == 'pieChart') {
-    chart
+        TextValue = @"chart
     .x(function(d) { return xLabels[d.x]})
     .showLabels(true)
     .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
     .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
     .donut(true)
     .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-    ;
-}",
+;
+
+chart.tooltip.valueFormatter(function(d){ 
+    return YPrimaryValueFormatter(d); 
+}); 	
+",
     });
 
     Template.Parameters.Add(new Parameter()
     {
-        Name = "nvd3_title_configuration",
+        Name = "nvd3_script_stackedarea",
         Category = ViewParameterCategory.NVD3,
-        DisplayName = "Title configuration",
-        Description = "Custom script to configure the title",
+        DisplayName = "Script: Stacked Area Chart configuration",
+        Description = "Custom script to configure the Stacked Area chart",
+        EditorLanguage = "js",
+        TextValue = @"	chart.interactiveLayer.tooltip.headerFormatter(function(d, i) {
+    return d;
+});
+",
+    });
+
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "nvd3_script_title",
+        Category = ViewParameterCategory.NVD3,
+        DisplayName = "Script: Title configuration",
+        Description = "Custom script to configure the chart title",
         EditorLanguage = "js",
         TextValue = @"if (chartTitle.length > 0) {
     svg.append('text')
-    .attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length))
-    .attr('y', svgJQ.height()+ (chartType == 'lineWithFocusChart' ? 10 : -6))
-    .style('font-weight', 'bold')
-    .style('font-size', '14px')
-    .text(chartTitle);
-}",
-    });
-
-    Template.Parameters.Add(new Parameter()
-    {
-        Name = "nvd3_additional_options",
-        Category = ViewParameterCategory.NVD3,
-        DisplayName = "Additional options",
-        Description = "Custom script to configure chart option",
-        EditorLanguage = "js",
-        TextValue = @"var hideControls = (chartType == 'scatterChart' || (series.length == 1 && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null) chart.showControls(!hideControls);
-if (chart.showLegend != null) chart.showLegend(true);
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-if (chart.stacked != null && chartType == 'multiBarChart') chart.stacked(false); //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line
-if (chart.interpolate != null) chart.interpolate('cardinal');
-if (chart.staggerLabels != null) chart.staggerLabels(true);
-if (chart.reduceXTicks != null) chart.reduceXTicks(!showAllAxisLabels);
+        .attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length))
+        .attr('y', svgJQ.height()+ (chartType == 'lineWithFocusChart' ? 10 : -6))
+        .style('font-weight', 'bold')
+        .style('font-size', '14px')
+        .text(chartTitle);
 }",
     });
 
