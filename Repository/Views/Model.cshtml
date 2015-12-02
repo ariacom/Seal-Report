@@ -176,52 +176,60 @@
                             <svg style="@View.GetCSS("nvd3_chart")" />
                         </div>
                         <script>
-                            nv.addGraph(function() {
-                                var series = new Array();
-                                @foreach (ResultSerie serie in page.Series)
+    nv.addGraph(function() {
+        var series = new Array();
+        @foreach (ResultSerie serie in page.Series)
                         {
                             string multiChartOption = (page.NVD3ChartType == "multiChart" ? string.Format(",type :'{0}', yAxis : {1}", serie.NVD3MultiChartType, ((int)serie.Element.YAxisType + 1)) : "");
                             <text>series.push({key: '@Raw(Helper.ToJS(serie.SerieDisplayName))', values:  [@Raw(serie.NVD3SerieValues)] @Raw(multiChartOption) });</text>
                         }
 
-                                var chartType = '@page.NVD3ChartType';
-                                var xLabels=[@Raw(page.NVD3XLabels)];
-                                var XValueFormatter = function(value) {
-                                    if (@Helper.ToJS(page.NVD3IsNumericAxis)) return d3.format('@page.NVD3XAxisFormat')(value).valueFormat();
-                                    if (@Helper.ToJS(page.NVD3IsDateTimeAxis)) return d3.time.format('@page.NVD3XAxisFormat')(new Date(value));
-                                    return xLabels[value];
-                                }
-                                var YPrimaryValueFormatter = function(value) {
-                                    if (@Helper.ToJS(page.NVD3PrimaryYIsDateTime)) return d3.time.format('@page.NVD3PrimaryYAxisFormat')(new Date(value));
-                                    return d3.format('@page.NVD3PrimaryYAxisFormat')(value).valueFormat();
-                                }
-                                var YSecondaryValueFormatter = function(value) {
-                                    if (@Helper.ToJS(page.NVD3SecondaryYIsDateTime)) return d3.time.format('@page.NVD3SecondaryYAxisFormat')(new Date(value));
-                                    return d3.format('@page.NVD3SecondaryYAxisFormat')(value).valueFormat();
-                                }
-                                var chart = nv.models.@(page.NVD3ChartType)();
-                                var svg = d3.select('#@chartName svg');
-                                var svgJQ = $("#@chartName svg");
+        var chartType = '@page.NVD3ChartType';
+        var xLabels=[@Raw(page.NVD3XLabels)];
+        var XValueFormatter = function(value) {
+            if (@Helper.ToJS(page.NVD3IsNumericAxis)) return d3.format('@page.NVD3XAxisFormat')(value).valueFormat();
+            if (@Helper.ToJS(page.NVD3IsDateTimeAxis)) return d3.time.format('@page.NVD3XAxisFormat')(new Date(value));
+            return xLabels[value];
+        }
+        var YPrimaryValueFormatter = function(value) {
+            if (@Helper.ToJS(page.NVD3PrimaryYIsDateTime)) return d3.time.format('@page.NVD3PrimaryYAxisFormat')(new Date(value));
+            return d3.format('@page.NVD3PrimaryYAxisFormat')(value).valueFormat();
+        }
+        var YSecondaryValueFormatter = function(value) {
+            if (@Helper.ToJS(page.NVD3SecondaryYIsDateTime)) return d3.time.format('@page.NVD3SecondaryYAxisFormat')(new Date(value));
+            return d3.format('@page.NVD3SecondaryYAxisFormat')(value).valueFormat();
+        }
+        var chart = nv.models.@(page.NVD3ChartType)();
+        var svg = d3.select('#@chartName svg');
+        var svgJQ = $("#@chartName svg");
 
-                                var showAllAxisLabels = @Helper.ToJS(View.GetBoolValue("chart_show_all_axis_labels"));
-                                @Raw(View.GetValue("nvd3_chart_configuration"))
-                                @Raw(View.GetValue("nvd3_pie_configuration"))
-                                @Raw(View.GetValue("nvd3_additional_options"))
-                                var chartTitle = '@Raw(Helper.ToJS(Report.TranslateGeneral(View.GetValue("chart_nvd3_title"))))';
-                                @Raw(View.GetValue("nvd3_title_configuration"))
-                                svg
-                                    .datum(@(page.NVD3ChartType != "pieChart" ? "series" : "series[0].values"))
-                                    .transition().duration(200)
-                                    .call(chart)
-                                ;
+        var showAllAxisLabels = @Helper.ToJS(View.GetBoolValue("chart_show_all_axis_labels"));
+        var chartTitle = '@Raw(Helper.ToJS(Report.TranslateGeneral(View.GetValue("chart_nvd3_title"))))';
+        var showLegend = @Helper.ToJS(View.GetBoolValue("nvd3_show_legend"));
+        var forceHideControls = @Helper.ToJS(View.GetBoolValue("nvd3_hide_controls"));
+        var barStacked = @Helper.ToJS(View.GetBoolValue("nvd3_bar_stacked"));
 
-                                if (nvd3Charts != null) nvd3Charts.push(chart);
-                                nvd3Translate($("#@(chartName) g.nv-controlsWrap text.nv-legend-text"));
-                                nvd3TranslateAxis($("#@(chartName) g.legendWrap text.nv-legend-text"));
-                                return chart;
-                            }
-                            ,function(){
-                                d3.selectAll("#@chartName").on('click', function(){ nvd3Translate($("#@(chartName) g.nv-controlsWrap text.nv-legend-text")); nvd3TranslateAxis($("#@(chartName) g.legendWrap text.nv-legend-text")); });
+        @Raw(View.GetValue("nvd3_chart_configuration"))
+        @Raw(View.GetValue("nvd3_script_margin"))
+        @Raw(View.GetValue("nvd3_script_options"))
+        @Raw(View.GetValue("nvd3_script_additional"))
+        @Raw(page.NVD3ChartType != "pieChart" ? "" : View.GetValue("nvd3_script_pie"))
+        @Raw(page.NVD3ChartType != "stackedAreaChart" ? "" : View.GetValue("nvd3_script_stackedarea"))
+        @Raw(View.GetValue("nvd3_script_title"))
+        svg
+            .datum(@(page.NVD3ChartType != "pieChart" ? "series" : "series[0].values"))
+            .transition().duration(200)
+            .call(chart)
+        ;
+
+        if (nvd3Charts != null) nvd3Charts.push(chart);
+        nvd3Translate($("#@(chartName) g.nv-controlsWrap text.nv-legend-text"));
+        nvd3TranslateAxis($("#@(chartName) text.nv-legend-text"));
+        nvd3TranslateAxis($("#@(chartName) title"));
+        return chart;
+    }
+    ,function(){
+        d3.selectAll("#@chartName").on('click', function(){ nvd3Translate($("#@(chartName) g.nv-controlsWrap text.nv-legend-text")); nvd3TranslateAxis($("#@(chartName) g.legendWrap text.nv-legend-text"));nvd3TranslateAxis($("#@(chartName) title")); });
                             })
                         </script>
         chartOk = true;
@@ -284,7 +292,7 @@
                             @for (int row = page.DataTable.BodyStartRow; row < page.DataTable.BodyEndRow; row++)
                             {
                                 ResultCell[] line = page.DataTable.Lines[row];
-                                <tr class="@((row-page.DataTable.BodyStartRow)%2 == 1 ? "" : "odd")">
+                                <tr class="@((row-page.DataTable.BodyStartRow)%2 == 1 ? " " : " odd")">
                                     @for (int col = 0; col < line.Length; col++)
                                     {
                                         ResultCell cell = line[col];

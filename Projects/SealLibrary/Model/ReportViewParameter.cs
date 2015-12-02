@@ -25,7 +25,6 @@ namespace Seal.Model
         public const string PrintLayoutParameter = "print_layout";
         public const string PDFLayoutParameter = "pdf_layout";
         public const string ExcelLayoutParameter = "excel_layout";
-        public const string NVD3ConfigurationParameter = "nvd3_chart_configuration";
         public const string DrillEnabledParameter = "drill_enabled";
         public const string SubReportsEnabledParameter = "subreports_enabled";
 
