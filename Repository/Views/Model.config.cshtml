@@ -34,6 +34,8 @@
     Template.Parameters.Add(new Parameter() { Name = "display_page_totals", DisplayName = "Totals: Display totals in page table", BoolValue = true, Description = "If true, the totals are displayed in the page table" });
     Template.Parameters.Add(new Parameter() { Name = "add_summary_totals_totals", DisplayName = "Totals: Add the total of totals line in summary table", BoolValue = true, Description = "If true, a line containing the totals is added at the end of the summary table" });
     Template.Parameters.Add(new Parameter() { Name = "chart_show_all_axis_labels", DisplayName = "Chart show all axis labels", BoolValue = false, Description = "If true, force all axis labels to be shown. For NVD3 Chart, the option is only valid for Bar chart." });
+    Template.Parameters.Add(new Parameter() { Name = "drill_enabled", DisplayName = "Drill Enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled in this model if enabled in the root view" });
+    Template.Parameters.Add(new Parameter() { Name = "sub_report_enabled", DisplayName = "Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled for this model if enabled in the root view" });
 
     //NVD3 Chart
     Template.Parameters.Add(new Parameter() { Name = "chart_nvd3_title", Category = ViewParameterCategory.NVD3, DisplayName = "Chart Title", Description = "Optional title displayed at the bottom of the NVD3 chart" });
@@ -119,6 +121,7 @@ if (chart.staggerLabels != null) chart.staggerLabels(true);
         EditorLanguage = "js",
         TextValue = @"//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
 //if (chart.isArea != null) chart.isArea(true); //for Line
+//chart.xAxis.showMaxMin(false);
 ",
     });
 

@@ -595,9 +595,9 @@ namespace Seal.Model
             }
         }
 
-        private void setSubReportNavigation(ResultCell[] cellsToAssign, int len, ResultCell[] cellValues)
+        private void setSubReportNavigation(ResultCell[] cellsToAssign, ResultCell[] cellValues)
         {
-            for (int i = 0; i < len && _processSubReports; i++)
+            for (int i = 0; i < cellsToAssign.Length && _processSubReports; i++)
             {
                 if (cellsToAssign[i] != null && cellsToAssign[i].Element != null && cellsToAssign[i].Element.MetaColumn != null)
                 {
@@ -635,6 +635,7 @@ namespace Seal.Model
                 ResultCell[] rowValues = GetResultCells(PivotPosition.Row, row, model);
                 ResultCell[] columnValues = GetResultCells(PivotPosition.Column, row, model);
                 ResultCell[] dataValues = GetResultCells(PivotPosition.Data, row, model);
+                ResultCell[] hiddenValues = GetResultCells(PivotPosition.Hidden, row, model);
 
                 bool createPage = false;
                 if (currentPageValues == null)
@@ -654,9 +655,8 @@ namespace Seal.Model
                     //Create Page table
                     currentPage.Pages = pageValues;
                     model.Pages.Add(currentPage);
-
                     //Set navigation values if any
-                    setSubReportNavigation(pageValues, pageValues.Length, rowValues);
+                    setSubReportNavigation(pageValues, hiddenValues);
                 }
 
                 //Set values in page
@@ -674,6 +674,8 @@ namespace Seal.Model
                         rowIndex = FindDimension(rowValues, currentPage.Rows);
                     }
                     rowValues = currentPage.Rows[rowIndex];
+                    //Set navigation values if any
+                    setSubReportNavigation(rowValues, hiddenValues);
                 }
 
                 int columnIndex = 0;
@@ -681,6 +683,8 @@ namespace Seal.Model
                 {
                     columnIndex = FindDimension(columnValues, currentPage.Columns);
                     columnValues = currentPage.Columns[columnIndex];
+                    //Set navigation values if any
+                    setSubReportNavigation(columnValues, hiddenValues);
                 }
 
                 if (dataValues.Length > 0)
@@ -765,7 +769,7 @@ namespace Seal.Model
 
                     if (headerColumnValues.Length > 0 && headerDataValues.Length <= 1 && i == headerColumnValues.Length - 1)
                     {
-                        //Case 1 Data with at least 1 column, or no data with 1 row and a cloumn, one line less as the titles is already set in first cell
+                        //Case 1 Data with at least 1 column, or no data with 1 row and a column, one line less as the titles is already set in first cell
                         //headers for rows
                         for (int j = 0; j < headerRowValues.Length; j++) line[j] = headerRowValues[j];
                         i++;
@@ -795,9 +799,6 @@ namespace Seal.Model
                     line = new ResultCell[width];
                     //Row values
                     for (int i = 0; i < row.Length && i < width; i++) line[i] = row[i];
-
-                    //Set navigation values if any
-                    setSubReportNavigation(line, width, row);
 
                     //Data values
                     List<ResultData> datas = null;

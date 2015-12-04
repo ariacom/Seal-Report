@@ -392,11 +392,11 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(ProjectDir)\..\..\Repository\Views\Scripts\common.js $(ProjectDir)\..\SealWebServer\Scripts\
-copy $(ProjectDir)\..\..\Repository\Views\Scripts\dataTables.js $(ProjectDir)\..\SealWebServer\Scripts\
-copy $(ProjectDir)\..\..\Repository\Views\Scripts\datepicker.js $(ProjectDir)\..\SealWebServer\Scripts\
-copy $(ProjectDir)\..\..\Repository\Views\Scripts\nvd3.js $(ProjectDir)\..\SealWebServer\Scripts\
-copy $(ProjectDir)\..\..\Repository\Views\Scripts\seal.css $(ProjectDir)\..\SealWebServer\Scripts\</PostBuildEvent>
+    <PostBuildEvent>copy $(ProjectDir)..\..\..\seal-report\Repository\Views\Scripts\common.js $(ProjectDir)\..\SealWebServer\Scripts\
+copy $(ProjectDir)..\..\..\seal-report\Repository\Views\Scripts\dataTables.js $(ProjectDir)\..\SealWebServer\Scripts\
+copy $(ProjectDir)..\..\..\seal-report\Repository\Views\Scripts\datepicker.js $(ProjectDir)\..\SealWebServer\Scripts\
+copy $(ProjectDir)..\..\..\seal-report\Repository\Views\Scripts\nvd3.js $(ProjectDir)\..\SealWebServer\Scripts\
+copy $(ProjectDir)..\..\..\seal-report\Repository\Views\Scripts\seal.css $(ProjectDir)\..\SealWebServer\Scripts\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

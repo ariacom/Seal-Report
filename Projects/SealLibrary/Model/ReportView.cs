@@ -121,6 +121,13 @@ namespace Seal.Model
                 childView.Report = Report;
                 childView.InitReferences();
             }
+
+            if (GetValue("nvd3_chart_configuration").Contains(".tooltipContent"))
+            {
+                if (string.IsNullOrEmpty(Report.LoadErrors)) Report.UpgradeWarnings = "NVD3 Upgrade to version 2.0.\r\nPlease check your charts layout and adjust the options in your NVD3 parameters for each view impacted...\r\n\r\n";
+                Report.UpgradeWarnings += string.Format("Reseting NVD3 Chart configuration for View '{0}'\r\n", Name);
+                Parameters.RemoveAll(i => i.Name == "nvd3_chart_configuration");
+            }
         }
 
 

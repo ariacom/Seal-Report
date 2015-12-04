@@ -16,7 +16,6 @@ using Seal.Forms;
 
 namespace Seal.Model
 {
-    //[ClassResource(BaseName = "DynamicTypeDescriptorApp.Properties.Resources", KeyPrefix = "MetaColumn_")]
     public class MetaColumn : RootComponent, ITreeSort
     {
         #region Editor
@@ -73,6 +72,24 @@ namespace Seal.Model
 
                 TypeDescriptor.Refresh(this);
             }
+        }
+
+        override public void SetReadOnly()
+        {
+            base.SetReadOnly();
+            GetProperty("HelperCreateEnum").SetIsBrowsable(false);
+            GetProperty("HelperCreateSubReport").SetIsBrowsable(false);
+            GetProperty("HelperAddSubReport").SetIsBrowsable(false);
+            TypeDescriptor.Refresh(this);
+        }
+
+        public void HideSubReports()
+        {
+            GetProperty("SubReports").SetIsBrowsable(false);
+            GetProperty("HelperOpenSubReportFolder").SetIsBrowsable(false);
+            GetProperty("HelperCreateSubReport").SetIsBrowsable(false);
+            GetProperty("HelperAddSubReport").SetIsBrowsable(false);
+            TypeDescriptor.Refresh(this);
         }
         #endregion
 
@@ -308,6 +325,12 @@ namespace Seal.Model
             set { _drillUpOnlyIfDD = value; }
         }
 
+        [Category("Drill"), DisplayName("Create Date Columns for Drill"), Description("Create automatically a 'Year' column and a 'Month' column to drill down to the date."), Id(3, 4)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperCreateDrillDates
+        {
+            get { return "<Click to create a 'Year' and a 'Month' column having Drill navigation>"; }
+        }
 
         List<SubReport> _subReports = new List<SubReport>();
         [Category("Sub-Reports"), DisplayName("Sub Reports"), Description("Defines sub-reports to navigate from this column."), Id(1, 5)]
@@ -360,13 +383,6 @@ namespace Seal.Model
         public string HelperShowValues
         {
             get { return "<Click to show the column values>"; }
-        }
-
-        [Category("Helpers"), DisplayName("Create Date Columns for Drill"), Description("Create automatically a 'Year' column and a 'Month' column to drill down to the date."), Id(4, 10)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-        public string HelperCreateDrillDates
-        {
-            get { return "<Click to create a 'Year' and a 'Month' column>"; }
         }
 
         string _information;

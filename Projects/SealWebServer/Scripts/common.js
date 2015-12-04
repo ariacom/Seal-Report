@@ -147,7 +147,7 @@ function setNavMenuSize() {
     menu.children().each(function () {
         if ($(this).text().length > maxLen) maxLen = $(this).text().length;
     });
-    menu.css("width", 8 * maxLen + 10);
+    menu.css("width", 8 * maxLen + 35);
 }
 
 function setNavMenuSizeAndPosition() {

@@ -270,20 +270,24 @@ namespace Seal.Model
                         {
                             foreach (var subreport in Element.MetaColumn.SubReports.Where(i => i.Restrictions.Count > 0))
                             {
-                                NavigationLink link = new NavigationLink();
-                                link.Href = string.Format("rpa={0}", HttpUtility.UrlEncode(subreport.Path));
+                                string subReportRestrictions = "";
                                 int index = 1;
                                 foreach (var guid in subreport.Restrictions)
                                 {
                                     var cellValue = SubReportValues.FirstOrDefault(i => i.Element.MetaColumnGUID == guid);
                                     if (cellValue != null)
                                     {
-                                        link.Href += string.Format("&res{0}={1}&val{0}={2}", index, guid, HttpUtility.UrlEncode(cellValue.NavigationValue));
+                                        subReportRestrictions += string.Format("&res{0}={1}&val{0}={2}", index, guid, HttpUtility.UrlEncode(cellValue.NavigationValue));
                                         index++;
                                     }
                                 }
-                                link.Text = report.Repository.RepositoryTranslate("SubReport", Element.MetaColumn.Category + '.' + Element.MetaColumn.DisplayName, subreport.Name);
-                                _links.Add(link);
+                                if (!string.IsNullOrEmpty(subReportRestrictions))
+                                {
+                                    NavigationLink link = new NavigationLink();
+                                    link.Href = string.Format("rpa={0}", HttpUtility.UrlEncode(subreport.Path)) + subReportRestrictions;
+                                    link.Text = report.Repository.RepositoryTranslate("SubReport", Element.MetaColumn.Category + '.' + Element.MetaColumn.DisplayName, subreport.Name);
+                                    _links.Add(link);
+                                }
                             }
                         }
                     }

@@ -15,7 +15,8 @@ namespace Seal.Model
         Page, 
         Row,
         Column,
-        Data
+        Data,
+        Hidden,
     };
 
     public enum DatabaseType

@@ -445,6 +445,10 @@ namespace Seal
                 {
                     MessageBox.Show(string.Format("Error loading the report:\r\n{0}", _report.LoadErrors), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+                if (!string.IsNullOrEmpty(_report.UpgradeWarnings))
+                {
+                    MessageBox.Show(_report.UpgradeWarnings, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             if (_reportViewer != null && _reportViewer.Visible) _reportViewer.Close();
             toolsHelper.Report = _report;
@@ -636,6 +640,8 @@ namespace Seal
                 if (selectedEntity is MetaJoin && !((MetaJoin)selectedEntity).IsEditable) entity.SetReadOnly();
                 if (selectedEntity is MetaColumn && !((MetaColumn)selectedEntity).MetaTable.IsEditable) entity.SetReadOnly();
                 if (selectedEntity is MetaEnum && !((MetaEnum)selectedEntity).IsEditable) entity.SetReadOnly();
+
+                if (selectedEntity is MetaColumn) ((MetaColumn)selectedEntity).HideSubReports();
             }
             else if (selectedEntity is ReportView)
             {

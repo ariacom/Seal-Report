@@ -25,7 +25,7 @@ namespace Seal.Model
             UpdateEditorAttributes();
         }
 
-        public void SetReadOnly()
+        virtual public void SetReadOnly()
         {
             foreach (var property in Properties) property.SetIsReadOnly(true);
         }
