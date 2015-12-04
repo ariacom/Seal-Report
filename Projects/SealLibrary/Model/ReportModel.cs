@@ -555,7 +555,7 @@ namespace Seal.Model
                             element.Source = Source;
                             element.Model = this;
                             element.MetaColumnGUID = guid;
-                            element.PivotPosition = PivotPosition.Row;
+                            element.PivotPosition = PivotPosition.Hidden;
                             element.IsForNavigation = true;
                             element.SortOrder = SortOrderConverter.kNoSortKeyword;
                             Elements.Add(element);

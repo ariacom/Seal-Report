@@ -351,8 +351,12 @@ namespace Seal.Model
                 return !string.IsNullOrEmpty(WebUrl) && !HasValidationErrors ? Translate("This report has execution errors. Please check details in the Windows Event Viewer...") : ExecutionErrors;
             }
         }
+
         [XmlIgnore]
         public string LoadErrors = "";
+
+        [XmlIgnore]
+        public string UpgradeWarnings = "";
 
         [XmlIgnore]
         public string TemplateParsingErrors;
@@ -1017,7 +1021,7 @@ namespace Seal.Model
             {
                 if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
                 {
-                    return string.Format("<link type='text/css' href='../Scripts/{0}' rel='stylesheet'/>", fileName);
+                    return string.Format("<link type='text/css' href='{0}Scripts/{1}' rel='stylesheet'/>", WebUrl, fileName);
                 }
                 else
                 {
