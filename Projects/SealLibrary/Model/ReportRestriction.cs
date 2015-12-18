@@ -960,7 +960,8 @@ namespace Seal.Model
                 else
                 {
                     date = GetFinalDate(keyword, date);
-                    result = ElementDisplayValue(date);
+                    //for date, format should be synchro with the date picker, whîch should use short date
+                    result = ((IFormattable)date).ToString(Model.Report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, Model.Report.ExecutionView.CultureInfo);
                 }
             }
             else

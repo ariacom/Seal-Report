@@ -3,11 +3,11 @@
   <DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString>
   <TaskFolderName>Seal Report</TaskFolderName>
   <DefaultCulture />
-  <IsLocal>true</IsLocal>
+  <IsLocal>false</IsLocal>
   <LogoName>logo.jpg</LogoName>
   <LogDays>30</LogDays>
   <WebProductName>Seal Report</WebProductName>
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>
   <WebApplicationName>/Seal</WebApplicationName>
-  <WebPublicationDirectory>/Seal</WebPublicationDirectory>
+  <WebPublicationDirectory>C:\inetpub\wwwroot\Seal</WebPublicationDirectory>
 </SealServerConfiguration>

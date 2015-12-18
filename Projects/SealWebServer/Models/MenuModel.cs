@@ -14,5 +14,6 @@ namespace SealWebServer.Models
     {
         public Repository Repository;
         public SecurityUser User;
+        public string MainPath;
     }
 }

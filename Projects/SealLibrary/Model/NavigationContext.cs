@@ -53,6 +53,9 @@ namespace Seal.Model
                     }
                     index++;
                 }
+                //Get display value
+                string dis = HttpUtility.ParseQueryString(navigation).Get("dis");
+                if (!string.IsNullOrEmpty(dis)) srcRestriction = HttpUtility.ParseQueryString(navigation).Get("dis");
             }
             else
             {
@@ -69,15 +72,21 @@ namespace Seal.Model
                 foreach (var model in newReport.Models)
                 {
                     ReportElement element = model.Elements.FirstOrDefault(i => i.MetaColumnGUID == src);
-                    if (element != null)
+                    //Has already restriction ? if down check src, if up check dest
+                    bool hasAlreadyRestriction = model.Restrictions.Exists(i => i.MetaColumnGUID == (val != null ? src : dst));
+                    if (element != null || hasAlreadyRestriction)
                     {
-                        //If the dest element is already in the model, we can remove it
-                        if (model.Elements.Exists(i => i.MetaColumnGUID == dst && i.PivotPosition == element.PivotPosition)) model.Elements.Remove(element);
-                        else element.ChangeColumnGUID(dst);
-                        destLabel = element.DisplayNameElTranslated;
+                        if (element != null)
+                        {
+                            string initialLabel = element.DisplayNameEl;
+                            element.ChangeColumnGUID(dst);
+                            destLabel = element.DisplayNameElTranslated;
+                            newReport.ExecutionView.ReplaceInParameterValues("chart_nvd3_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
+                        }
+
                         if (val != null)
                         {
-                            //Add restriction 
+                            //Drill Down: Add restriction 
                             ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
                             restriction.Source = model.Source;
                             restriction.Model = model;
@@ -94,6 +103,7 @@ namespace Seal.Model
                         }
                         else
                         {
+                            //Drill Down: Remove restrictions 
                             var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
                             foreach (var restr in restrictions)
                             {

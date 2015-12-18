@@ -5,7 +5,7 @@
     Repository repository = user.Security.Repository;
 }
 <input type="hidden" autofocus="autofocus" />
-<form id="userInfoForm" action="@ReportExecution.SetUserInfo" method="post" target="_top">
+<form id="userInfoForm" action="@ReportExecution.ActionSetUserInfo" method="post" target="_top">
     <div class="dataTables_wrapper">
         <table class="data_table">
             <tr class="even"><th class="cell_value">@repository.TranslateWeb("User Name")</th><td class="cell_value">@user.Name</td></tr>

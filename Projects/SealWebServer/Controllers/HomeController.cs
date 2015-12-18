@@ -81,7 +81,7 @@ namespace SealWebServer.Controllers
         ContentResult HandleException(Exception ex)
         {
             Helper.WriteLogEntryWeb(EventLogEntryType.Error, "Unexpected error got:\r\n{0}\r\n\r\n{1}\r\n\r\n{2}", ex.Message, Request.Url.OriginalString, ex.StackTrace);
-            return Content(string.Format("<b>Got unexpected exception:</b><br>{0}", ex.Message));
+            return Content(string.Format("<b>Sorry, we got an unexpected exception.</b><br>Please consult the Windows Event Log on the server machine to have more information..."));
         }
 
         bool CheckAuthentication()
@@ -167,7 +167,7 @@ namespace SealWebServer.Controllers
             return result;
         }
 
-        public ActionResult Login(string user_name, string password)
+        public ActionResult ActionLogin(string user_name, string password)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace SealWebServer.Controllers
                 WebUser.WebUserName = user_name;
                 WebUser.WebPassword = password;
                 Authenticate();
-                return Redirect("Main");
+                return Redirect(Request.ApplicationPath == "/" ? "/" : "Main");
             }
             catch (Exception ex)
             {
@@ -186,12 +186,12 @@ namespace SealWebServer.Controllers
             }
         }
 
-        public ActionResult Logout()
+        public ActionResult ActionLogout()
         {
             try
             {
                 CreateWebUser();
-                return Redirect("Main");
+                return Redirect(Request.ApplicationPath == "/" ? "/" : "Main");
             }
             catch (Exception ex)
             {
@@ -218,7 +218,7 @@ namespace SealWebServer.Controllers
                     cookie.Expires = DateTime.Now.AddYears(2);
                     Response.Cookies.Add(cookie);
                 }
-                return Redirect("Main");
+                return Redirect(Request.ApplicationPath == "/" ? "/" : "Main");
             }
             catch (Exception ex)
             {
@@ -232,7 +232,7 @@ namespace SealWebServer.Controllers
             try
             {
                 CheckAuthentication();
-                result = View(new MenuModel() { Repository = Repository, User = WebUser });
+                result = View(new MenuModel() { Repository = Repository, User = WebUser, MainPath = (Request.ApplicationPath == "/" ? "/" : "Main") });
             }
             catch (Exception ex)
             {

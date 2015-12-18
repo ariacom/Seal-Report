@@ -219,6 +219,7 @@ namespace Seal.Model
                 //val : value of the restriction
                 //res : guid element for a restriction
                 //rpa : report path for sub-report
+                //dis : display value for sub-report
  
 
                 if (_links == null)
@@ -233,6 +234,9 @@ namespace Seal.Model
                             var metaData = Element.Source.MetaData;
                             foreach (string childGUID in Element.MetaColumn.DrillChildren)
                             {
+                                //Check that the element is not already in the model
+                                if (Element.Model.Elements.Exists(i => i.MetaColumnGUID == childGUID && i.PivotPosition == Element.PivotPosition)) continue;
+
                                 var child = metaData.GetColumnFromGUID(childGUID);
                                 if (child != null)
                                 {
@@ -248,9 +252,11 @@ namespace Seal.Model
                             //Element.MetaColumn.DillUpOnlyIfDD
                             foreach (MetaTable table in Element.Source.MetaData.Tables)
                             {
-                                var parentColumn = table.Columns.FirstOrDefault(i => i.DrillChildren.Contains(Element.MetaColumnGUID));
-                                if (parentColumn != null)
+                                foreach(MetaColumn parentColumn in table.Columns.Where(i => i.DrillChildren.Contains(Element.MetaColumnGUID)))
                                 {
+                                    //Check that the element is not already in the model
+                                    if (Element.Model.Elements.Exists(i => i.MetaColumnGUID == parentColumn.GUID && i.PivotPosition == Element.PivotPosition)) continue;
+
                                     if (Element.MetaColumn.DrillUpOnlyIfDD)
                                     {
                                         //check that the drill down occured
@@ -284,7 +290,13 @@ namespace Seal.Model
                                 if (!string.IsNullOrEmpty(subReportRestrictions))
                                 {
                                     NavigationLink link = new NavigationLink();
-                                    link.Href = string.Format("rpa={0}", HttpUtility.UrlEncode(subreport.Path)) + subReportRestrictions;
+                                    link.Href = string.Format("rpa={0}", HttpUtility.UrlEncode(subreport.Path));
+                                    if (subreport.Restrictions.Count > 1 || !subreport.Restrictions.Contains(Element.MetaColumn.GUID))
+                                    {
+                                        //Add the display value if necessary
+                                        link.Href += string.Format("&dis={0}", HttpUtility.UrlEncode(DisplayValue));
+                                    }
+                                    link.Href += subReportRestrictions;
                                     link.Text = report.Repository.RepositoryTranslate("SubReport", Element.MetaColumn.Category + '.' + Element.MetaColumn.DisplayName, subreport.Name);
                                     _links.Add(link);
                                 }

@@ -38,7 +38,7 @@
     Template.Parameters.Add(new Parameter() { Name = "sub_report_enabled", DisplayName = "Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled for this model if enabled in the root view" });
 
     //NVD3 Chart
-    Template.Parameters.Add(new Parameter() { Name = "chart_nvd3_title", Category = ViewParameterCategory.NVD3, DisplayName = "Chart Title", Description = "Optional title displayed at the bottom of the NVD3 chart" });
+    Template.Parameters.Add(new Parameter() { Name = "chart_nvd3_title", Category = ViewParameterCategory.NVD3, DisplayName = "Chart Title", Description = "Optional title displayed for the NVD3 chart. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_hide_controls", Category = ViewParameterCategory.NVD3, DisplayName = "Force Hide Controls", BoolValue = false, Description = "If true, controls (depending on chart type) to interact with the series are hidden" });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_show_legend", Category = ViewParameterCategory.NVD3, DisplayName = "Show Legend", BoolValue = true, Description = "If true, the legend is displayed in the chart" });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_bar_stacked", Category = ViewParameterCategory.NVD3, DisplayName = "Bar Stacked", BoolValue = false, Description = "If true, the Bar in chart are stacked (only for Bar chart)" });
