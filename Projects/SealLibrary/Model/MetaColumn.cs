@@ -341,11 +341,11 @@ namespace Seal.Model
             set { _subReports = value; }
         }
 
-        [Category("Sub-Reports"), DisplayName("Create a Sub-Report"), Description("Create a first Sub-Report to display the detail of this table."), Id(2, 5)]
+        [Category("Sub-Reports"), DisplayName("Create a Sub-Report"), Description("Create a Sub-Report to display the detail of this table."), Id(2, 5)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCreateSubReport
         {
-            get { return "<Click to create a first Sub-Report to display the detail of this table>"; }
+            get { return "<Click to create a Sub-Report to display the detail of this table>"; }
         }
 
         [Category("Sub-Reports"), DisplayName("Add an existing Sub-Report"), Description("Add an existing Sub-Report to this column."), Id(2, 5)]

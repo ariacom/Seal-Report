@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GUID>015ab239-08f4-49cc-b6cd-0f44ac5bc667</GUID>
+  <GUID>a3156f93-6c5d-48b0-b0cd-bd77e6b182e9</GUID>
   <Sources>
     <ReportSource>
       <GUID>db41093d-d76c-4e64-849a-27a024e52816</GUID>
@@ -144,14 +144,14 @@
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[f4429620-6256-4f49-accc-f657c442499b]
+      <Restriction>[e7d89367-9862-4968-b5de-342223e72474]
 AND [73e4e19d-deca-4b91-824a-4837c79cfc95]
 AND [55b4a1b1-dc14-4421-aeab-7ae6c3812094]
 AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>f4429620-6256-4f49-accc-f657c442499b</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>e7d89367-9862-4968-b5de-342223e72474</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -159,7 +159,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -177,7 +177,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -446,23 +446,22 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[2a138eb8-4b80-4b35-9155-7f32503301e4]
+      <Restriction>[bbb49ee6-a879-4a2d-9ca9-ab0da80c74ee]
 AND [4fd84496-4d25-4c0b-bd05-c8e87fc6b331]
 AND [adb58d0e-ed3b-4ce7-add9-ed5090116730]
 AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>2a138eb8-4b80-4b35-9155-7f32503301e4</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>bbb49ee6-a879-4a2d-9ca9-ab0da80c74ee</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -480,7 +479,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -750,23 +749,22 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[632e5d54-adb8-43fb-84c9-d69251342b2e]
+      <Restriction>[2eb5255b-8e47-44ed-ae97-92746de2e8e6]
 AND [34da2119-d5a1-4b13-a97a-7cc76678a2bd]
 AND [02ce1155-0b54-4f87-85cc-a11897ea80e0]
 AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>632e5d54-adb8-43fb-84c9-d69251342b2e</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>2eb5255b-8e47-44ed-ae97-92746de2e8e6</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -784,7 +782,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -1020,23 +1018,22 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[c4419e84-df29-4aae-8c5a-5b17a72bff2b]
+      <Restriction>[d8a9cb66-9ed6-46be-b34c-d2083fba516b]
 AND [05a39809-afd2-400a-858d-0dce6cb0ccb5]
 AND [4efcbeaa-e51d-46b2-b487-3359585dfafe]
 AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>c4419e84-df29-4aae-8c5a-5b17a72bff2b</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>d8a9cb66-9ed6-46be-b34c-d2083fba516b</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -1054,7 +1051,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -1324,23 +1321,22 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[b985b961-8d98-4046-92d9-0320a121414f]
+      <Restriction>[f053313f-de25-4fb3-86e0-918b4c39d038]
 AND [2e3372c6-207c-47c8-8945-dd72392dc010]
 AND [50472d27-50b8-4f67-83a5-5fe010bffa2c]
 AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>b985b961-8d98-4046-92d9-0320a121414f</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>f053313f-de25-4fb3-86e0-918b4c39d038</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -1358,7 +1354,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -1628,23 +1624,22 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[3423014d-082a-4901-b958-dd5ddcf8bf8e]
+      <Restriction>[f63aeede-92a3-437c-acdd-3151e9ea2ea3]
 AND [83937d59-679b-4c88-bdce-75d0c139ad94]
 AND [00ac935c-2a25-46c6-b392-a985ac5e6a80]
 AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>3423014d-082a-4901-b958-dd5ddcf8bf8e</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>f63aeede-92a3-437c-acdd-3151e9ea2ea3</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -1662,7 +1657,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -1931,23 +1926,22 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[e1ae1e37-50d4-4bb1-a14e-35f2f5b6586e]
+      <Restriction>[add364a6-f217-49db-aad9-829f86d45f78]
 AND [4fde1f64-779e-400d-ab53-8c4dac49c4d1]
 AND [3735c464-e8f6-4760-86d7-e56a7d8ff572]
 AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>e1ae1e37-50d4-4bb1-a14e-35f2f5b6586e</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>add364a6-f217-49db-aad9-829f86d45f78</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -1965,7 +1959,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -2234,23 +2228,22 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[c878699a-64b7-44a4-8d8b-cddb1faa5fe3]
+      <Restriction>[3df3fb28-7245-447d-8230-13f3c15408f8]
 AND [fc5aa6fd-a2c2-4e70-a37b-6c3e39b24e76]
 AND [9daa2e06-f043-4aa4-9fe3-c556ca6ee90b]
 AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>c878699a-64b7-44a4-8d8b-cddb1faa5fe3</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>3df3fb28-7245-447d-8230-13f3c15408f8</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -2268,7 +2261,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -2630,9 +2623,9 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SerieDefinition>NVD3Serie</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <Nvd3Serie>Line</Nvd3Serie>
           <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
+          <YAxisType>Secondary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -2681,23 +2674,22 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[7f1daf82-610d-4f74-8aa2-e6ddb5640406]
+      <Restriction>[ea3a4238-6dc5-41db-8776-102bb456cb4a]
 AND [47db8b07-89a1-4cbf-ace9-9335fb2585f3]
 AND [8c7f789b-85a8-4f72-8ef2-519c8453100d]
 AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>7f1daf82-610d-4f74-8aa2-e6ddb5640406</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>ea3a4238-6dc5-41db-8776-102bb456cb4a</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -2715,7 +2707,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -2984,23 +2976,22 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[139b7e91-50ba-495e-a228-bc7bf1c04e36]
+      <Restriction>[7664e472-2ee9-432b-9043-bd19a78d2dca]
 AND [ac203578-5166-4869-9cc8-9d54c90de630]
 AND [3b272d83-7016-4379-aa05-38361de6822a]
 AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>139b7e91-50ba-495e-a228-bc7bf1c04e36</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>7664e472-2ee9-432b-9043-bd19a78d2dca</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -3018,7 +3009,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -3287,23 +3278,22 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[b41d42e9-490c-4c6c-9df6-d73f4e709b42]
+      <Restriction>[806a0325-ac3c-44e0-bb9e-178b9a3afeb1]
 AND [f321d7d8-2ee0-4b16-b5dd-de754fe3acc5]
 AND [50199ce6-5c59-45e2-86df-567d99c3fbc7]
 AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>b41d42e9-490c-4c6c-9df6-d73f4e709b42</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>806a0325-ac3c-44e0-bb9e-178b9a3afeb1</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -3321,7 +3311,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -3790,14 +3780,14 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
-      <Restriction>[5f8a32a8-e7fa-4edf-a4d5-3dc47aca708e]
+      <Restriction>[b3057c2a-ac93-431c-9611-9b6d4f1e2d46]
 AND [1a2e5c0a-ebcd-489a-81f2-ac0b8ccc72aa]
 AND [d2abc975-9c03-46f5-9d06-0c636bad1366]
 AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>5f8a32a8-e7fa-4edf-a4d5-3dc47aca708e</GUID>
-          <Name>Orders.OrderDate</Name>
+          <GUID>b3057c2a-ac93-431c-9611-9b6d4f1e2d46</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -3805,7 +3795,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
@@ -3823,7 +3813,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
@@ -4048,7 +4038,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales per category and country</Value>
+                      <Value>Sales per %Category% and %Customer Country%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4146,7 +4136,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales per country per month</Value>
+                      <Value>Sales per %Customer Country% and %Order Month%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4217,7 +4207,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales per category and employee</Value>
+                      <Value>Sales per %Category% and %Employee Name%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4315,11 +4305,16 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales per employee per month</Value>
+                      <Value>Sales per %Employee Name% and %Order Month%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
                       <Value>False</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>nvd3_script_margin</Name>
+                      <Value>chart.margin({top: 30, left: 70, bottom: 40, right: 70});
+</Value>
                     </Parameter>
                   </Parameters>
                   <CSS>
@@ -4366,7 +4361,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                   <Parameters>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales per category per month</Value>
+                      <Value>Sales per %Category% and %Order Month%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4444,7 +4439,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                   <Parameters>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Discounts per category per month</Value>
+                      <Value>Discounts per %Category% and %Order Month%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4515,7 +4510,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales per country and employee</Value>
+                      <Value>Sales per %Customer Country% and %Employee Name%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_page_separator</Name>
@@ -4578,7 +4573,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales per employee</Value>
+                      <Value>Sales per %Employee Name%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4613,7 +4608,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                   <Parameters>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales and discounts per month</Value>
+                      <Value>Sales and discounts per %Order Month%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4623,6 +4618,22 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Name>nvd3_hide_controls</Name>
                       <Value>True</Value>
                     </Parameter>
+                    <Parameter>
+                      <Name>nvd3_script_additional</Name>
+                      <Value>//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
+//if (chart.isArea != null) chart.isArea(true); //for Line
+//chart.xAxis.showMaxMin(false);
+
+//Override the formatter of second Y Values
+chart.yAxis2.tickFormat(function(value) {
+	return d3.format(',.0f')(value).valueFormat() + " %";
+});</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>nvd3_script_margin</Name>
+                      <Value>chart.margin({top: 30, left: 70, bottom: 40, right: 60});
+</Value>
+                    </Parameter>
                   </Parameters>
                   <CSS>
                     <Parameter>
@@ -4631,7 +4642,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:300px; page-break-inside:avoid;</Value>
+                      <Value>height:300px; width:320px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
@@ -4711,7 +4722,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales per category</Value>
+                      <Value>Sales per %Category%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>

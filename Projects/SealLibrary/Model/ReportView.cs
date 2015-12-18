@@ -238,6 +238,48 @@ namespace Seal.Model
             return parameter == null ? "" : parameter.Value;
         }
 
+        public string GetTranslatedMappedLabel(string text)
+        {
+            string result = text;
+            if(!string.IsNullOrEmpty(text) && text.Count(i => i=='%') > 1)
+            {
+                List<ReportElement> values = new List<ReportElement>();
+                foreach (var element in Model.Elements)
+                {
+                    if (result.Contains("%" + element.DisplayNameEl + "%"))
+                    {
+                        result = result.Replace("%" + element.DisplayNameEl + "%",string.Format("%{0}%", values.Count));
+                        values.Add(element);
+                    }
+                }
+                //Translate it
+                result = Report.TranslateGeneral(result);
+                int i = 0;
+                foreach (var element in values)
+                {
+                    result = result.Replace(string.Format("%{0}%", i++), element.DisplayNameElTranslated);
+                }
+            }
+            else {
+                result = Report.TranslateGeneral(text);
+            }
+            return result;
+        }
+
+        public void ReplaceInParameterValues(string paramName, string pattern, string text)
+        {
+            foreach(var param in Parameters.Where(i => i.Name == paramName && !string.IsNullOrEmpty(i.Value)))
+            {
+                param.Value = param.Value.Replace(pattern, text);
+            }
+
+            foreach (var child in Views)
+            {
+                child.ReplaceInParameterValues(paramName, pattern, text);
+            }
+        }
+
+
         public string GetHtmlValue(string name)
         {
             return Helper.ToHtml(GetValue(name));
@@ -1340,7 +1382,6 @@ namespace Seal.Model
                 //If mix of Line, Bar and Area -> we go for multiChart
                 if (string.IsNullOrEmpty(page.NVD3ChartType) && (hasArea || hasBar || hasLine)) page.NVD3ChartType = "multiChart";
             }
-
         }
         public bool InitPageChart(ResultPage page)
         {

@@ -233,18 +233,20 @@ namespace Seal.Forms
                     }
                     else if (context.PropertyDescriptor.Name == "HelperCreateSubReport")
                     {
-                        Report report = Report.Create(_metaColumn.Source.Repository);
+                        Report report = Report.Create(Repository.Create());
                         //Only on detail view
                         report.Views.Clear();
                         report.AddView(ReportViewTemplate.ModelDetailHTMLName);
                         report.Views[0].InitParameters(true);
                         report.Views[0].Parameters.First(i => i.Name == "restriction_button").BoolValue = false; 
 
-                        report.Sources.RemoveAll(i => i.MetaSourceGUID != _metaColumn.MetaTable.Source.GUID);
+                        report.Sources.RemoveAll(i => i.MetaSourceGUID != _metaColumn.Source.GUID);
+
+                        if (report.Sources.Count == 0) throw new Exception("Unable to create the detail report. Please save the Data Source first...");
 
                         //And one model
                         ReportModel model = report.Models[0];
-                        model.SourceGUID = report.Sources[0].GUID;
+                        model.SourceGUID = _metaColumn.Source.GUID;
                         //Add all the element of the table
                         foreach (var el in _metaColumn.MetaTable.Columns.OrderBy(i => i.DisplayOrder))
                         {

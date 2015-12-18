@@ -858,24 +858,7 @@
               <string>12ce241a-1f80-4b69-a023-66df46152046</string>
             </DrillChildren>
             <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
-            <SubReports>
-              <SubReport>
-                <Name>Product Detail1</Name>
-                <Path>%SEALREPOSITORY%\SubReports\Product Detail1.srex</Path>
-                <Restrictions>
-                  <string>d0a693f9-e276-4e6d-9ac2-d4d031610430</string>
-                </Restrictions>
-              </SubReport>
-              <SubReport>
-                <Name>Product Detail</Name>
-                <Path>%SEALREPOSITORY%\SubReports\Product Detail.srex</Path>
-                <Restrictions>
-                  <string>d0a693f9-e276-4e6d-9ac2-d4d031610430</string>
-                  <string>f1ca9f05-b6a3-46da-b753-68cb4056cb66</string>
-                  <string>75715efd-6f8a-48ba-8f8e-2297d956d184</string>
-                </Restrictions>
-              </SubReport>
-            </SubReports>
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</GUID>

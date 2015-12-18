@@ -174,7 +174,7 @@ function initNavMenu() {
             setNavMenuSize();
 
             $("#nav_menu").css("display", "inline");
-            $("#nav_menu").css("top", $(this).offset().top + $(this).height() + 5);
+            $("#nav_menu").css("top", $(this).offset().top + $(this).height()+3);
             $("#nav_menu").css("left", $(this).offset().left);
         }
     });

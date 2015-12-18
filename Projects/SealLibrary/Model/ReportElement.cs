@@ -31,15 +31,13 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                bool showFormat = IsEnum || TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric;
 
                 GetProperty("DisplayNameEl").SetIsBrowsable(true);
                 GetProperty("SQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("CellCss").SetIsBrowsable(true);
-                GetProperty("HasHTMLTags").SetIsBrowsable(true);
+                GetProperty("HasHTMLTags").SetIsBrowsable(!IsEnum);
                 GetProperty("SortOrder").SetIsBrowsable(true);
-                GetProperty("Format").SetIsBrowsable(showFormat);
-                GetProperty("TypeEd").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("TypeEd").SetIsBrowsable(!IsEnum && !Source.IsNoSQL);
 
                 GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
                 GetProperty("TotalAggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data);
@@ -47,11 +45,9 @@ namespace Seal.Model
                 GetProperty("CellScript").SetIsBrowsable(true);
                 GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data && IsNumeric);
 
-                if (showFormat)
-                {
-                    GetProperty("NumericStandardFormat").SetIsBrowsable(IsNumeric);
-                    GetProperty("DateTimeStandardFormat").SetIsBrowsable(IsDateTime);
-                }
+                GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
+                GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
+                GetProperty("DateTimeStandardFormat").SetIsBrowsable(!IsEnum && IsDateTime && (TypeEd == ColumnType.DateTime || Type == ColumnType.Default));
 
                 GetProperty("SerieDefinition").SetIsBrowsable(PivotPosition != PivotPosition.Page);
                 GetProperty("SerieType").SetIsBrowsable(PivotPosition == PivotPosition.Data && _serieDefinition == SerieDefinition.Serie);

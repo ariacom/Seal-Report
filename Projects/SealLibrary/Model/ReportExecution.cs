@@ -40,6 +40,7 @@ namespace Seal.Model
         public const string ActionViewExcelResult = "ActionViewExcelResult";
         public const string ActionNavigate = "ActionNavigate";
         public const string ActionLogin = "ActionLogin";
+        public const string ActionLogout = "ActionLogout";
         public const string ActionSetUserInfo = "ActionSetUserInfo";
         public const string ActionGetNavigationLinks = "ActionGetNavigationLinks";
 
@@ -605,9 +606,23 @@ namespace Seal.Model
                     {
                         foreach (var guid in subreport.Restrictions)
                         {
-                            for (int j = 0; j < cellValues.Length; j++)
+                            bool done = false;
+                            for (int j = 0; j < cellValues.Length && !done; j++)
                             {
-                                if (guid == cellValues[j].Element.MetaColumnGUID) cellsToAssign[i].SubReportValues.Add(cellValues[j]);
+                                if (guid == cellValues[j].Element.MetaColumnGUID)
+                                {
+                                    cellsToAssign[i].SubReportValues.Add(cellValues[j]);
+                                    done = true;
+                                }
+                            }
+                            //try in the cells themselves...
+                            for (int j = 0; j < cellsToAssign.Length && !done; j++)
+                            {
+                                if (guid == cellsToAssign[j].Element.MetaColumnGUID)
+                                {
+                                    cellsToAssign[i].SubReportValues.Add(cellsToAssign[j]);
+                                    done = true;
+                                }
                             }
                         }
                     }

@@ -266,7 +266,7 @@
 
 
     <div id="loginDialog" title="@(@repository.Configuration.WebProductName + " " + repository.TranslateWeb("Login"))">
-        <form id="loginForm" action="Login" method="post" target="_top">
+        <form id="loginForm" action="@ReportExecution.ActionLogin" method="post" target="_top">
             <fieldset>
                 <label for="name">@repository.TranslateWeb("User Name")</label>
                 <input type="text" name="user_name" id="user_name" value="" class="text ui-widget-content ui-corner-all">

@@ -77,13 +77,13 @@
         <hr />
         }
         <img src="~/Images/home.gif" />
-        <a href="Main" target="_top" title="@repository.TranslateWeb("Reload the folders and the report list")" style="font-weight: bold;">@repository.TranslateWeb("Home")</a>
+        <a href="@menuModel.MainPath" target="_top" title="@repository.TranslateWeb("Reload the folders and the report list")" style="font-weight: bold;">@repository.TranslateWeb("Home")</a>
 
         @if (user.IsAuthenticated && user.Security.PromptUserPassword)
         {
                 <hr />
                 <img src="~/Images/logout.gif" />
-                <a href="Logout" target="_top" title="@repository.TranslateWeb("Logout the user")">@repository.TranslateWeb("Logout")</a>
+                <a href="@ReportExecution.ActionLogout" target="_top" title="@repository.TranslateWeb("Logout the user")">@repository.TranslateWeb("Logout")</a>
         }
     </div>
 </body>

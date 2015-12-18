@@ -56,6 +56,9 @@
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -72,6 +75,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>cd851739-cbde-4998-a9c5-40c75e4a6f51</GUID>
@@ -84,6 +89,9 @@
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -100,6 +108,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>a4562ccd-9853-41f8-9f90-5cc554385b29</GUID>
@@ -113,6 +123,9 @@
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -120,7 +133,7 @@
           <CalculationOption>No</CalculationOption>
           <ShowTotal>RowColumn</ShowTotal>
           <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
@@ -129,6 +142,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>1915b2e8-d808-4cd6-a2dd-5f378d501f92</GUID>
@@ -142,6 +157,9 @@
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -152,9 +170,9 @@
           <SerieDefinition>NVD3Serie</SerieDefinition>
           <AxisUseValues>true</AxisUseValues>
           <SerieType>Point</SerieType>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <Nvd3Serie>Line</Nvd3Serie>
           <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
+          <YAxisType>Secondary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -244,6 +262,8 @@
 	}
 }
 </CellScript>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>1915b2e8-d808-4cd6-a2dd-5f378d501f92</GUID>
@@ -257,6 +277,9 @@
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
           <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -313,6 +336,8 @@
     }*/
 }
 </CellScript>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>4f957ce2-453c-464f-a398-d3fc00850acc</GUID>
@@ -325,6 +350,9 @@
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Page</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -341,6 +369,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[cb0ec4ed-77de-4b3d-a518-fc2118ffca87]</Restriction>
@@ -356,6 +386,9 @@
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>0</Format>
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
@@ -371,11 +404,14 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>None</Prompt>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>0</FormatRe>
+          <UseAsParameter>false</UseAsParameter>
           <Operator>GreaterEqual</Operator>
           <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
@@ -390,6 +426,7 @@
   </Models>
   <Outputs />
   <Tasks />
+  <CommunTaskScript />
   <Views>
     <ReportView>
       <GUID>16af14fb-10bb-44e4-ba73-09a9cb908f89</GUID>

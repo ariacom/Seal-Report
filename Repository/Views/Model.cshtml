@@ -208,7 +208,7 @@
                                 var svgJQ = $("#@chartName svg");
 
                                 var showAllAxisLabels = @Helper.ToJS(View.GetBoolValue("chart_show_all_axis_labels"));
-                                var chartTitle = '@Raw(Helper.ToJS(Report.TranslateGeneral(View.GetValue("chart_nvd3_title"))))';
+                                var chartTitle = '@Raw(Helper.ToJS(View.GetTranslatedMappedLabel(View.GetValue("chart_nvd3_title"))))';
                                 var showLegend = @Helper.ToJS(View.GetBoolValue("nvd3_show_legend"));
                                 var forceHideControls = @Helper.ToJS(View.GetBoolValue("nvd3_hide_controls") || Report.PrintLayout);
                                 var barStacked = @Helper.ToJS(View.GetBoolValue("nvd3_bar_stacked"));
