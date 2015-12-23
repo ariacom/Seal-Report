@@ -86,7 +86,6 @@ ReportViewName;\Dashboard - Sales.srex;Orders;;Commandes;
 ReportViewName;\Dashboard - Sales.srex;Dashboard;;Tableau de bord;
 ReportGeneral;\Dashboard - Sales.srex;Sales and discounts per %Order Month%;;Ventes et rabais par %Order Month%;
 ReportGeneral;\Dashboard - Sales.srex;Sales per %0%;;Ventes par %0%;
-ReportGeneral;\Dashboard - Sales.srex;Sales and discounts per %0%;;Ventes et rabais par %0%;
 ReportGeneral;\Dashboard - Sales.srex;Sales per %0% and %1%;;Ventes par %0% et %1%;
 ReportGeneral;\Dashboard - Sales.srex;Discounts per %0% and %1%;;Rabais par %0% et %1%;
 ReportOutputName;\Dashboard - Sales.srex;HTML File;;Fichier HTML;

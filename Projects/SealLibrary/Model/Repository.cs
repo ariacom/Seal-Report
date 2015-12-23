@@ -518,24 +518,12 @@ namespace Seal.Model
             }
             return result;
         }
-
+        
         public string RepositoryTranslate(string context, string instance, string reference)
         {
             return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, context, instance, reference);
         }
-
-        public string TranslateElement(ReportElement element, string reference)
-        {
-            return RepositoryTranslate("Element", element.MetaColumn.Category + '.' + element.DisplayNameEl, reference);
-        }
-
-        public string EnumDisplayValue(MetaEnum instance, string id)
-        {
-            string result = instance.GetDisplayValue(id);
-            if (instance.Translate) result = RepositoryTranslate("Enum", instance.Name, result);
-            return result;
-        }
-
+        
         public string TranslateFolderName(string path)
         {
             if (path.Length < ReportsFolder.Length) return Path.GetFileName(path);

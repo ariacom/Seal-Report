@@ -960,7 +960,7 @@ namespace Seal.Model
                                         if (!isHeaderLine) isTotalTitleSet = true;
                                         value = Report.Translate("Total");
                                     }
-                                    if (isHeaderLine && rowTotalElements.Count() > 1) Helper.AddValue(ref value, " ", Report.Repository.TranslateElement(element, element.DisplayNameEl));
+                                    if (isHeaderLine && rowTotalElements.Count() > 1) Helper.AddValue(ref value, " ", Report.TranslateElement(element, element.DisplayNameEl));
                                     if (!string.IsNullOrEmpty(value)) totalCell.IsTitle = true;
                                     totalCell.Value = value;
                                 }
@@ -1565,6 +1565,7 @@ namespace Seal.Model
 
         public string GenerateHTMLResult()
         {
+            Report.IsNavigating = false;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.DisplayFolder, Path.GetFileName(Report.ResultFileName)));
             if (Report.IsBasicHTMLWithNoOutput)
             {
@@ -1585,6 +1586,7 @@ namespace Seal.Model
 
         public string GeneratePrintResult()
         {
+            Report.IsNavigating = false;
             Parameter printParameter = Report.PrintLayoutParameter;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.DisplayFolder, Path.GetFileName(Report.ResultFileName)));
             if (printParameter != null)
@@ -1633,6 +1635,7 @@ namespace Seal.Model
             return Report.ExecutionView.ConvertToExcel(path);
         }
 
+        public bool IsConvertingToPDF = false; //If true, do not run conversion again
         public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...
 
         //cache management of template compilation
@@ -1658,117 +1661,5 @@ namespace Seal.Model
                 if (CompiledViews.Exists(i => i == viewGUID)) CompiledViews.Remove(viewGUID);
             }
         }
-
-        #region Navigation
-
-        /*
-        public ReportExecution Navigate(string navigation)
-        {
-            ReportExecution result = this;
-            string sre = HttpUtility.ParseQueryString(navigation).Get("sre");
-            Report lastReport = Report;
-            string destLabel = "", srcRestriction = "", srcGUID = "";
-
-            //create HTML result for navigation -> NavigationLinks must have one link to activate the button
-            NavigationLink lastLink = null;
-            if (lastReport.NavigationLinks.Count == 0)
-            {
-                lastLink = new NavigationLink();
-                lastReport.NavigationLinks.Add(lastLink);
-            }
-            else lastLink = result.Report.NavigationLinks.Last();
-
-            lastReport.IsNavigating = true;
-            string lastHTMLResultPath = GenerateHTMLResult();
-            if (!string.IsNullOrEmpty(Report.WebUrl)) lastHTMLResultPath = Report.WebTempUrl + Path.GetFileName(lastHTMLResultPath);
-
-
-            if (!string.IsNullOrEmpty(sre))
-            {
-                //Sub-Report
-                string path = sre.Replace(Repository.SealRepositoryKeyword, Report.Repository.RepositoryPath);
-                Report newReport = Report.LoadFromFile(path, Report.Repository);
-                newReport.WebUrl = lastReport.WebUrl;
-                newReport.NavigationLinks.AddRange(lastReport.NavigationLinks);
-
-                int index = 1;
-                while (true)
-                {
-                    string res = HttpUtility.ParseQueryString(navigation).Get("res" + index.ToString());
-                    string val = HttpUtility.ParseQueryString(navigation).Get("val" + index.ToString());
-                    if (string.IsNullOrEmpty(res) || string.IsNullOrEmpty(val)) break;
-                    foreach (var model in newReport.Models)
-                    {
-                        foreach (var restriction in model.Restrictions.Where(i => i.MetaColumnGUID == res && i.Prompt == PromptType.Prompt))
-                        {
-                            restriction.SetNavigationValue(val);
-                        }
-                    }
-                    index++;
-                }
-                result = new ReportExecution() { Report = newReport };
-            }
-            else
-            {
-                //Drill
-                string src = HttpUtility.ParseQueryString(navigation).Get("src");
-                string dst = HttpUtility.ParseQueryString(navigation).Get("dst");
-                string val = HttpUtility.ParseQueryString(navigation).Get("val");
-
-                foreach (var model in result.Report.Models)
-                {
-                    ReportElement element = model.Elements.FirstOrDefault(i => i.MetaColumnGUID == src);
-                    if (element != null)
-                    {
-                        //If the dest element is already in the model, we can remove it
-                        if (model.Elements.Exists(i => i.MetaColumnGUID == dst && i.PivotPosition == element.PivotPosition)) model.Elements.Remove(element);
-                        else element.ChangeColumnGUID(dst);
-                        destLabel = element.DisplayNameElTranslated;
-                        if (val != null)
-                        {
-                            destLabel = "> " + destLabel;
-                            //Add restriction 
-                            ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
-                            restriction.Source = model.Source;
-                            restriction.Model = model;
-                            restriction.MetaColumnGUID = src;
-                            restriction.SetDefaults();
-                            restriction.Operator = Operator.Equal;
-                            restriction.SetNavigationValue(val);
-                            model.Restrictions.Add(restriction);
-                            if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) AND ", model.Restriction);
-                            model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
-
-                            srcRestriction = restriction.DisplayText;
-                            srcGUID = restriction.MetaColumnGUID;
-                        }
-                        else
-                        {
-                            destLabel = "< " + destLabel;
-                            var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
-                            foreach (var restr in restrictions)
-                            {
-                                model.Restrictions.Remove(restr);
-                                model.Restriction = model.Restriction.Replace(ReportRestriction.kStartRestrictionChar + restr.GUID + ReportRestriction.kStopRestrictionChar, "1=1");
-                            }
-                        }
-                    }
-                }
-            }
-
-            lastLink.Href = lastHTMLResultPath;
-            if (string.IsNullOrEmpty(lastLink.Text)) lastLink.Text = lastReport.ExecutionName;
-
-            string linkText = string.Format("{0} {1}", result.Report.ExecutionName, destLabel);
-            if (!string.IsNullOrEmpty(srcRestriction)) linkText += string.Format(" [{0}]", srcRestriction);
-            result.Report.NavigationLinks.Add(new NavigationLink() { Href = "#", Text = linkText, Src = srcGUID });
-            result.Report.IsNavigating = true;
-
-            return result;
-        }
-        */
-        #endregion
-
-
     }
 }

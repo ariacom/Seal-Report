@@ -49,7 +49,7 @@ namespace Seal.Model
                 try
                 {
                     if (Value == null) return "";
-                    if (IsTitle) return Element.Model.Report.Repository.TranslateElement(Element, Value.ToString());
+                    if (IsTitle) return Element.Model.Report.TranslateElement(Element, Value.ToString());
                     if (Value is IFormattable) return ((IFormattable)Value).ToString(Element.FormatEl, Element.Model.Report.ExecutionView.CultureInfo);
                 }
                 catch { }
@@ -94,7 +94,7 @@ namespace Seal.Model
                 if (Element.IsEnum)
                 {
                     MetaEV enumValue = null;
-                    if (Element.MetaColumn.Enum.Translate) enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => Element.Model.Report.Repository.EnumDisplayValue(Element.MetaColumn.Enum, i.Id) == result);
+                    if (Element.MetaColumn.Enum.Translate) enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => Element.Model.Report.EnumDisplayValue(Element.MetaColumn.Enum, i.Id) == result);
                     else enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == result);
                     if (enumValue != null) result = enumValue.Id;
                 }
