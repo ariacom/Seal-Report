@@ -596,7 +596,7 @@ namespace Seal.Model
                 {
                     foreach (string enumValue in EnumValues)
                     {
-                        Helper.AddValue(ref result, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, Model.Report.Repository.EnumDisplayValue(EnumRE, enumValue));
+                        Helper.AddValue(ref result, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, Model.Report.EnumDisplayValue(EnumRE, enumValue));
                     }
                 }
                 return result;
@@ -648,7 +648,7 @@ namespace Seal.Model
 
         public string GetEnumDisplayValue(string id)
         {
-            return Model.Report.Repository.EnumDisplayValue(EnumRE, id);
+            return Model.Report.EnumDisplayValue(EnumRE, id);
         }
 
         public bool IsGreaterSmallerOperator

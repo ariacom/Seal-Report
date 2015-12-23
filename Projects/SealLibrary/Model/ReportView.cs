@@ -255,7 +255,7 @@ namespace Seal.Model
                 //Translate it
                 result = Report.TranslateGeneral(result);
                 int i = 0;
-                foreach (var element in values)
+                foreach (var element in values.OrderBy(i => i.DisplayNameEl))
                 {
                     result = result.Replace(string.Format("%{0}%", i++), element.DisplayNameElTranslated);
                 }
@@ -289,6 +289,12 @@ namespace Seal.Model
         {
             Parameter parameter = _parameters.FirstOrDefault(i => i.Name == name);
             return parameter == null ? false : parameter.BoolValue;
+        }
+
+        public bool GetBoolValue(string name, bool defaultValue)
+        {
+            Parameter parameter = _parameters.FirstOrDefault(i => i.Name == name);
+            return parameter == null ? defaultValue : parameter.BoolValue;
         }
 
         public int GetNumericValue(string name)

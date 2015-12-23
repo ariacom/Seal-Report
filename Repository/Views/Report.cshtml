@@ -93,52 +93,52 @@
     </style>
 
     <script type="text/javascript">
-        var generateHTMLDisplay =  @Helper.ToJS(Report.GenerateHTMLDisplay);
+    var generateHTMLDisplay =  @Helper.ToJS(Report.GenerateHTMLDisplay);
 
-        var urlPrefix = "@Report.WebUrl";
-        var executionTimer = null;
-        var hasRestrictions = @Helper.ToJS(Report.HasRestrictions);
-        var hasErrors = @Helper.ToJS(Report.HasErrors);
-        var hasNavigation = @Helper.ToJS(Report.HasNavigation && (Report.IsNavigating || Report.GenerateHTMLDisplay));/*SRKW do not modify*/
-        var showRestrictions = (hasRestrictions && @Helper.ToJS(View.GetBoolValue("restriction_button")));
-        var showResult = @Helper.ToJS(View.GetBoolValue("result_button"));
-        var showInformation = @Helper.ToJS(View.GetBoolValue("information_button"));
-        var showMessage = @Helper.ToJS(View.GetBoolValue("message_button"));
-        var displayMessages = @Helper.ToJS(View.GetBoolValue("display_messages"));
-        var forceExecution = @Helper.ToJS(View.GetBoolValue("force_execution") || Report.HasNavigation);
-        var restrictionsToShow = @Report.NumberOfRestrictionValuesToShow;
-        var isExecuting = @Helper.ToJS(Report.IsExecuting);
-        var isCancel = @Helper.ToJS(Report.Cancel);
-        var printLayout = @Helper.ToJS(Report.PrintLayout);
+    var urlPrefix = "@Report.WebUrl";
+    var executionTimer = null;
+    var hasRestrictions = @Helper.ToJS(Report.HasRestrictions);
+    var hasErrors = @Helper.ToJS(Report.HasErrors);
+    var hasNavigation = @Helper.ToJS(Report.HasNavigation && (Report.IsNavigating || Report.GenerateHTMLDisplay));/*SRKW do not modify*/
+    var showRestrictions = (hasRestrictions && @Helper.ToJS(View.GetBoolValue("restriction_button")));
+    var showResult = @Helper.ToJS(View.GetBoolValue("result_button"));
+    var showInformation = @Helper.ToJS(View.GetBoolValue("information_button"));
+    var showMessage = @Helper.ToJS(View.GetBoolValue("message_button"));
+    var displayMessages = @Helper.ToJS(View.GetBoolValue("display_messages"));
+    var forceExecution = @Helper.ToJS(View.GetBoolValue("force_execution") || Report.HasNavigation);
+    var restrictionsToShow = @Report.NumberOfRestrictionValuesToShow;
+    var isExecuting = @Helper.ToJS(Report.IsExecuting);
+    var isCancel = @Helper.ToJS(Report.Cancel);
+    var printLayout = @Helper.ToJS(Report.PrintLayout);
 
-        var rootViewId = '@View.ViewId';
-        var webExecutionGUID = '@Report.ExecutionGUID';
+    var rootViewId = '@View.ViewId';
+    var webExecutionGUID = '@Report.ExecutionGUID';
 
-        //text
-        var startingExecText = '@Report.Translate("Starting execution...")';
-        var cancelText = '@Report.Translate("Cancel")';
-        var showText = '@Report.Translate("Show")';
-        var hideText = '@Report.Translate("Hide")';
-        var reportCancelledText = '@Raw(Report.Translate("Report has been cancelled"))';
-        var backToTopText = '@Report.Translate("Back to top")';
-        var selectAllText = '@Report.Translate("Select All")';
+    //text
+    var startingExecText = '@Report.Translate("Starting execution...")';
+    var cancelText = '@Report.Translate("Cancel")';
+    var showText = '@Report.Translate("Show")';
+    var hideText = '@Report.Translate("Hide")';
+    var reportCancelledText = '@Raw(Report.Translate("Report has been cancelled"))';
+    var backToTopText = '@Report.Translate("Back to top")';
+    var selectAllText = '@Report.Translate("Select All")';
 
-        //buttons
-        var showButtonIds = ['#result', '#information', '#message', '#restriction'];
-        var showButtonInitValues = [showResult, hasErrors || showInformation, showMessage, showRestrictions];
-        var showButtonLabels = ['@Report.Translate("report result panel")', '@Report.Translate("report information")', '@Report.Translate("execution messages")', '@Report.Translate("report restrictions")'];
-        var showButtonIcons = ['ui-icon-circle-triangle-e', 'ui-icon-info', 'ui-icon-gear', 'ui-icon-zoomin'];
+    //buttons
+    var showButtonIds = ['#result', '#information', '#message', '#restriction'];
+    var showButtonInitValues = [showResult, hasErrors || showInformation, showMessage, showRestrictions];
+    var showButtonLabels = ['@Report.Translate("report result panel")', '@Report.Translate("report information")', '@Report.Translate("execution messages")', '@Report.Translate("report restrictions")'];
+    var showButtonIcons = ['ui-icon-circle-triangle-e', 'ui-icon-info', 'ui-icon-gear', 'ui-icon-zoomin'];
 
-        //datatables and globalization
-        var languageName = '@View.CultureInfo.EnglishName';
-        var dateFormat = '@(View.CultureInfo.DateTimeFormat.ShortDatePattern.Replace("M", "m").Replace("yy", "y"))';
-        var availableDateKeywords = ['@Raw(Report.Translate("Now"))', '@Raw(Report.Translate("Today"))', '@Raw((Report.Translate("Today") + "-1"))', '@Raw(Report.Translate("ThisWeek"))', '@Raw((Report.Translate("ThisWeek") + "-1"))', '@Raw(Report.Translate("ThisMonth"))', '@Raw((Report.Translate("ThisMonth") + "-1"))', '@Raw(Report.Translate("ThisYear"))', '@Raw((Report.Translate("ThisYear") + "-1"))'];
-        var shortDateFormat = '@View.CultureInfo.DateTimeFormat.ShortDatePattern';
-        var isUSdate = shortDateFormat.match(/^m/i);
-        var dateSeparator = '@View.CultureInfo.DateTimeFormat.DateSeparator';
-        var decimalSeparator = '@View.CultureInfo.NumberFormat.NumberDecimalSeparator';
-        var thousandSeparator = '@Raw(Helper.ToJS(View.CultureInfo.NumberFormat.NumberGroupSeparator))';
-        var currencySymbol = '@Raw(Helper.ToJS(@View.CultureInfo.NumberFormat.CurrencySymbol))';
+    //datatables and globalization
+    var languageName = '@View.CultureInfo.EnglishName';
+    var dateFormat = '@(View.CultureInfo.DateTimeFormat.ShortDatePattern.Replace("M", "m").Replace("yy", "y"))';
+    var availableDateKeywords = ['@Raw(Report.Translate("Now"))', '@Raw(Report.Translate("Today"))', '@Raw((Report.Translate("Today") + "-1"))', '@Raw(Report.Translate("ThisWeek"))', '@Raw((Report.Translate("ThisWeek") + "-1"))', '@Raw(Report.Translate("ThisMonth"))', '@Raw((Report.Translate("ThisMonth") + "-1"))', '@Raw(Report.Translate("ThisYear"))', '@Raw((Report.Translate("ThisYear") + "-1"))'];
+    var shortDateFormat = '@View.CultureInfo.DateTimeFormat.ShortDatePattern';
+    var isUSdate = shortDateFormat.match(/^m/i);
+    var dateSeparator = '@View.CultureInfo.DateTimeFormat.DateSeparator';
+    var decimalSeparator = '@View.CultureInfo.NumberFormat.NumberDecimalSeparator';
+    var thousandSeparator = '@Raw(Helper.ToJS(View.CultureInfo.NumberFormat.NumberGroupSeparator))';
+    var currencySymbol = '@Raw(Helper.ToJS(@View.CultureInfo.NumberFormat.CurrencySymbol))';
     </script>
     @Raw(Report.AttachScriptFile("common.js"))
 

@@ -1380,23 +1380,37 @@ namespace Seal.Model
         //Helpers for translations
         public string TranslateDisplayName(string displayName)
         {
-            return Repository.RepositoryTranslate("ReportDisplayName", TranslationFilePath, displayName);
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "ReportDisplayName", TranslationFilePath, displayName);
         }
 
         public string TranslateViewName(string viewName)
         {
-            return Repository.RepositoryTranslate("ReportViewName", TranslationFilePath, viewName);
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "ReportViewName", TranslationFilePath, viewName);
         }
 
         public string TranslateOutputName(string outputName)
         {
-            return Repository.RepositoryTranslate("ReportOutputName", TranslationFilePath, outputName);
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "ReportOutputName", TranslationFilePath, outputName);
         }
 
         public string TranslateGeneral(string reference)
         {
-            return Repository.RepositoryTranslate("ReportGeneral", TranslationFilePath, reference);
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "ReportGeneral", TranslationFilePath, reference);
         }
+
+        public string TranslateElement(ReportElement element, string reference)
+        {
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Element", element.MetaColumn.Category + '.' + element.DisplayNameEl, reference);
+        }
+
+        public string EnumDisplayValue(MetaEnum instance, string id)
+        {
+            string result = instance.GetDisplayValue(id);
+            if (instance.Translate) result = Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Enum", instance.Name, result);
+            return result;
+        }
+
+
         #endregion
 
         #region Log

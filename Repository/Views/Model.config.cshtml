@@ -169,8 +169,8 @@ chart.tooltip.valueFormatter(function(d){
         EditorLanguage = "js",
         TextValue = @"if (chartTitle.length > 0) {
     svg.append('text')
-        .attr('x', Math.max(1,svgJQ.width()/2 - 3*chartTitle.length))
-        .attr('y', svgJQ.height()+ (chartType == 'lineWithFocusChart' ? 10 : -6))
+        .attr('x', Math.max(1, (svgJQ.width() - getTextSize(chartTitle))/2))
+        .attr('y', svgJQ.height()+ (chartType == 'lineWithFocusChart' ? 10 : -4))
         .style('font-weight', 'bold')
         .style('font-size', '14px')
         .text(chartTitle);

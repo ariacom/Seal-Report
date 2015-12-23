@@ -81,7 +81,11 @@ namespace SealWebServer.Controllers
         ContentResult HandleException(Exception ex)
         {
             Helper.WriteLogEntryWeb(EventLogEntryType.Error, "Unexpected error got:\r\n{0}\r\n\r\n{1}\r\n\r\n{2}", ex.Message, Request.Url.OriginalString, ex.StackTrace);
-            return Content(string.Format("<b>Sorry, we got an unexpected exception.</b><br>Please consult the Windows Event Log on the server machine to have more information..."));
+#if DEBUG
+            return Content(string.Format("<b>Sorry, we got an unexpected exception.</b><br>{0}<br>{1}<br>{2}", ex.Message, Request.Url.OriginalString, ex.StackTrace));
+#else
+            return Content("<b>Sorry, we got an unexpected exception.</b><br>Please consult the Windows Event Log on the server machine to have more information...");
+#endif
         }
 
         bool CheckAuthentication()
@@ -517,7 +521,6 @@ namespace SealWebServer.Controllers
             {
                 return HandleException(ex);
             }
-
             return null;
         }
 
@@ -731,7 +734,18 @@ namespace SealWebServer.Controllers
                 if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
-                    string resultPath = execution.GeneratePDFResult();
+                    if (execution.IsConvertingToPDF) return Content(Repository.TranslateWeb("Sorry, the conversion is being in progress in another window..."));
+
+                    string resultPath = "";
+                    try
+                    {
+                        execution.IsConvertingToPDF = true;
+                        resultPath = execution.GeneratePDFResult();
+                    }
+                    finally
+                    {
+                        execution.IsConvertingToPDF = false;
+                    }
                     return Redirect(execution.Report.WebTempUrl + Path.GetFileName(resultPath));
                 }
             }
@@ -752,6 +766,8 @@ namespace SealWebServer.Controllers
                 if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
+                    if (execution.IsConvertingToExcel) return Content(Repository.TranslateWeb("Sorry, the conversion is being in progress in another window..."));
+
                     string resultPath = "";
                     try
                     {

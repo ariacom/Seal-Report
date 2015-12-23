@@ -537,8 +537,6 @@ namespace Seal
         {
             showScriptErrorsToolStripMenuItem.Checked = !showScriptErrorsToolStripMenuItem.Checked;
             Properties.Settings.Default.ShowScriptErrors = showScriptErrorsToolStripMenuItem.Checked;
-            schedulesWithCurrentUserToolStripMenuItem.Checked = !schedulesWithCurrentUserToolStripMenuItem.Checked;
-            Properties.Settings.Default.SchedulesWithCurrentUser = schedulesWithCurrentUserToolStripMenuItem.Checked;
             Properties.Settings.Default.Save();
         }
 

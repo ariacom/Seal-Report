@@ -110,6 +110,7 @@ Web;User Groups;;Groupes utilisateur;Gruppi utenti
 Web;Culture;;Culture;Cultura
 Web;Name;;Nom;Nome
 Web;Sorry, this report is not in your session anymore...;;Désolé, ce rapport n'est plus dans votre session…;
+Web;Sorry, the conversion is being in progress in another window...;;Désolé, la conversion est en cours dans une autre fenêtre…;
 NVD3;Stacked;;Empilée;Impilato/a
 NVD3;Grouped;;Groupée;Raggruppata
 NVD3;Stream;;Flux;Flusso

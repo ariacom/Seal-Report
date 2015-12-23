@@ -4056,7 +4056,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:290px; width:570px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:500px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
@@ -4154,7 +4154,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:290px; width:450px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:500px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
@@ -4225,7 +4225,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:550px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:500px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
@@ -4324,7 +4324,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:450px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:500px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>2</SortOrder>
@@ -4379,7 +4379,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:500px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:500px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>1</SortOrder>
@@ -4457,7 +4457,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:450px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:450px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>1</SortOrder>
@@ -4587,7 +4587,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:300px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:280px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>2</SortOrder>
@@ -4608,7 +4608,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                   <Parameters>
                     <Parameter>
                       <Name>chart_nvd3_title</Name>
-                      <Value>Sales and discounts per %Order Month%</Value>
+                      <Value>Sales per %Order Month%</Value>
                     </Parameter>
                     <Parameter>
                       <Name>show_data_tables</Name>
@@ -4642,7 +4642,7 @@ chart.yAxis2.tickFormat(function(value) {
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:320px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:360px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
@@ -4736,7 +4736,7 @@ chart.yAxis2.tickFormat(function(value) {
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:300px; width:380px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:360px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>1</SortOrder>
@@ -4837,6 +4837,10 @@ chart.yAxis2.tickFormat(function(value) {
   &lt;HtmlViewerHeight&gt;0&lt;/HtmlViewerHeight&gt;
   &lt;ClipHtmlView&gt;false&lt;/ClipHtmlView&gt;
   &lt;JavaScriptEnabled&gt;true&lt;/JavaScriptEnabled&gt;
+  &lt;Enable3DTransformations&gt;false&lt;/Enable3DTransformations&gt;
+  &lt;EnableWebGL&gt;false&lt;/EnableWebGL&gt;
+  &lt;EnableAccelerated2DCanvas&gt;false&lt;/EnableAccelerated2DCanvas&gt;
+  &lt;EnablePersistentStorage&gt;false&lt;/EnablePersistentStorage&gt;
   &lt;SvgFontsEnabled&gt;false&lt;/SvgFontsEnabled&gt;
   &lt;WebFontsEnabled&gt;true&lt;/WebFontsEnabled&gt;
   &lt;PostScriptFontsEnabled&gt;true&lt;/PostScriptFontsEnabled&gt;
@@ -4851,6 +4855,7 @@ chart.yAxis2.tickFormat(function(value) {
   &lt;ImagePartSize&gt;32000&lt;/ImagePartSize&gt;
   &lt;TriggeringMode&gt;ConversionDelay&lt;/TriggeringMode&gt;
   &lt;ConversionDelay&gt;2&lt;/ConversionDelay&gt;
+  &lt;ManualTriggeringConversionDelay&gt;2&lt;/ManualTriggeringConversionDelay&gt;
   &lt;NavigationTimeout&gt;60&lt;/NavigationTimeout&gt;
   &lt;PersistentHttpRequestHeaders&gt;true&lt;/PersistentHttpRequestHeaders&gt;
   &lt;XPSupplementalLanguages&gt;false&lt;/XPSupplementalLanguages&gt;
@@ -4889,11 +4894,11 @@ chart.yAxis2.tickFormat(function(value) {
   &lt;AvoidImageBreak&gt;false&lt;/AvoidImageBreak&gt;
   &lt;PdfPageOrientation&gt;Landscape&lt;/PdfPageOrientation&gt;
   &lt;ShowHeader&gt;false&lt;/ShowHeader&gt;
+  &lt;ShowFooter&gt;false&lt;/ShowFooter&gt;
   &lt;EmbedFonts&gt;true&lt;/EmbedFonts&gt;
   &lt;LiveUrlsEnabled&gt;true&lt;/LiveUrlsEnabled&gt;
   &lt;InteractiveHiddenElements&gt;false&lt;/InteractiveHiddenElements&gt;
   &lt;InternalLinksEnabled&gt;true&lt;/InternalLinksEnabled&gt;
-  &lt;ShowFooter&gt;false&lt;/ShowFooter&gt;
   &lt;TiledRenderingEnabled&gt;true&lt;/TiledRenderingEnabled&gt;
   &lt;EnhancedGraphicsQuality&gt;true&lt;/EnhancedGraphicsQuality&gt;
   &lt;TransparentImagesEnabled&gt;true&lt;/TransparentImagesEnabled&gt;
@@ -4902,6 +4907,8 @@ chart.yAxis2.tickFormat(function(value) {
   &lt;TransparencyEnabled&gt;true&lt;/TransparencyEnabled&gt;
   &lt;TableHeaderRepeatEnabled&gt;true&lt;/TableHeaderRepeatEnabled&gt;
   &lt;TableFooterRepeatEnabled&gt;true&lt;/TableFooterRepeatEnabled&gt;
+  &lt;StackRepeatedTableHeaders&gt;true&lt;/StackRepeatedTableHeaders&gt;
+  &lt;StackRepeatedTableFooters&gt;true&lt;/StackRepeatedTableFooters&gt;
 &lt;/PdfDocumentOptions&gt;</string>
         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;PdfSecurityOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;

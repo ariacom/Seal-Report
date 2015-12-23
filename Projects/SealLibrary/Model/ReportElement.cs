@@ -168,7 +168,7 @@ namespace Seal.Model
         {
             get
             {
-                return Model.Report.Repository.TranslateElement(this, DisplayNameEl);
+                return Model.Report.TranslateElement(this, DisplayNameEl);
             }
         }
 
@@ -258,7 +258,7 @@ namespace Seal.Model
             if (value != null)
             {
                 string sortPrefix = elementSortPosition ? string.Format("{0:000000}", MetaColumn.Enum.Values.LastIndexOf(value)) : "";
-                result = sortPrefix + Model.Report.Repository.EnumDisplayValue(MetaColumn.Enum, value.Id);
+                result = sortPrefix + Model.Report.EnumDisplayValue(MetaColumn.Enum, value.Id);
             }
             return result;
         }

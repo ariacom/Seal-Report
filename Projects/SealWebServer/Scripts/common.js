@@ -141,13 +141,21 @@ function initButtons() {
     $("#nav_button").css("display", hasNavigation ? "inline" : "none");
 }
 
+
+var canvas_ctx = document.createElement('canvas').getContext('2d');
+canvas_ctx.font = "bold 12pt arial";
+function getTextSize(txt) {
+    return canvas_ctx.measureText(txt).width;
+}
+
 function setNavMenuSize() {
     var menu = $("#nav_menu");
-    var maxLen = 8;
+    var maxSize = 8;
     menu.children().each(function () {
-        if ($(this).text().length > maxLen) maxLen = $(this).text().length;
+        var size = getTextSize($(this).text());
+        if (size > maxSize) maxSize = size;
     });
-    menu.css("width", 8 * maxLen + 35);
+    menu.css("width", maxSize + 10);
 }
 
 function setNavMenuSizeAndPosition() {

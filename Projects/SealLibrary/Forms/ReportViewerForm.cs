@@ -146,6 +146,17 @@ namespace Seal.Forms
             }
         }
 
+
+        void setCurrentExecution()
+        {
+            string executionGUID = webBrowser.Document.All[ReportExecution.HtmlId_execution_guid].GetAttribute("value");
+            if (_navigation.Navigations.ContainsKey(executionGUID))
+            {
+                _execution = _navigation.Navigations[executionGUID].Execution;
+                _report = _execution.Report;
+            }
+        }
+
         private bool processAction(string action)
         {
             bool cancelNavigation = false;
@@ -154,13 +165,7 @@ namespace Seal.Forms
                 switch (action)
                 {
                     case ReportExecution.ActionExecuteReport:
-                        string executionGUID = webBrowser.Document.All[ReportExecution.HtmlId_execution_guid].GetAttribute("value");
-                        if (_navigation.Navigations.ContainsKey(executionGUID))
-                        {
-                            _execution = _navigation.Navigations[executionGUID].Execution;
-                            _report = _execution.Report;
-                        }
-
+                        setCurrentExecution();
                         cancelNavigation = true;
                         _reportDone = false;
                         if (webBrowser.Document != null)
@@ -214,24 +219,28 @@ namespace Seal.Forms
                         break;
 
                     case ReportExecution.ActionViewHtmlResult:
+                        setCurrentExecution();
                         string resultPath = _execution.GenerateHTMLResult();
                         if (File.Exists(resultPath)) Process.Start(resultPath);
                         cancelNavigation = true;
                         break;
 
                     case ReportExecution.ActionViewPrintResult:
+                        setCurrentExecution();
                         resultPath = _execution.GeneratePrintResult();
                         if (File.Exists(resultPath)) Process.Start(resultPath);
                         cancelNavigation = true;
                         break;
 
                     case ReportExecution.ActionViewPDFResult:
+                        setCurrentExecution();
                         resultPath = _execution.GeneratePDFResult();
                         if (File.Exists(resultPath)) Process.Start(resultPath);
                         cancelNavigation = true;
                         break;
 
                     case ReportExecution.ActionViewExcelResult:
+                        setCurrentExecution();
                         resultPath = _execution.GenerateExcelResult();
                         if (File.Exists(resultPath)) Process.Start(resultPath);
                         cancelNavigation = true;
