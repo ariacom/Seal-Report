@@ -458,11 +458,13 @@ namespace Seal
 
                 if (_source != null)
                 {
+                    if (sender == saveAsToolStripMenuItem) _source.GUID = Guid.NewGuid().ToString(); //New GUID
                     if (!string.IsNullOrEmpty(newPath)) _source.FilePath = newPath;
                     _source.SaveToFile();
                 }
                 else if (_device != null)
                 {
+                    if (sender == saveAsToolStripMenuItem) _device.GUID = Guid.NewGuid().ToString(); //New GUID
                     if (!string.IsNullOrEmpty(newPath)) _device.FilePath = newPath;
                     _device.SaveToFile();
                 }

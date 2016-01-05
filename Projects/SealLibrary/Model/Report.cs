@@ -263,10 +263,10 @@ namespace Seal.Model
                 {
                     if (OutputToExecute.Device is OutputFolderDevice)
                     {
-                        fileName = OutputToExecute.FileName;
+                        fileName = OutputToExecute.FileName.Replace(Repository.SealReportDisplayNameKeyword, FileHelper.CleanFilePath(DisplayNameEx));
                         try
                         {
-                            fileName = string.Format(OutputToExecute.FileName, DateTime.Now);
+                            fileName = string.Format(fileName, DateTime.Now);
                         }
                         catch { }
                     }
@@ -815,8 +815,8 @@ namespace Seal.Model
             result.Name = Helper.GetUniqueName(string.Format("output ({0})", device.Name), (from i in Outputs select i.Name).ToList());
             if (device is OutputFolderDevice)
             {
-                result.FolderPath = Repository.SealRepositoryKeyword + "\\Reports\\";
-                result.FileName = FileHelper.CleanFilePath(DisplayNameEx);
+                result.FolderPath = string.IsNullOrEmpty(FilePath) ? Repository.SealRepositoryKeyword + "\\Reports\\" : Path.GetDirectoryName(FilePath).Replace(Repository.RepositoryPath, Repository.SealRepositoryKeyword);
+                result.FileName = Repository.SealReportDisplayNameKeyword;
             }
 
             result.Report = this;

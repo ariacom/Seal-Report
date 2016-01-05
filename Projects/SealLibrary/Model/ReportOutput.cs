@@ -110,7 +110,7 @@ namespace Seal.Model
 
 
         private string _fileName;
-        [Category("Folder"), DisplayName("File name"), Description("The name of the file used to generate the report result. The file name can be formatted with the execution date time."), Id(2, 2)]
+        [Category("Folder"), DisplayName("File name"), Description("The name of the file used to generate the report result. The file name can be formatted with the execution date time and can contain the keyword " + Repository.SealReportDisplayNameKeyword + " to specify the current report display name."), Id(2, 2)]
         [TypeConverter(typeof(CustomFormatConverter))]
         public string FileName
         {

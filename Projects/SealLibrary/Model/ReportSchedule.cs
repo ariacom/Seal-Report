@@ -111,7 +111,7 @@ namespace Seal.Model
         {
             get
             {
-                return string.Format("[{0}] {1} '{2}' {3}", Helper.CleanFileName(Path.GetFileNameWithoutExtension(Report.FilePath)), Report.DisplayNameEx, Name, GUID);
+                return Helper.CleanFileName(string.Format("[{0}] {1} '{2}' {3}", Path.GetFileNameWithoutExtension(Report.FilePath), Report.DisplayNameEx, Name, GUID));
             }
         }
 
