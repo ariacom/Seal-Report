@@ -255,7 +255,7 @@ namespace Seal.Model
                 //Translate it
                 result = Report.TranslateGeneral(result);
                 int i = 0;
-                foreach (var element in values.OrderBy(i => i.DisplayNameEl))
+                foreach (var element in values.OrderBy(j => j.DisplayNameEl))
                 {
                     result = result.Replace(string.Format("%{0}%", i++), element.DisplayNameElTranslated);
                 }

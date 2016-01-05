@@ -102,9 +102,14 @@ namespace Seal.Helpers
 
         public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "")
         {
-            if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(excelPath, tabName);
+            //Copy the Excel file if it is open...
+            string newPath = FileHelper.GetTempUniqueFileName(excelPath);
+            File.Copy(excelPath, newPath);
+            FileHelper.PurgeTempApplicationDirectory();
 
-            string connectionString = string.Format(ExcelOdbcDriver, excelPath);
+            if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(newPath, tabName);
+
+            string connectionString = string.Format(ExcelOdbcDriver, newPath);
             string sql = string.Format("select * from [{0}$]", Helper.IfNullOrEmpty(tabName, "Sheet1"));
             return OdbcLoadDataTable(connectionString, sql);
         }

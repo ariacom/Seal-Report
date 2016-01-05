@@ -30,6 +30,7 @@ namespace Seal.Model
         public const string SealServerManager = "SealServerManager.exe";
         public const string SealDefaultRepository = "Seal Report Repository";
         public const string SealRepositoryKeyword = "%SEALREPOSITORY%";
+        public const string SealReportDisplayNameKeyword = "%SEALREPORTDISPLAYNAME%";
 
         string _path;
         public string RepositoryPath

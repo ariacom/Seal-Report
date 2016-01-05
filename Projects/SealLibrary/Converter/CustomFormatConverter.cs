@@ -92,6 +92,10 @@ namespace Seal.Converter
             }
             else if (output != null)
             {
+                choices.Clear();
+                choices.Add(Repository.SealReportDisplayNameKeyword);
+                choices.Add(Repository.SealReportDisplayNameKeyword + "_{0:yyyy_MM_dd}");
+                choices.Add(Repository.SealReportDisplayNameKeyword + "_{0:yyyy_MM_dd HH_mm_ss}");
                 choices.Add(output.Report.ExecutionName);
                 choices.Add(output.Report.ExecutionName + "_{0:yyyy_MM_dd}");
                 choices.Add(output.Report.ExecutionName + "_{0:yyyy_MM_dd HH_mm_ss}");
