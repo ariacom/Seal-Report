@@ -88,6 +88,10 @@ namespace Seal.Forms
                     AddHelperButton("View SQL", "View the SQL generated for the model", Keys.F7);
                 }
             }
+            else if (SelectedEntity is TasksFolder)
+            {
+                AddHelperButton("Edit Common Script", "Edit the Common Razor Script", Keys.F7);
+            }
             else if (SelectedEntity is ReportTask)
             {
                 AddHelperButton("Edit SQL", "Edit the SQL Statement for the task", Keys.F8);
@@ -190,6 +194,10 @@ namespace Seal.Forms
                     {
                         if (key == Keys.F7) ((MetaJoin)SelectedEntity).CheckJoin();
                         if (key == Keys.F8) EditProperty("SQL Clause");
+                    }
+                    else if (SelectedEntity is TasksFolder)
+                    {
+                        if (key == Keys.F7) EditProperty("Commun Razor Script");
                     }
                     else if (SelectedEntity is ReportTask)
                     {

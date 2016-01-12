@@ -714,6 +714,24 @@ namespace Seal.Model
                 else if (op == Operator.StartsWith) value2 = string.Format("{0}%", value);
                 else if (op == Operator.EndsWith) value2 = string.Format("%{0}", value);
                 result = Helper.QuoteSingle(value2);
+                if (MetaColumn.Type == ColumnType.UnicodeText)
+                {
+                    if (Model.Connection.DatabaseType == DatabaseType.Oracle)
+                    {
+                        //For Oracle, we convert the unicode char using UNISTR
+                        result = "";
+                        for (int i = 0; i < value2.Length; i++)
+                        {
+                            string unicode = BitConverter.ToString(Encoding.Unicode.GetBytes(value2[i].ToString())).Replace("-", "");
+                            result += "\\" + unicode.Substring(2, 2) + unicode.Substring(0, 2);
+                        }
+                        result = "UNISTR(" + Helper.QuoteSingle(result) + ")";
+                    }
+                    else if (Model.Connection.DatabaseType == DatabaseType.MSSQLServer)
+                    {
+                        result = "N" + result;
+                    }
+                }
             }
             return result;
         }
@@ -969,7 +987,7 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(value)) value = "";
                 result = ElementDisplayValue(value);
             }
-            return Helper.ToHtml(result);
+            return result;
         }
 
         [XmlIgnore]

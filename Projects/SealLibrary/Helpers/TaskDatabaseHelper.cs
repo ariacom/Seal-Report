@@ -37,6 +37,7 @@ namespace Seal.Helpers
         public int InsertBurstSize = 500;
         public string ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
         public Encoding DefaultEncoding = Encoding.Default;
+        public bool TrimText = true;
 
         public bool DebugMode = false;
         public StringBuilder DebugLog = new StringBuilder();
@@ -102,12 +103,13 @@ namespace Seal.Helpers
 
         public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "")
         {
-            //Copy the Excel file if it is open...
-            string newPath = FileHelper.GetTempUniqueFileName(excelPath);
-            File.Copy(excelPath, newPath);
-            FileHelper.PurgeTempApplicationDirectory();
+            if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(excelPath, tabName);
 
-            if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(newPath, tabName);
+            //Copy the Excel file if it is open...
+            FileHelper.PurgeTempApplicationDirectory();
+            string newPath = FileHelper.GetTempUniqueFileName(excelPath);
+            File.Copy(excelPath, newPath, true);
+            File.SetLastWriteTime(newPath, DateTime.Now);
 
             string connectionString = string.Format(ExcelOdbcDriver, newPath);
             string sql = string.Format("select * from [{0}$]", Helper.IfNullOrEmpty(tabName, "Sheet1"));
@@ -357,6 +359,7 @@ namespace Seal.Helpers
             else
             {
                 string res = row[col].ToString().Replace("\r", " ").Replace("\n", " ");
+                if (TrimText) res = res.Trim();
                 result.Append(Helper.QuoteSingle(res));
             }
 

@@ -142,10 +142,16 @@ function initButtons() {
 }
 
 
-var canvas_ctx = document.createElement('canvas').getContext('2d');
-canvas_ctx.font = "bold 12pt arial";
+var canvas_ctx = null;
 function getTextSize(txt) {
-    return canvas_ctx.measureText(txt).width;
+    if (canvas_ctx == null) {
+        try {
+            canvas_ctx = document.createElement('canvas').getContext('2d');
+            canvas_ctx.font = "bold 12pt arial";
+        }
+        catch (err) { };
+    }
+    return canvas_ctx == null ? 5 + 8*txt.length : canvas_ctx.measureText(txt).width;
 }
 
 function setNavMenuSize() {

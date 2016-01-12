@@ -188,7 +188,7 @@ namespace Seal.Controls
         {
             ReportElement element = ReportElement.Create();
             element.Source = Model.Source;
-            element.Format = "";
+            element.Format = column.Format;
             element.Model = Model;
             element.MetaColumnGUID = column.GUID;
             element.Name = column.Name;

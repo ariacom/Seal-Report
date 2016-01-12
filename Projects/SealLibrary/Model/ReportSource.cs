@@ -40,6 +40,10 @@ namespace Seal.Model
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!IsNoSQL);
                 GetProperty("IsNoSQL").SetIsBrowsable(true);
 
+                GetProperty("NumericFormat").SetIsBrowsable(true);
+                GetProperty("DateTimeFormat").SetIsBrowsable(true);
+                GetProperty("NumericFormat").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
+                GetProperty("DateTimeFormat").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
 
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
@@ -138,6 +142,8 @@ namespace Seal.Model
                 {
                     IsDefault = source.IsDefault;
                     IsNoSQL = source.IsNoSQL;
+                    NumericFormat = source.NumericFormat;
+                    DateTimeFormat = source.DateTimeFormat;
                     _metaSourceName = source.Name;
                     foreach (var item in source.Connections)
                     {
@@ -162,6 +168,7 @@ namespace Seal.Model
 
                     PreSQL = source.PreSQL;
                     PostSQL = source.PostSQL;
+
                     IgnorePrePostError = source.IgnorePrePostError;
                 }
                 else

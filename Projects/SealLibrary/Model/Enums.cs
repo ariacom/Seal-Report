@@ -42,7 +42,9 @@ namespace Seal.Model
         [Description("Numeric")]
         Numeric,
         [Description("Date & Time")]
-        DateTime
+        DateTime,
+        [Description("Unicode Text")]
+        UnicodeText,
     }
 
     public enum AggregateFunction

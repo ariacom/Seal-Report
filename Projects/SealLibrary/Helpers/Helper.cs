@@ -149,8 +149,9 @@ namespace Seal.Helpers
             ColumnType result = ColumnType.Text;
             try
             {
-                OleDbType columnType = (OleDbType)dbValue;
+                OleDbType columnType = (OleDbType)Convert.ToInt32(dbValue);
                 result = Helper.NetTypeConverter(Helper.OleDbToNetTypeConverter(columnType));
+                if (columnType == OleDbType.WChar || columnType == OleDbType.VarWChar || columnType == OleDbType.LongVarWChar) result = ColumnType.UnicodeText;
             }
             catch { }
             return result;
@@ -171,7 +172,8 @@ namespace Seal.Helpers
         {
             string t = dbType.ToLower();
 
-            if (t == "char" || t == "nchar" || t == "ntext" || t == "nvarchar" || t == "varchar" || t == "varchar2" || t == "text" || t == "uniqueidentifier") return ColumnType.Text;
+            if (t == "char" || t == "varchar" || t == "varchar2" || t == "text" || t == "uniqueidentifier") return ColumnType.Text;
+            if (t == "nchar" || t == "ntext" || t == "nvarchar") return ColumnType.UnicodeText;
             if (t == "date" || t == "datetime" || t == "smalldatetime" || t == "timestamp") return ColumnType.DateTime;
             return ColumnType.Numeric;
         }
