@@ -28,6 +28,7 @@ namespace Seal.Converter
             choices.Add("0");
             choices.Add("N");
             choices.Add("N0");
+            choices.Add("N2");
             choices.Add("P");
             choices.Add("P2");
             choices.Add("00000");
@@ -58,7 +59,9 @@ namespace Seal.Converter
             choices.Add("T");
             choices.Add("yyyy");
             choices.Add("MM/yyyy");
+            choices.Add("MM/dd/yy H:mm:ss");
             choices.Add("MM/dd/yy H:mm:ss zzz");
+            choices.Add("dd/MM/yyyy HH:mm:ss");
             choices.Add("dd/MM/yyyy HH:mm:ss zzz");
         }
 
@@ -72,6 +75,7 @@ namespace Seal.Converter
             MetaColumn column = context.Instance as MetaColumn;
             ReportElement element = context.Instance as ReportElement;
             ReportOutput output = context.Instance as ReportOutput;
+            MetaSource source = context.Instance as MetaSource;
             List<string> choices = new List<string>();
             choices.Add("");
             if (element != null)
@@ -104,6 +108,12 @@ namespace Seal.Converter
                 choices.Add(output.Name + "_{0:yyyy_MM_dd HH_mm_ss}");
 
                 if (!string.IsNullOrEmpty(output.FileName) && !choices.Contains(output.FileName)) choices.Add(output.FileName);
+            }
+            else if (source != null)
+            {
+                if (context.PropertyDescriptor.Name == "NumericFormat") addNumericChoices(choices);
+                else if (context.PropertyDescriptor.Name == "DateFormat") addDateTimeChoices(choices);
+                else addStringChoices(choices);
             }
             return new StandardValuesCollection(choices.ToArray());
         }

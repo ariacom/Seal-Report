@@ -970,6 +970,8 @@ namespace Seal
                 //Create and save a meta source
                 MetaSource metaSource = MetaSource.Create(_repository);
                 metaSource.IsNoSQL = source.IsNoSQL;
+                metaSource.NumericFormat = source.NumericFormat;
+                metaSource.DateTimeFormat = source.DateTimeFormat;
                 metaSource.Connections.Clear();
                 metaSource.Connections.AddRange(source.Connections);
                 metaSource.MetaData.Joins.AddRange(source.MetaData.Joins);

@@ -47,6 +47,9 @@ namespace Seal.Model
                 GetProperty("IsDefault").SetIsBrowsable(true);
                 GetProperty("IsNoSQL").SetIsBrowsable(true);
 
+                GetProperty("NumericFormat").SetIsBrowsable(true);
+                GetProperty("DateTimeFormat").SetIsBrowsable(true);
+
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("Information").SetIsReadOnly(true);
@@ -75,7 +78,7 @@ namespace Seal.Model
 
 
         protected string _connectionGUID;
-        [Category("General"), DisplayName("Current Connection"), Description("The connection currently used for this data source"), Id(2, 1)]
+        [Category("General"), DisplayName("Current Connection"), Description("The connection currently used for this data source"), Id(1, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
         public string ConnectionGUID
         {
@@ -98,9 +101,27 @@ namespace Seal.Model
             get { return _isNoSQL; }
             set { _isNoSQL = value; }
         }
+        
+        string _numericFormat = "N0";
+        [Category("Default Display Formats"), DisplayName("Numeric Format"), Description("The display numeric format used for numeric column having the default format"), Id(2, 2)]
+        [TypeConverter(typeof(CustomFormatConverter))]
+        public string NumericFormat
+        {
+            get { return _numericFormat; }
+            set { _numericFormat = value; }
+        }
+
+        string _dateFormat = "d";
+        [Category("Default Display Formats"), DisplayName("Date Time Format"), Description("The display date time format used for date time column having the default format"), Id(3, 2)]
+        [TypeConverter(typeof(CustomFormatConverter))]
+        public string DateTimeFormat
+        {
+            get { return _dateFormat; }
+            set { _dateFormat = value; }
+        }
 
         string _preSQL;
-        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed after the connection is open and before the query is executed. The statement may contain Razor script if it starts with '@'."), Id(1, 2)]
+        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed after the connection is open and before the query is executed. The statement may contain Razor script if it starts with '@'."), Id(4, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string PreSQL
         {
@@ -109,7 +130,7 @@ namespace Seal.Model
         }
 
         string _postSQL;
-        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed before the connection is closed and after the query is executed. The statement may contain Razor script if it starts with '@'."), Id(2, 2)]
+        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed before the connection is closed and after the query is executed. The statement may contain Razor script if it starts with '@'."), Id(5, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string PostSQL
         {
@@ -118,7 +139,7 @@ namespace Seal.Model
         }
 
         bool _ignorePrePostError;
-        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(3, 2)]
+        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(6, 3)]
         public bool IgnorePrePostError
         {
             get { return _ignorePrePostError; }
@@ -471,7 +492,7 @@ namespace Seal.Model
         #region Helpers
 
         string _information;
-        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(1, 10)]
+        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(8, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
         public string Information
         {
@@ -480,7 +501,7 @@ namespace Seal.Model
         }
 
         string _error;
-        [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(2, 10)]
+        [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(9, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
         public string Error
         {

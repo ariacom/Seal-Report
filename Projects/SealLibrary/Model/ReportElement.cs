@@ -103,7 +103,7 @@ namespace Seal.Model
             get
             {
                 if (PivotPosition == PivotPosition.Data && AggregateFunction == AggregateFunction.Count) return false;
-                return (TypeEl == ColumnType.Text);
+                return (TypeEl == ColumnType.Text || TypeEl == ColumnType.UnicodeText);
             }
         }
 
@@ -210,11 +210,17 @@ namespace Seal.Model
                 string result = "";
                 if (IsNumeric && NumericStandardFormat == NumericStandardFormat.Default) result = MetaColumn.Format;
                 else if (IsNumeric && !string.IsNullOrEmpty(Format)) result = Format;
-                else if (IsDateTime && DateTimeStandardFormat == Seal.Model.DateTimeStandardFormat.Default) result = MetaColumn.Format;
+                else if (IsDateTime && DateTimeStandardFormat == DateTimeStandardFormat.Default) result = MetaColumn.Format;
                 else if (IsDateTime && !string.IsNullOrEmpty(Format)) result = Format;
                 else if (IsText && !string.IsNullOrEmpty(Format)) result = Format;
                 else result = MetaColumn.Format;
 
+                if (string.IsNullOrEmpty(result))
+                {
+                    if (IsNumeric) result = Source.NumericFormat;
+                    else if (IsDateTime) result = Source.DateTimeFormat;
+                    else result = "0";
+                }
                 if (string.IsNullOrEmpty(result)) result = "0";
                 return result;
             }

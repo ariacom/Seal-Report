@@ -120,8 +120,8 @@ namespace Seal.Model
                 _type = value;
                 if (_dctd != null)
                 {
-                    if (_type == ColumnType.Numeric) NumericStandardFormat = NumericStandardFormat.Numeric0;
-                    else if (_type == ColumnType.DateTime) DateTimeStandardFormat = DateTimeStandardFormat.ShortDate;
+                    if (_type == ColumnType.Numeric) NumericStandardFormat = NumericStandardFormat.Default;
+                    else if (_type == ColumnType.DateTime) DateTimeStandardFormat = DateTimeStandardFormat.Default;
                     else Format = "{0}";
                     UpdateEditorAttributes();
                 }
@@ -168,7 +168,7 @@ namespace Seal.Model
         }
 
 
-        protected NumericStandardFormat _numericStandardFormat = NumericStandardFormat.Numeric0;
+        protected NumericStandardFormat _numericStandardFormat = NumericStandardFormat.Default;
         [Category("Options"), DisplayName("Format"), Description("Standard display format applied to the element."), Id(2, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public NumericStandardFormat NumericStandardFormat
@@ -185,7 +185,7 @@ namespace Seal.Model
             }
         }
 
-        protected DateTimeStandardFormat _datetimeStandardFormat = DateTimeStandardFormat.ShortDate;
+        protected DateTimeStandardFormat _datetimeStandardFormat = DateTimeStandardFormat.Default;
         [Category("Options"), DisplayName("Format"), Description("Standard display format applied to the element."), Id(2, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public DateTimeStandardFormat DateTimeStandardFormat
@@ -203,11 +203,15 @@ namespace Seal.Model
         }
 
         protected string _format = "";
-        [Category("Options"), DisplayName("Custom Format"), Description("If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)."), Id(3, 3)]
+        [Category("Options"), DisplayName("Format"), Description("If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)."), Id(3, 3)]
         [TypeConverter(typeof(CustomFormatConverter))]
         public string Format
         {
-            get { return _format; }
+            get {
+                if (Type == ColumnType.Numeric && NumericStandardFormat == NumericStandardFormat.Default) return Source.NumericFormat;
+                else if (Type == ColumnType.DateTime && DateTimeStandardFormat == DateTimeStandardFormat.Default) return Source.DateTimeFormat;
+                return _format; 
+            }
             set { _format = value; }
         }
 
@@ -226,11 +230,19 @@ namespace Seal.Model
 
             if (type == ColumnType.Numeric && NumericStandardFormat != NumericStandardFormat.Custom)
             {
-                Format = Helper.ConvertNumericStandardFormat(NumericStandardFormat);
+                if (NumericStandardFormat == NumericStandardFormat.Default) Format = Source.NumericFormat;
+                else Format = Helper.ConvertNumericStandardFormat(NumericStandardFormat);
             }
             else if (type == ColumnType.DateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom)
             {
-                Format = Helper.ConvertDateTimeStandardFormat(DateTimeStandardFormat);
+                if (DateTimeStandardFormat == DateTimeStandardFormat.Default) Format = Source.DateTimeFormat;
+                else Format = Helper.ConvertDateTimeStandardFormat(DateTimeStandardFormat);
+            }
+            if (string.IsNullOrEmpty(Format))
+            {
+                if (Type == ColumnType.Numeric) Format = Source.NumericFormat;
+                else if (Type == ColumnType.DateTime) Format = Source.DateTimeFormat;
+                else Format = "";
             }
         }
 
