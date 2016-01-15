@@ -14,6 +14,9 @@
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
+      <NumericFormat>N</NumericFormat>
+      <DateTimeFormat>d</DateTimeFormat>
+      <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -52,7 +55,7 @@
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -119,7 +122,7 @@
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -158,7 +161,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -184,7 +187,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -202,7 +205,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -228,7 +231,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -388,7 +391,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -460,7 +463,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -486,7 +489,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -504,7 +507,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -530,7 +533,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -657,7 +660,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -724,7 +727,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -763,7 +766,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -789,7 +792,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -807,7 +810,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -833,7 +836,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -993,7 +996,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1032,7 +1035,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1058,7 +1061,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -1076,7 +1079,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1102,7 +1105,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -1229,7 +1232,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1262,7 +1265,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>MM/yyyy</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1296,7 +1299,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1335,7 +1338,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1361,7 +1364,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -1379,7 +1382,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1405,7 +1408,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -1532,7 +1535,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1565,7 +1568,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>MM/yyyy</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1599,7 +1602,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1638,7 +1641,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1664,7 +1667,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -1682,7 +1685,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1708,7 +1711,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -1835,7 +1838,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1868,7 +1871,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>MM/yyyy</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1940,7 +1943,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -1966,7 +1969,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -1984,7 +1987,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2010,7 +2013,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -2170,7 +2173,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2203,7 +2206,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>MM/yyyy</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2242,7 +2245,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2268,7 +2271,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -2286,7 +2289,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2312,7 +2315,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -2439,7 +2442,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>MM/yyyy</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2473,7 +2476,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2540,7 +2543,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2688,7 +2691,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2714,7 +2717,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -2732,7 +2735,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2758,7 +2761,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -2918,7 +2921,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2951,7 +2954,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2990,7 +2993,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3016,7 +3019,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -3034,7 +3037,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3060,7 +3063,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -3220,7 +3223,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>MM/yyyy</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3253,7 +3256,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3292,7 +3295,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3318,7 +3321,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -3336,7 +3339,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3362,7 +3365,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -3489,7 +3492,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3522,7 +3525,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>d</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3555,7 +3558,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3588,7 +3591,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3621,7 +3624,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3794,7 +3797,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>MM/yyyy</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3820,7 +3823,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>MM/yyyy</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -3838,7 +3841,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -3864,7 +3867,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -3978,6 +3981,12 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
     <ReportOutput>
       <GUID>d1dcd451-e5d3-4b78-b917-b7be0c8e8e77</GUID>
       <Name>HTML File</Name>
+      <CancelIfNoRecords>false</CancelIfNoRecords>
+      <PreScript />
+      <PostScript />
+      <ViewParameters />
+      <ViewCSS />
+      <ViewGUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</ViewGUID>
       <FolderPath>%SEALREPOSITORY%\Reports\</FolderPath>
       <FileName>Dashboard - Sales_{0:yyyy_MM_dd}</FileName>
       <EmailHtmlBody>false</EmailHtmlBody>
@@ -3985,18 +3994,12 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
       <EmailZipAttachments>false</EmailZipAttachments>
       <EmailZipPassword />
       <EmailSkipAttachments>false</EmailSkipAttachments>
-      <ViewGUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</ViewGUID>
-      <CancelIfNoRecords>false</CancelIfNoRecords>
-      <PreScript />
-      <PostScript />
-      <ViewParameters />
-      <ViewCSS />
       <UseCustomRestrictions>false</UseCustomRestrictions>
       <Restrictions />
     </ReportOutput>
   </Outputs>
   <Tasks />
-  <CommunTaskScript />
+  <TasksScript />
   <Views>
     <ReportView>
       <GUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</GUID>
@@ -4049,6 +4052,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Value>True</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4060,7 +4064,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4092,6 +4095,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Value>False</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>chart</Name>
@@ -4103,7 +4107,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>3</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4146,7 +4149,13 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Name>nvd3_hide_controls</Name>
                       <Value>True</Value>
                     </Parameter>
+                    <Parameter>
+                      <Name>nvd3_script_margin</Name>
+                      <Value>chart.margin({top: 30, left: 70, bottom: 40, right: 60});
+</Value>
+                    </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4158,7 +4167,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4169,9 +4177,9 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
               <UseCustomConfiguration>false</UseCustomConfiguration>
               <UseCustomTemplate>false</UseCustomTemplate>
               <Parameters />
+              <CultureName />
               <CSS />
               <SortOrder>2</SortOrder>
-              <CultureName />
               <PdfConfigurations />
               <ExcelConfigurations />
             </ReportView>
@@ -4218,6 +4226,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Value>True</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4229,7 +4238,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4261,6 +4269,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Value>False</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>chart</Name>
@@ -4272,7 +4281,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>3</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4317,6 +4325,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
 </Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4328,7 +4337,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>2</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4339,9 +4347,9 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
               <UseCustomConfiguration>false</UseCustomConfiguration>
               <UseCustomTemplate>false</UseCustomTemplate>
               <Parameters />
+              <CultureName />
               <CSS />
               <SortOrder>3</SortOrder>
-              <CultureName />
               <PdfConfigurations />
               <ExcelConfigurations />
             </ReportView>
@@ -4372,6 +4380,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Value>True</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4383,7 +4392,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>1</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4415,6 +4423,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Value>False</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>data_table</Name>
@@ -4422,7 +4431,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>2</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4449,7 +4457,13 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Name>nvd3_hide_controls</Name>
                       <Value>True</Value>
                     </Parameter>
+                    <Parameter>
+                      <Name>nvd3_script_margin</Name>
+                      <Value>chart.margin({top: 30, left: 70, bottom: 40, right: 60});
+</Value>
+                    </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4461,7 +4475,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>1</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4472,9 +4485,9 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
               <UseCustomConfiguration>false</UseCustomConfiguration>
               <UseCustomTemplate>false</UseCustomTemplate>
               <Parameters />
+              <CultureName />
               <CSS />
               <SortOrder>1</SortOrder>
-              <CultureName />
               <PdfConfigurations />
               <ExcelConfigurations />
             </ReportView>
@@ -4525,6 +4538,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Value>True</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4540,7 +4554,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>5</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4580,6 +4593,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <Value>False</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4591,7 +4605,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                   </CSS>
                   <SortOrder>2</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4635,6 +4648,7 @@ chart.yAxis2.tickFormat(function(value) {
 </Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4646,7 +4660,6 @@ chart.yAxis2.tickFormat(function(value) {
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4682,6 +4695,7 @@ chart.yAxis2.tickFormat(function(value) {
                       <Value>False</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4689,7 +4703,6 @@ chart.yAxis2.tickFormat(function(value) {
                     </Parameter>
                   </CSS>
                   <SortOrder>4</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4729,6 +4742,7 @@ chart.yAxis2.tickFormat(function(value) {
                       <Value>False</Value>
                     </Parameter>
                   </Parameters>
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>view</Name>
@@ -4740,7 +4754,6 @@ chart.yAxis2.tickFormat(function(value) {
                     </Parameter>
                   </CSS>
                   <SortOrder>1</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4751,9 +4764,9 @@ chart.yAxis2.tickFormat(function(value) {
               <UseCustomConfiguration>false</UseCustomConfiguration>
               <UseCustomTemplate>false</UseCustomTemplate>
               <Parameters />
+              <CultureName />
               <CSS />
               <SortOrder>0</SortOrder>
-              <CultureName />
               <PdfConfigurations />
               <ExcelConfigurations />
             </ReportView>
@@ -4771,6 +4784,7 @@ chart.yAxis2.tickFormat(function(value) {
                   <UseCustomConfiguration>false</UseCustomConfiguration>
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <Parameters />
+                  <CultureName />
                   <CSS>
                     <Parameter>
                       <Name>nvd3_chart</Name>
@@ -4778,7 +4792,6 @@ chart.yAxis2.tickFormat(function(value) {
                     </Parameter>
                   </CSS>
                   <SortOrder>1</SortOrder>
-                  <CultureName />
                   <ChartConfigurationXml />
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -4789,9 +4802,9 @@ chart.yAxis2.tickFormat(function(value) {
               <UseCustomConfiguration>false</UseCustomConfiguration>
               <UseCustomTemplate>false</UseCustomTemplate>
               <Parameters />
+              <CultureName />
               <CSS />
               <SortOrder>4</SortOrder>
-              <CultureName />
               <PdfConfigurations />
               <ExcelConfigurations />
             </ReportView>
@@ -4801,9 +4814,9 @@ chart.yAxis2.tickFormat(function(value) {
           <UseCustomConfiguration>false</UseCustomConfiguration>
           <UseCustomTemplate>false</UseCustomTemplate>
           <Parameters />
+          <CultureName />
           <CSS />
           <SortOrder>2</SortOrder>
-          <CultureName />
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
@@ -4827,9 +4840,9 @@ chart.yAxis2.tickFormat(function(value) {
           <Value>True</Value>
         </Parameter>
       </Parameters>
+      <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
-      <CultureName />
       <PdfConfigurations>
         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;PdfConverterCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;

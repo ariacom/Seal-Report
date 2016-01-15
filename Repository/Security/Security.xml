@@ -3,27 +3,7 @@
   <ProviderName>No Security</ProviderName>
   <UseCustomScript>false</UseCustomScript>
   <Script />
-  <Parameters>
-    <SecurityParameter>
-      <Name>default_domain_name</Name>
-    </SecurityParameter>
-    <SecurityParameter>
-      <Name>add_windows_groups</Name>
-      <Value>False</Value>
-    </SecurityParameter>
-    <SecurityParameter>
-      <Name>windows_groups_skip_domain</Name>
-      <Value>True</Value>
-    </SecurityParameter>
-    <SecurityParameter>
-      <Name>windows_groups_ad_context</Name>
-      <Value>False</Value>
-    </SecurityParameter>
-    <SecurityParameter>
-      <Name>oledb_connection_string</Name>
-      <Value>Provider=SQLOLEDB.1;Persist Security Info=False;Initial Catalog=master;Data Source=(local)</Value>
-    </SecurityParameter>
-  </Parameters>
+  <Parameters />
   <Groups>
     <SecurityGroup>
       <Name>Default Group</Name>

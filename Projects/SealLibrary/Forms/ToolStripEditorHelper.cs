@@ -90,7 +90,7 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is TasksFolder)
             {
-                AddHelperButton("Edit Common Script", "Edit the Common Razor Script", Keys.F7);
+                AddHelperButton("Edit Tasks Script", "Edit the Tasks Script", Keys.F7);
             }
             else if (SelectedEntity is ReportTask)
             {
@@ -197,7 +197,7 @@ namespace Seal.Forms
                     }
                     else if (SelectedEntity is TasksFolder)
                     {
-                        if (key == Keys.F7) EditProperty("Commun Razor Script");
+                        if (key == Keys.F7) EditProperty("Tasks Script");
                     }
                     else if (SelectedEntity is ReportTask)
                     {

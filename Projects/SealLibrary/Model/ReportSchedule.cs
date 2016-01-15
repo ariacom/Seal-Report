@@ -116,7 +116,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        [Category("Information"), DisplayName("Is enabled"), Description("Indicates if the task is enabled. Tasks can be enabled or disabled using the Task Scheduler Microsoft Management Console."), Id(1,2)]
+        [Category("Information"), DisplayName("Is enabled"), Description("Indicates if the task is enabled. Tasks can be enabled or disabled using the Task Scheduler Microsoft Management Console."), Id(2, 2)]
         public bool IsEnabled
         {
             get
@@ -133,7 +133,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        [Category("Information"), DisplayName("Last run time"), Description("Last time the task was executed."), Id(2, 2)]
+        [Category("Information"), DisplayName("Last run time"), Description("Last time the task was executed."), Id(3, 2)]
         public DateTime? LastRunTime
         {
             get
@@ -150,7 +150,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        [Category("Information"), DisplayName("Next run time"), Description("Next time the task will be executed."), Id(3, 2)]
+        [Category("Information"), DisplayName("Next run time"), Description("Next time the task will be executed."), Id(4, 2)]
         public DateTime? NextRunTime
         {
             get
@@ -167,7 +167,7 @@ namespace Seal.Model
         }
 
         private string _notificationEmailTo;
-        [Category("Email Notification in case of success"), DisplayName("TO addresses"), Description("The destination (To) email addresses used for the email notification in case of success. One per line or separated by semi-column."), Id(1, 3)]
+        [Category("Email Notification in case of success"), DisplayName("TO addresses"), Description("The destination (To) email addresses used for the email notification in case of success. One per line or separated by semi-column."), Id(2, 3)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string NotificationEmailTo
         {
@@ -176,7 +176,7 @@ namespace Seal.Model
         }
 
         private string _notificationEmailSubject;
-        [Category("Email Notification in case of success"), DisplayName("Subject"), Description("The subject of the email sent in case of success. If empty, the report name is used."), Id(2, 3)]
+        [Category("Email Notification in case of success"), DisplayName("Subject"), Description("The subject of the email sent in case of success. If empty, the report name is used."), Id(3, 3)]
         public string NotificationEmailSubject
         {
             get { return _notificationEmailSubject; }
@@ -184,7 +184,7 @@ namespace Seal.Model
         }
 
         private string _notificationEmailBody;
-        [Category("Email Notification in case of success"), DisplayName("Body"), Description("The body of the email sent in case of success. If empty, a default text is used."), Id(3, 3)]
+        [Category("Email Notification in case of success"), DisplayName("Body"), Description("The body of the email sent in case of success. If empty, a default text is used."), Id(4, 3)]
         public string NotificationEmailBody
         {
             get { return _notificationEmailBody; }
@@ -192,7 +192,7 @@ namespace Seal.Model
         }
 
         private string __notificationEmailFrom;
-        [Category("Email Notification in case of success"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(4, 3)]
+        [Category("Email Notification in case of success"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(5, 3)]
         public string NotificationEmailFrom
         {
             get { return __notificationEmailFrom; }
@@ -202,7 +202,7 @@ namespace Seal.Model
 
 
         int _errorNumberOfRetries = 0;
-        [Category("Failover: Retries"), DisplayName("Number of retries"), Description("The maximum number of retries in case of error."), Id(1, 5)]
+        [Category("Failover: Retries"), DisplayName("Number of retries"), Description("The maximum number of retries in case of error."), Id(2, 5)]
         public int ErrorNumberOfRetries
         {
             get { return Math.Max(_errorNumberOfRetries,0); }
@@ -210,7 +210,7 @@ namespace Seal.Model
         }
 
         int _errorMinutesBetweenRetries = 10;
-        [Category("Failover: Retries"), DisplayName("Minutes between each retry"), Description("The number of minutes elapsed between a retry."), Id(2, 5)]
+        [Category("Failover: Retries"), DisplayName("Minutes between each retry"), Description("The number of minutes elapsed between a retry."), Id(3, 5)]
         public int ErrorMinutesBetweenRetries
         {
             get { return _errorMinutesBetweenRetries; }
@@ -218,7 +218,7 @@ namespace Seal.Model
         }
 
         private string _errorEmailTo;
-        [Category("Failover: Email Notification in case of error"), DisplayName("TO addresses"), Description("The destination (To) email addresses used for the email in case of error. One per line or separated by semi-column."), Id(1, 7)]
+        [Category("Failover: Email Notification in case of error"), DisplayName("TO addresses"), Description("The destination (To) email addresses used for the email in case of error. One per line or separated by semi-column."), Id(2, 7)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string ErrorEmailTo
         {
@@ -227,7 +227,7 @@ namespace Seal.Model
         }
 
         private FailoverEmailMode _errorEmailSendMode = FailoverEmailMode.All;
-        [Category("Failover: Email Notification in case of error"), DisplayName("Send Email mode"), Description("Specify if the email is sent for the first, the last or for each failure."), Id(2, 7)]
+        [Category("Failover: Email Notification in case of error"), DisplayName("Send Email mode"), Description("Specify if the email is sent for the first, the last or for each failure."), Id(3, 7)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public FailoverEmailMode ErrorEmailSendMode
         {
@@ -236,7 +236,7 @@ namespace Seal.Model
         }
 
         private string _errorEmailSubject;
-        [Category("Failover: Email Notification in case of error"), DisplayName("Subject"), Description("The subject of the email sent in case of error. If empty, the report name is used."), Id(3, 7)]
+        [Category("Failover: Email Notification in case of error"), DisplayName("Subject"), Description("The subject of the email sent in case of error. If empty, the report name is used."), Id(4, 7)]
         public string ErrorEmailSubject
         {
             get { return _errorEmailSubject; }
@@ -244,7 +244,7 @@ namespace Seal.Model
         }
 
         private string _errorEmailFrom;
-        [Category("Failover: Email Notification in case of error"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(4, 7)]
+        [Category("Failover: Email Notification in case of error"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(5, 7)]
         public string ErrorEmailFrom
         {
             get { return _errorEmailFrom; }
@@ -373,14 +373,14 @@ namespace Seal.Model
 
         #region Helpers
 
-        [Category("Helpers"), DisplayName("Edit schedule properties"), Description("Edit the report schedule properties. Warning: Schedules may also be edited and managed using the Task Scheduler Microsoft Management Console."), Id(1, 10)]
+        [Category("Helpers"), DisplayName("Edit schedule properties"), Description("Edit the report schedule properties. Warning: Schedules may also be edited and managed using the Task Scheduler Microsoft Management Console."), Id(2, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperEditProperties
         {
             get { return "<Click to edit the schedule properties>"; }
         }
 
-        [Category("Helpers"), DisplayName("Run Task Scheduler MMC"), Description("Run the Task Scheduler Microsoft Management Console to manage schedule using the Windows interface."), Id(2, 10)]
+        [Category("Helpers"), DisplayName("Run Task Scheduler MMC"), Description("Run the Task Scheduler Microsoft Management Console to manage schedule using the Windows interface."), Id(3, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperRunTaskScheduler
         {

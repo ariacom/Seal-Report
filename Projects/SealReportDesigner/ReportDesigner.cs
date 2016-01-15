@@ -819,6 +819,7 @@ namespace Seal
             {
                 addAddItem("Add a Task", null);
                 addRemoveItem("Remove Tasks...");
+                addSmartCopyItem("Smart copy...", entity);
             }
             else if (entity is OutputFolder)
             {
@@ -972,6 +973,7 @@ namespace Seal
                 metaSource.IsNoSQL = source.IsNoSQL;
                 metaSource.NumericFormat = source.NumericFormat;
                 metaSource.DateTimeFormat = source.DateTimeFormat;
+                metaSource.TasksScript = source.TasksScript;
                 metaSource.Connections.Clear();
                 metaSource.Connections.AddRange(source.Connections);
                 metaSource.MetaData.Joins.AddRange(source.MetaData.Joins);
@@ -1099,6 +1101,11 @@ namespace Seal
             else if (selectedEntity is ReportOutput)
             {
                 form = new SmartCopyForm("Smart copy of " + ((ReportOutput)selectedEntity).Name, selectedEntity, _report);
+                form.ShowDialog();
+            }
+            else if (selectedEntity is TasksFolder)
+            {
+                form = new SmartCopyForm("Smart copy of Tasks Script", selectedEntity, _report);
                 form.ShowDialog();
             }
 

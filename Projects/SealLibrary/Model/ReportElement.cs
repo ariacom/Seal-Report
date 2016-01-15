@@ -189,6 +189,12 @@ namespace Seal.Model
             set
             {
                 Type = value;
+                if (_dctd != null)
+                {
+                    _numericStandardFormat = NumericStandardFormat.Default;
+                    _datetimeStandardFormat = DateTimeStandardFormat.Default;
+                    SetStandardFormat();
+                }                
                 UpdateEditorAttributes();
             }
         }
@@ -208,13 +214,7 @@ namespace Seal.Model
             {
                 SetStandardFormat();
                 string result = "";
-                if (IsNumeric && NumericStandardFormat == NumericStandardFormat.Default) result = MetaColumn.Format;
-                else if (IsNumeric && !string.IsNullOrEmpty(Format)) result = Format;
-                else if (IsDateTime && DateTimeStandardFormat == DateTimeStandardFormat.Default) result = MetaColumn.Format;
-                else if (IsDateTime && !string.IsNullOrEmpty(Format)) result = Format;
-                else if (IsText && !string.IsNullOrEmpty(Format)) result = Format;
-                else result = MetaColumn.Format;
-
+                if (string.IsNullOrEmpty(Format)) result = MetaColumn.Format;
                 if (string.IsNullOrEmpty(result))
                 {
                     if (IsNumeric) result = Source.NumericFormat;
@@ -563,12 +563,12 @@ namespace Seal.Model
             if (IsNumeric)
             {
                 string format = FormatEl;
-                if (format == "0") return ".0f";
-                else if (format == "N0" || format == "D0") return ",.0f";
-                else if (format == "N1" || format == "D1") return ",.1f";
-                else if (format == "N2" || format == "D2") return ",.2f";
-                else if (format == "N3" || format == "D3") return ",.3f";
-                else if (format == "N4" || format == "D4") return ",.4f";
+                if (format == "0" || format == "N" || format == "D" || format == "G") return ".0f";
+                else if (format == "N0" || format == "D0" || format == "G0") return ",.0f";
+                else if (format == "N1" || format == "D1" || format == "G1") return ",.1f";
+                else if (format == "N2" || format == "D2" || format == "G2") return ",.2f";
+                else if (format == "N3" || format == "D3" || format == "G3") return ",.3f";
+                else if (format == "N4" || format == "D4" || format == "G4") return ",.4f";
                 else if (format == "P0") return ",.0%";
                 else if (format == "P1") return ",.1%";
                 else if (format == "P2") return ",.2%";

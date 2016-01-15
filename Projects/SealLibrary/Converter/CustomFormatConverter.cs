@@ -29,6 +29,9 @@ namespace Seal.Converter
             choices.Add("N");
             choices.Add("N0");
             choices.Add("N2");
+            choices.Add("G");
+            choices.Add("G2");
+            choices.Add("G5");
             choices.Add("P");
             choices.Add("P2");
             choices.Add("00000");
@@ -42,8 +45,6 @@ namespace Seal.Converter
             choices.Add("D2");
             choices.Add("E");
             choices.Add("E2");
-            choices.Add("G");
-            choices.Add("G8");
             choices.Add("F");
             choices.Add("F2");
             choices.Add("H");
@@ -112,7 +113,7 @@ namespace Seal.Converter
             else if (source != null)
             {
                 if (context.PropertyDescriptor.Name == "NumericFormat") addNumericChoices(choices);
-                else if (context.PropertyDescriptor.Name == "DateFormat") addDateTimeChoices(choices);
+                else if (context.PropertyDescriptor.Name == "DateTimeFormat") addDateTimeChoices(choices);
                 else addStringChoices(choices);
             }
             return new StandardValuesCollection(choices.ToArray());

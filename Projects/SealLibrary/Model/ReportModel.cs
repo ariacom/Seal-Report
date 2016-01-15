@@ -125,15 +125,6 @@ namespace Seal.Model
             }
         }
 
-        [XmlIgnore]
-        [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        [Category("SQL"), DisplayName("SQL Statement"), Id(1, 2)]
-        public string SqlEditor
-        {
-            get { return "<Expand to view SQL>"; }
-            set { _sql = value; }
-        }
-
         string _preLoadScript;
         [Category("Model Definition"), DisplayName("Pre Load Script"), Description("Optional Razor Script to modify the result table of the model just before the database load."), Id(3, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
@@ -161,8 +152,17 @@ namespace Seal.Model
             set { _finalScript = value; }
         }
 
+        [XmlIgnore]
+        [Category("SQL"), DisplayName("SQL Statement"), Id(2, 2)]
+        [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
+        public string SqlEditor
+        {
+            get { return "<Expand to view SQL>"; }
+            set { _sql = value; }
+        }
+
         string _sqlSelect;
-        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement."), Id(2, 2)]
+        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement."), Id(3, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string SqlSelect
         {
@@ -171,7 +171,7 @@ namespace Seal.Model
         }
 
         string _sqlFrom;
-        [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrite the FROM clause in the generated SQL statement."), Id(3, 2)]
+        [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrite the FROM clause in the generated SQL statement."), Id(4, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string SqlFrom
         {
@@ -180,7 +180,7 @@ namespace Seal.Model
         }
 
         string _sqlGroupBy;
-        [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrite the GROUP BY clause in the generated SQL statement."), Id(4, 2)]
+        [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrite the GROUP BY clause in the generated SQL statement."), Id(5, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string SqlGroupBy
         {
@@ -190,7 +190,7 @@ namespace Seal.Model
 
         string _sqlOrderBy;
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrite the ORDER BY clause in the generated SQL statement."), Id(5, 2)]
+        [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrite the ORDER BY clause in the generated SQL statement."), Id(6, 2)]
         public string SqlOrderBy
         {
             get { return (_sqlOrderBy == DefaultClause) ? "" : _sqlOrderBy; }
@@ -198,7 +198,7 @@ namespace Seal.Model
         }
 
         string _preSQL;
-        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(6, 2)]
+        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(7, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string PreSQL
         {
@@ -207,7 +207,7 @@ namespace Seal.Model
         }
 
         string _postSQL;
-        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(7, 2)]
+        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(8, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string PostSQL
         {
@@ -216,7 +216,7 @@ namespace Seal.Model
         }
 
         bool _ignorePrePostError;
-        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(8, 2)]
+        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(9, 2)]
         public bool IgnorePrePostError
         {
             get { return _ignorePrePostError; }
@@ -225,7 +225,7 @@ namespace Seal.Model
 
 
         private string _forceJoinTableGUID;
-        [Category("Join Preferences"), DisplayName("Join table to use"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to use the table specified."), Id(1, 3)]
+        [Category("Join Preferences"), DisplayName("Join table to use"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to use the table specified."), Id(2, 3)]
         [TypeConverter(typeof(SourceTableConverter))]
         public string ForceJoinTableGUID
         {
@@ -238,7 +238,7 @@ namespace Seal.Model
         }
 
         private string _avoidTableGUID;
-        [Category("Join Preferences"), DisplayName("Join table to avoid"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to avoid to use the table specified."), Id(2, 3)]
+        [Category("Join Preferences"), DisplayName("Join table to avoid"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to avoid to use the table specified."), Id(3, 3)]
         [TypeConverter(typeof(SourceTableConverter))]
         public string AvoidJoinTableGUID
         {
