@@ -207,15 +207,14 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorCommunTasksTemplate = @"@using Sytem.Text
+        const string razorTasksTemplate = @"@using System.Text
 @functions {
-    //During execution, this script will be copied at the end of all task scripts of the report...
+    //During execution, this script will be copied at the end of all task scripts...
     public string MyConvertString(string input) {
         return input.Replace(""__"",""_"");
     }
 }
 ";
-
 
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
@@ -258,7 +257,7 @@ namespace Seal.Forms
                     frm.TypeForCheckSyntax = typeof(ReportTask);
                     frm.Text = "Edit task script";
                     frm.textBox.ConfigurationManager.Language = "cs";
-                    frm.TextToAddForCheck = ((ReportTask)context.Instance).Report.CommunTaskScript; 
+                    frm.TextToAddForCheck = ((ReportTask)context.Instance).Report.TasksScript + "\r\n" +  ((ReportTask)context.Instance).Source.TasksScript; 
                     List<string> samples = new List<string>();
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Refresh Data Sources enumerated lists\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.RefreshRepositoryEnums();\r\n}");
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Load a table from an Excel file, may need ODBC Office 2007 Drivers\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.LoadTableFromExcel(@\"c:\\temp\\loadFolder\", @\"c:\\temp\\excelFile.xlsx\", \"ExcelTabName\", \"DestinationTableName\", false /* true to load in all connections */);\r\n}");
@@ -411,15 +410,15 @@ namespace Seal.Forms
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                 }
-                else if (context.Instance is TasksFolder)
+                else if (context.Instance is TasksFolder || context.Instance is MetaSource)
                 {
-                    template = razorCommunTasksTemplate;
+                    template = razorTasksTemplate;
                     frm.TypeForCheckSyntax = typeof(ReportTask);
                     frm.Text = "Edit the script that will be added to all task scripts";
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
 
-                if (!string.IsNullOrEmpty(template) && string.IsNullOrWhiteSpace(valueToEdit))
+                if (!string.IsNullOrEmpty(template) && string.IsNullOrWhiteSpace(valueToEdit) && !context.PropertyDescriptor.IsReadOnly)
                 {
                     valueToEdit = template;
                 }

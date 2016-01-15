@@ -163,11 +163,11 @@ namespace Seal.Model
 
         public string FullScript
         {
-            get { return _script + (string.IsNullOrEmpty(Report.CommunTaskScript) ? "" : "\r\n" + Report.CommunTaskScript); }
+            get { return _script + (string.IsNullOrEmpty(Report.TasksScript) ? "" : "\r\n" + Report.TasksScript) + (string.IsNullOrEmpty(Source.TasksScript) ? "" : "\r\n" + Source.TasksScript); }
         }
 
         bool _ignoreError;
-        [Category("Options"), DisplayName("Ignore Errors"), Description("If true, errors occuring during the task execution are ignored and the report execution continues."), Id(1, 2)]
+        [Category("Options"), DisplayName("Ignore Errors"), Description("If true, errors occuring during the task execution are ignored and the report execution continues."), Id(2, 2)]
         public bool IgnoreError
         {
             get { return _ignoreError; }
@@ -175,7 +175,7 @@ namespace Seal.Model
         }
 
         bool _executeForEachConnection = false;
-        [Category("Options"), DisplayName("Execute for each connection"), Description("If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used."), Id(2, 2)]
+        [Category("Options"), DisplayName("Execute for each connection"), Description("If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used."), Id(3, 2)]
         public bool ExecuteForEachConnection
         {
             get { return _executeForEachConnection; }

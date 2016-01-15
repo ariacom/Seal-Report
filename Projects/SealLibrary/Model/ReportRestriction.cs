@@ -193,8 +193,13 @@ namespace Seal.Model
         [TypeConverter(typeof(CustomFormatConverter))]
         public string FormatRe
         {
-            get { return _format; }
-            set { _format = value; }
+            get {
+                SetDefaultFormat();
+                return _format; 
+            }
+            set { 
+                _format = value;
+            }
         }
 
         private string _operatorLabel;

@@ -473,7 +473,7 @@ namespace Seal.Model
         public List<ReportView> Views = new List<ReportView>();
 
         bool _useCustomConfiguration = false;
-        [DisplayName("Use custom configuration text"), Description("If true, the configuration text can be modified."), Category("Custom template configuration"), Id(1, 2)]
+        [DisplayName("Use custom configuration text"), Description("If true, the configuration text can be modified."), Category("Custom template configuration"), Id(2, 2)]
         public bool UseCustomConfiguration
         {
             get { return _useCustomConfiguration; }
@@ -486,7 +486,7 @@ namespace Seal.Model
         }
 
         string _customConfiguration;
-        [DisplayName("Custom configuration"), Description("The custom configuration text used instead of the configuration of the template."), Category("Custom template configuration"), Id(2, 2)]
+        [DisplayName("Custom configuration"), Description("The custom configuration text used instead of the configuration of the template."), Category("Custom template configuration"), Id(3, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string CustomConfiguration
         {
@@ -499,7 +499,7 @@ namespace Seal.Model
         }
 
         bool _useCustomTemplate = false;
-        [DisplayName("Use custom template text"), Description("If true, the template text can be modified."), Category("Custom template text"), Id(1, 3)]
+        [DisplayName("Use custom template text"), Description("If true, the template text can be modified."), Category("Custom template text"), Id(2, 3)]
         public bool UseCustomTemplate
         {
             get { return _useCustomTemplate; }
@@ -512,7 +512,7 @@ namespace Seal.Model
 
         DateTime _lastTemplateModification = DateTime.Now;
         string _customTemplate;
-        [DisplayName("Custom template"), Description("The custom template text used instead of the template defined by the template name."), Category("Custom template text"), Id(2, 3)]
+        [DisplayName("Custom template"), Description("The custom template text used instead of the template defined by the template name."), Category("Custom template text"), Id(3, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string CustomTemplate
         {
@@ -531,7 +531,7 @@ namespace Seal.Model
             set { _parameters = value; }
         }
 
-        [DisplayName("General Parameters"), Description("The view parameters values."), Category("View parameters"), Id(1, 4)]
+        [DisplayName("General Parameters"), Description("The view parameters values."), Category("View parameters"), Id(2, 4)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public List<Parameter> GeneralParameters
@@ -540,7 +540,7 @@ namespace Seal.Model
             set { }
         }
 
-        [DisplayName("Data Table Configuration"), Description("The configuration values for the Data Table."), Category("View parameters"), Id(2, 4)]
+        [DisplayName("Data Table Configuration"), Description("The configuration values for the Data Table."), Category("View parameters"), Id(3, 4)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public List<Parameter> DataTableParameters
@@ -549,7 +549,21 @@ namespace Seal.Model
             set { }
         }
 
-        [DisplayName("NVD3 Chart Configuration"), Description("The configuration values for the NV3 Chart."), Category("View parameters"), Id(4, 4)]
+        string _cultureName = "";
+        [DisplayName("Culture name"), Description("The language and culture used to display the report. If empty, the culture of the server configuration is used."), Category("View parameters"), Id(4, 4)]
+        [TypeConverter(typeof(CultureNameConverter))]
+        public string CultureName
+        {
+            get { return _cultureName; }
+            set
+            {
+                _cultureInfo = null;
+                _cultureName = value;
+            }
+        }
+
+
+        [DisplayName("NVD3 Chart Configuration"), Description("The configuration values for the NV3 Chart."), Category("View parameters"), Id(5, 4)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public List<Parameter> NVD3Parameters
@@ -559,7 +573,7 @@ namespace Seal.Model
         }
 
         List<Parameter> _css = new List<Parameter>();
-        [DisplayName("CSS"), Description("The custom CSS values for the view."), Category("View parameters"), Id(5, 4)]
+        [DisplayName("CSS"), Description("The custom CSS values for the view."), Category("View parameters"), Id(6, 4)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<Parameter> CSS
         {
@@ -583,20 +597,6 @@ namespace Seal.Model
         {
             get { return string.Format("{0:D5}_{1}", _sortOrder, Name); }
         }
-
-        string _cultureName = "";
-        [DisplayName("Culture name"), Description("The language and culture used to display the report. If empty, the culture of the server configuration is used."), Category("View parameters"), Id(3, 4)]
-        [TypeConverter(typeof(CultureNameConverter))]
-        public string CultureName
-        {
-            get { return _cultureName; }
-            set
-            {
-                _cultureInfo = null;
-                _cultureName = value;
-            }
-        }
-
 
         CultureInfo _cultureInfo = null;
         public CultureInfo CultureInfo
@@ -647,7 +647,7 @@ namespace Seal.Model
         }
 
         Chart _chartConfiguration = null;
-        [DisplayName("Full configuration"), Description("The configuration of the chart if the model defines chart series."), Category("Microsoft Chart configuration"), Id(1, 6)]
+        [DisplayName("Full configuration"), Description("The configuration of the chart if the model defines chart series."), Category("Microsoft Chart configuration"), Id(2, 6)]
         [XmlIgnore]
         public Chart ChartConfiguration
         {
@@ -697,6 +697,18 @@ namespace Seal.Model
                     initMicrosoftChartConfigurationSeries();
                 }
                 return _chartConfiguration;
+            }
+        }
+
+        [DisplayName("Chart area"), Description("The chart area."), Category("Microsoft Chart configuration"), Id(3, 6)]
+        [XmlIgnore]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public ChartArea ChartArea
+        {
+            get
+            {
+                if (ChartConfiguration != null && ChartConfiguration.ChartAreas.Count > 0) return ChartConfiguration.ChartAreas[0];
+                return null;
             }
         }
 
@@ -760,17 +772,6 @@ namespace Seal.Model
             }
         }
 
-        [DisplayName("Chart area"), Description("The chart area."), Category("Microsoft Chart configuration"), Id(2, 6)]
-        [XmlIgnore]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public ChartArea ChartArea
-        {
-            get
-            {
-                if (ChartConfiguration != null && ChartConfiguration.ChartAreas.Count > 0) return ChartConfiguration.ChartAreas[0];
-                return null;
-            }
-        }
 
         [XmlIgnore]
         public ReportModel Model
@@ -795,7 +796,7 @@ namespace Seal.Model
         private SealPdfConverter _pdfConverter = null;
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("PDF Configuration"), Description("All the options applied to the PDF conversion from the HTML result."), Category("View parameters"), Id(5, 4)]
+        [DisplayName("PDF Configuration"), Description("All the options applied to the PDF conversion from the HTML result."), Category("View parameters"), Id(7, 4)]
         public SealPdfConverter PdfConverter
         {
             get
@@ -827,7 +828,7 @@ namespace Seal.Model
         private SealExcelConverter _excelConverter = null;
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Excel Configuration"), Description("All the options applied to the Excel conversion from the view."), Category("View parameters"), Id(6, 4)]
+        [DisplayName("Excel Configuration"), Description("All the options applied to the Excel conversion from the view."), Category("View parameters"), Id(8, 4)]
         public SealExcelConverter ExcelConverter
         {
             get
@@ -857,49 +858,49 @@ namespace Seal.Model
         #endregion
 
         #region Helpers
-        [Category("Helpers"), DisplayName("Reload template configuration"), Description("Load the template configuration file."), Id(1, 10)]
+        [Category("Helpers"), DisplayName("Reload template configuration"), Description("Load the template configuration file."), Id(2, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperReloadConfiguration
         {
             get { return "<Click to reload the template configuration and refresh the parameters>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset parameter values"), Description("Reset parameters (including Data Tables and NVD3 Chart configuration) to their default values."), Id(2, 10)]
+        [Category("Helpers"), DisplayName("Reset parameter values"), Description("Reset parameters (including Data Tables and NVD3 Chart configuration) to their default values."), Id(3, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetParameters
         {
             get { return "<Click to reset the view parameters to their default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset CSS values"), Description("Reset CSS to their default values."), Id(3, 10)]
+        [Category("Helpers"), DisplayName("Reset CSS values"), Description("Reset CSS to their default values."), Id(4, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetCSSParameters
         {
             get { return "<Click to reset the view CSS values to their default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset NVD3 Chart values"), Description("Reset NVD3 Chart values to their default values."), Id(3, 10)]
+        [Category("Helpers"), DisplayName("Reset NVD3 Chart values"), Description("Reset NVD3 Chart values to their default values."), Id(5, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetNVD3Parameters
         {
             get { return "<Click to reset the view NVD3 Chart values to their default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset Microsoft Chart configuration"), Description("Reset the Microsoft Chart configuration to default values."), Id(3, 10)]
+        [Category("Helpers"), DisplayName("Reset Microsoft Chart configuration"), Description("Reset the Microsoft Chart configuration to default values."), Id(6, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetChartConfiguration
         {
             get { return "<Click to reset the Microsoft Chart configuration to default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to its default value."), Id(5, 10)]
+        [Category("Helpers"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to its default value."), Id(7, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetPDFConfigurations
         {
             get { return "<Click to reset the PDF configuration values to default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to its default value."), Id(6, 10)]
+        [Category("Helpers"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to its default value."), Id(8, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetExcelConfigurations
         {
@@ -907,7 +908,7 @@ namespace Seal.Model
         }
 
         string _information;
-        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(7, 10)]
+        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(9, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
         public string Information
         {
@@ -916,7 +917,7 @@ namespace Seal.Model
         }
 
         string _error;
-        [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(8, 10)]
+        [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(10, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
         public string Error
         {

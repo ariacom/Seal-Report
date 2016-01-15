@@ -8,7 +8,7 @@
     //Parameters for this provider
     provider.Parameters.Add(new SecurityParameter() { Name = "add_windows_groups", BoolValue = false, DisplayName = "Add security groups matching Windows groups", Description = "If true, the user will belong to the security groups having the name of his Windows groups." });
     provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_skip_domain", BoolValue = true, DisplayName = "Groups matching: Skip domain name", Description = "If true, the Windows-Security groups matching is done without the domain name." });
-    provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_ad_context", BoolValue = false, DisplayName = "Groups matching: Method used to get the Windows groups", Enums = new string[] { "", "Machine", "Domain" }, Description = "Select the context type used to get the Windows Groups. If empty, Windows Identity is used instead of Active Directory." });
+    provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_ad_context", Value = "", DisplayName = "Groups matching: Method used to get the Windows groups", Enums = new string[] { "", "Machine", "Domain" }, Description = "Select the context type used to get the Windows Groups. If empty, Windows Identity is used instead of Active Directory." });
     
     provider.Script = @"@using Seal.Model;
 @using System.Net;

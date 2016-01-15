@@ -24,7 +24,7 @@ namespace Seal.Forms
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                GetProperty("CommunScript").SetIsBrowsable(true);
+                GetProperty("TasksScript").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -33,12 +33,12 @@ namespace Seal.Forms
 
         public int GetSort() { return 1; }
 
-        [Category("Helpers"), DisplayName("Commun Razor Script"), Description("If set, the script is added to all task script executed. This may be useful to defined commun functions.")]
+        [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed. This may be useful to defined common functions for the report.")]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string CommunScript
+        public string TasksScript
         {
-            get { return Report.CommunTaskScript; }
-            set { Report.CommunTaskScript = value; }
+            get { return Report.TasksScript; }
+            set { Report.TasksScript = value; }
         }
     }
 }

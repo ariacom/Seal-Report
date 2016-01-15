@@ -36,6 +36,7 @@ namespace Seal.Forms
         const string ViewsKeyword = "[Views]";
         const string OutputsKeyword = "[Outputs]";
         const string TasksKeyword = "[Tasks]";
+        const string TasksFolderKeyword = "[Tasks Script]";
 
         object _source = null;
         Report _report = null;
@@ -94,6 +95,12 @@ namespace Seal.Forms
                 sourceName = "[Output Properties] ";
                 addRadioButton.Text = "Add the output to the destination reports selected";
                 updateRadioButton.Text = "Update selected properties to the destination outputs selected";
+            }
+            else if (_source is TasksFolder)
+            {
+                sourceName = "[Tasks Script] ";
+                addRadioButton.Visible = false;
+                updateRadioButton.Text = "Update selected properties to the reports selected";
             }
 
             List<PropertyItem> properties = new List<PropertyItem>();
@@ -277,6 +284,7 @@ namespace Seal.Forms
                 else if (_source is ReportView) return ViewsKeyword;
                 else if (_source is ReportTask) return TasksKeyword;
                 else if (_source is ReportOutput) return OutputsKeyword;
+                else if (_source is TasksFolder) return TasksFolderKeyword;
             }
             return "";
         }
@@ -381,6 +389,14 @@ namespace Seal.Forms
                     }
                 }
             }
+            else if (destinationName.StartsWith(TasksFolderKeyword))
+            {
+                if (report != _report)
+                {
+                    string name = string.Format("[{0}] Tasks Script ", fileName);
+                    _destinationItems.Add(new PropertyItem() { Name = name, Object = report });
+                }
+            }
         }
 
         void addViewsToDestinations(ReportView parentView, string prefix)
@@ -467,6 +483,10 @@ namespace Seal.Forms
             else if (destinationName.StartsWith(TasksKeyword))
             {
                 _destinationItems.RemoveAll(i => i.Object != null && ((ReportTask)i.Object).Report == report);
+            }
+            else if (destinationName.StartsWith(TasksFolderKeyword))
+            {
+                _destinationItems.RemoveAll(i => i.Object == report);
             }
             else if (destinationName.StartsWith(OutputsKeyword))
             {
@@ -920,6 +940,15 @@ namespace Seal.Forms
                             }
                         }
                     }
+                }
+
+                //Source is Report TasksFolder
+                else if (_source is TasksFolder)
+                {
+                    //Update report tasksScript
+                    Report reportDestination = destinationObject.Object as Report;
+                    if (!reportsToSave.Contains(reportDestination)) reportsToSave.Add(reportDestination);
+                    reportDestination.TasksScript = _report.TasksScript;
                 }
             }
 

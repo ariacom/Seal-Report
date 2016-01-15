@@ -122,7 +122,7 @@ namespace Seal.Model
                 {
                     if (_type == ColumnType.Numeric) NumericStandardFormat = NumericStandardFormat.Default;
                     else if (_type == ColumnType.DateTime) DateTimeStandardFormat = DateTimeStandardFormat.Default;
-                    else Format = "{0}";
+                    else _format = "";
                     UpdateEditorAttributes();
                 }
             }
@@ -203,16 +203,17 @@ namespace Seal.Model
         }
 
         protected string _format = "";
-        [Category("Options"), DisplayName("Format"), Description("If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)."), Id(3, 3)]
+        [Category("Options"), DisplayName("Custom Format"), Description("If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)."), Id(3, 3)]
         [TypeConverter(typeof(CustomFormatConverter))]
         public string Format
         {
             get {
-                if (Type == ColumnType.Numeric && NumericStandardFormat == NumericStandardFormat.Default) return Source.NumericFormat;
-                else if (Type == ColumnType.DateTime && DateTimeStandardFormat == DateTimeStandardFormat.Default) return Source.DateTimeFormat;
+                SetDefaultFormat();
                 return _format; 
             }
-            set { _format = value; }
+            set { 
+                _format = value;
+            }
         }
 
 
@@ -227,25 +228,39 @@ namespace Seal.Model
                 else if (element.IsNumeric) type = ColumnType.Numeric;
                 else type = ColumnType.Text;
             }
-
+            SetDefaultFormat();
             if (type == ColumnType.Numeric && NumericStandardFormat != NumericStandardFormat.Custom)
             {
-                if (NumericStandardFormat == NumericStandardFormat.Default) Format = Source.NumericFormat;
-                else Format = Helper.ConvertNumericStandardFormat(NumericStandardFormat);
+                _format = Helper.ConvertNumericStandardFormat(NumericStandardFormat);
             }
             else if (type == ColumnType.DateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom)
             {
-                if (DateTimeStandardFormat == DateTimeStandardFormat.Default) Format = Source.DateTimeFormat;
-                else Format = Helper.ConvertDateTimeStandardFormat(DateTimeStandardFormat);
-            }
-            if (string.IsNullOrEmpty(Format))
-            {
-                if (Type == ColumnType.Numeric) Format = Source.NumericFormat;
-                else if (Type == ColumnType.DateTime) Format = Source.DateTimeFormat;
-                else Format = "";
+                _format = Helper.ConvertDateTimeStandardFormat(DateTimeStandardFormat);
             }
         }
 
+        protected void SetDefaultFormat()
+        {
+            if (this is ReportElement)
+            {
+                //Force the type of the ReportElement
+                ReportElement element = (ReportElement)this;
+                element.MetaColumn.SetDefaultFormat();
+                if (element.IsNumeric && NumericStandardFormat == NumericStandardFormat.Default)
+                {
+                    _format = element.MetaColumn.Type == ColumnType.Numeric ? element.MetaColumn.Format : Source.NumericFormat;
+                }
+                else if (element.IsDateTime && DateTimeStandardFormat == DateTimeStandardFormat.Default)
+                {
+                    _format = element.MetaColumn.Type == ColumnType.DateTime ? element.MetaColumn.Format : Source.DateTimeFormat;
+                }
+            }
+            else
+            {
+                if (Type == ColumnType.Numeric && NumericStandardFormat == NumericStandardFormat.Default) _format = Source.NumericFormat;
+                else if (Type == ColumnType.DateTime && DateTimeStandardFormat == DateTimeStandardFormat.Default) _format = Source.DateTimeFormat;
+            }
+        }
 
         protected string _enumGUID;
         [Category("Options"), DisplayName("Enumerated List"), Description("If defined, a list of values is proposed when the column is used for restrictions."), Id(4, 3)]

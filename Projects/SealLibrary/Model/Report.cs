@@ -66,11 +66,11 @@ namespace Seal.Model
             set { _taks = value; }
         }
 
-        private string _communTaskScript = "";
-        public string CommunTaskScript
+        private string _tasksScript = "";
+        public string TasksScript
         {
-            get { return _communTaskScript; }
-            set { _communTaskScript = value; }
+            get { return _tasksScript; }
+            set { _tasksScript = value; }
         }
 
         private List<ReportView> _views = new List<ReportView>();

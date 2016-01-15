@@ -100,7 +100,7 @@ namespace Seal.Model
         public DataTable NoSQLTable = null;
 
         string _definitionScript;
-        [Category("Definition"), DisplayName("Definition Script"), Description("The Razor Script used to built the DataTable object that defines the table."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Definition Script"), Description("The Razor Script used to built the DataTable object that defines the table."), Id(1, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string DefinitionScript
         {
@@ -109,7 +109,7 @@ namespace Seal.Model
         }
 
         string _loadScript;
-        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string LoadScript
         {
@@ -118,7 +118,7 @@ namespace Seal.Model
         }
 
         private string _alias;
-        [Category("Definition"), DisplayName("Table Alias"), Description("If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Table Alias"), Description("If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified."), Id(5, 1)]
         public string Alias
         {
             get { return _alias; }
@@ -126,7 +126,7 @@ namespace Seal.Model
         }
 
         bool _dynamicColumns = false;
-        [Category("Definition"), DisplayName("Dynamic Columns"), Description("If true, columns are generated automatically from the Table Name or the Select SQL Statement by reading the database catalog."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Dynamic Columns"), Description("If true, columns are generated automatically from the Table Name or the Select SQL Statement by reading the database catalog."), Id(6, 1)]
         public bool DynamicColumns
         {
             get { return _dynamicColumns; }
@@ -138,7 +138,7 @@ namespace Seal.Model
         }
 
         bool _keepColumnNames = false;
-        [Category("Definition"), DisplayName("Keep Column Names"), Description("If true, column names are kept when generated from the database catalog."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Keep Column Names"), Description("If true, column names are kept when generated from the database catalog."), Id(7, 1)]
         public bool KeepColumnNames
         {
             get { return _keepColumnNames; }
@@ -147,7 +147,7 @@ namespace Seal.Model
 
 
         private string _type;
-        [Category("Definition"), DisplayName("Table Type"), Description("Type of the table got from database catalog."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Table Type"), Description("Type of the table got from database catalog."), Id(8, 1)]
         public string Type
         {
             get { return _type; }
@@ -163,7 +163,7 @@ namespace Seal.Model
         }
 
         string _preSQL;
-        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(1, 2)]
+        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(2, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string PreSQL
         {
@@ -172,7 +172,7 @@ namespace Seal.Model
         }
 
         string _postSQL;
-        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(2, 2)]
+        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(3, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string PostSQL
         {
@@ -181,7 +181,7 @@ namespace Seal.Model
         }
 
         bool _ignorePrePostError;
-        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(3, 2)]
+        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(4, 2)]
         public bool IgnorePrePostError
         {
             get { return _ignorePrePostError; }
@@ -189,7 +189,7 @@ namespace Seal.Model
         }
 
         string _whereSQL;
-        [Category("SQL"), DisplayName("Additional WHERE Clause"), Description("Additional SQL added in the WHERE clause when the table is involved in a query. The text may contain Razor script if it starts with '@'."), Id(4, 2)]
+        [Category("SQL"), DisplayName("Additional WHERE Clause"), Description("Additional SQL added in the WHERE clause when the table is involved in a query. The text may contain Razor script if it starts with '@'."), Id(5, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string WhereSQL
         {
@@ -530,14 +530,14 @@ namespace Seal.Model
 
         #region Helpers
 
-        [Category("Helpers"), DisplayName("Refresh dynamic columns"), Description("Create or update dynamic columns for this table."), Id(1, 10)]
+        [Category("Helpers"), DisplayName("Refresh dynamic columns"), Description("Create or update dynamic columns for this table."), Id(2, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperRefreshColumns
         {
             get { return "<Click to refresh dynamic columns>"; }
         }
 
-        [Category("Helpers"), DisplayName("Check table"), Description("Check the table definition."), Id(2, 10)]
+        [Category("Helpers"), DisplayName("Check table"), Description("Check the table definition."), Id(3, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCheckTable
         {
@@ -545,7 +545,7 @@ namespace Seal.Model
         }
 
         string _information;
-        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(3, 10)]
+        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(4, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
         public string Information
         {
@@ -554,7 +554,7 @@ namespace Seal.Model
         }
 
         string _error;
-        [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(4, 10)]
+        [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(5, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
         public string Error
         {

@@ -278,6 +278,7 @@ namespace Seal.Helpers
             else if (format == NumericStandardFormat.Fixedpoint) return "F";
             else if (format == NumericStandardFormat.Fixedpoint2) return "F2";
             else if (format == NumericStandardFormat.General) return "G";
+            else if (format == NumericStandardFormat.General2) return "G2";
             else if (format == NumericStandardFormat.General5) return "G5";
             else if (format == NumericStandardFormat.Hexadecimal) return "H";
             else if (format == NumericStandardFormat.Hexadecimal8) return "H8";

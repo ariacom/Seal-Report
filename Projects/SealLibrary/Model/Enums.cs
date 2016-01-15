@@ -67,6 +67,12 @@ namespace Seal.Model
         Default,
         [Description("Custom")]
         Custom,
+        [Description("General")]
+        General,
+        [Description("General 2 Digits")]
+        General2,
+        [Description("General 5 Digits")]
+        General5,
         [Description("Number 0 Decimal")]
         Numeric0,
         [Description("Number 2 Decimals")]
@@ -89,10 +95,6 @@ namespace Seal.Model
         Fixedpoint,
         [Description("Fixed-point 2 Decimals")]
         Fixedpoint2,
-        [Description("General")]
-        General,
-        [Description("General 5 Digits")]
-        General5,
         [Description("Hexadecimal")]
         Hexadecimal,
         [Description("Hexadecimal 8 Digits")]
