@@ -1479,7 +1479,7 @@
         <Sql>SELECT DISTINCT 
 CategoryID, CategoryName
 FROM Categories
-ORDER BY 1</Sql>
+ORDER BY 2</Sql>
         <Values>
           <MetaEV>
             <Id>1</Id>

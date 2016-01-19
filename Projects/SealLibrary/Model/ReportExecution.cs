@@ -716,6 +716,8 @@ namespace Seal.Model
 
         private void buildTables(ReportModel model)
         {
+            initialSort(model);
+
             ResultCell[] headerPageValues = GetHeaderCells(PivotPosition.Page, model);
             ResultCell[] headerRowValues = GetHeaderCells(PivotPosition.Row, model);
             ResultCell[] headerColumnValues = GetHeaderCells(PivotPosition.Column, model);
@@ -1168,18 +1170,21 @@ namespace Seal.Model
                         int secondaryIndex = FindDimension(xSecondaryDimensions, page.SecondaryXDimensions);
                         xSecondaryDimensions = page.SecondaryXDimensions[secondaryIndex];
 
-                        string primarySplitterValues = Helper.ConcatCellValues(GetSplitterSerieCells(AxisType.Primary, data.Row, data.Column, model), ",");
-                        string secondarySplitterValues = Helper.ConcatCellValues(GetSplitterSerieCells(AxisType.Secondary, data.Row, data.Column, model), ",");
+                        ResultCell[] primarySplitterCells = GetSplitterSerieCells(AxisType.Primary, data.Row, data.Column, model);
+                        string primarySplitterValues = Helper.ConcatCellValues(primarySplitterCells, ",");
+                        ResultCell[] secondarySplitterCells = GetSplitterSerieCells(AxisType.Secondary, data.Row, data.Column, model);
+                        string secondarySplitterValues = Helper.ConcatCellValues(secondarySplitterCells, ",");
 
                         foreach (var dataCell in data.Data.Where(i => i.Element.IsSerie))
                         {
                             var serieElement = dataCell.Element;
                             ResultCell[] xValues = (serieElement.XAxisType == AxisType.Primary ? xPrimaryDimensions : xSecondaryDimensions);
                             string splitterValue = (serieElement.XAxisType == AxisType.Primary ? primarySplitterValues : secondarySplitterValues);
+                            ResultCell[] splitterCells = (serieElement.XAxisType == AxisType.Primary ? primarySplitterCells : secondarySplitterCells);
                             ResultSerie serie = page.Series.FirstOrDefault(i => i.Element == serieElement && i.SplitterValues == splitterValue);
                             if (serie == null)
                             {
-                                serie = new ResultSerie() { Element = serieElement, SplitterValues = splitterValue };
+                                serie = new ResultSerie() { Element = serieElement, SplitterValues = splitterValue, SplitterCells = splitterCells };
                                 page.Series.Add(serie);
                             }
 
@@ -1221,6 +1226,20 @@ namespace Seal.Model
         }
 
 
+        private void initialSort(ReportModel model)
+        {
+            foreach (var page in model.Pages)
+            {
+                //If we have rows and columns ...
+                if (page.Rows.Count > 0 && page.Columns.Count > 0)
+                {
+                    page.Rows.Sort(ResultCell.CompareCells);
+                    page.Columns.Sort(ResultCell.CompareCells);
+                }
+            }
+        }
+
+
         private void finalSort(ReportModel model)
         {
             foreach (var page in model.Pages)
@@ -1236,6 +1255,8 @@ namespace Seal.Model
                 {
                     page.PrimaryXDimensions.Sort(ResultCell.CompareCells);
                     page.SecondaryXDimensions.Sort(ResultCell.CompareCells);
+
+                    page.Series.Sort(ResultSerie.CompareSeries);
                 }
             }
         }
