@@ -475,6 +475,9 @@ namespace Seal.Model
         [XmlIgnore]
         public StringBuilder execHavingClause = new StringBuilder();
 
+        [XmlIgnore]
+        public Object Tag;
+
         public void InitReferences()
         {
             if (Source.MetaData == null) return;

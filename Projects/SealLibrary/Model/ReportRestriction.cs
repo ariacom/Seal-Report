@@ -719,7 +719,7 @@ namespace Seal.Model
                 else if (op == Operator.StartsWith) value2 = string.Format("{0}%", value);
                 else if (op == Operator.EndsWith) value2 = string.Format("%{0}", value);
                 result = Helper.QuoteSingle(value2);
-                if (MetaColumn.Type == ColumnType.UnicodeText)
+                if (TypeEl == ColumnType.UnicodeText)
                 {
                     if (Model.Connection.DatabaseType == DatabaseType.Oracle)
                     {

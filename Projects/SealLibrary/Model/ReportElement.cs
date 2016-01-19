@@ -213,8 +213,8 @@ namespace Seal.Model
             get
             {
                 SetStandardFormat();
-                string result = "";
-                if (string.IsNullOrEmpty(Format)) result = MetaColumn.Format;
+                string result = Format;
+                if (string.IsNullOrEmpty(result)) result = MetaColumn.Format;
                 if (string.IsNullOrEmpty(result))
                 {
                     if (IsNumeric) result = Source.NumericFormat;

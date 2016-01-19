@@ -229,11 +229,11 @@ namespace Seal.Model
                 else type = ColumnType.Text;
             }
             SetDefaultFormat();
-            if (type == ColumnType.Numeric && NumericStandardFormat != NumericStandardFormat.Custom)
+            if (type == ColumnType.Numeric && NumericStandardFormat != NumericStandardFormat.Custom && NumericStandardFormat != NumericStandardFormat.Default)
             {
                 _format = Helper.ConvertNumericStandardFormat(NumericStandardFormat);
             }
-            else if (type == ColumnType.DateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom)
+            else if (type == ColumnType.DateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom && DateTimeStandardFormat != DateTimeStandardFormat.Default)
             {
                 _format = Helper.ConvertDateTimeStandardFormat(DateTimeStandardFormat);
             }

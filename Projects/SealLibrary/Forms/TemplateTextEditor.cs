@@ -169,7 +169,7 @@ namespace Seal.Forms
     List<ReportRestriction> restrictions = model.Restrictions;
 
     //Script executed before the model result table is loaded from the database
-    //You can change the model restrictions or elements before the loaded
+    //You can change the model restrictions or elements before the load of the table
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
     log.LogMessage(""Processing the model 'Pre Load Script'"");
     //restrictions[0].Value1 = ""1994""; 

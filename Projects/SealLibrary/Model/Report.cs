@@ -1326,6 +1326,9 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        public Object Tag;
+
         public ReportView FindView(List<ReportView> views, string guid)
         {
             ReportView result = null;

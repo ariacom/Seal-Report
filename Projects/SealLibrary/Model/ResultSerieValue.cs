@@ -13,6 +13,7 @@ namespace Seal.Model
     public class ResultSerie
     {
         public string SplitterValues;
+        public ResultCell[] SplitterCells;
         public ReportElement Element = null;
         public List<ResultSerieValue> Values = new List<ResultSerieValue>();
 
@@ -38,6 +39,31 @@ namespace Seal.Model
                 return "";
             }
         }
+
+        public static int CompareSeries(ResultSerie a, ResultSerie b)
+        {
+            if (a.SplitterCells == null || b.SplitterCells == null) return 0;
+            return ResultCell.CompareCells(a.SplitterCells, b.SplitterCells);
+
+       /*     a.
+
+
+            if (a.Length == 0 || a.Length != b.Length) return 0;
+            ReportModel model = a[0].Element.Model;
+
+            foreach (ReportElement element in model.Elements.OrderBy(i => i.FinalSortOrder))
+            {
+                ResultCell aCell = a.FirstOrDefault(i => i.Element == element);
+                ResultCell bCell = b.FirstOrDefault(i => i.Element == element);
+                if (aCell != null && bCell != null)
+                {
+                    int result = CompareCell(aCell, bCell);
+                    if (result != 0) return (element.SortOrder.Contains(SortOrderConverter.kAscendantSortKeyword) ? 1 : -1) * result;
+                }
+            }*/
+            //return 0;
+        }
+
     }
 
     public class ResultSerieValue
