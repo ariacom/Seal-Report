@@ -39,7 +39,7 @@ namespace Seal.Forms
             {
                 if (((MetaSource)SelectedEntity).MetaData.MasterTable != null)
                 {
-                    if (!((MetaSource)SelectedEntity).MetaData.MasterTable.IsSQL) AddHelperButton("Edit Master Load Script", "Edit the default load script", Keys.F10);
+                    if (!((MetaSource)SelectedEntity).MetaData.MasterTable.IsSQL) AddHelperButton("Edit Master Load Script", "Edit the default load script", Keys.F12);
                     else AddHelperButton("Edit Master SQL", "Edit the select SQL Statement of the master table", Keys.F8);
                 }
                 AddHelperButton("Check connection", "Check the current database connection", Keys.F7);
@@ -50,7 +50,7 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is MetaTable)
             {
-                if (!((MetaTable)SelectedEntity).IsSQL) AddHelperButton("Edit Load Script", "Edit the default load script", Keys.F10);
+                if (!((MetaTable)SelectedEntity).IsSQL) AddHelperButton("Edit Load Script", "Edit the default load script", Keys.F12);
                 if (((MetaTable)SelectedEntity).IsEditable)
                 {
                     ToolStripButton button = AddHelperButton("Refresh columns", "Create or update dynamic columns for this table", Keys.F9);
@@ -100,7 +100,7 @@ namespace Seal.Forms
             else if (SelectedEntity is ReportView)
             {
                 var view = (ReportView)SelectedEntity;
-                if (view.NVD3Parameters.Count > 0 && view.Model != null && view.Model.HasNVD3Serie) AddHelperButton("NVD3 Chart", "Edit the NVD3 Chart configuration values", Keys.F10);
+                if (view.NVD3Parameters.Count > 0 && view.Model != null && view.Model.HasNVD3Serie) AddHelperButton("NVD3 Chart", "Edit the NVD3 Chart configuration values", Keys.F12);
                 if (view.DataTableParameters.Count > 0) AddHelperButton("Data Table", "Edit the Data Table configuration values", Keys.F9);
                 if (view.CSS.Count > 0) AddHelperButton("Edit CSS", "Edit the CSS parameters of the view", Keys.F8);
                 if (view.Parameters.Count > 0) AddHelperButton("Edit Parameters", "Edit the parameters of the view", Keys.F7);
@@ -144,7 +144,7 @@ namespace Seal.Forms
                             source.Error = source.Connection.Error;
                             source.InitEditor();
                         }
-                        if (key == Keys.F8 || key == Keys.F10)
+                        if (key == Keys.F8 || key == Keys.F12)
                         {
                             MetaTable table = ((MetaSource)SelectedEntity).MetaData.MasterTable;
                             if (table != null)
@@ -175,7 +175,7 @@ namespace Seal.Forms
                                 EntityHandler.InitEntity(SelectedEntity);
                             }
                         }
-                        if (key == Keys.F10)
+                        if (key == Keys.F12)
                         {
                             EditProperty("Default Load Script");
                         }
@@ -237,7 +237,7 @@ namespace Seal.Forms
                         if (key == Keys.F7) EditProperty("General Parameters");
                         else if (key == Keys.F8) EditProperty("CSS");
                         else if (key == Keys.F9) EditProperty("Data Table Configuration");
-                        else if (key == Keys.F10) EditProperty("NVD3 Chart Configuration");
+                        else if (key == Keys.F12) EditProperty("NVD3 Chart Configuration");
                     }
                     else if (SelectedEntity is ReportSchedule)
                     {

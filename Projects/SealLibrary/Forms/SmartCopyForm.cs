@@ -831,6 +831,15 @@ namespace Seal.Forms
                                         else view.CSS.Add(new Parameter() { Name = item.Name, Value = item.Value });
                                     }
                                 }
+                                else if (descriptor.Name == "NVD3Parameters")
+                                {
+                                    foreach (var item in viewSource.NVD3Parameters)
+                                    {
+                                        var param = view.NVD3Parameters.FirstOrDefault(i => i.Name == item.Name);
+                                        if (param != null) param.Value = item.Value;
+                                        else view.NVD3Parameters.Add(new Parameter() { Name = item.Name, Value = item.Value });
+                                    }
+                                }
                                 else if (descriptor.Name == "PdfConverter")
                                 {
                                     view.PdfConverter = null;

@@ -103,7 +103,7 @@ namespace Seal.Model
             set { _isNoSQL = value; }
         }
         
-        string _numericFormat = "N";
+        string _numericFormat = "N0";
         [Category("Default Display Formats"), DisplayName("Numeric Format"), Description("The display numeric format used for numeric column having the default format"), Id(2, 2)]
         [TypeConverter(typeof(CustomFormatConverter))]
         public string NumericFormat
