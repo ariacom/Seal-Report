@@ -64,6 +64,8 @@ namespace Seal.Forms
                             vals.Add(((MetaColumn)item).GUID);
                         }
                         column.UpdateEditor();
+
+                        if (HelperEditor.HandlerInterface != null) HelperEditor.HandlerInterface.SetModified();
                     }
                 }
             }
