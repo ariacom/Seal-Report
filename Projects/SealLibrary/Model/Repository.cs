@@ -141,6 +141,11 @@ namespace Seal.Model
             set { _configuration = value; }
         }
 
+        public void ReloadConfiguration()
+        {
+            _configuration = null;
+        }
+
         SealSecurity _security = null;
         public SealSecurity Security
         {

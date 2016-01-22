@@ -235,7 +235,7 @@
                             <td>
                                 @foreach (ReportRestriction restriction in Report.ExecutionCommonRestrictions.Where(i => i.IsEnumRE))
                                 {
-                                    <div style="height: @(Report.HasOnlyRestrictionsWithNoOperator ? 165 : 205)px; display: inline; float: left; padding-left: 10px;">
+                                    <div style="height: @(Report.HasOnlyRestrictionsWithNoOperator ? 185 : 205)px; display: inline; float: left; padding-left: 10px;">
                                         <span style="display: block; margin-right: 5px;">@restriction.DisplayNameElTranslated</span>
                                         <select id="@restriction.OperatorHtmlId" name="@restriction.OperatorHtmlId" size="1" style="display:@(restriction.HasOperator ? "block" : "none"); margin-bottom:2px; ">
                                             @foreach (Operator op in restriction.AllowedDisplayOperators)

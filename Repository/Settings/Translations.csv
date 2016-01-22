@@ -1,119 +1,119 @@
-Context;Reference;en;fr;it
-Report;Execute;;Exécuter;Esegui
-Report;Cancel;;Annuler;Annulla
-Report;Execution date;;Date d'exécution;Data di esecuzione
-Report;report information;;les informations;informazioni
-Report;execution messages;;les messages d'exécution;informazioni di esecuzione
-Report;report restrictions;;les restrictions du rapport;restrizioni report
-Report;Hide;;Cacher;Nascondi
-Report;Show;;Montrer;Mostra
-Report;Back to top;;Retour en haut;Torna su
-Report;Report has been cancelled;;Le rapport a été annulé;Il report è stato annullato
-Report;Starting execution...;;Exécution...;Esecuzione...
-Report;Processing;;En cours;Processamento
-Report;Execution duration;;Durée d'exécution;Durata esecuzione
-Report;second(s);;seconde(s);secondo(i)
-Report;Cancelling report...;;Annulation...;Cancellazione...
-Report;Executing report...;;Exécution...;Esecuzione...
-Report;report result panel;;le panneau des résultats;pannello risultati report
-Report;Select All;;Tout;Seleziona tutto
-Report;Now;;Maintenant;Ora
-Report;Today;;Aujourdhui;Oggi
-Report;ThisWeek;;CetteSemaine;Questa settimana
-Report;ThisMonth;;CeMois;Questo mese
-Report;ThisYear;;CetteAnnée;Questo anno
-Report;View HTML Result;;Afficher le résultat HTML;Vedi il risulato HTML
-Report;View Print Result;;Afficher le résultat Impression;Vedi il risultato di stampa
-Report;View PDF Result;;Afficher le résultat PDF;Vedi il risultato PDF
-Report;View Excel Result;;Afficher le résultat Excel;Vedi il risultato Excel
-Report;Use the date format '{0}' or one of the following keywords:;;Utiliser le format de date '{0}' ou bien l'un des mots clés suivants:;Usa il formato data '{0}' in uno dei seguenti formati
-Report;Total;;Total;Totale
-Report;Model;;Modèle;Modello
-Report;Records;;Enregistrements;Registra
-Report;Pages;;Pages;Pagine
-Report;Duration;;Durée;Durata
-Report;Restrictions;;Restrictions;Restrizioni
-Report;Processing...;;En cours…;In corso
-Report;Show _MENU_ rows;;Afficher _MENU_ lignes;Mostra _MENU_ righe
-Report;No row;;Pas de ligne;Nessuna riga
-Report;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_
-Report;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0
-Report;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_)
-Report;Filter:;;Filtre:;Filtro:
-Report;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports
-Report;No reports;;Pas de rapports;Nessun report
-Report;Page;;Page;Pagina
-Report;The report has been generated.;;Le rapport a été généré.;Il report è stato generato
-Report;View report result file;;Afficher le résultat du rapport;Visualizza il file del risultato del report
-Report;=;;=;=
-Report;!=;;!=;!=
-Report;Between;;Dans l'intervalle;Tra
-Report;Not Between;;En dehors de l'intervalle;Non compreso
-Report;<;;<;<
-Report;<=;;<=;<=
-Report;>;;>;>
-Report;>=;;>=;>=
-Report;Is Null;;Est Null;E' nullo
-Report;Is Not Null;;N'est pas Null;Non è nullo
-Report;Is Empty;;Est vide;E' vuoto
-Report;Is Not Empty;;N'est pas vide;Non è vuoto
-Report;Contains;;Contient;Contiene
-Report;Not Contains;;Ne contient pas;Non contiene
-Report;Starts With;;Commence avec;Inizia con
-Report;Ends With;;Se termine par;Finisce con
-Report;Report result generated in '{0}';;Rapport généré dans  '{0}';Il risultato del report è stato generato in '{0}'
-Report;Sum of;;Somme de;Somma di
-Report;Count of;;Nombre de;Conteggio di
-Report;Maximum of;;Maximum de;Massimo di
-Report;Minimum of;;Minimum de;Minimo di 
-Report;Average of;;Moyenne de;Media di
-Report;Description;;Description;Descrizione
-Report;AND;;ET;E
-Report;This report has execution errors. Please check details in the Windows Event Viewer...;;Ce rapport a des erreurs d'exécutions. Veuillez consulter les détails dans le journal des événements Windows.;Questo report produce degli errori durante l'esecuzione. Per favore controllare i dettagli nella finestra relativa alla visualizzazione Evento
-Report;Invalid date;;Date invalide;Data non valida
-Report;Invalid numeric value;;Valeur numérique invalide;Valore numerico non corretto
-Report;"Page &p; of &P;";;"Page &p; de &P;";"Pagina &p; de &P;"
-Report;Charts;;Graphes;Grafici
-Report;Drill >;;Navigation >;Navigation >
-Report;Drill <;;Navigation <;Navigation <
-Web;Close;;Fermer;Chiuso
-Web;Display all reports in the repository;;Affiche tous les rapports du Repository;Mostra tutti i report del repertorio
-Web;All reports and files;;Tous les rapports et fichiers;Tutti i reports e files
-Web;Reload the folders and the report list;;Recharge les répertoires et la liste des rapports;Ricarica i folders e la lista reports
-Web;Home;;Accueil;Home
-Web;Folder;;Répertoire;Repertorio
-Web;Report Name;;Nom du rapport;Nome del report
-Web;Last Modification;;Dernière modification;Ultima modifica
-Web;Execute the report;;Exécuter le rapport;Esegui il report
-Web;Execute report views or outputs;;Exécuter des vues ou des destinations de rapport;Esegui le viste dei report o gli outputs 
-Web;Execute a report view or output;;Exécuter une vue ou une destination de rapport;Esegui la vista dei report o l'output 
-Web;Type;;Type;Tipo
-Web;Execute the report view;;Exécuter la vue du rapport;Esecuzione del report
-Web;View;;Vue;Visualizza
-Web;Execute the report output;;Exécuter la destination du rapport;Esegui l'output del report
-Web;Output;;Destination;Destinazione
-Web;Reports;;Rapports;Reports
-Web;Wait please...;;Veuillez patienter...;Attendere prego...
-Web;Open the file;;Ouvrir le fichier;Apri il file
-Web;Version;;Version;Versione
-Web;Error got during user authentication.;;Erreur lors de l'authentification de l'utilisateur.;Errore durante l'autenticazione dell'utente
-Web;Logout;;Déconnexion;Uscita
-Web;Logout the user;;Déconnecte l'utilisateur;Uscita utente
-Web;Cancel;;Annuler;Annulla
-Web;Save;;Enregistrer;Salva
-Web;Login;;Connexion;Login
-Web;User information and preferences;;Information et préférences;Informazioni e preferenze dell'utente
-Web;User Name;;Nom d'utilisateur;Nome utente
-Web;Password;;Mot de passe;Password
-Web;Error;;Erreur;Errore
-Web;User Groups;;Groupes utilisateur;Gruppi utenti
-Web;Culture;;Culture;Cultura
-Web;Name;;Nom;Nome
-Web;Sorry, this report is not in your session anymore...;;Désolé, ce rapport n'est plus dans votre session…;
-Web;Sorry, the conversion is being in progress in another window...;;Désolé, la conversion est en cours dans une autre fenêtre…;
-NVD3;Stacked;;Empilée;Impilato/a
-NVD3;Grouped;;Groupée;Raggruppata
-NVD3;Stream;;Flux;Flusso
-NVD3;Expanded;;Etendue;Espanso
-NVD3;Re-scale y-axis;;Rééchelonner l'axe y;Riscala l'asse y
-NVD3;(right axis);;(axe de droite);(l'asse di destra)
+Context;Reference;en;fr;it;pt
+Report;Execute;;Exécuter;Esegui;Executar
+Report;Cancel;;Annuler;Annulla;Cancelar
+Report;Execution date;;Date d'exécution;Data di esecuzione;Data de execução
+Report;report information;;les informations;informazioni;Informações
+Report;execution messages;;les messages d'exécution;informazioni di esecuzione;Mensagem de execução
+Report;report restrictions;;les restrictions du rapport;restrizioni report;Restrições do relatório
+Report;Hide;;Cacher;Nascondi;Esconder
+Report;Show;;Montrer;Mostra;Mostrar
+Report;Back to top;;Retour en haut;Torna su;Voltar para o topo
+Report;Report has been cancelled;;Le rapport a été annulé;Il report è stato annullato;Relatório foi cancelado
+Report;Starting execution...;;Exécution...;Esecuzione...;Iniciando execução...
+Report;Processing;;En cours;Processamento;Processando
+Report;Execution duration;;Durée d'exécution;Durata esecuzione;Duração da execução
+Report;second(s);;seconde(s);secondo(i);Segundo(s)
+Report;Cancelling report...;;Annulation...;Cancellazione...;Cancelando relatório...
+Report;Executing report...;;Exécution...;Esecuzione...;Executando relatório...
+Report;report result panel;;le panneau des résultats;pannello risultati report;Painél de resultados
+Report;Select All;;Tout;Seleziona tutto;Selecionar tudo
+Report;Now;;Maintenant;Ora;Agora
+Report;Today;;Aujourdhui;Oggi;Hoje
+Report;ThisWeek;;CetteSemaine;Questa settimana;Esta semana
+Report;ThisMonth;;CeMois;Questo mese;Este mês
+Report;ThisYear;;CetteAnnée;Questo anno;Este ano
+Report;View HTML Result;;Afficher le résultat HTML;Vedi il risulato HTML;Mostrar em HTML
+Report;View Print Result;;Afficher le résultat Impression;Vedi il risultato di stampa;Mostrar Impressão
+Report;View PDF Result;;Afficher le résultat PDF;Vedi il risultato PDF;Mostrar em PDF
+Report;View Excel Result;;Afficher le résultat Excel;Vedi il risultato Excel;Mostrar em Excel
+Report;Use the date format '{0}' or one of the following keywords:;;Utiliser le format de date '{0}' ou bien l'un des mots clés suivants:;Usa il formato data '{0}' in uno dei seguenti formati;Use o formato data '{0}' ou um dos seguintes formatos:
+Report;Total;;Total;Totale;Total
+Report;Model;;Modèle;Modello;Modelo
+Report;Records;;Enregistrements;Registra;Registros
+Report;Pages;;Pages;Pagine;Páginas
+Report;Duration;;Durée;Durata;Duração
+Report;Restrictions;;Restrictions;Restrizioni;Restrições
+Report;Processing...;;En cours…;In corso;Processando...
+Report;Show _MENU_ rows;;Afficher _MENU_ lignes;Mostra _MENU_ righe;Mostra_MENU_linhas
+Report;No row;;Pas de ligne;Nessuna riga;Nenhuma linha
+Report;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_;Mostrando _START_ até _END_ de _TOTAL_
+Report;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0;Mostrando 0 até 0 de 0
+Report;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_)
+Report;Filter:;;Filtre:;Filtro:;Filtro:
+Report;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports;Mostrar_MENU_ relatórios
+Report;No reports;;Pas de rapports;Nessun report;Nenhum relatório
+Report;Page;;Page;Pagina;Página
+Report;The report has been generated.;;Le rapport a été généré.;Il report è stato generato;O relatório foi gerado.
+Report;View report result file;;Afficher le résultat du rapport;Visualizza il file del risultato del report;Mostrar o arquivo de relatório
+Report;=;;=;=;=
+Report;!=;;!=;!=;!=
+Report;Between;;Dans l'intervalle;Tra;Entre
+Report;Not Between;;En dehors de l'intervalle;Non compreso;Não está entre
+Report;<;;<;<;<
+Report;<=;;<=;<=;<=
+Report;>;;>;>;>
+Report;>=;;>=;>=;>=
+Report;Is Null;;Est Null;E' nullo;É nulo
+Report;Is Not Null;;N'est pas Null;Non è nullo;Não é nulo
+Report;Is Empty;;Est vide;E' vuoto;Está vazio
+Report;Is Not Empty;;N'est pas vide;Non è vuoto;Não está vazio
+Report;Contains;;Contient;Contiene;Contém
+Report;Not Contains;;Ne contient pas;Non contiene;Não contém
+Report;Starts With;;Commence avec;Inizia con;Começa com
+Report;Ends With;;Se termine par;Finisce con;Termina com
+Report;Report result generated in '{0}';;Rapport généré dans  '{0}';Il risultato del report è stato generato in '{0}';Relatóro gerado em '{0}'
+Report;Sum of;;Somme de;Somma di;Soma de
+Report;Count of;;Nombre de;Conteggio di;Contagem de
+Report;Maximum of;;Maximum de;Massimo di;Máximo de
+Report;Minimum of;;Minimum de;Minimo di ;Mínimo de
+Report;Average of;;Moyenne de;Media di;Média de
+Report;Description;;Description;Descrizione;Descrição
+Report;AND;;ET;E;E
+Report;This report has execution errors. Please check details in the Windows Event Viewer...;;Ce rapport a des erreurs d'exécutions. Veuillez consulter les détails dans le journal des événements Windows.;Questo report produce degli errori durante l'esecuzione. Per favore controllare i dettagli nella finestra relativa alla visualizzazione Evento;Este relatório possui erros. Por favor verifique os detalhes no Visualizador de Eventos do Windows...
+Report;Invalid date;;Date invalide;Data non valida;Data inválida
+Report;Invalid numeric value;;Valeur numérique invalide;Valore numerico non corretto;Valor numérico inválido
+Report;"Page &p; of &P;";;"Page &p; de &P;";"Pagina &p; de &P;";"Página &p; de &P;"
+Report;Charts;;Graphes;Grafici;Gráficos
+Report;Drill >;;Navigation >;Navigation >;Drill >
+Report;Drill <;;Navigation <;Navigation <;Drill <
+Web;Close;;Fermer;Chiuso;Fechar
+Web;Display all reports in the repository;;Affiche tous les rapports du Repository;Mostra tutti i report del repertorio;Mostra todos os relatórios do repositório
+Web;All reports and files;;Tous les rapports et fichiers;Tutti i reports e files;Todos os relatórios e arquivos
+Web;Reload the folders and the report list;;Recharge les répertoires et la liste des rapports;Ricarica i folders e la lista reports;Recarrega as pastas e lista de relatórios
+Web;Home;;Accueil;Home;Home
+Web;Folder;;Répertoire;Repertorio;Pasta
+Web;Report Name;;Nom du rapport;Nome del report;Nome do relatório
+Web;Last Modification;;Dernière modification;Ultima modifica;Última modificação
+Web;Execute the report;;Exécuter le rapport;Esegui il report;Execute o relatório
+Web;Execute report views or outputs;;Exécuter des vues ou des destinations de rapport;Esegui le viste dei report o gli outputs ;Execute as views ou outputs dos relatórios  
+Web;Execute a report view or output;;Exécuter une vue ou une destination de rapport;Esegui la vista dei report o l'output ;Execute a view ou output do relatório
+Web;Type;;Type;Tipo;Tipo
+Web;Execute the report view;;Exécuter la vue du rapport;Esecuzione del report;Execute o relatório
+Web;View;;Vue;Visualizza;View
+Web;Execute the report output;;Exécuter la destination du rapport;Esegui l'output del report;Execute o output do relatório
+Web;Output;;Destination;Destinazione;Output
+Web;Reports;;Rapports;Reports;Relatório
+Web;Wait please...;;Veuillez patienter...;Attendere prego...;Por favor aguarde...
+Web;Open the file;;Ouvrir le fichier;Apri il file;Abrir o arquivo
+Web;Version;;Version;Versione;Versão
+Web;Error got during user authentication.;;Erreur lors de l'authentification de l'utilisateur.;Errore durante l'autenticazione dell'utente;Erro durante a autenticação do usuário
+Web;Logout;;Déconnexion;Uscita;Desconectar
+Web;Logout the user;;Déconnecte l'utilisateur;Uscita utente;Desconectar o usuário
+Web;Cancel;;Annuler;Annulla;Cancelar
+Web;Save;;Enregistrer;Salva;Gravar
+Web;Login;;Connexion;Login;Login
+Web;User information and preferences;;Information et préférences;Informazioni e preferenze dell'utente;Informações do usuário e preferências
+Web;User Name;;Nom d'utilisateur;Nome utente;Nome do usuário
+Web;Password;;Mot de passe;Password;Senha
+Web;Error;;Erreur;Errore;Erro
+Web;User Groups;;Groupes utilisateur;Gruppi utenti;Grupos de usuários
+Web;Culture;;Culture;Cultura;Cultura
+Web;Name;;Nom;Nome;Nome
+Web;Sorry, this report is not in your session anymore...;;Désolé, ce rapport n'est plus dans votre session…;;Desculpe, este relatório não está mais em sua seção
+Web;Sorry, the conversion is being in progress in another window...;;Désolé, la conversion est en cours dans une autre fenêtre…;;Desculpe, a conversão está sendo realizada em outra janela.
+NVD3;Stacked;;Empilée;Impilato/a;Empilhado
+NVD3;Grouped;;Groupée;Raggruppata;Agrupado
+NVD3;Stream;;Flux;Flusso;Fluxo
+NVD3;Expanded;;Etendue;Espanso;Expandido
+NVD3;Re-scale y-axis;;Rééchelonner l'axe y;Riscala l'asse y;Redimesionar eixo y
+NVD3;(right axis);;(axe de droite);(l'asse di destra);(eixo direito)

@@ -160,6 +160,11 @@ namespace Seal
                 if (string.IsNullOrEmpty(_repository.Configuration.FilePath)) _repository.Configuration.FilePath = _repository.ConfigurationPath;
                 _repository.Configuration.SaveToFile();
             }
+            else
+            {
+                //reset configuration
+                _repository.ReloadConfiguration();
+            }
         }
 
         void securityClick(object sender, EventArgs e)

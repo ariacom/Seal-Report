@@ -302,7 +302,7 @@ namespace Seal.Helpers
             var task = this._task;
         	TaskHelper helper = this;
             ReportExecutionLog log = task.Report;
-            //Just replace helper.DesignMyRazorScript(); with the code below
+            //Just replace helper.DesignMyRazorScript(); with the code below            
 
 
             var reader = System.Xml.XmlReader.Create("http://msdn.microsoft.com/en-us/subscriptions/subscription-downloads.rss");
