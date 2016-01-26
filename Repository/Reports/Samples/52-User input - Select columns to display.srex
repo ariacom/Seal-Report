@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>ef57917f-dea4-497a-a36e-bf924d6ea8ad</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>46cfb40c-d55b-4047-86ca-cf56193d12ae</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
+      <NumericFormat>N0</NumericFormat>
+      <DateTimeFormat>d</DateTimeFormat>
+      <TasksScript />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>cc6ab3b6-e41d-4913-9443-67d91f488fe7</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums>
+          <MetaEnum>
+            <GUID>c7e10051-823f-46cb-91a8-971381b5a6ce</GUID>
+            <Name>Select Columns</Name>
+            <DefaultSQL>select col1,col2 from table order by col2</DefaultSQL>
+            <IsDynamic>false</IsDynamic>
+            <IsDbRefresh>false</IsDbRefresh>
+            <UsePosition>false</UsePosition>
+            <Translate>false</Translate>
+            <Values>
+              <MetaEV>
+                <Id>Quantity</Id>
+                <Val>Quantity</Val>
+              </MetaEV>
+              <MetaEV>
+                <Id>Amount</Id>
+                <Val>Amount</Val>
+              </MetaEV>
+              <MetaEV>
+                <Id>Discount</Id>
+                <Val>Discount</Val>
+              </MetaEV>
+            </Values>
+            <Width>160</Width>
+          </MetaEnum>
+        </Enums>
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>d4b58a38-6b84-40e8-8c93-d69610558bf4</GUID>
+      <Name>model</Name>
+      <SourceGUID>46cfb40c-d55b-4047-86ca-cf56193d12ae</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <PreLoadScript>@using Seal.Model
+@using System.Data
+@{
+    ReportModel model = Model;
+	ReportExecutionLog log = model.Report;
+	
+	//Use the model tag to store the original elements for several executions...
+	if (model.Tag == null) 
+	{
+		model.Tag = model.Elements.ToList();
+	}
+	else 
+	{
+		model.Elements = ((List&lt;ReportElement&gt;)model.Tag).ToList();
+	}
+	
+	ReportRestriction restriction = model.GetRestrictionByName("Columns Displayed");
+	if (restriction != null &amp;&amp; restriction.EnumValues.Count &gt; 0) 
+	{
+		log.LogMessage("{0} Columns selected. Removing columns not selected", restriction.EnumValues.Count);
+		model.Elements.RemoveAll(i =&gt; !restriction.EnumValues.Contains(i.DisplayNameEl) &amp;&amp; i.DisplayNameEl != "Category");
+	}
+}
+</PreLoadScript>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>ff807682-c72a-4b3f-be81-ace7a0606c36</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
+        </ReportElement>
+        <ReportElement>
+          <GUID>17eb0c5d-0f63-41f6-a6c4-ced2062ea429</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1b92262c-8af8-474b-9c4b-7322f490c94e</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5376bdc7-1376-4f65-95ea-c61ed8f901ec</GUID>
+          <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Sum</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>NVD3Serie</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
+        </ReportElement>
+      </Elements>
+      <Restriction>[a5337be3-9b87-4ecf-a430-18f1f0d84b81]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>a5337be3-9b87-4ecf-a430-18f1f0d84b81</GUID>
+          <Name>Products.CategoryID</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <DisplayName>Columns Displayed</DisplayName>
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>N0</Format>
+          <EnumGUID>c7e10051-823f-46cb-91a8-971381b5a6ce</EnumGUID>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
+          <Prompt>Prompt</Prompt>
+          <TypeRe>Default</TypeRe>
+          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
+          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
+          <FormatRe>N0</FormatRe>
+          <OperatorLabel />
+          <EnumGUIDRE>c7e10051-823f-46cb-91a8-971381b5a6ce</EnumGUIDRE>
+          <UseAsParameter>true</UseAsParameter>
+          <Operator>ValueOnly</Operator>
+          <EnumValues>
+            <string>Quantity</string>
+            <string>Amount</string>
+            <string>Discount</string>
+          </EnumValues>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+      <FromTables>
+        <MetaTable>
+          <GUID>d5aee57b-f4db-4889-9039-82f681e9ed1b</GUID>
+          <Name>Products</Name>
+          <DynamicColumns>false</DynamicColumns>
+          <KeepColumnNames>false</KeepColumnNames>
+          <Type>TABLE</Type>
+          <MustRefresh>false</MustRefresh>
+          <IgnorePrePostError>false</IgnorePrePostError>
+          <Columns>
+            <MetaColumn>
+              <GUID>b372adcc-127b-4044-98ba-12d9b94af34c</GUID>
+              <Name>Products.Discontinued</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Products</Category>
+              <DisplayName>Discontinued</DisplayName>
+              <DisplayOrder>9</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</GUID>
+              <Name>Products.ProductName</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Products</Category>
+              <DisplayName>Product Name</DisplayName>
+              <DisplayOrder>2</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren>
+                <string>12ce241a-1f80-4b69-a023-66df46152046</string>
+              </DrillChildren>
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</GUID>
+              <Name>Products.QuantityPerUnit</Name>
+              <Type>Text</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Products</Category>
+              <DisplayName>Quantity Per Unit</DisplayName>
+              <DisplayOrder>4</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format />
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>75715efd-6f8a-48ba-8f8e-2297d956d184</GUID>
+              <Name>Products.ReorderLevel</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Products</Category>
+              <DisplayName>Reorder Level</DisplayName>
+              <DisplayOrder>8</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</GUID>
+              <Name>Products.UnitPrice</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Products</Category>
+              <DisplayName>Unit Price</DisplayName>
+              <DisplayOrder>5</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</GUID>
+              <Name>Products.UnitsInStock</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Products</Category>
+              <DisplayName>Units In Stock</DisplayName>
+              <DisplayOrder>6</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>6fa87b3b-048f-4680-9516-35679cba84bf</GUID>
+              <Name>Products.UnitsOnOrder</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Products</Category>
+              <DisplayName>Units On Order</DisplayName>
+              <DisplayOrder>7</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</GUID>
+              <Name>Products.CategoryID</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Products</Category>
+              <DisplayName>Category</DisplayName>
+              <DisplayOrder>3</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</EnumGUID>
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren>
+                <string>087ed2f1-b58b-4407-9291-8329ee5dbfe1</string>
+              </DrillChildren>
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>d0a693f9-e276-4e6d-9ac2-d4d031610430</GUID>
+              <Name>Products.ProductID</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Products</Category>
+              <DisplayName>Product ID</DisplayName>
+              <DisplayOrder>1</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <HasHTMLTags xsi:nil="true" />
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+          </Columns>
+        </MetaTable>
+        <MetaTable>
+          <GUID>9a7c09ed-aea3-4ce2-8f9f-79dab152ab6d</GUID>
+          <Name>[Order Details]</Name>
+          <DynamicColumns>false</DynamicColumns>
+          <KeepColumnNames>false</KeepColumnNames>
+          <Type>TABLE</Type>
+          <MustRefresh>false</MustRefresh>
+          <IgnorePrePostError>false</IgnorePrePostError>
+          <Columns>
+            <MetaColumn>
+              <GUID>f2cf72ab-afdc-4d0e-ba73-80c3d6f47eea</GUID>
+              <Name>100*[Order Details].Discount</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Order Details</Category>
+              <DisplayName>Discount Rate</DisplayName>
+              <DisplayOrder>5</DisplayOrder>
+              <NumericStandardFormat>Numeric2</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N2</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>cb20a340-73d5-4e52-b7fc-59dab043c176</GUID>
+              <Name>[Order Details].Quantity</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Order Details</Category>
+              <DisplayName>Quantity</DisplayName>
+              <DisplayOrder>4</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>582298c9-607a-4b0b-bd5a-f29fd2750d66</GUID>
+              <Name>[Order Details].UnitPrice</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Order Details</Category>
+              <DisplayName>Unit Price</DisplayName>
+              <DisplayOrder>3</DisplayOrder>
+              <NumericStandardFormat>Numeric2</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N2</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>067548ce-bc83-48b8-8212-aa359bd12f9b</GUID>
+              <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Order Details</Category>
+              <DisplayName>Amount</DisplayName>
+              <DisplayOrder>6</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>a63be915-3593-4377-8155-5ab3a78f45ba</GUID>
+              <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Order Details</Category>
+              <DisplayName>Discount</DisplayName>
+              <DisplayOrder>7</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <EnumGUID />
+              <HasHTMLTags>false</HasHTMLTags>
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>10f4d9b4-4bc3-4564-b982-db23ba7655a1</GUID>
+              <Name>[Order Details].OrderID</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Order Details</Category>
+              <DisplayName>Order ID</DisplayName>
+              <DisplayOrder>1</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <HasHTMLTags xsi:nil="true" />
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+            <MetaColumn>
+              <GUID>5b9cbdc8-230b-4c0d-b9df-81e5ebbf7da7</GUID>
+              <Name>[Order Details].ProductID</Name>
+              <Type>Numeric</Type>
+              <IsAggregate>false</IsAggregate>
+              <Category>Order Details</Category>
+              <DisplayName>Product ID</DisplayName>
+              <DisplayOrder>2</DisplayOrder>
+              <NumericStandardFormat>Numeric0</NumericStandardFormat>
+              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+              <Format>N0</Format>
+              <HasHTMLTags xsi:nil="true" />
+              <DrillChildren />
+              <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+              <SubReports />
+            </MetaColumn>
+          </Columns>
+        </MetaTable>
+      </FromTables>
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks />
+  <TasksScript>@using System.Text
+@functions {
+    //During execution, this script will be copied at the end of all task scripts...
+    public string MyConvertString(string input) {
+        return input.Replace("__","_");
+    }
+}
+</TasksScript>
+  <Views>
+    <ReportView>
+      <GUID>37a7cecf-0719-4b51-a760-b79835820841</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>5ca576ba-0ee8-48f2-85db-d4ccb261856c</GUID>
+          <Name>Model HTML View</Name>
+          <Views />
+          <ModelGUID>d4b58a38-6b84-40e8-8c93-d69610558bf4</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <Parameters>
+            <Parameter>
+              <Name>data_tables_enabled</Name>
+              <Value>False</Value>
+            </Parameter>
+          </Parameters>
+          <CultureName />
+          <CSS>
+            <Parameter>
+              <Name>chart</Name>
+              <Value>display:inline; float:left;</Value>
+            </Parameter>
+            <Parameter>
+              <Name>data_table</Name>
+              <Value>display:inline; float:left;</Value>
+            </Parameter>
+            <Parameter>
+              <Name>nvd3_chart</Name>
+              <Value>height:300px; width:400px; page-break-inside:avoid;</Value>
+            </Parameter>
+          </CSS>
+          <SortOrder>1</SortOrder>
+          <ChartConfigurationXml />
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+        <Parameter>
+          <Name>message_button</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <CultureName />
+      <CSS />
+      <SortOrder>0</SortOrder>
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <ViewGUID>37a7cecf-0719-4b51-a760-b79835820841</ViewGUID>
+  <Schedules />
+</Report>
