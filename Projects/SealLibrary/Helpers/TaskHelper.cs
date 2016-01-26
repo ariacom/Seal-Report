@@ -21,6 +21,11 @@ namespace Seal.Helpers
             _task = task;
         }
 
+        public void LogMessage(string message, params object[] args)
+        {
+            Log.LogMessage(message, args);
+        }
+
         ReportExecutionLog Log
         {
             get { return _task.Report; }
@@ -285,6 +290,30 @@ namespace Seal.Helpers
                 throw new Exception(err);
             }
         }
+
+        public void ExecuteNonQuery(string sql, bool useAllConnections = false)
+        {
+            foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
+            {
+                if (_task.CancelReport) break;
+                var command = _task.GetDbCommand(connection);
+                command.CommandText = sql;
+                DatabaseHelper.ExecuteCommand(command);
+            }
+        }
+
+        public object ExecuteScalar(string sql)
+        {
+            var connection = _task.Source.Connections.FirstOrDefault(i => i.GUID == _task.Connection.GUID);
+            if (connection != null)
+            {
+                var command = _task.GetDbCommand(connection);
+                command.CommandText = sql;
+                return command.ExecuteScalar();
+            }
+            return null;
+        }
+
 
         //SANDBOX !
         //Just use this to code, compile and debug your Razor Script within Visual Studio...
