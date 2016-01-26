@@ -201,7 +201,8 @@ namespace Seal.Helpers
             }
         }
 
-        void executeCommand(DbCommand command)
+
+        public void ExecuteCommand(DbCommand command)
         {
             if (DebugMode) DebugLog.AppendLine("Executing SQL Command\r\n" + command.CommandText);
             try
@@ -219,11 +220,11 @@ namespace Seal.Helpers
             try
             {
                 command.CommandText = string.Format("drop table {0}", CleanName(table.TableName));
-                executeCommand(command);
+                ExecuteCommand(command);
             }
             catch { }
             command.CommandText = GetTableCreateCommand(table);
-            executeCommand(command);
+            ExecuteCommand(command);
         }
 
         public void InsertTable(DbCommand command, DataTable table, string dateTimeFormat, bool deleteFirst)
@@ -236,7 +237,7 @@ namespace Seal.Helpers
                 if (deleteFirst)
                 {
                     command.CommandText = string.Format("delete from {0}", CleanName(table.TableName));
-                    executeCommand(command);
+                    ExecuteCommand(command);
                 }
 
                 StringBuilder sql = new StringBuilder("");
@@ -248,7 +249,7 @@ namespace Seal.Helpers
                     if (cnt % InsertBurstSize == 0)
                     {
                         command.CommandText = GetInsertCommand(sql.ToString());
-                        executeCommand(command);
+                        ExecuteCommand(command);
                         sql = new StringBuilder("");
                     }
                 }
@@ -256,7 +257,7 @@ namespace Seal.Helpers
                 if (sql.Length != 0)
                 {
                     command.CommandText = GetInsertCommand(sql.ToString());
-                    executeCommand(command);
+                    ExecuteCommand(command);
                 }
                 transaction.Commit();
             }
