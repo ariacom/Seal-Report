@@ -8,6 +8,10 @@ The product focuses on an **easy installation** and **report design**: Once setu
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
 * **Native Pivot Tables**: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
 * **HTML 5 Charts** and **Microsoft Charts**: Define and display Chart Series in two mouse clicks.
+* **Drill Down navigation and Sub Reports:** Navigate in your report result to drill to a detail or to execute another report.
+* **Report Tasks:** Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
+* **No SQL Data Sources:**
+Fill up your source Data Tables from your own code and display them in a report.
 * **HTML Rendering using Razor engine**: Use the power of HTML5 in the report result (JQuery Tabs, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
 * **Web Report Server**: Publish your reports on the web (requires Internet Information Server 7 or 8 with MVC4)
 * **Task scheduler**: Schedule your report executions and generate results in folders or send them by emails (integrated with the Windows Tasks Scheduler)
