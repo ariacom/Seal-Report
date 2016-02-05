@@ -608,7 +608,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Unable to read the file '{0}'.\r\n{1}", path, ex.Message));
+                throw new Exception(string.Format("Unable to read the file '{0}'.\r\n{1}\r\n", path, ex.Message, ex.StackTrace));
             }
             return result;
         }

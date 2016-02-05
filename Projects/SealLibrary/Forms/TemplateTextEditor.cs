@@ -81,7 +81,7 @@ namespace Seal.Forms
 	}		
 
 	e.g. to display the cell context
-	cell.FinalValue = string.Format(""Row={0} Col={1} Title={2} Summary={3} Page={4} Data"", cell.ContextRow, cell.ContextCol, cell.IsTitle, cell.ContextIsSummaryTable);
+	cell.FinalValue = string.Format(""Row={0} Col={1} Title={2} Summary={3}"", cell.ContextRow, cell.ContextCol, cell.IsTitle, cell.ContextIsSummaryTable);
 	*/
 	}
 ";
