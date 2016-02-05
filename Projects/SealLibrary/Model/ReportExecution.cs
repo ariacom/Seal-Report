@@ -1095,14 +1095,14 @@ namespace Seal.Model
                 {
                     string newKey = Guid.NewGuid().ToString();
                     Helper.CompileRazor(script, typeof(ResultCell), newKey);
-                    _cellCompilationKeys.Add(script, newKey);
+                    if (!_cellCompilationKeys.ContainsKey(script)) _cellCompilationKeys.Add(script, newKey);
                 }
                 string key = _cellCompilationKeys[script];
-                if (!string.IsNullOrEmpty(key)) Razor.Run(_cellCompilationKeys[script], cell);
+                if (!string.IsNullOrEmpty(key)) Razor.Run(key, cell);
             }
             catch (Exception ex)
             {
-                Report.ExecutionMessages += string.Format("Error got when executing Cell Script for '{0}'\r\n{1}\r\n", cell.Element.DisplayNameEl, ex.Message);
+                Report.ExecutionMessages += string.Format("Error got when executing Cell Script for '{0}' in model '{1}'\r\n{2}\r\n", cell.Element.DisplayNameEl, cell.Element.Model.Name, ex.Message);
                 if (!_cellCompilationKeys.ContainsKey(script)) _cellCompilationKeys.Add(script, "");
             }
         }
