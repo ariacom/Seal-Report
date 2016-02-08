@@ -24,14 +24,6 @@ namespace Seal.Model
         public Dictionary<string, string> Translations = new Dictionary<string, string>();
         public int Usage;
 
-        static string convert(string value)
-        {
-            string result = value;
-            if (value.StartsWith("\"") && value.EndsWith("\"")) result = result.Substring(1, value.Length - 2);
-            result = result.Replace("\"\"", "\"");
-            return result;
-        }
-
         static public List<RepositoryTranslation> InitFromCSV(string filePath, bool hasInstance)
         {
             List<RepositoryTranslation> translations = new List<RepositoryTranslation>();
@@ -61,18 +53,18 @@ namespace Seal.Model
                         {
                             for (int i = startCol; i < collection.Count; i++)
                             {
-                                languages.Add(convert(collection[i].Value));
+                                languages.Add(ExcelHelper.FromCsv(collection[i].Value));
                             }
                             isHeader = false;
                         }
                         else
                         {
-                            RepositoryTranslation translation = new RepositoryTranslation() { Context = convert(collection[0].Value), Reference = convert(collection[startCol-1].Value) };
-                            if (hasInstance) translation.Instance = convert(collection[1].Value);
+                            RepositoryTranslation translation = new RepositoryTranslation() { Context = ExcelHelper.FromCsv(collection[0].Value), Reference = ExcelHelper.FromCsv(collection[startCol-1].Value) };
+                            if (hasInstance) translation.Instance = ExcelHelper.FromCsv(collection[1].Value);
                             translations.Add(translation);
                             for (int i = 0; i < languages.Count && i + startCol < collection.Count; i++)
                             {
-                                translation.Translations.Add(languages[i], convert(collection[i + startCol].Value));
+                                translation.Translations.Add(languages[i], ExcelHelper.FromCsv(collection[i + startCol].Value));
                             }
                         }
                     }

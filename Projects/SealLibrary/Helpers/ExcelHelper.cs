@@ -17,4 +17,14 @@ namespace Seal.Helpers
             if (val != null) val = val.Replace("\"", "\"\"");
             return string.Format("\"{0}\"{1}", val, separator);
         }
-    }}
+
+        static public string FromCsv(string value)
+        {
+            string result = value;
+            if (value.StartsWith("\"") && value.EndsWith("\"")) result = result.Substring(1, value.Length - 2);
+            result = result.Replace("\"\"", "\"");
+            return result;
+        }
+
+    }
+}

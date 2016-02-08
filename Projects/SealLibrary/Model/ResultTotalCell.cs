@@ -85,7 +85,7 @@ namespace Seal.Model
         public void ProcessContext()
         {
             //set the common row or col of the cells part of the total
-            //may be sued in the cell script for Series values
+            //may be used in the cell script for Series values
             int commonRow = -1, commonCol = -1;
             if (Cells.Count > 0)
             {
