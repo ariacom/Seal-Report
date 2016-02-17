@@ -38,6 +38,13 @@ namespace Seal.Forms
 
             this.Load += TemplateTextEditorForm_Load;
             this.FormClosed += TemplateTextEditorForm_FormClosed;
+            this.textBox.KeyDown += TextBox_KeyDown;
+            this.KeyDown += TextBox_KeyDown;
+        }
+
+        private void TemplateTextEditorForm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Escape) Close();
         }
 
         void TemplateTextEditorForm_Load(object sender, EventArgs e)
@@ -56,6 +63,11 @@ namespace Seal.Forms
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape) cancelToolStripButton_Click(sender, e);
         }
 
         private void okToolStripButton_Click(object sender, EventArgs e)

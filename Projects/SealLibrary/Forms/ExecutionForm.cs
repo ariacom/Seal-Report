@@ -30,6 +30,8 @@ namespace Seal.Forms
 
         private void ExecutionForm_Load(object sender, EventArgs e)
         {
+            this.KeyDown += TextBox_KeyDown;
+            this.logTextBox.KeyDown += TextBox_KeyDown;
             if (_thread != null)
             {
                 _thread.Start(this);
@@ -39,6 +41,11 @@ namespace Seal.Forms
         public bool IsJobCancelled()
         {
             return CancelJob;
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape && (_thread == null || !_thread.IsAlive)) Close();
         }
 
         public void Log(string text, params object[] args)

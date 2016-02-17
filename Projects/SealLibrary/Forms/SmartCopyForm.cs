@@ -59,6 +59,7 @@ namespace Seal.Forms
 
         private void SmartCopyForm_Load(object sender, EventArgs e)
         {
+
             string sourceName = "";
             if (_source is ReportModel)
             {

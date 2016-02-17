@@ -303,6 +303,18 @@ namespace Seal.Forms
         {
             if (LastSize != null) Size = LastSize.Value;
             if (LastLocation != null) Location = LastLocation.Value;
+            this.KeyDown += TextBox_KeyDown;
+            this.webBrowser.PreviewKeyDown += WebBrowser_PreviewKeyDown;
+        }
+
+        private void WebBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape) Close();
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape) Close();
         }
     }
 }

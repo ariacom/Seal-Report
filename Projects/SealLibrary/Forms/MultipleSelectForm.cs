@@ -53,6 +53,14 @@ namespace Seal.Forms
 
         private void MultipleSelectForm_Load(object sender, EventArgs e)
         {
+            this.KeyDown += TextBox_KeyDown;
+            filterToolStripTextBox.KeyDown += TextBox_KeyDown;
+            checkedListBox.KeyDown += TextBox_KeyDown;
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape) cancelToolStripButton_Click(sender, e);
         }
 
         private void MultipleSelectForm_Shown(object sender, EventArgs e)
