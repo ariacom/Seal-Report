@@ -34,12 +34,19 @@ namespace Seal.Forms
 
             this.Load += SQLEditorForm_Load;
             this.FormClosed += SQLEditorForm_FormClosed;
+            this.sqlTextBox.KeyDown += TextBox_KeyDown;
+            this.KeyDown += TextBox_KeyDown;
         }
 
         void SQLEditorForm_Load(object sender, EventArgs e)
         {
             if (LastSize != null) Size = LastSize.Value;
             if (LastLocation != null) Location = LastLocation.Value;
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape) cancelToolStripButton_Click(sender, e);
         }
 
         void SQLEditorForm_FormClosed(object sender, FormClosedEventArgs e)
