@@ -21,6 +21,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -148,7 +149,6 @@
     <Content Include="Images\wait.gif" />
     <Content Include="Libraries\Newtonsoft.Json.dll" />
     <Content Include="Scripts\bullet.gif" />
-    <Content Include="Scripts\d3.v3.min.js" />
     <Content Include="Scripts\Images\animated-overlay.gif" />
     <Content Include="Scripts\Images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Scripts\Images\ui-bg_diagonals-thick_20_666666_40x40.png" />
