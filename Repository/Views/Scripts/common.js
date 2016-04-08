@@ -42,7 +42,7 @@ function mainInit() {
     $("#execute_button")
 	.button()
 	.css('cursor', 'pointer')
-	.click(function () { executeReport() });
+	.click(function () { executeReport(); });
     //force execute
     $("input").keydown(function (event) {
         if (event.keyCode == 13) {

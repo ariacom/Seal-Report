@@ -115,14 +115,22 @@ namespace Seal.Model
             }
         }
 
-        public void SetCultureInfo(string cultureName)
+        public bool SetCultureInfo(string cultureName)
         {
+            bool result = false;
             try
             {
                 var newCulture = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == cultureName);
-                if (newCulture != null) _cultureInfo = newCulture;
+                if (newCulture == null) newCulture = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.Name == cultureName);
+                if (newCulture != null)
+                {
+                    result = true;
+                    _cultureInfo = newCulture;
+                }
             }
             catch { }
+
+            return result;
         }
 
         SealServerConfiguration _configuration = null;
@@ -524,12 +532,12 @@ namespace Seal.Model
             }
             return result;
         }
-        
+
         public string RepositoryTranslate(string context, string instance, string reference)
         {
             return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, context, instance, reference);
         }
-        
+
         public string TranslateFolderName(string path)
         {
             if (path.Length < ReportsFolder.Length) return Path.GetFileName(path);
