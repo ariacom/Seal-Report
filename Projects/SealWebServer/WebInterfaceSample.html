@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Seal Report: Web Interface Samples</title>
+    <meta charset="utf-8" />
+    <script type='text/javascript' src='http://code.jquery.com/jquery-1.11.3.min.js'></script>
+    <script type='text/javascript' src='http://code.jquery.com/ui/1.11.3/jquery-ui.min.js'></script>
+    <script type='text/javascript' src='http://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js'></script>
+    <link type='text/css' href='http://codeorigin.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css' rel='stylesheet' />
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        var sealServer = "http://localhost:17178/";
+        var connected = false;
+        var folder = null;
+        var files = null;
+
+        function enableControls() {
+            $("button").removeAttr("disabled");
+            if (connected) {
+                $("#login_button").attr("disabled", "disabled");
+            }
+            if (!connected) {
+                $("#open_button").attr("disabled", "disabled");
+                $("#open_folder_button").attr("disabled", "disabled");
+                $("#folders_button").attr("disabled", "disabled");
+                $("#logout_button").attr("disabled", "disabled");
+                $("#execute2_button").attr("disabled", "disabled");
+                $("#execute3_button").attr("disabled", "disabled");
+                $("#execute4_button").attr("disabled", "disabled");
+                $("#culture_button").attr("disabled", "disabled");
+                $("#translate_button").attr("disabled", "disabled");
+                $("#repository_translate_button").attr("disabled", "disabled");
+            }
+            if (!connected || !folder) {
+                $("#folder_detail_button").attr("disabled", "disabled");
+            }
+            if (!connected || !files) {
+                $("#execute_button").attr("disabled", "disabled");
+                $("#report_detail_button").attr("disabled", "disabled");
+            }
+        }
+
+        $(document).ready(function () {
+            $("#login_button")
+                .click(function () {
+                    $("#login_label").html("Connecting...<br>");
+                    $.post(sealServer + "SWILogin", { user_name: $("#user_name").val(), password: $("#password").val() })
+                        .done(function (data) {
+                            if (!data.error) {
+                                connected = true;
+                                $("#login_label").html("SWILogin Done:'" + data.name + "'<br>" + JSON.stringify(data));
+                                $("#logout_label").text("");
+                            }
+                            else {
+                                $("#login_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
+
+            $("#open_button")
+                .click(function () {
+                    window.open(sealServer + "Main");
+                });
+
+            $("#open_folder_button")
+                .click(function () {
+                    window.open(sealServer + "Detail?folder=\\Samples&mode=1");
+                });
+
+            $("#folders_button")
+                .click(function () {
+                    $.post(sealServer + "SWIGetFolders", { folderPath: "\\" })
+                        .done(function (data) {
+                            if (!data.error) {
+                                folder = data;
+                                $("#folders_label").html("SWIGetFolders Done:'" + data.displayName + "' with " + data.folders.length + " subfolders<br>" + JSON.stringify(data));
+
+                            }
+                            else {
+                                $("#folders_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
+
+            $("#folder_detail_button")
+                .click(function () {
+                    $.post(sealServer + "SWIGetFolderDetail", { folderPath: folder.folderPath })
+                        .done(function (data) {
+                            if (!data.error) {
+                                files = data.files;
+                                $("#folder_detail_label").html("SWIGetFolderDetail Done:'" + folder.folderPath + "' with " + data.files.length + " files<br>" + JSON.stringify(data));
+                            }
+                            else {
+                                $("#folder_detail_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
+
+            $("#report_detail_button")
+                .click(function () {
+                    $.post(sealServer + "SWIGetReportDetail", { filePath: files[0].filePath })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#report_detail_label").html("SWIReportDetail Done:'" + files[0].displayName + "' with " + data.views.length + " views and " + data.outputs.length + " outputs<br>" + JSON.stringify(data));
+                            }
+                            else {
+                                $("#report_detail_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
+
+
+
+            $("#execute_button")
+                .click(function () {
+                    $("#execute_label").text("Executing: " + files[0].filePath);
+                    $.post(sealServer + "InitExecuteReport", { path: files[0].filePath })
+                        .done(function (data) {
+                            $("#execute_label").text("Report executed...in another window");
+                            var win = window.open('about:blank');
+                            with (win.document) {
+                                open();
+                                write(data);
+                                close();
+                            }
+                        })
+                });
+
+            $("#execute2_button")
+            .click(function () {
+                $("#execute2_label").text("Executing 'Order Search' with custom restrictions...");
+                $.post(sealServer + "InitExecuteReport", {
+                    path: "\\Search - Orders.srex",
+                    r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "1234",
+                    r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
+                    r2_name: "Order Date", r2_operator: "Equal", r2_value_1: "19940809 00:00:00", r2_value_2: "19940810 00:00:00", r2_value_3: "19940811 00:00:00", r2_value_4: "19940812 00:00:00",
+                    r3_name: "Customer Contact", r3_operator: "Contains", r3_value_1: "ar"
+                })
+                    .done(function (data) {
+                        $("#execute2_label").text("Report executed with custom restrictions...in another window");
+                        var win = window.open('about:blank');
+                        with (win.document) {
+                            open();
+                            write(data);
+                            close();
+                        }
+                    })
+            });
+
+            $("#execute3_button")
+                .click(function () {
+                    $("#execute3_label").text("Executing '07-Outputs and schedules' with the Excel view");
+                    $.post(sealServer + "InitExecuteReport", { path: "\\Samples\\07-Outputs and schedules.srex", viewGUID: "c496f22b-fc4d-45da-a2fc-23f9ecbf878b" })
+                        .done(function (data) {
+                            $("#execute3_label").text("Report executed...in another window");
+                            var win = window.open('about:blank');
+                            with (win.document) {
+                                open();
+                                write(data);
+                                close();
+                            }
+                        })
+                });
+
+            $("#execute4_button")
+                .click(function () {
+                    $("#execute4_label").text("Executing '07-Outputs and schedules' with Output HTML");
+                    $.post(sealServer + "InitExecuteReport", { path: "\\Samples\\07-Outputs and schedules.srex", outputGUID: "cac770ed-3039-4af8-93d3-e197ac94d808" })
+                        .done(function (data) {
+                            $("#execute4_label").text("Report executed...in another window");
+                            var win = window.open('about:blank');
+                            with (win.document) {
+                                open();
+                                write(data);
+                                close();
+                            }
+                        })
+                });           
+
+
+            $("#logout_button")
+            .click(function () {
+                $.post(sealServer + "SWILogout")
+                    .done(function (data) {
+                        if (!data.error) {
+                            $("#connect_label").text("");
+                            $("#logout_label").text("Disconnected");
+                            connected = false;
+                            folders = null;
+                            files = null;
+                        }
+                        else {
+                            $("#browse_detail_label").text("Error: " + data.error);
+                        }
+                        enableControls();
+                    })
+            });
+
+            $("#culture_button")
+                .click(function () {
+                    $.post(sealServer + "SWISetCulture", { culture: "it-IT" })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#culture_label").text("SWISetCulture Done: Culture set to 'Italian - Italy'.");
+                            }
+                            else {
+                                $("#culture_label").text("Error: " + data.error);
+                            }
+                        })
+                });
+
+            $("#translate_button")
+                .click(function () {
+                    $.post(sealServer + "SWITranslate", { context: "Report", reference: "report restrictions" })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#translate_label").text("SWITranslate Done: Translation->" + data.text);
+                            }
+                            else {
+                                $("#translate_label").text("Error: " + data.error);
+                            }
+                        })
+                });
+
+            $("#repository_translate_button")
+                .click(function () {
+                    $.post(sealServer + "SWIRepositoryTranslate", { context: "Element", instance: "Customers.City", reference: "City" })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#repository_translate_label").text("SWIRepositoryTranslate Done: Translation->" + data.text);
+                            }
+                            else {
+                                $("#repository_translate_label").text("Error: " + data.error);
+                            }
+                        })
+                });
+            enableControls();
+        });
+    </script>
+</head>
+<body>
+    <b>Seal Report Web Interface: Basic Samples</b><br /><br />
+    Login to the server: User Name <input type="text" class="form-control" id="user_name" name="user_name" autofocus value="" />
+    Password <input type="password" class="form-control" id="password" name="password" />
+    <button id="login_button">Login</button>
+    <label id="login_label"><br /></label>
+    <br />
+    <button id="open_button">Open Web Server in a new Window</button>
+    <br />
+    <button id="open_folder_button">Open a folder in a new Window</button>
+    <br />
+    <br />
+    Get repository folders: <button id="folders_button">Get Folders</button>
+    <label id="folders_label"><br /></label>
+    <br />
+    <br />
+    Get list of files and reports in a folder: <button id="folder_detail_button">Get Folder Detail</button>
+    <label id="folder_detail_label"><br /></label>
+    <br />
+    <br />
+    Show details of a report: <button id="report_detail_button">Get Report Detail</button>
+    <label id="report_detail_label"><br /></label>
+    <br />
+    <br />
+    Execute a report in another Window:<br />
+    <button id="execute_button">Execute a report</button>
+    <label id="execute_label"></label>
+    <br />
+    <button id="execute2_button">Execute 'Order Search' with custom restrictions</button>
+    <label id="execute2_label"></label>
+    <br />
+    <button id="execute3_button">Execute '07-Outputs and schedules' with Excel view</button>
+    <label id="execute3_label"></label>
+    <br />
+    <button id="execute4_button">Execute '07-Outputs and schedules' to HTML Output</button>
+    <label id="execute4_label"></label>
+    <br />
+    Generate a report result:<br />
+    <button id="execute4_button">Generate a report HTML result</button>
+    <label id="execute4_label"></label>
+    Execute a View, Execute an Output
+
+    Execute a report to HTML result, get id, pool, get result
+    Execute a report to GenerateExcelResult, HTML, PDF, Print result, get id, pool, get result
+
+    Bug to check:
+    translate dans subfolders
+    caractères % dans fichier généré
+    <br />
+    <br />
+    Logout:<br />
+    <button id="logout_button">Logout</button>
+    <label id="logout_label"></label>
+
+    Save User Profile
+    Open Just a Folder
+    Execute Report, Get Report Status, Get Report Result, Cancel Report
+
+    <br />
+    Additional<br />
+    <button id="culture_button">Set Culture</button>
+    <label id="culture_label"></label>
+    <br />
+    <button id="translate_button">Translate</button>
+    <label id="translate_label"></label>
+    <br />
+    <button id="repository_translate_button">Repository Translate</button>
+    <label id="repository_translate_label"></label>
+    <br />
+</body>
+</html>

@@ -478,6 +478,8 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
+        public Dictionary<string, string> PreInputRestrictions = new Dictionary<string, string>();
+        [XmlIgnore]
         public Dictionary<string, string> InputRestrictions = new Dictionary<string, string>();
 
         public string GetInputRestriction(string key)

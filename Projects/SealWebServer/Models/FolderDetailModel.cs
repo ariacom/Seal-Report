@@ -16,5 +16,6 @@ namespace SealWebServer.Models
         public Repository Repository;
         public SecurityUser User;
         public bool IsRecursive = false;
+        public int Mode = 0; //Use to customize detail rendering
     }
 }
