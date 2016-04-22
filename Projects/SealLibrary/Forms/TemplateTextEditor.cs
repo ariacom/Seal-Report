@@ -185,7 +185,7 @@ namespace Seal.Forms
     ReportModel model = Model;
  	ReportExecutionLog log = model.Report;
 
-    //Final script executed to modify the model result tables after its generation
+    //Final script executed to modify the model result tables after their generations
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
     log.LogMessage(""Modifying result values with the 'Final Script'..."");
     ResultTable summaryTable = model.SummaryTable;
