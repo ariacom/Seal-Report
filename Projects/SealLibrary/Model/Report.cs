@@ -336,7 +336,6 @@ namespace Seal.Model
             }
         }
 
-
         [XmlIgnore]
         public bool HasValidationErrors = false;
         [XmlIgnore]

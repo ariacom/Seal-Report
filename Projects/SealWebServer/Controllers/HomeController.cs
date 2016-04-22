@@ -454,128 +454,7 @@ namespace SealWebServer.Controllers
                     Report report = execution.Report;
 
                     Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting report {1} for user '{0}'", WebUser.Name, report.FilePath);
-
-                    report.InputRestrictions.Clear();
-                    if (report.PreInputRestrictions.Count > 0)
-                    {
-                        int i = 0;
-                        while (true)
-                        {
-                            string prefix = string.Format("r{0}", i);
-                            string key = prefix + "_name";
-                            if (report.PreInputRestrictions.ContainsKey(key))
-                            {
-                                var displayName = report.PreInputRestrictions[key].ToLower();
-                                foreach (ReportRestriction restriction in report.ExecutionCommonRestrictions.Where(j => j.DisplayNameEl.ToLower() == displayName))
-                                {
-                                    //Convert values to normal input using the html id...
-                                    key = prefix + "_operator";
-                                    if (report.PreInputRestrictions.ContainsKey(key))
-                                    {
-                                        //operator
-                                        report.InputRestrictions.Add(restriction.OperatorHtmlId, report.PreInputRestrictions[key]);
-                                        if (restriction.IsEnumRE)
-                                        {
-                                            //options
-                                            key = prefix + "_enum_values";
-                                            if (report.PreInputRestrictions.ContainsKey(key))
-                                            {
-                                                var optionValues = report.PreInputRestrictions[key];
-                                                //Convert values into index of the enum...
-                                                var preOptionvalues = optionValues.Split(',');
-                                                for (int k = 0; k < restriction.EnumRE.Values.Count; k++)
-                                                {
-                                                    var enumDef = restriction.EnumRE.Values[k];
-                                                    if (preOptionvalues.Contains(enumDef.Id))
-                                                    {
-                                                        report.InputRestrictions.Add(restriction.OptionHtmlId + k.ToString(), "true");
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        else if (restriction.IsDateTime)
-                                        {
-                                            //convert to user input format
-                                            DateTime dt;
-                                            key = prefix + "_value_1";
-                                            if (report.PreInputRestrictions.ContainsKey(key))
-                                            {
-                                                if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-                                                {
-                                                    report.InputRestrictions.Add(restriction.ValueHtmlId + "_1", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
-                                                }
-                                            }
-                                            key = prefix + "_value_2";
-                                            if (report.PreInputRestrictions.ContainsKey(key))
-                                            {
-                                                if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-                                                {
-                                                    report.InputRestrictions.Add(restriction.ValueHtmlId + "_2", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
-                                                }
-                                            }
-                                            key = prefix + "_value_3";
-                                            if (report.PreInputRestrictions.ContainsKey(key))
-                                            {
-                                                if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-                                                {
-                                                    report.InputRestrictions.Add(restriction.ValueHtmlId + "_3", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
-                                                }
-                                            }
-                                            key = prefix + "_value_4";
-                                            if (report.PreInputRestrictions.ContainsKey(key))
-                                            {
-                                                if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
-                                                {
-                                                    report.InputRestrictions.Add(restriction.ValueHtmlId + "_4", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
-                                                }
-                                            }
-
-                                        }
-                                        else
-                                        {
-                                            //standard values
-                                            key = prefix + "_value_1";
-                                            if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_1", report.PreInputRestrictions[key]);
-                                            key = prefix + "_value_2";
-                                            if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_2", report.PreInputRestrictions[key]);
-                                            key = prefix + "_value_3";
-                                            if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_3", report.PreInputRestrictions[key]);
-                                            key = prefix + "_value_4";
-                                            if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_4", report.PreInputRestrictions[key]);
-                                        }
-                                    }
-                                }
-                                i++;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    else {
-                        //get restriction values from the form request (if any)
-                        foreach (string key in Request.Form.Keys)
-                        {
-                            string value = Request.Form[key];
-                            if (value != null)
-                            {
-                                if (key.EndsWith("_Option_Value"))
-                                {
-                                    foreach (string optionValue in value.Split(','))
-                                    {
-                                        report.InputRestrictions.Add(optionValue, "true");
-                                    }
-                                }
-                                else
-                                {
-                                    report.InputRestrictions.Add(key, value);
-                                }
-                            }
-                        }
-                    }
-                    report.PreInputRestrictions.Clear();
-
+                    initInputRestrictions(report);
                     while (execution.IsConvertingToExcel) Thread.Sleep(100);
                     report.IsNavigating = false;
                     execution.Execute();
@@ -700,7 +579,7 @@ namespace SealWebServer.Controllers
             return Json(new { error = error });
         }
 
-        public ActionResult ViewOutputResult(string execution_guid)
+        public ActionResult ActionViewOutputResult(string execution_guid)
         {
             try
             {
@@ -710,25 +589,7 @@ namespace SealWebServer.Controllers
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
                     Report report = execution.Report;
-                    if (!string.IsNullOrEmpty(report.ResultFilePath))
-                    {
-                        string publishPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.HTMLDisplayFilePath), Path.GetFileName(report.ResultFilePath)));
-                        System.IO.File.Copy(report.ResultFilePath, publishPath);
-                        if (!report.ForPDFConversion && !report.HasExternalViewer)
-                        {
-                            foreach (ReportModel model in report.Models)
-                            {
-                                if (model.HasSerie)
-                                {
-                                    foreach (ResultPage page in model.Pages.Where(i => i.ChartPath != null))
-                                    {
-                                        System.IO.File.Copy(page.ChartPath, Path.Combine(Path.GetDirectoryName(report.HTMLDisplayFilePath), Path.GetFileName(page.ChartPath)), true);
-                                    }
-                                }
-                            }
-                        }
-                        return Redirect(report.WebTempUrl + Path.GetFileName(publishPath));
-                    }
+                    return Redirect(publishReportResult(report));
                 }
             }
             catch (Exception ex)
@@ -997,7 +858,7 @@ namespace SealWebServer.Controllers
         }
 
 
-        public ActionResult SWIExecuteReport(string path, string viewGUID, string outputGUID)
+        public ActionResult SWIExecuteReport(string path, string viewGUID, string outputGUID, string format)
         {
             try
             {
@@ -1014,47 +875,61 @@ namespace SealWebServer.Controllers
                     }
 
                     Repository repository = Repository.CreateFast();
-                    Report reportToExecute = Report.LoadFromFile(filePath, repository);
-                    reportToExecute.ExecutionContext = ReportExecutionContext.WebReport;
-                    reportToExecute.SecurityContext = WebUser;
-                    reportToExecute.CurrentViewGUID = reportToExecute.ViewGUID;
+                    Report report = Report.LoadFromFile(filePath, repository);
+                    report.ExecutionContext = ReportExecutionContext.WebReport;
+                    report.SecurityContext = WebUser;
+                    report.CurrentViewGUID = report.ViewGUID;
 
                     //Init Pre Input restrictions
-                    reportToExecute.PreInputRestrictions.Clear();
-                    foreach (string key in Request.Form.Keys) reportToExecute.PreInputRestrictions.Add(key, Request.Form[key]);
+                    report.PreInputRestrictions.Clear();
+                    foreach (string key in Request.Form.Keys) report.PreInputRestrictions.Add(key, Request.Form[key]);
 
                     //execute to output
                     if (!string.IsNullOrEmpty(outputGUID))
                     {
-                        reportToExecute.OutputToExecute = reportToExecute.Outputs.FirstOrDefault(i => i.GUID == outputGUID);
-                        reportToExecute.ExecutionContext = ReportExecutionContext.WebOutput;
-                        if (reportToExecute.OutputToExecute != null) reportToExecute.CurrentViewGUID = reportToExecute.OutputToExecute.ViewGUID;
+                        report.OutputToExecute = report.Outputs.FirstOrDefault(i => i.GUID == outputGUID);
+                        report.ExecutionContext = ReportExecutionContext.WebOutput;
+                        if (report.OutputToExecute != null) report.CurrentViewGUID = report.OutputToExecute.ViewGUID;
                     }
 
                     //execute with custom view
-                    if (!string.IsNullOrEmpty(viewGUID)) reportToExecute.CurrentViewGUID = viewGUID;
+                    if (!string.IsNullOrEmpty(viewGUID)) report.CurrentViewGUID = viewGUID;
 
-                    ReportExecution execution = new ReportExecution() { Report = reportToExecute };
+                    ReportExecution execution = new ReportExecution() { Report = report };
 
-                    Session[reportToExecute.ExecutionGUID] = execution;
+                    Session[report.ExecutionGUID] = execution;
 
-
-                    int index = Request.Url.OriginalString.ToLower().IndexOf("initexecutereport");
+                    int index = Request.Url.OriginalString.ToLower().IndexOf("swiexecutereport");
                     if (index == -1) throw new Exception("Invalid URL");
-                    reportToExecute.WebUrl = Request.Url.OriginalString.Substring(0, index);
+                    report.WebUrl = Request.Url.OriginalString.Substring(0, index);
                     repository.WebPublishFolder = Path.Combine(Request.PhysicalApplicationPath, "temp");
                     repository.WebApplicationPath = Path.Combine(Request.PhysicalApplicationPath, "bin");
                     if (!Directory.Exists(repository.WebPublishFolder)) Directory.CreateDirectory(repository.WebPublishFolder);
                     FileHelper.PurgeTempDirectory(repository.WebPublishFolder);
 
-                    reportToExecute.InitForExecution();
+                    report.InitForExecution();
+
+                    initInputRestrictions(report);
 
                     execution.Execute();
-                    while (reportToExecute.Status != ReportStatus.Executed) System.Threading.Thread.Sleep(100);
-                    string resultPath = execution.GenerateHTMLResult();
+                    while (report.Status != ReportStatus.Executed) System.Threading.Thread.Sleep(100);
 
-                    execution.RenderHTMLDisplayForViewer();
-                    return Json(new { url = resultPath });
+                    string result = "";
+                    if (!string.IsNullOrEmpty(outputGUID))
+                    {
+                        //Copy the result output to temp
+                        result = publishReportResult(report);
+                    }
+                    else {
+                        string fileResult = "";
+                        if (format.ToLower() == "print") fileResult = execution.GeneratePrintResult();
+                        else if (format.ToLower() == "pdf") fileResult = execution.GeneratePDFResult();
+                        else if (format.ToLower() == "excel") fileResult = execution.GenerateExcelResult();
+                        else fileResult = execution.GenerateHTMLResult();
+                        result = execution.Report.WebTempUrl + Path.GetFileName(fileResult);
+                    }
+
+                    return Json(new { url = result });
                 }
             }
             catch (Exception ex)
@@ -1135,6 +1010,154 @@ namespace SealWebServer.Controllers
                 subFolders.Add(sub);
             }
             folder.folders = subFolders.ToArray();
+        }
+
+        void initInputRestrictions(Report report)
+        {
+            report.InputRestrictions.Clear();
+            if (report.PreInputRestrictions.Count > 0)
+            {
+                int i = 0;
+                while (true)
+                {
+                    string prefix = string.Format("r{0}", i);
+                    string key = prefix + "_name";
+                    if (report.PreInputRestrictions.ContainsKey(key))
+                    {
+                        var displayName = report.PreInputRestrictions[key].ToLower();
+                        foreach (ReportRestriction restriction in report.ExecutionCommonRestrictions.Where(j => j.DisplayNameEl.ToLower() == displayName))
+                        {
+                            //Convert values to normal input using the html id...
+                            key = prefix + "_operator";
+                            if (report.PreInputRestrictions.ContainsKey(key))
+                            {
+                                //operator
+                                report.InputRestrictions.Add(restriction.OperatorHtmlId, report.PreInputRestrictions[key]);
+                                if (restriction.IsEnumRE)
+                                {
+                                    //options
+                                    key = prefix + "_enum_values";
+                                    if (report.PreInputRestrictions.ContainsKey(key))
+                                    {
+                                        var optionValues = report.PreInputRestrictions[key];
+                                        //Convert values into index of the enum...
+                                        var preOptionvalues = optionValues.Split(',');
+                                        for (int k = 0; k < restriction.EnumRE.Values.Count; k++)
+                                        {
+                                            var enumDef = restriction.EnumRE.Values[k];
+                                            if (preOptionvalues.Contains(enumDef.Id))
+                                            {
+                                                report.InputRestrictions.Add(restriction.OptionHtmlId + k.ToString(), "true");
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (restriction.IsDateTime)
+                                {
+                                    //convert to user input format
+                                    DateTime dt;
+                                    key = prefix + "_value_1";
+                                    if (report.PreInputRestrictions.ContainsKey(key))
+                                    {
+                                        if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                        {
+                                            report.InputRestrictions.Add(restriction.ValueHtmlId + "_1", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                        }
+                                    }
+                                    key = prefix + "_value_2";
+                                    if (report.PreInputRestrictions.ContainsKey(key))
+                                    {
+                                        if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                        {
+                                            report.InputRestrictions.Add(restriction.ValueHtmlId + "_2", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                        }
+                                    }
+                                    key = prefix + "_value_3";
+                                    if (report.PreInputRestrictions.ContainsKey(key))
+                                    {
+                                        if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                        {
+                                            report.InputRestrictions.Add(restriction.ValueHtmlId + "_3", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                        }
+                                    }
+                                    key = prefix + "_value_4";
+                                    if (report.PreInputRestrictions.ContainsKey(key))
+                                    {
+                                        if (DateTime.TryParseExact(report.PreInputRestrictions[key], "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt))
+                                        {
+                                            report.InputRestrictions.Add(restriction.ValueHtmlId + "_4", ((IFormattable)dt).ToString(report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, report.ExecutionView.CultureInfo));
+                                        }
+                                    }
+
+                                }
+                                else
+                                {
+                                    //standard values
+                                    key = prefix + "_value_1";
+                                    if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_1", report.PreInputRestrictions[key]);
+                                    key = prefix + "_value_2";
+                                    if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_2", report.PreInputRestrictions[key]);
+                                    key = prefix + "_value_3";
+                                    if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_3", report.PreInputRestrictions[key]);
+                                    key = prefix + "_value_4";
+                                    if (report.PreInputRestrictions.ContainsKey(key)) report.InputRestrictions.Add(restriction.ValueHtmlId + "_4", report.PreInputRestrictions[key]);
+                                }
+                            }
+                        }
+                        i++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            else {
+                //get restriction values from the form request (if any)
+                foreach (string key in Request.Form.Keys)
+                {
+                    string value = Request.Form[key];
+                    if (value != null)
+                    {
+                        if (key.EndsWith("_Option_Value"))
+                        {
+                            foreach (string optionValue in value.Split(','))
+                            {
+                                report.InputRestrictions.Add(optionValue, "true");
+                            }
+                        }
+                        else
+                        {
+                            report.InputRestrictions.Add(key, value);
+                        }
+                    }
+                }
+            }
+            report.PreInputRestrictions.Clear();
+        }
+
+        string publishReportResult(Report report)
+        {
+            if (!string.IsNullOrEmpty(report.ResultFilePath))
+            {
+                string publishPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.HTMLDisplayFilePath), Path.GetFileName(report.ResultFilePath)));
+                System.IO.File.Copy(report.ResultFilePath, publishPath);
+                if (!report.ForPDFConversion && !report.HasExternalViewer)
+                {
+                    foreach (ReportModel model in report.Models)
+                    {
+                        if (model.HasSerie)
+                        {
+                            foreach (ResultPage page in model.Pages.Where(i => i.ChartPath != null))
+                            {
+                                System.IO.File.Copy(page.ChartPath, Path.Combine(Path.GetDirectoryName(report.HTMLDisplayFilePath), Path.GetFileName(page.ChartPath)), true);
+                            }
+                        }
+                    }
+                }
+                return report.WebTempUrl + Path.GetFileName(publishPath);
+            }
+            return "";
         }
         #endregion
     }

@@ -32,6 +32,9 @@
                 $("#execute2_button").attr("disabled", "disabled");
                 $("#execute3_button").attr("disabled", "disabled");
                 $("#execute4_button").attr("disabled", "disabled");
+                $("#generate_button").attr("disabled", "disabled");
+                $("#generate2_button").attr("disabled", "disabled");
+                $("#generate3_button").attr("disabled", "disabled");
                 $("#culture_button").attr("disabled", "disabled");
                 $("#translate_button").attr("disabled", "disabled");
                 $("#repository_translate_button").attr("disabled", "disabled");
@@ -49,7 +52,10 @@
             $("#login_button")
                 .click(function () {
                     $("#login_label").html("Connecting...<br>");
-                    $.post(sealServer + "SWILogin", { user_name: $("#user_name").val(), password: $("#password").val() })
+                    $.post(sealServer + "SWILogin", {
+                        user_name: $("#user_name").val(),
+                        password: $("#password").val()
+                    })
                         .done(function (data) {
                             if (!data.error) {
                                 connected = true;
@@ -75,7 +81,9 @@
 
             $("#folders_button")
                 .click(function () {
-                    $.post(sealServer + "SWIGetFolders", { folderPath: "\\" })
+                    $.post(sealServer + "SWIGetFolders", {
+                        folderPath: "\\"
+                    })
                         .done(function (data) {
                             if (!data.error) {
                                 folder = data;
@@ -91,7 +99,9 @@
 
             $("#folder_detail_button")
                 .click(function () {
-                    $.post(sealServer + "SWIGetFolderDetail", { folderPath: folder.folderPath })
+                    $.post(sealServer + "SWIGetFolderDetail", {
+                        folderPath: folder.folderPath
+                    })
                         .done(function (data) {
                             if (!data.error) {
                                 files = data.files;
@@ -106,7 +116,9 @@
 
             $("#report_detail_button")
                 .click(function () {
-                    $.post(sealServer + "SWIGetReportDetail", { filePath: files[0].filePath })
+                    $.post(sealServer + "SWIGetReportDetail", {
+                        filePath: files[0].filePath
+                    })
                         .done(function (data) {
                             if (!data.error) {
                                 $("#report_detail_label").html("SWIReportDetail Done:'" + files[0].displayName + "' with " + data.views.length + " views and " + data.outputs.length + " outputs<br>" + JSON.stringify(data));
@@ -123,7 +135,9 @@
             $("#execute_button")
                 .click(function () {
                     $("#execute_label").text("Executing: " + files[0].filePath);
-                    $.post(sealServer + "InitExecuteReport", { path: files[0].filePath })
+                    $.post(sealServer + "InitExecuteReport", {
+                        path: files[0].filePath
+                    })
                         .done(function (data) {
                             $("#execute_label").text("Report executed...in another window");
                             var win = window.open('about:blank');
@@ -159,7 +173,10 @@
             $("#execute3_button")
                 .click(function () {
                     $("#execute3_label").text("Executing '07-Outputs and schedules' with the Excel view");
-                    $.post(sealServer + "InitExecuteReport", { path: "\\Samples\\07-Outputs and schedules.srex", viewGUID: "c496f22b-fc4d-45da-a2fc-23f9ecbf878b" })
+                    $.post(sealServer + "InitExecuteReport", {
+                        path: "\\Samples\\07-Outputs and schedules.srex",
+                        viewGUID: "c496f22b-fc4d-45da-a2fc-23f9ecbf878b"
+                    })
                         .done(function (data) {
                             $("#execute3_label").text("Report executed...in another window");
                             var win = window.open('about:blank');
@@ -174,7 +191,10 @@
             $("#execute4_button")
                 .click(function () {
                     $("#execute4_label").text("Executing '07-Outputs and schedules' with Output HTML");
-                    $.post(sealServer + "InitExecuteReport", { path: "\\Samples\\07-Outputs and schedules.srex", outputGUID: "cac770ed-3039-4af8-93d3-e197ac94d808" })
+                    $.post(sealServer + "InitExecuteReport", {
+                        path: "\\Samples\\07-Outputs and schedules.srex",
+                        outputGUID: "cac770ed-3039-4af8-93d3-e197ac94d808"
+                    })
                         .done(function (data) {
                             $("#execute4_label").text("Report executed...in another window");
                             var win = window.open('about:blank');
@@ -185,6 +205,63 @@
                             }
                         })
                 });           
+
+            $("#generate_button")
+                .click(function () {
+                    $("#generate_label").text("Generating report result");
+                    $.post(sealServer + "SWIExecuteReport", {
+                        path: "\\Search - Orders.srex", 
+                        format: "html", /* print, pdf or excel with the converter */
+                        r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "1234",
+                        r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
+                    })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#generate_label").html("SWIExecuteReport Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
+                            }
+                            else {
+                                $("#generate_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
+
+            $("#generate2_button")
+                .click(function () {
+                    $("#generate2_label").text("Generating report result");
+                    $.post(sealServer + "SWIExecuteReport", {
+                        path: "\\Samples\\07-Outputs and schedules.srex",
+                        outputGUID: "cac770ed-3039-4af8-93d3-e197ac94d808",
+                    })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#generate2_label").html("SWIExecuteReport Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
+                            }
+                            else {
+                                $("#generate2_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
+
+            $("#generate3_button")
+                .click(function () {
+                    $("#generate3_label").text("Generating report result");
+                    $.post(sealServer + "SWIExecuteReport", {
+                        path: "\\Samples\\07-Outputs and schedules.srex",
+                        format: "print", /* print, pdf or excel with the converter */
+                    })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#generate3_label").html("SWIExecuteReport Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
+                            }
+                            else {
+                                $("#generate3_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
+
 
 
             $("#logout_button")
@@ -275,7 +352,7 @@
     <button id="execute_button">Execute a report</button>
     <label id="execute_label"></label>
     <br />
-    <button id="execute2_button">Execute 'Order Search' with custom restrictions</button>
+    <button id="execute2_button">Execute 'Search - Orders' with custom restrictions</button>
     <label id="execute2_label"></label>
     <br />
     <button id="execute3_button">Execute '07-Outputs and schedules' with Excel view</button>
@@ -284,9 +361,17 @@
     <button id="execute4_button">Execute '07-Outputs and schedules' to HTML Output</button>
     <label id="execute4_label"></label>
     <br />
-    Generate a report result:<br />
-    <button id="execute4_button">Generate a report HTML result</button>
-    <label id="execute4_label"></label>
+    Generating report results:
+    <br />
+    <button id="generate_button">Generate 'Search - Orders' in HTML</button>
+    <label id="generate_label"></label>
+    <br />
+    <button id="generate2_button">Generate '07-Outputs and schedules' in Output</button>
+    <label id="generate2_label"></label>
+    <br />
+    <button id="generate3_button">Generate '07-Outputs and schedules' in Print HTML</button>
+    <label id="generate3_label"></label>
+    <br />
     Execute a View, Execute an Output
 
     Execute a report to HTML result, get id, pool, get result
