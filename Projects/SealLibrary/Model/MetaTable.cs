@@ -330,6 +330,7 @@ namespace Seal.Model
                     if (newColumn == null)
                     {
                         newColumn = MetaColumn.Create(fullColumnName);
+                        newColumn.Source = _source;
                         newColumn.DisplayName = (KeepColumnNames ? column.ColumnName.Trim() : Helper.DBNameToDisplayName(column.ColumnName.Trim()));
                         newColumn.Category = (Alias == MetaData.MasterTableName ? "Master" : AliasName);
                         newColumn.DisplayOrder = GetLastDisplayOrder();
@@ -337,12 +338,12 @@ namespace Seal.Model
                         newColumn.Type = type;
                         newColumn.SetStandardFormat();
                     }
+                    newColumn.Source = _source;
                     if (type != newColumn.Type)
                     {
                         newColumn.Type = type;
                         newColumn.SetStandardFormat();
                     }
-                    newColumn.Source = _source;
                 }
 
                 //Clear columns for No SQL
