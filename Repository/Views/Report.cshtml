@@ -354,7 +354,7 @@
                     @Raw(Helper.ToHtml(Report.OutputToExecute.Information))
                     @if (!string.IsNullOrEmpty(Report.ResultFilePath) && !Report.HasErrors)
                     {
-                        string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ViewOutputResult?execution_guid=" + Report.ExecutionGUID : "file:///" + Report.ResultFilePath;
+                        string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ActionViewOutputResult?execution_guid=" + Report.ExecutionGUID : "file:///" + Report.ResultFilePath;
                         <a style="display:block;margin-top:10px" href="@url" target="_new">@Report.Translate("View report result file")</a><br />
                     }
                 </div>
@@ -363,7 +363,7 @@
             {
                 if (!string.IsNullOrEmpty(Report.ResultFilePath) && !Report.HasErrors)
                 {
-                    string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ViewOutputResult?execution_guid=" + Report.ExecutionGUID : "file:///" + Report.ResultFilePath;
+                    string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "ActionViewOutputResult?execution_guid=" + Report.ExecutionGUID : "file:///" + Report.ResultFilePath;
                     <div style="margin:4px">
                         @Raw(Helper.ToHtml(Report.Translate("The report has been generated.")))
                         <a style="display:block;margin-top:10px" href="@url" target="_new">@Report.Translate("View report result file")</a><br />
