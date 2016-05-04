@@ -79,7 +79,9 @@ FROM
             //Update the data source with a new table
             var table = source.AddTable(true);
             table.DynamicColumns = true;
-            table.Sql = "select * from products";
+            table.Name = "products";
+            //Instead of the name, could be a direct SQL statement:
+            //table.Sql = "select * from products";
             table.Refresh();
 
             //Set the source of the default model

@@ -17,7 +17,6 @@
         var sealServer = "http://localhost:17178/";
         var connected = false;
         var folder = null;
-        var files = null;
 
         function enableControls() {
             $("button").removeAttr("disabled");
@@ -38,13 +37,11 @@
                 $("#culture_button").attr("disabled", "disabled");
                 $("#translate_button").attr("disabled", "disabled");
                 $("#repository_translate_button").attr("disabled", "disabled");
+                $("#execute_button").attr("disabled", "disabled");
+                $("#report_detail_button").attr("disabled", "disabled");
             }
             if (!connected || !folder) {
                 $("#folder_detail_button").attr("disabled", "disabled");
-            }
-            if (!connected || !files) {
-                $("#execute_button").attr("disabled", "disabled");
-                $("#report_detail_button").attr("disabled", "disabled");
             }
         }
 
@@ -82,12 +79,12 @@
             $("#folders_button")
                 .click(function () {
                     $.post(sealServer + "SWIGetFolders", {
-                        folderPath: "\\"
+                        path: "\\"
                     })
                         .done(function (data) {
                             if (!data.error) {
                                 folder = data;
-                                $("#folders_label").html("SWIGetFolders Done:'" + data.displayName + "' with " + data.folders.length + " subfolders<br>" + JSON.stringify(data));
+                                $("#folders_label").html("SWIGetFolders Done:'" + data.name + "' with " + data.folders.length + " subfolders<br>" + JSON.stringify(data));
 
                             }
                             else {
@@ -100,12 +97,11 @@
             $("#folder_detail_button")
                 .click(function () {
                     $.post(sealServer + "SWIGetFolderDetail", {
-                        folderPath: folder.folderPath
+                        path: folder.folderPath
                     })
                         .done(function (data) {
                             if (!data.error) {
-                                files = data.files;
-                                $("#folder_detail_label").html("SWIGetFolderDetail Done:'" + folder.folderPath + "' with " + data.files.length + " files<br>" + JSON.stringify(data));
+                                $("#folder_detail_label").html("SWIGetFolderDetail Done:'" + folder.path + "' with " + data.files.length + " files<br>" + JSON.stringify(data));
                             }
                             else {
                                 $("#folder_detail_label").text("Error: " + data.error);
@@ -117,11 +113,11 @@
             $("#report_detail_button")
                 .click(function () {
                     $.post(sealServer + "SWIGetReportDetail", {
-                        filePath: files[0].filePath
+                        path: "\\Samples\\07-Outputs and schedules.srex"
                     })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#report_detail_label").html("SWIReportDetail Done:'" + files[0].displayName + "' with " + data.views.length + " views and " + data.outputs.length + " outputs<br>" + JSON.stringify(data));
+                                $("#report_detail_label").html("SWIReportDetail Done:" + data.views.length + " view(s) and " + data.outputs.length + " output(s)<br>" + JSON.stringify(data));
                             }
                             else {
                                 $("#report_detail_label").text("Error: " + data.error);
@@ -134,9 +130,9 @@
 
             $("#execute_button")
                 .click(function () {
-                    $("#execute_label").text("Executing: " + files[0].filePath);
+                    $("#execute_label").text("Executing: 'Search - Orders'");
                     $.post(sealServer + "InitExecuteReport", {
-                        path: files[0].filePath
+                        path: "\\Search - Orders.srex"
                     })
                         .done(function (data) {
                             $("#execute_label").text("Report executed...in another window");
@@ -151,7 +147,7 @@
 
             $("#execute2_button")
             .click(function () {
-                $("#execute2_label").text("Executing 'Order Search' with custom restrictions...");
+                $("#execute2_label").text("Executing 'Search - Orders' with custom restrictions...");
                 $.post(sealServer + "InitExecuteReport", {
                     path: "\\Search - Orders.srex",
                     r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "1234",
@@ -273,7 +269,6 @@
                             $("#logout_label").text("Disconnected");
                             connected = false;
                             folders = null;
-                            files = null;
                         }
                         else {
                             $("#browse_detail_label").text("Error: " + data.error);
@@ -371,15 +366,6 @@
     <br />
     <button id="generate3_button">Generate '07-Outputs and schedules' in Print HTML</button>
     <label id="generate3_label"></label>
-    <br />
-    Execute a View, Execute an Output
-
-    Execute a report to HTML result, get id, pool, get result
-    Execute a report to GenerateExcelResult, HTML, PDF, Print result, get id, pool, get result
-
-    Bug to check:
-    translate dans subfolders
-    caractères % dans fichier généré
     <br />
     <br />
     Logout:<br />

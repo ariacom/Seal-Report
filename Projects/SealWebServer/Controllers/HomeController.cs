@@ -767,14 +767,14 @@ namespace SealWebServer.Controllers
 
         #region Web Interface
 
-        public ActionResult SWILogin(string user_name, string password)
+        public ActionResult SWILogin(string user, string password)
         {
             try
             {
                 CreateRepository();
                 CreateWebUser();
                 WebUser.WebPrincipal = User;
-                WebUser.WebUserName = user_name;
+                WebUser.WebUserName = user;
                 WebUser.WebPassword = password;
                 Authenticate();
                 return Json(new SWIUser() { name = WebUser.Name, group = WebUser.SecurityGroupsDisplay, culture = Repository.CultureInfo.EnglishName });
@@ -785,12 +785,12 @@ namespace SealWebServer.Controllers
             }
         }
 
-        public ActionResult SWIGetFolders(string folderPath)
+        public ActionResult SWIGetFolders(string path)
         {
             try
             {
                 CheckAuthentication();
-                var folder = new SWIFolder() { folderPath = folderPath, displayName = Repository.TranslateFolderName(folderPath) };
+                var folder = new SWIFolder() { path = path, name = Repository.TranslateFolderName(path) };
                 fillFolder(folder);
                 return Json(folder);
             }
@@ -800,26 +800,26 @@ namespace SealWebServer.Controllers
             }
         }
 
-        public ActionResult SWIGetFolderDetail(string folderPath)
+        public ActionResult SWIGetFolderDetail(string path)
         {
             try
             {
                 CheckAuthentication();
                 var files = new List<SWIFile>();
-                folderPath = Repository.ReportsFolder + (folderPath == null ? "" : folderPath);
-                SecurityFolder securityFolder = WebUser.FindSecurityFolder(folderPath);
-                if (securityFolder != null || WebUser.IsParentSecurityFolder(folderPath))
+                path = Repository.ReportsFolder + (path == null ? "" : path);
+                SecurityFolder securityFolder = WebUser.FindSecurityFolder(path);
+                if (securityFolder != null || WebUser.IsParentSecurityFolder(path))
                 {
-                    foreach (string path in Directory.GetFiles(Path.Combine(Repository.ReportsFolder, folderPath), securityFolder.UsedSearchPattern).Where(i => !Report.IsSealAttachedFile(i)))
+                    foreach (string newPath in Directory.GetFiles(Path.Combine(Repository.ReportsFolder, path), securityFolder.UsedSearchPattern).Where(i => !Report.IsSealAttachedFile(i)))
                     {
-                        if (Path.GetFileName(path) != securityFolder.DescriptionFile && Path.GetFileName(path) != Path.GetFileNameWithoutExtension(securityFolder.DescriptionFile) + ".cshtml")
+                        if (Path.GetFileName(newPath) != securityFolder.DescriptionFile && Path.GetFileName(newPath) != Path.GetFileNameWithoutExtension(securityFolder.DescriptionFile) + ".cshtml")
                         {
-                            var filePath = path.Substring(Repository.ReportsFolder.Length);
+                            var filePath = newPath.Substring(Repository.ReportsFolder.Length);
                             files.Add(new SWIFile() {
-                                filePath = filePath,
-                                displayName = Repository.TranslateFileName(path),
-                                isReport = Report.IsSealReportFile(path),
-                                canExecuteOutput = securityFolder.PublicationType == PublicationType.ExecuteOutput
+                                path = filePath,
+                                name = Repository.TranslateFileName(newPath),
+                                isReport = Report.IsSealReportFile(newPath),
+                                execOutput = securityFolder.PublicationType == PublicationType.ExecuteOutput
                             });
                         }
                     }
@@ -832,19 +832,19 @@ namespace SealWebServer.Controllers
             }
         }
 
-        public ActionResult SWIGetReportDetail(string filePath)
+        public ActionResult SWIGetReportDetail(string path)
         {
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
 
-                string path = Repository.ReportsFolder + filePath;
-                if (!System.IO.File.Exists(path)) throw new Exception("Report path not found");
-                SecurityFolder securityFolder = WebUser.FindSecurityFolder(Path.GetDirectoryName(path));
+                string newPath = Repository.ReportsFolder + path;
+                if (!System.IO.File.Exists(newPath)) throw new Exception("Report path not found");
+                SecurityFolder securityFolder = WebUser.FindSecurityFolder(Path.GetDirectoryName(newPath));
                 if (securityFolder == null) throw new Exception("Error: this folder is not published");
 
                 Repository repository = Repository;
-                Report report = Report.LoadFromFile(path, repository);
+                Report report = Report.LoadFromFile(newPath, repository);
                 SWIReport result = new SWIReport();
                 result.views = (from i in report.Views select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
                 result.outputs= (from i in report.Outputs select new SWIOutput() { guid = i.GUID, name = i.Name, displayName = report.TranslateOutputName(i.Name) }).ToArray();
@@ -999,13 +999,13 @@ namespace SealWebServer.Controllers
         void fillFolder(SWIFolder folder)
         {
             List<SWIFolder> subFolders = new List<SWIFolder>();
-            string folderPath = Repository.ReportsFolder + (folder.folderPath == null ? "\\" : folder.folderPath);
+            string folderPath = Repository.ReportsFolder + (folder.path == null ? "\\" : folder.path);
             foreach (string subFolder in Directory.GetDirectories(folderPath))
             {
                 SecurityFolder securityFolder = WebUser.FindSecurityFolder(subFolder);
                 if (securityFolder == null && !WebUser.IsParentSecurityFolder(subFolder)) continue;
                 var subFolderPath = folderPath = subFolder.Substring(Repository.ReportsFolder.Length);
-                var sub = new SWIFolder() { folderPath = subFolderPath, displayName = Repository.TranslateFolderName(subFolder) };
+                var sub = new SWIFolder() { path = subFolderPath, name = Repository.TranslateFolderName(subFolder) };
                 fillFolder(sub);
                 subFolders.Add(sub);
             }
