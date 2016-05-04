@@ -14,17 +14,17 @@ namespace SealWebServer.Models
 
     public class SWIFolder
     {
-        public string folderPath;
-        public string displayName;
+        public string path;
+        public string name;
         public SWIFolder[] folders = null;
     }
 
     public class SWIFile
     {
-        public string filePath;
-        public string displayName;
+        public string path;
+        public string name;
         public bool isReport;
-        public bool canExecuteOutput;
+        public bool execOutput;
     }
 
     public class SWIFolderDetail
