@@ -13,7 +13,6 @@ using Seal.Model;
 using SealWebServer.Models;
 using System.Threading;
 using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
 
 namespace SealWebServer.Controllers
@@ -922,6 +921,7 @@ namespace SealWebServer.Controllers
                     }
                     else {
                         string fileResult = "";
+                        if (string.IsNullOrEmpty(format)) format = "html";
                         if (format.ToLower() == "print") fileResult = execution.GeneratePrintResult();
                         else if (format.ToLower() == "pdf") fileResult = execution.GeneratePDFResult();
                         else if (format.ToLower() == "excel") fileResult = execution.GenerateExcelResult();

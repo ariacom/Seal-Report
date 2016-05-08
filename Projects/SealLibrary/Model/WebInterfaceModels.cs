@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SealWebServer.Models
+namespace Seal.Model
 {
     public class SWIUser
     {

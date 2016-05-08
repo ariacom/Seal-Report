@@ -229,6 +229,7 @@
     <Compile Include="Model\ResultTable.cs" />
     <Compile Include="Model\ResultTotalCell.cs" />
     <Compile Include="Model\RootComponent.cs" />
+    <Compile Include="Model\WebInterfaceModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
