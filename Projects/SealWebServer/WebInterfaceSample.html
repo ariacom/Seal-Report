@@ -15,8 +15,8 @@
     </style>
     <script>
         var sealServer = "http://localhost/Seal/";
+        sealServer = "http://localhost:17178/";
         var connected = false;
-        var folder = null;
 
         function enableControls() {
             $("button").removeAttr("disabled");
@@ -26,6 +26,7 @@
             if (!connected) {
                 $("#open_button").attr("disabled", "disabled");
                 $("#open_folder_button").attr("disabled", "disabled");
+                $("#folder_detail_button").attr("disabled", "disabled");
                 $("#folders_button").attr("disabled", "disabled");
                 $("#logout_button").attr("disabled", "disabled");
                 $("#execute2_button").attr("disabled", "disabled");
@@ -39,9 +40,6 @@
                 $("#repository_translate_button").attr("disabled", "disabled");
                 $("#execute_button").attr("disabled", "disabled");
                 $("#report_detail_button").attr("disabled", "disabled");
-            }
-            if (!connected || !folder) {
-                $("#folder_detail_button").attr("disabled", "disabled");
             }
         }
 
@@ -83,8 +81,7 @@
                     })
                         .done(function (data) {
                             if (!data.error) {
-                                folder = data;
-                                $("#folders_label").html("SWIGetFolders Done:'" + data.name + "' with " + data.folders.length + " subfolders<br>" + JSON.stringify(data));
+                                $("#folders_label").html("SWIGetFolders Done: " + data.folders.length + " subfolders<br>" + JSON.stringify(data));
 
                             }
                             else {
@@ -97,11 +94,11 @@
             $("#folder_detail_button")
                 .click(function () {
                     $.post(sealServer + "SWIGetFolderDetail", {
-                        path: folder.folderPath
+                        path: "\\Samples"
                     })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#folder_detail_label").html("SWIGetFolderDetail Done:'" + folder.path + "' with " + data.files.length + " files<br>" + JSON.stringify(data));
+                                $("#folder_detail_label").html("SWIGetFolderDetail for \\Samples Done: " + data.files.length + " files<br>" + JSON.stringify(data));
                             }
                             else {
                                 $("#folder_detail_label").text("Error: " + data.error);
@@ -150,7 +147,7 @@
                 $("#execute2_label").text("Executing 'Search - Orders' with custom restrictions...");
                 $.post(sealServer + "InitExecuteReport", {
                     path: "\\Search - Orders.srex",
-                    r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "1234",
+                    r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
                     r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
                     r2_name: "Order Date", r2_operator: "Equal", r2_value_1: "19940809 00:00:00", r2_value_2: "19940810 00:00:00", r2_value_3: "19940811 00:00:00", r2_value_4: "19940812 00:00:00",
                     r3_name: "Customer Contact", r3_operator: "Contains", r3_value_1: "ar"
@@ -208,7 +205,7 @@
                     $.post(sealServer + "SWIExecuteReport", {
                         path: "\\Search - Orders.srex", 
                         format: "html", /* print, pdf or excel with the converter */
-                        r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "1234",
+                        r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
                         r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
                     })
                         .done(function (data) {
@@ -268,7 +265,6 @@
                             $("#connect_label").text("");
                             $("#logout_label").text("Disconnected");
                             connected = false;
-                            folders = null;
                         }
                         else {
                             $("#browse_detail_label").text("Error: " + data.error);
@@ -282,7 +278,7 @@
                     $.post(sealServer + "SWISetCulture", { culture: "it-IT" })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#culture_label").text("SWISetCulture Done: Culture set to 'Italian - Italy'.");
+                                $("#culture_label").text("SWISetCulture Done: Culture set to " + data.culture);
                             }
                             else {
                                 $("#culture_label").text("Error: " + data.error);
@@ -321,29 +317,31 @@
 </head>
 <body>
     <b>Seal Report Web Interface: Basic Samples</b><br /><br />
-    Login to the server: User Name <input type="text" class="form-control" id="user_name" name="user_name" autofocus value="" />
+    Login:
+    <br/>
+    User Name <input type="text" class="form-control" id="user_name" name="user_name" autofocus value="" />
     Password <input type="password" class="form-control" id="password" name="password" />
     <button id="login_button">Login</button>
     <label id="login_label"><br /></label>
     <br />
-    <button id="open_button">Open Web Server in a new Window</button>
+    <button id="open_button">Open Web Server in a new window</button>
     <br />
-    <button id="open_folder_button">Open a folder in a new Window</button>
+    <button id="open_folder_button">Open a folder in a new window</button>
     <br />
     <br />
-    Get repository folders: <button id="folders_button">Get Folders</button>
+    Repository browsing:
+    <br/>
+    <button id="folders_button">Get Folders</button>
     <label id="folders_label"><br /></label>
     <br />
-    <br />
-    Get list of files and reports in a folder: <button id="folder_detail_button">Get Folder Detail</button>
+    <button id="folder_detail_button">Get Folder Detail</button>
     <label id="folder_detail_label"><br /></label>
     <br />
-    <br />
-    Show details of a report: <button id="report_detail_button">Get Report Detail</button>
+    <button id="report_detail_button">Get Report Detail</button>
     <label id="report_detail_label"><br /></label>
     <br />
     <br />
-    Execute a report in another Window:<br />
+    Execute a report in a new window:<br />
     <button id="execute_button">Execute a report</button>
     <label id="execute_label"></label>
     <br />
@@ -372,11 +370,7 @@
     Logout:<br />
     <button id="logout_button">Logout</button>
     <label id="logout_label"></label>
-
-    Save User Profile
-    Open Just a Folder
-    Execute Report, Get Report Status, Get Report Result, Cancel Report
-
+    <br />
     <br />
     Additional<br />
     <button id="culture_button">Set Culture</button>

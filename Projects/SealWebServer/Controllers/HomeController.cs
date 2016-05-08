@@ -788,7 +788,9 @@ namespace SealWebServer.Controllers
         {
             try
             {
-                CheckAuthentication();
+                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+
                 var folder = new SWIFolder() { path = path, name = Repository.TranslateFolderName(path) };
                 fillFolder(folder);
                 return Json(folder);
@@ -803,7 +805,9 @@ namespace SealWebServer.Controllers
         {
             try
             {
-                CheckAuthentication();
+                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+
                 var files = new List<SWIFile>();
                 path = Repository.ReportsFolder + (path == null ? "" : path);
                 SecurityFolder securityFolder = WebUser.FindSecurityFolder(path);
@@ -835,7 +839,8 @@ namespace SealWebServer.Controllers
         {
             try
             {
-                if (!CheckAuthentication()) return Content(_loginContent);
+                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
 
                 string newPath = Repository.ReportsFolder + path;
                 if (!System.IO.File.Exists(newPath)) throw new Exception("Report path not found");
@@ -844,7 +849,7 @@ namespace SealWebServer.Controllers
 
                 Repository repository = Repository;
                 Report report = Report.LoadFromFile(newPath, repository);
-                SWIReport result = new SWIReport();
+                SWIReportDetail result = new SWIReportDetail();
                 result.views = (from i in report.Views select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
                 result.outputs= (from i in report.Outputs select new SWIOutput() { guid = i.GUID, name = i.Name, displayName = report.TranslateOutputName(i.Name) }).ToArray();
                 return Json(result);
@@ -861,7 +866,8 @@ namespace SealWebServer.Controllers
         {
             try
             {
-                if (!CheckAuthentication()) return Content(_loginContent);
+                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
 
                 string filePath = Repository.ReportsFolder + path;
                 if (System.IO.File.Exists(filePath))
@@ -882,6 +888,7 @@ namespace SealWebServer.Controllers
                     //Init Pre Input restrictions
                     report.PreInputRestrictions.Clear();
                     foreach (string key in Request.Form.Keys) report.PreInputRestrictions.Add(key, Request.Form[key]);
+                    foreach (string key in Request.QueryString.Keys) report.PreInputRestrictions.Add(key, Request.QueryString[key]);
 
                     //execute to output
                     if (!string.IsNullOrEmpty(outputGUID))
@@ -956,9 +963,11 @@ namespace SealWebServer.Controllers
         {
             try
             {
-                CheckAuthentication();
+                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (string.IsNullOrEmpty(culture)) throw new Exception("Error: culture must be supplied");
+
                 if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
-                return Json(new {});
+                return Json(new { culture = Repository.CultureInfo.Name });
             }
             catch (Exception ex)
             {
@@ -970,7 +979,7 @@ namespace SealWebServer.Controllers
         {
             try
             {
-                CheckAuthentication();
+                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
                 return Json(new { text = Repository.Translate(context, reference) });
             }
             catch (Exception ex)
@@ -983,7 +992,7 @@ namespace SealWebServer.Controllers
         {
             try
             {
-                CheckAuthentication();
+                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
                 return Json(new { text = Repository.RepositoryTranslate(context, instance, reference) });
             }
             catch (Exception ex)

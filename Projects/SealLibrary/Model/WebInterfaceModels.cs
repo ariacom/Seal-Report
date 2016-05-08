@@ -46,7 +46,7 @@ namespace Seal.Model
         public string displayName;
     }
 
-    public class SWIReport
+    public class SWIReportDetail
     {
         public SWIView[] views;
         public SWIOutput[] outputs;
