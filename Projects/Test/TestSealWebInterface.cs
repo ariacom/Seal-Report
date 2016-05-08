@@ -4,22 +4,23 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
+using Seal.Model;
 
 namespace Test
 {
-    class SWIUserResponse
+    class SWIUserResponse : SWIUser
     {
-        public string name = "";
-        public string group = "";
-        public string culture = "";
         public string error = "";
     }
 
-    class SWIFolderResponse
+    class SWIFolderResponse : SWIFolder
     {
-        public string folderPath = "";
-        public string displayName = "";
-        public SWIFolderResponse[] folders = null;
+        public string error = "";
+    }
+
+    class SWIURLResponse
+    {
+        public string url = "";
         public string error = "";
     }
 
@@ -30,26 +31,23 @@ namespace Test
         public async Task SWIConnectionTest()
         {
             //Just test the basic methods of SWI. The Server must be running... 
-            var serverURL = "http://localhost:17178/";
+            var serverURL = "http://localhost/Seal/";
 
             var httpClient = new HttpClient();
-            var response = await httpClient.PostAsJsonAsync(serverURL + "SWILogin", new { user_name = "", password = "" });
+            var response = await httpClient.PostAsJsonAsync(serverURL + "SWILogin", new { user = "", password = "" });
             var user = await response.Content.ReadAsAsync<SWIUserResponse>();
+            if (!string.IsNullOrEmpty(user.error)) throw new Exception(user.error);
 
-            response = await httpClient.PostAsJsonAsync(serverURL + "SWIGetFolders", new { folderPath = "\\" });
+            response = await httpClient.PostAsJsonAsync(serverURL + "SWIGetFolders", new { path = "\\" });
             var folder = await response.Content.ReadAsAsync<SWIFolderResponse>();
+            if (!string.IsNullOrEmpty(folder.error)) throw new Exception(folder.error);
 
-           /* HttpResponseMessage httpResponse = httpClient.PostAsync(serverURL + "InitExecuteReport", new { folderPath = "\\Search - Orders.srex", r0_name = "Quantity", r0_operator = "Between", r0_value_1 = "34", r0_value_2 = "1234" }).Result;   
-            if (httpResponse.IsSuccessStatusCode)
-            {
-                var products = response.Content.ReadAsStringAsync().Result;
-            }
-            */
-            response = await httpClient.PostAsJsonAsync(serverURL + "InitExecuteReport", new { path = "\\Search - Orders.srex", r0_name = "Quantity", r0_operator = "Between", r0_value_1 = "34", r0_value_2 = "1234" });
-            var reportResult = await response.Content.ReadAsStringAsync();
-            var reportFile = Path.GetTempFileName() + ".htm";
-            File.WriteAllText(reportFile, reportResult);
-            Process.Start(reportFile);
+
+            response = await httpClient.PostAsJsonAsync(serverURL + "SWIExecuteReport", new { path = "\\Search - Orders.srex", format = "html", r0_name = "Quantity", r0_operator = "Between", r0_value_1 = "34", r0_value_2 = "1234" });
+            var url = await response.Content.ReadAsAsync<SWIURLResponse>();
+            if (!string.IsNullOrEmpty(url.error)) throw new Exception(url.error);
+
+            Process.Start(url.url);
 
         }
     }
