@@ -177,6 +177,16 @@ chart.tooltip.valueFormatter(function(d){
 }",
     });
 
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "nvd3_script_final",
+        Category = ViewParameterCategory.NVD3,
+        DisplayName = "Script: Final",
+        Description = "Custom script executed after the chart rendering",
+        EditorLanguage = "js",
+        TextValue = @"",
+    });
+
     //CSS
     Template.CSS.Add(new Parameter() { Name = "view", DisplayName = "View", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the full View", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
     Template.CSS.Add(new Parameter() { Name = "page", DisplayName = "Page", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Page of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });

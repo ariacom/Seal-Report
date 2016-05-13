@@ -294,6 +294,19 @@ function submitViewParameter(viewId, parameterName, parameterValue) {
     }
 }
 
+function setMultipleSelect(className, single)
+{
+    $(className).multipleSelect({
+        isOpen: true,
+        keepOpen: true,
+        filter: true,
+        single : single,
+        maxHeight: 92,
+        allSelected: allSelectedText,
+        countSelected: countSelectedText,
+        selectAllText: selectAllText
+    });
+}
 
 $(document).ready(function () {
     mainInit();
@@ -312,13 +325,11 @@ $(document).ready(function () {
     if (!hasRestrictions) $('#restriction_button, label[for="restriction_button"]').hide();
 
     //multiselect -> small ajustements
-    $(".enum").multipleSelect({
-        isopen: true,
-        filter: true,
-        maxHeight: 95,
-        selectAllText: selectAllText
-    });
-    $(".ms-drop").css("z-index", "0");
+    setMultipleSelect(".enum", false);
+    setMultipleSelect(".enum_single", true);
+
+    $(".ms-choice").css("cursor", "default").off('onClick').off('click');
+    $(".ms-choice").off('onClick').off('click');
 
     setButtonLabels();
 

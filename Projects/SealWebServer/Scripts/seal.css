@@ -32,7 +32,7 @@ div  button { margin:4px;}
 
 caption {font-weight: bold;}
 
-.datepicker { text-align:right; width:70px; }
+.datepicker { text-align:right; width:70px; position: relative; z-index: 1001; }
 
 .numeric_input { text-align:right; width:70px; }
 .text_input { width:70px; }
@@ -86,9 +86,9 @@ html[xmlns] .dataTables_wrapper { display: block; }
 
 /* multi select */
 .ms-drop {z-index:0;}
-.ms-choice {cursor:default;}
+.ms-choice {cursor:default; margin:0;}
 .ms-choice>div {display:none;}
-
+    
 /* cell detail */
 .cell_detail_title {color:black;font-weight:bold;text-align:left;vertical-align:top;}
 .cell_detail_value {text-align:left;}
