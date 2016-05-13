@@ -230,6 +230,7 @@
                                 nvd3Translate($("#@(chartName) g.nv-controlsWrap text.nv-legend-text"));
                                 nvd3TranslateAxis($("#@(chartName) text.nv-legend-text"));
                                 nvd3TranslateAxis($("#@(chartName) title"));
+                                @Raw(View.GetValue("nvd3_script_final"))
                                 return chart;
                             }
                             ,function(){

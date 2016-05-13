@@ -16,7 +16,9 @@ Report;second(s);;seconde(s);secondo(i);Segundo(s)
 Report;Cancelling report...;;Annulation...;Cancellazione...;Cancelando relatório...
 Report;Executing report...;;Exécution...;Esecuzione...;Executando relatório...
 Report;report result panel;;le panneau des résultats;pannello risultati report;Painél de resultados
-Report;Select All;;Tout;Seleziona tutto;Selecionar tudo
+Report;Select all;;Tout;Seleziona tutto;Selecionar tudo
+Report;All selected;;Tout est sélectionné;Seleziona tutto;Selecionar tudo
+Report;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %
 Report;Now;;Maintenant;Ora;Agora
 Report;Today;;Aujourdhui;Oggi;Hoje
 Report;ThisWeek;;CetteSemaine;Questa settimana;Esta semana
@@ -77,6 +79,7 @@ Report;Charts;;Graphes;Grafici;Gráficos
 Report;Drill >;;Navigation >;Navigation >;Drill >
 Report;Drill <;;Navigation <;Navigation <;Drill <
 Report;No records. The report output generation has been cancelled.;;Aucun enregistrement. La  génération a été annulée.;;
+Report;A value is required for;;Une valeur est requise pour;;
 Web;Close;;Fermer;Chiuso;Fechar
 Web;Display all reports in the repository;;Affiche tous les rapports du Repository;Mostra tutti i report del repertorio;Mostra todos os relatórios do repositório
 Web;All reports and files;;Tous les rapports et fichiers;Tutti i reports e files;Todos os relatórios e arquivos

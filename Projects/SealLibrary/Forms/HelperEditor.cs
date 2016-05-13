@@ -342,7 +342,7 @@ namespace Seal.Forms
 
                             foreach (var model in report.Models.Where(i => i.Source.MetaSourceGUID == _metaColumn.Source.GUID))
                             {
-                                foreach (var restriction in model.Restrictions.Where(i => i.Prompt == PromptType.Prompt))
+                                foreach (var restriction in model.Restrictions.Where(i => i.Prompt != PromptType.None))
                                 {
                                     var col = _metaColumn.MetaTable.Columns.FirstOrDefault(i => i.GUID == restriction.MetaColumnGUID);
                                     if (col != null)

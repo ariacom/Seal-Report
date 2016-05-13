@@ -33,6 +33,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Prompt").SetIsBrowsable(true);
+                GetProperty("Required").SetIsBrowsable(true);
                 GetProperty("Operator").SetIsBrowsable(true);
                 GetProperty("DisplayNameEl").SetIsBrowsable(true);
                 GetProperty("SQL").SetIsBrowsable(!Source.IsNoSQL);
@@ -103,6 +104,7 @@ namespace Seal.Model
                 }
 
                 GetProperty("UseAsParameter").SetIsReadOnly(_operator != Operator.ValueOnly);
+                GetProperty("Required").SetIsReadOnly(_prompt == PromptType.None);
 
                 //Aggregate restriction
                 if (PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate) GetProperty("AggregateFunction").SetIsBrowsable(true);
@@ -132,6 +134,14 @@ namespace Seal.Model
         {
             get { return _prompt; }
             set { _prompt = value; }
+        }
+
+        private bool _required = false;
+        [CategoryAttribute("Definition"), DisplayName("Is required"), Description("If true and the restriction is prompted, a value is required to execute the report."), Id(4, 1)]
+        public bool Required
+        {
+            get { return _required; }
+            set { _required = value; }
         }
 
         [Category("Advanced"), DisplayName("Custom SQL"), Description("If not empty, overwrite the default SQL used for the restriction in the WHERE clause."), Id(1, 3)]

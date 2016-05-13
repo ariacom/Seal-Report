@@ -266,6 +266,8 @@ namespace Seal.Model
         None,
         [Description("Prompt at execution")]
         Prompt,
+        [Description("Prompt only one value")]
+        PromptOneValue,
     }
 
     public enum ViewParameterType

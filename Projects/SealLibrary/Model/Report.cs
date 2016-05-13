@@ -1072,7 +1072,7 @@ namespace Seal.Model
                     _executionCommonRestrictions = new List<ReportRestriction>();
                     foreach (ReportModel model in ExecutionModels)
                     {
-                        foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt == PromptType.Prompt))
+                        foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None))
                         {
                             if (!_executionCommonRestrictions.Exists(i => i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl))
                             {
