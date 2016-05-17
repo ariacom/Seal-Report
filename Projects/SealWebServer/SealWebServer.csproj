@@ -199,7 +199,8 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
-    <Content Include="WebInterfaceSample.html" />
+    <Content Include="WebInterfaceAPI.html" />
+    <Content Include="WebInterfaceSamples.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

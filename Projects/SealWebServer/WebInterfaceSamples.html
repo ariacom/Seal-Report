@@ -1,16 +1,19 @@
-﻿<!DOCTYPE html>
-<html>
+﻿<html lang="en">
 <head>
-    <title>Seal Report: Web Interface Samples</title>
-    <meta charset="utf-8" />
-    <script type='text/javascript' src='http://code.jquery.com/jquery-1.11.3.min.js'></script>
-    <script type='text/javascript' src='http://code.jquery.com/ui/1.11.3/jquery-ui.min.js'></script>
-    <script type='text/javascript' src='http://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js'></script>
-    <link type='text/css' href='http://codeorigin.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css' rel='stylesheet' />
-    <style type="text/css">
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+
+    <style>
         body {
-            font-family: Arial;
-            font-size: 14px;
+            padding-top: 60px;
         }
     </style>
     <script>
@@ -48,7 +51,7 @@
                 .click(function () {
                     $("#login_label").html("Connecting...<br>");
                     $.post(sealServer + "SWILogin", {
-                        user_name: $("#user_name").val(),
+                        user: $("#user_name").val(),
                         password: $("#password").val()
                     })
                         .done(function (data) {
@@ -197,13 +200,13 @@
                                 close();
                             }
                         })
-                });           
+                });
 
             $("#generate_button")
                 .click(function () {
                     $("#generate_label").text("Generating report result");
                     $.post(sealServer + "SWIExecuteReport", {
-                        path: "\\Search - Orders.srex", 
+                        path: "\\Search - Orders.srex",
                         format: "html", /* print, pdf or excel with the converter */
                         r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
                         r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
@@ -316,71 +319,99 @@
     </script>
 </head>
 <body>
-    <b>Seal Report Web Interface: Basic Samples</b><br /><br />
-    Login:
-    <br/>
-    User Name <input type="text" class="form-control" id="user_name" name="user_name" autofocus value="" />
-    Password <input type="password" class="form-control" id="password" name="password" />
-    <button id="login_button">Login</button>
-    <label id="login_label"><br /></label>
-    <br />
-    <button id="open_button">Open Web Server in a new window</button>
-    <br />
-    <button id="open_folder_button">Open a folder in a new window</button>
-    <br />
-    <br />
-    Repository browsing:
-    <br/>
-    <button id="folders_button">Get Folders</button>
-    <label id="folders_label"><br /></label>
-    <br />
-    <button id="folder_detail_button">Get Folder Detail</button>
-    <label id="folder_detail_label"><br /></label>
-    <br />
-    <button id="report_detail_button">Get Report Detail</button>
-    <label id="report_detail_label"><br /></label>
-    <br />
-    <br />
-    Execute a report in a new window:<br />
-    <button id="execute_button">Execute a report</button>
-    <label id="execute_label"></label>
-    <br />
-    <button id="execute2_button">Execute 'Search - Orders' with custom restrictions</button>
-    <label id="execute2_label"></label>
-    <br />
-    <button id="execute3_button">Execute '07-Outputs and schedules' with Excel view</button>
-    <label id="execute3_label"></label>
-    <br />
-    <button id="execute4_button">Execute '07-Outputs and schedules' to HTML Output</button>
-    <label id="execute4_label"></label>
-    <br />
-    <br />
-    Generating report results:
-    <br />
-    <button id="generate_button">Generate 'Search - Orders' in HTML</button>
-    <label id="generate_label"></label>
-    <br />
-    <button id="generate2_button">Generate '07-Outputs and schedules' in Output</button>
-    <label id="generate2_label"></label>
-    <br />
-    <button id="generate3_button">Generate '07-Outputs and schedules' in Print HTML</button>
-    <label id="generate3_label"></label>
-    <br />
-    <br />
-    Logout:<br />
-    <button id="logout_button">Logout</button>
-    <label id="logout_label"></label>
-    <br />
-    <br />
-    Additional<br />
-    <button id="culture_button">Set Culture</button>
-    <label id="culture_label"></label>
-    <br />
-    <button id="translate_button">Translate</button>
-    <label id="translate_label"></label>
-    <br />
-    <button id="repository_translate_button">Repository Translate</button>
-    <label id="repository_translate_label"></label>
-    <br />
+    <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+        <div class="container">
+            <a class="navbar-brand" href="#">Seal Web Interface</a>
+            <ul class="nav navbar-nav pull-xs-right">
+                <li class="nav-item active"><a class="nav-link" href="WebInterfaceSamples.html">Samples</a></li>
+                <li class="nav-item"><a class="nav-link" href="WebInterfaceAPI.html">API Description</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://sealreport.org/" target="_blank">Seal Report Home</a></li>
+            </ul>
+        </div><!-- /.container -->
+    </nav><!-- /.navbar -->
+
+    <div class="container">
+
+        <div class="row row-offcanvas row-offcanvas-right">
+
+            <div class="col-xs-12 col-sm-12">
+
+
+                <b>Seal Report Web Interface: Basic Samples</b><br /><br />
+                Login:
+                <br />
+                User Name <input type="text" class="form-control" id="user_name" name="user_name" autofocus value="" />
+                Password <input type="password" class="form-control" id="password" name="password" />
+                <button id="login_button">Login</button>
+                <label id="login_label"><br /></label>
+                <br />
+                <button id="open_button">Open Web Server in a new window</button>
+                <br />
+                <button id="open_folder_button">Open a folder in a new window</button>
+                <br />
+                <br />
+                Repository browsing:
+                <br />
+                <button id="folders_button">Get Folders</button>
+                <label id="folders_label"><br /></label>
+                <br />
+                <button id="folder_detail_button">Get Folder Detail</button>
+                <label id="folder_detail_label"><br /></label>
+                <br />
+                <button id="report_detail_button">Get Report Detail</button>
+                <label id="report_detail_label"><br /></label>
+                <br />
+                <br />
+                Execute a report in a new window:<br />
+                <button id="execute_button">Execute a report</button>
+                <label id="execute_label"></label>
+                <br />
+                <button id="execute2_button">Execute 'Search - Orders' with custom restrictions</button>
+                <label id="execute2_label"></label>
+                <br />
+                <button id="execute3_button">Execute '07-Outputs and schedules' with Excel view</button>
+                <label id="execute3_label"></label>
+                <br />
+                <button id="execute4_button">Execute '07-Outputs and schedules' to HTML Output</button>
+                <label id="execute4_label"></label>
+                <br />
+                <br />
+                Generating report results:<br />
+                <button id="generate_button">Generate 'Search - Orders' in HTML</button>
+                <label id="generate_label"></label>
+                <br />
+                <button id="generate2_button">Generate '07-Outputs and schedules' in Output</button>
+                <label id="generate2_label"></label>
+                <br />
+                <button id="generate3_button">Generate '07-Outputs and schedules' in Print HTML</button>
+                <label id="generate3_label"></label>
+                <br />
+                <br />
+                Logout:<br />
+                <button id="logout_button">Logout</button>
+                <label id="logout_label"></label>
+                <br />
+                <br />
+                Additional:<br />
+                <button id="culture_button">Set Culture</button>
+                <label id="culture_label"></label>
+                <br />
+                <button id="translate_button">Translate</button>
+                <label id="translate_label"></label>
+                <br />
+                <button id="repository_translate_button">Repository Translate</button>
+                <label id="repository_translate_label"></label>
+                <br />
+
+            </div>
+        </div><!--/row-->
+
+        <hr>
+
+        <footer>
+            <p>&copy; Company 2014</p>
+        </footer>
+
+    </div><!--/.container-->
 </body>
 </html>
