@@ -23,9 +23,6 @@ A **live demonstration** of the <a href="http://demo.sealreport.org" target=_bla
 
 Use the <a href="http://forum.sealreport.org" target=_blank>Seal Report Forum</a> to get free support, information and hints on the product or read the [Wiki](https://github.com/ariacom/Seal-Report/wiki) for technical documentation.
 
-The product is also used by another open project to publish Open Data: <a href="http://openreporthub.com" target=_blank>Open Report Hub</a>.
-A free portal to publish and share your **Open Data** in **professional reports**. 
-
 # Screen shots
 ## Report Designer
 ![Report Designer](http://sealreport.org/Images/reportDesignerShot.png)
