@@ -5,48 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
     <!-- jQuery first, then Bootstrap JS. -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
     <style>
-        body {
-            padding-top: 60px;
-        }
+        body { padding-top: 60px; }
+        .table td, .table th { padding: 5px; }
+        label { font-weight : normal; }
     </style>
     <script>
-        var sealServer = "http://localhost/Seal/";
-        //sealServer = "http://localhost:17178/";
+        var sealServer = "/";
         var connected = false;
 
         function enableControls() {
-            $("button").removeAttr("disabled");
-            if (connected) {
-                $("#login_button").attr("disabled", "disabled");
-            }
-            if (!connected) {
-                $("#open_button").attr("disabled", "disabled");
-                $("#open_folder_button").attr("disabled", "disabled");
-                $("#folder_detail_button").attr("disabled", "disabled");
-                $("#folders_button").attr("disabled", "disabled");
-                $("#logout_button").attr("disabled", "disabled");
-                $("#execute2_button").attr("disabled", "disabled");
-                $("#execute3_button").attr("disabled", "disabled");
-                $("#execute4_button").attr("disabled", "disabled");
-                $("#generate_button").attr("disabled", "disabled");
-                $("#generate2_button").attr("disabled", "disabled");
-                $("#generate3_button").attr("disabled", "disabled");
-                $("#culture_button").attr("disabled", "disabled");
-                $("#translate_button").attr("disabled", "disabled");
-                $("#repository_translate_button").attr("disabled", "disabled");
-                $("#execute_button").attr("disabled", "disabled");
-                $("#report_detail_button").attr("disabled", "disabled");
-            }
+            $("button").prop("disabled", !connected);
+            $("#login_button").prop("disabled", connected);
+            $("#version_button").prop("disabled", false);
+
         }
 
         $(document).ready(function () {
+            $("button").addClass("btn btn-mg btn-default");
+            $("button").attr("type", "button");
+
+            $.ajaxSetup({
+                type: "POST",
+                data: {},
+                dataType: 'json',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true
+            });
+
             $("#login_button")
                 .click(function () {
                     $("#login_label").html("Connecting...<br>");
@@ -97,7 +97,7 @@
             $("#folder_detail_button")
                 .click(function () {
                     $.post(sealServer + "SWIGetFolderDetail", {
-                        path: "\\Samples"
+                        path: "\\"
                     })
                         .done(function (data) {
                             if (!data.error) {
@@ -204,16 +204,18 @@
 
             $("#generate_button")
                 .click(function () {
-                    $("#generate_label").text("Generating report result");
+                    $("#generate_label").text("Generating report result...");
                     $.post(sealServer + "SWIExecuteReport", {
                         path: "\\Search - Orders.srex",
                         format: "html", /* print, pdf or excel with the converter */
                         r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
                         r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
+                        r2_name: "Order Date", r2_operator: "Equal", r2_value_1: "19940809 00:00:00", r2_value_2: "19940810 00:00:00", r2_value_3: "19940811 00:00:00", r2_value_4: "19940812 00:00:00",
+                        r3_name: "Customer Contact", r3_operator: "Contains", r3_value_1: "ar"
                     })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#generate_label").html("SWIExecuteReport Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
+                                $("#generate_label").html("SWIExecuteReport Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a><br>" + JSON.stringify(data));
                             }
                             else {
                                 $("#generate_label").text("Error: " + data.error);
@@ -224,7 +226,7 @@
 
             $("#generate2_button")
                 .click(function () {
-                    $("#generate2_label").text("Generating report result");
+                    $("#generate2_label").text("Generating report result...");
                     $.post(sealServer + "SWIExecuteReport", {
                         path: "\\Samples\\07-Outputs and schedules.srex",
                         outputGUID: "cac770ed-3039-4af8-93d3-e197ac94d808",
@@ -242,7 +244,7 @@
 
             $("#generate3_button")
                 .click(function () {
-                    $("#generate3_label").text("Generating report result");
+                    $("#generate3_label").text("Generating report result...");
                     $.post(sealServer + "SWIExecuteReport", {
                         path: "\\Samples\\07-Outputs and schedules.srex",
                         format: "print", /* print, pdf or excel with the converter */
@@ -258,7 +260,57 @@
                         })
                 });
 
+            $("#set_up_button")
+                .click(function () {
+                    $.post(sealServer + "SWISetUserProfile", { culture: "it-IT" /* or Italian (Italy) */})
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#set_up_label").html("SWISetUserProfile Done: culture set to Italian (Italy).");
+                            }
+                            else {
+                                $("#set_up_label").text("Error: " + data.error);
+                            }
+                        })
+                });
 
+            $("#get_up_button")
+                .click(function () {
+                    $.post(sealServer + "SWIGetUserProfile")
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#get_up_label").html("SWIGetUserProfile Done.<br>" + JSON.stringify(data));
+                            }
+                            else {
+                                $("#get_up_label").text("Error: " + data.error);
+                            }
+                        })
+                });
+
+            $("#translate_button")
+                .click(function () {
+                    $.post(sealServer + "SWITranslate", { context: "Report", reference: "report restrictions" })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#translate_label").html("SWITranslate Done: Translation->" + data.text + "<br>" + JSON.stringify(data));
+                            }
+                            else {
+                                $("#translate_label").text("Error: " + data.error);
+                            }
+                        })
+                });
+
+            $("#repository_translate_button")
+                .click(function () {
+                    $.post(sealServer + "SWITranslate", { context: "Element", instance: "Customers.City", reference: "City" })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#repository_translate_label").html("SWITranslate Done: Translation->" + data.text + "<br>" + JSON.stringify(data));
+                            }
+                            else {
+                                $("#repository_translate_label").text("Error: " + data.error);
+                            }
+                        })
+                });
 
             $("#logout_button")
             .click(function () {
@@ -276,50 +328,26 @@
                     })
             });
 
-            $("#culture_button")
+            $("#version_button")
                 .click(function () {
-                    $.post(sealServer + "SWISetCulture", { culture: "it-IT" })
+                    $.post(sealServer + "SWIGetVersions")
                         .done(function (data) {
                             if (!data.error) {
-                                $("#culture_label").text("SWISetCulture Done: Culture set to " + data.culture);
+                                $("#version_label").html("SWIGetVersions Done: Version=" + data.SWIVersion + " Seal Version=" + data.SRVersion + "<br>" + JSON.stringify(data));
                             }
                             else {
-                                $("#culture_label").text("Error: " + data.error);
+                                $("#login_label").text("Error: " + data.error);
                             }
+                            enableControls();
                         })
                 });
 
-            $("#translate_button")
-                .click(function () {
-                    $.post(sealServer + "SWITranslate", { context: "Report", reference: "report restrictions" })
-                        .done(function (data) {
-                            if (!data.error) {
-                                $("#translate_label").text("SWITranslate Done: Translation->" + data.text);
-                            }
-                            else {
-                                $("#translate_label").text("Error: " + data.error);
-                            }
-                        })
-                });
-
-            $("#repository_translate_button")
-                .click(function () {
-                    $.post(sealServer + "SWIRepositoryTranslate", { context: "Element", instance: "Customers.City", reference: "City" })
-                        .done(function (data) {
-                            if (!data.error) {
-                                $("#repository_translate_label").text("SWIRepositoryTranslate Done: Translation->" + data.text);
-                            }
-                            else {
-                                $("#repository_translate_label").text("Error: " + data.error);
-                            }
-                        })
-                });
             enableControls();
         });
     </script>
 </head>
 <body>
-    <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+    <nav class="navbar-inverse navbar-fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">Seal Web Interface</a>
             <ul class="nav navbar-nav pull-xs-right">
@@ -335,74 +363,136 @@
         <div class="row row-offcanvas row-offcanvas-right">
 
             <div class="col-xs-12 col-sm-12">
-
-
-                <b>Seal Report Web Interface: Basic Samples</b><br /><br />
-                Login:
-                <br />
-                User Name <input type="text" class="form-control" id="user_name" name="user_name" autofocus value="" />
-                Password <input type="password" class="form-control" id="password" name="password" />
-                <button id="login_button">Login</button>
-                <label id="login_label"><br /></label>
-                <br />
-                <button id="open_button">Open Web Server in a new window</button>
-                <br />
-                <button id="open_folder_button">Open a folder in a new window</button>
-                <br />
-                <br />
-                Repository browsing:
-                <br />
-                <button id="folders_button">Get Folders</button>
-                <label id="folders_label"><br /></label>
-                <br />
-                <button id="folder_detail_button">Get Folder Detail</button>
-                <label id="folder_detail_label"><br /></label>
-                <br />
-                <button id="report_detail_button">Get Report Detail</button>
-                <label id="report_detail_label"><br /></label>
-                <br />
-                <br />
-                Execute a report in a new window:<br />
-                <button id="execute_button">Execute a report</button>
-                <label id="execute_label"></label>
-                <br />
-                <button id="execute2_button">Execute 'Search - Orders' with custom restrictions</button>
-                <label id="execute2_label"></label>
-                <br />
-                <button id="execute3_button">Execute '07-Outputs and schedules' with Excel view</button>
-                <label id="execute3_label"></label>
-                <br />
-                <button id="execute4_button">Execute '07-Outputs and schedules' to HTML Output</button>
-                <label id="execute4_label"></label>
-                <br />
-                <br />
-                Generating report results:<br />
-                <button id="generate_button">Generate 'Search - Orders' in HTML</button>
-                <label id="generate_label"></label>
-                <br />
-                <button id="generate2_button">Generate '07-Outputs and schedules' in Output</button>
-                <label id="generate2_label"></label>
-                <br />
-                <button id="generate3_button">Generate '07-Outputs and schedules' in Print HTML</button>
-                <label id="generate3_label"></label>
-                <br />
-                <br />
-                Logout:<br />
-                <button id="logout_button">Logout</button>
-                <label id="logout_label"></label>
-                <br />
-                <br />
-                Additional:<br />
-                <button id="culture_button">Set Culture</button>
-                <label id="culture_label"></label>
-                <br />
-                <button id="translate_button">Translate</button>
-                <label id="translate_label"></label>
-                <br />
-                <button id="repository_translate_button">Repository Translate</button>
-                <label id="repository_translate_label"></label>
+                <h2>Seal Report Web Interface: Samples</h2>
                 <br />
 
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="User name" autofocus value="" />
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" />
+                                    </div>
+                                    <button id="login_button">Login</button>
+</td>
+                            <td width="50%"><label id="login_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="open_button">Open Web Server in a new window</button>
+                            </td>
+                            <td width="50%"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="open_folder_button">Open a folder in a new window</button>
+                            </td>
+                            <td width="50%"></td>
+                        </tr>
+                        <tr><th>Repository browsing:</th><td></td></tr>
+                        <tr>
+                            <td>
+                                <button id="folders_button">Get Folders</button>
+                            </td>
+                            <td width="50%"><label id="folders_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="folder_detail_button">Get Folder Detail</button>
+                            </td>
+                            <td width="50%"><label id="folder_detail_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="report_detail_button">Get Report Detail</button>
+                            </td>
+                            <td width="50%"><label id="report_detail_label"></label></td>
+                        </tr>
+                        <tr><th>Execute a report in a new window:</th><td></td></tr>
+                        <tr>
+                            <td>
+                                <button id="execute_button">Execute a report</button>
+                            </td>
+                            <td width="50%"><label id="execute_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="execute2_button">Execute 'Search - Orders' with custom restrictions</button>
+                            </td>
+                            <td width="50%"><label id="execute2_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="execute3_button">Execute '07-Outputs and schedules' with Excel view</button>
+                            </td>
+                            <td width="50%"><label id="execute3_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="execute4_button">Execute '07-Outputs and schedules' to HTML Output</button>
+                            </td>
+                            <td width="50%"><label id="execute4_label"></label></td>
+                        </tr>
+                        <tr><th>Generating report results:</th><td></td></tr>
+                        <tr>
+                            <td>
+                                <button id="generate_button">Generate 'Search - Orders' in HTML</button>
+                            </td>
+                            <td width="50%"><label id="generate_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="generate2_button">Generate '07-Outputs and schedules' in Output</button>
+                            </td>
+                            <td width="50%"><label id="generate2_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="generate3_button">Generate '07-Outputs and schedules' in Print HTML</button>
+                            </td>
+                            <td width="50%"><label id="generate3_label"></label></td>
+                        </tr>
+                        <tr><th>Logout:</th><td></td></tr>
+                        <tr>
+                            <td>
+                                <button id="logout_button">Logout</button>
+                            </td>
+                            <td width="50%"><label id="logout_label"></label></td>
+                        </tr>
+                        <tr><th>Additional:</th><td></td></tr>
+                        <tr>
+                            <td>
+                                <button id="set_up_button">Set User Profile</button>
+                            </td>
+                            <td width="50%"><label id="set_up_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="get_up_button">Get User Profile</button>
+                            </td>
+                            <td width="50%"><label id="get_up_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="translate_button">Translate</button>
+                            </td>
+                            <td width="50%"><label id="translate_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="repository_translate_button">Repository Translate</button>
+                            </td>
+                            <td width="50%"><label id="repository_translate_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="version_button">Get Seal Web Interface and Seal Report Version</button>
+                            </td>
+                            <td width="50%"><label id="version_label"></label></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div><!--/row-->
 

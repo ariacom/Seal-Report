@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Seal.Model
 {
-    public class SWIUser
+    public class SWIUserProfile
     {
         public string name;
         public string group;
