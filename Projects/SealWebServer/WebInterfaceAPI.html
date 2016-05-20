@@ -4,15 +4,31 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Seal Web Interface</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
     <style>
-        body { padding-top: 60px;}
+        body {
+            padding-top: 60px;
+        }
+
+        table th {
+            width: 70px;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+    <nav class="navbar-inverse navbar-fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">Seal Web Interface</a>
             <ul class="nav navbar-nav pull-xs-right">
@@ -27,63 +43,338 @@
 
         <div class="row row-offcanvas row-offcanvas-right">
 
-            <div class="col-xs-12 col-sm-12">
+            <div class="col-lg-12">
                 <div class="row">
-                    <div class="col-xs-6 col-lg-12">
+                    <div class="col-lg-12">
                         <h2>SWILogin</h2>
                         <table class="table table-striped">
                             <tbody>
-                                <tr><th>Parameters</th><td>user (string), password (string)</td></tr>
-                                <tr><th>Returns</th><td>{ name (string) = the user name , group (string) =  the user's group names, culture (string) = the user's culture name }<br />{error (string) = the error description}</td></tr>
-                                <tr><th>Sample</th><td>{"name":"Anonymous","group":"Default Group","culture":"French (Switzerland)"} </td></tr>
                                 <tr><th>Description</th><td>Start a session with the Web Report Server using the user name and password (may be optional according to the authentication configured on the server) and returns information of the logged user.</td></tr>
+                                <tr>
+                                    <th>Call</th>
+                                    <td>
+<pre>
+$.post("http://demo.sealreport.org/SWILogin", {
+    user: "the user name", // The use name
+    password: "the password" // The password
+})
+.done(function (data) {
+        if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Returns</th>
+                                    <td>
+                                        name (string) : the user name<br />
+                                        group (string) :  the user's group names<br />
+                                        culture (string) : the user's culture name<br />
+                                        error (string) : if any error, the error description
+                                    </td>
+                                </tr>
+                                <tr><th>Sample</th><td>{"name":"Anonymous","group":"Default Group","culture":"French (Switzerland)"} </td></tr>
                             </tbody>
                         </table>
-                    </div><!--/span-->
-                    <div class="col-xs-6 col-lg-12">
-                        <h2>Heading</h2>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                        <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                    </div><!--/span-->
-                    <div class="col-xs-6 col-lg-12">
-                        <h2>Heading</h2>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                        <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                    </div><!--/span-->
-                    <div class="col-xs-6 col-lg-12">
-                        <h2>Heading</h2>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                        <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                    </div><!--/span-->
-                    <div class="col-xs-6 col-lg-12">
-                        <h2>Heading</h2>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                        <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                    </div><!--/span-->
-                    <div class="col-xs-6 col-lg-12">
-                        <h2>Heading</h2>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                        <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                    </div><!--/span-->
-                    <div class="col-xs-6 col-lg-12">
-                        <a name="123"></a>
-                        <h2>Heading</h2>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                        <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                    </div><!--/span-->
+                    </div>
+
+                    <div class="col-lg-12">
+                        <h2>SWILogout</h2>
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr><th>Description</th><td>Clear the current user session.</td></tr>
+                                <tr>
+                                    <th>Call</th>
+                                    <td>
+<pre>
+$.post("http://demo.sealreport.org/SWILogout")
+.done(function (data) {
+        if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Returns</th>
+                                    <td>
+                                        error (string) : if any error, the error description
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <h2>SWIGetFolders</h2>
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr><th>Description</th><td>Returns the list of the published folders for the current user from a root folder.</td></tr>
+                                <tr>
+                                    <th>Call</th>
+                                    <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIGetFolders", {
+    path: "\\", // The path of the root folder
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Returns</th>
+                                    <td>
+                                        path (string) : the folder path <br />
+                                        name (string) : the translated folder name<br />
+                                        folders ([folder]): array of children folders<br />
+                                        error (string) = if any error, the error description
+                                    </td>
+                                </tr>
+                                <tr><th>Sample</th><td></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <h2>SWIGetFolderDetail</h2>
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr><th>Description</th><td>Returns the list of file names and details contained in a folder.</td></tr>
+                                <tr>
+                                    <th>Call</th>
+                                    <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIGetFolderDetail", {
+    path: "\\", // The path of the folder
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Returns</th>
+                                    <td>
+                                        files ([file]) : array of files. <br />
+                                        error (string) = if any error, the error description<br /><br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>file</th>
+                                    <td>
+                                        path (string): the file path<br />
+                                        name (string): the translated file name<br />
+                                        isReport (boolean) : true if the file is a report<br />
+                                        execOutput (boolean) : true if the user can execute output.<br />
+                                    </td>
+                                </tr>
+                                <tr><th>Sample</th><td>{"files":[{"path":"\\Dashboard - Sales.srex","name":"Tableau de bord - Ventes","isReport":true,"execOutput":true},{"path":"\\Search - Orders.srex","name":"Recherche - Commandes","isReport":true,"execOutput":true}]}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <h2>SWIGetReportDetail</h2>
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr><th>Description</th><td>Returns the views and outputs of a report.</td></tr>
+                                <tr>
+                                    <th>Call</th>
+                                    <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIGetReportDetail", {
+    path: "\\", // The path of the report
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Returns</th>
+                                    <td>
+                                        views ([view]) : array of views<br />
+                                        outputs ([output]) : array of outputs.<br />
+                                        error (string) = if any error, the error description
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>view</th>
+                                    <td>
+                                        guid (string) : the unique identifier of the output<br />
+                                        name (string) : the output name <br />
+                                        displayName (string) : the output name translated
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>output</th>
+                                    <td>
+                                        guid (string) : the unique identifier of the view<br />
+                                        name (string) : the view name <br />
+                                        displayName (string) : the view name translated
+                                    </td>
+                                </tr>
+                                <tr><th>Sample</th><td>{"views":[{"guid":"2194db7c-bdea-459c-b055-d2e630d7f829","name":"view","displayName":"view"},{"guid":"c496f22b-fc4d-45da-a2fc-23f9ecbf878b","name":"view Excel","displayName":"view Excel"}],"outputs":[{"guid":"cac770ed-3039-4af8-93d3-e197ac94d808","name":"HTML file (Folder Device)","displayName":"HTML file (Folder Device)"},{"guid":"28ed9388-c2f2-4dbb-8933-033f8c4bd97c","name":"Email to the Seal (Email Device)","displayName":"Email to the Seal (Email Device)"},{"guid":"e1e8028f-cd54-4539-b55f-fcac49a0a687","name":"Excel file (Folder Device)","displayName":"Excel file (Folder Device)"}]}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <h2>SWIExecuteReport</h2>
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>
+                                        Execute a report into a report result.<br /><br />
+                                        Custom restriction values can be set for the execution if they are prompted in the report.<br />
+                                        In this case the parameters must be prefixed with <b>r0_</b> (for the restriction 0) with the following suffixes:<br />
+                                        <b>name</b> for the name of the restriction.<br />
+                                        <b>operator</b> for the operator applied:<br />
+                                        Equal, NotEqual, Greater, GreaterEqual, Smaller, SmallerEqual, Between,
+                                        NotBetween,
+                                        Contains,
+                                        NotContains,
+                                        StartsWith,
+                                        EndsWith,
+                                        IsEmpty,
+                                        IsNotEmpty,
+                                        IsNull,
+                                        IsNotNull.<br />
+                                        <b>value_1</b> to <b>value_4</b> if the restriction is not an enumerated list (date format is YYYYMMDD hh:mm:ss).<br />
+                                        <b>enum_values</b> containing the list of enumerated identifiers separated by commas if the restriction is an enumerated list.<br />
+                                        <br />
+                                        Several restrictions can be defined by changing the prefix index.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Call</th>
+                                    <td>
+<pre>
+$.post(sealServer + "SWIExecuteReport", {
+    path: "\\Search - Orders.srex",
+    format: "html", // optional, html by default, print, pdf or excel with the converter 
+    viewGUID: "", //optional, the view GUID to execute in the report
+    outputGUID: "", //optional, the output GUID to execute in the report
+    //optional restriction values if defined as prompted in the report
+    r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
+    r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
+    r2_name: "Order Date", r2_operator: "Equal", r2_value_1: "19940809 00:00:00", 
+    r2_value_2: "19940810 00:00:00", r2_value_3: "19940811 00:00:00", r2_value_4: "19940812 00:00:00",
+    r3_name: "Customer Contact", r3_operator: "Contains", r3_value_1: "ar"
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Returns</th>
+                                    <td>
+                                        url (string) : the url of the result file<br />
+                                        error (string) = if any error, the error description
+                                    </td>
+                                </tr>
+                                <tr><th>Sample</th><td>{"url":"http://demo.sealreport.org/temp/Search_-_Orders_iudis.htm"}</td></tr>
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div><!--/row-->
             </div><!--/span-->
         </div><!--/row-->
 
-        <hr>
+        <div class="col-lg-12">
+            <h2>SWIGetUserProfile</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the profile information of the logged user.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIGetUserProfile")
+.done(function (data) {
+        if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            name (string) : the user name<br />
+                            group (string) :  the user's group names<br />
+                            culture (string) : the user's culture name<br />
+                            error (string) : if any error, the error description
+                        </td>
+                    </tr>
+                    <tr><th>Sample</th><td>{"name":"Anonymous","group":"Default Group","culture":"French (Switzerland)"}</td></tr>
+                </tbody>
+            </table>
+        </div>
 
-        <footer>
-            <p>&copy; Company 2014</p>
-        </footer>
+        <div class="col-lg-12">
+            <h2>SWISetUserProfile</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Set the culture for the logged user.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWISetUserProfile", {
+            culture: "it-IT" // the new user's culture name or code
+})
+.done(function (data) {
+        if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string) : if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    </div><!--/.container-->
-    <!-- jQuery first, then Bootstrap JS. -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+        <div class="col-lg-12">
+            <h2>SWITranslate</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Translate a text either from the public translations or the repository translations. If the optional parameter instance is not empty, the repository translations are used.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWITranslate", {
+    context: "Element", // translation context as defined in Translations.csv or RepositoryTranslations.csv
+    instance: "Customers.City",  //optional, translation instance as defined in RepositoryTranslations.csv
+    reference: "City" // reference text to translate
+})
+.done(function (data) {
+        if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            text (string) : the text translate
+                        </td>
+                    </tr>
+                    <tr><th>Sample</th><td>{"text":"les restrictions du rapport"}</td></tr>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

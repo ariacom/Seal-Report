@@ -17,7 +17,6 @@ using System.Globalization;
 
 namespace SealWebServer.Controllers
 {
-    [SessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public class HomeController : Controller
     {
@@ -253,7 +252,7 @@ namespace SealWebServer.Controllers
                 {
                     folder = Session[SessionLastFolder] == null ? Repository.ReportsFolder : Session[SessionLastFolder] as string;
                 }
-                if (!folder.StartsWith(Repository.ReportsFolder)) folder = Repository.ReportsFolder + folder;
+                if (!folder.StartsWith(Repository.ReportsFolder) && folder != "*") folder = Repository.ReportsFolder + folder;
 
                 SecurityFolder securityFolder = WebUser.FindSecurityFolder(folder);
                 if (securityFolder != null && !string.IsNullOrEmpty(securityFolder.DescriptionFile))
@@ -766,6 +765,7 @@ namespace SealWebServer.Controllers
 
         #region Web Interface
 
+        [HttpPost]
         public ActionResult SWILogin(string user, string password)
         {
             try
@@ -776,7 +776,7 @@ namespace SealWebServer.Controllers
                 WebUser.WebUserName = user;
                 WebUser.WebPassword = password;
                 Authenticate();
-                return Json(new SWIUser() { name = WebUser.Name, group = WebUser.SecurityGroupsDisplay, culture = Repository.CultureInfo.EnglishName });
+                return Json(new SWIUserProfile() { name = WebUser.Name, group = WebUser.SecurityGroupsDisplay, culture = Repository.CultureInfo.EnglishName });
             }
             catch (Exception ex)
             {
@@ -784,11 +784,12 @@ namespace SealWebServer.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult SWIGetFolders(string path)
         {
             try
             {
-                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (WebUser == null || !WebUser.IsAuthenticated) throw new Exception("Error: user is not authenticated");
                 if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
 
                 var folder = new SWIFolder() { path = path, name = Repository.TranslateFolderName(path) };
@@ -801,11 +802,12 @@ namespace SealWebServer.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult SWIGetFolderDetail(string path)
         {
             try
             {
-                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (WebUser == null || !WebUser.IsAuthenticated) throw new Exception("Error: user is not authenticated");
                 if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
 
                 var files = new List<SWIFile>();
@@ -835,11 +837,12 @@ namespace SealWebServer.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult SWIGetReportDetail(string path)
         {
             try
             {
-                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (WebUser == null || !WebUser.IsAuthenticated) throw new Exception("Error: user is not authenticated");
                 if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
 
                 string newPath = Repository.ReportsFolder + path;
@@ -862,11 +865,12 @@ namespace SealWebServer.Controllers
         }
 
 
+        [HttpPost]
         public ActionResult SWIExecuteReport(string path, string viewGUID, string outputGUID, string format)
         {
             try
             {
-                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (WebUser == null || !WebUser.IsAuthenticated) throw new Exception("Error: user is not authenticated");
                 if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
 
                 string filePath = Repository.ReportsFolder + path;
@@ -945,6 +949,8 @@ namespace SealWebServer.Controllers
             }
             return Content("Error: Report file not found.\r\n");
         }
+
+        [HttpPost]
         public ActionResult SWILogout()
         {
             try
@@ -959,15 +965,16 @@ namespace SealWebServer.Controllers
         }
 
 
-        public ActionResult SWISetCulture(string culture)
+        [HttpPost]
+        public ActionResult SWISetUserProfile(string culture)
         {
             try
             {
-                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (WebUser == null || !WebUser.IsAuthenticated) throw new Exception("Error: user is not authenticated");
                 if (string.IsNullOrEmpty(culture)) throw new Exception("Error: culture must be supplied");
 
                 if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
-                return Json(new { culture = Repository.CultureInfo.Name });
+                return Json(new {});
             }
             catch (Exception ex)
             {
@@ -975,11 +982,28 @@ namespace SealWebServer.Controllers
             }
         }
 
-        public ActionResult SWITranslate(string context, string reference)
+
+        [HttpPost]
+        public ActionResult SWIGetUserProfile()
         {
             try
             {
-                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
+                if (WebUser == null || !WebUser.IsAuthenticated) throw new Exception("Error: user is not authenticated");
+                return Json(new SWIUserProfile() { name = WebUser.Name, group = WebUser.SecurityGroupsDisplay, culture = Repository.CultureInfo.EnglishName });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SWITranslate(string context, string instance, string reference)
+        {
+            try
+            {
+                if (WebUser == null || !WebUser.IsAuthenticated) throw new Exception("Error: user is not authenticated");
+                if (!string.IsNullOrEmpty(instance)) return Json(new { text = Repository.RepositoryTranslate(context, instance, reference) });
                 return Json(new { text = Repository.Translate(context, reference) });
             }
             catch (Exception ex)
@@ -988,12 +1012,12 @@ namespace SealWebServer.Controllers
             }
         }
 
-        public ActionResult SWIRepositoryTranslate(string context, string instance, string reference)
+        [HttpPost]
+        public ActionResult SWIGetVersions()
         {
             try
             {
-                if (!CheckAuthentication()) throw new Exception("Error: user is not authenticated");
-                return Json(new { text = Repository.RepositoryTranslate(context, instance, reference) });
+                return Json(new { SWIVersion = "1.0", SRVersion = Repository.ProductVersion });
             }
             catch (Exception ex)
             {

@@ -14,7 +14,7 @@
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
-      <NumericFormat>N</NumericFormat>
+      <NumericFormat>N0</NumericFormat>
       <DateTimeFormat>d</DateTimeFormat>
       <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
@@ -184,6 +184,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -228,6 +229,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -272,6 +274,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -324,6 +327,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -486,6 +490,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -530,6 +535,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -574,6 +580,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -626,6 +633,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -789,6 +797,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -833,6 +842,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -877,6 +887,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -929,6 +940,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1058,6 +1070,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1102,6 +1115,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1146,6 +1160,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1198,6 +1213,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1361,6 +1377,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1405,6 +1422,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1449,6 +1467,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1501,6 +1520,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1664,6 +1684,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1708,6 +1729,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1752,6 +1774,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1804,6 +1827,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -1966,6 +1990,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2010,6 +2035,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2054,6 +2080,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2106,6 +2133,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2268,6 +2296,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2312,6 +2341,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2356,6 +2386,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2408,6 +2439,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2714,6 +2746,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2758,6 +2791,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2802,6 +2836,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -2854,6 +2889,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3016,6 +3052,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3060,6 +3097,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3104,6 +3142,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3156,6 +3195,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3318,6 +3358,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3362,6 +3403,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3406,6 +3448,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3458,6 +3501,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3820,6 +3864,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3864,6 +3909,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3908,6 +3954,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -3960,6 +4007,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -5006,14 +5054,13 @@ chart.yAxis2.tickFormat(function(value) {
     var currentSheet = converter.Sheet;
 	converter.Sheet = converter.SetAdditionalSheet(converter.Sheet.Name + " " + view.Report.Repository.TranslateReport("Charts"), ref rowStart, ref colStart);
 
-    if (view.Model.HasSerie &amp;amp;&amp;amp; view.GetBoolValue(ExcelConverter.show_charts))
+    if (view.Model.HasSerie &amp;amp;&amp;amp; view.GetBoolValue(ExcelConverter.show_charts, true))
     {
         var firstSerie = page.Series[0];
 
         ExcelChartType chartType = (firstSerie.Element.SerieDefinition == Seal.Model.SerieDefinition.Serie ? ExcelConverter.ConvertChartType(page.Series[0].Element.SerieType) : ExcelConverter.ConvertChartType(page.Series[0].Element.Nvd3Serie));
         ExcelChart chart = converter.Sheet.Charts.AddChart(chartType, colStart, rowStart, colStart + converter.ChartWidth, rowStart + converter.ChartHeight);
-        chart.Title.Text = view.Report.TranslateGeneral(view.GetValue(ExcelConverter.chart_nvd3_title));
-
+        chart.Title.Text = view.GetTranslatedMappedLabel(view.GetValue("chart_nvd3_title"));
         rowStart += converter.ChartHeight;
 
         //Series Y values, support only of the Primary Axis...
@@ -5022,11 +5069,16 @@ chart.yAxis2.tickFormat(function(value) {
         foreach (var serie in page.Series)
         {
             colIndex = 0;
-            foreach (var serieValue in serie.Values)
-            {
-                converter.SetValue(rowStart + serieIndex, colStart + colIndex, serieValue.Yvalue);
+			foreach (var xDimensionKey in page.PrimaryXValues.Keys)
+			{
+				//Find the corresponding serie value...
+				var value = serie.Values.FirstOrDefault(i =&amp;gt; i.XDimensionValues == xDimensionKey);
+				if (value != null) {
+					converter.SetValue(rowStart + serieIndex, colStart + colIndex, value.Yvalue);
+				}
                 colIndex++;
-            }
+			}
+
             ExcelChartSeries chartSerie = chart.Series.AddSeries(serie.SerieDisplayName);
             chartSerie.ChartType = chartType;
             chartSerie.CategoryNamesRange = converter.Sheet[rowStart, colStart, rowStart, colStart + page.PrimaryXValues.Keys.Count - 1];
