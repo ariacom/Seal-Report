@@ -1,4 +1,5 @@
-﻿<html lang="en">
+﻿<!DOCTYPE html>
+<html>
 <head>
     <!-- Required meta tags always come first -->
     <meta charset="utf-8">
@@ -18,9 +19,17 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
     <style>
-        body { padding-top: 60px; }
-        .table td, .table th { padding: 5px; }
-        label { font-weight : normal; }
+        body {
+            padding-top: 60px;
+        }
+
+        .table td, .table th {
+            padding: 5px;
+        }
+
+        label {
+            font-weight: normal;
+        }
     </style>
     <script>
         var sealServer = "/";
@@ -36,16 +45,6 @@
         $(document).ready(function () {
             $("button").addClass("btn btn-mg btn-default");
             $("button").attr("type", "button");
-
-            $.ajaxSetup({
-                type: "POST",
-                data: {},
-                dataType: 'json',
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true
-            });
 
             $("#login_button")
                 .click(function () {
@@ -262,7 +261,7 @@
 
             $("#set_up_button")
                 .click(function () {
-                    $.post(sealServer + "SWISetUserProfile", { culture: "it-IT" /* or Italian (Italy) */})
+                    $.post(sealServer + "SWISetUserProfile", { culture: "it-IT" /* or Italian (Italy) */ })
                         .done(function (data) {
                             if (!data.error) {
                                 $("#set_up_label").html("SWISetUserProfile Done: culture set to Italian (Italy).");
@@ -373,9 +372,9 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="user_name" name="user_name" placeholder="User name" autofocus value="" />
                                     <input type="password" class="form-control" id="password" name="password" placeholder="Password" />
-                                    </div>
-                                    <button id="login_button">Login</button>
-</td>
+                                </div>
+                                <button id="login_button">Login</button>
+                            </td>
                             <td width="50%"><label id="login_label"></label></td>
                         </tr>
                         <tr>
