@@ -265,8 +265,8 @@
       <ViewParameters />
       <ViewCSS />
       <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
-      <FolderPath>%SEALREPOSITORY%\Reports</FolderPath>
-      <FileName>%SEALREPORTDISPLAYNAME%_{0:yyyy_MM_dd}</FileName>
+      <FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath>
+      <FileName>07-Outputs and schedules_{0:yyyy_MM_dd}</FileName>
       <EmailHtmlBody>false</EmailHtmlBody>
       <EmailMessagesInBody>false</EmailMessagesInBody>
       <EmailZipAttachments>false</EmailZipAttachments>
@@ -304,8 +304,8 @@
       <ViewParameters />
       <ViewCSS />
       <ViewGUID>c496f22b-fc4d-45da-a2fc-23f9ecbf878b</ViewGUID>
-      <FolderPath>%SEALREPOSITORY%\Reports</FolderPath>
-      <FileName>%SEALREPORTDISPLAYNAME%_{0:yyyy_MM_dd}</FileName>
+      <FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath>
+      <FileName>07-Outputs and schedules_{0:yyyy_MM_dd}</FileName>
       <EmailHtmlBody>false</EmailHtmlBody>
       <EmailMessagesInBody>false</EmailMessagesInBody>
       <EmailZipAttachments>false</EmailZipAttachments>
@@ -337,6 +337,11 @@
             <Parameter>
               <Name>chart_show_all_axis_labels</Name>
               <Value>True</Value>
+            </Parameter>
+            <Parameter>
+              <Name>nvd3_script_margin</Name>
+              <Value>chart.margin({top: 30, left: 70, bottom: 40, right: 60});
+</Value>
             </Parameter>
           </Parameters>
           <CultureName />
