@@ -320,6 +320,7 @@ namespace Seal.Model
 
             List<ReportRestriction> allRestrictions = Report.AllRestrictions;
 
+            //Check the existing restrictions
             int index = _restrictions.Count;
             while (--index >= 0)
             {
@@ -332,10 +333,11 @@ namespace Seal.Model
                 }
             }
 
+
+            //Add new restrictions
             foreach (var restriction in allRestrictions)
             {
                 ReportRestriction outputRestriction = _restrictions.FirstOrDefault(i => i.GUID == restriction.GUID);
-
                 if (outputRestriction == null)
                 {
                     outputRestriction = ReportRestriction.CreateReportRestriction();

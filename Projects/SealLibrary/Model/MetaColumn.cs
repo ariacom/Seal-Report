@@ -245,6 +245,8 @@ namespace Seal.Model
             {
                 //Force the type of the ReportElement
                 ReportElement element = (ReportElement)this;
+                if (element.MetaColumn == null) return;
+
                 element.MetaColumn.SetDefaultFormat();
                 if (element.IsNumeric && NumericStandardFormat == NumericStandardFormat.Default)
                 {
@@ -326,13 +328,6 @@ namespace Seal.Model
                 return _metaTable;
             }
         }
-
-        [XmlIgnore]
-        public string FullDisplayName
-        {
-            get { return string.Format("{0}.{1}", MetaTable.Name, _displayName); }
-        }
-
 
         List<string> _drillChildren = new List<string>();
         [Category("Drill"), DisplayName("Drill Children"), Description("Defines the child columns to navigate from this column with the drill feature."), Id(1, 4)]

@@ -717,7 +717,6 @@ namespace Seal.Model
                     view.SetAdvancedConfigurations();
                     view.BeforeSerialization();
                 }
-
                 //serialize only not readonly metadata
                 foreach (ReportSource source in Sources)
                 {
