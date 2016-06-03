@@ -1135,19 +1135,22 @@ namespace Seal.Model
                 {
                     if (element.IsEnum)
                     {
-                        hasEnum = true;
-                        DataColumn col = ResultTable.Columns[element.SQLColumnName];
-                        DataColumn newcol = new DataColumn("_seal_dummy_temp_col_", typeof(string));
-                        ResultTable.Columns.Add(newcol);
-
-                        foreach (DataRow row in ResultTable.Rows)
+                        lock (ResultTable)
                         {
-                            //to sort by position, we add 6 digits as a prefix
-                            if (element.IsSorted && element.MetaColumn.Enum.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
-                            row[newcol] = element.GetEnumSortValue(row[col].ToString(), false);
+                            hasEnum = true;
+                            DataColumn col = ResultTable.Columns[element.SQLColumnName];
+                            DataColumn newcol = new DataColumn("_seal_dummy_temp_col_", typeof(string));
+                            ResultTable.Columns.Add(newcol);
+
+                            foreach (DataRow row in ResultTable.Rows)
+                            {
+                                //to sort by position, we add 6 digits as a prefix
+                                if (element.IsSorted && element.MetaColumn.Enum.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
+                                row[newcol] = element.GetEnumSortValue(row[col].ToString(), false);
+                            }
+                            ResultTable.Columns.Remove(col);
+                            newcol.ColumnName = element.SQLColumnName;
                         }
-                        ResultTable.Columns.Remove(col);
-                        newcol.ColumnName = element.SQLColumnName;
                     }
                 }
 
