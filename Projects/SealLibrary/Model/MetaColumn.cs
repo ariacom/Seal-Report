@@ -329,6 +329,16 @@ namespace Seal.Model
             }
         }
 
+
+        [XmlIgnore]
+        public string FullDisplayName
+        {
+            get {
+                if (MetaTable == null) return _displayName;
+                return string.Format("{0}.{1}", string.IsNullOrEmpty(MetaTable.Name) ? MetaTable.Alias : MetaTable.Name, _displayName);
+            }
+        }
+
         List<string> _drillChildren = new List<string>();
         [Category("Drill"), DisplayName("Drill Children"), Description("Defines the child columns to navigate from this column with the drill feature."), Id(1, 4)]
         [Editor(typeof(ColumnsSelector), typeof(UITypeEditor))]
