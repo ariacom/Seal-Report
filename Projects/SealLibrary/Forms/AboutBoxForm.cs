@@ -28,16 +28,9 @@ namespace Seal.Forms
             string text = Repository.Instance.LicenseText;
             if (string.IsNullOrEmpty(text))
             {
-                text = @"A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.
-
-Visit our Web site, take a dive and join the Seal community...
-
-
-Copyright(c) Seal Report, Eric Pfirsch (sealreport@gmail.com).
-
-Seal Report is licensed under the Apache License, Version 2.0.
-http://www.apache.org/licenses/LICENSE-2.0.
-";
+                text = "A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n\r\n\r\n";
+                text += "Copyright(c) Seal Report, Eric Pfirsch (sealreport@gmail.com).\r\n\r\n";
+                text += "Seal Report is licensed under the Apache License, Version 2.0.\r\nhttp://www.apache.org/licenses/LICENSE-2.0.";
             }
             this.textBoxDescription.Text = text;
             ShowIcon = true;
