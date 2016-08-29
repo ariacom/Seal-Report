@@ -35,11 +35,11 @@ Use the <a href="http://forum.sealreport.org" target=_blank>Seal Report Forum</a
 
 ##System Requirements
 **For use:**
-* Windows XP, Vista, 2003, Windows 7, 2008, Windows 8, 2012
+* Windows XP, Vista, 2003, Windows 7, 2008, Windows 8, 2012, Windows 10
 * .Net Framework 4.0
 * Database OLE DB or ODBC Drivers
 * For the Web Server: Internet Information Server version 7 or 8 with MVC4
-* For the Task Scheduler: Windows Vista, 7, 2008, 8 or 2012
+* For the Task Scheduler: Windows Vista, 7, 2008, 8, 10 or 2012
 
 **For development:**
 * Visual Studio 2013 with MVC 4
