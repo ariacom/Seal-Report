@@ -42,7 +42,7 @@ Use the <a href="http://forum.sealreport.org" target=_blank>Seal Report Forum</a
 * For the Task Scheduler: Windows Vista, 7, 2008, 8, 10 or 2012
 
 **For development:**
-* Visual Studio 2013 with MVC 4
+* Visual Studio 2015 with MVC 4
 
 ##License
 Seal Report is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>
