@@ -909,7 +909,7 @@ namespace Seal.Model
                         if (Report.Cancel) break;
                         foreach (var element in colTotalElements)
                         {
-                            ResultTotalCell totalCell = new ResultTotalCell() { Element = element, IsTotal = true, IsTotalTotal = true };
+                            ResultTotalCell totalCell = new ResultTotalCell() { Element = element, IsTotal = true, IsTotalTotal = false };
                             for (int j = 0; j < page.DataTable.Lines.Count; j++)
                             {
                                 ResultCell cell = page.DataTable.Lines[j][i];
@@ -961,7 +961,7 @@ namespace Seal.Model
                         //Calculate the row total
                         foreach (var element in rowTotalElements)
                         {
-                            ResultTotalCell totalCell = new ResultTotalCell() { Element = element, IsTotal = true, IsTotalTotal = (i == page.DataTable.Lines.Count - 1) };
+                            ResultTotalCell totalCell = new ResultTotalCell() { Element = element, IsTotal = true, IsTotalTotal = (element.ShowTotal == ShowTotal.RowColumn && i == page.DataTable.Lines.Count - 1) };
                             bool isHeaderLine = false;
                             foreach (var cell in rowLine)
                             {
