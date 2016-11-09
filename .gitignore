@@ -45,6 +45,7 @@ work/
 temp/
 Assemblies/
 Logs/
+SpecialFolders/
 
 #web report editor files
 HomeControllerSWIEditor.cs
