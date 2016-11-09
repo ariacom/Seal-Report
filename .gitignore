@@ -52,7 +52,7 @@ HomeControllerSWIEditor.cs
 SWIReportModels.cs
 swi-properties.*
 swi-editor.*
-
+swi-button-group.*
 
 # =========================
 # Operating System Files
