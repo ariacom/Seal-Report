@@ -46,6 +46,12 @@ temp/
 Assemblies/
 Logs/
 
+#web report editor files
+HomeControllerSWIEditor.cs
+SWIReportModels.cs
+swi-properties.*
+swi-editor.*
+
 
 # =========================
 # Operating System Files
