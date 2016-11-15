@@ -11,7 +11,7 @@
         <SecurityFolder>
           <Path>\</Path>
           <UseSubFolders>true</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
+          <ManageFolder>false</ManageFolder>
           <FolderRight>Edit</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
