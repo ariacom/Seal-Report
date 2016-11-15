@@ -197,6 +197,7 @@
     <Compile Include="Model\SealExcelConverter.cs" />
     <Compile Include="Model\SealPdfConverter.cs" />
     <Compile Include="Model\SealSecurity.cs" />
+    <Compile Include="Model\SecurityColumn.cs" />
     <Compile Include="Model\SecurityProvider.cs" />
     <Compile Include="Model\SecurityFolder.cs" />
     <Compile Include="Model\SecurityGroup.cs" />
@@ -295,8 +296,8 @@
     <None Include="..\..\Repository\Views\Scripts\datepicker.js">
       <Link>Views\Scripts\datepicker.js</Link>
     </None>
-    <None Include="..\..\Repository\Views\Scripts\seal.css">
-      <Link>Views\Scripts\seal.css</Link>
+    <None Include="..\..\Repository\Views\Content\seal.css">
+      <Link>Views\Content\seal.css</Link>
     </None>
     <None Include="Result.cd" />
   </ItemGroup>
@@ -397,7 +398,7 @@
 copy "$(ProjectDir)..\..\Repository\Views\Scripts\dataTables.js" "$(ProjectDir)..\SealWebServer\Scripts\"
 copy "$(ProjectDir)..\..\Repository\Views\Scripts\datepicker.js" "$(ProjectDir)..\SealWebServer\Scripts\"
 copy "$(ProjectDir)..\..\Repository\Views\Scripts\nvd3.js" "$(ProjectDir)..\SealWebServer\Scripts\"
-copy "$(ProjectDir)..\..\Repository\Views\Scripts\seal.css" "$(ProjectDir)..\SealWebServer\Scripts\"</PostBuildEvent>
+copy "$(ProjectDir)..\..\Repository\Views\Content\seal.css" "$(ProjectDir)..\SealWebServer\Content\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

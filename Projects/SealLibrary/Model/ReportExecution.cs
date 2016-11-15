@@ -205,7 +205,9 @@ namespace Seal.Model
             else
             {
                 if (Report.ForOutput) Report.OutputToExecute.Information = "";
-                Report.LogMessage("Starting execution of '{0}'...", Path.GetFileNameWithoutExtension(Report.FilePath));
+                string userInfo = "No security context";
+                if (Report.SecurityContext != null) userInfo = string.Format("User:'{0}' Groups:'{1}'", Report.SecurityContext.Name, Report.SecurityContext.SecurityGroupsDisplay);
+                Report.LogMessage("Starting execution of '{0}' ({1})...", Path.GetFileNameWithoutExtension(Report.FilePath), userInfo);
                 Report.ExecutionCommonRestrictions = null;
                 Report.Status = ReportStatus.Executing;
                 Report.Cancel = false;
@@ -291,36 +293,136 @@ namespace Seal.Model
             Report.ExecutionErrors += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(error, args));
         }
 
-        private bool validateDateKeyword(string val, string dateMessage)
+        private static bool validateDateKeyword(Report report, string val, string dateMessage)
         {
-            string val2 = Report.TranslateDateKeywordsToEnglish(val);
+            string val2 = report.TranslateDateKeywordsToEnglish(val);
             if (!ReportRestriction.HasDateKeyword(val2))
             {
-                Report.HasValidationErrors = true;
-                Report.ExecutionErrors += string.Format("{0}: '{1}'.\r\n{2}\r\n", Report.Translate("Invalid date"), val, dateMessage);
+                report.HasValidationErrors = true;
+                report.ExecutionErrors += string.Format("{0}: '{1}'.\r\n{2}\r\n", report.Translate("Invalid date"), val, dateMessage);
                 return false;
             }
             return true;
         }
 
-        private bool validateNumeric(string val)
+        private static bool validateNumeric(Report report, string val)
         {
-            string val2 = Report.TranslateDateKeywordsToEnglish(val);
+            string val2 = report.TranslateDateKeywordsToEnglish(val);
             Double result;
             if (!Double.TryParse(val, out result))
             {
-                Report.HasValidationErrors = true;
-                Report.ExecutionErrors += string.Format("{0}: '{1}'\r\n", Report.Translate("Invalid numeric value"), val);
+                report.HasValidationErrors = true;
+                report.ExecutionErrors += string.Format("{0}: '{1}'\r\n", report.Translate("Invalid numeric value"), val);
                 return false;
             }
             return true;
         }
 
-        private void CheckInputRestrictions()
+
+        public static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired)
+        {
+            string dateMessage = report.Translate("Use the date format '{0}' or one of the following keywords:", report.CultureInfo.DateTimeFormat.ShortDatePattern) + " " + report.DateKeywordsList;
+
+            DateTime dt;
+            string val = val1;
+            if (restriction.IsDateTime)
+            {
+                if (string.IsNullOrEmpty(val))
+                {
+                    restriction.Date1 = DateTime.MinValue;
+                    restriction.Date1Keyword = "";
+                }
+                else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
+                {
+                    restriction.Date1Keyword = "";
+                    restriction.Date1 = dt;
+                }
+                else if (validateDateKeyword(report, val, dateMessage)) restriction.Date1Keyword = report.TranslateDateKeywordsToEnglish(val);
+            }
+            else if (restriction.IsNumeric)
+            {
+                if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value1 = val;
+            }
+            else restriction.Value1 = val;
+
+            //check required flag
+            if (string.IsNullOrEmpty(val) && restriction.Required)
+            {
+                report.HasValidationErrors = true;
+                report.ExecutionErrors += string.Format("{0} '{1}'\r\n", report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
+            }
+
+            if (restriction.Prompt != PromptType.PromptOneValue)
+            {
+                val = val2;
+                if (restriction.IsDateTime)
+                {
+                    if (string.IsNullOrEmpty(val))
+                    {
+                        restriction.Date2 = DateTime.MinValue;
+                        restriction.Date2Keyword = "";
+                    }
+                    else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
+                    {
+                        restriction.Date2Keyword = "";
+                        restriction.Date2 = dt;
+                    }
+                    else if (validateDateKeyword(report, val, dateMessage)) restriction.Date2Keyword = report.TranslateDateKeywordsToEnglish(val);
+                }
+                else if (restriction.IsNumeric)
+                {
+                    if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value2 = val;
+                }
+                else restriction.Value2 = val;
+
+                val = val3;
+                if (restriction.IsDateTime)
+                {
+                    if (string.IsNullOrEmpty(val))
+                    {
+                        restriction.Date3 = DateTime.MinValue;
+                        restriction.Date3Keyword = "";
+                    }
+                    else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
+                    {
+                        restriction.Date3Keyword = "";
+                        restriction.Date3 = dt;
+                    }
+                    else if (validateDateKeyword(report, val, dateMessage)) restriction.Date3Keyword = report.TranslateDateKeywordsToEnglish(val);
+                }
+                else if (restriction.IsNumeric)
+                {
+                    if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value3 = val;
+                }
+                else restriction.Value3 = val;
+
+                val = val4;
+                if (restriction.IsDateTime)
+                {
+                    if (string.IsNullOrEmpty(val))
+                    {
+                        restriction.Date4 = DateTime.MinValue;
+                        restriction.Date4Keyword = "";
+                    }
+                    else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
+                    {
+                        restriction.Date4Keyword = "";
+                        restriction.Date4 = dt;
+                    }
+                    else if (validateDateKeyword(report, val, dateMessage)) restriction.Date4Keyword = report.TranslateDateKeywordsToEnglish(val);
+                }
+                else if (restriction.IsNumeric)
+                {
+                    if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value4 = val;
+                }
+                else restriction.Value4 = val;
+            }
+        }
+
+        public void CheckInputRestrictions()
         {
             try
             {
-                string dateMessage = Report.Translate("Use the date format '{0}' or one of the following keywords:", Report.CultureInfo.DateTimeFormat.ShortDatePattern) + " " + Report.DateKeywordsList;
                 foreach (ReportModel model in Report.Models)
                 {
                     foreach (ReportRestriction restriction in model.ExecutionRestrictions.Where(i => i.Prompt != PromptType.None).Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None)))
@@ -352,100 +454,13 @@ namespace Seal.Model
                         }
                         else
                         {
-                            DateTime dt;
-                            val = Report.GetInputRestriction(restriction.ValueHtmlId + "_1");
-                            if (restriction.IsDateTime)
-                            {
-                                if (string.IsNullOrEmpty(val))
-                                {
-                                    restriction.Date1 = DateTime.MinValue;
-                                    restriction.Date1Keyword = "";
-                                }
-                                else if (DateTime.TryParse(val, Report.CultureInfo, DateTimeStyles.None, out dt))
-                                {
-                                    restriction.Date1Keyword = "";
-                                    restriction.Date1 = dt;
-                                }
-                                else if (validateDateKeyword(val, dateMessage)) restriction.Date1Keyword = Report.TranslateDateKeywordsToEnglish(val);
-                            }
-                            else if (restriction.IsNumeric)
-                            {
-                                if (string.IsNullOrEmpty(val) || validateNumeric(val)) restriction.Value1 = val;
-                            }
-                            else restriction.Value1 = val;
-
-                            //check required flag
-                            if (string.IsNullOrEmpty(val) && restriction.Required)
-                            {
-                                Report.HasValidationErrors = true;
-                                Report.ExecutionErrors += string.Format("{0} '{1}'\r\n", Report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
-                            }
-
-                            if (restriction.Prompt != PromptType.PromptOneValue)
-                            {
-                                val = Report.GetInputRestriction(restriction.ValueHtmlId + "_2");
-                                if (restriction.IsDateTime)
-                                {
-                                    if (string.IsNullOrEmpty(val))
-                                    {
-                                        restriction.Date2 = DateTime.MinValue;
-                                        restriction.Date2Keyword = "";
-                                    }
-                                    else if (DateTime.TryParse(val, Report.CultureInfo, DateTimeStyles.None, out dt))
-                                    {
-                                        restriction.Date2Keyword = "";
-                                        restriction.Date2 = dt;
-                                    }
-                                    else if (validateDateKeyword(val, dateMessage)) restriction.Date2Keyword = Report.TranslateDateKeywordsToEnglish(val);
-                                }
-                                else if (restriction.IsNumeric)
-                                {
-                                    if (string.IsNullOrEmpty(val) || validateNumeric(val)) restriction.Value2 = val;
-                                }
-                                else restriction.Value2 = val;
-
-                                val = Report.GetInputRestriction(restriction.ValueHtmlId + "_3");
-                                if (restriction.IsDateTime)
-                                {
-                                    if (string.IsNullOrEmpty(val))
-                                    {
-                                        restriction.Date3 = DateTime.MinValue;
-                                        restriction.Date3Keyword = "";
-                                    }
-                                    else if (DateTime.TryParse(val, Report.CultureInfo, DateTimeStyles.None, out dt))
-                                    {
-                                        restriction.Date3Keyword = "";
-                                        restriction.Date3 = dt;
-                                    }
-                                    else if (validateDateKeyword(val, dateMessage)) restriction.Date3Keyword = Report.TranslateDateKeywordsToEnglish(val);
-                                }
-                                else if (restriction.IsNumeric)
-                                {
-                                    if (string.IsNullOrEmpty(val) || validateNumeric(val)) restriction.Value3 = val;
-                                }
-                                else restriction.Value3 = val;
-
-                                val = Report.GetInputRestriction(restriction.ValueHtmlId + "_4");
-                                if (restriction.IsDateTime)
-                                {
-                                    if (string.IsNullOrEmpty(val))
-                                    {
-                                        restriction.Date4 = DateTime.MinValue;
-                                        restriction.Date4Keyword = "";
-                                    }
-                                    else if (DateTime.TryParse(val, Report.CultureInfo, DateTimeStyles.None, out dt))
-                                    {
-                                        restriction.Date4Keyword = "";
-                                        restriction.Date4 = dt;
-                                    }
-                                    else if (validateDateKeyword(val, dateMessage)) restriction.Date4Keyword = Report.TranslateDateKeywordsToEnglish(val);
-                                }
-                                else if (restriction.IsNumeric)
-                                {
-                                    if (string.IsNullOrEmpty(val) || validateNumeric(val)) restriction.Value4 = val;
-                                }
-                                else restriction.Value4 = val;
-                            }
+                            SetRestrictions(Report, restriction,
+                                   Report.GetInputRestriction(restriction.ValueHtmlId + "_1"),
+                                   Report.GetInputRestriction(restriction.ValueHtmlId + "_2"),
+                                   Report.GetInputRestriction(restriction.ValueHtmlId + "_3"),
+                                   Report.GetInputRestriction(restriction.ValueHtmlId + "_4"),
+                                   true
+                                   );
                         }
                     }
                 }
@@ -909,7 +924,7 @@ namespace Seal.Model
                         if (Report.Cancel) break;
                         foreach (var element in colTotalElements)
                         {
-                            ResultTotalCell totalCell = new ResultTotalCell() { Element = element, IsTotal = true, IsTotalTotal = true };
+                            ResultTotalCell totalCell = new ResultTotalCell() { Element = element, IsTotal = true, IsTotalTotal = false };
                             for (int j = 0; j < page.DataTable.Lines.Count; j++)
                             {
                                 ResultCell cell = page.DataTable.Lines[j][i];
@@ -961,7 +976,7 @@ namespace Seal.Model
                         //Calculate the row total
                         foreach (var element in rowTotalElements)
                         {
-                            ResultTotalCell totalCell = new ResultTotalCell() { Element = element, IsTotal = true, IsTotalTotal = (i == page.DataTable.Lines.Count - 1) };
+                            ResultTotalCell totalCell = new ResultTotalCell() { Element = element, IsTotal = true, IsTotalTotal = (element.ShowTotal == ShowTotal.RowColumn && i == page.DataTable.Lines.Count - 1) };
                             bool isHeaderLine = false;
                             foreach (var cell in rowLine)
                             {
@@ -1545,6 +1560,7 @@ namespace Seal.Model
                     {
                         report.CurrentViewGUID = report.ViewGUID;
                     }
+
                     reportExecution.Execute();
                     schedule.SynchronizeTask();
 

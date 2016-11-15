@@ -103,10 +103,7 @@ namespace Seal.Helpers
         public static TreeNode GetRootCategoryNode(TreeNode node)
         {
             TreeNode result = node;
-
-
             while (result != null && !(result.Tag is TableFolder)) result = result.Parent;
-
             //get the child...
             foreach (TreeNode child in result.Nodes)
             {

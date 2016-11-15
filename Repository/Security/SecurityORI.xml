@@ -11,12 +11,13 @@
         <SecurityFolder>
           <Path>\</Path>
           <UseSubFolders>true</UseSubFolders>
-          <PublicationType>ExecuteOutput</PublicationType>
-          <DescriptionFile />
-          <SearchPattern />
+          <ManageFolder>true</ManageFolder>
+          <FolderRight>Edit</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
       </Folders>
+      <PersonalFolder>false</PersonalFolder>
+      <Columns />
       <Culture />
     </SecurityGroup>
   </Groups>

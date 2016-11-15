@@ -88,7 +88,9 @@ if (chartType != 'discreteBarChart') {
         DisplayName = "Script: Margins definition",
         Description = "Custom script to configure chart margins",
         EditorLanguage = "js",
-        TextValue = @"//chart.margin({top: 30, left: 70, bottom: 40, right: 60});
+        TextValue = @"if (chartType == 'multiBarHorizontalChart') chart.margin({left: 30+4*XLabelsLen, right: 30 });
+else if (chartType != 'pieChart') chart.margin({left:30+5*YPrimaryLen, right:30+5*YSecondaryLen});
+//chart.margin({top: 30, left: 70, bottom: 40, right: 60});
 ",
     });
 

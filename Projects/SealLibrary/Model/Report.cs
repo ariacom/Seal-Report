@@ -110,6 +110,13 @@ namespace Seal.Model
             }
         }
 
+        private string _initScript = "";
+        public string InitScript
+        {
+            get { return _initScript; }
+            set { _initScript = value; }
+        }
+
         private string _viewGUID;
         public string ViewGUID
         {
@@ -130,36 +137,12 @@ namespace Seal.Model
         public Repository Repository = null;
 
         [XmlIgnore]
-        public string FilePath;
+        public string FilePath = "";
 
         [XmlIgnore]
         public DateTime LastModification;
 
-        [XmlIgnore]
-        public const string ResultFileStaticSuffix = "_seal_attach";
 
-        public static bool IsSealAttachedFile(string path)
-        {
-            return Path.GetFileNameWithoutExtension(path).EndsWith(ResultFileStaticSuffix);
-        }
-
-        public static bool IsSealReportFile(string path)
-        {
-            return path.EndsWith("." + Repository.SealReportFileExtension);
-        }
-
-        public static string CopySealFile(string path, string destinationFolder)
-        {
-            string newPath = FileHelper.GetUniqueFileName(Path.Combine(destinationFolder, Path.GetFileName(path)));
-            File.Copy(path, newPath, true);
-            File.SetLastWriteTimeUtc(path, DateTime.Now);
-            foreach (string attachedPath in Directory.GetFiles(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + "*" + ResultFileStaticSuffix + ".*"))
-            {
-                File.Copy(attachedPath, Path.Combine(destinationFolder, Path.GetFileName(attachedPath)), true);
-                File.SetLastWriteTimeUtc(attachedPath, DateTime.Now);
-            }
-            return newPath;
-        }
 
         [XmlIgnore]
         public string ResultFilePrefix;
@@ -172,7 +155,17 @@ namespace Seal.Model
         {
             get
             {
-                return ResultFilePath.Replace(Repository.ReportsFolder, "");
+                string result = ResultFilePath;
+                if (ResultFilePath.StartsWith(Repository.ReportsFolder)) result = ResultFilePath.Substring(Repository.ReportsFolder.Length);
+                else if (ResultFilePath.StartsWith(Repository.PersonalFolder))
+                {
+                    if (SecurityContext != null && ResultFilePath.StartsWith(Repository.GetPersonalFolder(SecurityContext)))
+                    {
+                        result = Repository.GetPersonalFolderName(SecurityContext) + ResultFilePath.Substring(Repository.GetPersonalFolder(SecurityContext).Length);
+                    }
+                    else result = ResultFilePath.Substring(Repository.PersonalFolder.Length);
+                }
+                return result;
             }
         }
 
@@ -293,6 +286,19 @@ namespace Seal.Model
                 //Check custom Output Parameters and CSS
                 Parameter.CopyParameters(OutputToExecute.ViewParameters, OutputToExecute.View.Parameters);
                 Parameter.CopyParameters(OutputToExecute.ViewCSS, OutputToExecute.View.CSS);
+
+                //Add the security context for the output if specified
+                if (!string.IsNullOrWhiteSpace(OutputToExecute.UserName) || !string.IsNullOrWhiteSpace(OutputToExecute.UserGroups))
+                {
+                    SecurityContext = new SecurityUser(Repository.Security) { Name = OutputToExecute.UserName };
+                    string[] groups= OutputToExecute.UserGroups.Replace(";", "\r").Replace("\n", "").Split('\r');
+                    foreach (string group in groups) SecurityContext.AddSecurityGroup(group);
+                }
+
+                if (!string.IsNullOrEmpty(OutputToExecute.UserCulture))
+                {
+                    SecurityContext.SetDefaultCulture(OutputToExecute.UserCulture);
+                }
             }
 
             try
@@ -310,13 +316,13 @@ namespace Seal.Model
                     //get unique file name in the result folder
                     ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, fileName), "." + ExecutionView.ExternalViewerExtension);
                 }
-                ResultFilePrefix = Path.GetFileNameWithoutExtension(ResultFilePath) + "_" + Path.GetExtension(ResultFilePath).Replace(".", "");
-                if (Repository.Configuration.IsLocal && !Directory.Exists(Path.Combine(ResultFolder, "images")) && !ExecutionView.Views.Exists(i => i.Template.Name == ReportViewTemplate.ModelCSVExcelName))
+                ResultFilePrefix = FileHelper.GetResultFilePrefix(ResultFilePath);
+                if (Repository.Configuration.IsLocal && ExecutionContext != ReportExecutionContext.WebReport && ExecutionContext != ReportExecutionContext.WebOutput && !Directory.Exists(Path.Combine(ResultFolder, "images")) && !ExecutionView.Views.Exists(i => i.Template.Name == ReportViewTemplate.ModelCSVExcelName))
                 {
                     try
                     {
                         //copy images folder (for jquery images)
-                        FileHelper.CopyDirectory(Path.Combine(Repository.ViewScriptsFolder, "images"), Path.Combine(ResultFolder, "images"), false);
+                        FileHelper.CopyDirectory(Path.Combine(Repository.ViewContentFolder, "images"), Path.Combine(ResultFolder, "images"), false);
                     }
                     catch { }
                 }
@@ -333,6 +339,18 @@ namespace Seal.Model
                 Cancel = true;
                 if (string.IsNullOrEmpty(fileFolder) && OutputToExecute != null && !string.IsNullOrEmpty(OutputToExecute.FolderPath)) fileFolder = OutputToExecute.FolderPath;
                 ExecutionErrors += string.Format("Error initializing report Path, check your report execution or output Path '{0}'\r\n{1}\r\n", Path.Combine(fileFolder, fileName), ex.Message);
+            }
+
+            if (!string.IsNullOrEmpty(InitScript))
+            {
+                try
+                {
+                    Helper.ParseRazor(InitScript, this);
+                }
+                catch(Exception ex2)
+                {
+                    ExecutionErrors += string.Format("Error executing init script\r\n{0}\r\n", ex2.Message);
+                }
             }
         }
 
@@ -617,7 +635,7 @@ namespace Seal.Model
         static public Report Create(Repository repository)
         {
             Report result = new Report() { GUID = Guid.NewGuid().ToString() };
-            result.FilePath = "NewReport." + Repository.SealReportFileExtension;
+            result.FilePath = repository.TranslateReport("New report") + "." + Repository.SealReportFileExtension;
             result.Repository = repository;
             foreach (MetaSource source in repository.Sources)
             {
@@ -653,20 +671,28 @@ namespace Seal.Model
         {
             try
             {
-                //Synchronze all schedules...
+                //Synchronize all schedules...
                 foreach (ReportSchedule schedule in Schedules)
                 {
-                    schedule.SynchronizeTask();
+                    try
+                    {
+                        schedule.SynchronizeTask();
+                    }
+                    catch { }
                 }
 
                 //Clear unused tasks
                 foreach (Task task in TaskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.StartsWith(FilePath + "\n")))
                 {
-                    ReportSchedule schedule = Schedules.FirstOrDefault(i => i.TaskSource == task.Definition.RegistrationInfo.Source);
-                    if (schedule == null)
+                    try
                     {
-                        TaskFolder.DeleteTask(task.Name);
+                        ReportSchedule schedule = Schedules.FirstOrDefault(i => i.TaskSource == task.Definition.RegistrationInfo.Source);
+                        if (schedule == null)
+                        {
+                            TaskFolder.DeleteTask(task.Name);
+                        }
                     }
+                    catch { }
                 }
             }
             catch { }
@@ -943,7 +969,8 @@ namespace Seal.Model
             //Do not sync taks here, it will be done when report is really saved...
         }
 
-        public string GetImageFile(string fileName)
+
+public string GetImageFile(string fileName)
         {
             if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
             {
@@ -957,7 +984,7 @@ namespace Seal.Model
 
         public string GetChartFileName()
         {
-            return FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, ResultFilePrefix + Guid.NewGuid().ToString() + ResultFileStaticSuffix + ".png"));
+            return FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, ResultFilePrefix + Guid.NewGuid().ToString() + FileHelper.ResultFileStaticSuffix + ".png"));
         }
 
         public string AttachImageFile(string fileName)
@@ -978,7 +1005,7 @@ namespace Seal.Model
             if (ForOutput)
             {
                 //execution to output, rename the file and copy them in the target directory
-                string targetFilePath = FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, ResultFilePrefix + Path.GetFileNameWithoutExtension(fileName) + ResultFileStaticSuffix + Path.GetExtension(fileName)));
+                string targetFilePath = FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, ResultFilePrefix + Path.GetFileNameWithoutExtension(fileName) + FileHelper.ResultFileStaticSuffix + Path.GetExtension(fileName)));
                 File.Copy(sourceFilePath, targetFilePath);
                 sourceFilePath = targetFilePath;
             }
@@ -987,9 +1014,17 @@ namespace Seal.Model
             return Path.GetFileName(sourceFilePath);
         }
 
+
+        private string ConvertCDNPath(string cdnPath)
+        {
+            string result = cdnPath;
+            if (!string.IsNullOrEmpty(WebUrl) && WebUrl.ToLower().StartsWith("https://") && cdnPath.ToLower().StartsWith("https://")) result = "https://" + result.Substring(7);
+            return result;
+        }
+
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
-            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<script type='text/javascript' src='{0}'></script>", cdnPath);
+            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<script type='text/javascript' src='{0}'></script>", ConvertCDNPath(cdnPath));
 
             if (GenerateHTMLDisplay || ForPDFConversion)
             {
@@ -1008,6 +1043,7 @@ namespace Seal.Model
             //generating result file, set the script directly in the result
             string result = "<script type='text/javascript'>\r\n";
             string sourceFilePath = Path.Combine(Repository.ViewScriptsFolder, fileName);
+
             result += File.ReadAllText(sourceFilePath);
             result += "\r\n</script>\r\n";
             return result;
@@ -1015,25 +1051,25 @@ namespace Seal.Model
 
         public string AttachCSSFile(string fileName, string cdnPath = "")
         {
-            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", cdnPath);
+            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", ConvertCDNPath(cdnPath));
 
             if (GenerateHTMLDisplay)
             {
                 if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
                 {
-                    return string.Format("<link type='text/css' href='{0}Scripts/{1}' rel='stylesheet'/>", WebUrl, fileName);
+                    return string.Format("<link type='text/css' href='{0}Content/{1}' rel='stylesheet'/>", WebUrl, fileName);
                 }
                 else
                 {
                     //reference local file
-                    string fileReference = "file:///" + HttpUtility.HtmlEncode(Path.Combine(Repository.ViewScriptsFolder, fileName));
+                    string fileReference = "file:///" + HttpUtility.HtmlEncode(Path.Combine(Repository.ViewContentFolder, fileName));
                     return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", fileReference);
                 }
             }
 
             //generating result file, set the CSS directly in the result
             string result = "<style type='text/css'>\r\n";
-            string sourceFilePath = Path.Combine(Repository.ViewScriptsFolder, fileName);
+            string sourceFilePath = Path.Combine(Repository.ViewContentFolder, fileName);
             result += File.ReadAllText(sourceFilePath);
             result += "\r\n</style>\r\n";
             return result;

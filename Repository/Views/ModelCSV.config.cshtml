@@ -17,7 +17,7 @@
     Template.SkipFileAttachments = true;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "csv_separator", Value = CultureInfo.CurrentCulture.TextInfo.ListSeparator, DisplayName = "CSV Separator", Description = "The separator used to generate the CSV file" });
+    Template.Parameters.Add(new Parameter() { Name = "csv_separator", Value = "", DisplayName = "CSV Separator", Description = "The separator used to generate the CSV file. If empty, the default value of the current culture is used." });
     Template.Parameters.Add(new Parameter() { Name = "use_display_format", DisplayName = "Use display format", BoolValue = true, Description = "If true, the display format is applied to the values displayed in the CSV file" });
     
     //Allowed template parent names

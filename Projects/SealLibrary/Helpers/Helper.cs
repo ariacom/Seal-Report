@@ -267,12 +267,20 @@ namespace Seal.Helpers
         static public string ConvertNumericStandardFormat(NumericStandardFormat format)
         {
             if (format == NumericStandardFormat.Numeric0) return "N0";
+            else if (format == NumericStandardFormat.Numeric1) return "N1";
             else if (format == NumericStandardFormat.Numeric2) return "N2";
+            else if (format == NumericStandardFormat.Numeric3) return "N3";
+            else if (format == NumericStandardFormat.Numeric4) return "N4";
             else if (format == NumericStandardFormat.Percentage0) return "P0";
             else if (format == NumericStandardFormat.Percentage2) return "P2";
             else if (format == NumericStandardFormat.Currency0) return "C0";
             else if (format == NumericStandardFormat.Currency2) return "C2";
             else if (format == NumericStandardFormat.Decimal) return "D";
+            else if (format == NumericStandardFormat.Decimal0) return "D0";
+            else if (format == NumericStandardFormat.Decimal1) return "D1";
+            else if (format == NumericStandardFormat.Decimal2) return "D2";
+            else if (format == NumericStandardFormat.Decimal3) return "D3";
+            else if (format == NumericStandardFormat.Decimal4) return "D4";
             else if (format == NumericStandardFormat.Exponential) return "E";
             else if (format == NumericStandardFormat.Exponential2) return "E2";
             else if (format == NumericStandardFormat.Fixedpoint) return "F";
@@ -607,5 +615,14 @@ namespace Seal.Helpers
             return connection;
         }
 
+        public static int CalculateHash(string str)
+        {
+            int res = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                res += (i * str[i]) % int.MaxValue;
+            }
+            return res;
+        }
     }
 }

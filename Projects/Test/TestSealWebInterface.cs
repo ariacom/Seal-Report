@@ -74,7 +74,7 @@ namespace Test
             response = await httpClient.PostAsJsonAsync(serverURL + "SWILogin", new { user = "", password = "" });
             var profile = await response.Content.ReadAsAsync<SWIUserProfileResponse>();
             Assert.IsTrue(string.IsNullOrEmpty(profile.error));
-            Assert.IsTrue(profile.name == "Anonymous" && profile.group == "Default Group");
+            Assert.IsTrue(!string.IsNullOrEmpty(profile.group));
 
             response = await httpClient.PostAsJsonAsync(serverURL + "SWIGetFolders", new { path = @"\" });
             var folder = await response.Content.ReadAsAsync<SWIFolderResponse>();
@@ -90,7 +90,7 @@ namespace Test
             Assert.IsTrue(string.IsNullOrEmpty(reportDetail.error));
             Assert.IsTrue(reportDetail.views.Length == 2 && reportDetail.outputs.Length == 3);
 
-            response = await httpClient.PostAsJsonAsync(serverURL + "SWIExecuteReport?r0_name=Quantity&r0_operator=Between&r0_value_1=34&r0_value_2=123",
+            response = await httpClient.PostAsJsonAsync(serverURL + "SWIExecuteReportToResult?r0_name=Quantity&r0_operator=Between&r0_value_1=34&r0_value_2=123",
                 new { path = @"\Search - Orders.srex" });
             var url = await response.Content.ReadAsAsync<SWIURLResponse>();
             Assert.IsTrue(string.IsNullOrEmpty(url.error));
@@ -104,7 +104,7 @@ namespace Test
             response = await httpClient.PostAsJsonAsync(serverURL + "SWIGetUserProfile", new { });
             profile = await response.Content.ReadAsAsync<SWIUserProfileResponse>();
             Assert.IsTrue(string.IsNullOrEmpty(profile.error));
-            Assert.IsTrue(profile.name == "Anonymous" && profile.group == "Default Group" && profile.culture == "Italian (Italy)");
+            Assert.IsTrue(!string.IsNullOrEmpty(profile.group) && profile.culture == "Italian (Italy)");
 
             response = await httpClient.PostAsJsonAsync(serverURL + "SWITranslate", new { context = "Report", reference = "report restrictions" });
             var translation = await response.Content.ReadAsAsync<SWITranslationResponse>();

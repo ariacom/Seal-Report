@@ -67,35 +67,51 @@ namespace Seal.Model
         Default,
         [Description("Custom")]
         Custom,
-        [Description("General")]
+        [Description("General (123.456)")]
         General,
-        [Description("General 2 Digits")]
+        [Description("General 2 Digits (12)")]
         General2,
-        [Description("General 5 Digits")]
+        [Description("General 5 Digits (123.45)")]
         General5,
-        [Description("Number 0 Decimal")]
+        [Description("Number 0 Decimal (1 234)")]
         Numeric0,
-        [Description("Number 2 Decimals")]
+        [Description("Number 1 Decimal (1 234.5)")]
+        Numeric1,
+        [Description("Number 2 Decimals (1 234.56)")]
         Numeric2,
-        [Description("Decimal")]
+        [Description("Number 3 Decimals (1 234.567)")]
+        Numeric3,
+        [Description("Number 4 Decimals (1 234.5678)")]
+        Numeric4,
+        [Description("Decimal (1234)")]
         Decimal,
-        [Description("Percentage 0 Decimal")]
+        [Description("Decimal 0 (1234)")]
+        Decimal0,
+        [Description("Decimal 1 (1234.5)")]
+        Decimal1,
+        [Description("Decimal 2  (1234.56)")]
+        Decimal2,
+        [Description("Decimal 3  (1234.567)")]
+        Decimal3,
+        [Description("Decimal 4  (1234.5678)")]
+        Decimal4,
+        [Description("Percentage 0 Decimal (100 %)")]
         Percentage0,
-        [Description("Percentage 2 Decimals")]
+        [Description("Percentage 2 Decimals (100.00 %)")]
         Percentage2,
-        [Description("Currency 0 Decimal")]
+        [Description("Currency 0 Decimal ($123)")]
         Currency0,
-        [Description("Currency 2 Decimals")]
+        [Description("Currency 2 Decimals ($123.46)")]
         Currency2,
-        [Description("Exponential (scientific)")]
+        [Description("Exponential (scientific) (1.052033E+003)")]
         Exponential,
-        [Description("Exponential (scientific) 2 Decimals")]
+        [Description("Exponential (scientific) 2 Decimals (-1.05e+003)")]
         Exponential2,
-        [Description("Fixed-point")]
+        [Description("Fixed-point (1234.57)")]
         Fixedpoint,
-        [Description("Fixed-point 2 Decimals")]
+        [Description("Fixed-point 2 Decimals (1234.56)")]
         Fixedpoint2,
-        [Description("Hexadecimal")]
+        [Description("Hexadecimal (FF)")]
         Hexadecimal,
         [Description("Hexadecimal 8 Digits")]
         Hexadecimal8,
@@ -312,6 +328,25 @@ namespace Seal.Model
         ExecuteOutput,
     }
 
+    public enum FolderRight
+    {
+        [Description("No right")]
+        None,
+        [Description("Execute reports")]
+        Execute,
+        [Description("Schedule reports")]
+        Schedule,
+        [Description("Edit reports")]
+        Edit,
+    }
+
+    public enum ColumnRight
+    {
+        [Description("No right")]
+        None,
+        [Description("Can be edited")]
+        Edit,
+    }
 
     public enum FailoverEmailMode
     {

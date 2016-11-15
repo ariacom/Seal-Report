@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using Seal.Forms;
 using DynamicTypeDescriptor;
 using System.Windows.Forms.Design;
+using System.Windows.Forms;
 
 namespace Seal.Model
 {
@@ -46,6 +47,7 @@ namespace Seal.Model
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
                 GetProperty("WebProductName").SetIsBrowsable(!ForPublication);
                 GetProperty("LogDays").SetIsBrowsable(!ForPublication);
+                GetProperty("CsvSeparator").SetIsBrowsable(!ForPublication);
 
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
@@ -102,6 +104,14 @@ namespace Seal.Model
             set { _logoName = value; }
         }
 
+        string _csvSeparator = "";
+        [Category("Server Settings"), DisplayName("Default CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(6, 1)]
+        public string CsvSeparator
+        {
+            get { return _csvSeparator; }
+            set { _csvSeparator = value; }
+        }
+
 
         int _logDays = 30;
         [Category("Log Settings"), DisplayName("Log days to keep"), Description("Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled."), Id(1, 2)]
@@ -141,6 +151,14 @@ namespace Seal.Model
         {
             get { return _webPublicationDirectory; }
             set { _webPublicationDirectory = value; }
+        }
+
+        //Set by the server manager...
+        string _installationDirectory = "";
+        public string InstallationDirectory
+        {
+            get { return _installationDirectory;}
+            set {_installationDirectory = value;}
         }
 
         [XmlIgnore]
@@ -186,6 +204,9 @@ namespace Seal.Model
             attrs.XmlIgnore = true;
             xmlOverrides.Add(typeof(RootComponent), "Name", attrs);
             xmlOverrides.Add(typeof(RootComponent), "GUID", attrs);
+
+            //Set installation path, used by, to define schedules
+            _installationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
 
             XmlSerializer serializer = new XmlSerializer(typeof(SealServerConfiguration), xmlOverrides);
             StreamWriter sw = new StreamWriter(path);

@@ -5,9 +5,11 @@
   <DefaultCulture />
   <IsLocal>false</IsLocal>
   <LogoName>logo.jpg</LogoName>
+  <CsvSeparator />
   <LogDays>30</LogDays>
   <WebProductName>Seal Report</WebProductName>
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>
-  <WebApplicationName>/Seal</WebApplicationName>
-  <WebPublicationDirectory>C:\inetpub\wwwroot\Seal</WebPublicationDirectory>
+  <WebApplicationName>/seal</WebApplicationName>
+  <WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory>
+  <InstallationDirectory>C:\_dev\Seal-Report\Projects\SealReportDesigner\bin\Debug</InstallationDirectory>
 </SealServerConfiguration>

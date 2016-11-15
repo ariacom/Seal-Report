@@ -91,7 +91,7 @@ MVC 4 extension
             }
             else
             {
-                infoTextBox.Text = @"This editor allows to configure your Seal Server parameters.
+                infoTextBox.Text = @"This editor allows to configure your server parameters.
 
 New parameter values may require a restart of the Report Designer or the Web Server.";
             }

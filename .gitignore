@@ -45,7 +45,16 @@ work/
 temp/
 Assemblies/
 Logs/
+SpecialFolders/
 
+#web report editor files
+SealEditor.sln
+SealWebServerEditor.*
+HomeControllerSWIEditor.cs
+SWIReportModels.cs
+swi-properties.*
+swi-editor.*
+swi-button-group.*
 
 # =========================
 # Operating System Files

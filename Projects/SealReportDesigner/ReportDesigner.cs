@@ -411,7 +411,11 @@ namespace Seal
         {
             if (_report != null)
             {
-                if (!checkModified()) return;
+                if (IsModified)
+                {
+                    DialogResult dlgResult = MessageBox.Show("The current report has been modified, are you sure you to reload it ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    if (dlgResult == DialogResult.Cancel) return;
+                }
                 if (_reportViewer != null && _reportViewer.Visible) _reportViewer.Close();
 
                 string path = _report.FilePath;

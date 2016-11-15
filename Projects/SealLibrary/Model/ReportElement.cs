@@ -440,7 +440,7 @@ namespace Seal.Model
             {
                 if (_metaColumn == null)
                 {
-                    if (!string.IsNullOrEmpty(_metaColumnGUID)) _metaColumn = Source.MetaData.GetColumnFromGUID(MetaColumnGUID);
+                    if (!string.IsNullOrEmpty(_metaColumnGUID) && Source != null && Source.MetaData != null) _metaColumn = Source.MetaData.GetColumnFromGUID(MetaColumnGUID);
                 }
                 return _metaColumn;
             }

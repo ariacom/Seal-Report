@@ -2,25 +2,7 @@
 <SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ProviderName>No Security</ProviderName>
   <UseCustomScript>false</UseCustomScript>
-  <Script>@using Seal.Model
-@using Seal.Helpers
-@{
-    SecurityUser user = Model;
-	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
-	//user.WebUserName -&gt; user name from the login screen
-	//user.WebPassword -&gt; password from the login screen
-
-	user.Name = user.WebUserName; //Display name
-	
-    //security check can be hardcoded
-	if (user.WebUserName == "aa" &amp;&amp; user.WebPassword == "bb")
-	{
-		user.AddDefaultSecurityGroup();
-	}
-	else {
-		throw new Exception("Invalid user name or password");
-	}
-}</Script>
+  <Script />
   <Parameters />
   <Groups>
     <SecurityGroup>
@@ -29,12 +11,13 @@
         <SecurityFolder>
           <Path>\</Path>
           <UseSubFolders>true</UseSubFolders>
-          <PublicationType>ExecuteOutput</PublicationType>
-          <DescriptionFile />
-          <SearchPattern />
+          <ManageFolder>true</ManageFolder>
+          <FolderRight>Edit</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
       </Folders>
+      <PersonalFolder>false</PersonalFolder>
+      <Columns />
       <Culture />
     </SecurityGroup>
   </Groups>

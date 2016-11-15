@@ -47,7 +47,7 @@ namespace Seal.Forms
 
                 infoTextBox.Text = @"This editor allows to configure the security used to publish your reports on the Web Server.
 
-Security groups define the repository folders published.
+Security groups define which repository folders are published and which columns are shown in the Web Report Designer.
 The security provider performs the authentication and select the security groups of the user.
 ";
             

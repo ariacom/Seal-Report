@@ -40,33 +40,34 @@
             if (dataTables != null && @Helper.ToJS(View.GetBoolValue("data_tables_enabled")) && !@Helper.ToJS(Report.PrintLayout))
             {
                 dataTables.dataTable({
-                    "sDom": '<"dataTableTop"lfpri>t',
-                    "aoColumnDefs": [{ "bSortable": false, "aTargets": ["firstcell"]}],
-                    "oLanguage": {
-                        "sProcessing": "@Report.Translate("Processing...")",
-                        "sLengthMenu": "@Report.Translate("Show _MENU_ rows")",
-                        "sZeroRecords": "@Report.Translate("No row")",
-                        "sInfo": "@Report.Translate("Showing _START_ to _END_ of _TOTAL_")",
-                        "sInfoEmpty": "@Report.Translate("Showing 0 to 0 of 0")",
-                        "sInfoFiltered": "@Report.Translate("(filtered from _MAX_)")",
-                        "sInfoPostFix": "",
-                        "sSearch": "@Report.Translate("Filter:")",
-                        "oPaginate": {
-                            "sFirst": "|&lt;",
-                            "sPrevious": "&lt;&lt;",
-                            "sNext": ">>",
-                            "sLast": ">|"
-            }
+                sDom: '<"dataTableTop"lfpri>t',
+                stateSave: true,
+                aoColumnDefs: [{ "bSortable": false, "aTargets": ["firstcell"]}],
+                oLanguage: {
+                    sProcessing: "@Report.Translate("Processing...")",
+                    sLengthMenu: "@Report.Translate("Show _MENU_ rows")",
+                    sZeroRecords: "@Report.Translate("No row")",
+                    sInfo: "@Report.Translate("Showing _START_ to _END_ of _TOTAL_")",
+                    sInfoEmpty: "@Report.Translate("Showing 0 to 0 of 0")",
+                    sInfoFiltered: "@Report.Translate("(filtered from _MAX_)")",
+                    sInfoPostFix: "",
+                    sSearch: "@Report.Translate("Filter:")",
+                    oPaginate: {
+                    sFirst: "|&lt;",
+                    sPrevious: "&lt;&lt;",
+                    sNext: ">>",
+                    sLast: ">|"
+                }
             },
-                    "bSort": @Helper.ToJS(View.GetBoolValue("data_tables_sort_enabled")),
-                    "aaSorting": [],
-                    "bPaginate": @Helper.ToJS(View.GetBoolValue("data_tables_pagination_enabled")),
-                    "sPaginationType": "full_numbers",
-                    "iDisplayLength": @View.GetValue("data_tables_pagination_size"),
-                    "bInfo": @Helper.ToJS(View.GetBoolValue("data_tables_show_information")),
-                    "bFilter": @Helper.ToJS(View.GetBoolValue("data_tables_filter_enabled")),
-                    "bProcessing": @Helper.ToJS(View.GetBoolValue("data_tables_show_processing")),
-                    "bAutoWidth": false
+                bSort: @Helper.ToJS(View.GetBoolValue("data_tables_sort_enabled")),
+                aaSorting: [],
+                bPaginate: @Helper.ToJS(View.GetBoolValue("data_tables_pagination_enabled")),
+                sPaginationType: "full_numbers",
+                iDisplayLength: @View.GetValue("data_tables_pagination_size"),
+                bInfo: @Helper.ToJS(View.GetBoolValue("data_tables_show_information")),
+                bFilter: @Helper.ToJS(View.GetBoolValue("data_tables_filter_enabled")),
+                bProcessing: @Helper.ToJS(View.GetBoolValue("data_tables_show_processing")),
+                bAutoWidth: false
             });
         }
     }
@@ -212,6 +213,7 @@
                                 var showLegend = @Helper.ToJS(View.GetBoolValue("nvd3_show_legend"));
                                 var forceHideControls = @Helper.ToJS(View.GetBoolValue("nvd3_hide_controls") || Report.PrintLayout);
                                 var barStacked = @Helper.ToJS(View.GetBoolValue("nvd3_bar_stacked"));
+                                var YPrimaryLen = @page.NVD3YPrimaryMaxLen, YSecondaryLen = @page.NVD3YPrimaryMaxLen, XLabelsLen = @page.NVD3XLabelMaxLen;
 
                                 @Raw(View.GetValue("nvd3_chart_configuration"))
                                 @Raw(View.GetValue("nvd3_script_margin"))
@@ -237,7 +239,7 @@
                                 d3.selectAll("#@chartName").on('click', function(){ nvd3Translate($("#@(chartName) g.nv-controlsWrap text.nv-legend-text")); nvd3TranslateAxis($("#@(chartName) g.legendWrap text.nv-legend-text"));nvd3TranslateAxis($("#@(chartName) title")); });
                             })
                         </script>
-                                chartOk = true;
+                        chartOk = true;
                     }
                     else
                     {

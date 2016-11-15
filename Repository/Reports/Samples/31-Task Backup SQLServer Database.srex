@@ -3,36 +3,6 @@
   <GUID>e6669b8d-397b-473f-b765-f1b3803eca78</GUID>
   <Sources>
     <ReportSource>
-      <GUID>3d13e3f0-8ca5-4a7c-804e-f5cf273df6ae</GUID>
-      <Name>Databank Worldbank (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
-      <Connections />
-      <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>false</IsNoSQL>
-      <IgnorePrePostError>false</IgnorePrePostError>
-      <MetaData>
-        <Tables>
-          <MetaTable>
-            <GUID>8f6f898a-b156-422e-8ffd-2040da8e7b77</GUID>
-            <Alias>SealMasterTable</Alias>
-            <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
-            <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
-            <Columns />
-          </MetaTable>
-        </Tables>
-        <Joins />
-        <Enums />
-      </MetaData>
-      <MetaSourceGUID>c15b5e0c-ba34-4a1b-98b4-c5876f2210eb</MetaSourceGUID>
-    </ReportSource>
-    <ReportSource>
       <GUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</GUID>
       <Name>Northwind (Repository)</Name>
       <ConnectionFolder />
@@ -44,6 +14,9 @@
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
+      <NumericFormat>N0</NumericFormat>
+      <DateTimeFormat>d</DateTimeFormat>
+      <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -84,6 +57,9 @@
       <ConnectionGUID>d28d79a7-bc64-40ac-b205-4c0d5fd381cf</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
+      <NumericFormat>N0</NumericFormat>
+      <DateTimeFormat>d</DateTimeFormat>
+      <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -144,6 +120,7 @@ string result = @"BACKUP DATABASE msdb TO DISK='C:\temp\backup_msdb_" + DateTime
       <SortOrder>1</SortOrder>
     </ReportTask>
   </Tasks>
+  <TasksScript />
   <Views>
     <ReportView>
       <GUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</GUID>
@@ -160,14 +137,15 @@ string result = @"BACKUP DATABASE msdb TO DISK='C:\temp\backup_msdb_" + DateTime
           <Value>True</Value>
         </Parameter>
       </Parameters>
+      <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
-      <CultureName />
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
   </Views>
   <DisplayName />
+  <InitScript />
   <ViewGUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</ViewGUID>
   <Schedules />
 </Report>

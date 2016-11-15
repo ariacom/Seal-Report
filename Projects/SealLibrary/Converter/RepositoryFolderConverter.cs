@@ -10,6 +10,7 @@ using System.ComponentModel;
 using Seal.Model;
 using System.Globalization;
 using System.IO;
+using Seal.Helpers;
 
 namespace Seal.Converter
 {
@@ -26,21 +27,13 @@ namespace Seal.Converter
             return limit; //true will limit to list. false will show the list, but allow free-form entry
         }
 
-        void addFolders(string path, string prefix, List<string> choices)
-        {
-            foreach (var folder in Directory.GetDirectories(path))
-            {
-                choices.Add(prefix + Repository.Instance.ConvertToRepositoryPath(folder));
-                addFolders(folder, prefix, choices);
-            }
-        }
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
             List<string> choices = new List<string>();
             string prefix = (context.Instance is ReportOutput ? Repository.SealRepositoryKeyword + "\\Reports" : "");
             choices.Add(prefix + "\\");
-            addFolders(Repository.Instance.ReportsFolder, prefix, choices);
+            FileHelper.AddFolderChoices(Repository.Instance.ReportsFolder, prefix, choices);
 
             return new StandardValuesCollection(choices);
         }   

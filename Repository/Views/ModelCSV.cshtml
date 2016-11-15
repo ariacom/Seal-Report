@@ -11,9 +11,11 @@
         ReportModel.InvertDataTables();
     }
     string separator = View.GetValue("csv_separator");
+    separator = string.IsNullOrEmpty(separator) ? Report.Repository.Configuration.CsvSeparator : separator;
+    separator = string.IsNullOrEmpty(separator) ? Report.Repository.CultureInfo.TextInfo.ListSeparator : separator;
     bool useFormat = View.GetBoolValue("use_display_format");
 }
-@foreach (ResultPage page in Model.Pages)
+@foreach (ResultPage page in ReportModel.Pages)
 {
     View.InitPageChart(page);
     if (page.PageTable != null && page.PageTable.Lines.Count == 2 && page.PageTable.Lines[0].Length > 0)

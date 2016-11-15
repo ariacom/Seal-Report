@@ -279,6 +279,11 @@ namespace Seal.Model
             }
         }
 
+        public Parameter GetParameter(string name)
+        {
+            var result = _parameters.FirstOrDefault(i => i.Name == name);
+            return result;
+        }
 
         public string GetHtmlValue(string name)
         {
@@ -550,7 +555,7 @@ namespace Seal.Model
         }
 
         string _cultureName = "";
-        [DisplayName("Culture name"), Description("The language and culture used to display the report. If empty, the culture of the server configuration is used."), Category("View parameters"), Id(4, 4)]
+        [DisplayName("Culture name"), Description("The language and culture used to display the report. If empty, the default culture is used."), Category("View parameters"), Id(4, 4)]
         [TypeConverter(typeof(CultureNameConverter))]
         public string CultureName
         {
@@ -1237,6 +1242,10 @@ namespace Seal.Model
             }
             initChartXValues(page);
 
+            page.NVD3XLabelMaxLen = 10;
+            page.NVD3YPrimaryMaxLen = 6;
+            page.NVD3YSecondaryMaxLen = 6;
+
             StringBuilder result = new StringBuilder();
             if (!page.NVD3IsNumericAxis && !page.NVD3IsDateTimeAxis)
             {
@@ -1244,7 +1253,9 @@ namespace Seal.Model
                 foreach (var key in page.PrimaryXValues.Keys)
                 {
                     if (result.Length != 0) result.Append(",");
-                    result.Append(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(page.PrimaryXValues[key].ToString())));
+                    var xval = page.PrimaryXValues[key].ToString();
+                    result.Append(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(xval)));
+                    if (xval.Length > page.NVD3XLabelMaxLen) page.NVD3XLabelMaxLen = xval.Length;
                 }
 
                 page.NVD3XLabels = result.ToString();
@@ -1275,6 +1286,8 @@ namespace Seal.Model
                     ResultSerieValue value = resultSerie.Values.FirstOrDefault(i => i.XDimensionValues == xDimensionKey);
                     object yValue = (value != null ? value.Yvalue.Value : null);
                     if (result.Length != 0) result.Append(",");
+                    if (resultSerie.Element.YAxisType == AxisType.Primary && value != null && value.Yvalue.DisplayValue.Length > page.NVD3YPrimaryMaxLen) page.NVD3YPrimaryMaxLen = value.Yvalue.DisplayValue.Length;
+                    if (resultSerie.Element.YAxisType == AxisType.Secondary && value != null && value.Yvalue.DisplayValue.Length > page.NVD3YSecondaryMaxLen) page.NVD3YSecondaryMaxLen = value.Yvalue.DisplayValue.Length;
 
                     if (page.NVD3IsNumericAxis)
                     {

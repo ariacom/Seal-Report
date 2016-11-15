@@ -26,7 +26,30 @@ namespace Seal.Model
 
         static public List<RepositoryTranslation> InitFromCSV(string filePath, bool hasInstance)
         {
+            try
+            {
+                return initFromCSV(filePath, hasInstance);
+            }
+            catch
+            {
+                if (File.Exists(filePath))
+                {
+                    try
+                    {
+                        //copy in a temp file to try
+                        string newPath = FileHelper.GetTempUniqueFileName(filePath);
+                        File.Copy(filePath, newPath, true);
+                        return initFromCSV(newPath, hasInstance);
+                    }
+                    catch { }
+                }
+            }
+            return new List<RepositoryTranslation>();
+        }
+        static private List<RepositoryTranslation> initFromCSV(string filePath, bool hasInstance)
+        {
             List<RepositoryTranslation> translations = new List<RepositoryTranslation>();
+
             if (File.Exists(filePath))
             {
                 bool isHeader = true;
@@ -59,7 +82,7 @@ namespace Seal.Model
                         }
                         else
                         {
-                            RepositoryTranslation translation = new RepositoryTranslation() { Context = ExcelHelper.FromCsv(collection[0].Value), Reference = ExcelHelper.FromCsv(collection[startCol-1].Value) };
+                            RepositoryTranslation translation = new RepositoryTranslation() { Context = ExcelHelper.FromCsv(collection[0].Value), Reference = ExcelHelper.FromCsv(collection[startCol - 1].Value) };
                             if (hasInstance) translation.Instance = ExcelHelper.FromCsv(collection[1].Value);
                             translations.Add(translation);
                             for (int i = 0; i < languages.Count && i + startCol < collection.Count; i++)
@@ -70,8 +93,7 @@ namespace Seal.Model
                     }
                 }
             }
-
             return translations;
         }
-    }
+}
 }

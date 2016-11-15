@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -22,13 +23,14 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PackageAsSingleFile>false</PackageAsSingleFile>
@@ -48,6 +50,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.5.4.0, Culture=neutral, PublicKeyToken=0d013ddd5178a2ae, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SealLibrary\SharedLibraries\Microsoft.Win32.TaskScheduler.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data">
       <Private>False</Private>
@@ -119,17 +125,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HomeControllerSWI.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\MenuModel.cs" />
-    <Compile Include="Models\FolderDetailModel.cs" />
+    <Compile Include="Models\ReportEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\32px.png" />
+    <Content Include="Content\bootstrap-3.3.6.min.css" />
+    <Content Include="Content\bootstrap-select.min.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\jquery-ui-1.11.3.css" />
+    <Content Include="Content\jstree-style.min.css" />
+    <Content Include="Content\multiple-select.css" />
+    <Content Include="Content\SealWeb.css" />
+    <Content Include="Content\throbber.gif" />
+    <Content Include="Fonts\fontawesome-webfont.svg" />
+    <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\device.png" />
     <Content Include="Images\exit.gif" />
@@ -148,7 +165,12 @@
     <Content Include="Images\view.png" />
     <Content Include="Images\wait.gif" />
     <Content Include="Libraries\Newtonsoft.Json.dll" />
-    <Content Include="Scripts\bullet.gif" />
+    <Content Include="Scripts\bootstrap-3.3.6.min.js" />
+    <Content Include="Scripts\bootstrap-select.min.js" />
+    <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\d3.min.js" />
+    <Content Include="Scripts\dataTables.js" />
+    <Content Include="Scripts\datepicker.js" />
     <Content Include="Scripts\Images\animated-overlay.gif" />
     <Content Include="Scripts\Images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Scripts\Images\ui-bg_diagonals-thick_20_666666_40x40.png" />
@@ -175,20 +197,15 @@
     <Content Include="Scripts\Images\ui-icons_ef8c08_256x240.png" />
     <Content Include="Scripts\Images\ui-icons_ffd27a_256x240.png" />
     <Content Include="Scripts\Images\ui-icons_ffffff_256x240.png" />
-    <Content Include="Scripts\jquery-1.9.1.min.js" />
-    <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
-    <Content Include="Scripts\jquery-ui.css" />
-    <Content Include="Scripts\jquery.dataTables.min.js" />
-    <Content Include="Scripts\nv.d3.min.css" />
+    <Content Include="Content\nv.d3.min.css" />
+    <Content Include="Scripts\jquery-1.11.3.min.js" />
+    <Content Include="Scripts\jquery-ui-1.11.3.min.js" />
+    <Content Include="Scripts\jstree.min.js" />
+    <Content Include="Scripts\Main.js" />
     <Content Include="Scripts\nv.d3.min.js" />
-    <Content Include="Scripts\sealWeb.css" />
     <Content Include="Scripts\jquery.multiple.select.js" />
-    <Content Include="Scripts\minus.gif" />
-    <Content Include="Scripts\mktree.css" />
-    <Content Include="Scripts\mktree.js" />
-    <Content Include="Scripts\multiple-select.css" />
-    <Content Include="Scripts\multiple-select.png" />
-    <Content Include="Scripts\plus.gif" />
+    <Content Include="Content\multiple-select.png" />
+    <Content Include="Scripts\nvd3.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -209,9 +226,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Menu.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SealLibrary\SealLibrary.csproj">
       <Project>{6d8d30f4-b36e-4a02-8704-d63c5a35df1f}</Project>
       <Name>SealLibrary</Name>
@@ -221,19 +235,50 @@
     <Content Include="Views\Home\Main.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Detail.cshtml" />
+    <TypeScriptCompile Include="Scripts\swi-main.ts" />
+    <TypeScriptCompile Include="Scripts\swi-gateway.ts" />
+    <TypeScriptCompile Include="Scripts\swi-utils.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jstree\jstree.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\main.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\ExecuteViewOutput.cshtml" />
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\UserPreferences.cshtml" />
+    <Content Include="Fonts\fontawesome-webfont.eot" />
+    <Content Include="Fonts\fontawesome-webfont.ttf" />
+    <Content Include="Fonts\fontawesome-webfont.woff" />
+    <Content Include="Fonts\fontawesome-webfont.woff2" />
+    <Content Include="Fonts\FontAwesome.otf" />
+    <Content Include="Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Properties\PublishProfiles\WebServerPublish.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
@@ -247,7 +292,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>17178</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:17178/</IISUrl>
+          <IISUrl>http://localhost:17178/seal/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

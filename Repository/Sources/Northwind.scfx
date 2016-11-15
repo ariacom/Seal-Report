@@ -43,6 +43,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Address</DisplayName>
             <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -60,6 +61,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>City</DisplayName>
             <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -79,6 +81,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Customer</DisplayName>
             <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -106,6 +109,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Customer Contact</DisplayName>
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -123,6 +127,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Contact Title</DisplayName>
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -140,6 +145,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Customer Country</DisplayName>
             <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -159,6 +165,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Fax</DisplayName>
             <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -176,6 +183,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Phone</DisplayName>
             <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -193,6 +201,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Postal Code</DisplayName>
             <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -210,6 +219,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Region</DisplayName>
             <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -227,6 +237,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Customers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Customer ID</DisplayName>
             <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -254,6 +265,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Address</DisplayName>
             <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -271,6 +283,7 @@
             <Type>DateTime</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Birth Date</DisplayName>
             <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -288,6 +301,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>City</DisplayName>
             <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -307,6 +321,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Country</DisplayName>
             <DisplayOrder>12</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -326,6 +341,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Extension</DisplayName>
             <DisplayOrder>14</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -343,6 +359,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Employee Name</DisplayName>
             <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -370,6 +387,7 @@
             <Type>DateTime</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Hire Date</DisplayName>
             <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -387,6 +405,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Home Phone</DisplayName>
             <DisplayOrder>13</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -404,6 +423,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Notes</DisplayName>
             <DisplayOrder>16</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -421,6 +441,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Photo</DisplayName>
             <DisplayOrder>15</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -438,6 +459,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Postal Code</DisplayName>
             <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -455,6 +477,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Region</DisplayName>
             <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -472,6 +495,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Reports To</DisplayName>
             <DisplayOrder>17</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -489,6 +513,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Title</DisplayName>
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -506,6 +531,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Title Of Courtesy</DisplayName>
             <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -523,6 +549,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>Employee ID</DisplayName>
             <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -539,6 +566,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Employees</Category>
+            <Tag>Master</Tag>
             <DisplayName>First Name</DisplayName>
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -565,7 +593,8 @@
             <Name>Orders.Freight</Name>
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
-            <Category>Orders</Category>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
             <DisplayName>Freight</DisplayName>
             <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -583,6 +612,7 @@
             <Type>DateTime</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Orders</Category>
+            <Tag>Master</Tag>
             <DisplayName>Order Date</DisplayName>
             <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -600,6 +630,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Orders</Category>
+            <Tag>Master</Tag>
             <DisplayName>Order ID</DisplayName>
             <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -625,6 +656,7 @@
             <Type>DateTime</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Orders</Category>
+            <Tag>Master</Tag>
             <DisplayName>Required Date</DisplayName>
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -641,7 +673,8 @@
             <Name>Orders.ShipAddress</Name>
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
-            <Category>Orders</Category>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
             <DisplayName>Ship Address</DisplayName>
             <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -658,7 +691,8 @@
             <Name>Orders.ShipCity</Name>
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
-            <Category>Orders</Category>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
             <DisplayName>Ship City</DisplayName>
             <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -677,7 +711,8 @@
             <Name>Orders.ShipCountry</Name>
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
-            <Category>Orders</Category>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
             <DisplayName>Ship Country</DisplayName>
             <DisplayOrder>12</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -696,7 +731,8 @@
             <Name>Orders.ShipName</Name>
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
-            <Category>Orders</Category>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
             <DisplayName>Ship Name</DisplayName>
             <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -715,7 +751,8 @@
             <Name>Orders.ShippedDate</Name>
             <Type>DateTime</Type>
             <IsAggregate>false</IsAggregate>
-            <Category>Orders</Category>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
             <DisplayName>Shipped Date</DisplayName>
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -732,7 +769,8 @@
             <Name>Orders.ShipPostalCode</Name>
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
-            <Category>Orders</Category>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
             <DisplayName>Ship Postal Code</DisplayName>
             <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -749,7 +787,8 @@
             <Name>Orders.ShipRegion</Name>
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
-            <Category>Orders</Category>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
             <DisplayName>Ship Region</DisplayName>
             <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -766,7 +805,8 @@
             <Name>Orders.ShipVia</Name>
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
-            <Category>Orders</Category>
+            <Category>Orders/Shipping</Category>
+            <Tag>Master</Tag>
             <DisplayName>Ship Via</DisplayName>
             <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -784,6 +824,7 @@
             <Type>DateTime</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Orders</Category>
+            <Tag>Master</Tag>
             <DisplayName>Order Year</DisplayName>
             <DisplayOrder>13</DisplayOrder>
             <NumericStandardFormat>Default</NumericStandardFormat>
@@ -803,6 +844,7 @@
             <Type>DateTime</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Orders</Category>
+            <Tag>Master</Tag>
             <DisplayName>Order Month</DisplayName>
             <DisplayOrder>14</DisplayOrder>
             <NumericStandardFormat>Default</NumericStandardFormat>
@@ -833,6 +875,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
+            <Tag>Master</Tag>
             <DisplayName>Discontinued</DisplayName>
             <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -850,6 +893,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
+            <Tag>tagep</Tag>
             <DisplayName>Product Name</DisplayName>
             <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -861,7 +905,15 @@
               <string>12ce241a-1f80-4b69-a023-66df46152046</string>
             </DrillChildren>
             <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
-            <SubReports />
+            <SubReports>
+              <SubReport>
+                <Name>Product Detail</Name>
+                <Path>%SEALREPOSITORY%\SubReports\Product Detail.srex</Path>
+                <Restrictions>
+                  <string>d0a693f9-e276-4e6d-9ac2-d4d031610430</string>
+                </Restrictions>
+              </SubReport>
+            </SubReports>
           </MetaColumn>
           <MetaColumn>
             <GUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</GUID>
@@ -869,6 +921,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
+            <Tag>Master</Tag>
             <DisplayName>Quantity Per Unit</DisplayName>
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -886,6 +939,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
+            <Tag>Master</Tag>
             <DisplayName>Reorder Level</DisplayName>
             <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -903,6 +957,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
+            <Tag>Master</Tag>
             <DisplayName>Unit Price</DisplayName>
             <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -920,6 +975,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
+            <Tag>Master</Tag>
             <DisplayName>Units In Stock</DisplayName>
             <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -937,6 +993,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
+            <Tag>Master</Tag>
             <DisplayName>Units On Order</DisplayName>
             <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -954,6 +1011,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
+            <Tag>Master</Tag>
             <DisplayName>Category</DisplayName>
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -973,6 +1031,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Products</Category>
+            <Tag>Master</Tag>
             <DisplayName>Product ID</DisplayName>
             <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1000,6 +1059,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Shippers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Shipper</DisplayName>
             <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1017,6 +1077,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Shippers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Phone</DisplayName>
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1034,6 +1095,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Shippers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Shipper ID</DisplayName>
             <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1062,6 +1124,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Address</DisplayName>
             <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1079,6 +1142,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>City</DisplayName>
             <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1098,6 +1162,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Supplier</DisplayName>
             <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1125,6 +1190,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Contact Name</DisplayName>
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1142,6 +1208,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Contact Title</DisplayName>
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1159,6 +1226,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Supplier Country</DisplayName>
             <DisplayOrder>9</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1178,6 +1246,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Fax</DisplayName>
             <DisplayOrder>11</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1195,6 +1264,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Home Page</DisplayName>
             <DisplayOrder>12</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1212,6 +1282,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Phone</DisplayName>
             <DisplayOrder>10</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1229,6 +1300,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Postal Code</DisplayName>
             <DisplayOrder>8</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1246,6 +1318,7 @@
             <Type>Text</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Region</DisplayName>
             <DisplayOrder>7</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1263,6 +1336,7 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Suppliers</Category>
+            <Tag>Master</Tag>
             <DisplayName>Supplier ID</DisplayName>
             <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
@@ -1291,8 +1365,9 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
+            <Tag>Master</Tag>
             <DisplayName>Discount Rate</DisplayName>
-            <DisplayOrder>5</DisplayOrder>
+            <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric2</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N2</Format>
@@ -1308,8 +1383,9 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
+            <Tag>Master</Tag>
             <DisplayName>Quantity</DisplayName>
-            <DisplayOrder>4</DisplayOrder>
+            <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -1325,8 +1401,9 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
+            <Tag>Master</Tag>
             <DisplayName>Unit Price</DisplayName>
-            <DisplayOrder>3</DisplayOrder>
+            <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric2</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N2</Format>
@@ -1342,8 +1419,9 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
+            <Tag>Master</Tag>
             <DisplayName>Amount</DisplayName>
-            <DisplayOrder>6</DisplayOrder>
+            <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
@@ -1359,45 +1437,14 @@
             <Type>Numeric</Type>
             <IsAggregate>false</IsAggregate>
             <Category>Order Details</Category>
+            <Tag>Master</Tag>
             <DisplayName>Discount</DisplayName>
-            <DisplayOrder>7</DisplayOrder>
+            <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format>N0</Format>
             <EnumGUID />
             <HasHTMLTags>false</HasHTMLTags>
-            <DrillChildren />
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
-            <SubReports />
-          </MetaColumn>
-          <MetaColumn>
-            <GUID>10f4d9b4-4bc3-4564-b982-db23ba7655a1</GUID>
-            <Name>[Order Details].OrderID</Name>
-            <Type>Numeric</Type>
-            <IsAggregate>false</IsAggregate>
-            <Category>Order Details</Category>
-            <DisplayName>Order ID</DisplayName>
-            <DisplayOrder>1</DisplayOrder>
-            <NumericStandardFormat>Numeric0</NumericStandardFormat>
-            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <Format>N0</Format>
-            <HasHTMLTags xsi:nil="true" />
-            <DrillChildren />
-            <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
-            <SubReports />
-          </MetaColumn>
-          <MetaColumn>
-            <GUID>5b9cbdc8-230b-4c0d-b9df-81e5ebbf7da7</GUID>
-            <Name>[Order Details].ProductID</Name>
-            <Type>Numeric</Type>
-            <IsAggregate>false</IsAggregate>
-            <Category>Order Details</Category>
-            <DisplayName>Product ID</DisplayName>
-            <DisplayOrder>2</DisplayOrder>
-            <NumericStandardFormat>Numeric0</NumericStandardFormat>
-            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-            <Format>N0</Format>
-            <HasHTMLTags xsi:nil="true" />
             <DrillChildren />
             <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
             <SubReports />
