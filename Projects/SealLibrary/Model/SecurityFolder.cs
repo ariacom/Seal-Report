@@ -7,6 +7,7 @@ using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms.Design;
+using System.Xml.Serialization;
 
 namespace Seal.Model
 {
@@ -21,11 +22,13 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Path").SetIsBrowsable(true);
-                GetProperty("SearchPattern").SetIsBrowsable(true);
                 GetProperty("UseSubFolders").SetIsBrowsable(true);
-                GetProperty("PublicationType").SetIsBrowsable(true);
+                GetProperty("FolderRight").SetIsBrowsable(true);
                 GetProperty("ExpandSubFolders").SetIsBrowsable(true);
-                GetProperty("DescriptionFile").SetIsBrowsable(true);
+                GetProperty("ManageFolder").SetIsBrowsable(true);
+
+
+                GetProperty("ManageFolder").SetIsReadOnly(!_useSubFolders);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -42,39 +45,35 @@ namespace Seal.Model
         }
 
         bool _useSubFolders = true;
-        [Category("Definition"), DisplayName("\tUse Sub-folders"), Description("If true, Sub-folders are also published with the same definition."), Id(2, 1)]
+        [Category("Definition"), DisplayName("\tShow sub-folders"), Description("If true, sub-folders are also published with the same definition."), Id(2, 1)]
         public bool UseSubFolders
         {
             get { return _useSubFolders; }
-            set { _useSubFolders = value; }
-        }
-
-        PublicationType _publicationType = PublicationType.ExecuteOutput;
-        [Category("Definition"), DisplayName("\tPublication Type"), Description("The publication type: execute reports only or execute reports and outputs."), Id(3, 1)]
-        [TypeConverter(typeof(NamedEnumConverter))]
-        public PublicationType PublicationType
-        {
-            get { return _publicationType; }
-            set { 
-                _publicationType = value;
+            set {
+                _useSubFolders = value;
                 UpdateEditorAttributes();
             }
         }
 
-        string _descriptionFile = "";
-        [Category("Definition"), DisplayName("Folder Description File Name"), Description("If not empty and a file with this name exists in the folder, the Web Server displays the file content in the detail frame. If the file has a .cshtml extension, it will be displayed as a View located in the Views\\Home folder of the Web Server."), Id(4, 1)]
-        public string DescriptionFile
+        bool _manageFolder = true;
+        [Category("Definition"), DisplayName("Manage sub-folder"), Description("If true, the user can Create, Rename or Delete sub-folders in this folder. This flag is only used if Sub-folders are shown."), Id(3, 1)]
+        public bool ManageFolder
         {
-            get { return _descriptionFile; }
-            set { _descriptionFile = value; }
+            get { return _manageFolder; }
+            set { _manageFolder = value; }
         }
 
-        string _searchPattern = "";
-        [Category("Options"), DisplayName("Search Pattern"), Description("Optional search pattern for the report names in the folder. Wildchar * means Zero or more characters. Wildchar ? means Exactly zero or one character."), Id(1, 2)]
-        public string SearchPattern
+        FolderRight _folderRight = FolderRight.Edit;
+        [Category("Definition"), DisplayName("\tRight"), Description("The right applied on the reports of the folder."), Id(4, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        public FolderRight FolderRight
         {
-            get { return _searchPattern; }
-            set { _searchPattern = value; }
+            get { return _folderRight; }
+            set
+            {
+                _folderRight = value;
+                UpdateEditorAttributes();
+            }
         }
 
         bool _expandSubFolders = true;
@@ -85,10 +84,8 @@ namespace Seal.Model
             set { _expandSubFolders = value; }
         }
 
-
-        public string UsedSearchPattern
-        {
-            get { return string.IsNullOrEmpty(_searchPattern) ? "*.*" : _searchPattern; }
-        }
+        //Helper, set to true if defined in a group
+        [XmlIgnore]
+        public bool IsDefined = false;
     }
 }

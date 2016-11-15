@@ -1,17 +1,10 @@
-﻿using DynamicTypeDescriptor;
-using Seal.Helpers;
+﻿using Seal.Helpers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Odbc;
-using System.Data.OleDb;
 using System.DirectoryServices.AccountManagement;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
-using System.Text;
-using System.Xml.Serialization;
 
 namespace Seal.Model
 {
@@ -22,7 +15,7 @@ namespace Seal.Model
         public SealSecurity Security;
         public string Error = "";
         public string Warning = "";
-
+        public List<SWIFolder> Folders = new List<SWIFolder>();
 
         //Parameters to authenticate
         public string WebUserName = "";
@@ -38,6 +31,11 @@ namespace Seal.Model
         public SecurityUser(SealSecurity security)
         {
             Security = security;
+        }
+
+        public bool HasPersonalFolder
+        {
+            get { return SecurityGroups.Exists(i => i.PersonalFolder); }
         }
 
         bool _tryAgain = true; //Try again to get rid of Load Assemblies exceptions...
@@ -118,10 +116,42 @@ namespace Seal.Model
             return Security.FindSecurityFolder(SecurityGroups, folder);
         }
 
-        public bool IsParentSecurityFolder(string folder)
+
+        private List<string> _noEditionCategories = null;
+        public List<string> NoEditionCategories
         {
-            if (Security == null) return false;
-            return Security.IsParentSecurityFolder(SecurityGroups, folder);
+            get
+            {
+                if (_noEditionCategories == null) InitSecurityColumnRights();
+                return _noEditionCategories;
+            }
+        }
+
+        private List<string> _noEditionTags = null;
+        public List<string> NoEditionTags
+        {
+            get
+            {
+                if (_noEditionTags == null) InitSecurityColumnRights();
+                return _noEditionTags;
+            }
+        }
+
+        public bool CanEditColumn(MetaColumn column)
+        {
+            return (!NoEditionCategories.Contains(column.Category) && !NoEditionTags.Contains(column.Tag));        
+        }
+
+        private void InitSecurityColumnRights()
+        {
+            _noEditionCategories = new List<string>();
+            _noEditionTags = new List<string>();
+
+            foreach (var sgroup in SecurityGroups)
+            {
+                _noEditionCategories.AddRange((from i in sgroup.Columns where i.Rights == ColumnRight.None select i.Category));
+                _noEditionTags.AddRange((from i in sgroup.Columns where i.Rights == ColumnRight.None select i.Tag));
+            }
         }
 
 
@@ -286,5 +316,6 @@ namespace Seal.Model
                 return result;
             }
         }
+
     }
 }

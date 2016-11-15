@@ -21,6 +21,7 @@
 	if (user.WebUserName == ""userName"" && user.WebPassword == ""password"")
 	{
 		user.AddDefaultSecurityGroup();
+		//user.AddSecurityGroup(""aGroupName"");
 	}
 	else {
 		throw new Exception(""Invalid user name or password"");

@@ -262,11 +262,11 @@ namespace Seal.Model
                 definition.RegistrationInfo.Source = TaskSource;
                 definition.RegistrationInfo.Description = description;
                 //If name has changed, we have to delete then insert it again...
-                if (!string.IsNullOrEmpty(Task.Name) && TaskName != Task.Name)
+                string oldName = Task.Name;
+                if (!string.IsNullOrEmpty(oldName) && TaskName != oldName)
                 {
-                    Report.TaskFolder.DeleteTask(Task.Name);
-                    _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, definition, TaskCreation.CreateOrUpdate, null);
-                }
+                    Report.TaskFolder.DeleteTask(oldName);
+                    RegisterTaskDefinition(definition);                }
                 else
                 {
                     _task.RegisterChanges();
@@ -274,10 +274,28 @@ namespace Seal.Model
             }
         }
 
+        void RegisterTaskDefinition(TaskDefinition definition)
+        {
+            if (!Report.SchedulesWithCurrentUser)
+            {
+                definition.Principal.RunLevel = TaskRunLevel.Highest;
+                _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, definition, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
+            }
+            else
+            {
+                //default user
+                _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, definition);
+            }
+        }
 
         public Task FindTask()
         {
             Task result = Report.TaskFolder.GetTasks().FirstOrDefault(i => i.Definition.RegistrationInfo.Source == TaskSource);
+            foreach (var task in Report.TaskFolder.GetTasks())
+            {
+                if (task.Definition.RegistrationInfo.Source.ToLower().Trim() == TaskSource.ToLower().Trim()) result = task;
+            }
+
             if (result == null)
             {
                 //check if the task is still existing (typically if the report was moved or renamed)
@@ -303,6 +321,7 @@ namespace Seal.Model
                     }
                 }
             }
+
             return result;
         }
 
@@ -326,22 +345,12 @@ namespace Seal.Model
                         //create task
                         TaskDefinition taskDefinition = (new TaskService()).NewTask();
                         taskDefinition.Triggers.Add(new DailyTrigger() { StartBoundary = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 0, 0), Enabled = false });
-                        string schedulerPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), Repository.SealTaskScheduler);
+                        string schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory, Repository.SealTaskScheduler);
 #if DEBUG
-                        schedulerPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\SealTaskScheduler\bin\Debug", Repository.SealTaskScheduler);
+                        schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory + @"\..\..\..\SealTaskScheduler\bin\Debug", Repository.SealTaskScheduler);
 #endif
                         taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Application.StartupPath));
-                        if (!Report.SchedulesWithCurrentUser)
-                        {
-                            //By default we use system account...
-                            taskDefinition.Principal.RunLevel = TaskRunLevel.Highest;
-                            _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, taskDefinition, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
-                        }
-                        else
-                        {
-                            //default user
-                            _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, taskDefinition);
-                        }
+                        RegisterTaskDefinition(taskDefinition);
                     }
                     SynchronizeTask();
                 }

@@ -42,47 +42,42 @@
 
     <div class="container">
 
-        <div class="row row-offcanvas row-offcanvas-right">
-
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h2>SWIGetVersions</h2>
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr><th>Description</th><td>Returns the version of the Seal Web Interface and the version of the Seal Library.</td></tr>
-                                <tr>
-                                    <th>Call</th>
-                                    <td>
+        <div class="col-lg-12">
+            <h2>SWIGetVersions</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the version of the Seal Web Interface and the version of the Seal Library.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
 <pre>
 $.post("http://demo.sealreport.org/SWIGetVersions")
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
 })
 </pre>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Returns</th>
-                                    <td>
-                                        SWIVersion (string) : Seal Web Interface version<br />
-                                        SRVersion (string) : Seal library version
-                                    </td>
-                                </tr>
-                                <tr><th>Sample</th><td>{"SWIVersion":"1.0","SRVersion":"2.1.0.0"}</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            SWIVersion (string) : Seal Web Interface version<br />
+                            SRVersion (string) : Seal library version
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
 
-                    <div class="col-lg-12">
-                        <h2>SWILogin</h2>
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr><th>Description</th><td>Start a session with the Web Report Server using the user name and password (may be optional according to the authentication configured on the server) and returns information of the logged user.</td></tr>
-                                <tr>
-                                    <th>Call</th>
-                                    <td>
+        <div class="col-lg-12">
+            <h2>SWILogin</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Start a session with the Web Report Server using the user name and password (may be optional according to the authentication configured on the server) and returns information of the logged user.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
 <pre>
 $.post("http://demo.sealreport.org/SWILogin", {
     user: "the user name", // The use name
@@ -92,127 +87,165 @@ $.post("http://demo.sealreport.org/SWILogin", {
         if (!data.error) { /* Do your job here */ }
 })
 </pre>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Returns</th>
-                                    <td>
-                                        name (string) : the user name<br />
-                                        group (string) :  the user's group names<br />
-                                        culture (string) : the user's culture name<br />
-                                        error (string) : if any error, the error description
-                                    </td>
-                                </tr>
-                                <tr><th>Sample</th><td>{"name":"Anonymous","group":"Default Group","culture":"French (Switzerland)"} </td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            name (string) : the user name<br />
+                            group (string) :  the user's group names<br />
+                            culture (string) : the user's culture name<br />
+                            folder (string) : the last folder viewed by the user<br />
+                            error (string) : if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                    <div class="col-lg-12">
-                        <h2>SWILogout</h2>
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr><th>Description</th><td>Clear the current user session.</td></tr>
-                                <tr>
-                                    <th>Call</th>
-                                    <td>
+        <div class="col-lg-12">
+            <h2>SWILogout</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Clear the current user session.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
 <pre>
 $.post("http://demo.sealreport.org/SWILogout")
 .done(function (data) {
         if (!data.error) { /* Do your job here */ }
 })
 </pre>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Returns</th>
-                                    <td>
-                                        error (string) : if any error, the error description
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                    <div class="col-lg-12">
-                        <h2>SWIGetFolders</h2>
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr><th>Description</th><td>Returns the list of the published folders for the current user from a root folder.</td></tr>
-                                <tr>
-                                    <th>Call</th>
-                                    <td>
+        <div class="col-lg-12">
+            <h2>SWIGetRootFolders</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Retruns all the folders of the iuser (including Personal folders).</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIGetRootFolders", {
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            path (string) : the folder path<br />
+                            name (string) : the translated folder name<br />
+                            fullname (string): the full path translated of the folder<br />
+                            right (integer): folder right (0 = Execute reports, 1 = Execute reports, 2 = Schedule reports, 3 = Edit reports)<br />
+                            expand (boolean): true is the folder must be expanded in the tree view<br />
+                            manage (integer): manage flag for the folder. (0 = Do not manage, 1 = manage sub-folders only, 2 = manage folder itself and sub-folders)<br />
+                            folders ([folder]): array of children folders<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+       <div class="col-lg-12">
+            <h2>SWIGetFolders</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the list of the published folders for the current user from a root folder.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
 <pre>
 $.post("http://demo.sealreport.org/SWIGetFolders", {
-    path: "\\", // The path of the root folder
+    path: "\\" // The path of the root folder
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
 })
 </pre>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Returns</th>
-                                    <td>
-                                        path (string) : the folder path <br />
-                                        name (string) : the translated folder name<br />
-                                        folders ([folder]): array of children folders<br />
-                                        error (string) = if any error, the error description
-                                    </td>
-                                </tr>
-                                <tr><th>Sample</th><td>{"path":"\\","name":"","folders":[{"path":"\\Samples","name":"Samples","folders":[]}]}</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            path (string) : the folder path<br />
+                            name (string) : the translated folder name<br />
+                            fullname (string): the full path translated of the folder<br />
+                            right (integer): folder right (0 = Execute reports, 1 = Execute reports, 2 = Schedule reports, 3 = Edit reports)<br />
+                            expand (boolean): true is the folder must be expanded in the tree view<br />
+                            manage (integer): manage flag for the folder. (0 = Do not manage, 1 = manage sub-folders only, 2 = manage folder itself and sub-folders)<br />
+                            folders ([folder]): array of children folders<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                    <div class="col-lg-12">
-                        <h2>SWIGetFolderDetail</h2>
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr><th>Description</th><td>Returns the list of file names and details contained in a folder.</td></tr>
-                                <tr>
-                                    <th>Call</th>
-                                    <td>
+        <div class="col-lg-12">
+            <h2>SWIGetFolderDetail</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the list of file names and details contained in a folder.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
 <pre>
 $.post("http://demo.sealreport.org/SWIGetFolderDetail", {
-    path: "\\", // The path of the folder
+    path: "\\" // The path of the folder
 })
 .done(function (data) {
     if (!data.error) { /* Do your job here */ }
 })
 </pre>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Returns</th>
-                                    <td>
-                                        files ([file]) : array of files. <br />
-                                        error (string) = if any error, the error description<br /><br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>file</th>
-                                    <td>
-                                        path (string): the file path<br />
-                                        name (string): the translated file name<br />
-                                        isReport (boolean) : true if the file is a report<br />
-                                        execOutput (boolean) : true if the user can execute output.<br />
-                                    </td>
-                                </tr>
-                                <tr><th>Sample</th><td>{"files":[{"path":"\\Dashboard - Sales.srex","name":"Tableau de bord - Ventes","isReport":true,"execOutput":true},{"path":"\\Search - Orders.srex","name":"Recherche - Commandes","isReport":true,"execOutput":true}]}</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            folder (folder): the current folder description<br />
+                            files ([file]): array of files<br />
+                            error (string): if any error, the error description<br /><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>file</th>
+                        <td>
+                            path (string): the file path<br />
+                            name (string): the translated file name<br />
+                            last (string): the last modification date and time<br />
+                            isReport (boolean): true if the file is a report<br />
+                            right (int): right applied to the folder (0 = Execute reports, 1 = Execute reports, 2 = Schedule reports, 3 = Edit reports)<br />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                    <div class="col-lg-12">
-                        <h2>SWIGetReportDetail</h2>
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr><th>Description</th><td>Returns the views and outputs of a report.</td></tr>
-                                <tr>
-                                    <th>Call</th>
-                                    <td>
+        <div class="col-lg-12">
+            <h2>SWIGetReportDetail</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the views and outputs of a report.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
 <pre>
 $.post("http://demo.sealreport.org/SWIGetReportDetail", {
     path: "\\", // The path of the report
@@ -221,70 +254,157 @@ $.post("http://demo.sealreport.org/SWIGetReportDetail", {
     if (!data.error) { /* Do your job here */ }
 })
 </pre>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Returns</th>
-                                    <td>
-                                        views ([view]) : array of views<br />
-                                        outputs ([output]) : array of outputs.<br />
-                                        error (string) = if any error, the error description
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>view</th>
-                                    <td>
-                                        guid (string) : the unique identifier of the output<br />
-                                        name (string) : the output name <br />
-                                        displayName (string) : the output name translated
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>output</th>
-                                    <td>
-                                        guid (string) : the unique identifier of the view<br />
-                                        name (string) : the view name <br />
-                                        displayName (string) : the view name translated
-                                    </td>
-                                </tr>
-                                <tr><th>Sample</th><td>{"views":[{"guid":"2194db7c-bdea-459c-b055-d2e630d7f829","name":"view","displayName":"view"},{"guid":"c496f22b-fc4d-45da-a2fc-23f9ecbf878b","name":"view Excel","displayName":"view Excel"}],"outputs":[{"guid":"cac770ed-3039-4af8-93d3-e197ac94d808","name":"HTML file (Folder Device)","displayName":"HTML file (Folder Device)"},{"guid":"28ed9388-c2f2-4dbb-8933-033f8c4bd97c","name":"Email to the Seal (Email Device)","displayName":"Email to the Seal (Email Device)"},{"guid":"e1e8028f-cd54-4539-b55f-fcac49a0a687","name":"Excel file (Folder Device)","displayName":"Excel file (Folder Device)"}]}</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            views ([view]): array of views<br />
+                            outputs ([output]): array of outputs<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>view</th>
+                        <td>
+                            guid (string): the unique identifier of the output<br />
+                            name (string): the output name <br />
+                            displayName (string): the output name translated
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>output</th>
+                        <td>
+                            guid (string): the unique identifier of the view<br />
+                            name (string): the view name <br />
+                            displayName (string): the view name translated
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                    <div class="col-lg-12">
-                        <h2>SWIExecuteReport</h2>
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr>
-                                    <th>Description</th>
-                                    <td>
-                                        Execute a report into a report result.<br /><br />
-                                        Custom restriction values can be set for the execution if they are prompted in the report.<br />
-                                        In this case the parameters must be prefixed with <b>r0_</b> (for the restriction 0) with the following suffixes:<br />
-                                        <b>name</b> for the name of the restriction.<br />
-                                        <b>operator</b> for the operator applied:<br />
-                                        Equal, NotEqual, Greater, GreaterEqual, Smaller, SmallerEqual, Between,
-                                        NotBetween,
-                                        Contains,
-                                        NotContains,
-                                        StartsWith,
-                                        EndsWith,
-                                        IsEmpty,
-                                        IsNotEmpty,
-                                        IsNull,
-                                        IsNotNull.<br />
-                                        <b>value_1</b> to <b>value_4</b> if the restriction is not an enumerated list (date format is YYYYMMDD hh:mm:ss).<br />
-                                        <b>enum_values</b> containing the list of enumerated identifiers separated by commas if the restriction is an enumerated list.<br />
-                                        <br />
-                                        Several restrictions can be defined by changing the prefix index.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Call</th>
-                                    <td>
+        <div class="col-lg-12">
+            <h2>SWINewReportDefinition (Currently available only for our sponsors !)</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Init a returns the definition of a new report in a repository.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
 <pre>
-$.post(sealServer + "SWIExecuteReport", {
+$.post("http://demo.sealreport.org/SWIGetReportDefinition", {
+    path: "\\New Report.srex" // The path of the report
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            report (SWIReport): the definition of the new report (refer to SWIReport class in the source code SWIReportModels.cs)<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="col-lg-12">
+            <h2>SWIGetReportDefinition (Currently available only for our sponsors !)</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the definition of an existing report.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIGetReportDefinition", {
+    path: "\\New Report.srex" // The path of the report
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            report (SWIReport): the report definition (refer to SWIReport class in the source code SWIReportModels.cs)<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWISaveReportDefinition (Currently available only for our sponsors !)</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Save a report.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWISaveReportDefinition", {
+    path: "\\a report.srex", // The path of the report
+    check: true, //If true, the save check that the report does not exists
+    report: report //the report definition (refer to SWIReport class in the source code SWIReportModels.cs)<br />
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIExecuteReportToResult</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Description</th>
+                        <td>
+                            Execute a report into a report result and returns the url of the result.<br /><br />
+                            Custom restriction values can be set for the execution if they are prompted in the report.<br />
+                            In this case the parameters must be prefixed with <b>r0_</b> (for the restriction 0) with the following suffixes:<br />
+                            <b>name</b> for the name of the restriction.<br />
+                            <b>operator</b> for the operator applied:<br />
+                            Equal, NotEqual, Greater, GreaterEqual, Smaller, SmallerEqual, Between,
+                            NotBetween,
+                            Contains,
+                            NotContains,
+                            StartsWith,
+                            EndsWith,
+                            IsEmpty,
+                            IsNotEmpty,
+                            IsNull,
+                            IsNotNull.<br />
+                            <b>value_1</b> to <b>value_4</b> if the restriction is not an enumerated list (date format is YYYYMMDD hh:mm:ss).<br />
+                            <b>enum_values</b> containing the list of enumerated identifiers separated by commas if the restriction is an enumerated list.<br />
+                            <br />
+                            Several restrictions can be defined by changing the prefix index.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post(sealServer + "SWIExecuteReportToResult", {
     path: "\\Search - Orders.srex",
     format: "html", // optional, html by default, print, pdf or excel with the converter 
     viewGUID: "", //optional, the view GUID to execute in the report
@@ -300,25 +420,94 @@ $.post(sealServer + "SWIExecuteReport", {
     if (!data.error) { /* Do your job here */ }
 })
 </pre>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Returns</th>
-                                    <td>
-                                        url (string) : the url of the result file<br />
-                                        error (string) = if any error, the error description
-                                    </td>
-                                </tr>
-                                <tr><th>Sample</th><td>{"url":"http://demo.sealreport.org/temp/Search_-_Orders_iudis.htm"}</td></tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div><!--/row-->
-            </div><!--/span-->
-        </div><!--/row-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            url (string): the url of the result file<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="col-lg-12">
+            <h2>SWIExecuteReport</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Description</th>
+                        <td>
+                            Execute a report and returns the report html display result content (e.g. html with prompted restrictions).<br />
+                            Custom restriction values can be set for the execution if they are prompted in the report as described for SWIExecuteReportToResult.<br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post(sealServer + "SWIExecuteReport", {
+    path: "", //the report path, if empty the report definition must be specified
+    render: false, //true if the report can be rendered (this option is used only if report definition is specified)
+    viewGUID: "", //optional, the view GUID to execute in the report
+    outputGUID: "" //optional, the output GUID to execute in the report
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            the full result content is returned to be displayed in a new window
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIExecuteReportDefinition (Currently available only for our sponsors !)</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Description</th>
+                        <td>
+                            Execute a report from its definition and returns the report html display result content (e.g. html with prompted restrictions).<br />
+                            Custom restriction values can be set for the execution if they are prompted in the report as described for SWIExecuteReportToResult.<br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post(sealServer + "SWIExecuteReportDefinition", {
+    report: report //the report definition (refer to SWIReport class in the source code SWIReportModels.cs)
+    render: false, //true if the report can be rendered (this option is used only if report definition is specified)
+    viewGUID: "", //optional, the view GUID to execute in the report
+    outputGUID: "" //optional, the output GUID to execute in the report
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            the full result content is returned to be displayed in a new window
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+       <div class="col-lg-12">
             <h2>SWIGetUserProfile</h2>
             <table class="table table-striped">
                 <tbody>
@@ -337,13 +526,13 @@ $.post("http://demo.sealreport.org/SWIGetUserProfile")
                     <tr>
                         <th>Returns</th>
                         <td>
-                            name (string) : the user name<br />
-                            group (string) :  the user's group names<br />
-                            culture (string) : the user's culture name<br />
-                            error (string) : if any error, the error description
+                            name (string): the user name<br />
+                            group (string):  the user's group names<br />
+                            culture (string): the user's culture name<br />
+                            folder (string): the last folder viewed by the user<br />
+                            error (string): if any error, the error description
                         </td>
                     </tr>
-                    <tr><th>Sample</th><td>{"name":"Anonymous","group":"Default Group","culture":"French (Switzerland)"}</td></tr>
                 </tbody>
             </table>
         </div>
@@ -369,7 +558,7 @@ $.post("http://demo.sealreport.org/SWISetUserProfile", {
                     <tr>
                         <th>Returns</th>
                         <td>
-                            error (string) : if any error, the error description
+                            error (string): if any error, the error description
                         </td>
                     </tr>
                 </tbody>
@@ -399,10 +588,181 @@ $.post("http://demo.sealreport.org/SWITranslate", {
                     <tr>
                         <th>Returns</th>
                         <td>
-                            text (string) : the text translate
+                            text (string): the text translate
                         </td>
                     </tr>
-                    <tr><th>Sample</th><td>{"text":"les restrictions du rapport"}</td></tr>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIDeleteFiles</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Delete files or reports from the repository.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIDeleteFiles", {
+    paths: "\\report1.srex\n\\report2.srex", // The paths of the files to delete separated by \n
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIMoveFile</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Move a file or a report in the repository.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIMoveFile", {
+    source: "\\report.srex", // The path of the report to copy or move
+    destination: "\\newname.srex", // The destination path 
+    copy: true //true to copy, false to move
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIViewFile</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>View a file published in the repository.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIViewFile", {
+    path: "\\report.htm", // The path of the file to view
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            url (string): the url of the result file<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWICreateFolder</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Create a sub-folder in the repository.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWICreateFolder", {
+    path: "\\Samples\\SubFolder", // The path of the folder to create
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIDeleteFolder</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Delete a sub-folder in the repository. The folder must be empty.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIDeleteFolder", {
+    path: "\\Samples\\SubFolder", // The path of the folder to delete
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIRenameFolder</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Rename a sub-folder in the repository.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIDeleteFolder", {
+    source: "\\Samples\\SubFolder", // The path of the folder to rename
+    destination: "\\Samples\\NewSubFolder", // The path of the folder to rename
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>

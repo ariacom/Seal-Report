@@ -76,6 +76,13 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
+            else if (CollectionItemType == typeof(SecurityColumn))
+            {
+                frmCollectionEditorForm.Text = "Security Columns Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
             else if (CollectionItemType == typeof(SubReport))
             {
                 frmCollectionEditorForm.Text = "Sub-Reports Collection Editor";
@@ -160,6 +167,12 @@ namespace Seal.Forms
             else if (value is Parameter) result = ((Parameter)value).DisplayName;
             else if (value is SecurityGroup) result = ((SecurityGroup)value).Name;
             else if (value is SecurityFolder) result = ((SecurityFolder)value).Path;
+            else if (value is SecurityColumn)
+            {
+                var item = (SecurityColumn)value;
+                if (!string.IsNullOrEmpty(item.Tag)) result = "Tag:" + item.Tag;
+                if (!string.IsNullOrEmpty(item.Category)) result += (result != "" ? "; " : "") + "Category:" + item.Category;
+            }
             else if (value is SubReport) result = ((SubReport)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }

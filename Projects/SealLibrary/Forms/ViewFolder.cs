@@ -26,6 +26,7 @@ namespace Seal.Forms
                 //Then enable
                 GetProperty("ViewGUID").SetIsBrowsable(true);
                 GetProperty("DisplayName").SetIsBrowsable(true);
+                GetProperty("InitScript").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -48,6 +49,14 @@ namespace Seal.Forms
         {
             get { return Report.DisplayName; }
             set { Report.DisplayName = value; }
+        }
+
+        [Category("Definition"), DisplayName("Init script"), Description("A Razor script  executed when the report is initialized. The script can be used to modify the report definition (e.g. set default values in restrictions).")]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string InitScript
+        {
+            get { return Report.InitScript; }
+            set { Report.InitScript = value; }
         }
     }
 }

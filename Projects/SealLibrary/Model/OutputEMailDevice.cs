@@ -260,7 +260,7 @@ namespace Seal.Model
         {
             if (!string.IsNullOrEmpty(input))
             {
-                string[] addresses = input.Replace(";", "\r").Replace("\n", "").Split('\r');
+                string[] addresses = input.Replace(";", "\r\n").Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
                 foreach (string address in addresses)
                 {
                     if (!string.IsNullOrWhiteSpace(address)) collection.Add(address);

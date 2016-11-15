@@ -216,6 +216,26 @@ namespace Seal.Forms
 }
 ";
 
+        const string razorInitScriptTemplate = @"@using Seal.Model
+@{
+    Report report = Model;
+	ReportExecutionLog log = report;
+
+    //Script executed when the report is initialized
+    log.LogMessage(""Executing Init Script"");
+    //report.Models[0].Restrictions[0].Value1 = ""1994""; 
+    //report.Models[0].Restrictions[0].Date1 = DateTime.Now.AddYears(-20);
+    //report.Models[0].GetRestrictionByName(""Order Year"").Value1 = ""2015"";
+    //report.Models[0].GetRestrictionByName(""Category"").EnumValues.Add(""1"");
+
+    //report.DisplayName = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + ""-"" + DateTime.Now.ToShortDateString();
+    
+    //Set the first value of an enum
+    //var enums = report.Models[0].Source.MetaData.Enums.FirstOrDefault(i=>i.Name == ""Category"");
+    //report.Models[0].GetRestrictionByName(""Category"").EnumValues.Add(enums.Values[0].Id);
+}
+";
+
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             if (context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
@@ -303,6 +323,13 @@ namespace Seal.Forms
                         template = displayNameTemplate;
                         frm.TypeForCheckSyntax = typeof(Report);
                         frm.Text = "Edit display name script";
+                        frm.textBox.ConfigurationManager.Language = "cs";
+                    }
+                    else if (context.PropertyDescriptor.Name == "InitScript")
+                    {
+                        template = razorInitScriptTemplate;
+                        frm.TypeForCheckSyntax = typeof(Report);
+                        frm.Text = "Edit the script executed when the report is initialized";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                 }

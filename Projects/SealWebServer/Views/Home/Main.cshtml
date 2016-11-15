@@ -1,23 +1,752 @@
-@using Seal.Model
+﻿@using Seal.Model
+@using Seal.Helpers
 @{
     Repository repository = Model as Repository;
 }
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-    <link href="Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-	<meta http-equiv="Content-Type" content="charset=iso-8859-1"/>
-	<title>@repository.Configuration.WebProductName</title>
+    <title>@repository.Configuration.WebProductName</title>
+    <meta charset="utf-8" />
+    <link href="~/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" href="~/Content/SealWeb.css" />
+
+    <script src='~/Scripts/jquery-1.11.3.min.js'></script>
+    <link rel="stylesheet" href="~/Content/bootstrap-3.3.6.min.css" />
+    <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
+    <script src='~/Scripts/bootstrap-3.3.6.min.js'></script>
+
+    <link rel='stylesheet' href='~/Content/jquery-ui-1.11.3.css' />
+    <script src='~/Scripts/jquery-ui-1.11.3.min.js'></script>
+
+    <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
+    <script src="~/Scripts/jstree.min.js"></script>
+
+    <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
+    <script src="~/Scripts/bootstrap-select.min.js"></script>
+
+    <link rel="stylesheet" href="~/Content/multiple-select.css" />
+    <script src="~/Scripts/jquery.multiple.select.js"></script>
+    <script src="~/Scripts/datepicker.js"></script>
+
+    <script src="~/Scripts/jquery.dataTables-1.10.12.min.js"></script>
+
+    <script type="text/javascript">
+        //server
+        var WebApplicationName = '@repository.Configuration.WebApplicationName';
+
+        //format for datatables
+        var shortDateFormat = '@repository.CultureInfo.DateTimeFormat.ShortDatePattern';
+        var isUSdate = shortDateFormat.match(/^m/i);
+        var dateSeparator = '@repository.CultureInfo.DateTimeFormat.DateSeparator';
+        var decimalSeparator = '@repository.CultureInfo.NumberFormat.NumberDecimalSeparator';
+        //for datepicker
+        var languageName = '@repository.CultureInfo.EnglishName';
+        var dateFormat = '@(repository.CultureInfo.DateTimeFormat.ShortDatePattern.Replace("M", "m").Replace("yy", "y"))';
+        var shortDateFormat = '@repository.CultureInfo.DateTimeFormat.ShortDatePattern';
+        var isUSdate = shortDateFormat.match(/^m/i);
+
+        var folderRightSchedule = @((int) FolderRight.Schedule);
+        var folderRightEdit = @((int) FolderRight.Edit);
+
+        function setDatePickerDefaults() {
+            if (languageName.indexOf("French") == 0) $.datepicker.setDefaults($.datepicker.regional['fr']);
+            else if (languageName.indexOf("German") == 0) $.datepicker.setDefaults($.datepicker.regional['de']);
+            else if (languageName.indexOf("Spanish") == 0) $.datepicker.setDefaults($.datepicker.regional['es']);
+            else if (languageName.indexOf("Italian") == 0) $.datepicker.setDefaults($.datepicker.regional['it']);
+            else if (languageName.indexOf("English") == 0 && !isUSdate) $.datepicker.setDefaults($.datepicker.regional['en']);
+            else $.datepicker.setDefaults($.datepicker.regional['']);
+            $.datepicker.setDefaults({ dateFormat: dateFormat });
+        }
+
+        var availableDateKeywords = ['@repository.TranslateReport("Now")', '@repository.TranslateReport("Today")', '@repository.TranslateReport("Today")-1', '@repository.TranslateReport("ThisWeek")', '@repository.TranslateReport("ThisWeek")-1', '@repository.TranslateReport("ThisMonth")', '@repository.TranslateReport("ThisMonth")-1', '@repository.TranslateReport("ThisYear")', '@repository.TranslateReport("ThisYear")-1'];
+
+        //translations
+        var translations = [];
+        @foreach(var translation in repository.JSTranslations)
+        {
+            <text>translations["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
+        }
+        //keyword
+        var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword';
+
+        var hasEditor = @Helper.ToJS(ReportEditor.HasEditor());
+    </script>
+    <script src='~/Scripts/dataTables.js'></script>
+
+    <script src="~/Scripts/swi-utils.js"></script>
+    <script src="~/Scripts/swi-button-group.js"></script>
+    <script src="~/Scripts/swi-gateway.js"></script>
+    <script src="~/Scripts/swi-main.js"></script>
+    @if (ReportEditor.HasEditor())
+    {
+        <script src="~/Scripts/swi-editor.js"></script>
+        <script src="~/Scripts/swi-properties.js"></script>
+    }
+
 </head>
+<body>
+    <nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <a id="brand-id" class="navbar-brand">@repository.Configuration.WebProductName</a>
+            <ul class="nav navbar-nav pull-xs-right navbar-right">
+                <li class="nav-item"><a id="profile-nav-item">@repository.TranslateWeb("Profile")</a></li>
+                <li class="nav-item" style="display:none"><a id="disconnect-nav-item">@repository.TranslateWeb("Disconnect")</a></li>
+            </ul>
+            <div class="navbar-form navbar-right">
+                <div class="form-group"><input id="search-pattern" type="text" class="form-control input-sm" placeholder="@repository.TranslateWeb("Search")" /></div>
+                <button id="search-nav-item" class="btn btn-default btn-sm">@repository.TranslateWeb("OK")</button>
+            </div>
+            <ul class="nav navbar-nav pull-xs-right navbar-right">
+                <li class="nav-item"><a id="folders-nav-item" title="Manage folders">@repository.TranslateWeb("Folders")</a></li>
+                <li class="nav-item"><a id="refresh-nav-item">@repository.TranslateWeb("Refresh")</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<frameset cols="260,*" rows="100%" >
-	<frame name="menu" src="Menu" "marginwidth="0" marginheight="0" frameborder="0" noresize="noresize" scrolling="no"/>
-	<frame name="detail" src="Detail" marginwidth="0" marginheight="0" frameborder="1" noresize="noresize" scrolling="yes"/>
-	<noframes>
-		<h2>Sorry.</h2>
-		<p><b>The browser you're using may not support "frames", which are required to use Seal Report.</b></p>
-	</noframes>
-</frameset>
+    <div id="main-container" class="container-fluid" style="padding-top:70px; display:none;">
+        <div class="row">
+            <div id="folder-view" class="col-sm-4">
+                <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto;"></div>
+            </div>
 
+            <div id="file-view" class="col-sm-8">
+                <!-- Report Menus -->
+                <div class="lighticon-menu">
+                    <div id="report-edit-lightbutton" class="lightbutton report-edit"><span class="lightbutton-icon fa fa-file-o"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("New")</span></div>
+                    <div id="report-cut-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-cut"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Cut")</span></div>
+                    <div id="report-copy-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-copy"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Copy")</span></div>
+                    <div id="report-paste-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-paste"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Paste")</span></div>
+                    <div id="report-delete-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-remove"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Delete")</span></div>
+                    <div id="report-rename-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-file-text"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Rename")</span></div>
+                </div>
+
+                <div id="file-table-view" style="overflow:auto;">
+                    <table id="file-table" class="table table-striped" style="margin:0px;">
+                        <thead>
+                            <tr>
+                                <th style="width:25px;"><input id="selectall-checkbox" type="checkbox" /></th>
+                                <th>@repository.TranslateWeb("Report")</th>
+                                <th style="width: 120px ; min-width:120px; text-align:center; ">@repository.TranslateWeb("Actions")</th>
+                                <th style="width: 170px; min-width:170px; ">@repository.TranslateWeb("Last modification")</th>
+                            </tr>
+                        </thead>
+                        <tbody id="file-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Wait Dialog-->
+    <div class="modal" id="wait-dialog" role="dialog">
+        <div class="modal-dialog" style="width: 300px;">
+            <div class="modal-content">
+                <div class="modal-body" style="text-align:center">
+                    <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+                    <h3 style="display:inline">@repository.TranslateWeb("Please wait")...</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Views and Output -->
+    <div id="output-panel" class="panel panel-default" style="display:none;">
+        <div class="panel-heading" style="height:20px;padding: 0px 10px;"><button type='button' id="output-panel-close" class='close'>&times;</button></div>
+        <div id="output-panel-content" class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr><th>@repository.TranslateWeb("Name")</th><th>@repository.TranslateWeb("Type")</th></tr>
+                </thead>
+                <tbody id="output-table-body">
+                    <tr><td colspan=2><i class='fa fa-spinner fa-spin fa-1x fa-fw'></i><span> @repository.TranslateWeb("Please Wait")...</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Editor -->
+    <div id="edit-dialog" role="dialog" class="modal fade in" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" style="width: 900px;">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 0px;">
+                    <nav id="dlgnav" class="navbar navbar-default" style="display: block; padding-right: 5px; margin-bottom: 0px;">
+                        <div class="container-fluid">
+
+                            <ul class="nav pagination" style="margin: 10px;">
+                                <li id="nav-dialog-elements" class="active"><a><span class="fa fa-cubes"></span> @repository.TranslateWeb("Elements")</a></li>
+                                <li id="nav-dialog-options"><a href="#"><span class="fa fa-list-ul"></span> @repository.TranslateWeb("Options")</a></li>
+                                <li id="nav-dialog-schedule"><a href="#"><span class="fa fa-clock-o"></span> @repository.TranslateWeb("Schedule")</a></li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right" style="margin-right:0px">
+                                <li><button id="nav-dialog-execute" class="btn btn-default" style="margin:10px 1px"><span class="fa fa-cog"></span> @repository.TranslateWeb("Execute")</button></li>
+                                <!--   <li><button id="nav-dialog-render" class="btn btn-default" style="margin:10px 1px"><span class="fa fa-cogs"></span> Render</button></li> -->
+                                <li><button id="nav-dialog-save" class="btn btn-default" style="margin:10px 1px"><span class="fa fa-save"></span> @repository.TranslateWeb("Save")</button></li>
+                                <!--   <li class="dropdown">
+                                       <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="padding-left:0px;padding-right:15px;">
+                                           <span class="caret"></span>
+                                       </a>
+                                       <ul class="dropdown-menu">
+                                           <li><a href="#">Save as...</a></li>
+                                       </ul>
+                                   </li>-->
+                                <li><button id="nav-dialog-close" class="btn btn-default" style="margin:10px 1px" href="#"><span class="fa fa-close"></span> @repository.TranslateWeb("Close") </button></li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div><div class="modal-body" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div id="elements-row" class="row editor-panel">
+                        <div style="padding:0px 2px;" class="col-md-4">
+                            <div style="margin-left:4px;">
+                                <select id="source-select" data-width="100%"></select>
+                            </div>
+                            <div class="jstree jstree-default drag-panel" style="padding:0px;margin:5px; height:420px; overflow:auto;" id="elements-tree" role="tree">
+                            </div>
+                            <hr style="margin:4px 0px;" />
+                            <div style="text-align:center;">
+                                <button id="grid-mode-btn" type="button" class="btn btn-default active"><i class="fa fa-table"></i> @repository.TranslateWeb("Grid mode")</button>
+                                <button id="pivot-mode-btn" type="button" class="btn btn-default"><i class="fa fa-th-large"></i> @repository.TranslateWeb("Pivot mode")</button>
+                            </div>
+                        </div>
+                        <div style="padding:0px 2px;" class="col-md-8">
+                            <div class="container-fluid" style="padding: 0px 2px;">
+                                <row>
+                                    <div id="page-panel" class="panel panel-success col-md-6 drag-panel">
+                                        <span class="drop-span"></span>
+                                    </div>
+                                    <div id="col-panel" class="panel panel-success col-md-6 drag-panel">
+                                        <span class="drop-span"></span>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div id="row-panel" class="panel panel-success col-md-6 drag-panel">
+                                        <span class="drop-span"></span>
+                                    </div>
+                                    <div id="data-panel" class="panel panel-success col-md-6 drag-panel">
+                                        <span class="drop-span"></span>
+                                    </div>
+                                </row>
+                                <row>
+                                    <div id="restriction-panel" class="panel panel-success col-md-12 drag-panel" style="padding:0px 0px;margin-bottom: 0px;">
+                                        <span class="drop-span"></span>
+                                    </div>
+                                </row>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="options-row" class="row editor-panel">
+                        <div class="form-horizontal col-sm-6" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-format">@repository.TranslateWeb("Format")</label>
+                                <div class="col-sm-8">
+                                    <select id="option-format" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-title">@repository.TranslateWeb("Report title")</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" id="option-title" placeholder="@repository.TranslateWeb("Report title if different from report name")" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-description">@repository.TranslateWeb("Description")</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" id="option-description" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-connection">@repository.TranslateWeb("Connection")</label>
+                                <div class="col-sm-8">
+                                    <select id="option-connection" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-chart-title">@repository.TranslateWeb("Chart title")</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" id="option-chart-title" placeholder="@repository.TranslateWeb("Optional title chart")" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-chart-height">@repository.TranslateWeb("Chart height")</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control numeric" id="option-chart-height" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-chart-width">@repository.TranslateWeb("Chart width")</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control numeric" id="option-chart-width" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <div class="form-horizontal panel panel-default" role="form">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">@repository.TranslateWeb("Display options")</h1>
+                                </div>
+                                <div id="option-body" class="panel-body">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="schedule-row" class="row editor-panel">
+                        <div class="form-horizontal col-sm-6" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="schedule-device">@repository.TranslateWeb("Device")</label>
+                                <div class="col-sm-8">
+                                    <select id="schedule-device" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group schedule-folder">
+                                <label class="control-label col-sm-4" for="schedule-folder">@repository.TranslateWeb("Folder")*</label>
+                                <div class="col-sm-8">
+                                    <select id="schedule-folder" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group schedule-folder">
+                                <label class="control-label col-sm-4" for="schedule-file">@repository.TranslateWeb("File name")*</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <input id="schedule-file" type="text" class="form-control" placeholder="@repository.TranslateWeb("Enter the file name without extension")" />
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul id="schedule-file-dropdown" class="dropdown-menu"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group schedule-email">
+                                <label class="control-label col-sm-4" for="schedule-to">@repository.TranslateWeb("To")*</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" id="schedule-to" placeholder="@repository.TranslateWeb("Enter addresses separated by ;")" />
+                                </div>
+                            </div>
+                            <div class="form-group schedule-email">
+                                <label class="control-label col-sm-4" for="schedule-subject">@repository.TranslateWeb("Subject")</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" id="schedule-subject" placeholder="@repository.TranslateWeb("Default subject")" />
+                                </div>
+                            </div>
+                            <div class="form-group schedule-email" style="margin-bottom: 5px;">
+                                <label class="control-label col-sm-4" for="schedule-body">@repository.TranslateWeb("Body")</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" id="schedule-body" rows="3" placeholder="@repository.TranslateWeb("Default body")"></textarea>
+                                </div>
+                            </div>
+                            <hr class="schedule-email" style="margin:4px 0px;" />
+                            <div class="form-group schedule-email">
+                                <label class="control-label col-sm-4" for="schedule-from">@repository.TranslateWeb("From")</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" id="schedule-from" placeholder="@repository.TranslateWeb("Default sender address")" />
+                                </div>
+                            </div>
+                            <div class="form-group schedule-email">
+                                <label class="control-label col-sm-4" for="schedule-cc">@repository.TranslateWeb("CC")</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" id="schedule-cc" placeholder="@repository.TranslateWeb("Optional addresses separated by ;")" />
+                                </div>
+                            </div>
+                            <div class="form-group schedule-email">
+                                <label class="control-label col-sm-4" for="schedule-bcc">@repository.TranslateWeb("BCC")</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" id="schedule-bcc" placeholder="@repository.TranslateWeb("Optional addresses separated by ;")" />
+                                </div>
+                            </div>
+                            <div class="form-group schedule-email">
+                                <label class="control-label col-sm-4" for="schedule-html">@repository.TranslateWeb("Result as body")</label>
+                                <div class="col-sm-8">
+                                    <select id="schedule-html" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group schedule-email">
+                                <label class="control-label col-sm-4" for="schedule-zip">@repository.TranslateWeb("Zip attachments")</label>
+                                <div class="col-sm-8">
+                                    <select id="schedule-zip" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group schedule-email">
+                                <label class="control-label col-sm-4" for="schedule-zippassword">@repository.TranslateWeb("Zip password")</label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="schedule-zippassword" placeholder="@repository.TranslateWeb("Enter a password to protect the Zip file")" />
+                                </div>
+                            </div>
+                            <div class="form-group schedule-execute">
+                                <label class="control-label col-sm-4" for="schedule-device"></label>
+                                <div class="col-sm-8" style="text-align:right">
+                                    <button id="nav-dialog-execute-schedule" class="btn btn-default" style="margin:10px 1px"><span class="fa fa-cog"></span> @repository.TranslateWeb("Execute schedule now")</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <div class="form-horizontal panel panel-default" role="form">
+                                <div class="panel-heading">
+                                    <i class="fa fa-clock-o"></i><h1 class="panel-title" style="display:inline"> @repository.TranslateWeb("Execution")</h1>
+                                </div>
+                                <div id="schedule-exec" class="panel-body" style="height:340px">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-start">@repository.TranslateWeb("Start date")</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control datepicker" id="schedule-start" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-end">@repository.TranslateWeb("End date")</label>
+                                        <div class="col-sm-7">
+                                            <input class="form-control datepicker" id="schedule-end" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-enabled">@repository.TranslateWeb("Is enabled")</label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control" id="schedule-enabled"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-type">@repository.TranslateWeb("Type")</label>
+                                        <div class="col-sm-7">
+                                            <select id="schedule-type" data-width="100%"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-end">@repository.TranslateWeb("Recur every")</label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control numeric" id="schedule-interval" />
+                                        </div>
+                                        <label class="control-label col-sm-3" id="schedule-interval-label" style="text-align:left;padding-left: 0px;"></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-weekdays">@repository.TranslateWeb("Days of the week")</label>
+                                        <div class="col-sm-7">
+                                            <select id="schedule-weekdays" multiple="multiple"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-months">@repository.TranslateWeb("Months")</label>
+                                        <div class="col-sm-7">
+                                            <select id="schedule-months" multiple="multiple"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-days">@repository.TranslateWeb("Days")</label>
+                                        <div class="col-sm-7">
+                                            <select id="schedule-days" multiple="multiple"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-repeat1">@repository.TranslateWeb("Repeat every")</label>
+                                        <div class="col-sm-7">
+                                            <div class="input-group">
+                                                <input id="schedule-repeat1" type="text" class="form-control" />
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul id="schedule-repeat1-dropdown" class="dropdown-menu"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-repeat2">@repository.TranslateWeb("for a duration of")</label>
+                                        <div class="col-sm-7">
+                                            <div class="input-group">
+                                                <input id="schedule-repeat2" type="text" class="form-control" />
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul id="schedule-repeat2-dropdown" class="dropdown-menu"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div style="padding:2px;" class="modal-footer">
+                    <row>
+                        <div class="col-md-8 text-left">
+                            <ol class="breadcrumb" id="breadcrumb" style="display: inline;margin: 0px 5px;padding: 0px"></ol>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <span id="status-message"></span>
+                        </div>
+                    </row>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Element button -->
+    <div class="btn-group element-btn-group" style="display:none">
+        <button type="button" class="btn btn-default element-btn" draggable="true" style="overflow:hidden;" />
+        <button type="button" class="btn btn-default element-prop-btn"><span class="fa fa-list" /></button>
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+    </div>
+
+    <ul id="element-dropdown" class="dropdown-menu" style="display:none;z-index:3000">
+        <li><a id="el-copy-dropdown">@repository.TranslateWeb("Copy")</a></li>
+        <li><a id="el-prompt-dropdown">@repository.TranslateWeb("Prompt at run-time")</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a id="el-remove-dropdown">@repository.TranslateWeb("Remove")</a></li>
+        <li><a id="el-removeall-dropdown">@repository.TranslateWeb("Remove all")</a></li>
+    </ul>
+
+
+    <!--Properties Editor-->
+    <div id="properties-panel" class="panel panel-default" style="display:none;z-index:2000;width:300px;">
+        <div class="panel-heading" style="height:20px;padding: 0px 10px;">
+            <span id="properties-title" style="font-style:italic"></span>
+            <button type='button' id="properties-panel-close" class='close'>&times;</button>
+        </div>
+        <div class="panel-body" style="padding:5px">
+            <div>
+                <label class="properties-label">@repository.TranslateWeb("Name")</label>
+                <div class="properties-value">
+                    <div class="input-group">
+                        <input id="property-name" type="text" class="form-control" />
+                        <div class="input-group-btn">
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul id="property-name-dropdown" class="dropdown-menu"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="properties-sort-group">
+                <label class="properties-label">@repository.TranslateWeb("Sort")</label>
+                <div class="properties-value">
+                    <select id="property-sort" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-format-group">
+                <label class="properties-label">@repository.TranslateWeb("Format")</label>
+                <div class="properties-value">
+                    <select id="property-format" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-serie-group">
+                <label class="properties-label">@repository.TranslateWeb("Chart axis")</label>
+                <div class="properties-value">
+                    <select id="property-serie" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-chart-group">
+                <label class="properties-label">@repository.TranslateWeb("Chart type")</label>
+                <div class="properties-value">
+                    <select id="property-chart" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-aggregate-group">
+                <label class="properties-label">@repository.TranslateWeb("Aggregate")</label>
+                <div class="properties-value">
+                    <select id="property-aggregate" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-totals-group">
+                <label class="properties-label">@repository.TranslateWeb("Show totals")</label>
+                <div class="properties-value">
+                    <select id="property-totals" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-totalsaggr-group">
+                <label class="properties-label">@repository.TranslateWeb("Total aggr.")</label>
+                <div class="properties-value">
+                    <select id="property-totalsaggr" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-operator-group">
+                <label class="properties-label">@repository.TranslateWeb("Operator")</label>
+                <div class="properties-value">
+                    <select id="property-operator" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-prompt-group">
+                <label class="properties-label">@repository.TranslateWeb("Prompt")</label>
+                <div class="properties-value">
+                    <select id="property-prompt" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-required-group">
+                <label class="properties-label">@repository.TranslateWeb("Is required")</label>
+                <div class="properties-value">
+                    <select id="property-required" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-val1-group">
+                <label class="properties-label">@repository.TranslateWeb("Value") 1</label>
+                <div class="properties-value">
+
+                </div>
+            </div>
+            <div id="properties-val2-group">
+                <label class="properties-label">@repository.TranslateWeb("Value") 2</label>
+                <div class="properties-value">
+                </div>
+            </div>
+            <div id="properties-val3-group">
+                <label class="properties-label">@repository.TranslateWeb("Value") 3</label>
+                <div class="properties-value">
+                </div>
+            </div>
+            <div id="properties-val4-group">
+                <label class="properties-label">@repository.TranslateWeb("Value") 4</label>
+                <div class="properties-value">
+                </div>
+            </div>
+            <div id="properties-evals-group">
+                <label class="properties-label">@repository.TranslateWeb("Values")</label>
+                <div class="properties-value">
+                    <select id="property-evals" multiple="multiple"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- File Name Dialog -->
+    <div id="report-name-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" style="top:60px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@repository.TranslateWeb("Enter your new file name")</h4>
+                </div>
+                <div class="modal-body">
+                    <input id="report-name" type="text" class="form-control" placeholder="@repository.TranslateReport("New report")" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                    <button id="report-name-save" type="button" class="btn btn-primary">@repository.TranslateWeb("Save")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Dialog -->
+    <div id="message-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" style="top: 60px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
+
+                    <h4 id="message-title" class="modal-title"></h4>
+
+                </div>
+                <div class="modal-body">
+                    <span id="message-text"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                    <button id="message-ok-button" type="button" class="btn btn-primary">@repository.TranslateWeb("OK")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="top:50px;">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #5cb85c;color:white;text-align: center;font-size: 30px;border-top-left-radius: 6px;border-top-right-radius: 6px;">
+                    <h4 style="color:white;"><span class="glyphicon glyphicon-lock"></span> @repository.Configuration.WebProductName @repository.TranslateWeb("Login")</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="username"><span class="glyphicon glyphicon-user"></span> @repository.TranslateWeb("User name")</label>
+                        <input type="text" class="form-control" id="username" placeholder="@repository.TranslateWeb("Enter user name")" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><span class="glyphicon glyphicon-eye-open"></span> @repository.TranslateWeb("Password")</label>
+                        <input type="password" class="form-control" id="password" placeholder="@repository.TranslateWeb("Enter password")" />
+                    </div>
+                    <button id="login-modal-submit" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> @repository.TranslateWeb("Login")</button>
+                </div>
+                <div class="modal-footer" style="text-align:left">
+                    <span id="login-modal-error" class="label label-danger" style="font-size: 12px;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" style="top:60px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@repository.TranslateWeb("Profile information")</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="profile-user"><span class="fa fa-user"></span> @repository.TranslateWeb("User name")</label>
+                        <input class="form-control" id="profile-user" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-groups"><span class="fa fa-users"></span> @repository.TranslateWeb("User groups")</label>
+                        <input class="form-control" id="profile-groups" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><span class="fa fa-language"></span> @repository.TranslateWeb("Culture")</label>
+                        <div>
+                            <select id="culture-select" data-width="100%"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                    <button id="profile-save" type="button" class="btn btn-primary">@repository.TranslateWeb("Save")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Folder Modal -->
+    <div id="folder-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" style="top:60px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@repository.TranslateWeb("Manage folders")</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input class="form-control" style="display:inline;width:60%;" id="create-folder-name" placeholder="@repository.TranslateWeb("New folder name")" />
+                        <button id="folder-create" type="button" class="btn btn-primary">@repository.TranslateWeb("Create new folder")</button>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" style="display:inline;width:60%;" id="rename-folder-name" placeholder="@repository.TranslateWeb("New folder name")" />
+                        <button id="folder-rename" type="button" class="btn btn-primary">@repository.TranslateWeb("Rename folder")</button>
+                    </div>
+                    <div class="form-group">
+                        <button id="folder-delete" type="button" class="btn btn-primary">@repository.TranslateWeb("Delete folder")</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Close")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">
+        <div>
+            <p>Copyright &copy; 2016 Seal Report. All Rights Reserved</p>
+        </div>
+    </div>
+</body>
 </html>

@@ -55,5 +55,10 @@ namespace Seal.Model
         public bool NVD3SecondaryYIsDateTime = false;
         public bool NVD3IsNumericAxis;
         public bool NVD3IsDateTimeAxis;
+
+        //Max lengths to adjust margins
+        public int NVD3XLabelMaxLen = 0;
+        public int NVD3YPrimaryMaxLen = 0;
+        public int NVD3YSecondaryMaxLen = 0;
     }
 }

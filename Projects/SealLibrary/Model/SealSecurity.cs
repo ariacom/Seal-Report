@@ -53,9 +53,8 @@ namespace Seal.Model
                 GetProperty("TestCurrentWindowsUser").SetIsBrowsable(true);
                 GetProperty("HelperSimulateLogin").SetIsBrowsable(true);
 
-                GetProperty("ProviderScript").SetIsReadOnly(true);
+                //GetProperty("ProviderScript").SetIsReadOnly(true); Let it writable to enable Reset
                 GetProperty("PromptUserPassword").SetIsReadOnly(true);
-                GetProperty("Script").SetIsReadOnly(!UseCustomScript);
                 GetProperty("TestUserName").SetIsReadOnly(!Provider.PromptUserPassword);
                 GetProperty("TestPassword").SetIsReadOnly(!Provider.PromptUserPassword);
 
@@ -125,6 +124,7 @@ namespace Seal.Model
                 var result = Providers.FirstOrDefault(i => i.Name == ProviderName);
                 if (result == null) result = Providers.FirstOrDefault(i => i.Name == "No Security");
                 if (result == null) result = Providers.FirstOrDefault();
+                if (result == null) throw new Exception("Invalid configuration: No security providers available. Check your repository configuration...");
                 _providerName = result.Name;
                 return result;
             }
@@ -190,44 +190,54 @@ namespace Seal.Model
             SecurityFolder result = null;
             foreach (var group in groups)
             {
-                string folderRoot = Repository.ConvertToRepositoryPath(folder);
-                while (result == null && !string.IsNullOrEmpty(folderRoot))
+                string folderRoot = folder;
+                SecurityFolder current = null;
+                while (current == null && !string.IsNullOrEmpty(folderRoot))
                 {
-                    result = group.Folders.FirstOrDefault(i => i.Path == folderRoot);
+                    current = group.Folders.FirstOrDefault(i => i.Path == folderRoot);
                     folderRoot = Path.GetDirectoryName(folderRoot);
                 }
-                if (result != null && result.Path != Repository.ConvertToRepositoryPath(folder) && !result.UseSubFolders)
+                if (current != null && current.Path != folder && !current.UseSubFolders)
                 {
                     //cannot use this parent
-                    result = null;
+                    current = null;
                 }
 
-                if (result != null) break;
+                if (current != null)
+                {
+                    if (result != null)
+                    {
+                        //Merge the groupFolder find in this group with the current result
+                        //Weakest right is applied..
+                        result.FolderRight = (FolderRight)Math.Min((int)result.FolderRight, (int)current.FolderRight);
+                        result.ExpandSubFolders = result.ExpandSubFolders || current.ExpandSubFolders;
+                        result.ManageFolder = result.ManageFolder && current.ManageFolder;
+                    }
+                    else
+                    {
+                        result = (SecurityFolder)Helper.Clone(current);
+                    }
+
+                    //set IsDefined flag
+                    if (current.Path == folder) result.IsDefined = true;
+                }
             }
             return result;
         }
 
-        public bool IsParentSecurityFolder(List<SecurityGroup> groups, string folder)
-        {
-            foreach (var group in groups)
-            {
-                string folderRoot = Repository.ConvertToRepositoryPath(folder);
-                if (group.Folders.Exists(i => i.Path.StartsWith(folderRoot))) return true;
-            }
-            return false;
-        }
 
         string getSecuritySummary(SecurityGroup group, string folder)
         {
             StringBuilder result = new StringBuilder();
             List<SecurityGroup> groups = new List<SecurityGroup>();
             groups.Add(group);
-            SecurityFolder securityFolder = FindSecurityFolder(groups, folder);
+            string folder2 = folder.Substring(Repository.ReportsFolder.Length);
+            SecurityFolder securityFolder = FindSecurityFolder(groups, folder2);
             if (securityFolder != null)
             {
-                string pattern = string.IsNullOrEmpty(securityFolder.SearchPattern) ? "" : string.Format(", Search Pattern:{0}", securityFolder.SearchPattern);
-                result.AppendLine(string.Format("    Folder:{0} (Type:{1}{2})\r\n", Repository.ConvertToRepositoryPath(folder), Helper.GetEnumDescription(securityFolder.PublicationType.GetType(), securityFolder.PublicationType), pattern));
+                result.AppendLine(string.Format("    Folder:'{0}' => Right:{1}; Use Sub-folders:{2}; Manage Sub-folders:{3};\r\n", folder2, Helper.GetEnumDescription(securityFolder.FolderRight.GetType(), securityFolder.FolderRight), securityFolder.UseSubFolders ? "Yes" : "No", securityFolder.UseSubFolders && securityFolder.ManageFolder ? "Yes" : "No"));
             }
+
             foreach (string subFolder in Directory.GetDirectories(folder))
             {
                 result.Append(getSecuritySummary(group, subFolder));
@@ -243,8 +253,15 @@ namespace Seal.Model
             foreach (var group in _groups)
             {
                 result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
-                result.AppendLine(getSecuritySummary(group, Repository.ReportsFolder));
+                foreach (var col in group.Columns)
+                {
+                    result.AppendFormat("    Column Category:'{0}' Security Tag:'{1}' => Right:{2}\r\n", col.Category, col.Tag, Helper.GetEnumDescription(col.Rights.GetType(), col.Rights));
+                }
+                result.AppendLine();
+                result.AppendLine(getSecuritySummary(group, Repository.ReportsFolder + "\\"));
             }
+
+            result.AppendLine("\r\nNote: If a user belongs to several groups, the weakest right is applied\r\n");
             return result.ToString();
         }
 

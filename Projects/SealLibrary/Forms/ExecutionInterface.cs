@@ -16,4 +16,11 @@ namespace Seal.Forms
         void LogNoCR(string text, params object[] args);
         void LogRaw(string text, params object[] args);
     }
+    public class DummyLogInterface : ExecutionLogInterface
+    {
+        public bool IsJobCancelled() { return false; }
+        public void Log(string text, params object[] args) { }
+        public void LogNoCR(string text, params object[] args) { }
+        public void LogRaw(string text, params object[] args) { }
+    }
 }

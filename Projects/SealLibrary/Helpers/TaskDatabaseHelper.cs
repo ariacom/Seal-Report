@@ -33,7 +33,7 @@ namespace Seal.Helpers
         public string ColumnDateTimeType = "";
         public string InsertStartCommand = "";
         public string InsertEndCommand = "";
-        public int ColumnCharLength = 0; //= means auto size
+        public int ColumnCharLength = 0; //0= means auto size
         public int InsertBurstSize = 500;
         public string ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
         public Encoding DefaultEncoding = Encoding.Default;

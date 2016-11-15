@@ -30,6 +30,8 @@ namespace Seal.Model
         public const string SealServerManager = "SealServerManager.exe";
         public const string SealDefaultRepository = "Seal Report Repository";
         public const string SealRepositoryKeyword = "%SEALREPOSITORY%";
+        public const string SealReportsRepositoryKeyword = "%SEALREPORTSREPOSITORY%";
+        public const string SealPersonalRepositoryKeyword = "%SEALPERSONALREPOSITORY%";
         public const string SealReportDisplayNameKeyword = "%SEALREPORTDISPLAYNAME%";
 
         string _path;
@@ -143,6 +145,12 @@ namespace Seal.Model
                     _configuration = SealServerConfiguration.LoadFromFile(ConfigurationPath, true);
                     if (_configuration == null) _configuration = new SealServerConfiguration();
                     _configuration.Repository = this;
+                    try
+                    {
+                        //save install directory if necessary
+                        if (string.IsNullOrEmpty(_configuration.InstallationDirectory)) _configuration.SaveToFile();
+                    }
+                    catch { }
                 }
                 return _configuration;
             }
@@ -161,7 +169,7 @@ namespace Seal.Model
             {
                 if (_security == null)
                 {
-                    _security = SealSecurity.LoadFromFile(SecurityPath, true);
+                    _security = SealSecurity.LoadFromFile(SecurityPath, false);
                     if (_security == null) _security = new SealSecurity();
                     _security.Repository = this;
                 }
@@ -365,6 +373,8 @@ namespace Seal.Model
                 if (!Directory.Exists(SecurityProvidersFolder)) Directory.CreateDirectory(SecurityProvidersFolder);
                 if (!Directory.Exists(AssembliesFolder)) Directory.CreateDirectory(AssembliesFolder);
                 if (!Directory.Exists(SubReportsFolder)) Directory.CreateDirectory(SubReportsFolder);
+                if (!Directory.Exists(SpecialsFolder)) Directory.CreateDirectory(SpecialsFolder);
+                if (!Directory.Exists(PersonalFolder)) Directory.CreateDirectory(PersonalFolder);
             }
             catch { }
         }
@@ -429,6 +439,11 @@ namespace Seal.Model
             get { return Path.Combine(ViewsFolder, "Scripts"); }
         }
 
+        public string ViewContentFolder
+        {
+            get { return Path.Combine(ViewsFolder, "Content"); }
+        }
+
         public string AssembliesFolder
         {
             get { return Path.Combine(_path, "Assemblies"); }
@@ -437,6 +452,30 @@ namespace Seal.Model
         public string SubReportsFolder
         {
             get { return Path.Combine(_path, "SubReports"); }
+        }
+
+        public string SpecialsFolder
+        {
+            get { return Path.Combine(_path, "SpecialFolders"); }
+        }
+
+        public string PersonalFolder
+        {
+            get { return Path.Combine(SpecialsFolder, "Personal"); }
+        }
+
+        public string GetPersonalFolder(SecurityUser user)
+        {
+            //add hash to the end of the name
+            var hash = Helper.CalculateHash(user.WebUserName);
+            string result = Path.Combine(PersonalFolder, string.Format("{0}_{1}", FileHelper.CleanFilePath(user.WebUserName), hash));
+            if (!Directory.Exists(result)) Directory.CreateDirectory(result);
+            return result;
+        }
+
+        public string GetPersonalFolderName(SecurityUser user)
+        {
+            return TranslateWeb("Personal") + string.Format(" ({0})", user.WebUserName); ;
         }
 
         public string TranslationsPath
@@ -462,7 +501,7 @@ namespace Seal.Model
         public string ReplaceRepositoryKeyword(string inputFolder)
         {
             if (string.IsNullOrEmpty(inputFolder)) return "";
-            return inputFolder.Replace(Repository.SealRepositoryKeyword, _path);
+            return inputFolder.Replace(Repository.SealRepositoryKeyword, _path).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
         }
 
         #region Translations
@@ -482,6 +521,25 @@ namespace Seal.Model
             }
         }
 
+        public Dictionary<string, string> JSTranslations
+        {
+            get
+            {
+                var result = new Dictionary<string, string>();
+                foreach (var translation in Translations.Where(i => i.Context == "WebJS"))
+                {
+                    var value = translation.Reference;
+                    if (translation.Translations.ContainsKey(CultureInfo.TwoLetterISOLanguageName))
+                    {
+                        value = translation.Translations[CultureInfo.TwoLetterISOLanguageName];
+                        if (string.IsNullOrEmpty(value)) value = translation.Reference;
+                    }
+                    result.Add(translation.Reference, value);
+                }
+                return result;
+            }
+        }
+
         public string Translate(string context, string reference)
         {
             return Translate(CultureInfo.TwoLetterISOLanguageName, context, reference);
@@ -490,6 +548,11 @@ namespace Seal.Model
         public string TranslateWeb(string reference)
         {
             return Translate(CultureInfo.TwoLetterISOLanguageName, "Web", reference);
+        }
+
+        public string TranslateWebJS(string reference)
+        {
+            return Translate(CultureInfo.TwoLetterISOLanguageName, "WebJS", reference);
         }
 
         public string TranslateReport(string reference)
@@ -538,22 +601,38 @@ namespace Seal.Model
             return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, context, instance, reference);
         }
 
-        public string TranslateFolderName(string path)
+        public string TranslateColumn(MetaColumn col)
         {
-            if (path.Length < ReportsFolder.Length) return Path.GetFileName(path);
-            return RepositoryTranslate("FolderName", path.Substring(ReportsFolder.Length), Path.GetFileName(path));
+            return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, "Element", col.Category + '.' + col.DisplayName, col.DisplayName);
+        }
+
+        public string TranslateCategory(string instance, string reference)
+        {
+            return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, "Category", instance, reference);
         }
 
         public string TranslateFolderPath(string path)
         {
-            if (path.Length < ReportsFolder.Length) return path;
-            return RepositoryTranslate("FolderPath", path.Substring(ReportsFolder.Length), path.Substring(ReportsFolder.Length));
+            if (path == "\\") return path;
+
+            string path2 = path;
+            string result = "";
+            while (!string.IsNullOrEmpty(path2) && path2 != "\\")
+            {
+                result = "\\" + TranslateFolderName(path2) + result;
+                path2 = Path.GetDirectoryName(path2);
+            }
+            return result;
+        }
+
+        public string TranslateFolderName(string path)
+        {
+            return RepositoryTranslate("FolderName", path.StartsWith(ReportsFolder) ? path.Substring(ReportsFolder.Length) : path, Path.GetFileName(path));
         }
 
         public string TranslateFileName(string path)
         {
-            if (path.Length < ReportsFolder.Length) return Path.GetFileName(path);
-            return RepositoryTranslate("FileName", path.Substring(ReportsFolder.Length), Path.GetFileNameWithoutExtension(path));
+            return RepositoryTranslate("FileName", path.StartsWith(ReportsFolder) ? path.Substring(ReportsFolder.Length) : path, Path.GetFileNameWithoutExtension(path));
         }
 
 #if DEBUG
@@ -662,34 +741,6 @@ namespace Seal.Model
                 }
             }
 
-            return result;
-        }
-
-        public string AttachScriptFile(string fileName, string cdnPath = "")
-        {
-            if (!string.IsNullOrEmpty(cdnPath) && !Configuration.IsLocal) return string.Format("<script type='text/javascript' src='{0}'></script>", cdnPath);
-            string result = "<script type='text/javascript'>\r\n";
-            string sourceFilePath = Path.Combine(ViewScriptsFolder, fileName);
-            result += File.ReadAllText(sourceFilePath);
-            result += "\r\n</script>\r\n";
-            return result;
-        }
-
-        public string AttachCSSFile(string fileName, string cdnPath = "")
-        {
-            if (!string.IsNullOrEmpty(cdnPath) && Configuration.IsLocal) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", cdnPath);
-
-            string result = "<style type='text/css'>\r\n";
-            string sourceFilePath = Path.Combine(ViewScriptsFolder, fileName);
-            result += File.ReadAllText(sourceFilePath);
-            result += "\r\n</style>\r\n";
-            return result;
-        }
-
-        public string ConvertToRepositoryPath(string path)
-        {
-            string result = path.Replace(ReportsFolder, "");
-            if (string.IsNullOrEmpty(result)) result = "\\";
             return result;
         }
 

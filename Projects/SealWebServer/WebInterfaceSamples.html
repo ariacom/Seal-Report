@@ -71,15 +71,10 @@
                     window.open(sealServer + "Main");
                 });
 
-            $("#open_folder_button")
-                .click(function () {
-                    window.open(sealServer + "Detail?folder=\\Samples&mode=1");
-                });
-
             $("#folders_button")
                 .click(function () {
                     $.post(sealServer + "SWIGetFolders", {
-                        path: "\\"
+                        path: "\\Samples"
                     })
                         .done(function (data) {
                             if (!data.error) {
@@ -130,7 +125,7 @@
             $("#execute_button")
                 .click(function () {
                     $("#execute_label").text("Executing: 'Search - Orders'");
-                    $.post(sealServer + "InitExecuteReport", {
+                    $.post(sealServer + "SWIExecuteReport", {
                         path: "\\Search - Orders.srex"
                     })
                         .done(function (data) {
@@ -147,7 +142,7 @@
             $("#execute2_button")
             .click(function () {
                 $("#execute2_label").text("Executing 'Search - Orders' with custom restrictions...");
-                $.post(sealServer + "InitExecuteReport", {
+                $.post(sealServer + "SWIExecuteReport", {
                     path: "\\Search - Orders.srex",
                     r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
                     r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
@@ -168,7 +163,7 @@
             $("#execute3_button")
                 .click(function () {
                     $("#execute3_label").text("Executing '07-Outputs and schedules' with the Excel view");
-                    $.post(sealServer + "InitExecuteReport", {
+                    $.post(sealServer + "SWIExecuteReport", {
                         path: "\\Samples\\07-Outputs and schedules.srex",
                         viewGUID: "c496f22b-fc4d-45da-a2fc-23f9ecbf878b"
                     })
@@ -186,7 +181,7 @@
             $("#execute4_button")
                 .click(function () {
                     $("#execute4_label").text("Executing '07-Outputs and schedules' with Output HTML");
-                    $.post(sealServer + "InitExecuteReport", {
+                    $.post(sealServer + "SWIExecuteReport", {
                         path: "\\Samples\\07-Outputs and schedules.srex",
                         outputGUID: "cac770ed-3039-4af8-93d3-e197ac94d808"
                     })
@@ -204,7 +199,7 @@
             $("#generate_button")
                 .click(function () {
                     $("#generate_label").text("Generating report result...");
-                    $.post(sealServer + "SWIExecuteReport", {
+                    $.post(sealServer + "SWIExecuteReportToResult", {
                         path: "\\Search - Orders.srex",
                         format: "html", /* print, pdf or excel with the converter */
                         r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
@@ -214,7 +209,7 @@
                     })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#generate_label").html("SWIExecuteReport Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a><br>" + JSON.stringify(data));
+                                $("#generate_label").html("SWIExecuteReportToResult Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a><br>" + JSON.stringify(data));
                             }
                             else {
                                 $("#generate_label").text("Error: " + data.error);
@@ -226,13 +221,13 @@
             $("#generate2_button")
                 .click(function () {
                     $("#generate2_label").text("Generating report result...");
-                    $.post(sealServer + "SWIExecuteReport", {
+                    $.post(sealServer + "SWIExecuteReportToResult", {
                         path: "\\Samples\\07-Outputs and schedules.srex",
                         outputGUID: "cac770ed-3039-4af8-93d3-e197ac94d808",
                     })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#generate2_label").html("SWIExecuteReport Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
+                                $("#generate2_label").html("SWIExecuteReportToResult Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
                             }
                             else {
                                 $("#generate2_label").text("Error: " + data.error);
@@ -244,13 +239,13 @@
             $("#generate3_button")
                 .click(function () {
                     $("#generate3_label").text("Generating report result...");
-                    $.post(sealServer + "SWIExecuteReport", {
+                    $.post(sealServer + "SWIExecuteReportToResult", {
                         path: "\\Samples\\07-Outputs and schedules.srex",
                         format: "print", /* print, pdf or excel with the converter */
                     })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#generate3_label").html("SWIExecuteReport Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
+                                $("#generate3_label").html("SWIExecuteReportToResult Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
                             }
                             else {
                                 $("#generate3_label").text("Error: " + data.error);
@@ -370,8 +365,8 @@
                         <tr>
                             <td>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="User name" autofocus value="" />
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" />
+                                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="User name (leave it empty for the demo)" autofocus value="" />
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password (leave it empty for the demo)" />
                                 </div>
                                 <button id="login_button">Login</button>
                             </td>
@@ -380,12 +375,6 @@
                         <tr>
                             <td>
                                 <button id="open_button">Open Web Server in a new window</button>
-                            </td>
-                            <td width="50%"></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button id="open_folder_button">Open a folder in a new window</button>
                             </td>
                             <td width="50%"></td>
                         </tr>

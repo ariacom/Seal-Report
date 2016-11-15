@@ -14,6 +14,9 @@
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
+      <NumericFormat>N0</NumericFormat>
+      <DateTimeFormat>d</DateTimeFormat>
+      <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -49,10 +52,11 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -82,10 +86,11 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>d</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -115,6 +120,7 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
@@ -148,6 +154,7 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Customer Contact</DisplayName>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
@@ -182,6 +189,7 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
@@ -216,6 +224,7 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Supplier</DisplayName>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
@@ -250,6 +259,7 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Shipper</DisplayName>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
@@ -284,10 +294,11 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -317,10 +328,11 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -350,10 +362,11 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -394,10 +407,11 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>d</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -420,10 +434,11 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe>0</FormatRe>
+          <FormatRe>d</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -438,10 +453,11 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -464,10 +480,11 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Equal</Operator>
           <EnumValues />
@@ -482,6 +499,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
@@ -508,6 +526,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -534,6 +553,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
@@ -561,6 +581,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -579,6 +600,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Customer Contact</DisplayName>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
@@ -606,6 +628,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -624,6 +647,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Supplier</DisplayName>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
@@ -651,6 +675,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>None</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -669,6 +694,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Shipper</DisplayName>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
@@ -696,6 +722,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -714,6 +741,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
@@ -740,6 +768,7 @@ AND [751aed67-d06d-4c94-95a0-6c494f63a80a]
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
@@ -763,10 +792,11 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -789,10 +819,11 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -807,10 +838,11 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -833,10 +865,11 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -851,10 +884,11 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -877,10 +911,11 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
+          <Required>false</Required>
           <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Default</NumericStandardFormatRe>
-          <FormatRe />
+          <FormatRe>N0</FormatRe>
           <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
@@ -894,7 +929,7 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
   </Models>
   <Outputs />
   <Tasks />
-  <CommunTaskScript />
+  <TasksScript />
   <Views>
     <ReportView>
       <GUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</GUID>
@@ -910,9 +945,9 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <UseCustomConfiguration>false</UseCustomConfiguration>
           <UseCustomTemplate>false</UseCustomTemplate>
           <Parameters />
+          <CultureName />
           <CSS />
           <SortOrder>1</SortOrder>
-          <CultureName />
           <ChartConfigurationXml />
           <PdfConfigurations />
           <ExcelConfigurations />
@@ -925,17 +960,17 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
       <UseCustomTemplate>false</UseCustomTemplate>
       <Parameters>
         <Parameter>
-          <Name>force_execution</Name>
-          <Value>True</Value>
-        </Parameter>
-        <Parameter>
           <Name>result_button</Name>
           <Value>True</Value>
         </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
       </Parameters>
+      <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
-      <CultureName />
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
@@ -953,9 +988,9 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
           <UseCustomConfiguration>false</UseCustomConfiguration>
           <UseCustomTemplate>false</UseCustomTemplate>
           <Parameters />
+          <CultureName />
           <CSS />
           <SortOrder>1</SortOrder>
-          <CultureName />
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
@@ -966,14 +1001,15 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
       <UseCustomConfiguration>false</UseCustomConfiguration>
       <UseCustomTemplate>false</UseCustomTemplate>
       <Parameters />
+      <CultureName />
       <CSS />
       <SortOrder>1</SortOrder>
-      <CultureName />
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
   </Views>
   <DisplayName />
+  <InitScript />
   <ViewGUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</ViewGUID>
   <Schedules />
 </Report>

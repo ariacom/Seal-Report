@@ -21,9 +21,11 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Folders").SetIsBrowsable(true);
+                GetProperty("Columns").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("Theme").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
+                GetProperty("PersonalFolder").SetIsBrowsable(true);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -39,12 +41,29 @@ namespace Seal.Model
         }
 
         private List<SecurityFolder> _folders = new List<SecurityFolder>();
-        [Category("Definition"), DisplayName("Folders"), Description("The folder configurations for this group. Only one path folder can be configured per security security group."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Folders"), Description("The folder configurations for this group used for Web Publication. By default repository folders have no right."), Id(2, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityFolder> Folders
         {
             get { return _folders; }
             set { _folders = value; }
+        }
+
+        bool _personalFolder = true;
+        [Category("Definition"), DisplayName("Private folder"), Description("If true, each user of the group has a dedicated personal folder with full rights."), Id(3, 1)]
+        public bool PersonalFolder
+        {
+            get { return _personalFolder; }
+            set { _personalFolder = value; }
+        }
+
+        private List<SecurityColumn> _columns = new List<SecurityColumn>();
+        [Category("Definition"), DisplayName("Columns"), Description("The columns configurations for this group used for Web Publication. Set rights to data source columns through the security tags or categories assigned. By default all columns have full rights."), Id(4, 1)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<SecurityColumn> Columns
+        {
+            get { return _columns; }
+            set { _columns = value; }
         }
 
         string _culture = "";

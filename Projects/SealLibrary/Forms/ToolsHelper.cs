@@ -327,6 +327,7 @@ namespace Seal.Forms
                     log.Log("Checking report '{0}'", reportPath);
                     count++;
                     Report report = Report.LoadFromFile(reportPath, repository);
+                    if (!string.IsNullOrEmpty(report.LoadErrors)) throw new Exception(string.Format("Error loading the report: {0}", report.LoadErrors));
                     report.CheckingExecution = true;
                     if (report.Tasks.Count > 0) log.Log("Warning: Report Task executions are skipped.");
                     foreach (ReportView view in report.Views)
@@ -392,6 +393,8 @@ namespace Seal.Forms
             {
                 log.Log("Starting Check Report Executions\r\n");
                 checkExecutions(log, repository.ReportsFolder, repository, ref count, ref errorCount, errorSummary);
+                log.Log("Checking personal folders\r\n");
+                checkExecutions(log, repository.PersonalFolder, repository, ref count, ref errorCount, errorSummary);
             }
             catch (Exception ex)
             {
@@ -483,7 +486,7 @@ namespace Seal.Forms
         {
             foreach (var fileName in Directory.GetFiles(path))
             {
-                if (Report.IsSealAttachedFile(fileName)) continue;
+                if (FileHelper.IsSealAttachedFile(fileName)) continue;
                 translations.AppendFormat("FileName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(fileName.Substring(len)), Helper.QuoteDouble(Path.GetFileNameWithoutExtension(fileName)), extraSeparators);
             }
 
@@ -644,6 +647,8 @@ namespace Seal.Forms
                 if (!Helper.IsMachineAdministrator() && !useCurrentUser) log.Log("WARNING: For this tool, we recommend to execute the 'Server Manager' application with the option 'Run as administrator'\r\n");
 
                 SynchronizeSchedules(log, repository.ReportsFolder, repository, ref count, ref errorCount, errorSummary, useCurrentUser);
+                log.Log("Checking personal folders\r\n");
+                SynchronizeSchedules(log, repository.PersonalFolder, repository, ref count, ref errorCount, errorSummary, useCurrentUser);
 
                 log.Log("Checking for Orphan tasks\r\n");
 

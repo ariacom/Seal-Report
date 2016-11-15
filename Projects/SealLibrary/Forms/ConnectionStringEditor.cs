@@ -30,6 +30,23 @@ namespace Seal.Forms
 
         private string PromptForConnectionString(MetaConnection connection, string currentConnectionString, string initialConnectionString)
         {
+            /* Try with DataConnectionDialog, but unable to select OleDbSource first... we keep MSDASC :-(
+             * 
+                DataConnectionDialog dcd = new DataConnectionDialog();
+
+            DataSource.AddStandardDataSources(dcd);
+
+
+            dcd.SelectedDataSource = DataSource.OdbcDataSource;
+
+            //            dcd.DataSources.Add(DataSource.OdbcDataSource);
+            //            dcd.DataSources.Add(DataSource.);
+
+            if (DataConnectionDialog.Show(dcd) == DialogResult.OK)
+            {
+
+             */
+
             MSDASC.DataLinks dataLinks = new MSDASC.DataLinks();
 
             string generatedConnectionString = currentConnectionString;

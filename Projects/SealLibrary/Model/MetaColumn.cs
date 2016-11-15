@@ -31,6 +31,7 @@ namespace Seal.Model
                 GetProperty("Type").SetIsBrowsable(true);
                 GetProperty("IsAggregate").SetIsBrowsable(IsSQL);
                 GetProperty("Category").SetIsBrowsable(true);
+                GetProperty("Tag").SetIsBrowsable(true);
                 GetProperty("DisplayName").SetIsBrowsable(true);
                 GetProperty("DisplayOrder").SetIsBrowsable(true);
                 GetProperty("Format").SetIsBrowsable(true);
@@ -145,9 +146,16 @@ namespace Seal.Model
             set { _category = value; }
         }
 
+        private string _tag;
+        [Category("Security"), DisplayName("Security Tag"), Description("Tag used to define the security of the Web Report Editor (Columns of the Security Groups defined in the Web Security)."), Id(2, 2)]
+        public string Tag
+        {
+            get { return string.IsNullOrEmpty(_tag) ? "" : _tag; }
+            set { _tag = value; }
+        }
 
         protected string _displayName;
-        [Category("Display"), DisplayName("Display Name"), Description("Name used to display the column in the Report Designer tree view and in the report results."), Id(2, 2)]
+        [Category("Display"), DisplayName("Display Name"), Description("Name used to display the column in the Report Designer tree view and in the report results."), Id(3, 2)]
         public string DisplayName
         {
             get { return _displayName; }
@@ -155,7 +163,7 @@ namespace Seal.Model
         }
 
         int _displayOrder = 0;
-        [Category("Display"), DisplayName("Display Order"), Description("The order number used to sort the column in the tree view (by table and by category)."), Id(3, 2)]
+        [Category("Display"), DisplayName("Display Order"), Description("The order number used to sort the column in the tree view (by table and by category)."), Id(4, 2)]
         public int DisplayOrder
         {
             get { return _displayOrder; }
@@ -274,7 +282,7 @@ namespace Seal.Model
         }
 
         private bool? _hasHTMLTags = null;
-        [Category("Options"), DisplayName("Contains HTML"), Description("If true, the result of the column contains HTML tags that will be used in the report result. If empty, the default value is used."), Id(5, 3)]
+        [Category("Options"), DisplayName("Contains HTML"), Description("If true, the result of the column contains HTML tags that will be used in the report result."), Id(5, 3)]
         public bool? HasHTMLTags
         {
             get { return _hasHTMLTags; }

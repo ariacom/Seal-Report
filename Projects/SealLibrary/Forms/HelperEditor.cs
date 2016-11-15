@@ -315,6 +315,7 @@ namespace Seal.Forms
                             if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction += "\r\nAND ";
                             model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
                         }
+                        model.InitReferences();
 
                         report.SaveToFile(path);
                         _metaColumn.SubReports.Add(sr);

@@ -3,34 +3,6 @@
   <GUID>f519ae4f-e032-4ada-9e2f-c89fd61abab3</GUID>
   <Sources>
     <ReportSource>
-      <GUID>3d13e3f0-8ca5-4a7c-804e-f5cf273df6ae</GUID>
-      <Name>Databank Worldbank (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
-      <Connections />
-      <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IgnorePrePostError>false</IgnorePrePostError>
-      <MetaData>
-        <Tables>
-          <MetaTable>
-            <GUID>8f6f898a-b156-422e-8ffd-2040da8e7b77</GUID>
-            <Alias>SealMasterTable</Alias>
-            <DynamicColumns>true</DynamicColumns>
-            <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
-            <Columns />
-          </MetaTable>
-        </Tables>
-        <Joins />
-        <Enums />
-      </MetaData>
-      <MetaSourceGUID>c15b5e0c-ba34-4a1b-98b4-c5876f2210eb</MetaSourceGUID>
-    </ReportSource>
-    <ReportSource>
       <GUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</GUID>
       <Name>Northwind (Repository)</Name>
       <ConnectionFolder />
@@ -41,6 +13,10 @@
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
+      <NumericFormat>N0</NumericFormat>
+      <DateTimeFormat>d</DateTimeFormat>
+      <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -48,6 +24,7 @@
             <GUID>509563f6-f3fd-4dcf-9be8-8e53e5c92496</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
             <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
@@ -68,7 +45,6 @@
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
-      <ShowDuplicateRows>false</ShowDuplicateRows>
       <Elements />
       <Restriction />
       <Restrictions />
@@ -82,10 +58,6 @@
       <GUID>27bcb127-6bb1-431a-a9aa-f8ff5d319473</GUID>
       <Name>Refresh enumerated lists</Name>
       <CancelReport>false</CancelReport>
-      <Message>
-        <Capacity>16</Capacity>
-        <Length>0</Length>
-      </Message>
       <DbInfoMessage>
         <Capacity>16</Capacity>
         <Length>0</Length>
@@ -107,6 +79,7 @@
       <SortOrder>1</SortOrder>
     </ReportTask>
   </Tasks>
+  <TasksScript />
   <Views>
     <ReportView>
       <GUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</GUID>
@@ -123,13 +96,15 @@
           <Value>True</Value>
         </Parameter>
       </Parameters>
+      <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
-      <CultureName />
       <PdfConfigurations />
+      <ExcelConfigurations />
     </ReportView>
   </Views>
   <DisplayName />
+  <InitScript />
   <ViewGUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</ViewGUID>
   <Schedules />
 </Report>

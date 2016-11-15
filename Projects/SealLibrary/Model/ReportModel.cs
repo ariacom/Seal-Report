@@ -519,20 +519,24 @@ namespace Seal.Model
             i = Restrictions.Count;
             while (--i >= 0)
             {
-                if (Restrictions[i].MetaColumn == null)
+                if (string.IsNullOrWhiteSpace(Restriction)) Restrictions.RemoveAt(i);
+                else if (Restrictions[i].MetaColumn == null)
                 {
-                    Restriction = Restriction.Replace(Restrictions[i].GUID, "(Warning) Restriction lost: " + Restrictions[i].Name);
+                    if (Restriction != null) Restriction = Restriction.Replace(Restrictions[i].GUID, "(Warning) Restriction lost: " + Restrictions[i].Name );
                     Restrictions.RemoveAt(i);
                 }
+                else if (!Restriction.Contains(Restrictions[i].GUID)) Restrictions.RemoveAt(i);
             }
             i = AggregateRestrictions.Count;
             while (--i >= 0)
             {
+                if (string.IsNullOrWhiteSpace(AggregateRestriction)) AggregateRestrictions.RemoveAt(i);
                 if (AggregateRestrictions[i].MetaColumn == null)
                 {
-                    AggregateRestriction = AggregateRestriction.Replace(AggregateRestrictions[i].GUID, "(Warning) Restriction lost: " + AggregateRestrictions[i].Name);
+                    if (AggregateRestriction != null) AggregateRestriction = AggregateRestriction.Replace(AggregateRestrictions[i].GUID, "(Warning) Restriction lost: " + AggregateRestrictions[i].Name);
                     AggregateRestrictions.RemoveAt(i);
                 }
+                else if (!AggregateRestriction.Contains(AggregateRestrictions[i].GUID)) AggregateRestrictions.RemoveAt(i);
             }
         }
 

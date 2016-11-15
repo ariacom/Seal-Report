@@ -841,14 +841,14 @@ namespace Seal.Model
                     if (Model.Source.IsNoSQL)
                     {
                         //Between is not supported for NoSQL
-                        _SQLText += SQLColumn + ">=" + GetSQLValue(Value1, FinalDate1, _operator);
-                        _SQLText += " AND " + SQLColumn + "<=" + GetSQLValue(Value2, FinalDate2, _operator);
+                        _SQLText += "(" + SQLColumn + ">=" + GetSQLValue(Value1, FinalDate1, _operator);
+                        _SQLText += " AND " + SQLColumn + "<=" + GetSQLValue(Value2, FinalDate2, _operator) + ")";
                     }
                     else
                     {
-                        _SQLText += SQLColumn + " " + sqlOperator + " ";
+                        _SQLText += "(" + SQLColumn + " " + sqlOperator + " ";
                         _SQLText += GetSQLValue(Value1, FinalDate1, _operator);
-                        _SQLText += " AND " + GetSQLValue(Value2, FinalDate2, _operator);
+                        _SQLText += " AND " + GetSQLValue(Value2, FinalDate2, _operator) + ")";
                     }
                 }
                 else if (_operator == Operator.Equal || _operator == Operator.NotEqual)
