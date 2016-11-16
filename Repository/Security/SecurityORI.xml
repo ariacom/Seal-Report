@@ -12,7 +12,7 @@
           <Path>\</Path>
           <UseSubFolders>true</UseSubFolders>
           <ManageFolder>false</ManageFolder>
-          <FolderRight>Edit</FolderRight>
+          <FolderRight>Execute</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
       </Folders>

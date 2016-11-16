@@ -126,4 +126,11 @@ namespace Seal.Model
         public SWIView[] views;
         public SWIOutput[] outputs;
     }
+
+    public class SWIItem
+    {
+        public string id;
+        public string val;
+    }
+
 }

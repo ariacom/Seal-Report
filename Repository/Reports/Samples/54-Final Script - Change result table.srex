@@ -567,29 +567,7 @@
       <AggregateRestrictions />
     </ReportModel>
   </Models>
-  <Outputs>
-    <ReportOutput>
-      <GUID>61a162ec-06ff-4028-ab4d-c636ce33f230</GUID>
-      <Name>Output</Name>
-      <CancelIfNoRecords>false</CancelIfNoRecords>
-      <PreScript />
-      <PostScript />
-      <ViewParameters />
-      <ViewCSS />
-      <ViewGUID>cdbccd20-d833-4783-ac0c-4f0ae9fb83f4</ViewGUID>
-      <FolderPath>%SEALPERSONALREPOSITORY%\aa_97</FolderPath>
-      <FileName>Test3</FileName>
-      <EmailHtmlBody>false</EmailHtmlBody>
-      <EmailMessagesInBody>false</EmailMessagesInBody>
-      <EmailZipAttachments>false</EmailZipAttachments>
-      <EmailZipPassword />
-      <EmailSkipAttachments>false</EmailSkipAttachments>
-      <UserName>aa</UserName>
-      <UserGroups>aa;</UserGroups>
-      <UseCustomRestrictions>false</UseCustomRestrictions>
-      <Restrictions />
-    </ReportOutput>
-  </Outputs>
+  <Outputs />
   <Tasks />
   <TasksScript />
   <Views>
@@ -631,39 +609,6 @@
           <Value>True</Value>
         </Parameter>
       </Parameters>
-      <CultureName />
-      <CSS />
-      <SortOrder>0</SortOrder>
-      <PdfConfigurations />
-      <ExcelConfigurations />
-    </ReportView>
-    <ReportView>
-      <GUID>d1f41aa5-bb32-47fd-90c7-e2dcbf476a5c</GUID>
-      <Name>view Excel</Name>
-      <Views>
-        <ReportView>
-          <GUID>2c6c9efd-fea7-492b-8e8a-ae9439c2c723</GUID>
-          <Name>Model CSV Excel View</Name>
-          <Views />
-          <ModelGUID>ee8de4d1-1c22-42bf-8c6f-2afd971d4369</ModelGUID>
-          <TemplateName>Model CSV Excel</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <UseCustomTemplate>false</UseCustomTemplate>
-          <Parameters />
-          <CultureName />
-          <CSS />
-          <SortOrder>1</SortOrder>
-          <PdfConfigurations />
-          <ExcelConfigurations />
-        </ReportView>
-      </Views>
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
-      <Parameters />
       <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
