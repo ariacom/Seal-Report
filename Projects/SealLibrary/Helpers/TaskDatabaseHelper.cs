@@ -16,7 +16,8 @@ namespace Seal.Helpers
     public delegate string CustomGetTableCreateCommand(DataTable table);
 
     public delegate string CustomGetTableColumnNames(DataTable table);
-    public delegate string CustomGetTableColumnName(string columnName);
+    public delegate string CustomGetTableColumnName(DataColumn col);
+    public delegate string CustomGetTableColumnType(DataColumn col);
 
     public delegate string CustomGetTableColumnValues(DataRow row, string dateTimeFormat);
     public delegate string CustomGetTableColumnValue(DataRow row, DataColumn col, string datetimeFormat);
@@ -30,6 +31,7 @@ namespace Seal.Helpers
         //Config, may be overwritten
         public string ColumnCharType = "";
         public string ColumnNumericType = "";
+        public string ColumnIntegerType = "";
         public string ColumnDateTimeType = "";
         public string InsertStartCommand = "";
         public string InsertEndCommand = "";
@@ -47,6 +49,7 @@ namespace Seal.Helpers
 
         public CustomGetTableColumnNames MyGetTableColumnNames = null;
         public CustomGetTableColumnName MyGetTableColumnName = null;
+        public CustomGetTableColumnType MyGetTableColumnType = null;
 
         public CustomGetTableColumnValues MyGetTableColumnValues = null;
         public CustomGetTableColumnValue MyGetTableColumnValue = null;
@@ -57,6 +60,7 @@ namespace Seal.Helpers
 
 
         string _defaultColumnCharType = "";
+        string _defaultColumnIntegerType = "";
         string _defaultColumnNumericType = "";
         string _defaultColumnDateTimeType = "";
         string _defaultInsertStartCommand = "";
@@ -186,6 +190,7 @@ namespace Seal.Helpers
             {
                 _defaultColumnCharType = "varchar2";
                 _defaultColumnNumericType = "number(18,3)";
+                _defaultColumnIntegerType = "number(12)";
                 _defaultColumnDateTimeType = "date";
                 _defaultInsertStartCommand = "begin";
                 _defaultInsertEndCommand = "end;";
@@ -195,6 +200,7 @@ namespace Seal.Helpers
                 //Default, tested on SQLServer...
                 _defaultColumnCharType = "varchar";
                 _defaultColumnNumericType = "numeric(18,3)";
+                _defaultColumnIntegerType = "int";
                 _defaultColumnDateTimeType = "datetime";
                 _defaultInsertStartCommand = "";
                 _defaultInsertEndCommand = "";
@@ -268,69 +274,105 @@ namespace Seal.Helpers
             }
         }
 
-        public string GetTableCreateCommand(DataTable table)
+        public string RootGetTableCreateCommand(DataTable table)
         {
-            if (MyGetTableCreateCommand != null) return MyGetTableCreateCommand(table);
-
             StringBuilder result = new StringBuilder();
             foreach (DataColumn col in table.Columns)
             {
                 if (result.Length > 0) result.Append(',');
-                result.AppendFormat("{0} ", GetTableColumnName(col.ColumnName));
-                if (col.DataType.Name == "Int32" || col.DataType.Name == "Integer" || col.DataType.Name == "Double" || col.DataType.Name == "Decimal" || col.DataType.Name == "Number")
-                {
-                    result.Append(Helper.IfNullOrEmpty(ColumnNumericType, _defaultColumnNumericType));
-                }
-                else if (col.DataType.Name == "DateTime")
-                {
-                    result.Append(Helper.IfNullOrEmpty(ColumnDateTimeType, _defaultColumnDateTimeType));
-                }
-                else
-                {
-                    int len = col.MaxLength;
-                    if (len <= 0) len = ColumnCharLength;
-                    if (ColumnCharLength <= 0)
-                    {
-                        //auto size
-                        len = 1;
-                        foreach (DataRow row in table.Rows)
-                        {
-                            if (row[col].ToString().Length > len) len = row[col].ToString().Length + 1;
-                        }
-                    }
-                    result.AppendFormat("{0}({1})", Helper.IfNullOrEmpty(ColumnCharType, _defaultColumnCharType), len);
-                }
+                result.AppendFormat("{0} ", GetTableColumnName(col));
+                result.Append(GetTableColumnType(col));
                 result.Append(" NULL");
             }
 
             return string.Format("CREATE TABLE {0} ({1})", CleanName(table.TableName), result);
         }
 
-        public string GetTableColumnNames(DataTable table)
-        {
-            if (MyGetTableColumnNames != null) return MyGetTableColumnNames(table);
 
+        public string GetTableCreateCommand(DataTable table)
+        {
+            if (MyGetTableCreateCommand != null) return MyGetTableCreateCommand(table);
+            return RootGetTableCreateCommand(table);
+        }
+
+        public string RootGetTableColumnNames(DataTable table)
+        {
             StringBuilder result = new StringBuilder();
             foreach (DataColumn col in table.Columns)
             {
                 if (result.Length > 0) result.Append(',');
-                result.AppendFormat("{0}", GetTableColumnName(col.ColumnName));
+                result.AppendFormat("{0}", GetTableColumnName(col));
             }
             return result.ToString();
-
         }
 
-        public string GetTableColumnName(string columnName)
+        public string GetTableColumnNames(DataTable table)
         {
-            if (MyGetTableColumnName != null) return MyGetTableColumnName(columnName);
-
-            return CleanName(columnName);
+            if (MyGetTableColumnNames != null) return MyGetTableColumnNames(table);
+            return RootGetTableColumnNames(table);
         }
 
-        public string GetTableColumnValues(DataRow row, string dateTimeFormat)
+        public string RootGetTableColumnName(DataColumn col)
         {
-            if (MyGetTableColumnValues != null) return MyGetTableColumnValues(row, dateTimeFormat);
+            return CleanName(col.ColumnName);
+        }
 
+        public string GetTableColumnName(DataColumn col)
+        {
+            if (MyGetTableColumnName != null) return MyGetTableColumnName(col);
+            return RootGetTableColumnName(col);
+        }
+
+        public string RootGetTableColumnType(DataColumn col)
+        {
+            StringBuilder result = new StringBuilder();
+            if (col.DataType.Name == "Int32" || col.DataType.Name == "Integer" || col.DataType.Name == "Double" || col.DataType.Name == "Decimal" || col.DataType.Name == "Number")
+            {
+                //Check for integer
+                bool isInteger = true;
+                foreach (DataRow row in col.Table.Rows)
+                {
+                    int a;
+                    if (!row.IsNull(col) && !int.TryParse(row[col].ToString(), out a))
+                    {
+                        isInteger = false;
+                        break;
+                    }
+                }
+
+                if (isInteger) result.Append(Helper.IfNullOrEmpty(ColumnIntegerType, _defaultColumnIntegerType));
+                else result.Append(Helper.IfNullOrEmpty(ColumnNumericType, _defaultColumnNumericType));
+            }
+            else if (col.DataType.Name == "DateTime")
+            {
+                result.Append(Helper.IfNullOrEmpty(ColumnDateTimeType, _defaultColumnDateTimeType));
+            }
+            else
+            {
+                int len = col.MaxLength;
+                if (len <= 0) len = ColumnCharLength;
+                if (ColumnCharLength <= 0)
+                {
+                    //auto size
+                    len = 1;
+                    foreach (DataRow row in col.Table.Rows)
+                    {
+                        if (row[col].ToString().Length > len) len = row[col].ToString().Length + 1;
+                    }
+                }
+                result.AppendFormat("{0}({1})", Helper.IfNullOrEmpty(ColumnCharType, _defaultColumnCharType), len);
+            }
+            return result.ToString();
+        }
+
+        public string GetTableColumnType(DataColumn col)
+        {
+            if (MyGetTableColumnType != null) return MyGetTableColumnType(col);
+            return RootGetTableColumnType(col);
+        }
+
+        public string RootGetTableColumnValues(DataRow row, string dateTimeFormat)
+        {
             StringBuilder result = new StringBuilder();
             foreach (DataColumn col in row.Table.Columns)
             {
@@ -340,10 +382,15 @@ namespace Seal.Helpers
             return result.ToString();
         }
 
-        public string GetTableColumnValue(DataRow row, DataColumn col, string dateTimeFormat)
-        {
-            if (MyGetTableColumnValue != null) return MyGetTableColumnValue(row, col, dateTimeFormat);
 
+        public string GetTableColumnValues(DataRow row, string dateTimeFormat)
+        {
+            if (MyGetTableColumnValues != null) return MyGetTableColumnValues(row, dateTimeFormat);
+            return RootGetTableColumnValues(row, dateTimeFormat);
+        }
+
+        public string RootGetTableColumnValue(DataRow row, DataColumn col, string dateTimeFormat)
+        {
             StringBuilder result = new StringBuilder();
             if (row.IsNull(col))
             {
@@ -365,6 +412,12 @@ namespace Seal.Helpers
             }
 
             return result.ToString();
+        }
+
+        public string GetTableColumnValue(DataRow row, DataColumn col, string dateTimeFormat)
+        {
+            if (MyGetTableColumnValue != null) return MyGetTableColumnValue(row, col, dateTimeFormat);
+            return RootGetTableColumnValue(row, col, dateTimeFormat);
         }
 
         public bool AreTablesIdentical(DataTable checkTable1, DataTable checkTable2)
