@@ -195,6 +195,8 @@ namespace Seal.Forms
                             if (message != null) message.SetAttribute("innerHTML", _report.ExecutionHeader);
                             HtmlElement messages = webBrowser.Document.All[ReportExecution.HtmlId_execution_messages];
                             if (messages != null) messages.SetAttribute("innerHTML", Helper.ToHtml(_report.ExecutionMessages));
+                            HtmlElement body = webBrowser.Document.All[ReportExecution.HtmlId_body_div];
+                            if (body != null) body.ScrollTop = body.ScrollRectangle.Height;
                         }
                         else if (!_reportDone)
                         {
