@@ -48,6 +48,7 @@ namespace Seal.Model
         public const string HtmlId_header_form = "header_form";
         public const string HtmlId_processing_message = "processing_message";
         public const string HtmlId_execution_messages = "execution_messages";
+        public const string HtmlId_body_div = "body_div";
         public const string HtmlId_parameter_view_id = "parameter_view_id";
         public const string HtmlId_parameter_view_name = "parameter_view_name";
         public const string HtmlId_parameter_view_value = "parameter_view_value";

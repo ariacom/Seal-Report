@@ -276,7 +276,7 @@ namespace Seal
             saveToolStripMenuItem.Enabled = (_report != null);
             saveToolStripButton.Enabled = saveToolStripMenuItem.Enabled;
             saveAsToolStripMenuItem.Enabled = (_report != null);
-            reloadToolStripMenuItem.Enabled = (_report != null);
+            reloadToolStripMenuItem.Enabled = (_report != null && !string.IsNullOrEmpty(Path.GetDirectoryName(_report.FilePath)));
             MRUToolStripMenuItem.Enabled = (MRUToolStripMenuItem.DropDownItems.Count > 0);
             closeToolStripMenuItem.Enabled = (_report != null);
             executeToolStripMenuItem.Enabled = (_report != null && (_reportViewer == null || (_reportViewer != null && _reportViewer.CanExecute)));

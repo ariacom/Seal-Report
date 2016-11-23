@@ -219,14 +219,17 @@ function executeTimer() {
 		            }
 		            else if (data.processing_message != null && data.execution_messages != null) {
 		                $("#processing_message").html(data.processing_message);
-		                if (displayMessages) $("#execution_messages").html(data.execution_messages);
+		                if (displayMessages) {
+		                    $("#execution_messages").html(data.execution_messages);
+		                    $("#body_div").scrollTop($("#body_div")[0].scrollHeight);
+                        }
 		            }
 		            else if (data.error != null) {
 		                $("#processing_message").html(data.error);
 		                clearInterval(executionTimer);
 		                $("#wait_image").css("display", "none");
 		                $("#execute_button").css("display", "none");
-		            }
+                    }
 		        });
         }
         else {
