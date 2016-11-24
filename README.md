@@ -31,7 +31,7 @@ Use the <a href="http://forum.sealreport.org" target=_blank>Seal Report Forum</a
 ![HTML Report Result](http://sealreport.org/Images/reportResult.png)
 
 ## Web Report Server
-![Web Report Server](http://sealreport.org/Images/webServer.png)
+![Web Report Server](http://sealreport.org/Images/webServer2.png)
 
 ##System Requirements
 **For use:**
