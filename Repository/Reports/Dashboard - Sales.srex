@@ -4203,7 +4203,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:350px; width:550px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:530px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
@@ -4301,7 +4301,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:350px; width:500px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:450px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>0</SortOrder>
@@ -4372,7 +4372,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:350px; width:550px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:530px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>1</SortOrder>
@@ -4466,7 +4466,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:350px; width:500px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:450px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>2</SortOrder>
@@ -4521,7 +4521,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart</Name>
-                      <Value>height:350px; width:550px; page-break-inside:avoid;</Value>
+                      <Value>height:350px; width:530px; page-break-inside:avoid;</Value>
                     </Parameter>
                   </CSS>
                   <SortOrder>1</SortOrder>
