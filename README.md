@@ -13,8 +13,8 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **No SQL Data Sources:**
 Fill up your source Data Tables from your own code and display them in a report.
 * **HTML Rendering using Razor engine**: Use the power of HTML5 in the report result (JQuery Tabs, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
-* **Web Report Server**: Publish your reports on the web (requires Internet Information Server 7 or 8 with MVC4)
-* **Task scheduler**: Schedule your report executions and generate results in folders or send them by emails (integrated with the Windows Tasks Scheduler)
+* **Web Report Server**: Publish and edit your reports on the web (requires Internet Information Server 7 or 8 with MVC4).
+* **Task scheduler**: Schedule your report executions and generate results in folders or send them by emails (integrated with the Windows Tasks Scheduler).
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
 
 A **live demonstration** of the <a href="http://demo.sealreport.org" target=_blank>Web Report Server</a> is available.
