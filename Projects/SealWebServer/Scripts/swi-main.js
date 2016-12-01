@@ -24,7 +24,6 @@ var SWIMain = (function () {
         this._folder = null;
         this._searchMode = false;
         this._clipboardCut = false;
-        this._autoLogin = false;
         this._folderpath = "\\";
     }
     SWIMain.prototype.Process = function () {
@@ -66,7 +65,6 @@ var SWIMain = (function () {
     SWIMain.prototype.loginSuccess = function (data) {
         _main._connected = true;
         _main._profile = data;
-        _main._autoLogin = (_main._profile.name == "");
         $loginModal.modal('hide');
         SWIUtil.HideMessages();
         $(".navbar-right").show();
@@ -146,17 +144,15 @@ var SWIMain = (function () {
             $("#profile-dialog").modal();
         });
         //Disconnect
-        if (!_main._autoLogin) {
-            $("#disconnect-nav-item").unbind('click').on("click", function (e) {
-                SWIUtil.HideMessages();
-                $outputPanel.hide();
-                _gateway.Logout(function (e) {
-                    _main._connected = false;
-                    $("#main-container").css("display", "none");
-                    _main.showLogin();
-                });
+        $("#disconnect-nav-item").unbind('click').on("click", function (e) {
+            SWIUtil.HideMessages();
+            $outputPanel.hide();
+            _gateway.Logout(function (e) {
+                _main._connected = false;
+                $("#main-container").css("display", "none");
+                _main.showLogin();
             });
-        }
+        });
         //Delete reports
         $("#report-delete-lightbutton").unbind('click').on("click", function (e) {
             $outputPanel.hide();
@@ -225,7 +221,6 @@ var SWIMain = (function () {
             $outputPanel.hide();
             if (_main._clipboard && _main._clipboard.length > 0) {
                 $waitDialog.modal();
-                var todo = _main._clipboard.length;
                 _main._clipboard.forEach(function (value, index) {
                     var newName = value.split('\\').pop().split('/').pop();
                     var folder = _main._folder.path;
@@ -283,7 +278,6 @@ var SWIMain = (function () {
         if (_main._folder)
             right = _main._folder.right;
         $outputPanel.hide();
-        SWIUtil.ShowHideControl($("#disconnect-nav-item").parent(), !_main._autoLogin);
         SWIUtil.EnableButton($("#report-edit-lightbutton"), right >= folderRightEdit);
         SWIUtil.ShowHideControl($("#report-edit-lightbutton"), hasEditor);
         var checked = $(".report-checkbox:checked").length;
@@ -369,7 +363,7 @@ var SWIMain = (function () {
         }
         var $cb = $("#selectall-checkbox");
         $cb.prop("checked", false);
-        $("#selectall-checkbox").unbind("click").bind("click", function (e) {
+        $("#selectall-checkbox").unbind("click").bind("click", function () {
             $(".report-checkbox").each(function (key, value) {
                 var isChecked = $cb.is(':checked');
                 $(value).prop("checked", isChecked);
@@ -406,7 +400,7 @@ var SWIMain = (function () {
                 'left': $target.offset().left - 120,
                 'top': $target.offset().top + $target.height() + 10
             }).show();
-            $("#output-panel-close").on("click", function (e) {
+            $("#output-panel-close").on("click", function () {
                 $outputPanel.hide();
             });
             _gateway.GetReportDetail($target.parent().data("path"), function (data) {
@@ -438,9 +432,6 @@ var SWIMain = (function () {
                 SWIUtil.ShowMessage("alert-danger", data.error, 0);
                 $outputPanel.hide();
             });
-        });
-        $("th").click(function () {
-            var e = $(this);
         });
         if (_editor)
             _editor.init();
