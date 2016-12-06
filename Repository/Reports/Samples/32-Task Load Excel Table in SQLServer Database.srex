@@ -119,11 +119,14 @@
 	/* configuration of the database helper may be changed to control the table creation and load...	
 	helper.DatabaseHelper.ColumnCharType = "";
 	helper.DatabaseHelper.ColumnNumericType = "";
+	helper.DatabaseHelper.ColumnIntegerType = "";
 	helper.DatabaseHelper.ColumnDateTimeType = "";
 	
-	helper.DatabaseHelper.ColumnCharLength = 400;
+	helper.DatabaseHelper.ColumnCharLength = 400; //0 means auto-size
 	helper.DatabaseHelper.InsertBurstSize = 500;
 	helper.DatabaseHelper.ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
+	helper.DatabaseHelper.DefaultEncoding = Encoding.Default;
+	TrimText = true;
 	helper.DatabaseHelper.DebugMode = false;
 	*/
 	helper.LoadTableFromExcel(
