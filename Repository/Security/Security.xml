@@ -11,12 +11,14 @@
 	//user.WebPassword -&gt; password from the login screen
 
 	user.Name = user.WebUserName; //Display name
-	
-		user.AddDefaultSecurityGroup();
+			user.AddDefaultSecurityGroup();
     //security check can be hardcoded
 	if (user.WebUserName == "aa" &amp;&amp; user.WebPassword == "aa")
 	{
 		user.AddSecurityGroup("aa");
+	}
+	else {
+
 	}
 }</Script>
   <Parameters />
