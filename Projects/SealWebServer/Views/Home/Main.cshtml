@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
     <script src='~/Scripts/bootstrap-3.3.6.min.js'></script>
 
-    <link rel='stylesheet' href='~/Content/jquery-ui-1.11.3.css' />
+    <link rel='stylesheet' href='~/Content/jquery-ui-1.11.3.min.css' />
     <script src='~/Scripts/jquery-ui-1.11.3.min.js'></script>
 
     <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
@@ -70,20 +70,26 @@
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword';
 
-        var hasEditor = @Helper.ToJS(ReportEditor.HasEditor());
+        var hasEditor = @Helper.ToJS(ServerOptions.HasEditor());
     </script>
     <script src='~/Scripts/dataTables.js'></script>
 
-    <script src="~/Scripts/swi-utils.js"></script>
-    <script src="~/Scripts/swi-button-group.js"></script>
-    <script src="~/Scripts/swi-gateway.js"></script>
-    <script src="~/Scripts/swi-main.js"></script>
-    @if (ReportEditor.HasEditor())
+    @if (ServerOptions.IsDebug())
     {
-        <script src="~/Scripts/swi-editor.js"></script>
-        <script src="~/Scripts/swi-properties.js"></script>
+        <script src="~/Scripts/swi-utils.js"></script>
+        <script src="~/Scripts/swi-button-group.js"></script>
+        <script src="~/Scripts/swi-gateway.js"></script>
+        <script src="~/Scripts/swi-main.js"></script>
+        if (ServerOptions.HasEditor())
+        {
+            <script src="~/Scripts/swi-editor.js"></script>
+            <script src="~/Scripts/swi-properties.js"></script>
+        }
     }
-
+    else
+    {
+        <script src="~/Scripts/swi.js"></script>
+    }
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
