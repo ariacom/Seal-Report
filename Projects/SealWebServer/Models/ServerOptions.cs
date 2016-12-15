@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Seal.Model
 {
-    public class ReportEditor
+    public class ServerOptions
     {
         public static bool HasEditor()
         {
@@ -16,5 +16,13 @@ namespace Seal.Model
 #endif
         }
 
+        public static bool IsDebug()
+        {
+#if DEBUG
+            return true;
+#else
+            return false;
+#endif
+        }
     }
 }

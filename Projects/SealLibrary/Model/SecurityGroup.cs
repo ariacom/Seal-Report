@@ -50,7 +50,7 @@ namespace Seal.Model
         }
 
         bool _personalFolder = true;
-        [Category("Definition"), DisplayName("Private folder"), Description("If true, each user of the group has a dedicated personal folder with full rights."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Personal folder"), Description("If true, each user of the group has a dedicated personal folder with full rights."), Id(3, 1)]
         public bool PersonalFolder
         {
             get { return _personalFolder; }

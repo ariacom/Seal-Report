@@ -66,6 +66,7 @@ namespace Seal.Model
                 GetProperty("PreSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PostSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("BuildTimeout").SetIsBrowsable(!Source.IsNoSQL);
 
                 GetProperty("ForceJoinTableGUID").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("AvoidJoinTableGUID").SetIsBrowsable(!Source.IsNoSQL);
@@ -223,6 +224,13 @@ namespace Seal.Model
             set { _ignorePrePostError = value; }
         }
 
+        int _buildTimout = 4000;
+        [Category("SQL"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)."), Id(10, 2)]
+        public int BuildTimeout
+        {
+            get { return _buildTimout; }
+            set { _buildTimout = value; }
+        }
 
         private string _forceJoinTableGUID;
         [Category("Join Preferences"), DisplayName("Join table to use"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to use the table specified."), Id(2, 3)]
@@ -395,10 +403,10 @@ namespace Seal.Model
         }
 
         List<MetaTable> _fromTables;
+        [XmlIgnore]
         public List<MetaTable> FromTables
         {
             get { return _fromTables; }
-
         }
 
         [XmlIgnore]
@@ -572,6 +580,7 @@ namespace Seal.Model
             }
         }
 
+        DateTime _buildTimer;
         public void BuildSQL()
         {
             try
@@ -662,15 +671,25 @@ namespace Seal.Model
                         //multiple tables, find joins...
                         List<MetaTable> tablesToUse = _fromTables.ToList();
                         List<JoinPath> resultPaths = new List<JoinPath>();
+                        JoinPath bestPath = null;
+                        _buildTimer = DateTime.Now;
                         foreach (var leftTable in _fromTables)
                         {
                             JoinPath rootPath = new JoinPath() { currentTable = leftTable, joinsToUse = new List<MetaJoin>(Source.MetaData.Joins) };
                             rootPath.tablesToUse = new List<MetaTable>(_fromTables.Where(i => i.GUID != leftTable.GUID));
                             JoinTables(rootPath, resultPaths);
-                        }
 
+                            //Optimisation: if many result paths, check if we have aready a relevant result, here a number of join almost equal to number of tables to reach
+                            if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout/2)
+                            {
+                                bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
+                                if (bestPath != null && bestPath.joins.Count <= _fromTables.Count + 2) break;
+                                Debug.WriteLine("Exiting the joins search after 2 seconds");
+                            }
+                            //Debug.WriteLine("{0}ms {1}", (DateTime.Now - _timer).TotalMilliseconds, resultPaths.Count);
+                        }
                         //Choose the path having all tables, then preferred, then less joins...
-                        JoinPath bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
+                        if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
                         if (bestPath == null)
                         {
                             //no direct joins found...try using several path...
@@ -825,7 +844,7 @@ namespace Seal.Model
                 Debug.WriteLine("");
                 foreach (var join in joins)
                 {
-                    Debug.Write(string.Format("{0} {1} {2}\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
+                //    Debug.Write(string.Format("{0} {1} {2}\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
                 }
                 Debug.WriteLine("");
 
@@ -836,14 +855,26 @@ namespace Seal.Model
 
         void JoinTables(JoinPath path, List<JoinPath> resultPath)
         {
+            //TODO: optimize speed of this procedure...
+            //If the search is longer than 5 seconds, we exite with the first path found...
+            if ((DateTime.Now - _buildTimer).TotalSeconds > BuildTimeout)
+            {
+                if (resultPath.Exists(i => i.tablesToUse.Count == 0))
+                {
+                    Debug.WriteLine("Exiting the joins search after 5 seconds");
+                    return;
+                }
+            }
+
             if (path.tablesToUse.Count != 0)
             {
                 foreach (var join in path.joinsToUse.Where(i => i.LeftTableGUID == path.currentTable.GUID || (i.RightTableGUID == path.currentTable.GUID && i.IsBiDirectional)))
                 {
-                    JoinPath newJoinPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), joinsToUse = new List<MetaJoin>(path.joinsToUse), rank = path.rank };
+                    //Check that the new table has not already been reached
+                    if (path.joins.Exists(i => i.RightTable == (join.RightTable == path.currentTable && join.IsBiDirectional ? join.LeftTable : join.RightTable))) continue;
+
                     MetaTable newTable = join.RightTable;
                     MetaJoin newJoin = join;
-
                     if (join.RightTable == path.currentTable && join.IsBiDirectional)
                     {
                         //Create a new join having the other left-right
@@ -857,7 +888,9 @@ namespace Seal.Model
                         //In this case the next table is the left one...
                         newTable = join.LeftTable;
                     }
+                    //if (_level == 1) Debug.WriteLine("{0} {1}", resultPath.Count, newTable.Name);
 
+                    JoinPath newJoinPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), joinsToUse = new List<MetaJoin>(path.joinsToUse), rank = path.rank };
                     //add the join and continue the path
                     newJoinPath.currentTable = newTable;
                     newJoinPath.joins.Add(newJoin);

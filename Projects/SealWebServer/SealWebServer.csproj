@@ -129,7 +129,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\ReportEditor.cs" />
+    <Compile Include="Models\ServerOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -201,7 +201,6 @@
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery-ui-1.11.3.min.js" />
     <Content Include="Scripts\jstree.min.js" />
-    <Content Include="Scripts\Main.js" />
     <Content Include="Scripts\nv.d3.min.js" />
     <Content Include="Scripts\jquery.multiple.select.js" />
     <Content Include="Content\multiple-select.png" />

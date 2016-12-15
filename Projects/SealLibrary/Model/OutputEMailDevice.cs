@@ -350,6 +350,9 @@ namespace Seal.Model
         {
             try
             {
+                _error = "";
+                _information = "";
+
                 if (string.IsNullOrEmpty(TestEmailTo)) throw new Exception("No email address has been specified in the destination email.");
                 if (string.IsNullOrEmpty(SenderEmail)) throw new Exception("No sender email address has been specified.");
 

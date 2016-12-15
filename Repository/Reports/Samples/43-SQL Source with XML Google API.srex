@@ -14,6 +14,9 @@
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
+      <NumericFormat>N0</NumericFormat>
+      <DateTimeFormat>d</DateTimeFormat>
+      <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -124,11 +127,15 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -145,6 +152,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>c9e6ae02-fe80-4d07-b033-547b0ef3ebcf</GUID>
@@ -152,11 +161,15 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -173,6 +186,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>a17dc90f-cf54-4da1-b655-019a5ca175ed</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>eea85c61-54ae-4f37-90b7-a83c12a8df83</GUID>
@@ -180,12 +195,16 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -202,6 +221,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>6b6fa5e3-3bd5-4098-af9f-010796d08074</GUID>
@@ -209,11 +230,15 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -230,6 +255,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>424cb01b-ad02-40b4-851e-606105c82e50</GUID>
@@ -237,11 +264,15 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -258,6 +289,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>b88b668a-7cd2-4a1e-9194-2df5a51c7c66</GUID>
@@ -265,12 +298,16 @@
           <Type>Numeric</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Latitude from Google</DisplayName>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Custom</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>N6</Format>
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Numeric</TypeEd>
@@ -289,6 +326,8 @@
           <MetaColumnGUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</MetaColumnGUID>
           <SQL>1.2</SQL>
           <CellScript />
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>4a0993ea-5ac8-4615-a2a3-ce4bd12a2181</GUID>
@@ -296,12 +335,16 @@
           <Type>Numeric</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Longitude from Google</DisplayName>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Custom</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>N6</Format>
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Numeric</TypeEd>
@@ -319,6 +362,8 @@
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</MetaColumnGUID>
           <SQL>1.2</SQL>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>5ce4f08b-93c3-4a9a-b6c4-986bcbbe6238</GUID>
@@ -326,11 +371,15 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Page</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -347,239 +396,19 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction />
       <Restrictions />
       <AggregateRestriction />
       <AggregateRestrictions />
-      <FromTables>
-        <MetaTable>
-          <GUID>61152bde-427a-4113-8f7d-322a1280bede</GUID>
-          <Name>Employees</Name>
-          <DynamicColumns>false</DynamicColumns>
-          <KeepColumnNames>false</KeepColumnNames>
-          <Type>TABLE</Type>
-          <MustRefresh>false</MustRefresh>
-          <IgnorePrePostError>false</IgnorePrePostError>
-          <Columns>
-            <MetaColumn>
-              <GUID>a17dc90f-cf54-4da1-b655-019a5ca175ed</GUID>
-              <Name>Employees.Address</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Address</DisplayName>
-              <DisplayOrder>6</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</GUID>
-              <Name>Employees.BirthDate</Name>
-              <Type>DateTime</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Birth Date</DisplayName>
-              <DisplayOrder>4</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format>d</Format>
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</GUID>
-              <Name>Employees.City</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>City</DisplayName>
-              <DisplayOrder>7</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</GUID>
-              <Name>Employees.Country</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Country</DisplayName>
-              <DisplayOrder>10</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID>a71e58ca-4cd6-4c8b-81c2-aa065abd86d1</EnumGUID>
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>9af39b8d-8b3a-4db2-a093-8abac0fb8e62</GUID>
-              <Name>Employees.Extension</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Extension</DisplayName>
-              <DisplayOrder>12</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>da2dbe92-e90c-4415-b354-1bc589839048</GUID>
-              <Name>Employees.LastName</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Employee Name</DisplayName>
-              <DisplayOrder>1</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID>f2611e98-b25e-450d-a9cc-6811dda32d94</EnumGUID>
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>b4a7f5d4-1045-4c67-b724-578e116ceff5</GUID>
-              <Name>Employees.HireDate</Name>
-              <Type>DateTime</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Hire Date</DisplayName>
-              <DisplayOrder>5</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format>d</Format>
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>9b0f675f-fbb0-4f9c-9dca-9e15039e75ec</GUID>
-              <Name>Employees.HomePhone</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Home Phone</DisplayName>
-              <DisplayOrder>11</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>0a5fef96-fd6b-4d51-bff0-59d458533a57</GUID>
-              <Name>Employees.Notes</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Notes</DisplayName>
-              <DisplayOrder>14</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>3aae4bf3-59e8-4773-887e-1661d6b39ae7</GUID>
-              <Name>Employees.Photo</Name>
-              <Type>Numeric</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Photo</DisplayName>
-              <DisplayOrder>13</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format>N0</Format>
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>68c9c516-8f39-4bad-a5b4-3e0c8009498a</GUID>
-              <Name>Employees.PostalCode</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Postal Code</DisplayName>
-              <DisplayOrder>9</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>80720d2a-0ebf-457b-8539-6eb07205c6c9</GUID>
-              <Name>Employees.Region</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Region</DisplayName>
-              <DisplayOrder>8</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>a042cb87-8838-46a8-a679-3e49f666a7b7</GUID>
-              <Name>Employees.ReportsTo</Name>
-              <Type>Numeric</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Reports To</DisplayName>
-              <DisplayOrder>15</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format>N0</Format>
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>793c07a5-b7bd-41ae-bdea-506ad244005e</GUID>
-              <Name>Employees.Title</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Title</DisplayName>
-              <DisplayOrder>2</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-            <MetaColumn>
-              <GUID>4d365f0e-0e2a-4a58-8411-11fd6d8900db</GUID>
-              <Name>Employees.TitleOfCourtesy</Name>
-              <Type>Text</Type>
-              <IsAggregate>false</IsAggregate>
-              <Category>Employees</Category>
-              <DisplayName>Title Of Courtesy</DisplayName>
-              <DisplayOrder>3</DisplayOrder>
-              <NumericStandardFormat>Numeric0</NumericStandardFormat>
-              <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-              <Format />
-              <EnumGUID />
-              <HasHTMLTags>false</HasHTMLTags>
-            </MetaColumn>
-          </Columns>
-        </MetaTable>
-      </FromTables>
     </ReportModel>
   </Models>
   <Outputs />
   <Tasks />
+  <TasksScript />
   <Views>
     <ReportView>
       <GUID>043a9782-171d-4b3f-af62-f698ef1a7261</GUID>
@@ -595,9 +424,9 @@
           <UseCustomConfiguration>false</UseCustomConfiguration>
           <UseCustomTemplate>false</UseCustomTemplate>
           <Parameters />
+          <CultureName />
           <CSS />
           <SortOrder>1</SortOrder>
-          <CultureName />
           <ChartConfigurationXml />
           <PdfConfigurations />
           <ExcelConfigurations />
@@ -609,9 +438,9 @@
       <UseCustomConfiguration>false</UseCustomConfiguration>
       <UseCustomTemplate>false</UseCustomTemplate>
       <Parameters />
+      <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
-      <CultureName />
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
@@ -629,9 +458,9 @@
           <UseCustomConfiguration>false</UseCustomConfiguration>
           <UseCustomTemplate>false</UseCustomTemplate>
           <Parameters />
+          <CultureName />
           <CSS />
           <SortOrder>1</SortOrder>
-          <CultureName />
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
@@ -642,14 +471,15 @@
       <UseCustomConfiguration>false</UseCustomConfiguration>
       <UseCustomTemplate>false</UseCustomTemplate>
       <Parameters />
+      <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
-      <CultureName />
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
   </Views>
   <DisplayName />
+  <InitScript />
   <ViewGUID>043a9782-171d-4b3f-af62-f698ef1a7261</ViewGUID>
   <Schedules />
 </Report>
