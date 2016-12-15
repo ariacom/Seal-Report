@@ -55,6 +55,7 @@ SWIReportModels.cs
 swi-properties.*
 swi-editor.*
 swi-button-group.*
+swi.js
 
 # =========================
 # Operating System Files

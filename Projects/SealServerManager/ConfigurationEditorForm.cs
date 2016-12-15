@@ -121,6 +121,8 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                 frm.ShowDialog();
             }
 
+            if (!_publicationInError) _configuration.SaveToFile();
+
             if (!_publicationInError && MessageBox.Show("The site has been successfully published. Do you want to try it now ?", "Publisher", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
             {
                 browseToolStripButton_Click(null, null);
