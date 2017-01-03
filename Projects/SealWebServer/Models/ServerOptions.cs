@@ -16,9 +16,9 @@ namespace Seal.Model
 #endif
         }
 
-        public static bool IsDebug()
+        public static bool HasMinifiedScripts()
         {
-#if DEBUG
+#if MINIFIED
             return true;
 #else
             return false;
