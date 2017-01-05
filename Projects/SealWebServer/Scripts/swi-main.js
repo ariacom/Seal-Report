@@ -49,6 +49,7 @@ var SWIMain = (function () {
         });
         _gateway.GetVersions(function (data) {
             $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + " - " + SWIUtil.tr("Server Version") + " : " + data.SRVersion);
+            $("#footer-version").text(data.SWIVersion);
         });
         _gateway.GetUserProfile(function (data) {
             //User already connected
@@ -258,6 +259,7 @@ var SWIMain = (function () {
         _main.enableControls();
     };
     SWIMain.prototype.showLogin = function () {
+        $("#footer-div").show();
         $loginModal.modal();
     };
     SWIMain.prototype.login = function () {
