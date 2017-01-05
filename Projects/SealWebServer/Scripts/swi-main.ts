@@ -64,6 +64,7 @@ class SWIMain {
         _gateway.GetVersions(
             function (data) {
                 $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + " - " + SWIUtil.tr("Server Version") + " : " + data.SRVersion);
+                $("#footer-version").text(data.SWIVersion);
             }
         )
 
@@ -310,6 +311,7 @@ class SWIMain {
     }
 
     private showLogin() {
+        $("#footer-div").show();
         $loginModal.modal();
     }
 
