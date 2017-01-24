@@ -97,7 +97,7 @@ namespace Seal.Model
         }
 
         string _logoName = "logo.jpg";
-        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the folders 'C:\\ProgramData\\eAdvisor Repository\\Views\\Images' and 'C:\\inetpub\\wwwroot\\Seal\\Images'."), Id(5, 1)]
+        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images'."), Id(5, 1)]
         public string LogoName
         {
             get { return _logoName; }
