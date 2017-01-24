@@ -66,6 +66,7 @@ var SWIMain = (function () {
     SWIMain.prototype.loginSuccess = function (data) {
         _main._connected = true;
         _main._profile = data;
+        _main._folder = null;
         $loginModal.modal('hide');
         SWIUtil.HideMessages();
         $(".navbar-right").show();
@@ -321,7 +322,7 @@ var SWIMain = (function () {
                 _main.ReloadReportsTable();
             });
             setTimeout(function () {
-                if (!_main._profile.folder || _main._profile.folder == "")
+                if (!_main._profile.folder || _main._profile.folder == "" || !$folderTree.jstree(true).get_node(_main._profile.folder))
                     _main._profile.folder = "\\";
                 _main._folderpath = _main._profile.folder;
                 $folderTree.jstree("deselect_all");
