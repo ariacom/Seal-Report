@@ -478,6 +478,35 @@ namespace SealWebServer.Controllers
         }
 
 
+        public ActionResult ActionGetTableData(string execution_guid, string viewid, string pageid, string parameters)
+        {
+            try
+            {
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
+                {
+                    ReportExecution execution = Session[execution_guid] as ReportExecution;
+                    var view = execution.Report.ExecutionView.GetView(viewid);
+                    if (view != null)
+                    {
+                        var page = view.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
+                        if (page != null)
+                        {
+                            return Json(page.DataTable.GetLoadTableData(view.Model, parameters), JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+
+            return Content(_noReportFoundMessage);
+        }
+
+
         #region private methods
 
         void checkSWIAuthentication()

@@ -169,24 +169,49 @@ namespace Seal.Model
             if (a.Length == 0 || a.Length != b.Length) return 0;
             ReportModel model = a[0].Element.Model;
 
-            foreach (ReportElement element in model.Elements.OrderBy(i => i.FinalSortOrder))
+            foreach (ReportElement element in model.Elements.Where(i=>!string.IsNullOrEmpty(i.FinalSortOrder)).OrderBy(i => i.FinalSortOrder))
             {
                 ResultCell aCell = a.FirstOrDefault(i => i.Element == element);
                 ResultCell bCell = b.FirstOrDefault(i => i.Element == element);
                 if (aCell != null && bCell != null)
                 {
                     int result = CompareCell(aCell, bCell);
-                    if (result != 0) return (element.SortOrder.Contains(SortOrderConverter.kAscendantSortKeyword) ? 1 : -1) * result;
+                    if (result != 0) return (element.FinalSortOrder.Contains(SortOrderConverter.kAscendantSortKeyword) ? 1 : -1) * result;
                 }
             }
             return 0;
         }
 
+        public static int CompareCellsForTableLoad(ResultCell[] a, ResultCell[] b)
+        {
+            if (a.Length == 0 || a.Length != b.Length) return 0;
+            ReportModel model = a[0].Element.Model;
+            ReportElement element = model.Elements.FirstOrDefault(i => i.FinalSortOrder.Contains(" "));
+            if (element != null)
+            {
+                var sortIndex = int.Parse(element.FinalSortOrder.Split(' ')[0]);
+                if (sortIndex < a.Length)
+                {
+                    ResultCell aCell = a[sortIndex];
+                    ResultCell bCell = b[sortIndex];
+                    int result = CompareCell(aCell, bCell);
+                    if (result != 0) return (element.FinalSortOrder.Contains(SortOrderConverter.kAscendantSortKeyword) ? 1 : -1) * result;
+                }
+            }
+            return 0;
+        }
+
+
         public static int CompareCell(ResultCell a, ResultCell b)
         {
             if (a.Value == DBNull.Value && b.Value == DBNull.Value) return 0;
-            if (a.Value == DBNull.Value && b.Value != null) return -1;
-            if (a.Value != null && b.Value == DBNull.Value) return 1;
+            else if (a.Value == DBNull.Value && b.Value != null) return -1;
+            else if (a.Value != null && b.Value == DBNull.Value) return 1;
+
+            if (a.Element == null && b.Element == null) return 0;
+            else if (a.Element == null && b.Element != null) return -1;
+            else if (a.Element != null && b.Element == null) return 1;
+
             if (a.Element.IsEnum)
             {
                 return a.Element.GetEnumSortValue(a.Value.ToString(), true).CompareTo(b.Element.GetEnumSortValue(b.Value.ToString(), true));

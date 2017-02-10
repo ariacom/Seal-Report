@@ -311,42 +311,6 @@ namespace SealWebServer.Controllers
                 Report report = Report.LoadFromFile(filePath, repository);
 
                 var execution = initReportExecution(report, viewGUID, outputGUID);
-                /*
-                report.ExecutionContext = ReportExecutionContext.WebReport;
-                report.SecurityContext = WebUser;
-                report.CurrentViewGUID = report.ViewGUID;
-
-                //Init Pre Input restrictions
-                report.PreInputRestrictions.Clear();
-                foreach (string key in Request.Form.Keys) report.PreInputRestrictions.Add(key, Request.Form[key]);
-                foreach (string key in Request.QueryString.Keys) report.PreInputRestrictions.Add(key, Request.QueryString[key]);
-
-                //execute to output
-                if (!string.IsNullOrEmpty(outputGUID))
-                {
-                    report.OutputToExecute = report.Outputs.FirstOrDefault(i => i.GUID == outputGUID);
-                    report.ExecutionContext = ReportExecutionContext.WebOutput;
-                    if (report.OutputToExecute != null) report.CurrentViewGUID = report.OutputToExecute.ViewGUID;
-                }
-
-                //execute with custom view
-                if (!string.IsNullOrEmpty(viewGUID)) report.CurrentViewGUID = viewGUID;
-
-                ReportExecution execution = new ReportExecution() { Report = report };
-
-                Session[report.ExecutionGUID] = execution;
-
-                int index = Request.Url.OriginalString.ToLower().IndexOf("swiexecutereport");
-                if (index == -1) throw new Exception("Invalid URL");
-                report.WebUrl = Request.Url.OriginalString.Substring(0, index);
-                repository.WebPublishFolder = Path.Combine(Request.PhysicalApplicationPath, "temp");
-                repository.WebApplicationPath = Path.Combine(Request.PhysicalApplicationPath, "bin");
-                if (!Directory.Exists(repository.WebPublishFolder)) Directory.CreateDirectory(repository.WebPublishFolder);
-                FileHelper.PurgeTempDirectory(repository.WebPublishFolder);
-
-                report.InitForExecution();
-                initInputRestrictions(report);
-                */
                 execution.Execute();
                 while (report.Status != ReportStatus.Executed) System.Threading.Thread.Sleep(100);
 

@@ -43,6 +43,7 @@ namespace Seal.Model
         public const string ActionLogout = "ActionLogout";
         public const string ActionSetUserInfo = "ActionSetUserInfo";
         public const string ActionGetNavigationLinks = "ActionGetNavigationLinks";
+        public const string ActionGetTableData = "ActionGetTableData";
 
         //Html Ids Keywords
         public const string HtmlId_header_form = "header_form";
@@ -55,7 +56,9 @@ namespace Seal.Model
         public const string HtmlId_navigation_id = "navigation_id";
         public const string HtmlId_execution_guid = "execution_guid";
         public const string HtmlId_navigation_menu = "nav_menu";
-
+        public const string HtmlId_parameter_tableload = "parameter_tableload";
+        public const string HtmlId_viewid_tableload = "viewid_tableload";
+        public const string HtmlId_pageid_tableload = "pageid_tableload";
 
         public Report Report = null;
         public Report RootReport = null;
@@ -1627,16 +1630,20 @@ namespace Seal.Model
         {
             Report.IsNavigating = false;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.DisplayFolder, Path.GetFileName(Report.ResultFileName)));
-            if (Report.IsBasicHTMLWithNoOutput)
+            Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
+            if (Report.IsBasicHTMLWithNoOutput && paginationParameter != null)
             {
+                bool initialValue = paginationParameter.BoolValue;
                 try
                 {
+                    paginationParameter.BoolValue = false;
                     Report.Status = ReportStatus.RenderingResult;
                     string result = Render();
                     File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
                 }
                 finally
                 {
+                    paginationParameter.BoolValue = initialValue;
                     Report.Status = ReportStatus.Executed;
                 }
             }

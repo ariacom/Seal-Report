@@ -1,4 +1,4 @@
-function viewResult(source) {
+﻿function viewResult(source) {
     $("#header_form").attr("target", urlPrefix != "" ? "_blank" : "");
     $("#header_form").attr("action", urlPrefix + $(source).attr("id"));
     $("#header_form").submit();
@@ -178,8 +178,21 @@ function setNavMenuSizeAndPosition() {
 function initNavMenu() {
     $("body").append("<ul id='nav_menu'/>");
     $("#nav_menu").menu();
+
+    $("#nav_menu").mouseenter(function () {
+        $("#nav_menu").css("display", "inline");
+    });
+
+    $("#nav_menu").mouseleave(function () {
+        $("#nav_menu").css("display", "none");
+    });
+
+    initNavCells();
+}
+
+function initNavCells() {
     $(".cell_value").mouseenter(function () {
-        if ($(this).attr("navigation") != null) {
+        if ($(this).attr("navigation")) {
             $("#nav_menu").empty();
             $("#nav_menu").append($(this).attr("navigation"));
             $('#nav_menu li').click(function (e) {
@@ -198,14 +211,6 @@ function initNavMenu() {
     $(".cell_value").mouseleave(function () {
         $("#nav_menu").css("display", "none");
     });
-
-    $("#nav_menu").mouseenter(function () {
-        $("#nav_menu").css("display", "inline");
-    });
-
-    $("#nav_menu").mouseleave(function () {
-        $("#nav_menu").css("display", "none");
-    });
 }
 
 function executeTimer() {
@@ -222,14 +227,14 @@ function executeTimer() {
 		                if (displayMessages) {
 		                    $("#execution_messages").html(data.execution_messages);
 		                    $("#body_div").scrollTop($("#body_div")[0].scrollHeight);
-                        }
+		                }
 		            }
 		            else if (data.error != null) {
 		                $("#processing_message").html(data.error);
 		                clearInterval(executionTimer);
 		                $("#wait_image").css("display", "none");
 		                $("#execute_button").css("display", "none");
-                    }
+		            }
 		        });
         }
         else {
@@ -311,6 +316,30 @@ function setMultipleSelect(className, single) {
         selectAllText: selectAllText
     });
 }
+
+function getTableData(guid, viewid, pageid, aoData, oSettings, callback) {
+    var params = aoData[0].value + "§" + oSettings.aaSorting + "§" + oSettings.oPreviousSearch.sSearch + "§" + oSettings._iDisplayLength + "§" + oSettings._iDisplayStart
+    if (urlPrefix != "") {
+        $.post(urlPrefix + "ActionGetTableData", { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
+            .done(function (data) {
+                var json = jQuery.parseJSON(data);
+                callback(json);
+                initNavCells();
+            });
+    }
+    else {
+        $("#header_form").attr("action", "ActionGetTableData");
+        $("#parameter_tableload").html(params);
+        $("#viewid_tableload").val(viewid);
+        $("#pageid_tableload").val(pageid);
+        $("#header_form").submit();
+        var json = jQuery.parseJSON($("#parameter_tableload").text());
+        callback(json);
+        $("#parameter_tableload").html("");
+        initNavCells();
+    }
+}
+
 
 $(document).ready(function () {
     mainInit();

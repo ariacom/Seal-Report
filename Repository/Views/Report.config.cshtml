@@ -1,7 +1,7 @@
 @using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-        
+
     //Template Name
     Template.Name = "Report";
 
@@ -26,6 +26,7 @@
     Template.Parameters.Add(new Parameter() { Name = Parameter.ExcelLayoutParameter, DisplayName = "Excel: Convert to Excel", BoolValue = false, Description = "If true, the Excel document is always generated and displayed when the report is executed" });
     Template.Parameters.Add(new Parameter() { Name = Parameter.DrillEnabledParameter, DisplayName = "Drill Enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled" });
     Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled" });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.ServerPaginationParameter, DisplayName = "Server Pagination Enabled", BoolValue = true, Description = "If true, data used by HTML data tables pagination are stored on the server" });
 
     //CSS
     Template.CSS.Add(new Parameter() { Name = "header", DisplayName = "Header", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report header", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });

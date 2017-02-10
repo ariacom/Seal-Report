@@ -141,6 +141,45 @@
         var decimalSeparator = '@View.CultureInfo.NumberFormat.NumberDecimalSeparator';
         var thousandSeparator = '@Raw(Helper.ToJS(View.CultureInfo.NumberFormat.NumberGroupSeparator))';
         var currencySymbol = '@Raw(Helper.ToJS(@View.CultureInfo.NumberFormat.CurrencySymbol))';
+
+        $.extend( true, $.fn.dataTable.defaults, {
+            sDom: '<"dataTableTop"lfpri>t',
+            stateSave: true,
+            aoColumnDefs: [
+        { "bSortable": false, "aTargets": ["firstcell"]}
+        @if (Report.IsServerPaginationEnabled) {<text>,
+            {
+                "targets": "_all",
+                "createdCell": function(td, cellData, rowData, row, col) {
+                    var cellDatas = cellData.split('§', 4);
+                    $(td).html(cellData.split('§')[3]);
+                    $(td).attr("class", cellData.split('§')[2]);
+                    $(td).attr("style", cellData.split('§')[1]);
+                    $(td).attr("navigation", cellData.split('§')[0]);
+                }
+            }
+        </text>}
+            ],
+            oLanguage: {
+                sProcessing: "@Report.Translate("Processing...")",
+                sLengthMenu: "@Report.Translate("Show _MENU_ rows")",
+                sZeroRecords: "@Report.Translate("No row")",
+                sInfo: "@Report.Translate("Showing _START_ to _END_ of _TOTAL_")",
+                sInfoEmpty: "@Report.Translate("Showing 0 to 0 of 0")",
+                sInfoFiltered: "@Report.Translate("(filtered from _MAX_)")",
+                sInfoPostFix: "",
+                sSearch: "@Report.Translate("Filter:")",
+                oPaginate: {
+                    sFirst: "|&lt;",
+                    sPrevious: "&lt;&lt;",
+                    sNext: ">>",
+                    sLast: ">|"
+                }
+            },
+            sPaginationType: "full_numbers",
+            bAutoWidth: false,
+            serverSide: @Helper.ToJS(Report.IsServerPaginationEnabled)
+            } );
     </script>
     @Raw(Report.AttachScriptFile("common.js"))
 
@@ -269,6 +308,9 @@
 
                 <input type="hidden" name="execution_guid" id="execution_guid" value="@Report.ExecutionGUID" />
                 <input type="hidden" name="navigation_id" id="navigation_id" value="" />
+                <input type="hidden" name="viewid_tableload" id="viewid_tableload" value="" />
+                <input type="hidden" name="pageid_tableload" id="pageid_tableload" value="" />
+                <span style="display: none;" id="parameter_tableload"></span>
             </form>
         }
         else

@@ -264,6 +264,27 @@ namespace Seal.Forms
                         HtmlElement navMenu = webBrowser.Document.All[ReportExecution.HtmlId_navigation_menu];
                         if (navMenu != null) navMenu.SetAttribute("innerHTML", _navigation.GetNavigationLinksHTML(_execution.RootReport));
                         break;
+
+                    case ReportExecution.ActionGetTableData:
+                        cancelNavigation = true;
+                        string guid = webBrowser.Document.All[ReportExecution.HtmlId_execution_guid].GetAttribute("value");
+                        if (_navigation.Navigations.ContainsKey(guid))
+                        {
+                            var report = _navigation.Navigations[guid].Execution.Report;
+                            string viewid = webBrowser.Document.All[ReportExecution.HtmlId_viewid_tableload].GetAttribute("value");
+                            string pageid = webBrowser.Document.All[ReportExecution.HtmlId_pageid_tableload].GetAttribute("value");
+                            HtmlElement dataload = webBrowser.Document.All[ReportExecution.HtmlId_parameter_tableload];
+                            var view = report.ExecutionView.GetView(viewid);
+                            if (view != null)
+                            {
+                                var page = view.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
+                                if (page != null)
+                                {
+                                    dataload.InnerText = page.DataTable.GetLoadTableData(view.Model, dataload.InnerText);
+                                }
+                            }
+                        }
+                        break;
                 }
             }
             catch (Exception ex)
