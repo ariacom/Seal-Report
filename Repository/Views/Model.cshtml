@@ -12,27 +12,6 @@
     }
 }
 
-@functions
-{
-    string GetNavigation(ResultCell cell)
-    {
-        string navigation = "";
-        ReportModel myModel = Model;
-        if (myModel.Report.GenerateHTMLDisplay)
-        {
-            foreach (var link in cell.Links)
-            {
-                if ((link.Href.StartsWith("exe=") && myModel.Report.View.GetBoolValue("drill_enabled")) || (link.Href.StartsWith("rpa=") && myModel.Report.View.GetBoolValue("sub_report_enabled")))
-                {
-                    navigation += string.Format("<li nav=\"{0}\"><a href=\"#\">{1}</a></li>", link.Href, link.Text);
-                }
-            }
-            navigation = string.IsNullOrEmpty(navigation) ? "" : string.Format(" navigation='{0}'", navigation);
-        }
-        return navigation;
-    }
-}
-
 <script type="text/javascript">
     $(document).ready(function () {
         var dataTables = $('#@View.ViewId .data_table');
@@ -40,34 +19,19 @@
             if (dataTables != null && @Helper.ToJS(View.GetBoolValue("data_tables_enabled")) && !@Helper.ToJS(Report.PrintLayout))
             {
                 dataTables.dataTable({
-                sDom: '<"dataTableTop"lfpri>t',
-                stateSave: true,
-                aoColumnDefs: [{ "bSortable": false, "aTargets": ["firstcell"]}],
-                oLanguage: {
-                    sProcessing: "@Report.Translate("Processing...")",
-                    sLengthMenu: "@Report.Translate("Show _MENU_ rows")",
-                    sZeroRecords: "@Report.Translate("No row")",
-                    sInfo: "@Report.Translate("Showing _START_ to _END_ of _TOTAL_")",
-                    sInfoEmpty: "@Report.Translate("Showing 0 to 0 of 0")",
-                    sInfoFiltered: "@Report.Translate("(filtered from _MAX_)")",
-                    sInfoPostFix: "",
-                    sSearch: "@Report.Translate("Filter:")",
-                    oPaginate: {
-                    sFirst: "|&lt;",
-                    sPrevious: "&lt;&lt;",
-                    sNext: ">>",
-                    sLast: ">|"
-                }
-            },
                 bSort: @Helper.ToJS(View.GetBoolValue("data_tables_sort_enabled")),
-                aaSorting: [],
                 bPaginate: @Helper.ToJS(View.GetBoolValue("data_tables_pagination_enabled")),
-                sPaginationType: "full_numbers",
                 iDisplayLength: @View.GetValue("data_tables_pagination_size"),
                 bInfo: @Helper.ToJS(View.GetBoolValue("data_tables_show_information")),
                 bFilter: @Helper.ToJS(View.GetBoolValue("data_tables_filter_enabled")),
                 bProcessing: @Helper.ToJS(View.GetBoolValue("data_tables_show_processing")),
-                bAutoWidth: false
+                aaSorting: []
+                @if (Report.IsServerPaginationEnabled)
+                {<text>,
+                fnServerData: function (sSource, aoData, fnCallback, oSettings) {
+                    getTableData("@Report.ExecutionGUID", $(this).attr("viewid"), $(this).attr("pageid"), aoData, oSettings,fnCallback);
+                }
+                </text>}
             });
         }
     }
@@ -100,7 +64,7 @@
                                     continue;
                                 }
 
-                                <td class='@(isFirst || (row - 1 == ReportModel.Pages.Count) ? "summary_title" : "cell_value")' style='@line[col].CellCssStyle' @Raw(GetNavigation(line[col]))>
+                                <td class='@(isFirst || (row - 1 == ReportModel.Pages.Count) ? "summary_title" : "cell_value")' style='@line[col].CellCssStyle' @Raw(Model.GetNavigation(line[col]))>
                                     @Raw(line[col].HTMLValue)
                                 </td>
                             }
@@ -159,7 +123,7 @@
                                 <th class='cell_title'>
                                     @Raw(header.HTMLValue)
                                 </th>
-                                <td class='cell_value' style='@value.CellCssStyle' @Raw(GetNavigation(value))>
+                                <td class='cell_value' style='@value.CellCssStyle' @Raw(Model.GetNavigation(value))>
                                     @Raw(value.HTMLValue)
                                 </td>
                             </tr>
@@ -185,8 +149,8 @@
                                 var series = new Array();
                                 @foreach (ResultSerie serie in page.Series)
                         {
-                            string multiChartOption = (page.NVD3ChartType == "multiChart" ? string.Format(",type :'{0}', yAxis : {1}", serie.NVD3MultiChartType, ((int)serie.Element.YAxisType + 1)) : "");
-                            <text>series.push({key: '@Raw(Helper.ToJS(serie.SerieDisplayName))', values:  [@Raw(serie.NVD3SerieValues)] @Raw(multiChartOption) });</text>
+                            string multiChartOption = (page.NVD3ChartType == "multiChart" ? string.Format(",type:'{0}',yAxis:{1}", serie.NVD3MultiChartType, ((int)serie.Element.YAxisType + 1)) : "");
+                            <text>series.push({key:'@Raw(Helper.ToJS(serie.SerieDisplayName))',values:[@Raw(serie.NVD3SerieValues)] @Raw(multiChartOption) });</text>
                         }
 
                                 var chartType = '@page.NVD3ChartType';
@@ -270,7 +234,7 @@
             {
                 bool dataTitleHeader = true;
                 <div class='data_table_div' style='@View.GetCSS("data_table")'>
-                    <table class='data_table' style='@View.GetCSS("data_table_table")'>
+                    <table class='data_table' viewid="@View.ViewId" pageid="@page.PageId" style='@View.GetCSS("data_table_table")'>
                         @if (View.HasValue("data_table_caption"))
                         {
                             <caption align="bottom" style="caption-side: bottom;">@Raw(View.GetHtmlValue("data_table_caption"))</caption>
@@ -290,26 +254,29 @@
                                         {
                                             className = cell.IsTotal ? "cell_value_total" : "cell_value";
                                         }
-                                        <th class='@className' style='@cell.CellCssStyle' @Raw(GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
+                                        <th class='@className' style='@cell.CellCssStyle' @Raw(Model.GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
                                     }
                                 </tr>
                             }
                         </thead>
-                        <tbody>
-                            @for (int row = page.DataTable.BodyStartRow; row < page.DataTable.BodyEndRow; row++)
-                            {
-                                ResultCell[] line = page.DataTable.Lines[row];
-                                <tr class="@((row-page.DataTable.BodyStartRow)%2 == 1 ? " " : " odd")">
-                                    @for (int col = 0; col < line.Length; col++)
-                                    {
-                                        ResultCell cell = line[col];
-                                        string className = cell.IsTitle && col == 0 ? "cell_title" : "cell_value";
-                                        className = cell.IsTotal ? "cell_value_total" : className;
-                                        <td class='@className' style='@cell.CellCssStyle' @Raw(GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
+                        @if (!Report.IsServerPaginationEnabled)
+                        {<text>
+                            <tbody>
+                                @for (int row = page.DataTable.BodyStartRow; row < page.DataTable.BodyEndRow; row++)
+                                {
+                                    ResultCell[] line = page.DataTable.Lines[row];
+                                    <tr class="@((row - page.DataTable.BodyStartRow) % 2 == 1 ? " " : " odd")">
+                                        @for (int col = 0; col < line.Length; col++)
+                                        {
+                                            ResultCell cell = line[col];
+                                            string className = cell.IsTitle && col == 0 ? "cell_title" : "cell_value";
+                                            className = cell.IsTotal ? "cell_value_total" : className;
+                                            <td class='@className' style='@cell.CellCssStyle' @Raw(Model.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </text>}
                         <tfoot>
                             @for (int row = page.DataTable.BodyEndRow; row < page.DataTable.Lines.Count; row++)
                             {

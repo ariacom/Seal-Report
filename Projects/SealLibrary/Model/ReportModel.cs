@@ -1284,6 +1284,24 @@ namespace Seal.Model
             return Restrictions.FirstOrDefault(i => i.DisplayNameEl.ToLower() == name.ToLower());
         }
 
+
+        public string GetNavigation(ResultCell cell, bool serverSide = false)
+        {
+            string navigation = "";
+            if (Report.GenerateHTMLDisplay || serverSide)
+            {
+                foreach (var link in cell.Links)
+                {
+                    if ((link.Href.StartsWith("exe=") && Report.View.GetBoolValue("drill_enabled")) || (link.Href.StartsWith("rpa=") && Report.View.GetBoolValue("sub_report_enabled")))
+                    {
+                        navigation += string.Format("<li nav={2}\"{0}{2}\"><a href={2}\"#{2}\">{1}</a></li>", link.Href, link.Text, (serverSide ? "\\" : ""));
+                    }
+                }
+                navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation='{0}'", navigation));
+            }
+            return navigation;
+        }
+
         //SANDBOX !
         //Just use this to code, compile and debug your Razor Script using Visual Studio...
         //When OK, just cut and paste it into the Load Script of your Model using the Report Designer

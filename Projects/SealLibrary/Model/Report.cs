@@ -1317,6 +1317,15 @@ public string GetImageFile(string fileName)
         }
 
         [XmlIgnore]
+        public bool IsServerPaginationEnabled
+        {
+            get
+            {
+                return ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter) && !PrintLayout && !ForPDFConversion && !ForOutput;
+            }
+        }
+
+        [XmlIgnore]
         public bool SkipImageAttachment
         {
             get

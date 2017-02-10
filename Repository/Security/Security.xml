@@ -12,9 +12,11 @@
 
 	user.Name = user.WebUserName; //Display name
     //security check can be hardcoded
-	if (user.WebUserName == "aa" &amp;&amp; user.WebPassword == "aa")
+	if (user.WebUserName == "aa")
 	{
-		user.AddSecurityGroup("aa");
+		if (user.WebPassword == "aa") {
+			user.AddSecurityGroup("aa");
+		}
 	}
 	else {
 		user.AddDefaultSecurityGroup();

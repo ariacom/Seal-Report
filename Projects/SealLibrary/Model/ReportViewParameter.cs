@@ -27,7 +27,8 @@ namespace Seal.Model
         public const string ExcelLayoutParameter = "excel_layout";
         public const string DrillEnabledParameter = "drill_enabled";
         public const string SubReportsEnabledParameter = "subreports_enabled";
-
+        public const string ServerPaginationParameter = "serverpagination_enabled";
+        
         #region Editor
 
         protected override void UpdateEditorAttributes()
