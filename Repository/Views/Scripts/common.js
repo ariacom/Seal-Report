@@ -317,26 +317,36 @@ function setMultipleSelect(className, single) {
     });
 }
 
-function getTableData(guid, viewid, pageid, aoData, oSettings, callback) {
-    var params = aoData[0].value + "§" + oSettings.aaSorting + "§" + oSettings.oPreviousSearch.sSearch + "§" + oSettings._iDisplayLength + "§" + oSettings._iDisplayStart
-    if (urlPrefix != "") {
-        $.post(urlPrefix + "ActionGetTableData", { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
-            .done(function (data) {
-                var json = jQuery.parseJSON(data);
-                callback(json);
-                initNavCells();
-            });
+function getTableData(datatable, guid, viewid, pageid, aoData, oSettings, callback) {
+    try {
+        var params = aoData[0].value + "§" + oSettings.aaSorting + "§" + oSettings.oPreviousSearch.sSearch + "§" + oSettings._iDisplayLength + "§" + oSettings._iDisplayStart
+        if (urlPrefix != "") {
+            $.post(urlPrefix + "ActionGetTableData", { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
+                .done(function (data) {
+                    try {
+                        var json = jQuery.parseJSON(data);
+                        callback(json);
+                        initNavCells();
+                    }
+                    catch (ex) {
+                        datatable[0].innerHTML = "Error loading data..." + "<br>" + ex.message;
+                    }
+                });
+        }
+        else {
+            $("#header_form").attr("action", "ActionGetTableData");
+            $("#parameter_tableload").html(params);
+            $("#viewid_tableload").val(viewid);
+            $("#pageid_tableload").val(pageid);
+            $("#header_form").submit();
+            var json = jQuery.parseJSON($("#parameter_tableload").text());
+            callback(json);
+            $("#parameter_tableload").html("");
+            initNavCells();
+        }
     }
-    else {
-        $("#header_form").attr("action", "ActionGetTableData");
-        $("#parameter_tableload").html(params);
-        $("#viewid_tableload").val(viewid);
-        $("#pageid_tableload").val(pageid);
-        $("#header_form").submit();
-        var json = jQuery.parseJSON($("#parameter_tableload").text());
-        callback(json);
-        $("#parameter_tableload").html("");
-        initNavCells();
+    catch (ex2) {
+        datatable[0].innerHTML = "Error loading data..." + "<br>" + ex2.message;
     }
 }
 
