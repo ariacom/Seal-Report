@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace Seal.Model
 {
@@ -102,10 +103,10 @@ namespace Seal.Model
                     string className = cell.IsTitle && col == 0 ? "cell_title" : "cell_value";
                     className = cell.IsTotal ? "cell_value_total" : className;
                     var cellValue = !string.IsNullOrEmpty(cell.FinalValue) ? cell.FinalValue : cell.DisplayValue;
-                    sb.AppendFormat("\"{0}§{1}§{2}§{3}\"", model.GetNavigation(cell, true), cell.CellCssStyle, className, cellValue);
+                    var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}", model.GetNavigation(cell, true), cell.CellCssStyle, className, cellValue));
+                    sb.AppendFormat("\"{0}\"", fullValue);
                 }
                 sb.Append("]");
-
             }
             sb.Append("]}");
 

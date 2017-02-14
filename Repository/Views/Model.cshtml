@@ -25,11 +25,12 @@
                 bInfo: @Helper.ToJS(View.GetBoolValue("data_tables_show_information")),
                 bFilter: @Helper.ToJS(View.GetBoolValue("data_tables_filter_enabled")),
                 bProcessing: @Helper.ToJS(View.GetBoolValue("data_tables_show_processing")),
+                serverSide: @Helper.ToJS(Report.IsServerPaginationEnabled && View.GetBoolValue("data_tables_enabled")),
                 aaSorting: []
-                @if (Report.IsServerPaginationEnabled)
+                @if (Report.IsServerPaginationEnabled && View.GetBoolValue("data_tables_enabled"))
                 {<text>,
                 fnServerData: function (sSource, aoData, fnCallback, oSettings) {
-                    getTableData("@Report.ExecutionGUID", $(this).attr("viewid"), $(this).attr("pageid"), aoData, oSettings,fnCallback);
+                    getTableData($(this), "@Report.ExecutionGUID", $(this).attr("viewid"), $(this).attr("pageid"), aoData, oSettings,fnCallback);
                 }
                 </text>}
             });
@@ -259,7 +260,7 @@
                                 </tr>
                             }
                         </thead>
-                        @if (!Report.IsServerPaginationEnabled)
+                        @if (!Report.IsServerPaginationEnabled || !View.GetBoolValue("data_tables_enabled"))
                         {<text>
                             <tbody>
                                 @for (int row = page.DataTable.BodyStartRow; row < page.DataTable.BodyEndRow; row++)
