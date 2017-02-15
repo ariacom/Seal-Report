@@ -2713,7 +2713,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Percentage0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-          <Format>{0}</Format>
+          <Format>P0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
@@ -2755,17 +2755,21 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
 		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][1].DoubleValue;
 		var currentValue = cell.ContextTable.Lines[cell.ContextRow][1].DoubleValue;
 		//Calculate the progression
-		cell.Value = 100*(currentValue - previousValue)/previousValue;
+		cell.Value = (currentValue - previousValue)/previousValue;
+		
 		if (cell.DoubleValue &lt; 0)
 		{
-			cell.FinalValue = string.Format("{0:N0} %", cell.DoubleValue);
+			cell.FinalValue = string.Format("{0:N0} %", 100*cell.DoubleValue);
 			cell.FinalCssStyle = "font-weight:bold;color:red;text-align:right;";
 		}
 		else if (cell.DoubleValue &gt; 0.5)
 		{
-			cell.FinalValue = string.Format("&lt;span style='font-size:12pt;'&gt;&amp;#9786;&lt;/span&gt; {0:N0} %", cell.DoubleValue);
+			cell.FinalValue = string.Format("&lt;span style='font-size:12pt;'&gt;&amp;#9786;&lt;/span&gt; {0:N0} %", 100*cell.DoubleValue);
 			cell.FinalCssStyle = "color:green;text-align:right;";
-		}		
+		}
+		else if (cell.DoubleValue &gt;= 0) {
+			cell.FinalValue = string.Format("{0:N0} %", 100*cell.DoubleValue);
+		}
 	}
 	
     //Example to calculate the ratio between the 2 previous total cells in the result table:

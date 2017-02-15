@@ -1304,10 +1304,10 @@ namespace Seal.Model
                 {
                     if ((link.Href.StartsWith("exe=") && Report.View.GetBoolValue("drill_enabled")) || (link.Href.StartsWith("rpa=") && Report.View.GetBoolValue("sub_report_enabled")))
                     {
-                        navigation += string.Format("<li nav={2}\"{0}{2}\"><a href={2}\"#{2}\">{1}</a></li>", link.Href, link.Text, (serverSide ? "\\" : ""));
+                        navigation += string.Format("<li nav='{0}'><a href='#'>{1}</a></li>", link.Href, link.Text);
                     }
                 }
-                navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation='{0}'", navigation));
+                navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation=\"{0}\"", navigation));
             }
             return navigation;
         }
