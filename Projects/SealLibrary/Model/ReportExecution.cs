@@ -1283,6 +1283,7 @@ namespace Seal.Model
 
         private void finalSort(ReportModel model)
         {
+            model.UpdateFinalSortOrders();
             foreach (var page in model.Pages)
             {
                 //If we have rows and columns OR if there are cell scripts, we have to resort the rows and columns as the SQL cannot do that directly...

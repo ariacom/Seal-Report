@@ -656,6 +656,7 @@ namespace Seal.Model
                     if (GetElements(PivotPosition.Data).Count() == 0 && execHavingClause.Length == 0) execGroupByClause = new StringBuilder();
 
                     List<string> orderColumns = new List<string>();
+                    UpdateFinalSortOrders();
                     buildOrderClause(GetElements(PivotPosition.Page), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
                     buildOrderClause(GetElements(PivotPosition.Row), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
                     buildOrderClause(GetElements(PivotPosition.Column), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
@@ -910,8 +911,15 @@ namespace Seal.Model
             }
         }
 
+        public void UpdateFinalSortOrders()
+        {
+            updateFinalSortOrder(GetElements(PivotPosition.Page));
+            updateFinalSortOrder(GetElements(PivotPosition.Row));
+            updateFinalSortOrder(GetElements(PivotPosition.Column));
+            updateFinalSortOrder(GetElements(PivotPosition.Data));
+        }
 
-        void buildOrderClause(IEnumerable<ReportElement> elements, List<string> orderColumns, ref StringBuilder orderClause, ref StringBuilder orderClauseName)
+        void updateFinalSortOrder(IEnumerable<ReportElement> elements)
         {
             for (int i = 0; i < elements.Count(); i++)
             {
@@ -923,8 +931,10 @@ namespace Seal.Model
                     else element.FinalSortOrder = element.SortOrder;
                 }
             }
+        }
 
-
+        void buildOrderClause(IEnumerable<ReportElement> elements, List<string> orderColumns, ref StringBuilder orderClause, ref StringBuilder orderClauseName)
+        {
             foreach (ReportElement element in elements.OrderBy(i => i.FinalSortOrder))
             {
                 if (!orderColumns.Contains(element.SQLColumn) && element.IsSorted)
