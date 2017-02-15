@@ -75,6 +75,12 @@ if (chartType != 'discreteBarChart') {
         if (d == null) return '';
         return nvd3TranslateTextAxis(d);
 	});
+
+  if (chartType == 'multiChart') {
+      chart.tooltip.contentGenerator(function(data) {
+          return nvd3TooltipGenerator(data, series, XValueFormatter, YPrimaryValueFormatter, YSecondaryValueFormatter);
+      });
+  }
 }
 
 //More information at http://nvd3.org/ and https://nvd3-community.github.io/nvd3/

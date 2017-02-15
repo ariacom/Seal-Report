@@ -178,7 +178,9 @@
             },
             sPaginationType: "full_numbers",
             bAutoWidth: false,
-            } );
+        } );
+
+        @Raw(View.GetValue("additional_js"));
     </script>
     @Raw(Report.AttachScriptFile("common.js"))
 
@@ -314,7 +316,7 @@
         }
         else
         {
-            <form id="header_form" method="post" action="" style="display: none" />
+            <form id="header_form" method="post" action="" style="display: none"></form>
         }
         @if (View.GetBoolValue("display_messages"))
         {

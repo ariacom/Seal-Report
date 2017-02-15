@@ -43,6 +43,7 @@
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -357,6 +358,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -670,6 +672,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -984,6 +987,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -1263,6 +1267,7 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -1577,6 +1582,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -1891,6 +1897,7 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -2204,6 +2211,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -2517,6 +2525,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -2977,6 +2986,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -3290,6 +3300,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -3603,6 +3614,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -4319,7 +4331,24 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
               <CSS />
               <SortOrder>2</SortOrder>
               <PdfConfigurations />
-              <ExcelConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript&gt;@using Winnovative.ExcelLib
+@using SealExcelConverter
+@{
+}&lt;/MainScript&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
             </ReportView>
             <ReportView>
               <GUID>9cd2cb35-af4c-48fd-8cf1-518f8b25f2b9</GUID>
@@ -4484,7 +4513,24 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
               <CSS />
               <SortOrder>3</SortOrder>
               <PdfConfigurations />
-              <ExcelConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript&gt;@using Winnovative.ExcelLib
+@using SealExcelConverter
+@{
+}&lt;/MainScript&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
             </ReportView>
             <ReportView>
               <GUID>42d6dbd2-5942-479e-a9b7-22da130e87e2</GUID>
@@ -4617,7 +4663,24 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
               <CSS />
               <SortOrder>1</SortOrder>
               <PdfConfigurations />
-              <ExcelConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript&gt;@using Winnovative.ExcelLib
+@using SealExcelConverter
+@{
+}&lt;/MainScript&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
             </ReportView>
             <ReportView>
               <GUID>1ce10f7e-3ffd-4eef-9c21-b75ff7aa003b</GUID>
@@ -4758,17 +4821,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     <Parameter>
                       <Name>nvd3_hide_controls</Name>
                       <Value>True</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>nvd3_script_additional</Name>
-                      <Value>//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line
-//chart.xAxis.showMaxMin(false);
-
-//Override the formatter of second Y Values
-chart.yAxis2.tickFormat(function(value) {
-	return d3.format(',.0f')(value).valueFormat() + " %";
-});</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
@@ -4929,13 +4981,115 @@ chart.yAxis2.tickFormat(function(value) {
               <CSS />
               <SortOrder>4</SortOrder>
               <PdfConfigurations />
-              <ExcelConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript&gt;@using Winnovative.ExcelLib
+@using SealExcelConverter
+@{	
+}&lt;/MainScript&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>
           <ThemeName />
           <UseCustomConfiguration>false</UseCustomConfiguration>
-          <UseCustomTemplate>false</UseCustomTemplate>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>@using System.Data
+@using Seal.Model
+@using Seal.Helpers
+@{ Report Report = Model; ReportView View = Report.View; Repository Repository = Report.Repository; }
+
+&lt;script&gt;
+    $(function () {
+        if (!@Helper.ToJS(Report.PrintLayout))  {
+            $("#@(View.ViewId)_tab_control").tabs({
+            active: @View.GetNumericValue("tab_selected_index"),
+            heightStyle: "content",
+            activate: function(event, ui) {
+                    submitViewParameter("@View.ViewId", "tab_selected_index", $("#@(View.ViewId)_tab_control").tabs('option', 'active'));
+            @if (Report.HasNVD3Chart)
+            {
+                    //redraw nvd3 charts
+                    &lt;text&gt;nvd3UpdateCharts();&lt;/text&gt;
+            }
+        }
+        });
+
+        /* vertical */
+        var tabPosition = "@View.GetValue("tab_position")";
+        if (tabPosition=="Vertical")
+        {
+            $("#@(View.ViewId)_tab_control").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
+            $("#@(View.ViewId)_tab_control li").removeClass("ui-corner-top").addClass("ui-corner-left");
+        }
+        else if (tabPosition=="Bottom")
+        {
+            // bottom
+            $(".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav &gt; *")
+              .removeClass("ui-corner-all ui-corner-top")
+              .addClass("ui-corner-bottom");
+
+            // move the nav to the bottom
+            $(".tabs-bottom .ui-tabs-nav").appendTo(".tabs-bottom");
+        }
+    }
+    });
+&lt;/script&gt;
+
+
+&lt;div class="tabs@(View.GetValue("tab_position") == "Bottom" ? "-bottom" : "")" id="@(View.ViewId)_tab_control" style='@View.GetCSS("tab_control")'&gt;
+    @if (!Report.PrintLayout)
+    {
+        &lt;ul&gt;
+            @foreach (ReportView childView in View.Views.OrderBy(i =&gt; i.SortOrderFull))
+            {
+				if (childView.Name == "Orders" &amp;&amp; Report.ForPDFConversion) { continue;}
+				
+                &lt;li&gt;&lt;a href='#@(childView.ViewId)_tab_page'&gt;@childView.ViewName&lt;/a&gt;&lt;/li&gt;
+            }
+        &lt;/ul&gt;
+    }
+
+    @if (Report.IsExecuting &amp;&amp; !Report.Cancel)
+    {
+        List&lt;ReportView&gt; views = View.Views.OrderBy(i =&gt; i.SortOrderFull).ToList();
+        foreach (ReportView childView in views)
+        {
+			if (childView.Name == "Orders" &amp;&amp; Report.ForPDFConversion) { continue;}
+
+			if (Report.PrintLayout &amp;&amp; View.GetBoolValue("print_break_after_view") &amp;&amp; childView != views[0])
+            {
+                &lt;div style="page-break-after:always;"&gt;&lt;/div&gt;
+            }
+
+            if (Report.PrintLayout)
+            {
+                &lt;p class="title"&gt;@childView.ViewName&lt;/p&gt;
+            }
+
+            @Raw(childView.Parse())
+
+            if (!string.IsNullOrEmpty(childView.Error))
+            {
+                &lt;p class='error_message'&gt;@Raw(Helper.ToHtml(childView.Error))&lt;/p&gt;
+            }
+        }
+    }
+    &lt;div style="clear:both;"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;!--_tab_control--&gt;
+</CustomTemplate>
           <Parameters />
           <CultureName />
           <CSS />
