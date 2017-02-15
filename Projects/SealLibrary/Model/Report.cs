@@ -978,7 +978,7 @@ public string GetImageFile(string fileName)
             }
 
             string result = Path.Combine(Repository.ViewImagesFolder, fileName);
-            return "file:///" + HttpUtility.UrlEncode(result).Replace("+", "%20");
+            return "file:///" + result.Replace("\\", "/");
         }
 
 
@@ -987,7 +987,7 @@ public string GetImageFile(string fileName)
             return FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, ResultFilePrefix + Guid.NewGuid().ToString() + FileHelper.ResultFileStaticSuffix + ".png"));
         }
 
-        public string AttachImageFile(string fileName)
+        public string AttachImageFile(string fileName, bool forUrl = true)
         {
             if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
             {

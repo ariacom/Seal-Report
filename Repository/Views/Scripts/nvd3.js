@@ -45,3 +45,18 @@ function nvd3UpdateCharts() {
 }
 nv.utils.windowResize(nvd3UpdateCharts);
 
+function nvd3TooltipGenerator(data, series, xvalformatter, y1formatter, y2formatter) {
+		var header =xvalformatter(data.value);
+		var headerhtml = '<thead><tr><td colspan=3><strong class="x-value">' + header + '</strong></td></tr></thead>';
+		var bodyhtml = '<tbody>';
+		data.series.forEach(function(dataSerie) {
+			var formatter = y1formatter;
+			series.forEach(function(serie) {
+				 if (dataSerie.key.indexOf(serie.key) == 0 && serie.yAxis == 2) formatter = y2formatter;
+			});	
+			bodyhtml = bodyhtml + '<tr><td class="legend-color-guide"><div style="background-color: ' + dataSerie.color + ';"></div></td><td class="key">' + dataSerie.key + '</td><td class="value">' + formatter(dataSerie.value) + '</td></tr>';
+		});
+		bodyhtml = bodyhtml+'</tbody>';
+		return '<table>'+headerhtml+''+bodyhtml+'</table>';
+};		
+

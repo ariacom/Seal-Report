@@ -1689,10 +1689,20 @@ namespace Seal.Model
 
         public string GeneratePDFResult()
         {
+            string newPath = "";
             SetPDFRootViewHeaderCSS();
-            string source = GeneratePrintResult();
-            string newPath = Path.Combine(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source)) + ".pdf";
-            Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(source, newPath);
+            var pdfParameter = Report.ExecutionView.GetParameter(Parameter.PDFLayoutParameter);
+            bool initialValue = pdfParameter.BoolValue;
+            try
+            {
+                pdfParameter.BoolValue = true;
+                string source = GeneratePrintResult();
+                newPath = Path.Combine(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source)) + ".pdf";
+                Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(source, newPath);
+            }
+            finally {
+                pdfParameter.BoolValue = initialValue;
+            }
             return newPath;
         }
 

@@ -27,6 +27,7 @@
     Template.Parameters.Add(new Parameter() { Name = Parameter.DrillEnabledParameter, DisplayName = "Drill Enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled" });
     Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled" });
     Template.Parameters.Add(new Parameter() { Name = Parameter.ServerPaginationParameter, DisplayName = "Server Pagination Enabled", BoolValue = true, Description = "If true, data used by HTML data tables pagination are stored on the server" });
+    Template.Parameters.Add(new Parameter() { Name = "additional_js", DisplayName = "Additional JavaScript", Type = ViewParameterType.Text, Description = "Additional JavaScript inserted at the top of the report result file"});
 
     //CSS
     Template.CSS.Add(new Parameter() { Name = "header", DisplayName = "Header", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report header", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
