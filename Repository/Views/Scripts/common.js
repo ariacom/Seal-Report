@@ -113,6 +113,7 @@ function initButtons() {
         .click(function () {
             $("#body_div").animate({ scrollTop: 0 }, "slow");
         });
+
     $("#nav_button").button({ text: false, label: ">", icons: { primary: "ui-icon-arrow-2-n-s" } })
             .mouseenter(function () {
                 $("#nav_menu").empty();

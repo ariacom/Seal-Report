@@ -152,10 +152,10 @@
                 "targets": "_all",
                 "createdCell": function(td, cellData, rowData, row, col) {
                     var cellDatas = cellData.split('§', 4);
-                    $(td).html(cellData.split('§')[3]);
-                    $(td).attr("class", cellData.split('§')[2]);
-                    $(td).attr("style", cellData.split('§')[1]);
-                    $(td).attr("navigation", cellData.split('§')[0]);
+                    $(td).html(cellDatas[3]);
+                    $(td).attr("class", cellDatas[2]);
+                    $(td).attr("style", cellDatas[1]);
+                    $(td).attr("navigation", cellDatas[0]);
                 }
             }
         </text>}

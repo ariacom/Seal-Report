@@ -44,7 +44,7 @@ caption {font-weight: bold;}
 
 /* specific data tables */
 a.paginate_button { background-color: #CCC; color: black; display: inline-block; padding: 2px 6px; margin-left: 2px; cursor: pointer; *cursor: hand; border: 1px solid white; }	
-a.paginate_button.current { font-weight:bold; }	
+a.paginate_button.current,a.paginate_button.current:hover { font-weight:bold; }	
 a.paginate_button:hover { font-weight:normal;}
 a.paginate_active {	background-color: transparent; color: black; border: 1px solid black; display: inline-block; padding: 2px 6px; margin-left: 2px; cursor: pointer; *cursor: hand;}
 a.paginate_active:hover { font-weight:normal;}
