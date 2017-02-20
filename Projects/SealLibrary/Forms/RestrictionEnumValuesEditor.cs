@@ -37,7 +37,7 @@ namespace Seal.Forms
                 setContext(context);
                 if (_restriction != null && _restriction.IsEnum)
                 {
-                    MultipleSelectForm frm = new MultipleSelectForm("Please restriction values", _restriction.EnumRE.Values, "Val");
+                    MultipleSelectForm frm = new MultipleSelectForm("Please select the restriction values", _restriction.EnumRE.Values, "DisplayRestriction");
                     //select existing values
                     for (int i = 0; i < frm.checkedListBox.Items.Count; i++)
                     {

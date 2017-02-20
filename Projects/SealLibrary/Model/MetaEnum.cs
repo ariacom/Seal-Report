@@ -111,7 +111,7 @@ namespace Seal.Model
         public string DefaultSQL = "select col1,col2 from table order by col2";
 
         private string _sql;
-        [Category("Definition"), DisplayName("Select SQL Statement"), Description("If the list is loaded from the database, SQL Select statement with 1 or 2 columns used to build the list of values. The first column is used for the identifier value, the second optional column is used for the display value."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Select SQL Statement"), Description("If the list is loaded from the database, SQL Select statement with 1, 2 or 3 columns used to build the list of values. The first column is used for the identifier value, the second optional column is used for the display value, the third optional column is used for the restriction display value shown in the list."), Id(4, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string Sql
         {
@@ -189,7 +189,8 @@ namespace Seal.Model
                         {
                             MetaEV value = new MetaEV();
                             value.Id = row[0].ToString();
-                            value.Val = table.Columns.Count > 1 ? (row.IsNull(1) ? "" : row[1].ToString()) : value.Id;
+                            value.Val = table.Columns.Count > 1 ? (row.IsNull(1) ? null : row[1].ToString()) : null;
+                            value.ValR = table.Columns.Count > 2 ? (row.IsNull(2) ? null : row[2].ToString()) : null;
                             Values.Add(value);
                         }
                     }
@@ -205,10 +206,10 @@ namespace Seal.Model
             UpdateEditorAttributes();
         }
 
-        public string GetDisplayValue(string id)
+        public string GetDisplayValue(string id, bool forRestriction = false)
         {
             MetaEV value = Values.FirstOrDefault(i => i.Id == id);
-            return value == null ? id : value.Val;
+            return value == null ? id : (forRestriction ? value.DisplayRestriction : value.DisplayValue);
         }
 
         #region Helpers

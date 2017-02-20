@@ -258,7 +258,7 @@ namespace Seal.Model
             string result = enumValue;
             bool elementSortPosition = (IsSorted && MetaColumn.Enum.UsePosition);
             MetaEV value = null;
-            if (useDisplayValue) value = MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == enumValue);
+            if (useDisplayValue) value = MetaColumn.Enum.Values.FirstOrDefault(i => i.DisplayValue == enumValue);
             else value = MetaColumn.Enum.Values.FirstOrDefault(i => i.Id == enumValue);
 
             if (value != null)

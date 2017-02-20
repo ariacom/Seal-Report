@@ -18,7 +18,7 @@ namespace Seal.Model
    public class MetaEV
     {
         string _identifier;
-        [Category("Definition"), DisplayName("Identifier"), Description("The database value of the enumerated value")]
+        [Category("Definition"), DisplayName("\tIdentifier"), Description("The database value of the enumerated value")]
         public string Id
         {
             get { return _identifier; }
@@ -26,11 +26,32 @@ namespace Seal.Model
         }
 
         string _value;
-        [Category("Definition"), DisplayName("Value"), Description("The display value of the enumerated value")]
+        [Category("Definition"), DisplayName("\tValue"), Description("The display value of the enumerated value")]
         public string Val
         {
             get { return _value; }
             set { _value = value; }
         }
+
+        string _restrictionValue;
+        [Category("Definition"), DisplayName("Restriction Value"), Description("The optional display value of the enumerated value for the restriction list")]
+        public string ValR
+        {
+            get { return _restrictionValue; }
+            set { _restrictionValue = value; }
+        }
+
+        [Category("Display"), DisplayName("\tValue"), Description("The final value displayed in the report")]
+        public string DisplayValue
+        {
+            get { return !string.IsNullOrEmpty(_value) ? _value : _identifier; }
+        }
+
+        [Category("Display"), DisplayName("Restriction"), Description("The final value displayed for the restriction")]
+        public string DisplayRestriction
+        {
+            get { return !string.IsNullOrEmpty(_restrictionValue) ? _restrictionValue : DisplayValue; }
+        }
+
     }
 }

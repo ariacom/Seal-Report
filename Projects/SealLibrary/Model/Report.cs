@@ -1451,9 +1451,9 @@ public string GetImageFile(string fileName)
             return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Element", element.MetaColumn.Category + '.' + element.DisplayNameEl, reference);
         }
 
-        public string EnumDisplayValue(MetaEnum instance, string id)
+        public string EnumDisplayValue(MetaEnum instance, string id, bool forRestriction = false)
         {
-            string result = instance.GetDisplayValue(id);
+            string result = instance.GetDisplayValue(id, forRestriction);
             if (instance.Translate) result = Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Enum", instance.Name, result);
             return result;
         }
