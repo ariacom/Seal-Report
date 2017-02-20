@@ -453,7 +453,9 @@ namespace Seal.Forms
                 {
                     foreach (var enumVal in enumList.Values)
                     {
-                        translations.AppendFormat("Enum{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(enumList.Name), Helper.QuoteDouble(enumVal.Val), extraSeparators);
+                        translations.AppendFormat("Enum{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(enumList.Name), Helper.QuoteDouble(enumVal.DisplayValue), extraSeparators);
+                        if (enumVal.DisplayValue != enumVal.DisplayRestriction) translations.AppendFormat("Enum{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(enumList.Name), Helper.QuoteDouble(enumVal.DisplayRestriction), extraSeparators);
+
                     }
                 }
 

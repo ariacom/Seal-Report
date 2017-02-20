@@ -94,8 +94,8 @@ namespace Seal.Model
                 if (Element.IsEnum)
                 {
                     MetaEV enumValue = null;
-                    if (Element.MetaColumn.Enum.Translate) enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => Element.Model.Report.EnumDisplayValue(Element.MetaColumn.Enum, i.Id) == result);
-                    else enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.Val == result);
+                    if (Element.MetaColumn.Enum.Translate) enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => Element.Model.Report.EnumDisplayValue(Element.MetaColumn.Enum, i.Id, false) == result);
+                    else enumValue = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.DisplayValue == result);
                     if (enumValue != null) result = enumValue.Id;
                 }
                 else if (Element.IsDateTime && Value is DateTime)

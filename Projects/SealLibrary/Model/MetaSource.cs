@@ -282,7 +282,7 @@ namespace Seal.Model
                 column.MetaTable.BuildNoSQLTable(true);
                 foreach (DataRow row in column.MetaTable.NoSQLTable.Rows)
                 {
-                    result.Values.Add(new MetaEV() { Id = row[column.Name].ToString(), Val = row[column.Name].ToString() });
+                    result.Values.Add(new MetaEV() { Id = row[column.Name].ToString() });
                 }
             }
             return result;

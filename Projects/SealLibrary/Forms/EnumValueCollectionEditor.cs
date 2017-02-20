@@ -68,7 +68,7 @@ namespace Seal.Forms
         protected override string GetDisplayText(object value)
         {
             MetaEV item = (MetaEV)value;
-            return base.GetDisplayText(string.IsNullOrEmpty(item.Id) ? "<Empty value>" : string.Format("{0}", item.Val));
+            return base.GetDisplayText(string.IsNullOrEmpty(item.Id) ? "<Empty value>" : string.Format("{0}", item.DisplayValue));
         }
     }
 }
