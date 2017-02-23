@@ -87,7 +87,7 @@ namespace Seal.Forms
                         valueToEdit = anEnum.DefaultSQL;
                     }
                 }
-                else if (context.Instance is ReportSource)
+                else if (context.Instance is ReportSource || context.Instance is MetaSource)
                 {
                     template = razorSourceTemplate;
                     frm.clearToolStripButton.Visible = false;
