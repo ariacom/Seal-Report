@@ -250,7 +250,7 @@ namespace Seal.Forms
     if (log != null) {
         log.LogMessage(""Executing 'Init Script' for source: "" + source.Name +"" ..."");
 
-        //TODO...
+        //...
     }
 }
 ";
