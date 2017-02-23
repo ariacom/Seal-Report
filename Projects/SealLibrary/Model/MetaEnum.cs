@@ -175,7 +175,7 @@ namespace Seal.Model
                 _error = "";
                 _information = "";
                 DbConnection connection = _source.GetOpenConnection();
-                DataTable table = Helper.GetDataTable(connection, Sql);
+                DataTable table = Helper.GetDataTable(connection, Helper.ParseRazor(Sql, this));
                 connection.Close();
 
                 if (checkOnly) return;

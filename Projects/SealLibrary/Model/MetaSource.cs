@@ -49,6 +49,7 @@ namespace Seal.Model
 
                 GetProperty("NumericFormat").SetIsBrowsable(true);
                 GetProperty("DateTimeFormat").SetIsBrowsable(true);
+                GetProperty("InitScript").SetIsBrowsable(true);
                 GetProperty("TasksScript").SetIsBrowsable(true);
 
                 GetProperty("Information").SetIsBrowsable(true);
@@ -121,8 +122,17 @@ namespace Seal.Model
             set { _dateFormat = value; }
         }
 
+        string _initScript = "";
+        [Category("Scripts"), DisplayName("Init Script"), Description("If set, the script is executed when a report is initialized for an execution. This may be useful to change dynamically components of the source (e.g. modifying connections, tables, columns, enums, etc.)."), Id(4, 3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string InitScript
+        {
+            get { return _initScript; }
+            set { _initScript = value; }
+        }
+
         string _tasksScript = "";
-        [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed with this source. This may be useful to defined common functions for the source."), Id(4, 3)]
+        [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed with this source. This may be useful to defined common functions for the source."), Id(5, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string TasksScript
         {
@@ -131,7 +141,7 @@ namespace Seal.Model
         }
 
         string _preSQL;
-        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed after the connection is open and before the query is executed. The statement may contain Razor script if it starts with '@'."), Id(4, 4)]
+        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed after the connection is open and before the query is executed. The statement may contain Razor script if it starts with '@'."), Id(5, 4)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string PreSQL
         {
@@ -140,7 +150,7 @@ namespace Seal.Model
         }
 
         string _postSQL;
-        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed before the connection is closed and after the query is executed. The statement may contain Razor script if it starts with '@'."), Id(5, 4)]
+        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed before the connection is closed and after the query is executed. The statement may contain Razor script if it starts with '@'."), Id(6, 4)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string PostSQL
         {
@@ -149,7 +159,7 @@ namespace Seal.Model
         }
 
         bool _ignorePrePostError;
-        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(6, 4)]
+        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(7, 4)]
         public bool IgnorePrePostError
         {
             get { return _ignorePrePostError; }

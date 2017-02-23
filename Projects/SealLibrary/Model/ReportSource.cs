@@ -47,6 +47,8 @@ namespace Seal.Model
 
                 GetProperty("TasksScript").SetIsBrowsable(true);
                 GetProperty("TasksScript").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
+                GetProperty("InitScript").SetIsBrowsable(true);
+                GetProperty("InitScript").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
 
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
@@ -146,6 +148,7 @@ namespace Seal.Model
                     IsDefault = source.IsDefault;
                     IsNoSQL = source.IsNoSQL;
                     NumericFormat = source.NumericFormat;
+                    InitScript = source.InitScript;
                     TasksScript = source.TasksScript;
                     DateTimeFormat = source.DateTimeFormat;
                     _metaSourceName = source.Name;

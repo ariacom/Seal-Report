@@ -341,6 +341,22 @@ namespace Seal.Model
                 ExecutionErrors += string.Format("Error initializing report Path, check your report execution or output Path '{0}'\r\n{1}\r\n", Path.Combine(fileFolder, fileName), ex.Message);
             }
 
+            //Init scripts
+            foreach (var source in Sources.Where(i => !string.IsNullOrEmpty(i.InitScript)))
+            {
+                if (Models.Exists(i => i.SourceGUID == source.GUID))
+                {
+                    try
+                    {
+                        Helper.ParseRazor(source.InitScript, source);
+                    }
+                    catch (Exception ex2)
+                    {
+                        ExecutionErrors += string.Format("Error executing init script for source {0}\r\n{1}\r\n", source.Name, ex2.Message);
+                    }
+                }
+            }
+
             if (!string.IsNullOrEmpty(InitScript))
             {
                 try
