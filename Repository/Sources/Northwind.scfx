@@ -23,6 +23,7 @@
   <IsNoSQL>false</IsNoSQL>
   <NumericFormat>N0</NumericFormat>
   <DateTimeFormat>d</DateTimeFormat>
+  <InitScript />
   <TasksScript />
   <IgnorePrePostError>false</IgnorePrePostError>
   <MetaData>

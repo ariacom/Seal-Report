@@ -236,6 +236,25 @@ namespace Seal.Forms
 }
 ";
 
+
+        const string razorSourceInitScriptTemplate = @"@using Seal.Model
+@using System.Data
+@{
+    MetaSource source = Model;
+	ReportExecutionLog log = null;
+    if (source is ReportSource) {
+        log = ((ReportSource) source).Report;
+    }
+
+    //Script executed to modify the source when the report is initialized at execution
+    if (log != null) {
+        log.LogMessage(""Executing 'Init Script' for source: "" + source.Name +"" ..."");
+
+        //TODO...
+    }
+}
+";
+
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             if (context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
@@ -438,7 +457,14 @@ namespace Seal.Forms
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                 }
-                else if (context.Instance is TasksFolder || context.Instance is MetaSource)
+                else if (context.Instance is MetaSource && context.PropertyDescriptor.Name == "InitScript")
+                {
+                    template = razorSourceInitScriptTemplate;
+                    frm.TypeForCheckSyntax = typeof(MetaSource);
+                    frm.Text = "Edit the init script of the source";
+                    frm.textBox.ConfigurationManager.Language = "cs";
+                }
+                else if ((context.Instance is TasksFolder || context.Instance is MetaSource) && context.PropertyDescriptor.Name == "TasksScript")
                 {
                     template = razorTasksTemplate;
                     frm.TypeForCheckSyntax = typeof(ReportTask);
@@ -466,8 +492,8 @@ namespace Seal.Forms
 
                 if (svc.ShowDialog(frm) == DialogResult.OK)
                 {
-                    if (frm.textBox.Text.Trim() != template || string.IsNullOrEmpty(template)) value = frm.textBox.Text;
-                    else if (frm.textBox.Text.Trim() == template && !string.IsNullOrEmpty(template)) value = "";
+                    if (frm.textBox.Text.Trim() != template.Trim() || string.IsNullOrEmpty(template)) value = frm.textBox.Text;
+                    else if (frm.textBox.Text.Trim() == template.Trim() && !string.IsNullOrEmpty(template)) value = "";
                 }
             }
             return value;

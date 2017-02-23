@@ -977,6 +977,7 @@ namespace Seal
                 metaSource.IsNoSQL = source.IsNoSQL;
                 metaSource.NumericFormat = source.NumericFormat;
                 metaSource.DateTimeFormat = source.DateTimeFormat;
+                metaSource.InitScript = source.InitScript;
                 metaSource.TasksScript = source.TasksScript;
                 metaSource.Connections.Clear();
                 metaSource.Connections.AddRange(source.Connections);

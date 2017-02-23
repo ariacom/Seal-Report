@@ -23,6 +23,8 @@ namespace Seal.Forms
         static Size? LastSize = null;
         static Point? LastLocation = null;
 
+        ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...");
+
         public SQLEditorForm()
         {
             InitializeComponent();
@@ -98,7 +100,7 @@ namespace Seal.Forms
                 if (Instance is MetaEnum)
                 {
                     MetaEnum anEnum = Instance as MetaEnum;
-                    error = anEnum.Source.CheckSQL(sqlTextBox.Text, null, null, false);
+                    error = anEnum.Source.CheckSQL(Helper.ParseRazor(sqlTextBox.Text, anEnum), null, null, false);
                 }
                 else if (Instance is MetaSource)
                 {
@@ -199,6 +201,23 @@ namespace Seal.Forms
                 toolStripStatusLabel.Text = "Text copied to clipboard";
                 toolStripStatusLabel.Image = null;
             }
+        }
+
+
+        public void SetSamples(List<string> samples)
+        {
+            foreach (string sample in samples)
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem(sample);
+                item.Click += new System.EventHandler(this.item_Click);
+                samplesMenuItem.DropDownItems.Add(item);
+            }
+            if (!mainToolStrip.Items.Contains(samplesMenuItem)) mainToolStrip.Items.Add(samplesMenuItem);
+        }
+
+        void item_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem) sqlTextBox.Text = ((ToolStripMenuItem)sender).Text;
         }
     }
 }

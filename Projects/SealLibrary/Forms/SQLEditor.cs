@@ -21,6 +21,7 @@ namespace Seal.Forms
         const string razorSourceTemplate = "@using Seal.Model\r\n@{\r\nMetaSource source = Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
         const string razorModelTemplate = "@using Seal.Model\r\n@{\r\nReportModel model = Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
         const string razorTaskTemplate = "@using Seal.Model\r\n@{\r\nReportTask task= Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
+        const string razorEnumTemplate = "@using Seal.Model\r\n@{\r\nMetaEnum enumList= Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
 
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
@@ -77,6 +78,7 @@ namespace Seal.Forms
                 }
                 else if (context.Instance is MetaEnum)
                 {
+                    template = razorEnumTemplate;
                     frm.clearToolStripButton.Visible = false;
                     MetaEnum anEnum = context.Instance as MetaEnum;
                     if (value == null || string.IsNullOrEmpty(value.ToString()))
@@ -108,14 +110,14 @@ namespace Seal.Forms
                     frm.clearToolStripButton.Visible = false;
                 }
 
-                if (!string.IsNullOrEmpty(template))
-                {
-                    frm.errorTextBox.Text = "Note that Razor script can be used if the text starts with '@'. Here is a template:\r\n" + template;
-                }
-                
                 if (value != null) frm.sqlTextBox.Text = valueToEdit.ToString();
 
                 if (context.PropertyDescriptor.IsReadOnly) frm.SetReadOnly();
+                else if (!string.IsNullOrEmpty(template))
+                {
+                    frm.SetSamples(new List<string>() { template });
+                    frm.errorTextBox.Text = "Note that Razor script can be used if the text starts with '@'.\r\n";
+                }
 
                 if (svc.ShowDialog(frm) == DialogResult.OK)
                 {
