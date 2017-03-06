@@ -137,6 +137,12 @@ namespace Seal.Model
         {
             get
             {
+                if (Element != null && Element.IsEnum)
+                {
+                    MetaEV value = Element.MetaColumn.Enum.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
+                    if (value != null) FinalCssStyle = value.Css;
+                }
+
                 if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
 
                 string result = "";

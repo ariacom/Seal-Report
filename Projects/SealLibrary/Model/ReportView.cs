@@ -1439,8 +1439,8 @@ namespace Seal.Model
                 {
                     Thread.CurrentThread.CurrentCulture = Report.ExecutionView.CultureInfo;
                     page.ChartPath = Report.GetChartFileName();
-                    page.ChartFileName = Path.GetFileName(page.ChartPath);
                     page.Chart.SaveImage(page.ChartPath, ChartImageFormat.Png);
+                    page.ChartFileName = Helper.HtmlMakeImageSrcData(page.ChartPath);
                 }
                 catch (Exception ex)
                 {

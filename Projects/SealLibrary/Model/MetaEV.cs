@@ -41,6 +41,14 @@ namespace Seal.Model
             set { _restrictionValue = value; }
         }
 
+        string _css;
+        [Category("Definition"), DisplayName("CSS"), Description("The optional Cascade Style Sheet applied to the cell displayed")]
+        public string Css
+        {
+            get { return _css; }
+            set { _css = value; }
+        }
+
         [Category("Display"), DisplayName("\tValue"), Description("The final value displayed in the report")]
         public string DisplayValue
         {
@@ -52,6 +60,5 @@ namespace Seal.Model
         {
             get { return !string.IsNullOrEmpty(_restrictionValue) ? _restrictionValue : DisplayValue; }
         }
-
     }
 }

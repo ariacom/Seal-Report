@@ -986,7 +986,7 @@ namespace Seal.Model
         }
 
 
-public string GetImageFile(string fileName)
+        public string GetImageFile(string fileName)
         {
             if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
             {
@@ -1003,7 +1003,7 @@ public string GetImageFile(string fileName)
             return FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, ResultFilePrefix + Guid.NewGuid().ToString() + FileHelper.ResultFileStaticSuffix + ".png"));
         }
 
-        public string AttachImageFile(string fileName, bool forUrl = true)
+        public string AttachImageFile(string fileName)
         {
             if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
             {

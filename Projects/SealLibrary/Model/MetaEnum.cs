@@ -191,6 +191,7 @@ namespace Seal.Model
                             value.Id = row[0].ToString();
                             value.Val = table.Columns.Count > 1 ? (row.IsNull(1) ? null : row[1].ToString()) : null;
                             value.ValR = table.Columns.Count > 2 ? (row.IsNull(2) ? null : row[2].ToString()) : null;
+                            value.Css = table.Columns.Count > 3 ? (row.IsNull(3) ? null : row[3].ToString()) : null;
                             Values.Add(value);
                         }
                     }
