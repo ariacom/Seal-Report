@@ -220,8 +220,10 @@ function executeTimer() {
         if (urlPrefix != "") {
             $.post(urlPrefix + "ActionRefreshReport", { execution_guid: webExecutionGUID })
 		        .done(function (data) {
-		            if (data.result_url != null && data.result_url != "") {
-		                window.location.assign(data.result_url);
+		            if (data.result_ready) {
+		                clearInterval(executionTimer);
+		                $("#header_form").attr("action", urlPrefix + "Result");
+                        $("#header_form").submit();
 		            }
 		            else if (data.processing_message != null && data.execution_messages != null) {
 		                $("#processing_message").html(data.processing_message);
@@ -261,6 +263,7 @@ function executeReport(nav) {
     }
 
     $("#navigation_id").val(nav);
+    $("#header_form").attr("target", "");
     if (urlPrefix != "") {
         $.post(url, $("#header_form").serialize())
             .done(function (data) {

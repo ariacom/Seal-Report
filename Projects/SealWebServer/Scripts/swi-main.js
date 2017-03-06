@@ -388,7 +388,10 @@ var SWIMain = (function () {
             else {
                 _gateway.ViewFile($(e.currentTarget).data("path"), function (data) {
                     $waitDialog.modal('hide');
-                    window.open(data.url);
+                    var win = window.open('about:blank');
+                    win.document.open();
+                    win.document.write(data);
+                    win.document.close();
                 });
             }
         });

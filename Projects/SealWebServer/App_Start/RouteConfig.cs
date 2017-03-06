@@ -24,6 +24,7 @@ namespace SealWebServer
                  "{action}", // URL with parameters
                  new { controller = "Home", action = "Main" } // Parameter defaults
                  );
+
         }
     }
 }

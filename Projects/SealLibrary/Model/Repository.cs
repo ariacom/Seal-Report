@@ -34,6 +34,8 @@ namespace Seal.Model
         public const string SealPersonalRepositoryKeyword = "%SEALPERSONALREPOSITORY%";
         public const string SealReportDisplayNameKeyword = "%SEALREPORTDISPLAYNAME%";
 
+        public const string SealWebPublishTemp = "temp";
+
         string _path;
         public string RepositoryPath
         {

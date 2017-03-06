@@ -90,6 +90,12 @@ namespace Seal.Model
             }
 
             //build the json result
+            if (len == -1)
+            {
+                start = 0;
+                len = _filteredLines.Count;
+            }
+
             for (int row = start; row < _filteredLines.Count && row < start + len; row++)
             {
                 ResultCell[] line = _filteredLines[row];

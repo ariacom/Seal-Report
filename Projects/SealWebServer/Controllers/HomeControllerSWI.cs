@@ -361,7 +361,7 @@ namespace SealWebServer.Controllers
 
                 var execution = initReportExecution(report, viewGUID, outputGUID);
                 execution.RenderHTMLDisplayForViewer();
-                return GetContentResult(report.HTMLDisplayFilePath);
+                return getFileResult(report.HTMLDisplayFilePath, report);
             }
             catch (Exception ex)
             {
@@ -385,11 +385,13 @@ namespace SealWebServer.Controllers
                 string filePath = getFullPath(path);
 
                 filePath = FileHelper.CopySealFile(filePath, tempFolder);
+                return getFileResult(filePath, null);
+                /*
                 int index = Request.Url.OriginalString.ToLower().IndexOf("swiviewfile");
                 if (index == -1) throw new Exception("Invalid URL");
                 string url = Request.Url.OriginalString.Substring(0, index) + "temp/" + HttpUtility.UrlEncode(Path.GetFileName(filePath)).Replace("+", "%20");
 
-                return Json(new { url = url });
+                return Json(new { url = url });*/
             }
             catch (Exception ex)
             {

@@ -21,7 +21,8 @@
                 dataTables.dataTable({
                 bSort: @Helper.ToJS(View.GetBoolValue("data_tables_sort_enabled")),
                 bPaginate: @Helper.ToJS(View.GetBoolValue("data_tables_pagination_enabled")),
-                iDisplayLength: @View.GetValue("data_tables_pagination_size"),
+                aLengthMenu: [[10, 25, 50, 100, 500], [10, 25, 50, 100, 500]],
+                iDisplayLength: @(View.GetBoolValue("data_tables_pagination_enabled") ? View.GetValue("data_tables_pagination_size") : "-1"),
                 bInfo: @Helper.ToJS(View.GetBoolValue("data_tables_show_information")),
                 bFilter: @Helper.ToJS(View.GetBoolValue("data_tables_filter_enabled")),
                 bProcessing: @Helper.ToJS(View.GetBoolValue("data_tables_show_processing")),

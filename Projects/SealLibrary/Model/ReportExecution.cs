@@ -34,10 +34,10 @@ namespace Seal.Model
         public const string ActionRefreshReport = "ActionRefreshReport";
         public const string ActionCancelReport = "ActionCancelReport";
         public const string ActionUpdateViewParameter = "ActionUpdateViewParameter";
-        public const string ActionViewHtmlResult = "ActionViewHtmlResult";
-        public const string ActionViewPrintResult = "ActionViewPrintResult";
-        public const string ActionViewPDFResult = "ActionViewPDFResult";
-        public const string ActionViewExcelResult = "ActionViewExcelResult";
+        public const string ActionViewHtmlResult = "HtmlResult";
+        public const string ActionViewPrintResult = "PrintResult";
+        public const string ActionViewPDFResult = "PDFResult";
+        public const string ActionViewExcelResult = "ExcelResult";
         public const string ActionNavigate = "ActionNavigate";
         public const string ActionLogin = "ActionLogin";
         public const string ActionLogout = "ActionLogout";

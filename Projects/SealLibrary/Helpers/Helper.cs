@@ -624,5 +624,15 @@ namespace Seal.Helpers
             }
             return res;
         }
+
+
+        public static string HtmlMakeImageSrcData(string filename)
+        {
+            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            byte[] filebytes = new byte[fs.Length];
+            fs.Read(filebytes, 0, Convert.ToInt32(fs.Length));
+            return "data:image/png;base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
+        }
+
     }
 }

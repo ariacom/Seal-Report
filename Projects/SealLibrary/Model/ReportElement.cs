@@ -35,7 +35,7 @@ namespace Seal.Model
                 GetProperty("DisplayNameEl").SetIsBrowsable(true);
                 GetProperty("SQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("CellCss").SetIsBrowsable(true);
-                GetProperty("HasHTMLTags").SetIsBrowsable(!IsEnum);
+                GetProperty("HasHTMLTags").SetIsBrowsable(true);
                 GetProperty("SortOrder").SetIsBrowsable(true);
                 GetProperty("TypeEd").SetIsBrowsable(!IsEnum && !Source.IsNoSQL);
 
