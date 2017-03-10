@@ -57,8 +57,6 @@ namespace Seal.Model
             set { _outputs = value; }
         }
 
-
-
         private List<ReportTask> _taks = new List<ReportTask>();
         public List<ReportTask> Tasks
         {
@@ -175,7 +173,7 @@ namespace Seal.Model
         {
             get
             {
-                if (string.IsNullOrEmpty(_HTMLDisplayFilePath)) _HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(DisplayFolder, "result.htm"));
+                if (string.IsNullOrEmpty(_HTMLDisplayFilePath)) _HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, "result.htm"));
                 return _HTMLDisplayFilePath;
             }
             set { _HTMLDisplayFilePath = value; }
@@ -186,7 +184,7 @@ namespace Seal.Model
         {
             get
             {
-                string result = (ExecutionContext == ReportExecutionContext.WebReport ? Repository.WebPublishFolder : FileHelper.TempApplicationDirectory);
+                string result = FileHelper.TempApplicationDirectory;
 
                 if (ForOutput)
                 {
@@ -222,27 +220,16 @@ namespace Seal.Model
 
         [XmlIgnore]
         public string WebUrl = "";
-
-        [XmlIgnore]
-        public string WebTempUrl
-        {
-            get { return WebUrl + "temp/"; }
-        }
-
+        
         [XmlIgnore]
         public string ExecutionGUID = Guid.NewGuid().ToString();
 
         [XmlIgnore]
-        public string DisplayFolder
+        public string GenerationFolder
         {
             get
             {
-                string result = FileHelper.TempApplicationDirectory;
-                if (ExecutionContext == ReportExecutionContext.WebOutput || ExecutionContext == ReportExecutionContext.WebReport)
-                {
-                    result = Repository.WebPublishFolder;
-                }
-                return result;
+                return FileHelper.TempApplicationDirectory;
             }
         }
 
@@ -328,7 +315,7 @@ namespace Seal.Model
                 }
 
                 //Display path is always an HTML one...
-                HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(DisplayFolder, ResultFilePrefix + ".htm"));
+                HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, ResultFilePrefix + ".htm"));
 
                 //Clear some cache values...
                 _displayNameEx = null;
@@ -342,6 +329,20 @@ namespace Seal.Model
             }
 
             //Init scripts
+            //First config
+            if (!string.IsNullOrEmpty(Repository.Configuration.InitScript))
+            {
+                try
+                {
+                    Helper.ParseRazor(Repository.Configuration.InitScript, this);
+                }
+                catch (Exception ex2)
+                {
+                    ExecutionErrors += string.Format("Error executing configuration init script:\r\n{0}\r\n", ex2.Message);
+                }
+            }
+
+            //Then source
             foreach (var source in Sources.Where(i => !string.IsNullOrEmpty(i.InitScript)))
             {
                 if (Models.Exists(i => i.SourceGUID == source.GUID))
@@ -352,11 +353,12 @@ namespace Seal.Model
                     }
                     catch (Exception ex2)
                     {
-                        ExecutionErrors += string.Format("Error executing init script for source {0}\r\n{1}\r\n", source.Name, ex2.Message);
+                        ExecutionErrors += string.Format("Error executing source init script for '{0}'\r\n{1}\r\n", source.Name, ex2.Message);
                     }
                 }
             }
 
+            //Finally report
             if (!string.IsNullOrEmpty(InitScript))
             {
                 try
@@ -365,7 +367,7 @@ namespace Seal.Model
                 }
                 catch(Exception ex2)
                 {
-                    ExecutionErrors += string.Format("Error executing init script\r\n{0}\r\n", ex2.Message);
+                    ExecutionErrors += string.Format("Error executing report init script:\r\n{0}\r\n", ex2.Message);
                 }
             }
         }
@@ -446,8 +448,6 @@ namespace Seal.Model
         {
             get { return (ExecutionRenderingDate - ExecutionStartDate); }
         }
-        [XmlIgnore]
-        public List<string> ExecutionAttachedFiles = new List<string>();
 
         [XmlIgnore]
         public bool IsNavigating = false; //If false, do evaluate restrictions prompted...
@@ -1005,12 +1005,12 @@ namespace Seal.Model
 
         public string AttachImageFile(string fileName)
         {
-            if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
+            if (ExecutionContext == ReportExecutionContext.WebReport)
             {
                 return string.Format("{0}Images/{1}", WebUrl, fileName);
             }
 
-            if (GenerateHTMLDisplay || SkipImageAttachment || IsBasicHTMLWithNoOutput || ForPDFConversion)
+            if (GenerateHTMLDisplay || SkipImageAttachment || ForPDFConversion)
             {
                 //Rendering the display, we return full path with file:///
                 return GetImageFile(fileName);
@@ -1018,15 +1018,10 @@ namespace Seal.Model
 
             //generating result file
             string sourceFilePath = Path.Combine(Repository.ViewImagesFolder, fileName);
-            if (ForOutput)
+            if (ForOutput || IsBasicHTMLWithNoOutput)
             {
-                //execution to output, rename the file and copy them in the target directory
-                string targetFilePath = FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, ResultFilePrefix + Path.GetFileNameWithoutExtension(fileName) + FileHelper.ResultFileStaticSuffix + Path.GetExtension(fileName)));
-                File.Copy(sourceFilePath, targetFilePath);
-                sourceFilePath = targetFilePath;
+                return Helper.HtmlMakeImageSrcData(sourceFilePath);
             }
-
-            ExecutionAttachedFiles.Add(sourceFilePath);
             return Path.GetFileName(sourceFilePath);
         }
 

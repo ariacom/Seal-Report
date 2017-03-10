@@ -314,11 +314,10 @@ namespace SealWebServer.Controllers
                 execution.Execute();
                 while (report.Status != ReportStatus.Executed) System.Threading.Thread.Sleep(100);
 
-                string result = "";
+                ActionResult result = null;
                 if (!string.IsNullOrEmpty(outputGUID))
                 {
-                    //Copy the result output to temp
-                    result = publishReportResult(report);
+                    result = getFileResult(publishReportResult(report), report);
                 }
                 else
                 {
@@ -328,10 +327,10 @@ namespace SealWebServer.Controllers
                     else if (format.ToLower() == "pdf") fileResult = execution.GeneratePDFResult();
                     else if (format.ToLower() == "excel") fileResult = execution.GenerateExcelResult();
                     else fileResult = execution.GenerateHTMLResult();
-                    result = execution.Report.WebTempUrl + Path.GetFileName(fileResult);
+                    result = getFileResult(Path.GetFileName(fileResult), report);
                 }
                 report.PreInputRestrictions.Clear();
-                return Json(new { url = result });
+                return result;
             }
             catch (Exception ex)
             {

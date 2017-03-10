@@ -27,8 +27,7 @@ namespace Seal.Model
                 rootReport.IsNavigating = true;
                 rootReport.HasNavigation = true;
 
-                Navigations.First(i => i.Value.Execution.RootReport == rootReport).Value.Link.Href = !string.IsNullOrEmpty(rootReport.WebUrl) ? rootReport.WebTempUrl + Path.GetFileName(rootReport.ResultFilePath) : rootReport.ResultFilePath;
-
+                Navigations.First(i => i.Value.Execution.RootReport == rootReport).Value.Link.Href = ReportExecution.ActionViewHtmlResultFile + "?execution_guid=" + rootReport.ExecutionGUID;
             }
 
             if (!string.IsNullOrEmpty(reportPath))
@@ -139,7 +138,7 @@ namespace Seal.Model
             }
             //navigation.Origin = 
             navigation.Link = new NavigationLink() { Text = execution.Report.ExecutionName };
-            navigation.Link.Href = !string.IsNullOrEmpty(execution.Report.WebUrl) ? execution.Report.WebTempUrl + Path.GetFileName(execution.Report.ResultFilePath) : execution.Report.ResultFilePath;
+            navigation.Link.Href = ReportExecution.ActionViewHtmlResultFile + "?execution_guid=" + execution.Report.ExecutionGUID;
 
             //set root report here
             if (execution.RootReport == null) execution.RootReport = execution.Report;

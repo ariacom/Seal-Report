@@ -975,8 +975,6 @@ namespace Seal
                 //Create and save a meta source
                 MetaSource metaSource = MetaSource.Create(_repository);
                 metaSource.IsNoSQL = source.IsNoSQL;
-                metaSource.NumericFormat = source.NumericFormat;
-                metaSource.DateTimeFormat = source.DateTimeFormat;
                 metaSource.InitScript = source.InitScript;
                 metaSource.TasksScript = source.TasksScript;
                 metaSource.Connections.Clear();

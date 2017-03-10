@@ -2,14 +2,45 @@
 <SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString>
   <TaskFolderName>Seal Report</TaskFolderName>
-  <DefaultCulture />
   <IsLocal>false</IsLocal>
   <LogoName>logo.jpg</LogoName>
-  <CsvSeparator />
   <LogDays>30</LogDays>
   <WebProductName>Seal Report</WebProductName>
+  <InitScript>@using Seal.Model
+@using System.Data
+@{
+    Report report = Model;
+	ReportExecutionLog log = Model;
+
+    //Script executed when the report is initialized at execution
+    if (log != null) {
+        log.LogMessage("Executing root server 'Init Script'");
+
+        //...
+    }
+
+    // Example to change the Thousand Separator or the Decimal Separator
+    	report.ExecutionView.CultureInfo.NumberFormat.NumberGroupSeparator = " ";
+        report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ".";	
+    
+}
+</InitScript>
+  <TasksScript>@using System.Text
+@functions {
+    //During execution, this script will be copied at the end of all task scripts...
+    public string MyConvertString(string input) {
+        return input.Replace("__","_"); 
+    }
+}
+</TasksScript>
+  <DefaultCulture />
+  <NumericFormat>N0</NumericFormat>
+  <DateTimeFormat>d</DateTimeFormat>
+  <CsvSeparator />
+  <ThousandSeparator>b</ThousandSeparator>
+  <DecimalSeparator>c</DecimalSeparator>
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>
   <WebApplicationName>/seal</WebApplicationName>
   <WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory>
-  <InstallationDirectory>C:\_dev\Seal-Report\Projects\SealReportDesigner\bin\Debug</InstallationDirectory>
+  <InstallationDirectory>C:\_dev\Seal-Report\Projects\SealServerManager\bin\Debug</InstallationDirectory>
 </SealServerConfiguration>

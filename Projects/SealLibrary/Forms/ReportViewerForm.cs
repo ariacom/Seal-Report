@@ -133,6 +133,7 @@ namespace Seal.Forms
 
             _execution = new ReportExecution() { Report = _report };
             _report.InitForExecution();
+            if (_report.HasErrors) _report.Cancel = true;
             _execution.RenderHTMLDisplayForViewer();
             _url = "file:///" + _report.HTMLDisplayFilePath;
             webBrowser.Navigate(_url);

@@ -40,6 +40,7 @@ namespace Seal.Helpers
         public string ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
         public Encoding DefaultEncoding = Encoding.Default;
         public bool TrimText = true;
+        public bool RemoveCrLf = false;
 
         public bool DebugMode = false;
         public StringBuilder DebugLog = new StringBuilder();
@@ -406,8 +407,9 @@ namespace Seal.Helpers
             }
             else
             {
-                string res = row[col].ToString().Replace("\r", " ").Replace("\n", " ");
+                string res = row[col].ToString();
                 if (TrimText) res = res.Trim();
+                if (RemoveCrLf) res = res.Replace("\r", " ").Replace("\n", " ");
                 result.Append(Helper.QuoteSingle(res));
             }
 

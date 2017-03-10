@@ -48,6 +48,10 @@ namespace Seal.Model
                 GetProperty("WebProductName").SetIsBrowsable(!ForPublication);
                 GetProperty("LogDays").SetIsBrowsable(!ForPublication);
                 GetProperty("CsvSeparator").SetIsBrowsable(!ForPublication);
+                GetProperty("NumericFormat").SetIsBrowsable(!ForPublication);
+                GetProperty("DateTimeFormat").SetIsBrowsable(!ForPublication);
+                GetProperty("InitScript").SetIsBrowsable(!ForPublication);
+                GetProperty("TasksScript").SetIsBrowsable(!ForPublication);
 
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
@@ -79,15 +83,6 @@ namespace Seal.Model
             set { _taskFolderName = value; }
         }
 
-        string _defaultCulture = "";
-        [Category("Server Settings"), DisplayName("Default Culture"), Description("The name of the default culture used when a report is created. If not specified, the current culture of the server is used."), Id(3, 1)]
-        [TypeConverter(typeof(Seal.Converter.CultureInfoConverter))]
-        public string DefaultCulture
-        {
-            get { return _defaultCulture; }
-            set { _defaultCulture = value; }
-        }
-
         bool _isLocal = false;
         [Category("Server Settings"), DisplayName("Server is local (No internet)"), Description("If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path)."), Id(4, 1)]
         public bool IsLocal
@@ -104,17 +99,8 @@ namespace Seal.Model
             set { _logoName = value; }
         }
 
-        string _csvSeparator = "";
-        [Category("Server Settings"), DisplayName("Default CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(6, 1)]
-        public string CsvSeparator
-        {
-            get { return _csvSeparator; }
-            set { _csvSeparator = value; }
-        }
-
-
         int _logDays = 30;
-        [Category("Log Settings"), DisplayName("Log days to keep"), Description("Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled."), Id(1, 2)]
+        [Category("Server Settings"), DisplayName("Log days to keep"), Description("Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled."), Id(6, 1)]
         public int LogDays
         {
             get { return _logDays; }
@@ -122,11 +108,68 @@ namespace Seal.Model
         }
 
         string _webProductName = "Seal Report";
-        [Category("Web Server Settings"), DisplayName("Web Product Name"), Description("The name of the product displayed on the Web site."), Id(1, 2)]
+        [Category("Server Settings"), DisplayName("Web Product Name"), Description("The name of the product displayed on the Web site."), Id(7, 1)]
         public string WebProductName
         {
             get { return _webProductName; }
             set { _webProductName = value; }
+        }
+
+
+
+        string _initScript = "";
+        [Category("Scripts"), DisplayName("Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string InitScript
+        {
+            get { return _initScript; }
+            set { _initScript = value; }
+        }
+
+        string _tasksScript = "";
+        [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed. This may be useful to defined common functions."), Id(5, 3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string TasksScript
+        {
+            get { return _tasksScript; }
+            set { _tasksScript = value; }
+        }
+
+
+        string _defaultCulture = "";
+        [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used when a report is created. If not specified, the current culture of the server is used."), Id(1, 2)]
+        [TypeConverter(typeof(Seal.Converter.CultureInfoConverter))]
+        public string DefaultCulture
+        {
+            get { return _defaultCulture; }
+            set { _defaultCulture = value; }
+        }
+ 
+        string _numericFormat = "N0";
+        [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format"), Id(2, 2)]
+        [TypeConverter(typeof(CustomFormatConverter))]
+        public string NumericFormat
+        {
+            get { return _numericFormat; }
+            set { _numericFormat = value; }
+        }
+
+        string _dateFormat = "d";
+        [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format"), Id(3, 2)]
+        [TypeConverter(typeof(CustomFormatConverter))]
+        public string DateTimeFormat
+        {
+            get { return _dateFormat; }
+            set { _dateFormat = value; }
+        }
+
+
+        string _csvSeparator = "";
+        [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(4, 2)]
+        public string CsvSeparator
+        {
+            get { return _csvSeparator; }
+            set { _csvSeparator = value; }
         }
 
         string _webApplicationPoolName = Repository.SealRootProductName + " Application Pool";
@@ -136,6 +179,7 @@ namespace Seal.Model
             get { return _webApplicationPoolName; }
             set { _webApplicationPoolName = value; }
         }
+
         string _webApplicationName = "/Seal";
         [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application."), Id(1, 1)]
         public string WebApplicationName

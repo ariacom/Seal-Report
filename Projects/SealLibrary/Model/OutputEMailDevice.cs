@@ -106,8 +106,32 @@ namespace Seal.Model
         [XmlIgnore]
         public string ClearPassword
         {
-            get { return CryptoHelper.DecryptTripleDES(_password, PasswordKey); }
-            set { _password = CryptoHelper.EncryptTripleDES(value, PasswordKey); }
+            get
+            {
+                try
+                {
+                    return CryptoHelper.DecryptTripleDES(_password, PasswordKey);
+                }
+                catch (Exception ex)
+                {
+                    _error = "Error during password decryption:" + ex.Message;
+                    TypeDescriptor.Refresh(this);
+                    return _password;
+                }
+            }
+            set
+            {
+                try
+                {
+                    _password = CryptoHelper.EncryptTripleDES(value, PasswordKey);
+                }
+                catch (Exception ex)
+                {
+                    _error = "Error during password encryption:" + ex.Message;
+                    _password = value;
+                    TypeDescriptor.Refresh(this);
+                }
+            }
         }
 
         string _senderEmail;
@@ -298,12 +322,6 @@ namespace Seal.Model
                 message.Attachments.Add(new Attachment(report.ResultFilePath));
             }
 
-            //Attach image files
-            foreach (string path in report.ExecutionAttachedFiles)
-            {
-                message.Attachments.Add(new Attachment(path));
-            }
-
             foreach (ReportModel model in report.Models)
             {
                 foreach (ResultPage page in model.Pages)
@@ -359,6 +377,7 @@ namespace Seal.Model
                 MailMessage message = new MailMessage();
                 message.To.Add(TestEmailTo);
                 message.From = new MailAddress(SenderEmail);
+                AddEmailAddresses(message.ReplyToList, ReplyTo);
                 message.Subject = "Test email";
                 message.Body = "This is a test message.";
                 SmtpClient.Send(message);

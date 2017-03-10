@@ -147,10 +147,8 @@ namespace Seal.Model
                 {
                     IsDefault = source.IsDefault;
                     IsNoSQL = source.IsNoSQL;
-                    NumericFormat = source.NumericFormat;
                     InitScript = source.InitScript;
                     TasksScript = source.TasksScript;
-                    DateTimeFormat = source.DateTimeFormat;
                     _metaSourceName = source.Name;
                     foreach (var item in source.Connections)
                     {
