@@ -626,12 +626,16 @@ namespace Seal.Helpers
         }
 
 
-        public static string HtmlMakeImageSrcData(string filename)
+        public static string HtmlMakeImageSrcData(string path)
         {
-            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
             byte[] filebytes = new byte[fs.Length];
             fs.Read(filebytes, 0, Convert.ToInt32(fs.Length));
-            return "data:image/png;base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
+            var ext = Path.GetExtension(path);
+            string type;
+            if (ext == ".ico") type = "x-icon";
+            else type = ext.Replace(".","");
+            return "data:image/" + type + ";base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
         }
 
     }

@@ -258,17 +258,17 @@ namespace Seal.Model
                 element.MetaColumn.SetDefaultFormat();
                 if (element.IsNumeric && NumericStandardFormat == NumericStandardFormat.Default)
                 {
-                    _format = element.MetaColumn.Type == ColumnType.Numeric ? element.MetaColumn.Format : Source.NumericFormat;
+                    _format = element.MetaColumn.Type == ColumnType.Numeric ? element.MetaColumn.Format : Source.Repository.Configuration.NumericFormat;
                 }
                 else if (element.IsDateTime && DateTimeStandardFormat == DateTimeStandardFormat.Default)
                 {
-                    _format = element.MetaColumn.Type == ColumnType.DateTime ? element.MetaColumn.Format : Source.DateTimeFormat;
+                    _format = element.MetaColumn.Type == ColumnType.DateTime ? element.MetaColumn.Format : Source.Repository.Configuration.DateTimeFormat;
                 }
             }
             else
             {
-                if (Type == ColumnType.Numeric && NumericStandardFormat == NumericStandardFormat.Default) _format = Source.NumericFormat;
-                else if (Type == ColumnType.DateTime && DateTimeStandardFormat == DateTimeStandardFormat.Default) _format = Source.DateTimeFormat;
+                if (Type == ColumnType.Numeric && NumericStandardFormat == NumericStandardFormat.Default) _format = Source.Repository.Configuration.NumericFormat;
+                else if (Type == ColumnType.DateTime && DateTimeStandardFormat == DateTimeStandardFormat.Default) _format = Source.Repository.Configuration.DateTimeFormat;
             }
         }
 

@@ -9,7 +9,6 @@ namespace Seal.Model
     {
         public string Href = "";
         public string Text = "";
-        public string Src = "";
     }
 
 }

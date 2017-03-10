@@ -608,9 +608,9 @@ namespace Seal.Model
         {
             get
             {
-                if (_cultureInfo == null && !string.IsNullOrEmpty(_cultureName)) _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == _cultureName);
-                if (_cultureInfo == null && Report.ExecutionView != this && Report.ExecutionView != null) _cultureInfo = Report.CultureInfo;
-                if (_cultureInfo == null) _cultureInfo = Report.Repository.CultureInfo;
+                if (_cultureInfo == null && !string.IsNullOrEmpty(_cultureName)) _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == _cultureName).Clone() as CultureInfo;
+                if (_cultureInfo == null && Report.ExecutionView != this && Report.ExecutionView != null) _cultureInfo = Report.CultureInfo.Clone() as CultureInfo;
+                if (_cultureInfo == null) _cultureInfo = Report.Repository.CultureInfo.Clone() as CultureInfo;
                 return _cultureInfo;
             }
         }

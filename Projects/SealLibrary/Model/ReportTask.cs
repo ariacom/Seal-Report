@@ -161,9 +161,24 @@ namespace Seal.Model
             set { _script = value; }
         }
 
+        public string ScriptHeader
+        {
+            get
+            {
+                var result = "";
+                if (!string.IsNullOrEmpty(Report.Repository.Configuration.TasksScript)) result += Report.Repository.Configuration.TasksScript + "\r\n";
+                if (!string.IsNullOrEmpty(Source.TasksScript)) result += Source.TasksScript + "\r\n";
+                if (!string.IsNullOrEmpty(Report.TasksScript)) result += Report.TasksScript + "\r\n";
+                return result;
+            }
+        }
+
+
         public string FullScript
         {
-            get { return _script + (string.IsNullOrEmpty(Report.TasksScript) ? "" : "\r\n" + Report.TasksScript) + (string.IsNullOrEmpty(Source.TasksScript) ? "" : "\r\n" + Source.TasksScript); }
+            get {
+                return ScriptHeader + _script;
+            }
         }
 
         bool _ignoreError;

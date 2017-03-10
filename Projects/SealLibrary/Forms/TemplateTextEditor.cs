@@ -242,16 +242,37 @@ namespace Seal.Forms
 @{
     MetaSource source = Model;
 	ReportExecutionLog log = null;
+    Report = null;
     if (source is ReportSource) {
         log = ((ReportSource) source).Report;
+        report = ((ReportSource) source).Report;
     }
 
-    //Script executed to modify the source when the report is initialized at execution
+    //Script executed when the report is initialized at execution
     if (log != null) {
         log.LogMessage(""Executing 'Init Script' for source: "" + source.Name +"" ..."");
 
         //...
     }
+}
+";
+
+        const string razorConfigurationInitScriptTemplate = @"@using Seal.Model
+@using System.Data
+@{
+    Report report = Model;
+	ReportExecutionLog log = Model;
+
+    //Script executed when the report is initialized at execution
+    if (log != null) {
+        log.LogMessage(""Executing configuration 'Init Script'"");
+
+        //...
+    }
+
+    // e.g. to change the Thousand Separator or the Decimal Separator
+    	//report.ExecutionView.CultureInfo.NumberFormat.NumberGroupSeparator = ""'"";
+        //report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ""."";	    
 }
 ";
 
@@ -296,7 +317,9 @@ namespace Seal.Forms
                     frm.TypeForCheckSyntax = typeof(ReportTask);
                     frm.Text = "Edit task script";
                     frm.textBox.ConfigurationManager.Language = "cs";
-                    frm.TextToAddForCheck = ((ReportTask)context.Instance).Report.TasksScript + "\r\n" +  ((ReportTask)context.Instance).Source.TasksScript; 
+
+                    frm.TextToAddForCheck = "";
+                    frm.TextToAddForCheck = ((ReportTask)context.Instance).ScriptHeader; 
                     List<string> samples = new List<string>();
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Refresh Data Sources enumerated lists\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.RefreshRepositoryEnums();\r\n}");
                     samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Load a table from an Excel file, may need ODBC Office 2007 Drivers\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.LoadTableFromExcel(@\"c:\\temp\\loadFolder\", @\"c:\\temp\\excelFile.xlsx\", \"ExcelTabName\", \"DestinationTableName\", false /* true to load in all connections */);\r\n}");
@@ -465,6 +488,20 @@ namespace Seal.Forms
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
                 else if ((context.Instance is TasksFolder || context.Instance is MetaSource) && context.PropertyDescriptor.Name == "TasksScript")
+                {
+                    template = razorTasksTemplate;
+                    frm.TypeForCheckSyntax = typeof(ReportTask);
+                    frm.Text = "Edit the script that will be added to all task scripts";
+                    frm.textBox.ConfigurationManager.Language = "cs";
+                }
+                else if (context.Instance is SealServerConfiguration && context.PropertyDescriptor.Name == "InitScript")
+                {
+                    template = razorConfigurationInitScriptTemplate;
+                    frm.TypeForCheckSyntax = typeof(Report);
+                    frm.Text = "Edit the init script";
+                    frm.textBox.ConfigurationManager.Language = "cs";
+                }
+                else if (context.Instance is SealServerConfiguration && context.PropertyDescriptor.Name == "TasksScript")
                 {
                     template = razorTasksTemplate;
                     frm.TypeForCheckSyntax = typeof(ReportTask);

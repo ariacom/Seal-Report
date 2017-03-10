@@ -21,8 +21,6 @@
   <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
   <IsDefault>false</IsDefault>
   <IsNoSQL>false</IsNoSQL>
-  <NumericFormat>N0</NumericFormat>
-  <DateTimeFormat>d</DateTimeFormat>
   <InitScript />
   <TasksScript />
   <IgnorePrePostError>false</IgnorePrePostError>

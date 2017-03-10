@@ -47,8 +47,6 @@ namespace Seal.Model
                 GetProperty("IsDefault").SetIsBrowsable(true);
                 GetProperty("IsNoSQL").SetIsBrowsable(true);
 
-                GetProperty("NumericFormat").SetIsBrowsable(true);
-                GetProperty("DateTimeFormat").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsBrowsable(true);
                 GetProperty("TasksScript").SetIsBrowsable(true);
 
@@ -104,24 +102,6 @@ namespace Seal.Model
             set { _isNoSQL = value; }
         }
         
-        string _numericFormat = "N0";
-        [Category("Default Display Formats"), DisplayName("Numeric Format"), Description("The display numeric format used for numeric column having the default format"), Id(2, 2)]
-        [TypeConverter(typeof(CustomFormatConverter))]
-        public string NumericFormat
-        {
-            get { return _numericFormat; }
-            set { _numericFormat = value; }
-        }
-
-        string _dateFormat = "d";
-        [Category("Default Display Formats"), DisplayName("Date Time Format"), Description("The display date time format used for date time column having the default format"), Id(3, 2)]
-        [TypeConverter(typeof(CustomFormatConverter))]
-        public string DateTimeFormat
-        {
-            get { return _dateFormat; }
-            set { _dateFormat = value; }
-        }
-
         string _initScript = "";
         [Category("Scripts"), DisplayName("Init Script"), Description("If set, the script is executed when a report is initialized for an execution. This may be useful to change dynamically components of the source (e.g. modifying connections, tables, columns, enums, etc.)."), Id(4, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]

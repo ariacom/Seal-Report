@@ -107,6 +107,7 @@ namespace Seal.Model
             }
         }
 
+
         CultureInfo _cultureInfo = null;
         public CultureInfo CultureInfo
         {
@@ -115,6 +116,7 @@ namespace Seal.Model
 
                 if (_cultureInfo == null && !string.IsNullOrEmpty(Configuration.DefaultCulture)) _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == Configuration.DefaultCulture);
                 if (_cultureInfo == null) _cultureInfo = CultureInfo.CurrentCulture;
+                
                 return _cultureInfo;
             }
         }
@@ -700,7 +702,6 @@ namespace Seal.Model
         #region Web publishing
         //Web publishing
         public string WebApplicationPath;
-        public string WebPublishFolder;
         public string ApplicationPath
         {
             get

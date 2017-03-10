@@ -35,6 +35,7 @@ namespace Seal.Model
         public const string ActionCancelReport = "ActionCancelReport";
         public const string ActionUpdateViewParameter = "ActionUpdateViewParameter";
         public const string ActionViewHtmlResult = "HtmlResult";
+        public const string ActionViewHtmlResultFile = "HtmlResultFile";
         public const string ActionViewPrintResult = "PrintResult";
         public const string ActionViewPDFResult = "PDFResult";
         public const string ActionViewExcelResult = "ExcelResult";
@@ -127,7 +128,7 @@ namespace Seal.Model
             catch (Exception ex)
             {
                 //unable to write in the result file -> get one from temp or web publish...
-                string newFolder = (Report.ExecutionContext == ReportExecutionContext.WebReport ? Report.Repository.WebPublishFolder : FileHelper.TempApplicationDirectory);
+                string newFolder = FileHelper.TempApplicationDirectory;
                 string newPath = FileHelper.GetUniqueFileName(Path.Combine(newFolder, Report.ResultFileName), "." + Report.ExecutionView.ExternalViewerExtension);
                 Report.ExecutionErrors += string.Format("Unable to write to '{0}'.\r\nChanging report result to '{1}'.\r\n{2}\r\n", Report.ResultFilePath, newPath, ex.Message);
                 Report.ResultFilePath = newPath;
@@ -199,7 +200,6 @@ namespace Seal.Model
             Report.ExecutionMessages = "";
             Report.ExecutionErrors = "";
             Report.HasValidationErrors = false;
-            Report.ExecutionAttachedFiles.Clear();
 
             Report.InitForExecution();
             if (Report.HasErrors)
@@ -1630,7 +1630,7 @@ namespace Seal.Model
         public string GenerateHTMLResult()
         {
             Report.IsNavigating = false;
-            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.DisplayFolder, Path.GetFileName(Report.ResultFileName)));
+            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileName(Report.ResultFileName)));
             Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
             if (Report.IsBasicHTMLWithNoOutput && paginationParameter != null)
             {
@@ -1656,7 +1656,7 @@ namespace Seal.Model
         {
             Report.IsNavigating = false;
             Parameter printParameter = Report.PrintLayoutParameter;
-            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.DisplayFolder, Path.GetFileName(Report.ResultFileName)));
+            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileName(Report.ResultFileName)));
             if (printParameter != null)
             {
                 bool initialValue = printParameter.BoolValue;
@@ -1709,7 +1709,7 @@ namespace Seal.Model
 
         public string GenerateExcelResult()
         {
-            string path = FileHelper.GetUniqueFileName(Path.Combine(Report.DisplayFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)) + ".xlsx");
+            string path = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)) + ".xlsx");
             return Report.ExecutionView.ConvertToExcel(path);
         }
 

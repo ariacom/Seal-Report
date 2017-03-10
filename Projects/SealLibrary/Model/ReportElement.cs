@@ -217,8 +217,8 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(result)) result = MetaColumn.Format;
                 if (string.IsNullOrEmpty(result))
                 {
-                    if (IsNumeric) result = Source.NumericFormat;
-                    else if (IsDateTime) result = Source.DateTimeFormat;
+                    if (IsNumeric) result = Source.Repository.Configuration.NumericFormat;
+                    else if (IsDateTime) result = Source.Repository.Configuration.DateTimeFormat;
                     else result = "0";
                 }
                 if (string.IsNullOrEmpty(result)) result = "0";

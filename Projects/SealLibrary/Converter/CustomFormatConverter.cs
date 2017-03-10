@@ -76,7 +76,7 @@ namespace Seal.Converter
             MetaColumn column = context.Instance as MetaColumn;
             ReportElement element = context.Instance as ReportElement;
             ReportOutput output = context.Instance as ReportOutput;
-            MetaSource source = context.Instance as MetaSource;
+            SealServerConfiguration config = context.Instance as SealServerConfiguration;
             List<string> choices = new List<string>();
             choices.Add("");
             if (element != null)
@@ -110,7 +110,7 @@ namespace Seal.Converter
 
                 if (!string.IsNullOrEmpty(output.FileName) && !choices.Contains(output.FileName)) choices.Add(output.FileName);
             }
-            else if (source != null)
+            else if (config != null)
             {
                 if (context.PropertyDescriptor.Name == "NumericFormat") addNumericChoices(choices);
                 else if (context.PropertyDescriptor.Name == "DateTimeFormat") addDateTimeChoices(choices);
