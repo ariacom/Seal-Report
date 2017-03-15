@@ -119,7 +119,7 @@ function initButtons() {
                 $("#nav_menu").empty();
                 if ($("#nav_button").attr("disabled") == "disabled") return;
                 if (urlPrefix != "") {
-                    $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: webExecutionGUID })
+                    $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: $("#execution_guid").val() })
                     .done(function (data) {
                         if (data.links != null && data.links != "") {
                             $("#nav_menu").html(data.links);
@@ -218,7 +218,7 @@ function executeTimer() {
     if (executionTimer != null) {
         $("#header_form").attr("action", urlPrefix + "ActionRefreshReport");
         if (urlPrefix != "") {
-            $.post(urlPrefix + "ActionRefreshReport", { execution_guid: webExecutionGUID })
+            $.post(urlPrefix + "ActionRefreshReport", { execution_guid: $("#execution_guid").val() })
 		        .done(function (data) {
 		            if (data.result_ready) {
 		                clearInterval(executionTimer);
@@ -255,7 +255,7 @@ function executeReport(nav) {
         $("#wait_image").css("display", "inline");
         $("#execute_button").button({ label: cancelText });
         url = urlPrefix + (nav == null ? "ActionExecuteReport" : "ActionNavigate");
-        executionTimer = setInterval(function () { executeTimer() }, 1200);
+        if (nav == null || urlPrefix == "") executionTimer = setInterval(function () { executeTimer() }, 1200);
     }
     else {
         url = urlPrefix + "ActionCancelReport";
@@ -265,12 +265,9 @@ function executeReport(nav) {
     $("#navigation_id").val(nav);
     $("#header_form").attr("target", "");
     if (urlPrefix != "") {
-        $.post(url, $("#header_form").serialize())
-            .done(function (data) {
-                if (data.result_url != null && data.result_url != "") {
-                    window.location.assign(data.result_url);
-                }
-            });
+        $.post(url, $("#header_form").serialize()).done(function (data) {
+            if (nav != null) $('body').html(data);
+        });
     }
     else {
         $("#header_form").attr("action", url);
@@ -296,7 +293,7 @@ function setButtonLabels() {
 function submitViewParameter(viewId, parameterName, parameterValue) {
     if (generateHTMLDisplay) {
         if (urlPrefix != "") {
-            $.post(urlPrefix + "ActionUpdateViewParameter", { execution_guid: webExecutionGUID, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+            $.post(urlPrefix + "ActionUpdateViewParameter", { execution_guid: $("#execution_guid").val(), parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
         }
         else {
             $("#parameter_view_id").val(viewId);

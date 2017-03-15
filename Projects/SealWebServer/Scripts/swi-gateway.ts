@@ -134,28 +134,31 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public ExecuteReport(path: string, render: boolean, viewGUID: string, outputGUID: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_sealServer + "SWIExecuteReport", {
-            path: path, render: render, viewGUID: viewGUID, outputGUID: outputGUID
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+    public ExecuteReport(path: string, render: boolean, viewGUID: string, outputGUID: string) {
+        var f: JQuery = $('<form method="post" target="_blank"/>').appendTo('body')
+        f.attr('action', _sealServer + "SWIExecuteReport");
+        f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
+        f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
+        f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
+        f.append($('<input />').attr('type', 'hidden').attr('name', 'outputGUID').attr('value', outputGUID));
+        f.submit();
     }
 
-    public ExecuteReportDefinition(report: any, render: boolean, viewGUID: string, outputGUID: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_sealServer + "SWIExecuteReportDefinition", {
-            report: report, render: render, viewGUID: viewGUID, outputGUID: outputGUID
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+    public ExecuteReportDefinition(report: any, render: boolean, viewGUID: string, outputGUID: string) {
+        var f: JQuery = $('<form method="post" target="_blank"/>').appendTo('body')
+        f.attr('action', _sealServer + "SWIExecuteReportDefinition");
+        f.append($('<input />').attr('type', 'hidden').attr('name', 'report').attr('value', report));
+        f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
+        f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
+        f.append($('<input />').attr('type', 'hidden').attr('name', 'outputGUID').attr('value', outputGUID));
+        f.submit();
     }
 
-    public ViewFile(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_sealServer + "SWIViewFile", {
-            path: path
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+    public ViewFile(path: string) {
+        var f : JQuery = $('<form method="post" target="_blank"/>').appendTo('body')
+        f.attr('action', _sealServer + "SWIViewFile");
+        f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
+        f.submit();
     }
 
     public GetReportDetail(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {

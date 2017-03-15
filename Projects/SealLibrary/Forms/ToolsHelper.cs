@@ -488,7 +488,6 @@ namespace Seal.Forms
         {
             foreach (var fileName in Directory.GetFiles(path))
             {
-                if (FileHelper.IsSealAttachedFile(fileName)) continue;
                 translations.AppendFormat("FileName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(fileName.Substring(len)), Helper.QuoteDouble(Path.GetFileNameWithoutExtension(fileName)), extraSeparators);
             }
 

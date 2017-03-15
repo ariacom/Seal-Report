@@ -37,8 +37,6 @@
   <NumericFormat>N0</NumericFormat>
   <DateTimeFormat>d</DateTimeFormat>
   <CsvSeparator />
-  <ThousandSeparator>b</ThousandSeparator>
-  <DecimalSeparator>c</DecimalSeparator>
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>
   <WebApplicationName>/seal</WebApplicationName>
   <WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory>

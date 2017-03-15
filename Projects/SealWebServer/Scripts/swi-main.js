@@ -374,26 +374,11 @@ var SWIMain = (function () {
             _main.enableControls();
         });
         $(".report-name").on("click", function (e) {
-            $waitDialog.modal();
             $outputPanel.hide();
-            if ($(e.currentTarget).data("isReport")) {
-                _gateway.ExecuteReport($(e.currentTarget).data("path"), false, null, null, function (data) {
-                    $waitDialog.modal('hide');
-                    var win = window.open('about:blank');
-                    win.document.open();
-                    win.document.write(data);
-                    win.document.close();
-                });
-            }
-            else {
-                _gateway.ViewFile($(e.currentTarget).data("path"), function (data) {
-                    $waitDialog.modal('hide');
-                    var win = window.open('about:blank');
-                    win.document.open();
-                    win.document.write(data);
-                    win.document.close();
-                });
-            }
+            if ($(e.currentTarget).data("isReport"))
+                _gateway.ExecuteReport($(e.currentTarget).data("path"), false, null, null);
+            else
+                _gateway.ViewFile($(e.currentTarget).data("path"));
         });
         $(".report-output").on("click", function (e) {
             $outputPanel.hide();
@@ -425,14 +410,7 @@ var SWIMain = (function () {
                 }
                 $(".output-name").on("click", function (e) {
                     $outputPanel.hide();
-                    $waitDialog.modal();
-                    _gateway.ExecuteReport($target.parent().data("path"), false, $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), function (data) {
-                        $waitDialog.modal('hide');
-                        var win = window.open('about:blank');
-                        win.document.open();
-                        win.document.write(data);
-                        win.document.close();
-                    });
+                    _gateway.ExecuteReport($target.parent().data("path"), false, $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
                 });
             }, function (data) {
                 SWIUtil.ShowMessage("alert-danger", data.error, 0);

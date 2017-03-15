@@ -447,26 +447,9 @@ class SWIMain {
         });
 
         $(".report-name").on("click", function (e) {
-            $waitDialog.modal();
             $outputPanel.hide();
-            if ($(e.currentTarget).data("isReport")) {
-                _gateway.ExecuteReport($(e.currentTarget).data("path"), false, null, null, function (data) {
-                    $waitDialog.modal('hide');
-                    var win: any = window.open('about:blank');
-                    win.document.open();
-                    win.document.write(data);
-                    win.document.close();
-                })
-            }
-            else {
-                _gateway.ViewFile($(e.currentTarget).data("path"), function (data) {
-                    $waitDialog.modal('hide');
-                    var win: any = window.open('about:blank');
-                    win.document.open();
-                    win.document.write(data);
-                    win.document.close();
-                })
-            }
+            if ($(e.currentTarget).data("isReport")) _gateway.ExecuteReport($(e.currentTarget).data("path"), false, null, null);
+            else _gateway.ViewFile($(e.currentTarget).data("path"));
         });
 
         $(".report-output").on("click", function (e) {
@@ -503,14 +486,7 @@ class SWIMain {
 
                     $(".output-name").on("click", function (e) {
                         $outputPanel.hide();
-                        $waitDialog.modal();
-                        _gateway.ExecuteReport($target.parent().data("path"), false, $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"), function (data) {
-                            $waitDialog.modal('hide');
-                            var win: any = window.open('about:blank');
-                            win.document.open();
-                            win.document.write(data);
-                            win.document.close();
-                        })
+                        _gateway.ExecuteReport($target.parent().data("path"), false, $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
                     });
                 },
                 function (data) {
