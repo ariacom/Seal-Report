@@ -40,11 +40,6 @@ namespace Seal.Model
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!IsNoSQL);
                 GetProperty("IsNoSQL").SetIsBrowsable(true);
 
-                GetProperty("NumericFormat").SetIsBrowsable(true);
-                GetProperty("DateTimeFormat").SetIsBrowsable(true);
-                GetProperty("NumericFormat").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
-                GetProperty("DateTimeFormat").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
-
                 GetProperty("TasksScript").SetIsBrowsable(true);
                 GetProperty("TasksScript").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
                 GetProperty("InitScript").SetIsBrowsable(true);

@@ -1000,7 +1000,7 @@ namespace Seal.Model
 
         public string GetChartFileName()
         {
-            return FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, ResultFilePrefix + Guid.NewGuid().ToString() + FileHelper.ResultFileStaticSuffix + ".png"));
+            return FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, ResultFilePrefix + Guid.NewGuid().ToString() +  ".png"));
         }
 
         public string AttachImageFile(string fileName)

@@ -141,13 +141,6 @@ namespace Seal.Helpers
         }
 
         #region Seal Attachments
-        public const string ResultFileStaticSuffix = "_seal_attach";
-
-        public static bool IsSealAttachedFile(string path)
-        {
-            return Path.GetFileNameWithoutExtension(path).EndsWith(ResultFileStaticSuffix);
-        }
-
         public static string GetResultFilePrefix(string path)
         {
             return Path.GetFileNameWithoutExtension(path) + "_" + Path.GetExtension(path).Replace(".", "");
@@ -164,28 +157,11 @@ namespace Seal.Helpers
             return content.Contains("<ReportSchedule>") && content.Contains("</ReportSchedule>");
         }
 
-        public static string CopySealFile(string path, string destinationFolder)
-        {
-            string newPath = FileHelper.GetUniqueFileName(Path.Combine(destinationFolder, Path.GetFileName(path)));
-            File.Copy(path, newPath, true);
-            File.SetLastWriteTimeUtc(path, DateTime.Now);
-            foreach (string attachedPath in Directory.GetFiles(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + "*" + ResultFileStaticSuffix + ".*"))
-            {
-                File.Copy(attachedPath, Path.Combine(destinationFolder, Path.GetFileName(attachedPath)), true);
-                File.SetLastWriteTimeUtc(attachedPath, DateTime.Now);
-            }
-            return newPath;
-        }
-
         public static void DeleteSealFile(string path)
         {
             if (File.Exists(path))
             {
                 File.Delete(path);
-                foreach (string attachedPath in Directory.GetFiles(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + "*" + ResultFileStaticSuffix + ".*"))
-                {
-                    File.Delete(attachedPath);
-                }
             }
         }
 
@@ -193,33 +169,8 @@ namespace Seal.Helpers
         {
             if (source != destination)
             {
-                string content = "";
-                //For HTML, copy links if necessary
-                if (Path.GetExtension(source).ToLower().StartsWith(".htm") && Path.GetFileName(source) != Path.GetFileName(destination))
-                {
-                    content = File.ReadAllText(source);
-                }
-
-                foreach (string attachedPath in Directory.GetFiles(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source) + "*" + ResultFileStaticSuffix + ".*"))
-                {
-                    string newPath = Path.Combine(Path.GetDirectoryName(destination), FileHelper.GetResultFilePrefix(destination) + Path.GetFileName(attachedPath).Substring(Path.GetFileName(source).Length));
-                    if (!string.IsNullOrEmpty(content))
-                    {
-                        content = content.Replace(Path.GetFileName(attachedPath), Path.GetFileName(newPath));
-                    }
-                
-                    if (copy) File.Copy(attachedPath, newPath, true);
-                    else File.Move(attachedPath, newPath);
-                }
-
-                if (!string.IsNullOrEmpty(content))
-                {
-                    File.WriteAllText(destination, content);
-                    if (!copy) File.Delete(source);
-                }
-                else if (copy) File.Copy(source, destination, true);
+                if (copy) File.Copy(source, destination, true);
                 else File.Move(source, destination);
-
             }
         }
 

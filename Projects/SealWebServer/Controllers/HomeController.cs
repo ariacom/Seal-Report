@@ -219,7 +219,6 @@ namespace SealWebServer.Controllers
 
                     report.InitForExecution();
                     execution.RenderHTMLDisplayForViewer();
-                    report.IsExecuting = false;
                     return getFileResult(report.HTMLDisplayFilePath, report);
                 }
             }
@@ -267,22 +266,18 @@ namespace SealWebServer.Controllers
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
                     Report report = execution.Report;
+                    Debug.WriteLine(string.Format("Report Status {0}", report.Status));
                     if (report.IsExecuting)
                     {
-                        return Json(new { processing_message = Helper.ToHtml(report.ExecutionHeader), execution_messages = Helper.ToHtml(report.ExecutionMessages), result_url = "" });
+                        return Json(new { processing_message = Helper.ToHtml(report.ExecutionHeader), execution_messages = Helper.ToHtml(report.ExecutionMessages) });
                     }
                     else if (execution.IsConvertingToExcel)
                     {
-                        return Json(new { processing_message = Helper.ToHtml(report.Translate("Executing report...")), execution_messages = Helper.ToHtml(report.ExecutionMessages), result_url = "" });
+                        return Json(new { processing_message = Helper.ToHtml(report.Translate("Executing report...")), execution_messages = Helper.ToHtml(report.ExecutionMessages) });
                     }
                     else if (report.Status == ReportStatus.Executed)
                     {
                         return Json(new { result_ready = true}); ;
-                    }
-                    else
-                    {
-                        //return empty data, means result is ready
-                        return Content("");
                     }
                 }
                 else
@@ -300,6 +295,8 @@ namespace SealWebServer.Controllers
 
         public ActionResult Result(string execution_guid)
         {
+            Debug.WriteLine(string.Format("Result {0}", execution_guid));
+
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -336,7 +333,7 @@ namespace SealWebServer.Controllers
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
                     Report report = execution.Report;
-                    return getFileResult(publishReportResult(report), report);
+                    return getFileResult(report.ResultFilePath, report);
                 }
             }
             catch (Exception ex)
@@ -570,6 +567,7 @@ namespace SealWebServer.Controllers
 
         SWIFolder getParentFolder(string path)
         {
+            if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
             return getFolder(SWIFolder.GetParentPath(path));
         }
         SWIFolder getFolder(string path)
@@ -636,7 +634,7 @@ namespace SealWebServer.Controllers
 
         void searchFolder(SWIFolder folder, string pattern, List<SWIFile> files)
         {
-            foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*").Where(i => !FileHelper.IsSealAttachedFile(i) && Path.GetFileName(i).ToLower().Contains(pattern.ToLower())))
+            foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*").Where(i => Path.GetFileName(i).ToLower().Contains(pattern.ToLower())))
             {
                 files.Add(new SWIFile()
                 {

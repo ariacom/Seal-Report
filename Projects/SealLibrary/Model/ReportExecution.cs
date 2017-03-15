@@ -95,19 +95,6 @@ namespace Seal.Model
 
         public void RenderResult()
         {
-            if (Report.ForOutput)
-            {
-                if (Report.OutputToExecute.Device is OutputFolderDevice)
-                {
-                    //Clean-up previous attached files...
-                    foreach (string attachedFile in Directory.GetFiles(Path.GetDirectoryName(Report.ResultFilePath), Report.ResultFilePrefix + "*"))
-                    {
-                        try { File.Delete(attachedFile); }
-                        catch { }
-                    }
-                }
-            }
-
             string result = "";
             Report.Status = ReportStatus.RenderingResult;
             if (Report.HasExternalViewer && !Report.ForPDFConversion)
@@ -185,12 +172,15 @@ namespace Seal.Model
                 Report.ResultFilePath = Report.HTMLDisplayFilePath;
             }
             string result = Render();
+            Debug.WriteLine(string.Format("RenderHTMLDisplay {0} {1} {2}", Report.HTMLDisplayFilePath, Report.Status, Report.ExecutionGUID));
             File.WriteAllText(Report.HTMLDisplayFilePath, result, System.Text.Encoding.UTF8);
         }
 
         public void RenderHTMLDisplayForViewer()
         {
             string result = Render();
+            Debug.WriteLine(string.Format("RenderHTMLDisplayForViewer {0} {1} {2}", Report.HTMLDisplayFilePath, Report.Status, Report.ExecutionGUID));
+
             File.WriteAllText(Report.HTMLDisplayFilePath, result, System.Text.Encoding.UTF8);
         }
 
@@ -284,6 +274,7 @@ namespace Seal.Model
             finally
             {
                 Report.Status = ReportStatus.Executed;
+                Debug.WriteLine(string.Format("ExecuteThread {0} {1}", Report.Status, Report.ExecutionGUID));
                 Report.ExecutionEndDate = DateTime.Now;
 
                 Report.LogExecution();
@@ -1640,12 +1631,14 @@ namespace Seal.Model
                     paginationParameter.BoolValue = false;
                     Report.Status = ReportStatus.RenderingResult;
                     string result = Render();
+                    Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1} {2}", newPath, Report.Status, Report.ExecutionGUID));
                     File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
                 }
                 finally
                 {
                     paginationParameter.BoolValue = initialValue;
                     Report.Status = ReportStatus.Executed;
+                    Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1}", Report.Status, Report.ExecutionGUID));
                 }
             }
             return newPath;
@@ -1671,6 +1664,7 @@ namespace Seal.Model
                 {
                     printParameter.BoolValue = initialValue;
                     Report.Status = ReportStatus.Executed;
+                    Debug.WriteLine(string.Format("GeneratePrintResult {0} {1}", Report.Status, Report.ExecutionGUID));
                 }
             }
             return newPath;

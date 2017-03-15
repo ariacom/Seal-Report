@@ -107,7 +107,7 @@ namespace SealWebServer.Controllers
                 var files = new List<SWIFile>();
                 if (folder.right > 0)
                 {
-                    foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*").Where(i => !FileHelper.IsSealAttachedFile(i)))
+                    foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
                     {
                         files.Add(new SWIFile()
                         {
@@ -317,6 +317,7 @@ namespace SealWebServer.Controllers
                 ActionResult result = null;
                 if (!string.IsNullOrEmpty(outputGUID))
                 {
+                    //TODO
                     result = getFileResult(publishReportResult(report), report);
                 }
                 else
@@ -349,7 +350,6 @@ namespace SealWebServer.Controllers
                 Report report = null;
                 Repository repository = null;
 
-                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
 
@@ -368,6 +368,7 @@ namespace SealWebServer.Controllers
             }
         }
 
+
         [HttpPost]
         public ActionResult SWIViewFile(string path)
         {
@@ -381,16 +382,7 @@ namespace SealWebServer.Controllers
                 string tempFolder = Path.Combine(Path.Combine(Request.PhysicalApplicationPath, "temp"));
                 FileHelper.PurgeTempDirectory(tempFolder);
 
-                string filePath = getFullPath(path);
-
-                filePath = FileHelper.CopySealFile(filePath, tempFolder);
-                return getFileResult(filePath, null);
-                /*
-                int index = Request.Url.OriginalString.ToLower().IndexOf("swiviewfile");
-                if (index == -1) throw new Exception("Invalid URL");
-                string url = Request.Url.OriginalString.Substring(0, index) + "temp/" + HttpUtility.UrlEncode(Path.GetFileName(filePath)).Replace("+", "%20");
-
-                return Json(new { url = url });*/
+                return getFileResult(getFullPath(path), null);
             }
             catch (Exception ex)
             {
