@@ -49,6 +49,13 @@
           <FolderRight>Edit</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
+        <SecurityFolder>
+          <Path>\</Path>
+          <UseSubFolders>true</UseSubFolders>
+          <ManageFolder>true</ManageFolder>
+          <FolderRight>None</FolderRight>
+          <ExpandSubFolders>true</ExpandSubFolders>
+        </SecurityFolder>
       </Folders>
       <PersonalFolder>true</PersonalFolder>
       <Columns />

@@ -22,6 +22,14 @@ function failure() {
 }
 
 class SWIGateway {
+    private _execForm: JQuery = null;
+    private getExecForm(action : string): JQuery {
+        if (this._execForm == null) this._execForm = $('<form method="post" target="_blank"/>').appendTo('body');
+        this._execForm.find("input").remove();
+        this._execForm.attr('action', _sealServer + action);
+        return this._execForm;
+    }
+
 
     public GetVersions(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetVersions", { })
@@ -135,8 +143,7 @@ class SWIGateway {
     }
 
     public ExecuteReport(path: string, render: boolean, viewGUID: string, outputGUID: string) {
-        var f: JQuery = $('<form method="post" target="_blank"/>').appendTo('body')
-        f.attr('action', _sealServer + "SWIExecuteReport");
+        var f = this.getExecForm("SWIExecuteReport");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -145,8 +152,7 @@ class SWIGateway {
     }
 
     public ExecuteReportDefinition(report: any, render: boolean, viewGUID: string, outputGUID: string) {
-        var f: JQuery = $('<form method="post" target="_blank"/>').appendTo('body')
-        f.attr('action', _sealServer + "SWIExecuteReportDefinition");
+        var f = this.getExecForm("SWIExecuteReportDefinition");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'report').attr('value', report));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -155,8 +161,7 @@ class SWIGateway {
     }
 
     public ViewFile(path: string) {
-        var f : JQuery = $('<form method="post" target="_blank"/>').appendTo('body')
-        f.attr('action', _sealServer + "SWIViewFile");
+        var f = this.getExecForm("SWIViewFile");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.submit();
     }
