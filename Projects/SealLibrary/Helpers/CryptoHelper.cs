@@ -14,16 +14,23 @@ namespace Seal.Helpers
     public class CryptoHelper
     {
         private static string TripleDESVector = "qOiä+-?$"; //8 chars
+
+
+        static TripleDESCryptoServiceProvider getCryptoServiceProvider(string key)
+        {
+            TripleDESCryptoServiceProvider crypto = new TripleDESCryptoServiceProvider();
+            crypto.Key = Encoding.Default.GetBytes(key + "123456789").Take(crypto.KeySize / 8).ToArray();
+            crypto.IV = Encoding.Default.GetBytes(TripleDESVector + "123456789").Take(crypto.BlockSize / 8).ToArray();
+            return crypto;
+        }
+
         public static string EncryptTripleDES(string text, string key)
         {
             //Expect an ANSI key of 24 chars...
             string result = "";
             if (string.IsNullOrEmpty(text)) return result;
 
-            TripleDESCryptoServiceProvider crypto = new TripleDESCryptoServiceProvider();
-            crypto.Key = Encoding.Default.GetBytes(key.Substring(0, 24));
-            crypto.IV = Encoding.Default.GetBytes(TripleDESVector);
-
+            var crypto = getCryptoServiceProvider(key);
             MemoryStream ms = new MemoryStream();
             CryptoStream cs = new CryptoStream(ms, crypto.CreateEncryptor(), CryptoStreamMode.Write);
             StreamWriter sw = new StreamWriter(cs);
@@ -40,10 +47,7 @@ namespace Seal.Helpers
             string result = "";
             if (string.IsNullOrEmpty(text)) return result;
 
-            TripleDESCryptoServiceProvider crypto = new TripleDESCryptoServiceProvider();
-            crypto.Key = Encoding.Default.GetBytes(key.Substring(0, 24));
-            crypto.IV = Encoding.Default.GetBytes(TripleDESVector);
-
+            var crypto = getCryptoServiceProvider(key);
             MemoryStream ms = new MemoryStream(System.Convert.FromBase64String(text));
             CryptoStream cs = new CryptoStream(ms, crypto.CreateDecryptor(), CryptoStreamMode.Read);
             StreamReader sr = new StreamReader(cs);

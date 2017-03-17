@@ -317,8 +317,7 @@ namespace SealWebServer.Controllers
                 ActionResult result = null;
                 if (!string.IsNullOrEmpty(outputGUID))
                 {
-                    //TODO
-                    result = getFileResult(publishReportResult(report), report);
+                    result = getFileResult(Path.GetFileName(report.ResultFilePath), report);
                 }
                 else
                 {

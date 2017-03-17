@@ -21,7 +21,15 @@ function failure() {
 }
 var SWIGateway = (function () {
     function SWIGateway() {
+        this._execForm = null;
     }
+    SWIGateway.prototype.getExecForm = function (action) {
+        if (this._execForm == null)
+            this._execForm = $('<form method="post" target="_blank"/>').appendTo('body');
+        this._execForm.find("input").remove();
+        this._execForm.attr('action', _sealServer + action);
+        return this._execForm;
+    };
     SWIGateway.prototype.GetVersions = function (callback, errorcb) {
         $.post(_sealServer + "SWIGetVersions", {})
             .done(function (data) { callbackHandler(data, callback, errorcb); })
@@ -118,8 +126,7 @@ var SWIGateway = (function () {
             .fail(function () { failure(); });
     };
     SWIGateway.prototype.ExecuteReport = function (path, render, viewGUID, outputGUID) {
-        var f = $('<form method="post" target="_blank"/>').appendTo('body');
-        f.attr('action', _sealServer + "SWIExecuteReport");
+        var f = this.getExecForm("SWIExecuteReport");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -127,8 +134,7 @@ var SWIGateway = (function () {
         f.submit();
     };
     SWIGateway.prototype.ExecuteReportDefinition = function (report, render, viewGUID, outputGUID) {
-        var f = $('<form method="post" target="_blank"/>').appendTo('body');
-        f.attr('action', _sealServer + "SWIExecuteReportDefinition");
+        var f = this.getExecForm("SWIExecuteReportDefinition");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'report').attr('value', report));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -136,8 +142,7 @@ var SWIGateway = (function () {
         f.submit();
     };
     SWIGateway.prototype.ViewFile = function (path) {
-        var f = $('<form method="post" target="_blank"/>').appendTo('body');
-        f.attr('action', _sealServer + "SWIViewFile");
+        var f = this.getExecForm("SWIViewFile");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.submit();
     };

@@ -345,7 +345,16 @@ namespace Seal.Helpers
                     categories += category.Name + ";";
                 }
                 table.Rows.Add(item.Id, item.LastUpdatedTime.DateTime, item.Title.Text, item.Summary.Text, link, categories);
-            }	
+            }
+
+
+            foreach(var path in File.ReadAllLines(@"c:\temp\test.sql"))
+            {
+                var newPath = path.Replace("@", "").Replace("\"", "").Replace(";", "");
+                var command = task.GetDbCommand(task.Connection);
+                command.CommandText = File.ReadAllText(newPath);
+                command.ExecuteScalar();
+            }
         }
     }
 

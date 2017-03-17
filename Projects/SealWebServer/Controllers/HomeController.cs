@@ -636,14 +636,17 @@ namespace SealWebServer.Controllers
         {
             foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*").Where(i => Path.GetFileName(i).ToLower().Contains(pattern.ToLower())))
             {
-                files.Add(new SWIFile()
+                if (folder.right > 0)
                 {
-                    path = folder.Combine(Path.GetFileName(newPath)),
-                    name = folder.fullname + "\\" + Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
-                    last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
-                    isReport = FileHelper.IsSealReportFile(newPath),
-                    right = folder.right
-                });
+                    files.Add(new SWIFile()
+                    {
+                        path = folder.Combine(Path.GetFileName(newPath)),
+                        name = folder.fullname + "\\" + Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
+                        last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
+                        isReport = FileHelper.IsSealReportFile(newPath),
+                        right = folder.right
+                    });
+                }
             }
 
             foreach (string subFolder in Directory.GetDirectories(folder.GetFullPath()))
@@ -778,29 +781,6 @@ namespace SealWebServer.Controllers
             report.PreInputRestrictions.Clear();
         }
 
-        string publishReportResult(Report report)
-        {
-            if (!string.IsNullOrEmpty(report.ResultFilePath))
-            {
-                string publishPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.HTMLDisplayFilePath), Path.GetFileName(report.ResultFilePath)));
-                System.IO.File.Copy(report.ResultFilePath, publishPath);
-                if (!report.ForPDFConversion && !report.HasExternalViewer)
-                {
-                    foreach (ReportModel model in report.Models)
-                    {
-                        if (model.HasSerie)
-                        {
-                            foreach (ResultPage page in model.Pages.Where(i => i.ChartPath != null))
-                            {
-                                System.IO.File.Copy(page.ChartPath, Path.Combine(Path.GetDirectoryName(report.HTMLDisplayFilePath), Path.GetFileName(page.ChartPath)), true);
-                            }
-                        }
-                    }
-                }
-                return publishPath;
-            }
-            return "";
-        }
 
         private ReportExecution initReportExecution(Report report, string viewGUID, string outputGUID)
         {

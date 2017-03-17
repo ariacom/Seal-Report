@@ -418,7 +418,7 @@ namespace Seal.Model
         {
             try
             {
-                foreach (ReportModel model in Report.Models)
+                foreach (ReportModel model in Report.ExecutionModels)
                 {
                     foreach (ReportRestriction restriction in model.ExecutionRestrictions.Where(i => i.Prompt != PromptType.None).Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None)))
                     {
