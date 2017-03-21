@@ -126,7 +126,7 @@ var SWIGateway = (function () {
             .fail(function () { failure(); });
     };
     SWIGateway.prototype.ExecuteReport = function (path, render, viewGUID, outputGUID) {
-        var f = this.getExecForm("SWIExecuteReport");
+        var f = this.getExecForm("HTMLExecuteReport");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -134,7 +134,7 @@ var SWIGateway = (function () {
         f.submit();
     };
     SWIGateway.prototype.ExecuteReportDefinition = function (report, render, viewGUID, outputGUID) {
-        var f = this.getExecForm("SWIExecuteReportDefinition");
+        var f = this.getExecForm("HTMLExecuteReportDefinition");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'report').attr('value', report));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -142,7 +142,7 @@ var SWIGateway = (function () {
         f.submit();
     };
     SWIGateway.prototype.ViewFile = function (path) {
-        var f = this.getExecForm("SWIViewFile");
+        var f = this.getExecForm("HTMLViewFile");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.submit();
     };

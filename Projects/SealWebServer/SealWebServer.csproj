@@ -140,7 +140,7 @@
     <Content Include="Content\bootstrap-3.3.6.min.css" />
     <Content Include="Content\bootstrap-select.min.css" />
     <Content Include="Content\font-awesome.min.css" />
-    <Content Include="Content\jquery-ui-1.11.3.css" />
+    <Content Include="Content\jquery-ui-1.11.3.min.css" />
     <Content Include="Content\jstree-style.min.css" />
     <Content Include="Content\multiple-select.css" />
     <Content Include="Content\SealWeb.css" />

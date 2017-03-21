@@ -908,6 +908,16 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        public string DisplayRestrictionForEditor
+        {
+            get
+            {
+                BuildTexts();
+                return DisplayRestriction.Replace("[", "{").Replace("]","}");
+            }
+        }
+
 
         [XmlIgnore]
         string _displayText;

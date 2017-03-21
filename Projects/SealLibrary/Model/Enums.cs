@@ -340,12 +340,12 @@ namespace Seal.Model
         Edit,
     }
 
-    public enum ColumnRight
+    public enum EditorRight
     {
-        [Description("No right")]
-        None,
-        [Description("Can be edited")]
-        Edit,
+        [Description("Cannot be selected")]
+        NoSelection,
+        [Description("Can be selected")]
+        Selection,
     }
 
     public enum FailoverEmailMode

@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
-    public class SecurityColumn : RootEditor
+    public class SecurityConnection : RootEditor
     {
         #region Editor
         protected override void UpdateEditorAttributes()
@@ -22,8 +22,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Source").SetIsBrowsable(true);
-                GetProperty("Tag").SetIsBrowsable(true);
-                GetProperty("Category").SetIsBrowsable(true);
+                GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Right").SetIsBrowsable(true);
 
                 TypeDescriptor.Refresh(this);
@@ -31,33 +30,24 @@ namespace Seal.Model
         }
         #endregion
 
-
         string _source;
-        [Category("Definition"), DisplayName("\tSource Name"), Description("The name of the data source containing the column (optional)."), Id(1, 1)]
+        [Category("Definition"), DisplayName("Source Name"), Description("The name of the data source containing the connection (optional)."), Id(1, 1)]
         public string Source
         {
             get { return _source; }
             set { _source = value; }
         }
 
-        string _tag = "";
-        [Category("Definition"), DisplayName("Security Tag"), Description("The name of the security tag (must match with the tags defined in the columns)."), Id(2,1)]
-        public string Tag
+        string _name = "";
+        [Category("Definition"), DisplayName("\tName"), Description("The name of the connection."), Id(2,1)]
+        public string Name
         {
-            get { return _tag; }
-            set { _tag = value; }
-        }
-
-        string _category = "";
-        [Category("Definition"), DisplayName("Category"), Description("The name of the category (must match with categories defined in the columns)."), Id(3, 1)]
-        public string Category
-        {
-            get { return _category; }
-            set { _category = value; }
+            get { return _name; }
+            set { _name = value; }
         }
 
         EditorRight _right = EditorRight.NoSelection;
-        [Category("Rights"), DisplayName("Column Right"), Description("The right applied for the columns having this security tag or this category."), Id(1, 2)]
+        [Category("Rights"), DisplayName("Connection Right"), Description("The right applied for the connection having this name."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public EditorRight Right
         {
@@ -74,10 +64,10 @@ namespace Seal.Model
             {
                 var result = "";
                 if (!string.IsNullOrEmpty(Source)) result = "Source:" + Source;
-                if (!string.IsNullOrEmpty(Category)) result += (result != "" ? "; " : "") + "Category:" + Category;
-                if (!string.IsNullOrEmpty(Tag)) result += (result != "" ? "; " : "") + "Tag:" + Tag;
+                result += (result != "" ? "; " : "") + "Name:" + Name;
                 return result;
             }
         }
+
     }
 }

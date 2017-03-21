@@ -117,40 +117,98 @@ namespace Seal.Model
         }
 
 
-        private List<string> _noEditionCategories = null;
-        public List<string> NoEditionCategories
+        private List<SecurityColumn> _securityColumns = null;
+        public List<SecurityColumn> ForbiddenColumns
         {
             get
             {
-                if (_noEditionCategories == null) InitSecurityColumnRights();
-                return _noEditionCategories;
+                if (_securityColumns == null) InitEditionRights();
+                return _securityColumns;
             }
         }
 
-        private List<string> _noEditionTags = null;
-        public List<string> NoEditionTags
+        public bool CanSelectColumn(MetaColumn column)
+        {
+            var sourceName = column.Source.Name;
+            if (column.Source is ReportSource) sourceName = ((ReportSource)column.Source).MetaSourceName;
+            return !ForbiddenColumns.Exists(i => 
+                (string.IsNullOrEmpty(i.Source) || i.Source==sourceName) &&
+                (string.IsNullOrEmpty(i.Tag) || i.Tag == column.Tag) &&
+                (string.IsNullOrEmpty(i.Category) || i.Category == column.Category)
+                );        
+        }
+
+
+        private List<SecuritySource> _securitySources = null;
+        public List<SecuritySource> ForbiddenSources
         {
             get
             {
-                if (_noEditionTags == null) InitSecurityColumnRights();
-                return _noEditionTags;
+                if (_securitySources == null) InitEditionRights();
+                return _securitySources;
             }
         }
 
-        public bool CanEditColumn(MetaColumn column)
+        public bool CanSelectSource(MetaSource item)
         {
-            return (!NoEditionCategories.Contains(column.Category) && !NoEditionTags.Contains(column.Tag));        
+            var sourceName = item.Name;
+            if (item is ReportSource) sourceName = ((ReportSource)item).MetaSourceName;
+            return !ForbiddenSources.Exists(i =>
+                (string.IsNullOrEmpty(i.Name) || i.Name == sourceName) 
+                );
         }
 
-        private void InitSecurityColumnRights()
+
+        private List<SecurityDevice> _securityDevices = null;
+        public List<SecurityDevice> ForbiddenDevices
         {
-            _noEditionCategories = new List<string>();
-            _noEditionTags = new List<string>();
+            get
+            {
+                if (_securityDevices == null) InitEditionRights();
+                return _securityDevices;
+            }
+        }
+
+        public bool CanSelectDevice(OutputDevice item)
+        {
+            return !ForbiddenDevices.Exists(i =>
+                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name)
+                );
+        }
+
+
+        private List<SecurityConnection> _securityConnections = null;
+        public List<SecurityConnection> ForbiddenConnections
+        {
+            get
+            {
+                if (_securityConnections == null) InitEditionRights();
+                return _securityConnections;
+            }
+        }
+
+        public bool CanSelectConnection(MetaConnection item)
+        {
+            var sourceName = item.Source.Name;
+            if (item.Source is ReportSource) sourceName = ((ReportSource)item.Source).MetaSourceName;
+            return !ForbiddenConnections.Exists(i =>
+                (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
+                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) 
+                );
+        }
+        private void InitEditionRights()
+        {
+            _securityConnections = new List<SecurityConnection>();
+            _securityDevices = new List<SecurityDevice>();
+            _securitySources = new List<SecuritySource>();
+            _securityColumns = new List<SecurityColumn>();
 
             foreach (var sgroup in SecurityGroups)
             {
-                _noEditionCategories.AddRange((from i in sgroup.Columns where i.Rights == ColumnRight.None select i.Category));
-                _noEditionTags.AddRange((from i in sgroup.Columns where i.Rights == ColumnRight.None select i.Tag));
+                _securityConnections.AddRange(sgroup.Connections.Where(i => i.Right == EditorRight.NoSelection));
+                /* FUTURE_securityDevices.AddRange(sgroup.Devices.Where(i => i.Right == EditorRight.NoSelection));*/
+                _securitySources.AddRange(sgroup.Sources.Where(i => i.Right == EditorRight.NoSelection));
+                _securityColumns.AddRange(sgroup.Columns.Where(i => i.Right == EditorRight.NoSelection));
             }
         }
 

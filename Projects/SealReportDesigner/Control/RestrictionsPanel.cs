@@ -112,8 +112,8 @@ namespace Seal.Controls
                     {
                         //replace by restriction text
                         text = text.Remove(startPos + 1, endPos - startPos - 1);
-                        text = text.Insert(startPos + 1, restriction.DisplayRestriction);
-                        startPos = startPos + 1 + restriction.DisplayRestriction.Length + 1;
+                        text = text.Insert(startPos + 1, restriction.DisplayRestrictionForEditor);
+                        startPos = startPos + 1 + restriction.DisplayRestrictionForEditor.Length + 1;
                     }
                 }
             }
@@ -128,7 +128,7 @@ namespace Seal.Controls
             if (ModelPanel.RestrictionGrid.SelectedObject != null)
             {
                 ReportRestriction restriction = (ReportRestriction)ModelPanel.RestrictionGrid.SelectedObject;
-                restrictionsTextBox.Selection.Text = ReportRestriction.kStartRestrictionChar + restriction.DisplayRestriction + ReportRestriction.kStopRestrictionChar;
+                restrictionsTextBox.Selection.Text = ReportRestriction.kStartRestrictionChar + restriction.DisplayRestrictionForEditor + ReportRestriction.kStopRestrictionChar;
                 restrictionsTextBox.Caret.Position -= 1;
                 highlightRestriction(false);
             }
@@ -158,9 +158,11 @@ namespace Seal.Controls
 
             if (startOk)
             {
+                bool inQuote = false;
                 while (endPos < text.Length)
                 {
-                    if (text[endPos] == ReportRestriction.kStartRestrictionChar) break;
+                    if (text[endPos] == '\'') inQuote = true;
+                    if (text[endPos] == ReportRestriction.kStartRestrictionChar && !inQuote) break;
                     if (text[endPos] == ReportRestriction.kStopRestrictionChar)
                     {
                         if (endPos == text.Length - 1 || (endPos < text.Length - 1 && (text[endPos + 1]) != ReportRestriction.kStopRestrictionChar))
@@ -176,7 +178,7 @@ namespace Seal.Controls
             if (startOk && endOk)
             {
                 string fullText = text.Substring(startPos + 1, endPos - startPos - 1);
-                result = Restrictions.FirstOrDefault(i => i.DisplayRestriction == fullText);
+                result = Restrictions.FirstOrDefault(i => i.DisplayRestrictionForEditor == fullText);
                 //Try with the GUID
                 if (result == null) result = Restrictions.FirstOrDefault(i => i.GUID == fullText);
             }
@@ -369,7 +371,7 @@ namespace Seal.Controls
                 //Check for duplicate
                 int index = 1;
                 string initialName = restriction.DisplayNameEl;
-                while (Restrictions.FirstOrDefault(i => i.DisplayRestriction == restriction.DisplayRestriction) != null)
+                while (Restrictions.FirstOrDefault(i => i.DisplayRestrictionForEditor == restriction.DisplayRestrictionForEditor) != null)
                 {
                     index++;
                     restriction.DisplayName = initialName + " " + index.ToString();
@@ -389,7 +391,7 @@ namespace Seal.Controls
                     if (restrictionsTextBox.Text.Last() != '\n') insertedText = "\r\n";
                     insertedText += "AND ";
                 }
-                insertedText += ReportRestriction.kStartRestrictionChar + restriction.DisplayRestriction + ReportRestriction.kStopRestrictionChar;
+                insertedText += ReportRestriction.kStartRestrictionChar + restriction.DisplayRestrictionForEditor + ReportRestriction.kStopRestrictionChar;
                 restrictionsTextBox.Selection.Text = insertedText;
                 restrictionsTextBox.Caret.Position -= 1;
                 highlightRestriction(false);

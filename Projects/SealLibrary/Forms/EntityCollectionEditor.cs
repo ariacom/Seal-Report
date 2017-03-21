@@ -83,6 +83,27 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
+            else if (CollectionItemType == typeof(SecuritySource))
+            {
+                frmCollectionEditorForm.Text = "Security Data Sources Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
+            else if (CollectionItemType == typeof(SecurityDevice))
+            {
+                frmCollectionEditorForm.Text = "Security Devices Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
+            else if (CollectionItemType == typeof(SecurityConnection))
+            {
+                frmCollectionEditorForm.Text = "Security Connections Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
             else if (CollectionItemType == typeof(SubReport))
             {
                 frmCollectionEditorForm.Text = "Sub-Reports Collection Editor";
@@ -167,12 +188,10 @@ namespace Seal.Forms
             else if (value is Parameter) result = ((Parameter)value).DisplayName;
             else if (value is SecurityGroup) result = ((SecurityGroup)value).Name;
             else if (value is SecurityFolder) result = ((SecurityFolder)value).Path;
-            else if (value is SecurityColumn)
-            {
-                var item = (SecurityColumn)value;
-                if (!string.IsNullOrEmpty(item.Tag)) result = "Tag:" + item.Tag;
-                if (!string.IsNullOrEmpty(item.Category)) result += (result != "" ? "; " : "") + "Category:" + item.Category;
-            }
+            else if (value is SecurityColumn) result = ((SecurityColumn)value).DisplayName;
+            else if (value is SecuritySource) result = ((SecuritySource)value).DisplayName;
+            else if (value is SecurityDevice) result = ((SecurityDevice)value).DisplayName;
+            else if (value is SecurityConnection) result = ((SecurityConnection)value).DisplayName;
             else if (value is SubReport) result = ((SubReport)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }

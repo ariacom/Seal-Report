@@ -143,7 +143,7 @@ class SWIGateway {
     }
 
     public ExecuteReport(path: string, render: boolean, viewGUID: string, outputGUID: string) {
-        var f = this.getExecForm("SWIExecuteReport");
+        var f = this.getExecForm("HTMLExecuteReport");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -152,7 +152,7 @@ class SWIGateway {
     }
 
     public ExecuteReportDefinition(report: any, render: boolean, viewGUID: string, outputGUID: string) {
-        var f = this.getExecForm("SWIExecuteReportDefinition");
+        var f = this.getExecForm("HTMLExecuteReportDefinition");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'report').attr('value', report));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -161,7 +161,7 @@ class SWIGateway {
     }
 
     public ViewFile(path: string) {
-        var f = this.getExecForm("SWIViewFile");
+        var f = this.getExecForm("HTMLViewFile");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.submit();
     }
