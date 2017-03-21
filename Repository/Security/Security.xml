@@ -36,7 +36,27 @@
         </SecurityFolder>
       </Folders>
       <PersonalFolder>false</PersonalFolder>
-      <Columns />
+      <Sources>
+        <SecuritySource>
+          <Name />
+          <Right>NoSelection</Right>
+        </SecuritySource>
+      </Sources>
+      <Connections>
+        <SecurityConnection>
+          <Source>aaaa dsfsd</Source>
+          <Name>gfdggdf</Name>
+          <Right>Selection</Right>
+        </SecurityConnection>
+      </Connections>
+      <Columns>
+        <SecurityColumn>
+          <Source>fdg</Source>
+          <Tag />
+          <Category>fgdg</Category>
+          <Right>Selection</Right>
+        </SecurityColumn>
+      </Columns>
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
@@ -58,7 +78,32 @@
         </SecurityFolder>
       </Folders>
       <PersonalFolder>true</PersonalFolder>
-      <Columns />
+      <Sources>
+        <SecuritySource>
+          <Name>RSS No SQL Source</Name>
+          <Right>NoSelection</Right>
+        </SecuritySource>
+      </Sources>
+      <Connections>
+        <SecurityConnection>
+          <Name>connection</Name>
+          <Right>NoSelection</Right>
+        </SecurityConnection>
+      </Connections>
+      <Columns>
+        <SecurityColumn>
+          <Source>Northwind</Source>
+          <Tag />
+          <Category>Products</Category>
+          <Right>NoSelection</Right>
+        </SecurityColumn>
+        <SecurityColumn>
+          <Source>Northwind</Source>
+          <Tag />
+          <Category>Customers</Category>
+          <Right>NoSelection</Right>
+        </SecurityColumn>
+      </Columns>
       <Culture />
     </SecurityGroup>
   </Groups>

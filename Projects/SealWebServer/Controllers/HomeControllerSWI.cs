@@ -47,7 +47,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -76,7 +76,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -94,7 +94,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -125,7 +125,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -142,7 +142,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -158,7 +158,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -174,7 +174,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -191,7 +191,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -215,7 +215,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -252,7 +252,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -293,15 +293,17 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
         [HttpPost]
-        public ActionResult SWIExecuteReportToResult(string path, string viewGUID, string outputGUID, string format)
+        public ActionResult HTMLExecuteReportToResult(string path, string viewGUID, string outputGUID, string format)
         {
             try
             {
+                if (!CheckAuthentication()) return Content(_loginContent);
+
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
 
@@ -334,17 +336,17 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleException(ex);
             }
         }
 
 
         [HttpPost]
-        public ActionResult SWIExecuteReport(string path, bool? render, string viewGUID, string outputGUID)
+        public ActionResult HTMLExecuteReport(string path, bool? render, string viewGUID, string outputGUID)
         {
             try
             {
-                checkSWIAuthentication();
+                if (!CheckAuthentication()) return Content(_loginContent);
 
                 Report report = null;
                 Repository repository = null;
@@ -363,17 +365,18 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleException(ex);
             }
         }
 
 
         [HttpPost]
-        public ActionResult SWIViewFile(string path)
+        public ActionResult HTMLViewFile(string path)
         {
             try
             {
-                checkSWIAuthentication();
+                if (!CheckAuthentication()) return Content(_loginContent);
+
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
 
@@ -385,7 +388,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleException(ex);
             }
         }
 
@@ -399,7 +402,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -419,7 +422,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -434,7 +437,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -454,7 +457,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -469,7 +472,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 
@@ -482,7 +485,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return handleSWIException(ex);
+                return HandleSWIException(ex);
             }
         }
 

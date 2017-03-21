@@ -253,9 +253,21 @@ namespace Seal.Model
             foreach (var group in _groups)
             {
                 result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
-                foreach (var col in group.Columns)
+                /*FUTURE foreach (var item in group.Devices)
                 {
-                    result.AppendFormat("    Column Category:'{0}' Security Tag:'{1}' => Right:{2}\r\n", col.Category, col.Tag, Helper.GetEnumDescription(col.Rights.GetType(), col.Rights));
+                    result.AppendFormat("    Device:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                }*/
+                foreach (var item in group.Sources)
+                {
+                    result.AppendFormat("    Source:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                }
+                foreach (var item in group.Connections)
+                {
+                    result.AppendFormat("    Connection:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                }
+                foreach (var item in group.Columns)
+                {
+                    result.AppendFormat("    Column:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 result.AppendLine();
                 result.AppendLine(getSecuritySummary(group, Repository.ReportsFolder + "\\"));

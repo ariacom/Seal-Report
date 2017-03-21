@@ -554,7 +554,7 @@ namespace SealWebServer.Controllers
             if (WebUser == null || !WebUser.IsAuthenticated) throw new Exception("Error: user is not authenticated");
         }
 
-        JsonResult handleSWIException(Exception ex)
+        JsonResult HandleSWIException(Exception ex)
         {
             return Json(new { error = ex.Message, authenticated = (WebUser != null && WebUser.IsAuthenticated) });
         }
@@ -809,7 +809,7 @@ namespace SealWebServer.Controllers
             ReportExecution execution = new ReportExecution() { Report = report };
 
             Session[report.ExecutionGUID] = execution;
-            int index = Request.Url.OriginalString.ToLower().IndexOf("swiexecutereport");
+            int index = Request.Url.OriginalString.ToLower().IndexOf("htmlexecutereport");
             if (index == -1) throw new Exception("Invalid URL");
             report.WebUrl = Request.Url.OriginalString.Substring(0, index);
             repository.WebApplicationPath = Path.Combine(Request.PhysicalApplicationPath, "bin");

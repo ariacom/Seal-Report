@@ -93,6 +93,7 @@ a {
     opacity: 0.5;
     background: orange !important;
 }
+
 #wait-dialog {
     top: 80px;
     z-index: 100000 !important;
@@ -125,7 +126,7 @@ a {
 .ms-choice {
     cursor: default;
     margin: 0;
-    width : 160px;
+    width: 160px;
 }
 
     .ms-choice > div {
@@ -193,9 +194,13 @@ a.paginate_active {
     *cursor: hand;
 }
 
-    a.paginate_active:hover {
-        font-weight: normal;
-    }
+a.paginate_active:hover {
+    font-weight: normal;
+}
+
+a.paginate_button.current, a.paginate_button.current:hover {
+    font-weight: bold;
+}
 
 a.paginate_button_disabled {
     color: #999999;
@@ -214,7 +219,7 @@ div.dataTables_wrapper {
     margin: 5px;
 }
 
-div.dataTableTop  {
+div.dataTableTop {
     height: 36px;
     border-radius: 6px;
     padding: 3px;
@@ -252,7 +257,7 @@ div.dataTables_info {
     font-style: italic;
     float: left;
     padding-left: 20px;
-    padding-top:5px;
+    padding-top: 5px;
 }
 
 table.data_table {
