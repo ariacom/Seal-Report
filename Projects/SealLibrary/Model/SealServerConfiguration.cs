@@ -43,7 +43,6 @@ namespace Seal.Model
                 GetProperty("DefaultConnectionString").SetIsBrowsable(!ForPublication);
                 GetProperty("TaskFolderName").SetIsBrowsable(!ForPublication);
                 GetProperty("DefaultCulture").SetIsBrowsable(!ForPublication);
-                GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
                 GetProperty("WebProductName").SetIsBrowsable(!ForPublication);
                 GetProperty("LogDays").SetIsBrowsable(!ForPublication);
@@ -81,14 +80,6 @@ namespace Seal.Model
         {
             get { return _taskFolderName; }
             set { _taskFolderName = value; }
-        }
-
-        bool _isLocal = false;
-        [Category("Server Settings"), DisplayName("Server is local (No internet)"), Description("If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path)."), Id(4, 1)]
-        public bool IsLocal
-        {
-            get { return _isLocal; }
-            set { _isLocal = value; }
         }
 
         string _logoName = "logo.jpg";

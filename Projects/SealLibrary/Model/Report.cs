@@ -304,7 +304,7 @@ namespace Seal.Model
                     ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, fileName), "." + ExecutionView.ExternalViewerExtension);
                 }
                 ResultFilePrefix = FileHelper.GetResultFilePrefix(ResultFilePath);
-                if (Repository.Configuration.IsLocal && ExecutionContext != ReportExecutionContext.WebReport && ExecutionContext != ReportExecutionContext.WebOutput && !Directory.Exists(Path.Combine(ResultFolder, "images")) && !ExecutionView.Views.Exists(i => i.Template.Name == ReportViewTemplate.ModelCSVExcelName))
+                if (ExecutionContext != ReportExecutionContext.WebReport && ExecutionContext != ReportExecutionContext.WebOutput && !Directory.Exists(Path.Combine(ResultFolder, "images")) && !ExecutionView.Views.Exists(i => i.Template.Name == ReportViewTemplate.ModelCSVExcelName))
                 {
                     try
                     {
@@ -1035,7 +1035,7 @@ namespace Seal.Model
 
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
-            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<script type='text/javascript' src='{0}'></script>", ConvertCDNPath(cdnPath));
+            if (!string.IsNullOrEmpty(cdnPath)) return string.Format("<script type='text/javascript' src='{0}'></script>", ConvertCDNPath(cdnPath));
 
             if (GenerateHTMLDisplay || ForPDFConversion)
             {
@@ -1062,7 +1062,7 @@ namespace Seal.Model
 
         public string AttachCSSFile(string fileName, string cdnPath = "")
         {
-            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", ConvertCDNPath(cdnPath));
+            if (!string.IsNullOrEmpty(cdnPath)) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", ConvertCDNPath(cdnPath));
 
             if (GenerateHTMLDisplay)
             {
