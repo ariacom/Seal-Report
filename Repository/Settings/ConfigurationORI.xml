@@ -3,7 +3,6 @@
   <DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString>
   <TaskFolderName>Seal Report</TaskFolderName>
   <DefaultCulture />
-  <IsLocal>false</IsLocal>
   <LogoName>logo.jpg</LogoName>
   <CsvSeparator />
   <LogDays>30</LogDays>
