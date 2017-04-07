@@ -26,7 +26,7 @@ namespace Seal.Model
         }
 
         string _value;
-        [Category("Definition"), DisplayName("\tValue"), Description("The display value of the enumerated value")]
+        [Category("Definition"), DisplayName("\tValue"), Description("The optional display value")]
         public string Val
         {
             get { return _value; }
@@ -34,7 +34,7 @@ namespace Seal.Model
         }
 
         string _restrictionValue;
-        [Category("Definition"), DisplayName("Restriction Value"), Description("The optional display value of the enumerated value for the restriction list")]
+        [Category("Definition"), DisplayName("Restriction Value"), Description("The optional display value for the restriction list")]
         public string ValR
         {
             get { return _restrictionValue; }

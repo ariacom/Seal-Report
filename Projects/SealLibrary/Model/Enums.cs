@@ -358,7 +358,6 @@ namespace Seal.Model
         Last,
     }
 
-
     public enum LogMode
     {
         [Description("No log")]
@@ -370,4 +369,16 @@ namespace Seal.Model
         [Description("Log in one file per execution")]
         OneFilePerExecution,
     }
+
+
+    public enum HTMLLinksOption
+    {
+        [Description("HTTP links")]
+        Http,
+        [Description("HTTPS links")]
+        Https,
+        [Description("Links to local files (No internet)")]
+        Local,
+    };
+
 }

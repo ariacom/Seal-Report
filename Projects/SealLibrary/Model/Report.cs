@@ -304,15 +304,6 @@ namespace Seal.Model
                     ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, fileName), "." + ExecutionView.ExternalViewerExtension);
                 }
                 ResultFilePrefix = FileHelper.GetResultFilePrefix(ResultFilePath);
-                if (ExecutionContext != ReportExecutionContext.WebReport && ExecutionContext != ReportExecutionContext.WebOutput && !Directory.Exists(Path.Combine(ResultFolder, "images")) && !ExecutionView.Views.Exists(i => i.Template.Name == ReportViewTemplate.ModelCSVExcelName))
-                {
-                    try
-                    {
-                        //copy images folder (for jquery images)
-                        FileHelper.CopyDirectory(Path.Combine(Repository.ViewContentFolder, "images"), Path.Combine(ResultFolder, "images"), false);
-                    }
-                    catch { }
-                }
 
                 //Display path is always an HTML one...
                 HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, ResultFilePrefix + ".htm"));
@@ -1028,14 +1019,13 @@ namespace Seal.Model
 
         private string ConvertCDNPath(string cdnPath)
         {
-            string result = cdnPath;
-            if (!string.IsNullOrEmpty(WebUrl) && WebUrl.ToLower().StartsWith("https://") && cdnPath.ToLower().StartsWith("https://")) result = "https://" + result.Substring(7);
-            return result;
+            if (Repository.Configuration.LinksOption == HTMLLinksOption.Https && cdnPath.ToLower().StartsWith("http://")) return "https://" + cdnPath.Substring(7);
+            return cdnPath;
         }
 
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
-            if (!string.IsNullOrEmpty(cdnPath)) return string.Format("<script type='text/javascript' src='{0}'></script>", ConvertCDNPath(cdnPath));
+            if (!string.IsNullOrEmpty(cdnPath) && Repository.Configuration.LinksOption != HTMLLinksOption.Local) return string.Format("<script type='text/javascript' src='{0}'></script>", ConvertCDNPath(cdnPath));
 
             if (GenerateHTMLDisplay || ForPDFConversion)
             {
@@ -1062,7 +1052,7 @@ namespace Seal.Model
 
         public string AttachCSSFile(string fileName, string cdnPath = "")
         {
-            if (!string.IsNullOrEmpty(cdnPath)) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", ConvertCDNPath(cdnPath));
+             if (!string.IsNullOrEmpty(cdnPath) && Repository.Configuration.LinksOption != HTMLLinksOption.Local) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", ConvertCDNPath(cdnPath));
 
             if (GenerateHTMLDisplay)
             {
@@ -1082,6 +1072,12 @@ namespace Seal.Model
             string result = "<style type='text/css'>\r\n";
             string sourceFilePath = Path.Combine(Repository.ViewContentFolder, fileName);
             result += File.ReadAllText(sourceFilePath);
+            //Hack to change JQuery Images URL...
+            if (!string.IsNullOrEmpty(cdnPath) && Repository.Configuration.LinksOption == HTMLLinksOption.Local && cdnPath.ToLower().Contains("jquery.com"))
+            {
+                if (!string.IsNullOrEmpty(WebUrl)) result = result.Replace("url(\"images/", "url(\"" + WebUrl + "Content/images/");
+                else result = result.Replace("url(\"images/", "url(\"file://" + Path.Combine(Repository.ViewContentFolder, "images/").Replace("\\","/"));
+            }
             result += "\r\n</style>\r\n";
             return result;
         }

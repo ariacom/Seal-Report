@@ -143,25 +143,27 @@ class SWIGateway {
     }
 
     public ExecuteReport(path: string, render: boolean, viewGUID: string, outputGUID: string) {
-        var f = this.getExecForm("HTMLExecuteReport");
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'outputGUID').attr('value', outputGUID));
+        var f = this.getExecForm("SWExecuteReport");
+        f.append($('<input />').attr('name', 'path').attr('value', path));
+        f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
+        f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
+        f.append($('<input />').attr('name', 'outputGUID').attr('value', outputGUID));
+        f.children('input').attr('type', 'hidden');
         f.submit();
     }
 
     public ExecuteReportDefinition(report: any, render: boolean, viewGUID: string, outputGUID: string) {
-        var f = this.getExecForm("HTMLExecuteReportDefinition");
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'report').attr('value', report));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'outputGUID').attr('value', outputGUID));
+        var f = this.getExecForm("SWExecuteReportDefinition");
+        f.append($('<input />').attr('name', 'report').attr('value', report));
+        f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
+        f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
+        f.append($('<input />').attr('name', 'outputGUID').attr('value', outputGUID));
+        f.children('input').attr('type', 'hidden');
         f.submit();
     }
 
     public ViewFile(path: string) {
-        var f = this.getExecForm("HTMLViewFile");
+        var f = this.getExecForm("SWViewFile");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.submit();
     }

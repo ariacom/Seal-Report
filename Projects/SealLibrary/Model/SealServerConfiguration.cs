@@ -51,6 +51,7 @@ namespace Seal.Model
                 GetProperty("DateTimeFormat").SetIsBrowsable(!ForPublication);
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("TasksScript").SetIsBrowsable(!ForPublication);
+                GetProperty("LinksOption").SetIsBrowsable(!ForPublication);
 
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
@@ -107,6 +108,14 @@ namespace Seal.Model
         }
 
 
+        HTMLLinksOption _linksOption = HTMLLinksOption.Http;
+        [Category("Server Settings"), DisplayName("HTML Links Option"), Description("Specify how reference links (for JQuery, DataTables, etc.) are generated in the HTML result file. Through HTTP links, HTTPS links or local links only (if server has no internet)."), Id(8, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        public HTMLLinksOption LinksOption
+        {
+            get { return _linksOption; }
+            set { _linksOption = value; }
+        }
 
         string _initScript = "";
         [Category("Scripts"), DisplayName("Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 3)]
