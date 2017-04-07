@@ -121,137 +121,129 @@
                 });
 
 
+            $("#search_button")
+                .click(function () {
+                    $.post(sealServer + "SWISearch", {
+                        path: "\\Samples",
+                        pattern: "02-"
+                    })
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#search_label").html("SWISearch Done:" + JSON.stringify(data));
+                            }
+                            else {
+                                $("#search_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
+
 
             $("#execute_button")
                 .click(function () {
                     $("#execute_label").text("Executing: 'Search - Orders'");
-                    $.post(sealServer + "SWIExecuteReport", {
-                        path: "\\Search - Orders.srex"
-                    })
-                        .done(function (data) {
-                            $("#execute_label").text("Report executed...in another window");
-                            var win = window.open('about:blank');
-                            with (win.document) {
-                                open();
-                                write(data);
-                                close();
-                            }
-                        })
+                    var form = $('<form method="post" target="_blank"/>').appendTo('body');
+                    form.attr('action', sealServer + "SWExecuteReport");
+                    form.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', "\\Search - Orders.srex"));
+                    form.submit();
                 });
 
             $("#execute2_button")
-            .click(function () {
-                $("#execute2_label").text("Executing 'Search - Orders' with custom restrictions...");
-                $.post(sealServer + "SWIExecuteReport", {
-                    path: "\\Search - Orders.srex",
-                    r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
-                    r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
-                    r2_name: "Order Date", r2_operator: "Equal", r2_value_1: "19940809 00:00:00", r2_value_2: "19940810 00:00:00", r2_value_3: "19940811 00:00:00", r2_value_4: "19940812 00:00:00",
-                    r3_name: "Customer Contact", r3_operator: "Contains", r3_value_1: "ar"
-                })
-                    .done(function (data) {
-                        $("#execute2_label").text("Report executed with custom restrictions...in another window");
-                        var win = window.open('about:blank');
-                        with (win.document) {
-                            open();
-                            write(data);
-                            close();
-                        }
-                    })
-            });
+                .click(function () {
+                    $("#execute2_label").text("Executing 'Search - Orders' with custom restrictions...");
+                    var form = $('<form method="post" target="_blank"/>').appendTo('body');
+                    form.attr('action', sealServer + "SWExecuteReport");
+                    form.append($('<input />').attr('name', 'path').attr('value', "\\Search - Orders.srex"));
+                    form.append($('<input />').attr('name', 'r0_name').attr('value', "Quantity"));
+                    form.append($('<input />').attr('name', 'r0_operator').attr('value', "Between"));
+                    form.append($('<input />').attr('name', 'r0_value_1').attr('value', "34"));
+                    form.append($('<input />').attr('name', 'r0_value_2').attr('value', "123"));
+                    form.append($('<input />').attr('name', 'r1_name').attr('value', "Category"));
+                    form.append($('<input />').attr('name', 'r1_operator').attr('value', "Equal"));
+                    form.append($('<input />').attr('name', 'r1_enum_values').attr('value', "2,3,4,7"));
+                    form.append($('<input />').attr('name', 'r2_name').attr('value', "Order Date"));
+                    form.append($('<input />').attr('name', 'r2_operator').attr('value', "Equal"));
+                    form.append($('<input />').attr('name', 'r2_value_1').attr('value', "19940809 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_2').attr('value', "19940810 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_3').attr('value', "19940811 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_4').attr('value', "19940812 00:00:00"));
+                    form.append($('<input />').attr('name', 'r3_name').attr('value', "Customer Contact"));
+                    form.append($('<input />').attr('name', 'r3_operator').attr('value', "Contains"));
+                    form.append($('<input />').attr('name', 'r3_value_1').attr('value', "ar"));
+                    form.children('input').attr('type', 'hidden');
+                    form.submit();
+                });
 
             $("#execute3_button")
                 .click(function () {
                     $("#execute3_label").text("Executing '07-Outputs and schedules' with the Excel view");
-                    $.post(sealServer + "SWIExecuteReport", {
-                        path: "\\Samples\\07-Outputs and schedules.srex",
-                        viewGUID: "c496f22b-fc4d-45da-a2fc-23f9ecbf878b"
-                    })
-                        .done(function (data) {
-                            $("#execute3_label").text("Report executed...in another window");
-                            var win = window.open('about:blank');
-                            with (win.document) {
-                                open();
-                                write(data);
-                                close();
-                            }
-                        })
+                    var form = $('<form method="post" target="_blank"/>').appendTo('body');
+                    form.attr('action', sealServer + "SWExecuteReport");
+                    form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
+                    form.append($('<input />').attr('name', 'viewGUID').attr('value', "c496f22b-fc4d-45da-a2fc-23f9ecbf878b"));
+                    form.children('input').attr('type', 'hidden');
+                    form.submit();
                 });
 
             $("#execute4_button")
                 .click(function () {
                     $("#execute4_label").text("Executing '07-Outputs and schedules' with Output HTML");
-                    $.post(sealServer + "SWIExecuteReport", {
-                        path: "\\Samples\\07-Outputs and schedules.srex",
-                        outputGUID: "cac770ed-3039-4af8-93d3-e197ac94d808"
-                    })
-                        .done(function (data) {
-                            $("#execute4_label").text("Report executed...in another window");
-                            var win = window.open('about:blank');
-                            with (win.document) {
-                                open();
-                                write(data);
-                                close();
-                            }
-                        })
+                    var form = $('<form method="post" target="_blank"/>').appendTo('body');
+                    form.attr('action', sealServer + "SWExecuteReport");
+                    form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
+                    form.append($('<input />').attr('name', 'outputGUID').attr('value', "cac770ed-3039-4af8-93d3-e197ac94d808"));
+                    form.children('input').attr('type', 'hidden');
+                    form.submit();
                 });
 
             $("#generate_button")
                 .click(function () {
                     $("#generate_label").text("Generating report result...");
-                    $.post(sealServer + "SWIExecuteReportToResult", {
-                        path: "\\Search - Orders.srex",
-                        format: "html", /* print, pdf or excel with the converter */
-                        r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
-                        r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
-                        r2_name: "Order Date", r2_operator: "Equal", r2_value_1: "19940809 00:00:00", r2_value_2: "19940810 00:00:00", r2_value_3: "19940811 00:00:00", r2_value_4: "19940812 00:00:00",
-                        r3_name: "Customer Contact", r3_operator: "Contains", r3_value_1: "ar"
-                    })
-                        .done(function (data) {
-                            if (!data.error) {
-                                $("#generate_label").html("SWIExecuteReportToResult Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a><br>" + JSON.stringify(data));
-                            }
-                            else {
-                                $("#generate_label").text("Error: " + data.error);
-                            }
-                            enableControls();
-                        })
+                    $("#execute2_label").text("Executing 'Search - Orders' with custom restrictions...");
+                    var form = $('<form method="post" target="_blank"/>').appendTo('body');
+                    form.attr('action', sealServer + "SWExecuteReportToResult");
+                    form.append($('<input />').attr('name', 'path').attr('value', "\\Search - Orders.srex"));
+                    form.append($('<input />').attr('name', 'format').attr('value', "html"));
+                    form.append($('<input />').attr('name', 'r0_name').attr('value', "Quantity"));
+                    form.append($('<input />').attr('name', 'r0_operator').attr('value', "Between"));
+                    form.append($('<input />').attr('name', 'r0_value_1').attr('value', "34"));
+                    form.append($('<input />').attr('name', 'r0_value_2').attr('value', "123"));
+                    form.append($('<input />').attr('name', 'r1_name').attr('value', "Category"));
+                    form.append($('<input />').attr('name', 'r1_operator').attr('value', "Equal"));
+                    form.append($('<input />').attr('name', 'r1_enum_values').attr('value', "2,3,4,7"));
+                    form.append($('<input />').attr('name', 'r2_name').attr('value', "Order Date"));
+                    form.append($('<input />').attr('name', 'r2_operator').attr('value', "Equal"));
+                    form.append($('<input />').attr('name', 'r2_value_1').attr('value', "19940809 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_2').attr('value', "19940810 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_3').attr('value', "19940811 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_4').attr('value', "19940812 00:00:00"));
+                    form.append($('<input />').attr('name', 'r3_name').attr('value', "Customer Contact"));
+                    form.append($('<input />').attr('name', 'r3_operator').attr('value', "Contains"));
+                    form.append($('<input />').attr('name', 'r3_value_1').attr('value', "ar"));
+                    form.children('input').attr('type', 'hidden');
+                    form.submit();
                 });
 
             $("#generate2_button")
                 .click(function () {
                     $("#generate2_label").text("Generating report result...");
-                    $.post(sealServer + "SWIExecuteReportToResult", {
-                        path: "\\Samples\\07-Outputs and schedules.srex",
-                        outputGUID: "cac770ed-3039-4af8-93d3-e197ac94d808",
-                    })
-                        .done(function (data) {
-                            if (!data.error) {
-                                $("#generate2_label").html("SWIExecuteReportToResult Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
-                            }
-                            else {
-                                $("#generate2_label").text("Error: " + data.error);
-                            }
-                            enableControls();
-                        })
+                    var form = $('<form method="post" target="_blank"/>').appendTo('body');
+                    form.attr('action', sealServer + "SWExecuteReportToResult");
+                    form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
+                    form.append($('<input />').attr('name', 'outputGUID').attr('value', "cac770ed-3039-4af8-93d3-e197ac94d808"));
+                    form.children('input').attr('type', 'hidden');
+                    form.submit();
                 });
 
             $("#generate3_button")
                 .click(function () {
                     $("#generate3_label").text("Generating report result...");
-                    $.post(sealServer + "SWIExecuteReportToResult", {
-                        path: "\\Samples\\07-Outputs and schedules.srex",
-                        format: "print", /* print, pdf or excel with the converter */
-                    })
-                        .done(function (data) {
-                            if (!data.error) {
-                                $("#generate3_label").html("SWIExecuteReportToResult Done: <a href=" + encodeURI(data.url) + " target=_blank>" + data.url + "</a>");
-                            }
-                            else {
-                                $("#generate3_label").text("Error: " + data.error);
-                            }
-                            enableControls();
-                        })
+                    var form = $('<form method="post" target="_blank"/>').appendTo('body');
+                    form.attr('action', sealServer + "SWExecuteReportToResult");
+                    form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
+                    form.append($('<input />').attr('name', 'format').attr('value', "print"));/* print, pdf or excel with the converter */
+                    form.children('input').attr('type', 'hidden');
+                    form.submit();
                 });
 
             $("#set_up_button")
@@ -396,6 +388,12 @@
                                 <button id="report_detail_button">Get Report Detail</button>
                             </td>
                             <td width="50%"><label id="report_detail_label"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button id="search_button">Search</button>
+                            </td>
+                            <td width="50%"><label id="search_label"></label></td>
                         </tr>
                         <tr><th>Execute a report in a new window:</th><td></td></tr>
                         <tr>

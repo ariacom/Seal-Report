@@ -43,7 +43,7 @@
     <div class="container">
 
         <div class="col-lg-12">
-            <h2>Seal Web Interface Version 3.0.1</h2>
+            <h2>Seal Web Interface Version 3.1.0</h2>
         </div>
         <div class="col-lg-12">
             <h2>SWIGetVersions</h2>
@@ -328,7 +328,7 @@ $.post("http://demo.sealreport.org/SWIGetReportDetail", {
         </div>
 
         <div class="col-lg-12">
-            <h2>SWINewReportDefinition (Only available for our sponsors !)</h2>
+            <h2>SWINewReportDefinition (Only available with the Web Report Designer !)</h2>
             <table class="table table-striped">
                 <tbody>
                     <tr><th>Description</th><td>Init a returns the definition of a new report in a repository.</td></tr>
@@ -357,7 +357,7 @@ $.post("http://demo.sealreport.org/SWIGetReportDefinition", {
         </div>
 
         <div class="col-lg-12">
-            <h2>SWIGetReportDefinition (Only available for our sponsors !)</h2>
+            <h2>SWIGetReportDefinition (Only available with the Web Report Designer !)</h2>
             <table class="table table-striped">
                 <tbody>
                     <tr><th>Description</th><td>Returns the definition of an existing report.</td></tr>
@@ -386,7 +386,7 @@ $.post("http://demo.sealreport.org/SWIGetReportDefinition", {
         </div>
 
         <div class="col-lg-12">
-            <h2>SWISaveReportDefinition (Only available for our sponsors !)</h2>
+            <h2>SWISaveReportDefinition (Only available with the Web Report Designer !)</h2>
             <table class="table table-striped">
                 <tbody>
                     <tr><th>Description</th><td>Save a report.</td></tr>
@@ -416,13 +416,13 @@ $.post("http://demo.sealreport.org/SWISaveReportDefinition", {
         </div>
 
         <div class="col-lg-12">
-            <h2>SWIExecuteReportToResult</h2>
+            <h2>SWExecuteReportToResult</h2>
             <table class="table table-striped">
                 <tbody>
                     <tr>
                         <th>Description</th>
                         <td>
-                            Execute a report into a report result and returns the url of the result.<br /><br />
+                            Execute a report into a report result and returns the result.<br /><br />
                             Custom restriction values can be set for the execution if they are prompted in the report.<br />
                             In this case the parameters must be prefixed with <b>r0_</b> (for the restriction 0) with the following suffixes:<br />
                             <b>name</b> for the name of the restriction.<br />
@@ -447,29 +447,34 @@ $.post("http://demo.sealreport.org/SWISaveReportDefinition", {
                         <th>Call</th>
                         <td>
 <pre>
-$.post(sealServer + "SWIExecuteReportToResult", {
-    path: "\\Search - Orders.srex",
-    format: "html", // optional, html by default, print, pdf or excel with the converter 
-    viewGUID: "", //optional, the view GUID to execute in the report
-    outputGUID: "", //optional, the output GUID to execute in the report
+    var f = $('&lt;form method="post" target="_blank" />').appendTo('body');
+    f.attr('action', sealServer + "SWExecuteReportToResult");
+    f.append($('&lt;input/>').attr('name', 'path').attr('value', path));  //the report path, if empty the report definition must be specified
+    f.append($('&lt;input />').attr('name', 'render').attr('value', JSON.stringify(render))); //true if the report can be rendered (this option is used only if report definition is specified)
+    f.append($('&lt;input />').attr('name', 'viewGUID').attr('value', viewGUID)); //optional, the view GUID to execute in the report
+    f.append($('&lt;input />').attr('name', 'outputGUID').attr('value', outputGUID)); //optional, the output GUID to execute in the report
+    f.append($('&lt;input />').attr('name', 'format').attr('value', "html"));  // optional, html by default, print, pdf or excel with the converter 
+
     //optional restriction values if defined as prompted in the report
-    r0_name: "Quantity", r0_operator: "Between", r0_value_1: "34", r0_value_2: "123",
-    r1_name: "Category", r1_operator: "Equal", r1_enum_values: "2,3,4,7",
-    r2_name: "Order Date", r2_operator: "Equal", r2_value_1: "19940809 00:00:00", 
-    r2_value_2: "19940810 00:00:00", r2_value_3: "19940811 00:00:00", r2_value_4: "19940812 00:00:00",
-    r3_name: "Customer Contact", r3_operator: "Contains", r3_value_1: "ar"
-})
-.done(function (data) {
-    if (!data.error) { /* Do your job here */ }
-})
+    f.append($('&lt;input />').attr('name', 'r0_name').attr('value', "Quantity"));
+    f.append($('&lt;input />').attr('name', 'r0_operator').attr('value', "Between"));
+    f.append($('&lt;input />').attr('name', 'r0_value_1').attr('value', "34"));
+    f.append($('&lt;input />').attr('name', 'r0_value_2').attr('value', "123"));
+    f.append($('&lt;input />').attr('name', 'r1_name').attr('value', "Category"));
+    f.append($('&lt;input />').attr('name', 'r1_operator').attr('value', "Equal"));
+    f.append($('&lt;input />').attr('name', 'r1_enum_values').attr('value', "2,3,4,7"));
+    f.append($('&lt;input />').attr('name', 'r2_name').attr('value', "Order Date"));
+    f.append($('&lt;input />').attr('name', 'r2_operator').attr('value', "Equal"));
+    f.append($('&lt;input />').attr('name', 'r2_value_1').attr('value', "19940809 00:00:00"));
+    f.append($('&lt;input />').attr('name', 'r2_value_2').attr('value', "19940810 00:00:00"));
+    f.append($('&lt;input />').attr('name', 'r2_value_3').attr('value', "19940811 00:00:00"));
+    f.append($('&lt;input />').attr('name', 'r2_value_4').attr('value', "19940812 00:00:00"));
+    f.append($('&lt;input />').attr('name', 'r3_name').attr('value', "Customer Contact"));
+    f.append($('&lt;input />').attr('name', 'r3_operator').attr('value', "Contains"));
+    f.append($('&lt;input />').attr('name', 'r3_value_1').attr('value', "ar"));
+    f.children('input').attr('type', 'hidden');
+    f.submit();
 </pre>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Returns</th>
-                        <td>
-                            url (string): the url of the result file<br />
-                            error (string): if any error, the error description
                         </td>
                     </tr>
                 </tbody>
@@ -477,36 +482,29 @@ $.post(sealServer + "SWIExecuteReportToResult", {
         </div>
 
         <div class="col-lg-12">
-            <h2>SWIExecuteReport</h2>
+            <h2>SWExecuteReport</h2>
             <table class="table table-striped">
                 <tbody>
                     <tr>
                         <th>Description</th>
                         <td>
                             Execute a report and returns the report html display result content (e.g. html with prompted restrictions).<br />
-                            Custom restriction values can be set for the execution if they are prompted in the report as described for SWIExecuteReportToResult.<br />
+                            Custom restriction values can be set for the execution if they are prompted in the report as described for SWExecuteReportToResult.<br />
                         </td>
                     </tr>
                     <tr>
                         <th>Call</th>
                         <td>
 <pre>
-$.post(sealServer + "SWIExecuteReport", {
-    path: "", //the report path, if empty the report definition must be specified
-    render: false, //true if the report can be rendered (this option is used only if report definition is specified)
-    viewGUID: "", //optional, the view GUID to execute in the report
-    outputGUID: "" //optional, the output GUID to execute in the report
-})
-.done(function (data) {
-    if (!data.error) { /* Do your job here */ }
-})
+    var f = $('&lt;form method="post" target="_blank" />').appendTo('body');
+    f.attr('action', sealServer + "SWExecuteReport");
+    f.append($('&lt;input />').attr('name', 'path').attr('value', path));  //the report path, if empty the report definition must be specified
+    f.append($('&lt;input />').attr('name', 'render').attr('value', JSON.stringify(render))); //true if the report can be rendered (this option is used only if report definition is specified)
+    f.append($('&lt;input />').attr('name', 'viewGUID').attr('value', viewGUID)); //optional, the view GUID to execute in the report
+    f.append($('&lt;input />').attr('name', 'outputGUID').attr('value', outputGUID)); //optional, the output GUID to execute in the report
+    f.children('input').attr('type', 'hidden');
+    f.submit();
 </pre>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Returns</th>
-                        <td>
-                            the full result content is returned to be displayed in a new window
                         </td>
                     </tr>
                 </tbody>
@@ -514,36 +512,29 @@ $.post(sealServer + "SWIExecuteReport", {
         </div>
 
         <div class="col-lg-12">
-            <h2>SWIExecuteReportDefinition (Only available for our sponsors !)</h2>
+            <h2>SWExecuteReportDefinition (Only available with the Web Report Designer !)</h2>
             <table class="table table-striped">
                 <tbody>
                     <tr>
                         <th>Description</th>
                         <td>
                             Execute a report from its definition and returns the report html display result content (e.g. html with prompted restrictions).<br />
-                            Custom restriction values can be set for the execution if they are prompted in the report as described for SWIExecuteReportToResult.<br />
+                            Custom restriction values can be set for the execution if they are prompted in the report as described for SWExecuteReportToResult.<br />
                         </td>
                     </tr>
                     <tr>
                         <th>Call</th>
                         <td>
 <pre>
-$.post(sealServer + "SWIExecuteReportDefinition", {
-    report: report //the report definition (refer to SWIReport class in the source code SWIReportModels.cs)
-    render: false, //true if the report can be rendered (this option is used only if report definition is specified)
-    viewGUID: "", //optional, the view GUID to execute in the report
-    outputGUID: "" //optional, the output GUID to execute in the report
-})
-.done(function (data) {
-    if (!data.error) { /* Do your job here */ }
-})
+    var f = $('&lt;form method="post" target="_blank" />').appendTo('body');
+    f.attr('action', sealServer + "SWIExecuteReportDefinition");
+    f.append($('&lt;input />').attr('name', 'path').attr('value', path));  //the report path, if empty the report definition must be specified
+    f.append($('&lt;input />').attr('name', 'render').attr('value', JSON.stringify(render))); //true if the report can be rendered (this option is used only if report definition is specified)
+    f.append($('&lt;input />').attr('name', 'viewGUID').attr('value', viewGUID)); //optional, the view GUID to execute in the report
+    f.append($('&lt;input />').attr('name', 'outputGUID').attr('value', outputGUID)); //optional, the output GUID to execute in the report
+    f.children('input').attr('type', 'hidden');
+    f.submit();
 </pre>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Returns</th>
-                        <td>
-                            the full result content is returned to be displayed in a new window
                         </td>
                     </tr>
                 </tbody>

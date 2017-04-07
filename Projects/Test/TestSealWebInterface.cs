@@ -7,6 +7,8 @@ using System.Diagnostics;
 using Seal.Model;
 using System.Text;
 using System.Net;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 namespace Test
 {
@@ -30,7 +32,7 @@ namespace Test
         public string error = "";
     }
 
-    class SWIVersionsResponse 
+    class SWIVersionsResponse
     {
         public string SWIVersion = "";
         public string SRVersion = "";
@@ -64,9 +66,9 @@ namespace Test
             var serverURL = "http://localhost:17178/";
             //serverURL = "http://localhost/Seal/";
 
-            var httpClient = new HttpClient(); 
+            var httpClient = new HttpClient();
 
-            var response = await httpClient.PostAsJsonAsync(serverURL + "SWIGetVersions", new {});
+            var response = await httpClient.PostAsJsonAsync(serverURL + "SWIGetVersions", new { });
             var versions = await response.Content.ReadAsAsync<SWIVersionsResponse>();
             Assert.IsTrue(string.IsNullOrEmpty(versions.error));
             Assert.IsTrue(!string.IsNullOrEmpty(versions.SWIVersion) && !string.IsNullOrEmpty(versions.SRVersion));
@@ -90,12 +92,23 @@ namespace Test
             Assert.IsTrue(string.IsNullOrEmpty(reportDetail.error));
             Assert.IsTrue(reportDetail.views.Length == 2 && reportDetail.outputs.Length == 3);
 
-            response = await httpClient.PostAsJsonAsync(serverURL + "SWIExecuteReportToResult?r0_name=Quantity&r0_operator=Between&r0_value_1=34&r0_value_2=123",
-                new { path = @"\Search - Orders.srex" });
-            var url = await response.Content.ReadAsAsync<SWIURLResponse>();
-            Assert.IsTrue(string.IsNullOrEmpty(url.error));
-            Assert.IsTrue(!string.IsNullOrEmpty(url.url));
-            Process.Start(url.url);
+            var parameters = new List<KeyValuePair<string, string>>();
+            parameters.Add(new KeyValuePair<string, string>("path", @"\Search - Orders.srex"));
+            parameters.Add(new KeyValuePair<string, string>("r0_name", "Quantity"));
+            parameters.Add(new KeyValuePair<string, string>("r0_operator", "Between"));
+            parameters.Add(new KeyValuePair<string, string>("r0_value_1", "34"));
+            parameters.Add(new KeyValuePair<string, string>("r0_value_2", "123"));
+
+            var formUrlEncodedContent = new FormUrlEncodedContent(parameters);
+            formUrlEncodedContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+            var request = new HttpRequestMessage(HttpMethod.Post, serverURL + "SWExecuteReportToResult");
+            request.Content = formUrlEncodedContent;
+            var response2 = httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).Result;
+            var reader = new StreamReader(response2.Content.ReadAsStreamAsync().Result);
+
+            var fileName = Path.GetTempFileName() + ".htm";
+            File.WriteAllText(fileName,reader.ReadToEnd());
+            Process.Start(fileName);
 
             response = await httpClient.PostAsJsonAsync(serverURL + "SWISetUserProfile", new { culture = "it-IT" });
             var empty = await response.Content.ReadAsAsync<SWIEmptyResponse>();

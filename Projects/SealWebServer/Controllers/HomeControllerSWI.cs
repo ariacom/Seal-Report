@@ -298,7 +298,7 @@ namespace SealWebServer.Controllers
         }
 
         [HttpPost]
-        public ActionResult HTMLExecuteReportToResult(string path, string viewGUID, string outputGUID, string format)
+        public ActionResult SWExecuteReportToResult(string path, string viewGUID, string outputGUID, string format)
         {
             try
             {
@@ -319,7 +319,7 @@ namespace SealWebServer.Controllers
                 ActionResult result = null;
                 if (!string.IsNullOrEmpty(outputGUID))
                 {
-                    result = getFileResult(Path.GetFileName(report.ResultFilePath), report);
+                    result = getFileResult(report.ResultFilePath, report);
                 }
                 else
                 {
@@ -329,7 +329,7 @@ namespace SealWebServer.Controllers
                     else if (format.ToLower() == "pdf") fileResult = execution.GeneratePDFResult();
                     else if (format.ToLower() == "excel") fileResult = execution.GenerateExcelResult();
                     else fileResult = execution.GenerateHTMLResult();
-                    result = getFileResult(Path.GetFileName(fileResult), report);
+                    result = getFileResult(fileResult, report);
                 }
                 report.PreInputRestrictions.Clear();
                 return result;
@@ -342,7 +342,7 @@ namespace SealWebServer.Controllers
 
 
         [HttpPost]
-        public ActionResult HTMLExecuteReport(string path, bool? render, string viewGUID, string outputGUID)
+        public ActionResult SWExecuteReport(string path, bool? render, string viewGUID, string outputGUID)
         {
             try
             {
@@ -371,7 +371,7 @@ namespace SealWebServer.Controllers
 
 
         [HttpPost]
-        public ActionResult HTMLViewFile(string path)
+        public ActionResult SWViewFile(string path)
         {
             try
             {

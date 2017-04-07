@@ -126,23 +126,25 @@ var SWIGateway = (function () {
             .fail(function () { failure(); });
     };
     SWIGateway.prototype.ExecuteReport = function (path, render, viewGUID, outputGUID) {
-        var f = this.getExecForm("HTMLExecuteReport");
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'outputGUID').attr('value', outputGUID));
+        var f = this.getExecForm("SWExecuteReport");
+        f.append($('<input />').attr('name', 'path').attr('value', path));
+        f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
+        f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
+        f.append($('<input />').attr('name', 'outputGUID').attr('value', outputGUID));
+        f.children('input').attr('type', 'hidden');
         f.submit();
     };
     SWIGateway.prototype.ExecuteReportDefinition = function (report, render, viewGUID, outputGUID) {
-        var f = this.getExecForm("HTMLExecuteReportDefinition");
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'report').attr('value', report));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'render').attr('value', JSON.stringify(render)));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'viewGUID').attr('value', viewGUID));
-        f.append($('<input />').attr('type', 'hidden').attr('name', 'outputGUID').attr('value', outputGUID));
+        var f = this.getExecForm("SWExecuteReportDefinition");
+        f.append($('<input />').attr('name', 'report').attr('value', report));
+        f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
+        f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
+        f.append($('<input />').attr('name', 'outputGUID').attr('value', outputGUID));
+        f.children('input').attr('type', 'hidden');
         f.submit();
     };
     SWIGateway.prototype.ViewFile = function (path) {
-        var f = this.getExecForm("HTMLViewFile");
+        var f = this.getExecForm("SWViewFile");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.submit();
     };

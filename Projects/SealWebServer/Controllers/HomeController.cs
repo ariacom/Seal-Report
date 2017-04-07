@@ -615,12 +615,6 @@ namespace SealWebServer.Controllers
             string folderPath = folder.GetFullPath();
             foreach (string subFolder in Directory.GetDirectories(folderPath))
             {
-                //Hack: do not display images sub-directory when the directory contains the ui-* files (for jquery)
-                if (Path.GetFileName(subFolder).ToLower() == "images")
-                {
-                    if (Directory.GetFiles(subFolder, "ui-*.png").Length > 10) continue;
-                }
-
                 SWIFolder sub = getFolder(folder.Combine(subFolder));
                 //Add if right on this folder, or a sub folder is defined with this root
                 if ((sub.right > 0) || WebUser.SecurityGroups.Exists(i => i.Folders.Exists(j => j.Path.StartsWith(sub.path + (sub.path == "\\" ? "" : "\\")) && j.FolderRight != FolderRight.None)))
@@ -809,7 +803,7 @@ namespace SealWebServer.Controllers
             ReportExecution execution = new ReportExecution() { Report = report };
 
             Session[report.ExecutionGUID] = execution;
-            int index = Request.Url.OriginalString.ToLower().IndexOf("htmlexecutereport");
+            int index = Request.Url.OriginalString.ToLower().IndexOf("swexecutereport");
             if (index == -1) throw new Exception("Invalid URL");
             report.WebUrl = Request.Url.OriginalString.Substring(0, index);
             repository.WebApplicationPath = Path.Combine(Request.PhysicalApplicationPath, "bin");
@@ -832,7 +826,6 @@ namespace SealWebServer.Controllers
                 else result.FileDownloadName = Path.GetFileName(path);
             }
             return result;
-
         }
 
 

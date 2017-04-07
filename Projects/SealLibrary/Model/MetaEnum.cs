@@ -111,7 +111,7 @@ namespace Seal.Model
         public string DefaultSQL = "select col1,col2 from table order by col2";
 
         private string _sql;
-        [Category("Definition"), DisplayName("Select SQL Statement"), Description("If the list is loaded from the database, SQL Select statement with 1, 2 or 3 columns used to build the list of values. The first column is used for the identifier value, the second optional column is used for the display value, the third optional column is used for the restriction display value shown in the list."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Select SQL Statement"), Description("If the list is loaded from the database, SQL Select statement with 1, 2, 3 or 4 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS applied to the result cell."), Id(4, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string Sql
         {
