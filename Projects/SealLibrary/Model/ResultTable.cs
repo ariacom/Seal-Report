@@ -3,6 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using Seal.Converter;
+using Seal.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,13 +27,24 @@ namespace Seal.Model
         public string GetLoadTableData(ReportModel model, string parameter)
         {
             var parameters = parameter.Split('§');
-            if (parameters.Length != 5) throw new Exception("Invalid parameter size");
-            var echo = int.Parse(parameters[0]);
-            var sort = parameters[1];
-            var search = parameters[2];
-            var len = int.Parse(parameters[3]);
-            var start = int.Parse(parameters[4]);
 
+            int echo = 1, len = 50, start = 0;
+            string sort = "", search = "";
+            try
+            {
+                if (parameters.Length != 5) throw new Exception("Invalid parameter size");
+                echo = int.Parse(parameters[0]);
+                sort = parameters[1];
+                search = parameters[2];
+                len = int.Parse(parameters[3]);
+                start = int.Parse(parameters[4]);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntryWeb(System.Diagnostics.EventLogEntryType.Error, string.Format("GetLoadTableData-> Error in parameter:{0}\r\n{1}", parameter, ex.Message));
+                echo = 1; len = 50; start = 0;
+                sort = ""; search = "";
+            }
             var sb = new StringBuilder();
             sb.Append("\"aaData\": [");
 

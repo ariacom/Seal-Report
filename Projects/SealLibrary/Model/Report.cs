@@ -1017,15 +1017,9 @@ namespace Seal.Model
         }
 
 
-        private string ConvertCDNPath(string cdnPath)
-        {
-            if (Repository.Configuration.LinksOption == HTMLLinksOption.Https && cdnPath.ToLower().StartsWith("http://")) return "https://" + cdnPath.Substring(7);
-            return cdnPath;
-        }
-
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
-            if (!string.IsNullOrEmpty(cdnPath) && Repository.Configuration.LinksOption != HTMLLinksOption.Local) return string.Format("<script type='text/javascript' src='{0}'></script>", ConvertCDNPath(cdnPath));
+            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<script type='text/javascript' src='{0}'></script>", cdnPath);
 
             if (GenerateHTMLDisplay || ForPDFConversion)
             {
@@ -1052,7 +1046,7 @@ namespace Seal.Model
 
         public string AttachCSSFile(string fileName, string cdnPath = "")
         {
-             if (!string.IsNullOrEmpty(cdnPath) && Repository.Configuration.LinksOption != HTMLLinksOption.Local) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", ConvertCDNPath(cdnPath));
+             if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", cdnPath);
 
             if (GenerateHTMLDisplay)
             {
@@ -1073,7 +1067,7 @@ namespace Seal.Model
             string sourceFilePath = Path.Combine(Repository.ViewContentFolder, fileName);
             result += File.ReadAllText(sourceFilePath);
             //Hack to change JQuery Images URL...
-            if (!string.IsNullOrEmpty(cdnPath) && Repository.Configuration.LinksOption == HTMLLinksOption.Local && cdnPath.ToLower().Contains("jquery.com"))
+            if (!string.IsNullOrEmpty(cdnPath) && Repository.Configuration.IsLocal && cdnPath.ToLower().Contains("jquery.com"))
             {
                 if (!string.IsNullOrEmpty(WebUrl)) result = result.Replace("url(\"images/", "url(\"" + WebUrl + "Content/images/");
                 else result = result.Replace("url(\"images/", "url(\"file://" + Path.Combine(Repository.ViewContentFolder, "images/").Replace("\\","/"));
