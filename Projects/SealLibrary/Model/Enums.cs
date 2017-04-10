@@ -370,15 +370,4 @@ namespace Seal.Model
         OneFilePerExecution,
     }
 
-
-    public enum HTMLLinksOption
-    {
-        [Description("HTTP links")]
-        Http,
-        [Description("HTTPS links")]
-        Https,
-        [Description("Links to local files (No internet)")]
-        Local,
-    };
-
 }

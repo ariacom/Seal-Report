@@ -5,7 +5,7 @@
   <LogoName>logo.jpg</LogoName>
   <LogDays>30</LogDays>
   <WebProductName>Seal Report</WebProductName>
-  <LinksOption>Local</LinksOption>
+  <IsLocal>false</IsLocal>
   <InitScript>@using Seal.Model
 @using System.Data
 @{
