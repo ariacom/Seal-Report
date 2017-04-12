@@ -14,8 +14,7 @@
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
@@ -63,13 +62,12 @@
     {
 		ReportElement address = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Address");
 		ReportElement city = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "City");
-		ReportElement po = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Postal Code");
 		ReportElement country = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Country");
 		ReportElement lat = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Latitude from Google");
 		ReportElement lng = model.Elements.FirstOrDefault(i =&gt; i.DisplayNameEl == "Longitude from Google");
 		if (lat != null &amp;&amp; lng != null) 
 		{			
-			string url = string.Format("https://maps.googleapis.com/maps/api/geocode/xml?address={0}+{1}+{2}+{3}", row[address.SQLColumnName], row[city.SQLColumnName], row[po.SQLColumnName], row[country.SQLColumnName]);
+			string url = string.Format("https://maps.googleapis.com/maps/api/geocode/xml?address={0}+{1}+{2}", row[address.SQLColumnName], row[city.SQLColumnName], row[country.SQLColumnName]);
 
 			log.LogMessage("Calling " + url);
 			var webRequest = System.Net.WebRequest.Create(url);
@@ -118,9 +116,44 @@
 }
 </FinalScript>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
+        <ReportElement>
+          <GUID>5ce4f08b-93c3-4a9a-b6c4-986bcbbe6238</GUID>
+          <Name>Employees.Country</Name>
+          <Type>Default</Type>
+          <IsAggregate>false</IsAggregate>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayOrder>0</DisplayOrder>
+          <NumericStandardFormat>Default</NumericStandardFormat>
+          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
+          <PivotPosition>Page</PivotPosition>
+          <SortOrder>Automatic Ascendant</SortOrder>
+          <TypeEd>Default</TypeEd>
+          <AggregateFunction>Count</AggregateFunction>
+          <CalculationOption>No</CalculationOption>
+          <ShowTotal>No</ShowTotal>
+          <TotalAggregateFunction>Sum</TotalAggregateFunction>
+          <SerieDefinition>None</SerieDefinition>
+          <AxisUseValues>true</AxisUseValues>
+          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <XAxisType>Primary</XAxisType>
+          <YAxisType>Primary</YAxisType>
+          <SerieSortOrder>Ascending</SerieSortOrder>
+          <SerieSortType>Y</SerieSortType>
+          <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
+        </ReportElement>
         <ReportElement>
           <GUID>a73676cd-2cae-40fd-ba96-639e17f33e37</GUID>
           <Name>Employees.LastName</Name>
@@ -293,8 +326,8 @@
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
-          <GUID>b88b668a-7cd2-4a1e-9194-2df5a51c7c66</GUID>
-          <Name>Employees.City</Name>
+          <GUID>b433095d-144c-4b3a-b439-2ac17760eb91</GUID>
+          <Name>Employees.Title</Name>
           <Type>Numeric</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -323,15 +356,14 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</MetaColumnGUID>
+          <MetaColumnGUID>793c07a5-b7bd-41ae-bdea-506ad244005e</MetaColumnGUID>
           <SQL>1.2</SQL>
-          <CellScript />
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
-          <GUID>4a0993ea-5ac8-4615-a2a3-ce4bd12a2181</GUID>
-          <Name>Employees.City</Name>
+          <GUID>7b27f42e-7ed1-4169-a09f-447194286065</GUID>
+          <Name>Employees.Title</Name>
           <Type>Numeric</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
@@ -360,42 +392,8 @@
           <YAxisType>Primary</YAxisType>
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>5d08f638-1b78-4850-b6cb-d46b5ce72f94</MetaColumnGUID>
+          <MetaColumnGUID>793c07a5-b7bd-41ae-bdea-506ad244005e</MetaColumnGUID>
           <SQL>1.2</SQL>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
-        </ReportElement>
-        <ReportElement>
-          <GUID>5ce4f08b-93c3-4a9a-b6c4-986bcbbe6238</GUID>
-          <Name>Employees.Country</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
-          <Category>Master</Category>
-          <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
-          <HasHTMLTags xsi:nil="true" />
-          <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
-          <SubReports />
-          <PivotPosition>Page</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
-          <MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID>
           <DrillEnabled>true</DrillEnabled>
           <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
