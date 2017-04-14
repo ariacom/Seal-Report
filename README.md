@@ -33,7 +33,7 @@ Use the <a href="http://forum.sealreport.org" target=_blank>Seal Report Forum</a
 ## Web Report Server
 ![Web Report Server](http://sealreport.org/Images/webServer2.png)
 
-##System Requirements
+## System Requirements
 **For use:**
 * Windows XP, Vista, 2003, Windows 7, 2008, Windows 8, 2012, Windows 10
 * .Net Framework 4.0
@@ -44,5 +44,5 @@ Use the <a href="http://forum.sealreport.org" target=_blank>Seal Report Forum</a
 **For development:**
 * Visual Studio 2015 with MVC 4
 
-##License
+## License
 Seal Report is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>
