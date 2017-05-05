@@ -17,8 +17,9 @@ var _main: SWIMain;
 var _editor: ReportEditorInterface;
 
 
-declare var folderRightEdit : number;
+declare var folderRightPrivateSchedule: number;
 declare var folderRightSchedule: number;
+declare var folderRightEdit: number;
 declare var hasEditor: boolean;
 
 $(document).ready(function () {
@@ -431,7 +432,7 @@ class SWIMain {
             $tr.append($td);
             if (file.isReport) {
                 $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Views and outputs")).addClass("btn btn-default btn-table fa fa-list-ul report-output"));
-                if (file.right >= folderRightSchedule && hasEditor) $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Edit report")).addClass("btn btn-default fa fa-pencil report-edit"));
+                if (file.right >= folderRightPrivateSchedule && hasEditor) $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Edit report")).addClass("btn btn-default fa fa-pencil report-edit"));
             }
             $tr.append($("<td>").css("text-align", "right").text(file.last));
         }

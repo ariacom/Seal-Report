@@ -253,10 +253,10 @@ namespace Seal.Model
             foreach (var group in _groups)
             {
                 result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
-                /*FUTURE foreach (var item in group.Devices)
+                foreach (var item in group.Devices)
                 {
                     result.AppendFormat("    Device:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
-                }*/
+                }
                 foreach (var item in group.Sources)
                 {
                     result.AppendFormat("    Source:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));

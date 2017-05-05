@@ -13,6 +13,9 @@
       <Connections />
       <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
       <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
+      <InitScript />
+      <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
@@ -20,6 +23,7 @@
             <GUID>55dc8e4b-9040-4547-a15d-3ccc6286f66b</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
             <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
@@ -42,9 +46,9 @@
       <SqlGroupBy />
       <SqlOrderBy />
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
-      <ShowDuplicateRows>false</ShowDuplicateRows>
       <Elements>
         <ReportElement>
           <GUID>3e8c1b78-2884-4638-ae2c-80b8ab544abe</GUID>
@@ -52,11 +56,15 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>yyyy</Format>
           <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Page</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -73,6 +81,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>32f79895-2da2-4b75-a2d8-36e73707e925</GUID>
@@ -80,11 +90,15 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -101,6 +115,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>53402a75-0948-44bc-8d4e-b1c89eeb6001</GUID>
@@ -108,11 +124,15 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -129,6 +149,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>318e4a99-855d-4c84-aa77-f45b5439b8d9</GUID>
@@ -136,11 +158,15 @@
           <Type>Default</Type>
           <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayOrder>0</DisplayOrder>
           <NumericStandardFormat>Default</NumericStandardFormat>
           <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <Format>0</Format>
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Ascendant</SortOrder>
           <TypeEd>Default</TypeEd>
@@ -157,6 +183,8 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <DrillEnabled>true</DrillEnabled>
+          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction />
@@ -165,8 +193,42 @@
       <AggregateRestrictions />
     </ReportModel>
   </Models>
-  <Outputs />
+  <Outputs>
+    <ReportOutput>
+      <GUID>df9e9ea1-afbc-4851-b44b-cc64864586cb</GUID>
+      <Name>output (GMail Device)</Name>
+      <OutputDeviceGUID>c6394c4c-d4f2-41dd-81dc-ec14c35d0a64</OutputDeviceGUID>
+      <CancelIfNoRecords>false</CancelIfNoRecords>
+      <PreScript />
+      <PostScript />
+      <ViewParameters>
+        <Parameter>
+          <Name>print_layout</Name>
+          <Value>True</Value>
+        </Parameter>
+        <Parameter>
+          <Name>pdf_layout</Name>
+          <Value>True</Value>
+        </Parameter>
+      </ViewParameters>
+      <ViewCSS />
+      <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
+      <EmailTo>ep@ariacom.com</EmailTo>
+      <EmailSubject>test</EmailSubject>
+      <EmailHtmlBody>false</EmailHtmlBody>
+      <EmailMessagesInBody>false</EmailMessagesInBody>
+      <EmailZipAttachments>true</EmailZipAttachments>
+      <EmailZipPassword>er</EmailZipPassword>
+      <EmailSkipAttachments>false</EmailSkipAttachments>
+      <UserName />
+      <UserGroups />
+      <UserCulture />
+      <UseCustomRestrictions>false</UseCustomRestrictions>
+      <Restrictions />
+    </ReportOutput>
+  </Outputs>
   <Tasks />
+  <TasksScript />
   <Views>
     <ReportView>
       <GUID>2194db7c-bdea-459c-b055-d2e630d7f829</GUID>
@@ -184,6 +246,7 @@
           <UseCustomTemplate>false</UseCustomTemplate>
           <CustomTemplate />
           <Parameters />
+          <CultureName />
           <CSS>
             <Parameter>
               <Name>nvd3_chart</Name>
@@ -191,7 +254,6 @@
             </Parameter>
           </CSS>
           <SortOrder>1</SortOrder>
-          <CultureName />
           <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;Chart Size="600, 400"&gt;
   &lt;Series&gt;
@@ -228,9 +290,9 @@
           <Value>True</Value>
         </Parameter>
       </Parameters>
+      <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
-      <CultureName />
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
@@ -250,9 +312,9 @@
           <UseCustomTemplate>false</UseCustomTemplate>
           <CustomTemplate />
           <Parameters />
+          <CultureName />
           <CSS />
           <SortOrder>1</SortOrder>
-          <CultureName />
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
@@ -270,14 +332,24 @@
           <Value>A simple cross tab with a chart</Value>
         </Parameter>
       </Parameters>
+      <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
-      <CultureName />
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
   </Views>
   <DisplayName />
+  <InitScript />
   <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
-  <Schedules />
+  <Schedules>
+    <ReportSchedule>
+      <GUID>2728b98b-6fc1-4351-b72c-f11de2f0dedf</GUID>
+      <Name>Schedule (output (GMail Device))</Name>
+      <OutputGUID>df9e9ea1-afbc-4851-b44b-cc64864586cb</OutputGUID>
+      <ErrorNumberOfRetries>0</ErrorNumberOfRetries>
+      <ErrorMinutesBetweenRetries>10</ErrorMinutesBetweenRetries>
+      <ErrorEmailSendMode>All</ErrorEmailSendMode>
+    </ReportSchedule>
+  </Schedules>
 </Report>

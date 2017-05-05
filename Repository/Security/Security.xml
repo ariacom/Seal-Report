@@ -12,13 +12,21 @@
 
 	user.Name = user.WebUserName; //Display name
     //security check can be hardcoded
-	if (user.WebUserName == "aa")
+	if (user.WebUserName == "aa" &amp;&amp; user.WebPassword == "aa")
 	{
-		if (user.WebPassword == "aa") {
-			user.AddSecurityGroup("aa");
-		}
+		user.AddSecurityGroup("aa");
 	}
-	else {
+	else if (user.WebUserName == "bb" &amp;&amp; user.WebPassword == "bb")
+	{
+	//	user.AddSecurityGroup("aa");
+		user.AddSecurityGroup("bb");
+	}
+	else if (user.WebUserName == "cc" &amp;&amp; user.WebPassword == "cc")
+	{
+		user.AddSecurityGroup("aa");
+		user.AddSecurityGroup("cc");
+	}
+	else if (string.IsNullOrEmpty(user.WebUserName)) {
 		user.AddDefaultSecurityGroup();
 	}
 }</Script>
@@ -31,53 +39,35 @@
           <Path>\</Path>
           <UseSubFolders>true</UseSubFolders>
           <ManageFolder>true</ManageFolder>
-          <FolderRight>Execute</FolderRight>
+          <FolderRight>Edit</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
       </Folders>
       <PersonalFolder>false</PersonalFolder>
-      <Sources>
-        <SecuritySource>
-          <Name />
-          <Right>NoSelection</Right>
-        </SecuritySource>
-      </Sources>
-      <Connections>
-        <SecurityConnection>
-          <Source>aaaa dsfsd</Source>
-          <Name>gfdggdf</Name>
-          <Right>Selection</Right>
-        </SecurityConnection>
-      </Connections>
-      <Columns>
-        <SecurityColumn>
-          <Source>fdg</Source>
-          <Tag />
-          <Category>fgdg</Category>
-          <Right>Selection</Right>
-        </SecurityColumn>
-      </Columns>
+      <Devices />
+      <Sources />
+      <Connections />
+      <Columns />
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
       <Name>aa</Name>
       <Folders>
         <SecurityFolder>
-          <Path>\work</Path>
+          <Path>\work\aa</Path>
           <UseSubFolders>true</UseSubFolders>
           <ManageFolder>true</ManageFolder>
-          <FolderRight>Edit</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-        </SecurityFolder>
-        <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
-          <FolderRight>None</FolderRight>
+          <FolderRight>PrivateSchedule</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
       </Folders>
       <PersonalFolder>true</PersonalFolder>
+      <Devices>
+        <SecurityDevice>
+          <Name>Folder Device</Name>
+          <Right>NoSelection</Right>
+        </SecurityDevice>
+      </Devices>
       <Sources>
         <SecuritySource>
           <Name>RSS No SQL Source</Name>
@@ -104,6 +94,42 @@
           <Right>NoSelection</Right>
         </SecurityColumn>
       </Columns>
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>bb</Name>
+      <Folders>
+        <SecurityFolder>
+          <Path>\work\aa</Path>
+          <UseSubFolders>true</UseSubFolders>
+          <ManageFolder>true</ManageFolder>
+          <FolderRight>Schedule</FolderRight>
+          <ExpandSubFolders>true</ExpandSubFolders>
+        </SecurityFolder>
+      </Folders>
+      <PersonalFolder>true</PersonalFolder>
+      <Devices />
+      <Sources />
+      <Connections />
+      <Columns />
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>cc</Name>
+      <Folders>
+        <SecurityFolder>
+          <Path>\work\cc</Path>
+          <UseSubFolders>true</UseSubFolders>
+          <ManageFolder>true</ManageFolder>
+          <FolderRight>Edit</FolderRight>
+          <ExpandSubFolders>true</ExpandSubFolders>
+        </SecurityFolder>
+      </Folders>
+      <PersonalFolder>true</PersonalFolder>
+      <Devices />
+      <Sources />
+      <Connections />
+      <Columns />
       <Culture />
     </SecurityGroup>
   </Groups>

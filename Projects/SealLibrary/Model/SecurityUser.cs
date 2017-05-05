@@ -206,7 +206,7 @@ namespace Seal.Model
             foreach (var sgroup in SecurityGroups)
             {
                 _securityConnections.AddRange(sgroup.Connections.Where(i => i.Right == EditorRight.NoSelection));
-                /* FUTURE_securityDevices.AddRange(sgroup.Devices.Where(i => i.Right == EditorRight.NoSelection));*/
+                _securityDevices.AddRange(sgroup.Devices.Where(i => i.Right == EditorRight.NoSelection));
                 _securitySources.AddRange(sgroup.Sources.Where(i => i.Right == EditorRight.NoSelection));
                 _securityColumns.AddRange(sgroup.Columns.Where(i => i.Right == EditorRight.NoSelection));
             }

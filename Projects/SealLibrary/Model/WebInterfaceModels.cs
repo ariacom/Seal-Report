@@ -19,13 +19,6 @@ namespace Seal.Model
         PDFPrint
     }
 
-    public enum SWIScheduleType
-    {
-        None,
-        Email,
-        Folder,
-    }
-
 
     public class SWIUserProfile
     {

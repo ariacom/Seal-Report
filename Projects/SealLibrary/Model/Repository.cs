@@ -304,7 +304,7 @@ namespace Seal.Model
             if (_devices.Count == 0)
             {
                 //Devices, add a default folder device, then the other devices
-                _devices.Add(new OutputFolderDevice() { Name = "Folder Device" });
+                _devices.Add(OutputFolderDevice.Create());
                 foreach (var file in Directory.GetFiles(DevicesEmailFolder, "*." + SealConfigurationFileExtension))
                 {
                     try
@@ -613,6 +613,11 @@ namespace Seal.Model
         public string TranslateCategory(string instance, string reference)
         {
             return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, "Category", instance, reference);
+        }
+
+        public string TranslateDevice(string instance, string reference)
+        {
+            return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, "Device", instance, reference);
         }
 
         public string TranslateFolderPath(string path)

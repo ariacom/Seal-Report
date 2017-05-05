@@ -12,9 +12,11 @@ namespace Seal.Model
 {
     public class OutputFolderDevice : OutputDevice
     {
+        static string DefaultGUID = "c428a6ba-061b-4a47-b9bc-f3f02442ab4b";
+
         static public OutputFolderDevice Create()
         {
-            OutputFolderDevice result = new OutputFolderDevice() { GUID = Guid.NewGuid().ToString() };
+            OutputFolderDevice result = new OutputFolderDevice() { GUID = DefaultGUID };
             result.Name = "Folder Device";
             return result;
         }
