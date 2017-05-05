@@ -46,6 +46,7 @@
         var shortDateFormat = '@repository.CultureInfo.DateTimeFormat.ShortDatePattern';
         var isUSdate = shortDateFormat.match(/^m/i);
 
+        var folderRightPrivateSchedule = @((int) FolderRight.PrivateSchedule);
         var folderRightSchedule = @((int) FolderRight.Schedule);
         var folderRightEdit = @((int) FolderRight.Edit);
 
@@ -62,10 +63,10 @@
         var availableDateKeywords = ['@repository.TranslateReport("Now")', '@repository.TranslateReport("Today")', '@repository.TranslateReport("Today")-1', '@repository.TranslateReport("ThisWeek")', '@repository.TranslateReport("ThisWeek")-1', '@repository.TranslateReport("ThisMonth")', '@repository.TranslateReport("ThisMonth")-1', '@repository.TranslateReport("ThisYear")', '@repository.TranslateReport("ThisYear")-1'];
 
         //translations
-        var translations = [];
+        var tra = [];
         @foreach(var translation in repository.JSTranslations)
         {
-            <text>translations["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
+        <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
         }
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword';
@@ -300,90 +301,104 @@
                     <div id="schedule-row" class="row editor-panel">
                         <div class="form-horizontal col-sm-6" role="form">
                             <div class="form-group">
-                                <label class="control-label col-sm-4" for="schedule-device">@repository.TranslateWeb("Device")</label>
-                                <div class="col-sm-8">
-                                    <select id="schedule-device" data-width="100%"></select>
-                                </div>
-                            </div>
-                            <div class="form-group schedule-folder">
-                                <label class="control-label col-sm-4" for="schedule-folder">@repository.TranslateWeb("Folder")*</label>
-                                <div class="col-sm-8">
-                                    <select id="schedule-folder" data-width="100%"></select>
-                                </div>
-                            </div>
-                            <div class="form-group schedule-folder">
-                                <label class="control-label col-sm-4" for="schedule-file">@repository.TranslateWeb("File name")*</label>
+                                <label class="control-label col-sm-4" for="output-name">@repository.TranslateWeb("Output")</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
-                                        <input id="schedule-file" type="text" class="form-control" placeholder="@repository.TranslateWeb("Enter the file name without extension")" />
+                                        <input id="output-name" type="text" class="form-control" />
                                         <div class="input-group-btn">
                                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
-                                            <ul id="schedule-file-dropdown" class="dropdown-menu"></ul>
+                                            <ul id="output-name-dropdown" class="dropdown-menu"></ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group schedule-email">
-                                <label class="control-label col-sm-4" for="schedule-to">@repository.TranslateWeb("To")*</label>
+                            <div class="form-group output-folder">
+                                <label class="control-label col-sm-4" for="output-folder">@repository.TranslateWeb("Folder")*</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" id="schedule-to" placeholder="@repository.TranslateWeb("Enter addresses separated by ;")" />
+                                    <select id="output-folder" data-width="100%"></select>
                                 </div>
                             </div>
-                            <div class="form-group schedule-email">
-                                <label class="control-label col-sm-4" for="schedule-subject">@repository.TranslateWeb("Subject")</label>
+                            <div class="form-group output-folder">
+                                <label class="control-label col-sm-4" for="output-file">@repository.TranslateWeb("File name")*</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" id="schedule-subject" placeholder="@repository.TranslateWeb("Default subject")" />
+                                    <div class="input-group">
+                                        <input id="output-file" type="text" class="form-control" placeholder="@repository.TranslateWeb("Enter the file name without extension")" />
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul id="output-file-dropdown" class="dropdown-menu"></ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group schedule-email" style="margin-bottom: 5px;">
-                                <label class="control-label col-sm-4" for="schedule-body">@repository.TranslateWeb("Body")</label>
+                            <div class="form-group output-email">
+                                <label class="control-label col-sm-4" for="output-to">@repository.TranslateWeb("To")*</label>
                                 <div class="col-sm-8">
-                                    <textarea class="form-control" id="schedule-body" rows="3" placeholder="@repository.TranslateWeb("Default body")"></textarea>
+                                    <input class="form-control" id="output-to" placeholder="@repository.TranslateWeb("Enter addresses separated by ;")" />
                                 </div>
                             </div>
-                            <hr class="schedule-email" style="margin:4px 0px;" />
-                            <div class="form-group schedule-email">
-                                <label class="control-label col-sm-4" for="schedule-from">@repository.TranslateWeb("From")</label>
+                            <div class="form-group output-email">
+                                <label class="control-label col-sm-4" for="output-subject">@repository.TranslateWeb("Subject")</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" id="schedule-from" placeholder="@repository.TranslateWeb("Default sender address")" />
+                                    <input class="form-control" id="output-subject" placeholder="@repository.TranslateWeb("Default subject")" />
                                 </div>
                             </div>
-                            <div class="form-group schedule-email">
-                                <label class="control-label col-sm-4" for="schedule-cc">@repository.TranslateWeb("CC")</label>
+                            <div class="form-group output-email" style="margin-bottom: 5px;">
+                                <label class="control-label col-sm-4" for="output-body">@repository.TranslateWeb("Body")</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" id="schedule-cc" placeholder="@repository.TranslateWeb("Optional addresses separated by ;")" />
+                                    <textarea class="form-control" id="output-body" rows="3" placeholder="@repository.TranslateWeb("Default body")"></textarea>
                                 </div>
                             </div>
-                            <div class="form-group schedule-email">
-                                <label class="control-label col-sm-4" for="schedule-bcc">@repository.TranslateWeb("BCC")</label>
+                            <hr class="output-email" style="margin:4px 0px;" />
+                            <div class="form-group output-email">
+                                <label class="control-label col-sm-4" for="output-from">@repository.TranslateWeb("From")</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" id="schedule-bcc" placeholder="@repository.TranslateWeb("Optional addresses separated by ;")" />
+                                    <input class="form-control" id="output-from" placeholder="@repository.TranslateWeb("Default sender address")" />
                                 </div>
                             </div>
-                            <div class="form-group schedule-email">
-                                <label class="control-label col-sm-4" for="schedule-html">@repository.TranslateWeb("Result as body")</label>
+                            <div class="form-group output-email">
+                                <label class="control-label col-sm-4" for="output-cc">@repository.TranslateWeb("CC")</label>
                                 <div class="col-sm-8">
-                                    <select id="schedule-html" data-width="100%"></select>
+                                    <input class="form-control" id="output-cc" placeholder="@repository.TranslateWeb("Optional addresses separated by ;")" />
                                 </div>
                             </div>
-                            <div class="form-group schedule-email">
-                                <label class="control-label col-sm-4" for="schedule-zip">@repository.TranslateWeb("Zip attachments")</label>
+                            <div class="form-group output-email">
+                                <label class="control-label col-sm-4" for="output-bcc">@repository.TranslateWeb("BCC")</label>
                                 <div class="col-sm-8">
-                                    <select id="schedule-zip" data-width="100%"></select>
+                                    <input class="form-control" id="output-bcc" placeholder="@repository.TranslateWeb("Optional addresses separated by ;")" />
                                 </div>
                             </div>
-                            <div class="form-group schedule-email">
-                                <label class="control-label col-sm-4" for="schedule-zippassword">@repository.TranslateWeb("Zip password")</label>
+                            <div class="form-group output-email">
+                                <label class="control-label col-sm-4" for="output-html">@repository.TranslateWeb("Result as body")</label>
                                 <div class="col-sm-8">
-                                    <input type="password" class="form-control" id="schedule-zippassword" placeholder="@repository.TranslateWeb("Enter a password to protect the Zip file")" />
+                                    <select id="output-html" data-width="100%"></select>
                                 </div>
                             </div>
-                            <div class="form-group schedule-execute">
-                                <label class="control-label col-sm-4" for="schedule-device"></label>
+                            <div class="form-group output-email">
+                                <label class="control-label col-sm-4" for="output-zip">@repository.TranslateWeb("Zip attachments")</label>
+                                <div class="col-sm-8">
+                                    <select id="output-zip" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group output-email">
+                                <label class="control-label col-sm-4" for="output-zippassword">@repository.TranslateWeb("Zip password")</label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="output-zippassword" placeholder="@repository.TranslateWeb("Enter a password to protect the Zip file")" />
+                                </div>
+                            </div>
+                            <div class="form-group output-execute">
+                                <label class="control-label col-sm-4" for="output-published">@repository.TranslateWeb("Is published")</label>
+                                <div class="col-sm-8">
+                                    <select id="output-published" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group output-execute">
+                                <label class="control-label col-sm-4" ></label>
                                 <div class="col-sm-8" style="text-align:right">
-                                    <button id="nav-dialog-execute-schedule" class="btn btn-default" style="margin:10px 1px"><span class="fa fa-cog"></span> @repository.TranslateWeb("Execute schedule now")</button>
+                                    <button id="nav-dialog-execute-schedule" class="btn btn-default"><span class="fa fa-cog"></span> @repository.TranslateWeb("Test now")</button>
                                 </div>
                             </div>
                         </div>
@@ -394,57 +409,71 @@
                                 </div>
                                 <div id="schedule-exec" class="panel-body" style="height:340px">
                                     <div class="form-group">
+                                        <label class="control-label col-sm-5" for="schedule-instance">@repository.TranslateWeb("Name")</label>
+                                        <div class="col-sm-7">
+                                            <div class="input-group">
+                                                <input id="schedule-instance" type="text" class="form-control" />
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul id="schedule-instance-dropdown" class="dropdown-menu"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-start">@repository.TranslateWeb("Start date")</label>
                                         <div class="col-sm-7">
                                             <input class="form-control datepicker" id="schedule-start" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-end">@repository.TranslateWeb("End date")</label>
                                         <div class="col-sm-7">
                                             <input class="form-control datepicker" id="schedule-end" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-enabled">@repository.TranslateWeb("Is enabled")</label>
                                         <div class="col-sm-7">
                                             <select class="form-control" id="schedule-enabled"></select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-type">@repository.TranslateWeb("Type")</label>
                                         <div class="col-sm-7">
                                             <select id="schedule-type" data-width="100%"></select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-end">@repository.TranslateWeb("Recur every")</label>
                                         <div class="col-sm-4">
                                             <input class="form-control numeric" id="schedule-interval" />
                                         </div>
                                         <label class="control-label col-sm-3" id="schedule-interval-label" style="text-align:left;padding-left: 0px;"></label>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-weekdays">@repository.TranslateWeb("Days of the week")</label>
                                         <div class="col-sm-7">
                                             <select id="schedule-weekdays" multiple="multiple"></select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-months">@repository.TranslateWeb("Months")</label>
                                         <div class="col-sm-7">
                                             <select id="schedule-months" multiple="multiple"></select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-days">@repository.TranslateWeb("Days")</label>
                                         <div class="col-sm-7">
                                             <select id="schedule-days" multiple="multiple"></select>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-footer">
-                                    <div class="form-group">
+                                <div class="panel-footer" style="height:110px">
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-repeat1">@repository.TranslateWeb("Repeat every")</label>
                                         <div class="col-sm-7">
                                             <div class="input-group">
@@ -458,7 +487,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-repeat2">@repository.TranslateWeb("for a duration of")</label>
                                         <div class="col-sm-7">
                                             <div class="input-group">

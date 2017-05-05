@@ -60,6 +60,7 @@ namespace Seal.Model
                 GetProperty("UserName").SetIsBrowsable(true);
                 GetProperty("UserGroups").SetIsBrowsable(true);
                 GetProperty("UserCulture").SetIsBrowsable(true);
+                GetProperty("IsPublished").SetIsBrowsable(true);
 
                 //Helpers
                 //GetProperty("Information").SetIsBrowsable(true);
@@ -301,7 +302,7 @@ namespace Seal.Model
 
 
         private string _userName = "";
-        [Category("Security Context"), DisplayName("User name"), Description("If not empty, the output is generated with a security context having the name specified."), Id(1, 6)]
+        [Category("Security and Publication"), DisplayName("User name"), Description("If not empty, the output is generated with a security context having the name specified."), Id(1, 6)]
         public string UserName
         {
             get { return _userName; }
@@ -309,7 +310,7 @@ namespace Seal.Model
         }
 
         private string _userGroups = "";
-        [Category("Security Context"), DisplayName("User groups"), Description("If not empty, the output is generated with a security context having the groups specified. One group name per line or separated by semi-column."), Id(2, 6)]
+        [Category("Security and Publication"), DisplayName("User groups"), Description("If not empty, the output is generated with a security context having the groups specified. One group name per line or separated by semi-column."), Id(2, 6)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string UserGroups
         {
@@ -318,12 +319,20 @@ namespace Seal.Model
         }
 
         string _userCulture = "";
-        [Category("Security Context"), DisplayName("Culture"), Description("The culture used to generate the report. If empty, the culture from the groups is used, then the default culture."), Id(3, 6)]
+        [Category("Security and Publication"), DisplayName("Culture"), Description("The culture used to generate the report. If empty, the culture from the groups is used, then the default culture."), Id(3, 6)]
         [TypeConverter(typeof(Seal.Converter.CultureInfoConverter))]
         public string UserCulture
         {
             get { return _userCulture; }
             set { _userCulture = value; }
+        }
+
+        private bool _isPublished = true;
+        [Category("Security and Publication"), DisplayName("Is Published in Web"), Description("If true, the output can be viewed and executed from the Web Report Server interface."), Id(4, 6)]
+        public bool IsPublished
+        {
+            get { return _isPublished; }
+            set { _isPublished = value; }
         }
 
 

@@ -111,3 +111,6 @@ Category;Products;Products;;Produits;
 Category;Shippers;Shippers;;Livreurs;
 Category;Suppliers;Suppliers;;Fournisseurs;
 Category;Customers;Customers;;Clients;
+Device;Folder Device;Folder Device;;Répertoire;
+Device;Email Device;Email Device;;Courriel;
+Device;GMail Device;GMail Device;;Courriel Gmail;

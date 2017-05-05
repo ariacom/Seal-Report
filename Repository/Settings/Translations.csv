@@ -116,6 +116,7 @@ Web;Disconnect;;Déconnecter;;
 Web;Display options;;Options d'affichage;;
 Web;Elements;;Eléments;;
 Web;End date;;Date de fin;;
+Web;End date is before start date;;La date de fin est avant la date de départ;;
 Web;Enter a password to protect the Zip file;;Mot de passe pour protéger le fichier zip;;
 Web;"Enter addresses separated by ;";;"Adresses séparées par ;";;
 Web;Enter password;;Entrer le mot de passe;;
@@ -123,6 +124,7 @@ Web;Enter the file name without extension;;Nom du fichier sans l'extension;;
 Web;Enter user name;;Entrer le nom d'utilisateur;;
 Web;Enter your new file name;;Entrer un nouveau nom de fichier;;
 Web;Error;;Erreur;Errore;Erro
+Web;Error: This report name exists already.;;Erreur: Ce nom de rapport existe déjà;;
 Web;Execute;;Exécuter;Esegui;Executar
 Web;Execute schedule now;;Exécuter la planification maintenant;;
 Web;Execution;;Exécution;;
@@ -137,6 +139,7 @@ Web;Inconsistent duration or interval for the schedule. Check your entries.;;La 
 Web;Invalid user name or password;;Utilisateur ou mot de passe invalide;;
 Web;Is enabled;;Actif;;
 Web;Is required;;Requis;;
+Web;Last;;Dernier;Ultima;Última
 Web;Last modification;;Modification;Ultima modifica;Última modificação
 Web;Login;;Connexion;Login;Login
 Web;Logout;;Déconnexion;Uscita;Desconectar
@@ -156,6 +159,7 @@ Web;Options;;Options;;
 Web;Output;;Destination;;
 Web;Password;;Mot de passe;Password;Senha
 Web;Paste;;Coller;;
+Web;Personal;;Personnel;;
 Web;Pivot mode;;Mode pivot;;
 Web;Please wait;;Veuillez patienter;Attendere prego;Por favor aguarde
 Web;Profile;;Profil;;
@@ -169,6 +173,7 @@ Web;Remove all;;Tout supprimer;;
 Web;Rename;;Renommer;;
 Web;Rename folder;;Renommer un répertoire;;
 Web;Repeat every;;Répéter tous les;;
+Web;Report;;Rapport;Report;Relatório
 Web;Report name;;Nom du rapport;Nome del report;Nome do relatório
 Web;Report title;;Titre du rapport;;
 Web;Report title if different from report name;;Titre du rapport si différent du nom;;
@@ -178,9 +183,11 @@ Web;Save;;Enregistrer;Salva;Gravar
 Web;Schedule;;Planification;;
 Web;Search;;Rechercher;;
 Web;Show totals;;Totaux;;
+Web;Sorry, this report contains elements you cannot edit...;;Désolé, ce rapport contient des éléments que vous ne pouvez pas éditer…;;
 Web;Sort;;Tri;;
 Web;Start date;;Date de départ;;
 Web;Subject;;Sujet;;
+Web;This report cannot be edited with the Web Report Designer.;;Ce rapport ne peut pas être édité avec l'interface Web.;;
 Web;To;;Destinataire;;
 Web;Total aggr.;;Aggr. totaux;;
 Web;Type;;Type;Tipo;Tipo
@@ -190,9 +197,10 @@ Web;Value;;Valeur;;
 Web;Values;;Valeurs;;
 Web;Zip attachments;;Options ZIP;;
 Web;Zip password;;Mot de passe ZIP;;
-Web;Personal;;Personnel;;
 WebJS;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %
 WebJS;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_)
+WebJS;<No Output>;;<Aucune Destination>;;
+WebJS;<No Schedule>;;<Aucune Planification>;;
 WebJS;1 Decimal;;1 Décimale;;
 WebJS;2 Decimals;;2 Décimales;;
 WebJS;3 Decimals;;3 Décimales;;
@@ -267,8 +275,9 @@ WebJS;minute;;minute;;
 WebJS;minutes;;minutes;;
 WebJS;Modified;;Modifié;;
 WebJS;Monthly;;Mensuel;;
-WebJS;New Report;;;;
+WebJS;New Output for;;Nouvelle Destination pour;;
 WebJS;New report;;Nouveau rapport;;
+WebJS;New Schedule;;Nouvelle Planification;;
 WebJS;No;;Non;;
 WebJS;No prompt;;Pas de prompt;;
 WebJS;No report;;Aucun rapport;;
@@ -290,12 +299,14 @@ WebJS;Please wait;;Veuillez patienter;Attendere prego;Por favor aguarde
 WebJS;Point;;Point;;
 WebJS;Prompt at execution;;Demander à l'exécution;;
 WebJS;Prompt only one value;;Demander une valeur à l'exécution;;
+WebJS;Remove;;Effacer;;
 WebJS;Report has been modified, do you really want to close ?;;Le rapport a été modifié, voulez-vous vraiment fermer ?;;
 WebJS;Report saved;;Rapport sauvegardé;;
 WebJS;report(s) or file(s) cut in the clipboard;;rapport(s) ou fichier(s) ont été coupés dans le presse-papier;;
 WebJS;report(s) or file(s) have been deleted;;rapport(s) ou fichier(s) ont été effacés;;
 WebJS;report(s) or file(s) processed;;rapport(s) ou fichier(s) ont été traités;;
 WebJS;report(s) or files(s) copied in the clipboard;;rapport(s) ou fichier(s) ont été copiés dans le presse-papier;;
+WebJS;Schedule;;Planification;;
 WebJS;Select all;;Tout;Seleziona tutto;Selecionar tudo
 WebJS;Server Version;;Version du serveur;;
 WebJS;Short date;;Date courte;;
@@ -325,5 +336,3 @@ WebJS;weeks;;semaines;;
 WebJS;Yes;;Oui;;
 WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés);;
 WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message);;
-Web;This report cannot be edited with the Web Report Designer.;;Ce rapport ne peut pas être édité avec l'interface Web.;;
-Web;Sorry, this report contains elements you cannot edit...;;Désolé, ce rapport contient des éléments que vous ne pouvez pas éditer…;;

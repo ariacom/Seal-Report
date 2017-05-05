@@ -1,12 +1,16 @@
-﻿declare var translations;
+﻿declare var tra;
 declare var availableDateKeywords;
 declare function setDatePickerDefaults() : void;
 
 module SWIUtil {
     export function tr(reference : string) : string {
-        var result = translations[reference];
+        var result = tra[reference];
         if (!result || result == "") result = reference;
         return result;
+    }
+
+    export function tr2(reference: string): string {
+        return $('<div/>').html(tr(reference)).text();
     }
 
     export function Newguid() {
@@ -72,4 +76,27 @@ module SWIUtil {
         return $result;
     }
 
+    export function GetAnchorWithIcon(text: string, id: string, type: string, icon: string) : JQuery {
+        var $a = $("<a/>").text(text);
+        $a.html("<i class='" + icon + "'></i> " + $a.html());
+        if (id) $a.prop("id", id);
+        if (type) $a.prop("type", type);
+        return $a;
+    }
+
+    export function UniqueName(name: string, array: any) {
+        var result = name;
+        var index = 1;
+        while (true) {
+            var found = false;
+            $.each(array, function (key, value) {
+                if (value.name == result) found = true;
+            });
+
+            if (found) result = name + index.toString();
+            else break;
+            index++;
+        }
+        return result;
+    }
 }

@@ -320,13 +320,6 @@ namespace Seal.Model
         WebOutput,
     }
 
-    public enum PublicationType
-    {
-        [Description("Execute only reports (no output)")]
-        ExecuteOnly,
-        [Description("Execute reports and outputs")]
-        ExecuteOutput,
-    }
 
     public enum FolderRight
     {
@@ -334,7 +327,11 @@ namespace Seal.Model
         None,
         [Description("Execute reports")]
         Execute,
-        [Description("Schedule reports")]
+        [Description("Execute reports and outputs")]
+        ExecuteReportOuput,
+        [Description("Edit only schedules belonging to the user")]
+        PrivateSchedule,
+        [Description("Edit all schedules")]
         Schedule,
         [Description("Edit reports")]
         Edit,

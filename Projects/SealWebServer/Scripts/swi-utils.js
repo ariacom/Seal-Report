@@ -1,12 +1,16 @@
 var SWIUtil;
 (function (SWIUtil) {
     function tr(reference) {
-        var result = translations[reference];
+        var result = tra[reference];
         if (!result || result == "")
             result = reference;
         return result;
     }
     SWIUtil.tr = tr;
+    function tr2(reference) {
+        return $('<div/>').html(tr(reference)).text();
+    }
+    SWIUtil.tr2 = tr2;
     function Newguid() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -80,5 +84,33 @@ var SWIUtil;
         return $result;
     }
     SWIUtil.GetOption = GetOption;
+    function GetAnchorWithIcon(text, id, type, icon) {
+        var $a = $("<a/>").text(text);
+        $a.html("<i class='" + icon + "'></i> " + $a.html());
+        if (id)
+            $a.prop("id", id);
+        if (type)
+            $a.prop("type", type);
+        return $a;
+    }
+    SWIUtil.GetAnchorWithIcon = GetAnchorWithIcon;
+    function UniqueName(name, array) {
+        var result = name;
+        var index = 1;
+        while (true) {
+            var found = false;
+            $.each(array, function (key, value) {
+                if (value.name == result)
+                    found = true;
+            });
+            if (found)
+                result = name + index.toString();
+            else
+                break;
+            index++;
+        }
+        return result;
+    }
+    SWIUtil.UniqueName = UniqueName;
 })(SWIUtil || (SWIUtil = {}));
 //# sourceMappingURL=swi-utils.js.map

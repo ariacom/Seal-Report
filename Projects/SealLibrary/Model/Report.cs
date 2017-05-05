@@ -1459,7 +1459,6 @@ namespace Seal.Model
             return result;
         }
 
-
         #endregion
 
         #region Log

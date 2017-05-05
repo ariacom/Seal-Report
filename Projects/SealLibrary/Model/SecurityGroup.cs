@@ -22,6 +22,7 @@ namespace Seal.Model
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Folders").SetIsBrowsable(true);
                 GetProperty("Columns").SetIsBrowsable(true);
+                GetProperty("Devices").SetIsBrowsable(true);
                 GetProperty("Connections").SetIsBrowsable(true);
                 GetProperty("Sources").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
@@ -59,19 +60,17 @@ namespace Seal.Model
             set { _personalFolder = value; }
         }
 
-        /* FUTURE ?
         private List<SecurityDevice> _devices = new List<SecurityDevice>();
-        [Category("Web Report Designer Security"), DisplayName("\t\tDevices"), Description("Web Report Designer devices rights for the group. Set rights to devices through their names. By default all devices can be selected."), Id(1, 2)]
+        [Category("Web Report Designer Security"), DisplayName("\t\tDevices"), Description("For the Web Report Designer: Device rights for the group. Set rights to devices through their names. By default all devices can be selected."), Id(1, 2)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityDevice> Devices
         {
             get { return _devices; }
             set { _devices = value; }
         }
-        */
 
         private List<SecuritySource> _sources = new List<SecuritySource>();
-        [Category("Web Report Designer Security"), DisplayName("\t\tSources"), Description("Web Report Designer data sources rights for the group. Set rights to data source through their names. By default all sources can be selected."), Id(2, 2)]
+        [Category("Web Report Designer Security"), DisplayName("\t\tSources"), Description("For the Web Report Designer: Data sources rights for the group. Set rights to data source through their names. By default all sources can be selected."), Id(2, 2)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecuritySource> Sources
         {
@@ -80,7 +79,7 @@ namespace Seal.Model
         }
 
         private List<SecurityConnection> _connections = new List<SecurityConnection>();
-        [Category("Web Report Designer Security"), DisplayName("\tConnections"), Description("Web Report Designer connections rights for the group. Set rights to connections through their names. By default all devices can be selected."), Id(3, 2)]
+        [Category("Web Report Designer Security"), DisplayName("\tConnections"), Description("For the Web Report Designer: Connections rights for the group. Set rights to connections through their names. By default all devices can be selected."), Id(3, 2)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityConnection> Connections
         {
@@ -89,7 +88,7 @@ namespace Seal.Model
         }
 
         private List<SecurityColumn> _columns = new List<SecurityColumn>();
-        [Category("Web Report Designer Security"), DisplayName("Columns"), Description("Web Report Designer columns rights for the group. Set rights to columns through the security tags or categories assigned. By default all columns can be selected."), Id(4, 2)]
+        [Category("Web Report Designer Security"), DisplayName("Columns"), Description("For the Web Report Designer: Columns rights for the group. Set rights to columns through the security tags or categories assigned. By default all columns can be selected."), Id(4, 2)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityColumn> Columns
         {

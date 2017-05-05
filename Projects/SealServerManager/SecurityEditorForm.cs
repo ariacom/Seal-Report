@@ -49,6 +49,8 @@ namespace Seal.Forms
 
 Security groups define which repository folders are published and which columns are shown in the Web Report Designer.
 The security provider performs the authentication and select the security groups of the user.
+
+If a user belongs to several groups, the weakest right is applied.
 ";
             
             Visible = true;
