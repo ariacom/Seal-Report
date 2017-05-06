@@ -64,7 +64,7 @@ namespace Seal.Model
         }
 
         FolderRight _folderRight = FolderRight.Edit;
-        [Category("Definition"), DisplayName("\tRight"), Description("The right applied on the reports of the folder: None, Execute reports only, Execute reports and outputs, Edit schedules belonging to the user, Edit all schedules, Edit reports"), Id(4, 1)]
+        [Category("Definition"), DisplayName("\tRight"), Description("The right applied on the reports of the folder: None, Execute reports only, Execute reports and outputs, Edit schedules, Edit reports"), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public FolderRight FolderRight
         {

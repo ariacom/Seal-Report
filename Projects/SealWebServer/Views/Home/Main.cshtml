@@ -46,7 +46,6 @@
         var shortDateFormat = '@repository.CultureInfo.DateTimeFormat.ShortDatePattern';
         var isUSdate = shortDateFormat.match(/^m/i);
 
-        var folderRightPrivateSchedule = @((int) FolderRight.PrivateSchedule);
         var folderRightSchedule = @((int) FolderRight.Schedule);
         var folderRightEdit = @((int) FolderRight.Edit);
 
@@ -389,16 +388,20 @@
                                     <input type="password" class="form-control" id="output-zippassword" placeholder="@repository.TranslateWeb("Enter a password to protect the Zip file")" />
                                 </div>
                             </div>
+                            <hr class="output-execute" style="margin:4px 0px;" />
                             <div class="form-group output-execute">
-                                <label class="control-label col-sm-4" for="output-published">@repository.TranslateWeb("Is published")</label>
-                                <div class="col-sm-8">
-                                    <select id="output-published" data-width="100%"></select>
+                                <label class="control-label col-sm-4" for="output-publicedit">@repository.TranslateWeb("Public edition")</label>
+                                <div class="col-sm-3">
+                                    <select id="output-publicedit" data-width="100%"></select>
                                 </div>
                             </div>
                             <div class="form-group output-execute">
-                                <label class="control-label col-sm-4" ></label>
-                                <div class="col-sm-8" style="text-align:right">
-                                    <button id="nav-dialog-execute-schedule" class="btn btn-default"><span class="fa fa-cog"></span> @repository.TranslateWeb("Test now")</button>
+                                <label class="control-label col-sm-4" for="output-publicedit">@repository.TranslateWeb("Public execution")</label>
+                                <div class="col-sm-3">
+                                    <select id="output-publicexec" data-width="100%"></select>
+                                </div>
+                                <div class="col-sm-5" style="text-align:right">
+                                    <button id="nav-dialog-execute-schedule" class="btn btn-default" style="text-align:right"><span class="fa fa-bolt"></span> @repository.TranslateWeb("Execute now")</button>
                                 </div>
                             </div>
                         </div>
