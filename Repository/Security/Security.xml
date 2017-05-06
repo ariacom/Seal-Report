@@ -57,7 +57,7 @@
           <Path>\work\aa</Path>
           <UseSubFolders>true</UseSubFolders>
           <ManageFolder>true</ManageFolder>
-          <FolderRight>PrivateSchedule</FolderRight>
+          <FolderRight>Schedule</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
       </Folders>

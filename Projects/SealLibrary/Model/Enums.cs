@@ -329,9 +329,7 @@ namespace Seal.Model
         Execute,
         [Description("Execute reports and outputs")]
         ExecuteReportOuput,
-        [Description("Edit only schedules belonging to the user")]
-        PrivateSchedule,
-        [Description("Edit all schedules")]
+        [Description("Edit schedules")]
         Schedule,
         [Description("Edit reports")]
         Edit,

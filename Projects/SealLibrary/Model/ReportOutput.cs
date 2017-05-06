@@ -60,7 +60,8 @@ namespace Seal.Model
                 GetProperty("UserName").SetIsBrowsable(true);
                 GetProperty("UserGroups").SetIsBrowsable(true);
                 GetProperty("UserCulture").SetIsBrowsable(true);
-                GetProperty("IsPublished").SetIsBrowsable(true);
+                GetProperty("PublicExec").SetIsBrowsable(true);
+                GetProperty("PublicEdit").SetIsBrowsable(true);
 
                 //Helpers
                 //GetProperty("Information").SetIsBrowsable(true);
@@ -327,14 +328,21 @@ namespace Seal.Model
             set { _userCulture = value; }
         }
 
-        private bool _isPublished = true;
-        [Category("Security and Publication"), DisplayName("Is Published in Web"), Description("If true, the output can be viewed and executed from the Web Report Server interface."), Id(4, 6)]
-        public bool IsPublished
+        private bool _publicExec = true;
+        [Category("Security and Publication"), DisplayName("Public Execution"), Description("For the Web Report Server: If true, the output can be executed by all users having the execute right on the report. If false, only the user owner can execute the schedule."), Id(4, 6)]
+        public bool PublicExec
         {
-            get { return _isPublished; }
-            set { _isPublished = value; }
+            get { return _publicExec; }
+            set { _publicExec = value; }
         }
 
+        private bool _publicEdit = true;
+        [Category("Security and Publication"), DisplayName("Public Edit"), Description("For the Web Report Server Designer: If true, the output and shedule can be edited by all users having the schedule right on the report. If false, only the user owner can edit the schedule."), Id(4, 6)]
+        public bool PublicEdit
+        {
+            get { return _publicEdit; }
+            set { _publicEdit = value; }
+        }
 
         [XmlIgnore]
         public OutputDevice Device
