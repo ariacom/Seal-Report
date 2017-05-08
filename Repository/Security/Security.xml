@@ -23,7 +23,7 @@
 	}
 	else if (user.WebUserName == "cc" &amp;&amp; user.WebPassword == "cc")
 	{
-		user.AddSecurityGroup("aa");
+	//	user.AddSecurityGroup("aa");
 		user.AddSecurityGroup("cc");
 	}
 	else if (string.IsNullOrEmpty(user.WebUserName)) {
@@ -57,7 +57,7 @@
           <Path>\work\aa</Path>
           <UseSubFolders>true</UseSubFolders>
           <ManageFolder>true</ManageFolder>
-          <FolderRight>Schedule</FolderRight>
+          <FolderRight>Execute</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
       </Folders>
@@ -103,7 +103,7 @@
           <Path>\work\aa</Path>
           <UseSubFolders>true</UseSubFolders>
           <ManageFolder>true</ManageFolder>
-          <FolderRight>Schedule</FolderRight>
+          <FolderRight>ExecuteReportOuput</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
       </Folders>
@@ -118,10 +118,10 @@
       <Name>cc</Name>
       <Folders>
         <SecurityFolder>
-          <Path>\work\cc</Path>
+          <Path>\work\aa</Path>
           <UseSubFolders>true</UseSubFolders>
           <ManageFolder>true</ManageFolder>
-          <FolderRight>Edit</FolderRight>
+          <FolderRight>Schedule</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
         </SecurityFolder>
       </Folders>
