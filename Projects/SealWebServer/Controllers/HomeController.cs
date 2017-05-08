@@ -793,8 +793,10 @@ namespace SealWebServer.Controllers
             if (!string.IsNullOrEmpty(outputGUID))
             {
                 report.OutputToExecute = report.Outputs.FirstOrDefault(i => i.GUID == outputGUID);
+                if (report.OutputToExecute == null) throw new Exception("Invalid report output to execute");
+                if (!report.OutputToExecute.PublicExec && WebUser.Name != report.OutputToExecute.UserName) throw new Exception("This output is not public and can only be executed by:" + report.OutputToExecute.UserName);
                 report.ExecutionContext = ReportExecutionContext.WebOutput;
-                if (report.OutputToExecute != null) report.CurrentViewGUID = report.OutputToExecute.ViewGUID;
+                report.CurrentViewGUID = report.OutputToExecute.ViewGUID;
             }
 
             //execute with custom view
