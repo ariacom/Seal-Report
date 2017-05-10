@@ -33,6 +33,7 @@ namespace Seal.Model
         public const string SealReportsRepositoryKeyword = "%SEALREPORTSREPOSITORY%";
         public const string SealPersonalRepositoryKeyword = "%SEALPERSONALREPOSITORY%";
         public const string SealReportDisplayNameKeyword = "%SEALREPORTDISPLAYNAME%";
+        public const string SealReportDisplayNameKeyword2 = "{Report Name}";
 
         public const string SealWebPublishTemp = "temp";
 

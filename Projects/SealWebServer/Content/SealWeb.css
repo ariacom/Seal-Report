@@ -56,7 +56,7 @@ a {
 }
 
 #schedule-row > div > .form-group, #schedule-exec > .form-group {
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 /* jstree */
@@ -162,10 +162,8 @@ a {
 
 /* editor panels */
 .editor-panel {
-    height: 515px;
+    height: 520px;
 }
-
-
 
 /* specific data tables */
 a.paginate_button {

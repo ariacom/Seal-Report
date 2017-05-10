@@ -68,7 +68,7 @@
         <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
         }
         //keyword
-        var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword';
+        var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
 
         var hasEditor = @Helper.ToJS(ServerOptions.HasEditor());
     </script>
@@ -166,7 +166,6 @@
                     <tr><th>@repository.TranslateWeb("Name")</th><th>@repository.TranslateWeb("Type")</th></tr>
                 </thead>
                 <tbody id="output-table-body">
-                    <tr><td colspan=2><i class='fa fa-spinner fa-spin fa-1x fa-fw'></i><span> @repository.TranslateWeb("Please wait")...</span></td></tr>
                 </tbody>
             </table>
         </div>
@@ -313,6 +312,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="output-format">@repository.TranslateWeb("Format")</label>
+                                <div class="col-sm-8">
+                                    <select id="output-format" data-width="100%"></select>
+                                </div>
+                            </div>
                             <div class="form-group output-folder">
                                 <label class="control-label col-sm-4" for="output-folder">@repository.TranslateWeb("Folder")*</label>
                                 <div class="col-sm-8">
@@ -390,13 +395,13 @@
                             </div>
                             <hr class="output-execute" style="margin:4px 0px;" />
                             <div class="form-group output-execute">
-                                <label class="control-label col-sm-4" for="output-publicedit">@repository.TranslateWeb("Public edition")</label>
+                                <label class="control-label col-sm-4" for="output-publicedit">@repository.TranslateWeb("Edition")</label>
                                 <div class="col-sm-3">
                                     <select id="output-publicedit" data-width="100%"></select>
                                 </div>
                             </div>
                             <div class="form-group output-execute">
-                                <label class="control-label col-sm-4" for="output-publicedit">@repository.TranslateWeb("Public execution")</label>
+                                <label class="control-label col-sm-4" for="output-publicedit">@repository.TranslateWeb("Execution")</label>
                                 <div class="col-sm-3">
                                     <select id="output-publicexec" data-width="100%"></select>
                                 </div>
