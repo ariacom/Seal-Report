@@ -75,6 +75,8 @@ namespace Seal.Model
                 bool hasNVD3Config = (Model != null && Model.HasNVD3Serie && NVD3Parameters.Count > 0);
                 GetProperty("NVD3Parameters").SetIsBrowsable(hasNVD3Config);
 
+                GetProperty("PublicExec").SetIsBrowsable(true);
+
                 //Read only
                 GetProperty("TemplateName").SetIsReadOnly(true);
                 GetProperty("CustomTemplate").SetIsReadOnly(!UseCustomTemplate);
@@ -775,6 +777,14 @@ namespace Seal.Model
                 if (ChartConfiguration != null) return ChartConfiguration.Series;
                 return null;
             }
+        }
+
+        private bool _publicExec = true;
+        [Category("Publication"), DisplayName("Public Execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(1, 7)]
+        public bool PublicExec
+        {
+            get { return _publicExec; }
+            set { _publicExec = value; }
         }
 
 

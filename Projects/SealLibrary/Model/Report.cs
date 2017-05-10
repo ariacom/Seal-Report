@@ -920,7 +920,7 @@ namespace Seal.Model
             ReportView view = AddRootView();
             if (view != null && modelTemplate != null)
             {
-                view.Name = Helper.GetUniqueName("view" + (modelName == ReportViewTemplate.ModelCSVExcelName ? " Excel" : ""), (from i in Views select i.Name).ToList());
+                view.Name = Helper.GetUniqueName((modelName == ReportViewTemplate.ModelCSVExcelName ? "CSV" : "view"), (from i in Views select i.Name).ToList());
                 AddChildView(view, modelTemplate);
             }
             return view;

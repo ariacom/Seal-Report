@@ -208,7 +208,7 @@ namespace SealWebServer.Controllers
                 Repository repository = Repository;
                 Report report = Report.LoadFromFile(newPath, repository);
                 SWIReportDetail result = new SWIReportDetail();
-                result.views = (from i in report.Views select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
+                result.views = (from i in report.Views.Where(i => i.PublicExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
                 result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayName = report.TranslateOutputName(i.Name) }).ToArray() : new SWIOutput[] { };
                 return Json(result);
 

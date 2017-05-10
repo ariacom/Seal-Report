@@ -126,7 +126,8 @@ Web;Enter your new file name;;Entrer un nouveau nom de fichier;;
 Web;Error;;Erreur;Errore;Erro
 Web;Error: This report name exists already.;;Erreur: Ce nom de rapport existe déjà;;
 Web;Execute;;Exécuter;Esegui;Executar
-Web;Execute schedule now;;Exécuter la planification maintenant;;
+Web;Execute now;;Exécuter maintenant;;
+Web;Edition;;Edition;;
 Web;Execution;;Exécution;;
 Web;File name;;Nom du fichier;;
 Web;Folder;;Répertoire;Repertorio;Pasta
@@ -166,7 +167,7 @@ Web;Profile;;Profil;;
 Web;Profile information;;Profil utilisateur;;
 Web;Prompt;;Demander;;
 Web;Prompt at run-time;;Demander à l'exécution;;
-Web;Recur every;;Récurent tous les;;
+Web;Recur every;;Récurrent tous les;;
 Web;Refresh;;Rafraîchir;;
 Web;Remove;;Supprimer;;
 Web;Remove all;;Tout supprimer;;
@@ -178,7 +179,7 @@ Web;Report name;;Nom du rapport;Nome del report;Nome do relatório
 Web;Report title;;Titre du rapport;;
 Web;Report title if different from report name;;Titre du rapport si différent du nom;;
 Web;Reports;;Rapports;Reports;Relatório
-Web;Result as body;;HTML message;;
+Web;Result as body;;Message HTML;;
 Web;Save;;Enregistrer;Salva;Gravar
 Web;Schedule;;Planification;;
 Web;Search;;Rechercher;;
@@ -297,8 +298,11 @@ WebJS;PDF Print;;PDF Impression;;
 WebJS;Pie;;Camembert;;
 WebJS;Please wait;;Veuillez patienter;Attendere prego;Por favor aguarde
 WebJS;Point;;Point;;
+WebJS;Private (The output cannot be executed by other users);;Privée (la destination ne peut pas être exécutée par d'autres utilisateurs);;
+WebJS;Private (The output cannot be edited by other users);;Privée (la destination ne peut pas être éditée par d'autres utilisateurs);;
 WebJS;Prompt at execution;;Demander à l'exécution;;
 WebJS;Prompt only one value;;Demander une valeur à l'exécution;;
+WebJS;Public;;Publique;;
 WebJS;Remove;;Effacer;;
 WebJS;Report has been modified, do you really want to close ?;;Le rapport a été modifié, voulez-vous vraiment fermer ?;;
 WebJS;Report saved;;Rapport sauvegardé;;
