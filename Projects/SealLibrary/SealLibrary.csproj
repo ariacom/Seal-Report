@@ -194,6 +194,7 @@
     <Compile Include="Model\ReportViewTemplate.cs" />
     <Compile Include="Model\ReportViewParameter.cs" />
     <Compile Include="Model\RootEditor.cs" />
+    <Compile Include="Model\SealInterface.cs" />
     <Compile Include="Model\SealExcelConverter.cs" />
     <Compile Include="Model\SealPdfConverter.cs" />
     <Compile Include="Model\SealSecurity.cs" />

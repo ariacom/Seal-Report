@@ -17,7 +17,7 @@ var _main: SWIMain;
 var _editor: ReportEditorInterface;
 
 
-declare var folderRightPrivateSchedule: number;
+declare var folderRightSchedule: number;
 declare var folderRightEdit: number;
 declare var hasEditor: boolean;
 
@@ -63,7 +63,7 @@ class SWIMain {
 
         _gateway.GetVersions(
             function (data) {
-                $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + " - " + SWIUtil.tr("Server Version") + " : " + data.SRVersion);
+                $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + "\r\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\r\n" + data.Info);
                 $("#footer-version").text(data.SWIVersion);
             }
         )
@@ -90,6 +90,7 @@ class SWIMain {
         _main._profile = data;
         _main._folder = null;
 
+        $("body").children(".modal-backdrop").remove();
         $loginModal.modal('hide');
         SWIUtil.HideMessages();
         $(".navbar-right").show();
@@ -307,12 +308,13 @@ class SWIMain {
     private loginFailure(data: any) {
         $waitDialog.modal('hide');
         _main._connected = false;
-        if ($("#username").val() != "") $("#login-modal-error").text(data.error);
-        if (!$loginModal.hasClass('in')) _main.showLogin();
+        $("#login-modal-error").text(data.error);
+        _main.showLogin();
         _main.enableControls();
     }
 
     private showLogin() {
+        $("body").children(".modal-backdrop").remove();
         $("#footer-div").show();
         $loginModal.modal();
     }
@@ -325,7 +327,6 @@ class SWIMain {
                 _main.loginSuccess(data);
             },
             function (data) {
-                _main.showLogin();
                 _main.loginFailure(data);
             });
     }

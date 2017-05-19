@@ -145,6 +145,12 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                 log.Log("Copying files from '{0}' to '{1}'", sourceDirectory, publicationDirectory);
                 FileHelper.CopyDirectory(sourceDirectory, publicationDirectory, true);
 
+                //Copy license files if any
+                foreach (var path in Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "*.slc"))
+                {
+                    File.Copy(path, Path.Combine(Path.Combine(publicationDirectory, "bin"), Path.GetFileName(path)));
+                }
+
                 //Check web config...
                 if (!File.Exists(Path.Combine(publicationDirectory, "web.config")) && File.Exists(Path.Combine(publicationDirectory, "web.release.config")))
                 {

@@ -664,8 +664,7 @@ namespace Seal.Model
             ReportView defaultView = result.AddModelHTMLView();
             if (defaultView == null) throw new Exception(string.Format("Unable to find any view in your repository. Check that your repository folder '{0}' contains all the default sub-folders and files...", repository.RepositoryPath));
             result.ViewGUID = defaultView.GUID;
-            result.AddModelCSVView();
-
+            var csvView  = result.AddModelCSVView();
             return result;
         }
 

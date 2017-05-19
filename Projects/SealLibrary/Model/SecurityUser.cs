@@ -70,6 +70,14 @@ namespace Seal.Model
                     Error = ex.Message;
                 }
             }
+
+            if (!SealSecurity.LoggedUsers.Contains(this)) SealSecurity.LoggedUsers.Add(this);
+        }
+
+        public void Logout()
+        {
+            SecurityGroups.Clear();
+            if (SealSecurity.LoggedUsers.Contains(this)) SealSecurity.LoggedUsers.Remove(this);
         }
 
 

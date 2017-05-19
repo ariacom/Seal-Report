@@ -24,15 +24,6 @@ namespace Seal.Forms
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             linkLabel.Text = "Get the last version and free support at http://wwww.sealreport.org";
-            //check for license text
-            string text = Repository.Instance.LicenseText;
-            if (string.IsNullOrEmpty(text))
-            {
-                text = "A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n\r\n\r\n";
-                text += "Copyright(c) Seal Report, Eric Pfirsch (sealreport@gmail.com).\r\n\r\n";
-                text += "Seal Report is licensed under the Apache License, Version 2.0.\r\nhttp://www.apache.org/licenses/LICENSE-2.0.";
-            }
-            this.textBoxDescription.Text = text;
             ShowIcon = true;
             Icon = Repository.ProductIcon;
         }
@@ -124,12 +115,30 @@ namespace Seal.Forms
 
         private void AboutBoxForm_Shown(object sender, EventArgs e)
         {
+            var defaultText = "A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n\r\n\r\n";
+            defaultText += "Copyright(c) Seal Report, Eric Pfirsch (sealreport@gmail.com).\r\n\r\n";
+            defaultText += "Seal Report is licensed under the Apache License, Version 2.0.\r\nhttp://www.apache.org/licenses/LICENSE-2.0.";
             try
             {
-                if (string.IsNullOrEmpty(Repository.Instance.LicenseText))
+                string text = "";
+                try
                 {
+                    var si = SealInterface.Create(Repository.Instance);
+                    si.Init();
+                    text = Repository.Instance.LicenseText + "\r\n" + si.Text();
+                    text = text.Trim();
+                }
+                catch { }
+
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    this.textBoxDescription.Text = defaultText;
                     SoundPlayer simpleSound = new SoundPlayer(Properties.Resources.seal_barking);
                     simpleSound.Play();
+                }
+                else
+                {
+                    this.textBoxDescription.Text = text;
                 }
             }
             catch { }

@@ -87,6 +87,7 @@ namespace Seal.Model
                             translations.Add(translation);
                             for (int i = 0; i < languages.Count && i + startCol < collection.Count; i++)
                             {
+                                if (string.IsNullOrEmpty(languages[i])) continue;
                                 translation.Translations.Add(languages[i], ExcelHelper.FromCsv(collection[i + startCol].Value));
                             }
                         }

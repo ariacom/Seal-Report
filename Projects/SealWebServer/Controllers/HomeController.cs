@@ -34,7 +34,7 @@ namespace SealWebServer.Controllers
         {
             get
             {
-                return Repository.TranslateWeb("Sorry, this report is not in your session anymore...");
+                return Translate("Sorry, this report is not in your session anymore...");
             }
         }
 
@@ -44,6 +44,11 @@ namespace SealWebServer.Controllers
             {
                 return Session[SessionRepository] as Repository;
             }
+        }
+
+        public string Translate(string reference)
+        {
+            return Repository.TranslateWeb(reference);
         }
 
         Repository CreateRepository()
@@ -109,12 +114,16 @@ namespace SealWebServer.Controllers
             return WebUser.IsAuthenticated;
         }
 
+#if !EDITOR
+        public string Info; //Info to display in the Web Report Server
+
         void Authenticate()
         {
             WebUser.WebPrincipal = User;
             WebUser.Authenticate();
             Helper.WriteLogEntryWeb(WebUser.IsAuthenticated ? EventLogEntryType.SuccessAudit : EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
         }
+#endif
 
         ContentResult GetContentResult(string filePath)
         {
@@ -277,7 +286,7 @@ namespace SealWebServer.Controllers
                     }
                     else if (report.Status == ReportStatus.Executed)
                     {
-                        return Json(new { result_ready = true}); ;
+                        return Json(new { result_ready = true }); ;
                     }
                 }
                 else
@@ -462,7 +471,7 @@ namespace SealWebServer.Controllers
                 if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
-                    if (execution.IsConvertingToPDF) return Content(Repository.TranslateWeb("Sorry, the conversion is being in progress in another window..."));
+                    if (execution.IsConvertingToPDF) return Content(Translate("Sorry, the conversion is being in progress in another window..."));
 
                     string resultPath = "";
                     try
@@ -494,7 +503,7 @@ namespace SealWebServer.Controllers
                 if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
-                    if (execution.IsConvertingToExcel) return Content(Repository.TranslateWeb("Sorry, the conversion is being in progress in another window..."));
+                    if (execution.IsConvertingToExcel) return Content(Translate("Sorry, the conversion is being in progress in another window..."));
 
                     string resultPath = "";
                     try
@@ -593,8 +602,8 @@ namespace SealWebServer.Controllers
             }
             else
             {
-                result.name = (result.Path == "\\" ? Repository.TranslateWeb("Reports") : Repository.TranslateFolderName(path));
-                result.fullname = Repository.TranslateWeb("Reports") + Repository.TranslateFolderPath(result.Path);
+                result.name = (result.Path == "\\" ? Translate("Reports") : Repository.TranslateFolderName(path));
+                result.fullname = Translate("Reports") + Repository.TranslateFolderPath(result.Path);
                 SecurityFolder securityFolder = WebUser.FindSecurityFolder(path);
                 if (securityFolder != null)
                 {
@@ -823,7 +832,8 @@ namespace SealWebServer.Controllers
         {
             var contentType = GetMimeType(Path.GetExtension(path).ToLower());
             var result = new FilePathResult(path, contentType);
-            if (contentType != "text/html") {
+            if (contentType != "text/html")
+            {
                 if (report != null) result.FileDownloadName = Helper.CleanFileName(report.DisplayNameEx + Path.GetExtension(path));
                 else result.FileDownloadName = Path.GetFileName(path);
             }
@@ -835,7 +845,7 @@ namespace SealWebServer.Controllers
         //TODO
         private static IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
 
-        #region Big freaking list of mime types
+#region Big freaking list of mime types
         // combination of values from Windows 7 Registry and 
         // from C:\Windows\System32\inetsrv\config\applicationHost.config
         // some added, including .7z and .dat
@@ -1399,7 +1409,7 @@ namespace SealWebServer.Controllers
         {".xwd", "image/x-xwindowdump"},
         {".z", "application/x-compress"},
         {".zip", "application/x-zip-compressed"},
-        #endregion
+#endregion
 
         };
 
