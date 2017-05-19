@@ -100,7 +100,10 @@ namespace Seal.Model
         private string _outputDeviceGUID;
         public string OutputDeviceGUID
         {
-            get { return _outputDeviceGUID; }
+            get {
+                if (string.IsNullOrEmpty(_outputDeviceGUID)) _outputDeviceGUID = OutputFolderDevice.DefaultGUID;
+                return 
+                    _outputDeviceGUID; }
             set { _outputDeviceGUID = value; }
         }
 
