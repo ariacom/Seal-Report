@@ -115,7 +115,7 @@ namespace SealWebServer.Controllers
         }
 
 #if !EDITOR
-        public string Info; //Info to display in the Web Report Server
+        public string Info = ""; //Info to display in the Web Report Server
 
         void Authenticate()
         {
