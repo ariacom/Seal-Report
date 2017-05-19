@@ -64,8 +64,6 @@ namespace Seal.Model
 
         #endregion
 
-
-
         string _providerName;
         [DisplayName("Security Provider"), Description("The security provider used for the authentication. Security providers are defined in the repository Security\\Providers folder."), Category("Security Provider Definition"), Id(1, 1)]
         [TypeConverter(typeof(SecurityProviderConverter))]
@@ -396,6 +394,6 @@ namespace Seal.Model
             return parameter == null ? 0 : parameter.NumericValue;
         }
 
-
+        static public List<SecurityUser> LoggedUsers = new List<SecurityUser>();
     }
 }

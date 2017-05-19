@@ -1,342 +1,345 @@
-Context;Reference;en;fr;it;pt
-NVD3;(right axis);;(axe de droite);(l'asse di destra);(eixo direito)
-NVD3;Expanded;;Etendue;Espanso;Expandido
-NVD3;Grouped;;Groupée;Raggruppata;Agrupado
-NVD3;Re-scale y-axis;;Rééchelonner l'axe y;Riscala l'asse y;Redimesionar eixo y
-NVD3;Stacked;;Empilée;Impilato/a;Empilhado
-NVD3;Stream;;Flux;Flusso;Fluxo
-Report;!=;;!=;!=;!=
-Report;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %
-Report;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_)
-Report;<;;<;<;<
-Report;<=;;<=;<=;<=
-Report;=;;=;=;=
-Report;>;;>;>;>
-Report;>=;;>=;>=;>=
-Report;A value is required for;;Une valeur est requise pour;;
-Report;All selected;;Tout est sélectionné;Seleziona tutto;Selecionar tudo
-Report;AND;;ET;E;E
-Report;Average of;;Moyenne de;Media di;Média de
-Report;Back to top;;Retour en haut;Torna su;Voltar para o topo
-Report;Between;;Dans l'intervalle;Tra;Entre
-Report;Cancel;;Annuler;Annulla;Cancelar
-Report;Cancelling report...;;Annulation...;Cancellazione...;Cancelando relatório...
-Report;Charts;;Graphes;Grafici;Gráficos
-Report;Contains;;Contient;Contiene;Contém
-Report;Count of;;Nombre de;Conteggio di;Contagem de
-Report;Description;;Description;Descrizione;Descrição
-Report;Drill <;;Navigation <;Navigation <;Drill <
-Report;Drill >;;Navigation >;Navigation >;Drill >
-Report;Duration;;Durée;Durata;Duração
-Report;Ends With;;Se termine par;Finisce con;Termina com
-Report;Execute;;Exécuter;Esegui;Executar
-Report;Executing report...;;Exécution...;Esecuzione...;Executando relatório...
-Report;Execution date;;Date d'exécution;Data di esecuzione;Data de execução
-Report;Execution duration;;Durée d'exécution;Durata esecuzione;Duração da execução
-Report;execution messages;;les messages d'exécution;informazioni di esecuzione;Mensagem de execução
-Report;Filter:;;Filtre:;Filtro:;Filtro:
-Report;Hide;;Cacher;Nascondi;Esconder
-Report;Invalid date;;Date invalide;Data non valida;Data inválida
-Report;Invalid numeric value;;Valeur numérique invalide;Valore numerico non corretto;Valor numérico inválido
-Report;Is Empty;;Est vide;E' vuoto;Está vazio
-Report;Is Not Empty;;N'est pas vide;Non è vuoto;Não está vazio
-Report;Is Not Null;;N'est pas Null;Non è nullo;Não é nulo
-Report;Is Null;;Est Null;E' nullo;É nulo
-Report;Maximum of;;Maximum de;Massimo di;Máximo de
-Report;Minimum of;;Minimum de;Minimo di ;Mínimo de
-Report;Model;;Modèle;Modello;Modelo
-Report;New report;;Nouveau rapport;;
-Report;No records. The report output generation has been cancelled.;;Aucun enregistrement. La  génération a été annulée.;;
-Report;No reports;;Pas de rapports;Nessun report;Nenhum relatório
-Report;No row;;Pas de ligne;Nessuna riga;Nenhuma linha
-Report;Not Between;;En dehors de l'intervalle;Non compreso;Não está entre
-Report;Not Contains;;Ne contient pas;Non contiene;Não contém
-Report;Now;;Maintenant;Ora;Agora
-Report;Page;;Page;Pagina;Página
-Report;"Page &p; of &P;";;"Page &p; de &P;";"Pagina &p; de &P;";"Página &p; de &P;"
-Report;Pages;;Pages;Pagine;Páginas
-Report;Processing;;En cours;Processamento;Processando
-Report;Processing...;;En cours…;In corso;Processando...
-Report;Records;;Enregistrements;Registra;Registros
-Report;Report has been cancelled;;Le rapport a été annulé;Il report è stato annullato;Relatório foi cancelado
-Report;report information;;les informations;informazioni;Informações
-Report;report restrictions;;les restrictions du rapport;restrizioni report;Restrições do relatório
-Report;Report result generated in '{0}';;Rapport généré dans  '{0}';Il risultato del report è stato generato in '{0}';Relatóro gerado em '{0}'
-Report;report result panel;;le panneau des résultats;pannello risultati report;Painél de resultados
-Report;Restrictions;;Restrictions;Restrizioni;Restrições
-Report;second(s);;seconde(s);secondo(i);Segundo(s)
-Report;Select all;;Tout;Seleziona tutto;Selecionar tudo
-Report;Show;;Montrer;Mostra;Mostrar
-Report;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports;Mostrar_MENU_ relatórios
-Report;Show _MENU_ rows;;Afficher _MENU_ lignes;Mostra _MENU_ righe;Mostra_MENU_linhas
-Report;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_;Mostrando _START_ até _END_ de _TOTAL_
-Report;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0;Mostrando 0 até 0 de 0
-Report;Starting execution...;;Exécution...;Esecuzione...;Iniciando execução...
-Report;Starts With;;Commence avec;Inizia con;Começa com
-Report;Sum of;;Somme de;Somma di;Soma de
-Report;The report has been generated.;;Le rapport a été généré.;Il report è stato generato;O relatório foi gerado.
-Report;This report has execution errors. Please check details in the Windows Event Viewer...;;Ce rapport a des erreurs d'exécutions. Veuillez consulter les détails dans le journal des événements Windows.;Questo report produce degli errori durante l'esecuzione. Per favore controllare i dettagli nella finestra relativa alla visualizzazione Evento;Este relatório possui erros. Por favor verifique os detalhes no Visualizador de Eventos do Windows...
-Report;ThisMonth;;CeMois;QuestoMese;EsteMês
-Report;ThisWeek;;CetteSemaine;QuestaSettimana;EstaSemana
-Report;ThisYear;;CetteAnnée;QuestoAnno;EsteAno
-Report;Today;;Aujourdhui;Oggi;Hoje
-Report;Total;;Total;Totale;Total
-Report;Use the date format '{0}' or one of the following keywords:;;Utiliser le format de date '{0}' ou bien l'un des mots clés suivants:;Usa il formato data '{0}' in uno dei seguenti formati;Use o formato data '{0}' ou um dos seguintes formatos:
-Report;View Excel Result;;Afficher le résultat Excel;Vedi il risultato Excel;Mostrar em Excel
-Report;View HTML Result;;Afficher le résultat HTML;Vedi il risulato HTML;Mostrar em HTML
-Report;View PDF Result;;Afficher le résultat PDF;Vedi il risultato PDF;Mostrar em PDF
-Report;View Print Result;;Afficher le résultat Impression;Vedi il risultato di stampa;Mostrar Impressão
-Report;View report result file;;Afficher le résultat du rapport;Visualizza il file del risultato del report;Mostrar o arquivo de relatório
-Web;Actions;;Actions;;
-Web;Aggregate;;Agrégat;;
-Web;BCC;;BCC;;
-Web;Body;;Message;;
-Web;Cancel;;Annuler;Annulla;Cancelar
-Web;CC;;CC;;
-Web;Chart axis;;Graphe;;
-Web;Chart height;;Hauteur graphe;;
-Web;Chart title;;Titre du graphe;;
-Web;Chart type;;Graphe;;
-Web;Chart width;;Largeur graphe;;
-Web;Close;;Fermer;Chiuso;Fechar
-Web;Connection;;Connexion;;
-Web;Copy;;Copier;;
-Web;Create new folder;;Créer un répertoire;;
-Web;Cut;;Couper;;
-Web;Days;;Jours;;
-Web;Days of the week;;Jours de la semaine;;
-Web;Default body;;Message par défaut;;
-Web;Default sender address;;Adresse d'envoi par défaut;;
-Web;Default subject;;Sujet par défaut;;
-Web;Delete;;Supprimer;;
-Web;Delete folder;;Supprimer un répertoire;;
-Web;Description;;Description;;
-Web;Device;;Périphérique;;
-Web;Disconnect;;Déconnecter;;
-Web;Display options;;Options d'affichage;;
-Web;Elements;;Eléments;;
-Web;End date;;Date de fin;;
-Web;End date is before start date;;La date de fin est avant la date de départ;;
-Web;Enter a password to protect the Zip file;;Mot de passe pour protéger le fichier zip;;
-Web;"Enter addresses separated by ;";;"Adresses séparées par ;";;
-Web;Enter password;;Entrer le mot de passe;;
-Web;Enter the file name without extension;;Nom du fichier sans l'extension;;
-Web;Enter user name;;Entrer le nom d'utilisateur;;
-Web;Enter your new file name;;Entrer un nouveau nom de fichier;;
-Web;Error;;Erreur;Errore;Erro
-Web;Error: This report name exists already.;;Erreur: Ce nom de rapport existe déjà;;
-Web;Execute;;Exécuter;Esegui;Executar
-Web;Execute now;;Exécuter maintenant;;
-Web;Edition;;Edition;;
-Web;Execution;;Exécution;;
-Web;File name;;Nom du fichier;;
-Web;Folder;;Répertoire;Repertorio;Pasta
-Web;Folders;;Répertoire;;
-Web;for a duration of;;pour une durée de;;
-Web;Format;;Format;;
-Web;From;;De;;
-Web;Grid mode;;Mode grille;;
-Web;Inconsistent duration or interval for the schedule. Check your entries.;;La durée et l'intervalle de la planification ne sont pas consistent. Vérifiez vos entrées.;;
-Web;Invalid user name or password;;Utilisateur ou mot de passe invalide;;
-Web;Is enabled;;Actif;;
-Web;Is required;;Requis;;
-Web;Last;;Dernier;Ultima;Última
-Web;Last modification;;Modification;Ultima modifica;Última modificação
-Web;Login;;Connexion;Login;Login
-Web;Logout;;Déconnexion;Uscita;Desconectar
-Web;Logout the user;;Déconnecte l'utilisateur;Uscita utente;Desconectar o usuário
-Web;Manage folders;;Gestion des répertoires;;
-Web;Months;;Mois;;
-Web;Name;;Nom;Nome;Nome
-Web;New;;Nouveau;;
-Web;New folder name;;Nouveau nom de répertoire;;
-Web;No Email destination specified in the schedule;;L'adresse Email n'est pas renseignée;;
-Web;No file name specified in the schedule;;Le nom du fichier n'est pas renseigné;;
-Web;OK;;OK;;
-Web;Operator;;Opérateur;;
-Web;"Optional addresses separated by ;";;"Adresses optionnelles séparées par ;";;
-Web;Optional title chart;;Titre optionnel du graphe;;
-Web;Options;;Options;;
-Web;Output;;Destination;;
-Web;Password;;Mot de passe;Password;Senha
-Web;Paste;;Coller;;
-Web;Personal;;Personnel;;
-Web;Pivot mode;;Mode pivot;;
-Web;Please wait;;Veuillez patienter;Attendere prego;Por favor aguarde
-Web;Profile;;Profil;;
-Web;Profile information;;Profil utilisateur;;
-Web;Prompt;;Demander;;
-Web;Prompt at run-time;;Demander à l'exécution;;
-Web;Recur every;;Récurrent tous les;;
-Web;Refresh;;Rafraîchir;;
-Web;Remove;;Supprimer;;
-Web;Remove all;;Tout supprimer;;
-Web;Rename;;Renommer;;
-Web;Rename folder;;Renommer un répertoire;;
-Web;Repeat every;;Répéter tous les;;
-Web;Report;;Rapport;Report;Relatório
-Web;Report name;;Nom du rapport;Nome del report;Nome do relatório
-Web;Report title;;Titre du rapport;;
-Web;Report title if different from report name;;Titre du rapport si différent du nom;;
-Web;Reports;;Rapports;Reports;Relatório
-Web;Result as body;;Message HTML;;
-Web;Save;;Enregistrer;Salva;Gravar
-Web;Schedule;;Planification;;
-Web;Search;;Rechercher;;
-Web;Show totals;;Totaux;;
-Web;Sorry, this report contains elements you cannot edit...;;Désolé, ce rapport contient des éléments que vous ne pouvez pas éditer…;;
-Web;Sort;;Tri;;
-Web;Start date;;Date de départ;;
-Web;Subject;;Sujet;;
-Web;This report cannot be edited with the Web Report Designer.;;Ce rapport ne peut pas être édité avec l'interface Web.;;
-Web;To;;Destinataire;;
-Web;Total aggr.;;Aggr. totaux;;
-Web;Type;;Type;Tipo;Tipo
-Web;User groups;;Groupes utilisateur;Gruppi utenti;Grupos de usuários
-Web;User name;;Nom d'utilisateur;Nome utente;Nome do usuário
-Web;Value;;Valeur;;
-Web;Values;;Valeurs;;
-Web;Zip attachments;;Options ZIP;;
-Web;Zip password;;Mot de passe ZIP;;
-WebJS;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %
-WebJS;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_)
-WebJS;<No Output>;;<Aucune Destination>;;
-WebJS;<No Schedule>;;<Aucune Planification>;;
-WebJS;1 Decimal;;1 Décimale;;
-WebJS;2 Decimals;;2 Décimales;;
-WebJS;3 Decimals;;3 Décimales;;
-WebJS;4 Decimals;;4 Décimales;;
-WebJS;All selected;;Tout est sélectionné;Seleziona tutto;Selecionar tudo
-WebJS;Ascendant;;Ascendant;;
-WebJS;Automatic ascendant;;Automatique ascendant;;
-WebJS;Automatic descendant;;Automatique descendant;;
-WebJS;Average;;Moyenne;;
-WebJS;Axis;;Axe;;
-WebJS;Bar;;Barre;;
-WebJS;Contains;;Contient;;
-WebJS;Count;;Nombre;;
-WebJS;Count of;;Nombre de;;
-WebJS;CSV;;CSV;;
-WebJS;Daily;;Quotidien;;
-WebJS;day;;jour;;
-WebJS;days;;jours;;
-WebJS;Decimal;;Décimale;;
-WebJS;Default;;Défaut;;
-WebJS;Default report connection;;Connexion du rapport;;
-WebJS;Default repository connection;;Connexion du repository;;
-WebJS;Descendant;;Descendant;;
-WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?;;
-WebJS;Does not contain;;Ne contient pas;;
-WebJS;Drop your Column elements;;Eléments de type Colonne;;
-WebJS;Drop your Data;;Données;;
-WebJS;Drop your Data elements;;Eléments de type Donnée;;
-WebJS;Drop your Elements;;Eléments;;
-WebJS;Drop your Page elements;;Eléments de type Page;;
-WebJS;Drop your Restrictions;;Restrictions;;
-WebJS;Drop your Row elements;;Eléments de type Ligne;;
-WebJS;Edit report;;Editer le rapport;;
-WebJS;Email;;Courriel;;
-WebJS;Ends with;;Finit par;;
-WebJS;Equals;;Egale;;
-WebJS;Error;;Erreur;;
-WebJS;Error : Unable to connect to the server;;Erreur: Impossible de se connecter au serveur;;
-WebJS;Excel;;Excel;;
-WebJS;Filter;;Filtre;Filtro;Filtro
-WebJS;Folder;;Répertoire;Repertorio;Pasta
-WebJS;For columns;;Pour les colonnes;;
-WebJS;For rows;;Pour les lignes;;
-WebJS;For rows and columns;;Pour les lignes et colonnes;;
-WebJS;Force execution;;Forcer l'exécution;;
-WebJS;General;;Général;;
-WebJS;General date long time;;Date générale avec le temps long;;
-WebJS;General date short time;;Date générale avec le temps court;;
-WebJS;Horizontal Bar;;Barre horizontale;;
-WebJS;hour;;heure;;
-WebJS;hours;;heures;;
-WebJS;HTML;;HTML;;
-WebJS;HTML Print;;HTML Impression;;
-WebJS;Indefinitely;;Indéfiniment;;
-WebJS;Is between;;Est entre;;
-WebJS;Is different from;;Est différent de;;
-WebJS;Is empty;;Est vide;;
-WebJS;Is greater or equal than;;Est plus grand ou égal à;;
-WebJS;Is greater than;;Est plus grand que;;
-WebJS;Is not between;;N'est pas entre;;
-WebJS;Is not empty;;N'est pas vide;;
-WebJS;Is not Null;;N'est pas Null;;
-WebJS;Is Null;;Est Null;;
-WebJS;Is smaller or equal than;;Est plus petit ou égal à;;
-WebJS;Is smaller than;;Est plus petit que;;
-WebJS;Line;;Ligne;;
-WebJS;Long date;;Date longue;;
-WebJS;Maximum;;Maximum;;
-WebJS;Maximum of;;Maximum de;;
-WebJS;Minimum;;Minimum;;
-WebJS;minute;;minute;;
-WebJS;minutes;;minutes;;
-WebJS;Modified;;Modifié;;
-WebJS;Monthly;;Mensuel;;
-WebJS;New Output for;;Nouvelle Destination pour;;
-WebJS;New report;;Nouveau rapport;;
-WebJS;New Schedule;;Nouvelle Planification;;
-WebJS;No;;Non;;
-WebJS;No prompt;;Pas de prompt;;
-WebJS;No report;;Aucun rapport;;
-WebJS;No schedule;;Pas de planification;;
-WebJS;No total;;Pas de totaux;;
-WebJS;None;;Aucun;;
-WebJS;Not sorted;;Pas de tri;;
-WebJS;Number;;Nombre;;
-WebJS;Number 1 dec.;;Nombre 1 déc.;;
-WebJS;Number 2 dec.;;Nombre 2 déc.;;
-WebJS;Number 3 dec.;;Nombre 3 déc.;;
-WebJS;Number 4 dec.;;Nombre 4 déc.;;
-WebJS;One time;;Une fois;;
-WebJS;Output;;Destination;;
-WebJS;PDF;;PDF;;
-WebJS;PDF Print;;PDF Impression;;
-WebJS;Pie;;Camembert;;
-WebJS;Please wait;;Veuillez patienter;Attendere prego;Por favor aguarde
-WebJS;Point;;Point;;
-WebJS;Private (The output cannot be executed by other users);;Privée (la destination ne peut pas être exécutée par d'autres utilisateurs);;
-WebJS;Private (The output cannot be edited by other users);;Privée (la destination ne peut pas être éditée par d'autres utilisateurs);;
-WebJS;Prompt at execution;;Demander à l'exécution;;
-WebJS;Prompt only one value;;Demander une valeur à l'exécution;;
-WebJS;Public;;Publique;;
-WebJS;Remove;;Effacer;;
-WebJS;Report has been modified, do you really want to close ?;;Le rapport a été modifié, voulez-vous vraiment fermer ?;;
-WebJS;Report saved;;Rapport sauvegardé;;
-WebJS;report(s) or file(s) cut in the clipboard;;rapport(s) ou fichier(s) ont été coupés dans le presse-papier;;
-WebJS;report(s) or file(s) have been deleted;;rapport(s) ou fichier(s) ont été effacés;;
-WebJS;report(s) or file(s) processed;;rapport(s) ou fichier(s) ont été traités;;
-WebJS;report(s) or files(s) copied in the clipboard;;rapport(s) ou fichier(s) ont été copiés dans le presse-papier;;
-WebJS;Schedule;;Planification;;
-WebJS;Select all;;Tout;Seleziona tutto;Selecionar tudo
-WebJS;Server Version;;Version du serveur;;
-WebJS;Short date;;Date courte;;
-WebJS;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports;Mostrar_MENU_ relatórios
-WebJS;Show execution message panel;;Afficher les messages d'exécutions;;
-WebJS;Show information panel;;Afficher les informations;;
-WebJS;Show report result panel;;Afficher le panneau des résultats;;
-WebJS;Show restrictions panel;;Afficher les restrictions;;
-WebJS;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_;Mostrando _START_ até _END_ de _TOTAL_
-WebJS;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0;Mostrando 0 até 0 de 0
-WebJS;Splitter;;Séparateur;;
-WebJS;Stacked Area;;Empilé;;
-WebJS;Starts with;;Commence par;;
-WebJS;Sum;;Somme;;
-WebJS;The folder has been created;;Le répertoire a été créé;;
-WebJS;The folder has been deleted;;Le répertoire a été effacé;;
-WebJS;The folder has been renamed;;Le répertoire a été renommé;;
-WebJS;The folder has been updated;;Le répertoire a été mis à jour;;
-WebJS;The report or file has been renamed;;Le rapport ou le fichier a été renommé;;
-WebJS;Use data tables;;Utiliser les data tables;;
-WebJS;View;;Vue;;
-WebJS;Views and outputs;;Vues et destinations;;
-WebJS;Warning;;Avertissement;;
-WebJS;Web Interface Version;;Version de l'interface Web;;
-WebJS;Weekly;;Hebdomadaire;;
-WebJS;weeks;;semaines;;
-WebJS;Yes;;Oui;;
-WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés);;
-WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message);;
+Context;Reference;en;fr;it;pt;
+NVD3;(right axis);;(axe de droite);(l'asse di destra);(eixo direito);
+NVD3;Expanded;;Etendue;Espanso;Expandido;
+NVD3;Grouped;;Groupée;Raggruppata;Agrupado;
+NVD3;Re-scale y-axis;;Rééchelonner l'axe y;Riscala l'asse y;Redimesionar eixo y;
+NVD3;Stacked;;Empilée;Impilato/a;Empilhado;
+NVD3;Stream;;Flux;Flusso;Fluxo;
+Report;!=;;!=;!=;!=;
+Report;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %;
+Report;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_);
+Report;<;;<;<;<;
+Report;<=;;<=;<=;<=;
+Report;=;;=;=;=;
+Report;>;;>;>;>;
+Report;>=;;>=;>=;>=;
+Report;A value is required for;;Une valeur est requise pour;;;
+Report;All selected;;Tout est sélectionné;Seleziona tutto;Selecionar tudo;
+Report;AND;;ET;E;E;
+Report;Average of;;Moyenne de;Media di;Média de;
+Report;Back to top;;Retour en haut;Torna su;Voltar para o topo;
+Report;Between;;Dans l'intervalle;Tra;Entre;
+Report;Cancel;;Annuler;Annulla;Cancelar;
+Report;Cancelling report...;;Annulation...;Cancellazione...;Cancelando relatório...;
+Report;Charts;;Graphes;Grafici;Gráficos;
+Report;Contains;;Contient;Contiene;Contém;
+Report;Count of;;Nombre de;Conteggio di;Contagem de;
+Report;Description;;Description;Descrizione;Descrição;
+Report;Drill <;;Navigation <;Navigation <;Drill <;
+Report;Drill >;;Navigation >;Navigation >;Drill >;
+Report;Duration;;Durée;Durata;Duração;
+Report;Ends With;;Se termine par;Finisce con;Termina com;
+Report;Execute;;Exécuter;Esegui;Executar;
+Report;Executing report...;;Exécution...;Esecuzione...;Executando relatório...;
+Report;Execution date;;Date d'exécution;Data di esecuzione;Data de execução;
+Report;Execution duration;;Durée d'exécution;Durata esecuzione;Duração da execução;
+Report;execution messages;;les messages d'exécution;informazioni di esecuzione;Mensagem de execução;
+Report;Filter:;;Filtre:;Filtro:;Filtro:;
+Report;Hide;;Cacher;Nascondi;Esconder;
+Report;Invalid date;;Date invalide;Data non valida;Data inválida;
+Report;Invalid numeric value;;Valeur numérique invalide;Valore numerico non corretto;Valor numérico inválido;
+Report;Is Empty;;Est vide;E' vuoto;Está vazio;
+Report;Is Not Empty;;N'est pas vide;Non è vuoto;Não está vazio;
+Report;Is Not Null;;N'est pas Null;Non è nullo;Não é nulo;
+Report;Is Null;;Est Null;E' nullo;É nulo;
+Report;Maximum of;;Maximum de;Massimo di;Máximo de;
+Report;Minimum of;;Minimum de;Minimo di ;Mínimo de;
+Report;Model;;Modèle;Modello;Modelo;
+Report;New report;;Nouveau rapport;;;
+Report;No records. The report output generation has been cancelled.;;Aucun enregistrement. La  génération a été annulée.;;;
+Report;No reports;;Pas de rapports;Nessun report;Nenhum relatório;
+Report;No row;;Pas de ligne;Nessuna riga;Nenhuma linha;
+Report;Not Between;;En dehors de l'intervalle;Non compreso;Não está entre;
+Report;Not Contains;;Ne contient pas;Non contiene;Não contém;
+Report;Now;;Maintenant;Ora;Agora;
+Report;Page;;Page;Pagina;Página;
+Report;"Page &p; of &P;";;"Page &p; de &P;";"Pagina &p; de &P;";"Página &p; de &P;";
+Report;Pages;;Pages;Pagine;Páginas;
+Report;Processing;;En cours;Processamento;Processando;
+Report;Processing...;;En cours…;In corso;Processando...;
+Report;Records;;Enregistrements;Registra;Registros;
+Report;Report has been cancelled;;Le rapport a été annulé;Il report è stato annullato;Relatório foi cancelado;
+Report;report information;;les informations;informazioni;Informações;
+Report;report restrictions;;les restrictions du rapport;restrizioni report;Restrições do relatório;
+Report;Report result generated in '{0}';;Rapport généré dans  '{0}';Il risultato del report è stato generato in '{0}';Relatóro gerado em '{0}';
+Report;report result panel;;le panneau des résultats;pannello risultati report;Painél de resultados;
+Report;Restrictions;;Restrictions;Restrizioni;Restrições;
+Report;second(s);;seconde(s);secondo(i);Segundo(s);
+Report;Select all;;Tout;Seleziona tutto;Selecionar tudo;
+Report;Show;;Montrer;Mostra;Mostrar;
+Report;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports;Mostrar_MENU_ relatórios;
+Report;Show _MENU_ rows;;Afficher _MENU_ lignes;Mostra _MENU_ righe;Mostra_MENU_linhas;
+Report;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_;Mostrando _START_ até _END_ de _TOTAL_;
+Report;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0;Mostrando 0 até 0 de 0;
+Report;Starting execution...;;Exécution...;Esecuzione...;Iniciando execução...;
+Report;Starts With;;Commence avec;Inizia con;Começa com;
+Report;Sum of;;Somme de;Somma di;Soma de;
+Report;The report has been generated.;;Le rapport a été généré.;Il report è stato generato;O relatório foi gerado.;
+Report;This report has execution errors. Please check details in the Windows Event Viewer...;;Ce rapport a des erreurs d'exécutions. Veuillez consulter les détails dans le journal des événements Windows.;Questo report produce degli errori durante l'esecuzione. Per favore controllare i dettagli nella finestra relativa alla visualizzazione Evento;Este relatório possui erros. Por favor verifique os detalhes no Visualizador de Eventos do Windows...;
+Report;ThisMonth;;CeMois;QuestoMese;EsteMês;
+Report;ThisWeek;;CetteSemaine;QuestaSettimana;EstaSemana;
+Report;ThisYear;;CetteAnnée;QuestoAnno;EsteAno;
+Report;Today;;Aujourdhui;Oggi;Hoje;
+Report;Total;;Total;Totale;Total;
+Report;Use the date format '{0}' or one of the following keywords:;;Utiliser le format de date '{0}' ou bien l'un des mots clés suivants:;Usa il formato data '{0}' in uno dei seguenti formati;Use o formato data '{0}' ou um dos seguintes formatos:;
+Report;View Excel Result;;Afficher le résultat Excel;Vedi il risultato Excel;Mostrar em Excel;
+Report;View HTML Result;;Afficher le résultat HTML;Vedi il risulato HTML;Mostrar em HTML;
+Report;View PDF Result;;Afficher le résultat PDF;Vedi il risultato PDF;Mostrar em PDF;
+Report;View Print Result;;Afficher le résultat Impression;Vedi il risultato di stampa;Mostrar Impressão;
+Report;View report result file;;Afficher le résultat du rapport;Visualizza il file del risultato del report;Mostrar o arquivo de relatório;
+Web;Actions;;Actions;;;
+Web;Aggregate;;Agrégat;;;
+Web;BCC;;BCC;;;
+Web;Body;;Message;;;
+Web;Cancel;;Annuler;Annulla;Cancelar;
+Web;CC;;CC;;;
+Web;Chart axis;;Graphe;;;
+Web;Chart height;;Hauteur graphe;;;
+Web;Chart title;;Titre du graphe;;;
+Web;Chart type;;Graphe;;;
+Web;Chart width;;Largeur graphe;;;
+Web;Close;;Fermer;Chiuso;Fechar;
+Web;Connection;;Connexion;;;
+Web;Copy;;Copier;;;
+Web;Create new folder;;Créer un répertoire;;;
+Web;Cut;;Couper;;;
+Web;Days;;Jours;;;
+Web;Days of the week;;Jours de la semaine;;;
+Web;Default body;;Message par défaut;;;
+Web;Default sender address;;Adresse d'envoi par défaut;;;
+Web;Default subject;;Sujet par défaut;;;
+Web;Delete;;Supprimer;;;
+Web;Delete folder;;Supprimer un répertoire;;;
+Web;Description;;Description;;;
+Web;Device;;Périphérique;;;
+Web;Disconnect;;Déconnecter;;;
+Web;Display options;;Options d'affichage;;;
+Web;Elements;;Eléments;;;
+Web;End date;;Date de fin;;;
+Web;End date is before start date;;La date de fin est avant la date de départ;;;
+Web;Enter a password to protect the Zip file;;Mot de passe pour protéger le fichier zip;;;
+Web;"Enter addresses separated by ;";;"Adresses séparées par ;";;;
+Web;Enter password;;Entrer le mot de passe;;;
+Web;Enter the file name without extension;;Nom du fichier sans l'extension;;;
+Web;Enter user name;;Entrer le nom d'utilisateur;;;
+Web;Enter your new file name;;Entrer un nouveau nom de fichier;;;
+Web;Error;;Erreur;Errore;Erro;
+Web;Error: This report name exists already.;;Erreur: Ce nom de rapport existe déjà;;;
+Web;Execute;;Exécuter;Esegui;Executar;
+Web;Execute now;;Exécuter maintenant;;;
+Web;Edition;;Edition;;;
+Web;Execution;;Exécution;;;
+Web;File name;;Nom du fichier;;;
+Web;Folder;;Répertoire;Repertorio;Pasta;
+Web;Folders;;Répertoire;;;
+Web;for a duration of;;pour une durée de;;;
+Web;Format;;Format;;;
+Web;From;;De;;;
+Web;Grid mode;;Mode grille;;;
+Web;Inconsistent duration or interval for the schedule. Check your entries.;;La durée et l'intervalle de la planification ne sont pas consistent. Vérifiez vos entrées.;;;
+Web;Invalid user name or password;;Utilisateur ou mot de passe invalide;;;
+Web;Is enabled;;Actif;;;
+Web;Is required;;Requis;;;
+Web;Last;;Dernier;Ultima;Última;
+Web;Last modification;;Modification;Ultima modifica;Última modificação;
+Web;Licensed to;;Licence pour;;;
+Web;Login;;Connexion;Login;Login;
+Web;Logout;;Déconnexion;Uscita;Desconectar;
+Web;Logout the user;;Déconnecte l'utilisateur;Uscita utente;Desconectar o usuário;
+Web;Manage folders;;Gestion des répertoires;;;
+Web;Months;;Mois;;;
+Web;Name;;Nom;Nome;Nome;
+Web;New;;Nouveau;;;
+Web;New folder name;;Nouveau nom de répertoire;;;s
+Web;No Email destination specified in the schedule;;L'adresse Email n'est pas renseignée;;;
+Web;No file name specified in the schedule;;Le nom du fichier n'est pas renseigné;;;
+Web;OK;;OK;;;
+Web;Operator;;Opérateur;;;
+Web;"Optional addresses separated by ;";;"Adresses optionnelles séparées par ;";;;
+Web;Optional title chart;;Titre optionnel du graphe;;;
+Web;Options;;Options;;;
+Web;Output;;Destination;;;
+Web;Password;;Mot de passe;Password;Senha;
+Web;Paste;;Coller;;;
+Web;Personal;;Personnel;;;
+Web;Pivot mode;;Mode pivot;;;
+Web;Please wait;;Veuillez patienter;Attendere prego;Por favor aguarde;
+Web;Profile;;Profil;;;
+Web;Profile information;;Profil utilisateur;;;
+Web;Prompt;;Demander;;;
+Web;Prompt at run-time;;Demander à l'exécution;;;
+Web;Recur every;;Récurrent tous les;;;
+Web;Refresh;;Rafraîchir;;;
+Web;Remove;;Supprimer;;;
+Web;Remove all;;Tout supprimer;;;
+Web;Rename;;Renommer;;;
+Web;Rename folder;;Renommer un répertoire;;;
+Web;Repeat every;;Répéter tous les;;;
+Web;Report;;Rapport;Report;Relatório;
+Web;Report name;;Nom du rapport;Nome del report;Nome do relatório;
+Web;Report title;;Titre du rapport;;;
+Web;Report title if different from report name;;Titre du rapport si différent du nom;;;
+Web;Reports;;Rapports;Reports;Relatório;
+Web;Result as body;;Message HTML;;;
+Web;Save;;Enregistrer;Salva;Gravar;
+Web;Schedule;;Planification;;;
+Web;Search;;Rechercher;;;
+Web;Show totals;;Totaux;;;
+Web;Sorry, this report contains elements you cannot edit...;;Désolé, ce rapport contient des éléments que vous ne pouvez pas éditer…;;;
+Web;Sort;;Tri;;;
+Web;Start date;;Date de départ;;;
+Web;Subject;;Sujet;;;
+Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;;Le nombre maximum de connexions a été atteint pour votre licence ({0}). Merci d'essayer plus tard...;;;
+Web;To;;Destinataire;;;
+Web;Total aggr.;;Aggr. totaux;;;
+Web;Type;;Type;Tipo;Tipo;
+Web;User groups;;Groupes utilisateur;Gruppi utenti;Grupos de usuários;
+Web;User name;;Nom d'utilisateur;Nome utente;Nome do usuário;
+Web;Users;;Utilisateurs;;;
+Web;Value;;Valeur;;;
+Web;Values;;Valeurs;;;
+Web;Zip attachments;;Options ZIP;;;
+Web;Zip password;;Mot de passe ZIP;;;
+WebJS;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %;
+WebJS;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_);
+WebJS;<No Output>;;<Aucune Destination>;;;
+WebJS;<No Schedule>;;<Aucune Planification>;;;
+WebJS;1 Decimal;;1 Décimale;;;
+WebJS;2 Decimals;;2 Décimales;;;
+WebJS;3 Decimals;;3 Décimales;;;
+WebJS;4 Decimals;;4 Décimales;;;
+WebJS;All selected;;Tout est sélectionné;Seleziona tutto;Selecionar tudo;
+WebJS;Ascendant;;Ascendant;;;
+WebJS;Automatic ascendant;;Automatique ascendant;;;
+WebJS;Automatic descendant;;Automatique descendant;;;
+WebJS;Average;;Moyenne;;;
+WebJS;Axis;;Axe;;;
+WebJS;Bar;;Barre;;;
+WebJS;Contains;;Contient;;;
+WebJS;Count;;Nombre;;;
+WebJS;Count of;;Nombre de;;;
+WebJS;CSV;;CSV;;;
+WebJS;Daily;;Quotidien;;;
+WebJS;day;;jour;;;
+WebJS;days;;jours;;;
+WebJS;Decimal;;Décimale;;;
+WebJS;Default;;Défaut;;;
+WebJS;Default report connection;;Connexion du rapport;;;
+WebJS;Default repository connection;;Connexion du repository;;;
+WebJS;Descendant;;Descendant;;;
+WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?;;;
+WebJS;Does not contain;;Ne contient pas;;;
+WebJS;Drop your Column elements;;Eléments de type Colonne;;;
+WebJS;Drop your Data;;Données;;;
+WebJS;Drop your Data elements;;Eléments de type Donnée;;;
+WebJS;Drop your Elements;;Eléments;;;
+WebJS;Drop your Page elements;;Eléments de type Page;;;
+WebJS;Drop your Restrictions;;Restrictions;;;
+WebJS;Drop your Row elements;;Eléments de type Ligne;;;
+WebJS;Edit report;;Editer le rapport;;;
+WebJS;Email;;Courriel;;;
+WebJS;Ends with;;Finit par;;;
+WebJS;Equals;;Egale;;;
+WebJS;Error;;Erreur;;;
+WebJS;Error : Unable to connect to the server;;Erreur: Impossible de se connecter au serveur;;;
+WebJS;Excel;;Excel;;;
+WebJS;Filter;;Filtre;Filtro;Filtro;
+WebJS;Folder;;Répertoire;Repertorio;Pasta;
+WebJS;For columns;;Pour les colonnes;;;
+WebJS;For rows;;Pour les lignes;;;
+WebJS;For rows and columns;;Pour les lignes et colonnes;;;
+WebJS;Force execution;;Forcer l'exécution;;;
+WebJS;General;;Général;;;
+WebJS;General date long time;;Date générale avec le temps long;;;
+WebJS;General date short time;;Date générale avec le temps court;;;
+WebJS;Horizontal Bar;;Barre horizontale;;;
+WebJS;hour;;heure;;;
+WebJS;hours;;heures;;;
+WebJS;HTML;;HTML;;;
+WebJS;HTML Print;;HTML Impression;;;
+WebJS;Indefinitely;;Indéfiniment;;;
+WebJS;Is between;;Est entre;;;
+WebJS;Is different from;;Est différent de;;;
+WebJS;Is empty;;Est vide;;;
+WebJS;Is greater or equal than;;Est plus grand ou égal à;;;
+WebJS;Is greater than;;Est plus grand que;;;
+WebJS;Is not between;;N'est pas entre;;;
+WebJS;Is not empty;;N'est pas vide;;;
+WebJS;Is not Null;;N'est pas Null;;;
+WebJS;Is Null;;Est Null;;;
+WebJS;Is smaller or equal than;;Est plus petit ou égal à;;;
+WebJS;Is smaller than;;Est plus petit que;;;
+WebJS;Line;;Ligne;;;
+WebJS;Long date;;Date longue;;;
+WebJS;Maximum;;Maximum;;;
+WebJS;Maximum of;;Maximum de;;;
+WebJS;Minimum;;Minimum;;;
+WebJS;minute;;minute;;;
+WebJS;minutes;;minutes;;;
+WebJS;Modified;;Modifié;;;
+WebJS;Monthly;;Mensuel;;;
+WebJS;New Output for;;Nouvelle Destination pour;;;
+WebJS;New report;;Nouveau rapport;;;
+WebJS;New Schedule;;Nouvelle Planification;;;
+WebJS;No;;Non;;;
+WebJS;No prompt;;Pas de prompt;;;
+WebJS;No report;;Aucun rapport;;;
+WebJS;No schedule;;Pas de planification;;;
+WebJS;No total;;Pas de totaux;;;
+WebJS;None;;Aucun;;;
+WebJS;Not sorted;;Pas de tri;;;
+WebJS;Number;;Nombre;;;
+WebJS;Number 1 dec.;;Nombre 1 déc.;;;
+WebJS;Number 2 dec.;;Nombre 2 déc.;;;
+WebJS;Number 3 dec.;;Nombre 3 déc.;;;
+WebJS;Number 4 dec.;;Nombre 4 déc.;;;
+WebJS;One time;;Une fois;;;
+WebJS;Output;;Destination;;;
+WebJS;PDF;;PDF;;;
+WebJS;PDF Print;;PDF Impression;;;
+WebJS;Pie;;Camembert;;;
+WebJS;Please wait;;Veuillez patienter;Attendere prego;Por favor aguarde;
+WebJS;Please note that only schedules can be edited for this report.;;Veuillez noter que seules les planifications peuvent être éditées pour ce rapport.;;;
+WebJS;Point;;Point;;;
+WebJS;Private (The output cannot be executed by other users);;Privée (la destination ne peut pas être exécutée par d'autres utilisateurs);;;
+WebJS;Private (The output cannot be edited by other users);;Privée (la destination ne peut pas être éditée par d'autres utilisateurs);;;
+WebJS;Prompt at execution;;Demander à l'exécution;;;
+WebJS;Prompt only one value;;Demander une valeur à l'exécution;;;
+WebJS;Public;;Publique;;;
+WebJS;Remove;;Effacer;;;
+WebJS;Report has been modified, do you really want to close ?;;Le rapport a été modifié, voulez-vous vraiment fermer ?;;;
+WebJS;Report saved;;Rapport sauvegardé;;;
+WebJS;report(s) or file(s) cut in the clipboard;;rapport(s) ou fichier(s) ont été coupés dans le presse-papier;;;
+WebJS;report(s) or file(s) have been deleted;;rapport(s) ou fichier(s) ont été effacés;;;
+WebJS;report(s) or file(s) processed;;rapport(s) ou fichier(s) ont été traités;;;
+WebJS;report(s) or files(s) copied in the clipboard;;rapport(s) ou fichier(s) ont été copiés dans le presse-papier;;;
+WebJS;Schedule;;Planification;;;
+WebJS;Select all;;Tout;Seleziona tutto;Selecionar tudo;
+WebJS;Server Version;;Version du serveur;;;
+WebJS;Short date;;Date courte;;;
+WebJS;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports;Mostrar_MENU_ relatórios;
+WebJS;Show execution message panel;;Afficher les messages d'exécutions;;;
+WebJS;Show information panel;;Afficher les informations;;;
+WebJS;Show report result panel;;Afficher le panneau des résultats;;;
+WebJS;Show restrictions panel;;Afficher les restrictions;;;
+WebJS;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_;Mostrando _START_ até _END_ de _TOTAL_;
+WebJS;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0;Mostrando 0 até 0 de 0;
+WebJS;Splitter;;Séparateur;;;
+WebJS;Stacked Area;;Empilé;;;
+WebJS;Starts with;;Commence par;;;
+WebJS;Sum;;Somme;;;
+WebJS;The folder has been created;;Le répertoire a été créé;;;
+WebJS;The folder has been deleted;;Le répertoire a été effacé;;;
+WebJS;The folder has been renamed;;Le répertoire a été renommé;;;
+WebJS;The folder has been updated;;Le répertoire a été mis à jour;;;
+WebJS;The report or file has been renamed;;Le rapport ou le fichier a été renommé;;;
+WebJS;Use data tables;;Utiliser les data tables;;;
+WebJS;View;;Vue;;;
+WebJS;Views and outputs;;Vues et destinations;;;
+WebJS;Warning;;Avertissement;;;
+WebJS;Web Interface Version;;Version de l'interface Web;;;
+WebJS;Weekly;;Hebdomadaire;;;
+WebJS;weeks;;semaines;;;
+WebJS;Yes;;Oui;;;
+WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés);;;
+WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message);;;

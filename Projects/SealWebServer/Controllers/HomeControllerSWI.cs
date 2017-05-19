@@ -35,7 +35,7 @@ namespace SealWebServer.Controllers
                     WebUser.WebPassword = password;
                     Authenticate();
 
-                    if (!WebUser.IsAuthenticated) throw new Exception(string.IsNullOrEmpty(WebUser.Error) ? Repository.TranslateWeb("Invalid user name or password") : WebUser.Error);
+                    if (!WebUser.IsAuthenticated) throw new Exception(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
                 }
 
                 //Set culture from cookie
@@ -208,7 +208,7 @@ namespace SealWebServer.Controllers
                 Repository repository = Repository;
                 Report report = Report.LoadFromFile(newPath, repository);
                 SWIReportDetail result = new SWIReportDetail();
-                result.views = (from i in report.Views.Where(i => i.PublicExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
+                result.views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
                 result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayName = report.TranslateOutputName(i.Name) }).ToArray() : new SWIOutput[] { };
                 return Json(result);
 
@@ -397,6 +397,7 @@ namespace SealWebServer.Controllers
         {
             try
             {
+                if (WebUser != null) WebUser.Logout();
                 CreateWebUser();
                 return Json(new { });
             }
@@ -481,7 +482,7 @@ namespace SealWebServer.Controllers
         {
             try
             {
-                return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion });
+                return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion, Info = Info });
             }
             catch (Exception ex)
             {

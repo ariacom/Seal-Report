@@ -48,7 +48,7 @@ var SWIMain = (function () {
             _main.login();
         });
         _gateway.GetVersions(function (data) {
-            $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + " - " + SWIUtil.tr("Server Version") + " : " + data.SRVersion);
+            $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + "\r\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\r\n" + data.Info);
             $("#footer-version").text(data.SWIVersion);
         });
         _gateway.GetUserProfile(function (data) {
@@ -67,6 +67,7 @@ var SWIMain = (function () {
         _main._connected = true;
         _main._profile = data;
         _main._folder = null;
+        $("body").children(".modal-backdrop").remove();
         $loginModal.modal('hide');
         SWIUtil.HideMessages();
         $(".navbar-right").show();
@@ -253,13 +254,12 @@ var SWIMain = (function () {
     SWIMain.prototype.loginFailure = function (data) {
         $waitDialog.modal('hide');
         _main._connected = false;
-        if ($("#username").val() != "")
-            $("#login-modal-error").text(data.error);
-        if (!$loginModal.hasClass('in'))
-            _main.showLogin();
+        $("#login-modal-error").text(data.error);
+        _main.showLogin();
         _main.enableControls();
     };
     SWIMain.prototype.showLogin = function () {
+        $("body").children(".modal-backdrop").remove();
         $("#footer-div").show();
         $loginModal.modal();
     };
@@ -269,7 +269,6 @@ var SWIMain = (function () {
         _gateway.Login($("#username").val(), $("#password").val(), function (data) {
             _main.loginSuccess(data);
         }, function (data) {
-            _main.showLogin();
             _main.loginFailure(data);
         });
     };
