@@ -79,7 +79,7 @@ namespace Seal.Model
         }
 
         private List<SecurityConnection> _connections = new List<SecurityConnection>();
-        [Category("Web Report Designer Security"), DisplayName("\tConnections"), Description("For the Web Report Designer: Connections rights for the group. Set rights to connections through their names. By default all devices can be selected."), Id(3, 2)]
+        [Category("Web Report Designer Security"), DisplayName("\tConnections"), Description("For the Web Report Designer: Connections rights for the group. Set rights to connections through their names. By default all connections can be selected."), Id(3, 2)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityConnection> Connections
         {
