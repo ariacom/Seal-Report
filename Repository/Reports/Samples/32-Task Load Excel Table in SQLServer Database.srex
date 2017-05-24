@@ -14,8 +14,7 @@
       <ConnectionGUID>1</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
@@ -57,8 +56,7 @@
       <ConnectionGUID>d28d79a7-bc64-40ac-b205-4c0d5fd381cf</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
@@ -85,6 +83,7 @@
       <SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID>
       <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements />
@@ -110,6 +109,8 @@
       <SQL />
       <Script>@using Seal.Model
 @using Seal.Helpers
+@using System.Data
+@using System.IO
 @{
 	//Load a table from an Excel file, needs ODBC Drivers for Office 2007 installed
 	//When executed, the task loads the Excel sheet in a table if the file is newer that the one in load folder
@@ -126,9 +127,41 @@
 	helper.DatabaseHelper.InsertBurstSize = 500;
 	helper.DatabaseHelper.ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
 	helper.DatabaseHelper.DefaultEncoding = Encoding.Default;
-	TrimText = true;
+	helper.DatabaseHelper.TrimText = true;
 	helper.DatabaseHelper.DebugMode = false;
+	
+	//Delegate samples:
+	helper.DatabaseHelper.MyGetTableColumnValue = new CustomGetTableColumnValue(delegate(DataRow row, DataColumn col,string datetimeFormat)
+	{
+		string res = "";
+		//TODO return the value
+		//Check code from: res = helper.DatabaseHelper.RootGetTableColumnValue(row,col,datetimeFormat);
+		return res;
+	});
+		
+	helper.DatabaseHelper.MyLoadDataTableFromExcel = new CustomLoadDataTableFromExcel(delegate(string excelPath, string tabName)
+	{
+		DataTable res = null;
+		//TODO return the datatable
+		return res;
+	});	
+	
+    public delegate string CustomGetTableCreateCommand(DataTable table);
+
+	//List of delegates (from TaskDatabaseHelper.cs):
+    //public delegate string CustomGetTableColumnNames(DataTable table);
+    //public delegate string CustomGetTableColumnName(DataColumn col);
+    //public delegate string CustomGetTableColumnType(DataColumn col);
+
+    //public delegate string CustomGetTableColumnValues(DataRow row, string dateTimeFormat);
+    //public delegate string CustomGetTableColumnValue(DataRow row, DataColumn col, string datetimeFormat);
+
+    //public delegate DataTable CustomLoadDataTable(string connectionString, string sql);
+    //public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "");
+    //public delegate DataTable CustomLoadDataTableFromCSV(string csvPath, char? separator = null);
+		
 	*/
+
 	helper.LoadTableFromExcel(
 		@"c:\temp\loadFolder", //Load folder used to store the Excel file loaded
 		System.IO.Path.Combine(task.Repository.RepositoryPath, @"Databases\databank.worldbank.org_health_population.xlsx"), //Source Excel file to load
@@ -162,6 +195,7 @@
       <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
+      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>

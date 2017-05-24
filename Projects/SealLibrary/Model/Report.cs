@@ -665,6 +665,7 @@ namespace Seal.Model
             if (defaultView == null) throw new Exception(string.Format("Unable to find any view in your repository. Check that your repository folder '{0}' contains all the default sub-folders and files...", repository.RepositoryPath));
             result.ViewGUID = defaultView.GUID;
             var csvView  = result.AddModelCSVView();
+
             return result;
         }
 
@@ -915,12 +916,17 @@ namespace Seal.Model
 
         public ReportView AddView(string modelName)
         {
+            ReportView view = null;
             ReportViewTemplate modelTemplate = Repository.ViewTemplates.FirstOrDefault(i => i.Name == modelName);
-            ReportView view = AddRootView();
-            if (view != null && modelTemplate != null)
+            if (modelTemplate != null)
             {
-                view.Name = Helper.GetUniqueName((modelName == ReportViewTemplate.ModelCSVExcelName ? "CSV" : "view"), (from i in Views select i.Name).ToList());
-                AddChildView(view, modelTemplate);
+                view = AddRootView();
+                view.SortOrder = Views.Count > 0 ? Views.Max(i => i.SortOrder) + 1 : 1;
+                if (view != null)
+                {
+                    view.Name = Helper.GetUniqueName((modelName == ReportViewTemplate.ModelCSVExcelName ? "CSV" : "view"), (from i in Views select i.Name).ToList());
+                    AddChildView(view, modelTemplate);
+                }
             }
             return view;
         }

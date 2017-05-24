@@ -193,40 +193,7 @@
       <AggregateRestrictions />
     </ReportModel>
   </Models>
-  <Outputs>
-    <ReportOutput>
-      <GUID>df9e9ea1-afbc-4851-b44b-cc64864586cb</GUID>
-      <Name>output (GMail Device)</Name>
-      <OutputDeviceGUID>c6394c4c-d4f2-41dd-81dc-ec14c35d0a64</OutputDeviceGUID>
-      <CancelIfNoRecords>false</CancelIfNoRecords>
-      <PreScript />
-      <PostScript />
-      <ViewParameters>
-        <Parameter>
-          <Name>print_layout</Name>
-          <Value>True</Value>
-        </Parameter>
-        <Parameter>
-          <Name>pdf_layout</Name>
-          <Value>True</Value>
-        </Parameter>
-      </ViewParameters>
-      <ViewCSS />
-      <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
-      <EmailTo>ep@ariacom.com</EmailTo>
-      <EmailSubject>test</EmailSubject>
-      <EmailHtmlBody>false</EmailHtmlBody>
-      <EmailMessagesInBody>false</EmailMessagesInBody>
-      <EmailZipAttachments>true</EmailZipAttachments>
-      <EmailZipPassword>er</EmailZipPassword>
-      <EmailSkipAttachments>false</EmailSkipAttachments>
-      <UserName />
-      <UserGroups />
-      <UserCulture />
-      <UseCustomRestrictions>false</UseCustomRestrictions>
-      <Restrictions />
-    </ReportOutput>
-  </Outputs>
+  <Outputs />
   <Tasks />
   <TasksScript />
   <Views>
@@ -245,7 +212,16 @@
           <CustomConfiguration />
           <UseCustomTemplate>false</UseCustomTemplate>
           <CustomTemplate />
-          <Parameters />
+          <Parameters>
+            <Parameter>
+              <Name>data_tables_enabled</Name>
+              <Value>False</Value>
+            </Parameter>
+            <Parameter>
+              <Name>chart_nvd3_title</Name>
+              <Value />
+            </Parameter>
+          </Parameters>
           <CultureName />
           <CSS>
             <Parameter>
@@ -273,6 +249,7 @@
     &lt;/ChartArea&gt;
   &lt;/ChartAreas&gt;
 &lt;/Chart&gt;</ChartConfigurationXml>
+          <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
@@ -293,6 +270,7 @@
       <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
+      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
@@ -315,6 +293,7 @@
           <CultureName />
           <CSS />
           <SortOrder>1</SortOrder>
+          <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
@@ -335,6 +314,7 @@
       <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
+      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
@@ -342,14 +322,5 @@
   <DisplayName />
   <InitScript />
   <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
-  <Schedules>
-    <ReportSchedule>
-      <GUID>2728b98b-6fc1-4351-b72c-f11de2f0dedf</GUID>
-      <Name>Schedule (output (GMail Device))</Name>
-      <OutputGUID>df9e9ea1-afbc-4851-b44b-cc64864586cb</OutputGUID>
-      <ErrorNumberOfRetries>0</ErrorNumberOfRetries>
-      <ErrorMinutesBetweenRetries>10</ErrorMinutesBetweenRetries>
-      <ErrorEmailSendMode>All</ErrorEmailSendMode>
-    </ReportSchedule>
-  </Schedules>
+  <Schedules />
 </Report>
