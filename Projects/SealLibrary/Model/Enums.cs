@@ -325,15 +325,26 @@ namespace Seal.Model
     {
         [Description("No right")]
         None,
-        [Description("Execute reports")]
+        [Description("Execute reports / View files")]
         Execute,
-        [Description("Execute reports and outputs")]
+        [Description("Execute reports and outputs / View files")]
         ExecuteReportOuput,
-        [Description("Edit schedules")]
+        [Description("Edit schedules / View files")]
         Schedule,
-        [Description("Edit reports")]
+        [Description("Edit reports / Manage files")]
         Edit,
     }
+
+    public enum PersonalFolderRight
+    {
+        [Description("No personal folder")]
+        None,
+        [Description("Personal folder for files only")]
+        Files,
+        [Description("Personal folder for reports and files")]
+        Reports,
+    }
+
 
     public enum EditorRight
     {

@@ -57,6 +57,10 @@ var SWIUtil;
             link.removeAttr('disabled');
     }
     SWIUtil.EnableLinkInput = EnableLinkInput;
+    function IsEnabled(control) {
+        return !(control.attr('disabled') || control.prop('disabled'));
+    }
+    SWIUtil.IsEnabled = IsEnabled;
     function ActivatePanel(button, panel, active) {
         if (!active) {
             button.removeClass("active");

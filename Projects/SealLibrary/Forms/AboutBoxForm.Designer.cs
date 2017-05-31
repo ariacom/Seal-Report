@@ -111,7 +111,6 @@
             this.textBoxDescription.Size = new System.Drawing.Size(373, 142);
             this.textBoxDescription.TabIndex = 23;
             this.textBoxDescription.TabStop = false;
-            this.textBoxDescription.Text = "";
             // 
             // okButton
             // 

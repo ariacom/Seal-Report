@@ -26,6 +26,7 @@ namespace Seal.Model
                 GetProperty("FolderRight").SetIsBrowsable(true);
                 GetProperty("ExpandSubFolders").SetIsBrowsable(true);
                 GetProperty("ManageFolder").SetIsBrowsable(true);
+                GetProperty("FilesOnly").SetIsBrowsable(true);
 
 
                 GetProperty("ManageFolder").SetIsReadOnly(!_useSubFolders);
@@ -64,7 +65,7 @@ namespace Seal.Model
         }
 
         FolderRight _folderRight = FolderRight.Edit;
-        [Category("Definition"), DisplayName("\tRight"), Description("The right applied on the reports of the folder: None, Execute reports only, Execute reports and outputs, Edit schedules, Edit reports"), Id(4, 1)]
+        [Category("Definition"), DisplayName("\tRight"), Description("The right applied on the reports and files of the folder"), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public FolderRight FolderRight
         {
@@ -82,6 +83,15 @@ namespace Seal.Model
         {
             get { return _expandSubFolders; }
             set { _expandSubFolders = value; }
+        }
+
+
+        bool _filesOnly = false;
+        [Category("Options"), DisplayName("Files only (no reports)"), Description("If true, only files can be viewed or managed in the folder (reports are not shown and can not be created)."), Id(3, 2)]
+        public bool FilesOnly
+        {
+            get { return _filesOnly; }
+            set { _filesOnly = value; }
         }
 
         //Helper, set to true if defined in a group

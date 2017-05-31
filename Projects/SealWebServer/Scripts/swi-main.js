@@ -67,6 +67,10 @@ var SWIMain = (function () {
         _main._connected = true;
         _main._profile = data;
         _main._folder = null;
+        _main._searchMode = false;
+        _main._clipboard = null;
+        _main._clipboardCut = false;
+        $("#search-pattern").val("");
         $("body").children(".modal-backdrop").remove();
         $loginModal.modal('hide');
         SWIUtil.HideMessages();
@@ -158,6 +162,8 @@ var SWIMain = (function () {
         });
         //Delete reports
         $("#report-delete-lightbutton").unbind('click').on("click", function (e) {
+            if (!SWIUtil.IsEnabled($(this)))
+                return;
             $outputPanel.hide();
             var checked = $(".report-checkbox:checked").length;
             $("#message-title").html(SWIUtil.tr("Warning"));
@@ -179,26 +185,32 @@ var SWIMain = (function () {
         });
         //Rename
         $("#report-rename-lightbutton").unbind('click').on("click", function (e) {
+            if (!SWIUtil.IsEnabled($(this)))
+                return;
             $outputPanel.hide();
             var source = $(".report-checkbox:checked").first().data("path");
-            var filename = source.split('\\').pop();
-            var extension = filename.split('.').pop();
-            $("#report-name-save").unbind('click').on("click", function (e) {
-                $waitDialog.modal();
-                var folder = _main._folder.path;
-                var destination = (folder != "\\" ? folder : "") + "\\" + $("#report-name").val() + "." + extension;
-                $("#report-name-dialog").modal('hide');
-                _gateway.MoveFile(source, destination, false, function (data) {
-                    _main.ReloadReportsTable();
-                    $waitDialog.modal('hide');
-                    SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The report or file has been renamed"), 5000);
+            if (source) {
+                var filename = source.split('\\').pop();
+                var extension = filename.split('.').pop();
+                $("#report-name-save").unbind('click').on("click", function (e) {
+                    $waitDialog.modal();
+                    var folder = _main._folder.path;
+                    var destination = (folder != "\\" ? folder : "") + "\\" + $("#report-name").val() + "." + extension;
+                    $("#report-name-dialog").modal('hide');
+                    _gateway.MoveFile(source, destination, false, function (data) {
+                        _main.ReloadReportsTable();
+                        $waitDialog.modal('hide');
+                        SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The report or file has been renamed"), 5000);
+                    });
                 });
-            });
-            $("#report-name").val(filename.replace(/\.[^/.]+$/, ""));
-            $("#report-name-dialog").modal();
+                $("#report-name").val(filename.replace(/\.[^/.]+$/, ""));
+                $("#report-name-dialog").modal();
+            }
         });
         //Copy
         $("#report-copy-lightbutton").unbind('click').on("click", function (e) {
+            if (!SWIUtil.IsEnabled($(this)))
+                return;
             $outputPanel.hide();
             _main._clipboard = [];
             $(".report-checkbox:checked").each(function (key, value) {
@@ -210,6 +222,8 @@ var SWIMain = (function () {
         });
         //Cut
         $("#report-cut-lightbutton").unbind('click').on("click", function (e) {
+            if (!SWIUtil.IsEnabled($(this)))
+                return;
             $outputPanel.hide();
             _main._clipboard = [];
             $(".report-checkbox:checked").each(function (key, value) {
@@ -221,6 +235,8 @@ var SWIMain = (function () {
         });
         //Paste
         $("#report-paste-lightbutton").unbind('click').on("click", function (e) {
+            if (!SWIUtil.IsEnabled($(this)))
+                return;
             $outputPanel.hide();
             if (_main._clipboard && _main._clipboard.length > 0) {
                 $waitDialog.modal();
@@ -277,10 +293,13 @@ var SWIMain = (function () {
     };
     SWIMain.prototype.enableControls = function () {
         var right = 0; //1 Execute,2 Shedule,3 Edit
-        if (_main._folder)
+        var files = false;
+        if (_main._folder) {
             right = _main._folder.right;
+            files = _main._folder.files;
+        }
         $outputPanel.hide();
-        SWIUtil.EnableButton($("#report-edit-lightbutton"), right >= folderRightEdit);
+        SWIUtil.EnableButton($("#report-edit-lightbutton"), right >= folderRightEdit && !files);
         SWIUtil.ShowHideControl($("#report-edit-lightbutton"), hasEditor);
         var checked = $(".report-checkbox:checked").length;
         SWIUtil.EnableButton($("#report-rename-lightbutton"), checked == 1 && right >= folderRightEdit);
