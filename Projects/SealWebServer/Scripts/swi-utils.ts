@@ -53,6 +53,10 @@ module SWIUtil {
         else link.removeAttr('disabled');
     }
 
+    export function IsEnabled(control: JQuery): boolean {
+        return ! (control.attr('disabled') || control.prop('disabled'))
+    }
+
     export function ActivatePanel(button: JQuery, panel: JQuery, active: boolean) {
         if (!active) {
             button.removeClass("active");

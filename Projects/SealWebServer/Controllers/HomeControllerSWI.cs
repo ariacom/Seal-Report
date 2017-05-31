@@ -60,7 +60,7 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 List<SWIFolder> result = new List<SWIFolder>();
                 //Personal
-                if (WebUser.HasPersonalFolder)
+                if (WebUser.PersonalFolderRight != PersonalFolderRight.None)
                 {
                     var personalFolder = getFolder(SWIFolder.GetPersonalRoot());
                     fillFolder(personalFolder);
@@ -109,6 +109,8 @@ namespace SealWebServer.Controllers
                 {
                     foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
                     {
+                        if (folder.files && FileHelper.IsSealReportFile(newPath)) continue;
+
                         files.Add(new SWIFile()
                         {
                             path = folder.Combine(Path.GetFileName(newPath)),
@@ -210,6 +212,8 @@ namespace SealWebServer.Controllers
                 SWIReportDetail result = new SWIReportDetail();
                 result.views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
                 result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayName = report.TranslateOutputName(i.Name) }).ToArray() : new SWIOutput[] { };
+                if (result.views.Length == 0 && result.outputs.Length == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
+
                 return Json(result);
 
             }
@@ -269,6 +273,7 @@ namespace SealWebServer.Controllers
                 string sourcePath = getFullPath(source);
                 string destinationPath = getFullPath(destination);
                 if (!System.IO.File.Exists(sourcePath)) throw new Exception("Error: source path is incorrect");
+                if (folderDest.files && FileHelper.IsSealReportFile(sourcePath)) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
                 if (System.IO.File.Exists(destinationPath) && copy) destinationPath = FileHelper.GetUniqueFileName(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + " - Copy", Path.GetExtension(destinationPath));
 
                 bool hasSchedule = (FileHelper.IsSealReportFile(sourcePath) && FileHelper.ReportHasSchedule(sourcePath));
@@ -283,10 +288,7 @@ namespace SealWebServer.Controllers
                         report.Schedules.Clear();
                         report.SaveToFile();
                     }
-                    else
-                    {
-                        report.SchedulesWithCurrentUser = true;
-                    }
+                    report.SchedulesWithCurrentUser = false;
                     report.SynchronizeTasks();
                 }
                 return Json(new object { });

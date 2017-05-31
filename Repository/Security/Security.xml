@@ -12,19 +12,26 @@
 
 	user.Name = user.WebUserName; //Display name
     //security check can be hardcoded
-	if (user.WebUserName == "aa" &amp;&amp; user.WebPassword == "aa")
+	if (user.WebUserName == "ex" &amp;&amp; user.WebPassword == "ex")
 	{
-		user.AddSecurityGroup("aa");
+		user.AddSecurityGroup("Group (Execute)");
 	}
-	else if (user.WebUserName == "bb" &amp;&amp; user.WebPassword == "bb")
+	else if (user.WebUserName == "exo" &amp;&amp; user.WebPassword == "exo")
 	{
-	//	user.AddSecurityGroup("aa");
-		user.AddSecurityGroup("bb");
+		user.AddSecurityGroup("Group (Execute Output)");
 	}
-	else if (user.WebUserName == "cc" &amp;&amp; user.WebPassword == "cc")
+	else if (user.WebUserName == "sc" &amp;&amp; user.WebPassword == "sc")
 	{
-	//	user.AddSecurityGroup("aa");
-		user.AddSecurityGroup("cc");
+		user.AddSecurityGroup("Group (Schedule)");
+	}
+	else if (user.WebUserName == "ed" &amp;&amp; user.WebPassword == "ed")
+	{
+		user.AddSecurityGroup("Group (Edit)");
+	}
+	else if (user.WebUserName == "exed" &amp;&amp; user.WebPassword == "exed")
+	{
+		user.AddSecurityGroup("Group (Execute)");
+		user.AddSecurityGroup("Group (Edit)");
 	}
 	else if (string.IsNullOrEmpty(user.WebUserName)) {
 		user.AddDefaultSecurityGroup();
@@ -41,9 +48,10 @@
           <ManageFolder>true</ManageFolder>
           <FolderRight>Edit</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
+          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
-      <PersonalFolder>false</PersonalFolder>
+      <PersFolderRight>None</PersFolderRight>
       <Devices />
       <Sources />
       <Connections />
@@ -51,17 +59,75 @@
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
-      <Name>aa</Name>
+      <Name>Group (Execute)</Name>
       <Folders>
         <SecurityFolder>
-          <Path>\work\aa</Path>
+          <Path>\</Path>
           <UseSubFolders>true</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
+          <ManageFolder>false</ManageFolder>
           <FolderRight>Execute</FolderRight>
           <ExpandSubFolders>true</ExpandSubFolders>
+          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
-      <PersonalFolder>true</PersonalFolder>
+      <PersFolderRight>None</PersFolderRight>
+      <Devices />
+      <Sources />
+      <Connections />
+      <Columns />
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Execute Output)</Name>
+      <Folders>
+        <SecurityFolder>
+          <Path>\</Path>
+          <UseSubFolders>true</UseSubFolders>
+          <ManageFolder>false</ManageFolder>
+          <FolderRight>ExecuteReportOuput</FolderRight>
+          <ExpandSubFolders>true</ExpandSubFolders>
+          <FilesOnly>false</FilesOnly>
+        </SecurityFolder>
+      </Folders>
+      <PersFolderRight>None</PersFolderRight>
+      <Devices />
+      <Sources />
+      <Connections />
+      <Columns />
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Schedule)</Name>
+      <Folders>
+        <SecurityFolder>
+          <Path>\</Path>
+          <UseSubFolders>true</UseSubFolders>
+          <ManageFolder>false</ManageFolder>
+          <FolderRight>Schedule</FolderRight>
+          <ExpandSubFolders>true</ExpandSubFolders>
+          <FilesOnly>false</FilesOnly>
+        </SecurityFolder>
+      </Folders>
+      <PersFolderRight>Files</PersFolderRight>
+      <Devices />
+      <Sources />
+      <Connections />
+      <Columns />
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
+      <Name>Group (Edit)</Name>
+      <Folders>
+        <SecurityFolder>
+          <Path>\</Path>
+          <UseSubFolders>true</UseSubFolders>
+          <ManageFolder>true</ManageFolder>
+          <FolderRight>Edit</FolderRight>
+          <ExpandSubFolders>true</ExpandSubFolders>
+          <FilesOnly>false</FilesOnly>
+        </SecurityFolder>
+      </Folders>
+      <PersFolderRight>Reports</PersFolderRight>
       <Devices>
         <SecurityDevice>
           <Name>Folder Device</Name>
@@ -94,42 +160,6 @@
           <Right>NoSelection</Right>
         </SecurityColumn>
       </Columns>
-      <Culture />
-    </SecurityGroup>
-    <SecurityGroup>
-      <Name>bb</Name>
-      <Folders>
-        <SecurityFolder>
-          <Path>\work\aa</Path>
-          <UseSubFolders>true</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
-          <FolderRight>ExecuteReportOuput</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-        </SecurityFolder>
-      </Folders>
-      <PersonalFolder>true</PersonalFolder>
-      <Devices />
-      <Sources />
-      <Connections />
-      <Columns />
-      <Culture />
-    </SecurityGroup>
-    <SecurityGroup>
-      <Name>cc</Name>
-      <Folders>
-        <SecurityFolder>
-          <Path>\work\aa</Path>
-          <UseSubFolders>true</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
-          <FolderRight>Schedule</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-        </SecurityFolder>
-      </Folders>
-      <PersonalFolder>true</PersonalFolder>
-      <Devices />
-      <Sources />
-      <Connections />
-      <Columns />
       <Culture />
     </SecurityGroup>
   </Groups>

@@ -303,7 +303,7 @@ namespace Seal.Model
             AddEmailAddresses(message.To, output.EmailTo);
             AddEmailAddresses(message.CC, output.EmailCC);
             AddEmailAddresses(message.Bcc, output.EmailBCC);
-            AddEmailAddresses(message.ReplyToList, Helper.IfNullOrEmpty(output.EmailReplyTo,ReplyTo));
+            AddEmailAddresses(message.ReplyToList, Helper.IfNullOrEmpty(output.EmailReplyTo, ReplyTo));
             message.Subject = Helper.IfNullOrEmpty(output.EmailSubject, report.ExecutionName);
             if (output.EmailHtmlBody)
             {
@@ -320,14 +320,6 @@ namespace Seal.Model
                 else message.Body = Helper.IfNullOrEmpty(output.EmailBody, report.Translate("Please find the report '{0}' in attachment.", report.ExecutionView.Name));
 
                 message.Attachments.Add(new Attachment(report.ResultFilePath));
-            }
-
-            foreach (ReportModel model in report.Models)
-            {
-                foreach (ResultPage page in model.Pages)
-                {
-                    if (model.HasSerie && File.Exists(page.ChartPath)) message.Attachments.Add(new Attachment(page.ChartPath));
-                }
             }
 
             //Attachments options

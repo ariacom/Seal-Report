@@ -592,13 +592,14 @@ namespace SealWebServer.Controllers
             if (result.IsPersonal)
             {
                 //Personal
-                if (!WebUser.HasPersonalFolder) throw new Exception("Error: this user has no personal folder");
+                if (WebUser.PersonalFolderRight == PersonalFolderRight.None) throw new Exception("Error: this user has no personal folder");
                 result.SetManageFlag(true, true, result.Path == "");
                 result.expand = false;
                 string prefix = Repository.GetPersonalFolderName(WebUser);
                 result.name = (result.Path == "" ? prefix : Path.GetFileName(result.Path));
                 result.fullname = prefix + (result.Path == "" ? "\\" : "") + result.Path;
                 result.right = (int)FolderRight.Edit;
+                result.files = (WebUser.PersonalFolderRight == PersonalFolderRight.Files);
             }
             else
             {
@@ -610,6 +611,7 @@ namespace SealWebServer.Controllers
                     result.SetManageFlag(securityFolder.UseSubFolders, securityFolder.ManageFolder, securityFolder.IsDefined);
                     result.expand = securityFolder.ExpandSubFolders;
                     result.right = (int)securityFolder.FolderRight;
+                    result.files = securityFolder.FilesOnly;
                 }
             }
             return result;
@@ -619,7 +621,7 @@ namespace SealWebServer.Controllers
         void fillFolder(SWIFolder folder)
         {
             List<SWIFolder> subFolders = new List<SWIFolder>();
-            if (folder.IsPersonal && !WebUser.HasPersonalFolder) return;
+            if (folder.IsPersonal && WebUser.PersonalFolderRight == PersonalFolderRight.None) return;
 
             string folderPath = folder.GetFullPath();
             foreach (string subFolder in Directory.GetDirectories(folderPath))

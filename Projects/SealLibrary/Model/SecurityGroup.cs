@@ -1,4 +1,5 @@
 ﻿using DynamicTypeDescriptor;
+using Seal.Converter;
 using Seal.Forms;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Seal.Model
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("Theme").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
-                GetProperty("PersonalFolder").SetIsBrowsable(true);
+                GetProperty("PersFolderRight").SetIsBrowsable(true);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -52,12 +53,13 @@ namespace Seal.Model
             set { _folders = value; }
         }
 
-        bool _personalFolder = true;
-        [Category("Definition"), DisplayName("Personal folder"), Description("If true, each user of the group has a dedicated personal folder with full rights."), Id(3, 1)]
-        public bool PersonalFolder
+        PersonalFolderRight _persFolderRight = PersonalFolderRight.None;
+        [Category("Definition"), DisplayName("Personal folder"), Description("Define the right of the dedicated personal folder for each user of the group."), Id(3, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        public PersonalFolderRight PersFolderRight
         {
-            get { return _personalFolder; }
-            set { _personalFolder = value; }
+            get { return _persFolderRight; }
+            set { _persFolderRight = value; }
         }
 
         private List<SecurityDevice> _devices = new List<SecurityDevice>();

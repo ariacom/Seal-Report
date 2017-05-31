@@ -65,7 +65,7 @@ namespace Seal.Model
         public virtual void ConvertHTMLToPDF(string source, string destination)
         {
             //PlaceHolder2
-            throw new Exception("M'enfin, c'est pô juste !\r\nThe PDF Converter is not implemented in the open source version...\r\nHowever a commercial component is available at www.ariacom.com\r\n");
+            throw new Exception("The PDF Converter is not implemented in the open source version...\r\nA commercial component is available at www.ariacom.com\r\n");
         }
 
         public virtual void SetConfigurations(List<string> configurations, ReportView view)

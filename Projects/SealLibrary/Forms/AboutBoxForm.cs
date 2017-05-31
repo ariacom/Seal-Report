@@ -125,7 +125,7 @@ namespace Seal.Forms
                 {
                     var si = SealInterface.Create(Repository.Instance);
                     si.Init();
-                    text = Repository.Instance.LicenseText + "\r\n" + si.Text();
+                    text = Repository.Instance.LicenseText + "\r\n\r\n" + si.Text();
                     text = text.Trim();
                 }
                 catch { }
@@ -138,6 +138,7 @@ namespace Seal.Forms
                 }
                 else
                 {
+                    linkLabel.Text = "http://wwww.sealreport.org";
                     this.textBoxDescription.Text = text;
                 }
             }

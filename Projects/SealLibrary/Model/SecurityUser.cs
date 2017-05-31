@@ -33,9 +33,21 @@ namespace Seal.Model
             Security = security;
         }
 
-        public bool HasPersonalFolder
+
+        private PersonalFolderRight? _persFolderRight = null;
+        public PersonalFolderRight PersonalFolderRight
         {
-            get { return SecurityGroups.Exists(i => i.PersonalFolder); }
+            get
+            {
+                if (_persFolderRight == null)
+                {
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (_persFolderRight == null || _persFolderRight < group.PersFolderRight) _persFolderRight = group.PersFolderRight;
+                    }
+                }
+                return _persFolderRight.Value;
+            }
         }
 
         bool _tryAgain = true; //Try again to get rid of Load Assemblies exceptions...
@@ -139,11 +151,11 @@ namespace Seal.Model
         {
             var sourceName = column.Source.Name;
             if (column.Source is ReportSource) sourceName = ((ReportSource)column.Source).MetaSourceName;
-            return !ForbiddenColumns.Exists(i => 
-                (string.IsNullOrEmpty(i.Source) || i.Source==sourceName) &&
+            return !ForbiddenColumns.Exists(i =>
+                (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
                 (string.IsNullOrEmpty(i.Tag) || i.Tag == column.Tag) &&
                 (string.IsNullOrEmpty(i.Category) || i.Category == column.Category)
-                );        
+                );
         }
 
 
@@ -162,7 +174,7 @@ namespace Seal.Model
             var sourceName = item.Name;
             if (item is ReportSource) sourceName = ((ReportSource)item).MetaSourceName;
             return !ForbiddenSources.Exists(i =>
-                (string.IsNullOrEmpty(i.Name) || i.Name == sourceName) 
+                (string.IsNullOrEmpty(i.Name) || i.Name == sourceName)
                 );
         }
 
@@ -201,7 +213,7 @@ namespace Seal.Model
             if (item.Source is ReportSource) sourceName = ((ReportSource)item.Source).MetaSourceName;
             return !ForbiddenConnections.Exists(i =>
                 (string.IsNullOrEmpty(i.Source) || i.Source == sourceName) &&
-                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name) 
+                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name)
                 );
         }
         private void InitEditionRights()
