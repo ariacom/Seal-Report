@@ -90,7 +90,7 @@ namespace Test
             response = await httpClient.PostAsJsonAsync(serverURL + "SWIGetReportDetail", new { path = @"\Samples\07-Outputs and schedules.srex" });
             var reportDetail = await response.Content.ReadAsAsync<SWIReportDetailResponse>();
             Assert.IsTrue(string.IsNullOrEmpty(reportDetail.error));
-            Assert.IsTrue(reportDetail.views.Length == 2 && reportDetail.outputs.Length == 3);
+            Assert.IsTrue(reportDetail.views.Length == 1 && reportDetail.outputs.Length == 3);
 
             var parameters = new List<KeyValuePair<string, string>>();
             parameters.Add(new KeyValuePair<string, string>("path", @"\Search - Orders.srex"));
