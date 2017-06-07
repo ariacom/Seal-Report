@@ -32,10 +32,13 @@ div  button { margin:4px;}
 
 caption {font-weight: bold;}
 
-.datepicker { text-align:right; width:70px; position: relative; z-index: 1001; }
+.datepicker { text-align:center; border-radius: 5px; width:70px; position: relative; z-index: 1001; font-weight: bold; border: 1px solid #808080; height: 20px; background: #fef5f3;}
+.operator_select {width: 120px; border-radius: 4px; height: 25px; background: #fef5f3; }
+.operator_enum_select { width: 120px; border-radius: 4px; height: 25px; background: #fef5f3; }
 
-.numeric_input { text-align:right; width:70px; }
-.text_input { width:70px; }
+.numeric_input { text-align:right; width:70px; border-radius: 5px; border: 1px solid #808080; height: 20px; font-weight: bold; background: #fef5f3;}
+.text_input { width:70px;  border-radius: 5px; border: 1px solid #808080; height: 20px; font-weight: bold; background: #fef5f3;}
+.more_restrictions { padding:5px 10px; background:#ccc; border:0 none; cursor:pointer; -webkit-border-radius: 5px; border-radius: 5px; }
 
 /* summary table */
 .summary_table {margin:5px; background-color:#e5e5e5}
@@ -43,7 +46,7 @@ caption {font-weight: bold;}
 .summary_title { font-weight: bold; background-color: white;  }
 
 /* specific data tables */
-a.paginate_button { background-color: #CCC; color: black; display: inline-block; padding: 2px 6px; margin-left: 2px; cursor: pointer; *cursor: hand; border: 1px solid white; }	
+a.paginate_button { padding:2px 10px; background:#ccc; border:0 none; cursor:pointer; -webkit-border-radius: 5px; border-radius: 5px; margin-left: 2px;}
 a.paginate_button.current,a.paginate_button.current:hover { font-weight:bold; }	
 a.paginate_button:hover { font-weight:normal;}
 a.paginate_active {	background-color: transparent; color: black; border: 1px solid black; display: inline-block; padding: 2px 6px; margin-left: 2px; cursor: pointer; *cursor: hand;}
@@ -51,18 +54,23 @@ a.paginate_active:hover { font-weight:normal;}
 a.paginate_button_disabled {color: #999; border: 1px solid white;}
  
 div.dataTables_length, div.dataTables_filter, div.dataTables_paginate, div.dataTables_info { background-color: white; padding: 4px;}
+div.dataTables_filter {padding: 2px 4px;}
+div.dataTables_length {padding: 2px 40px 2px 4px;}
 div.dataTables_processing {	float: left; font-weight: bold;	color: orange; padding-left: 20px; margin: 4px;}
 
 .data_table thead .sorting_asc,.data_table thead .sorting_desc,.data_table thead .sorting  {cursor: pointer; *cursor: hand;}
 
+.dataTables_length select { border-radius: 4px; height: 22px; background: #fef5f3; }
+.dataTables_filter input { width:70px; border-radius: 5px; border: 1px solid #808080; height: 20px; font-weight: bold; background: #fef5f3; }
+
 div#information_div { margin: 4px;}
 div#message_div { margin: 4px;}
 div.dataTables_paginate, div.dataTables_filter, div.dataTables_length { float: left;}
-div.dataTables_length { padding-right: 50px;}
+div.dataTables_length { padding-right: 40px;}
 div.dataTables_info { font-style: italic; float: left;}
 table.data_table {clear: both; }
 div.dataTableTop { margin:4px;}
-table.data_table, table.page_table { border-radius: 4px; -moz-border-radius: 4px -webkit-border-radius: 4px; padding: 2px; margin:4px;}
+table.data_table, table.page_table { border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; padding: 2px; margin:4px;}
 
 div.dataTables_wrapper:after {	content: ".";	display: block;	clear: both; visibility: hidden; line-height: 0; height: 0;}
 html[xmlns] .dataTables_wrapper { display: block; }

@@ -76,6 +76,8 @@ function mainInit() {
     else if (languageName.indexOf("German") == 0) $.datepicker.setDefaults($.datepicker.regional['de']);
     else if (languageName.indexOf("Spanish") == 0) $.datepicker.setDefaults($.datepicker.regional['es']);
     else if (languageName.indexOf("Italian") == 0) $.datepicker.setDefaults($.datepicker.regional['it']);
+    else if (languageName.indexOf("Norwegian") == 0) $.datepicker.setDefaults($.datepicker.regional['nb']);
+    else if (languageName.indexOf("Portuguese") == 0) $.datepicker.setDefaults($.datepicker.regional['pt']);
     else if (languageName.indexOf("English") == 0 && !isUSdate) $.datepicker.setDefaults($.datepicker.regional['en']);
     else $.datepicker.setDefaults($.datepicker.regional['']);
     $.datepicker.setDefaults({ dateFormat: dateFormat });

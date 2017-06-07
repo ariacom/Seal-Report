@@ -440,7 +440,7 @@ var SWIMain = (function () {
         if (_editor)
             _editor.init();
         $('#file-table').dataTable({
-            sDom: '<"dataTableTop"lfpri>t',
+            sDom: '<"dataTableTop"lfpir>t',
             bSort: true,
             stateSave: true,
             aaSorting: [],

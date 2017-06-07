@@ -1024,6 +1024,9 @@ namespace Seal.Model
 
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
+            string sourceFilePath = Path.Combine(Repository.ViewScriptsFolder, fileName);
+            if (!File.Exists(sourceFilePath)) return "";
+
             if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<script type='text/javascript' src='{0}'></script>", cdnPath);
 
             if (GenerateHTMLDisplay || ForPDFConversion)
@@ -1042,7 +1045,6 @@ namespace Seal.Model
 
             //generating result file, set the script directly in the result
             string result = "<script type='text/javascript'>\r\n";
-            string sourceFilePath = Path.Combine(Repository.ViewScriptsFolder, fileName);
 
             result += File.ReadAllText(sourceFilePath);
             result += "\r\n</script>\r\n";
@@ -1051,6 +1053,9 @@ namespace Seal.Model
 
         public string AttachCSSFile(string fileName, string cdnPath = "")
         {
+            string sourceFilePath = Path.Combine(Repository.ViewContentFolder, fileName);
+            if (!File.Exists(sourceFilePath)) return "";
+
              if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", cdnPath);
 
             if (GenerateHTMLDisplay)
@@ -1069,7 +1074,6 @@ namespace Seal.Model
 
             //generating result file, set the CSS directly in the result
             string result = "<style type='text/css'>\r\n";
-            string sourceFilePath = Path.Combine(Repository.ViewContentFolder, fileName);
             result += File.ReadAllText(sourceFilePath);
             //Hack to change JQuery Images URL...
             if (!string.IsNullOrEmpty(cdnPath) && Repository.Configuration.IsLocal && cdnPath.ToLower().Contains("jquery.com"))
