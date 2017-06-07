@@ -87,8 +87,6 @@
           div.dataTables_paginate, div.dataTables_filter, div.dataTables_length, div.dataTables_info { display: none;}
            .page_table th, .page_table td, .data_table td, .data_table th, .summary_table td {border: @(View.GetBoolValue("print_show_table_border") ? "1" : "0")px solid black; }
         }
-
-        @View.GetCSS("additional_css")
     </style>
 
     <script type="text/javascript">
@@ -141,7 +139,7 @@
         var currencySymbol = '@Raw(Helper.ToJS(@View.CultureInfo.NumberFormat.CurrencySymbol))';
 
         $.extend( true, $.fn.dataTable.defaults, {
-            sDom: '<"dataTableTop"lfpri>t',
+            sDom: '<"dataTableTop"lfpir>t',
             stateSave: true,
             aoColumnDefs: [
         { "bSortable": false, "aTargets": ["firstcell"]}
@@ -177,12 +175,20 @@
             sPaginationType: "full_numbers",
             bAutoWidth: false,
         } );
+    </script>
 
+    @Raw(Report.AttachScriptFile("common.js"))
+    @Raw(Report.AttachScriptFile("dataTables.js"))
+
+    @Raw(Report.AttachCSSFile("custom.css"))
+    @Raw(Report.AttachScriptFile("custom.js"))
+
+    <style>
+        @View.GetCSS("additional_css")
+    </style>
+    <script>
         @Raw(View.GetValue("additional_js"));
     </script>
-    @Raw(Report.AttachScriptFile("common.js"))
-
-    @Raw(Report.AttachScriptFile("dataTables.js"))
 </head>
 <body>
     <div id="header_div" style="width: 100%; @(Report.UseFixedHTMLHeader ? "position:absolute; width:100%; height:54px;" : View.GetCSS("header"))">
@@ -280,7 +286,7 @@
                                 {
                                     <div style="height: @(Report.HasOnlyRestrictionsWithNoOperator ? 178 : 198)px; display: inline; float: left; padding-left: 10px;">
                                         <span style="display: block; margin-right: 5px;">@(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : ""))</span>
-                                        <select id="@restriction.OperatorHtmlId" name="@restriction.OperatorHtmlId" size="1" style="display:@(restriction.HasOperator ? "block" : "none"); margin-bottom:2px; ">
+                                        <select id="@restriction.OperatorHtmlId" class="operator_enum_select" name="@restriction.OperatorHtmlId" size="1" style="display:@(restriction.HasOperator ? "block" : "none"); margin-bottom:2px; ">
                                             @foreach (Operator op in restriction.AllowedDisplayOperators)
                                             {
                                                 <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetOperatorLabel(op)))</option>
