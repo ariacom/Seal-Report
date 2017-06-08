@@ -308,6 +308,7 @@ namespace SealWebServer.Controllers
 
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
+                if (!string.IsNullOrEmpty(outputGUID) && (FolderRight) folder.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this folder");
 
                 string filePath = getFullPath(path);
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: report does not exist");
@@ -355,6 +356,7 @@ namespace SealWebServer.Controllers
 
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
+                if (!string.IsNullOrEmpty(outputGUID) && (FolderRight)folder.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this folder");
 
                 string filePath = getFullPath(path);
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: report does not exist");
