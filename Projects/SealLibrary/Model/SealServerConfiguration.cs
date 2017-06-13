@@ -248,9 +248,13 @@ namespace Seal.Model
             xmlOverrides.Add(typeof(RootComponent), "Name", attrs);
             xmlOverrides.Add(typeof(RootComponent), "GUID", attrs);
 
+#if !DEBUG
             //Set installation path, used by, to define schedules
-            _installationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
-
+            if (Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealServerManager.ToLower() || Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealReportDesigner.ToLower())
+            {
+                _installationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+            }
+#endif
             XmlSerializer serializer = new XmlSerializer(typeof(SealServerConfiguration), xmlOverrides);
             StreamWriter sw = new StreamWriter(path);
             serializer.Serialize(sw, (SealServerConfiguration)this);
