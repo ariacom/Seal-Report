@@ -40,5 +40,5 @@
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>
   <WebApplicationName>/seal</WebApplicationName>
   <WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory>
-  <InstallationDirectory>C:\_dev\Seal-Report\Projects\SealServerManager\bin\Debug</InstallationDirectory>
+  <InstallationDirectory></InstallationDirectory>
 </SealServerConfiguration>
