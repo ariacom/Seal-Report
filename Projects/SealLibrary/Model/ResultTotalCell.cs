@@ -27,9 +27,12 @@ namespace Seal.Model
             Sum = null; Min = null; Max = null;
             DateSum = null;
             DateMin = null; DateMax = null;
+            int RealCount = 0;
 
             foreach (var cell in Cells)
             {
+                if (cell.Value != null && cell.Value != DBNull.Value) RealCount++;
+
                 if (Element.IsNumeric)
                 {
                     if (cell.DoubleValue != null)
@@ -63,9 +66,9 @@ namespace Seal.Model
             }
 
             //Total of totals for a count -> we make the sum
-            if (!IsSerie && Element.TotalAggregateFunction == AggregateFunction.Count) Value = IsTotalTotal ? Sum : Cells.Count;
+            if (!IsSerie && Element.TotalAggregateFunction == AggregateFunction.Count) Value = IsTotalTotal ? Sum : RealCount;
 
-            if (Cells.Count > 0)
+            if (RealCount > 0)
             {
                 AggregateFunction aggregatFunction = IsSerie ? Element.AggregateFunction : Element.TotalAggregateFunction;
                 if (IsSerie && aggregatFunction == AggregateFunction.Count) Value = Sum; //Count aggregat for a serie -> we make the sum
@@ -73,10 +76,10 @@ namespace Seal.Model
                 else if (Sum != null && Element.IsNumeric && aggregatFunction == AggregateFunction.Sum) Value = Sum;
                 else if (Min != null && Element.IsNumeric && aggregatFunction == AggregateFunction.Min) Value = Min;
                 else if (Max != null && Element.IsNumeric && aggregatFunction == AggregateFunction.Max) Value = Max;
-                else if (Sum != null && Element.IsNumeric && aggregatFunction == AggregateFunction.Avg) Value = Sum / Cells.Count;
+                else if (Sum != null && Element.IsNumeric && aggregatFunction == AggregateFunction.Avg) Value = Sum / RealCount;
                 else if (DateMin != null && Element.IsDateTime && aggregatFunction == AggregateFunction.Min) Value = DateMin;
                 else if (DateMax != null && Element.IsDateTime && aggregatFunction == AggregateFunction.Max) Value = DateMax;
-                else if (DateSum != null && Element.IsDateTime && aggregatFunction == AggregateFunction.Avg) Value = new DateTime((long)(DateSum.Value * kTickDivider / Cells.Count));
+                else if (DateSum != null && Element.IsDateTime && aggregatFunction == AggregateFunction.Avg) Value = new DateTime((long)(DateSum.Value * kTickDivider / RealCount));
             }
 
             _done = true;
