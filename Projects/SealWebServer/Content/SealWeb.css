@@ -102,13 +102,13 @@ a {
 .properties-label {
     display: inline;
     padding-top: 8px;
-    width: 30%;
+    width: 35%;
     float: left;
 }
 
 .properties-value {
     display: inline;
-    width: 70%;
+    width: 65%;
     float: left;
 }
 

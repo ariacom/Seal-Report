@@ -12,6 +12,7 @@ using System.Windows.Forms.Design;
 using System.Windows.Forms;
 using Seal.Model;
 using System.ComponentModel.Design;
+using System.Drawing;
 
 namespace Seal.Forms
 {
@@ -49,6 +50,7 @@ namespace Seal.Forms
                     propertyGrid.HelpVisible = true;
                     propertyGrid.ToolbarVisible = false;
                     propertyGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(propertyGrid_PropertyValueChanged);
+                    propertyGrid.LineColor = SystemColors.ControlLight;
                 }
             }
 

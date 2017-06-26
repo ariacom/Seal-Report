@@ -55,12 +55,14 @@ namespace Seal.Controls
             ModelGrid.ToolbarVisible = false;
             ModelGrid.HelpVisible = false;
             ModelGrid.PropertySort = PropertySort.Categorized;
+            ModelGrid.LineColor = SystemColors.ControlLight;
             modelSourceSplitContainer.Panel1.Controls.Add(ModelGrid);
 
             ElementGrid.Dock = DockStyle.Fill;
             ElementGrid.PropertyValueChanged += Grid_PropertyValueChanged;
             ElementGrid.ToolbarVisible = false;
             ElementGrid.PropertySort = PropertySort.Categorized;
+            ElementGrid.LineColor = SystemColors.ControlLight;
             elementsContainer.Panel2.Controls.Add(ElementGrid);
             foreach (var panel in PanelList) elementsContainer.Panel1.Controls.Add(panel);
 
@@ -69,6 +71,7 @@ namespace Seal.Controls
             RestrictionGrid.SelectedObjectsChanged += new EventHandler(RestrictionGrid_SelectedObjectsChanged);
             RestrictionGrid.ToolbarVisible = false;
             RestrictionGrid.PropertySort = PropertySort.Categorized;
+            RestrictionGrid.LineColor = SystemColors.ControlLight;
             restrictionsContainer.Panel2.Controls.Add(RestrictionGrid);
         }
 

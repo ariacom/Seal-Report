@@ -34,6 +34,7 @@ namespace Seal.Forms
             mainPropertyGrid.ToolbarVisible = false;
             mainPropertyGrid.SelectedObject = security;
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
+            mainPropertyGrid.LineColor = SystemColors.ControlLight;
             mainPropertyGrid.PropertyValueChanged += mainPropertyGrid_PropertyValueChanged;
 
             Text = Repository.SealRootProductName + " Security Editor";

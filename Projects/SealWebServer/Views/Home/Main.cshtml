@@ -548,7 +548,7 @@
 
 
     <!--Properties Editor-->
-    <div id="properties-panel" class="panel panel-default" style="display:none;z-index:2000;width:300px;">
+    <div id="properties-panel" class="panel panel-default" style="display:none;z-index:2000;width:340px;">
         <div class="panel-heading" style="height:20px;padding: 0px 10px;">
             <span id="properties-title" style="font-style:italic"></span>
             <button type='button' id="properties-panel-close" class='close'>&times;</button>
@@ -590,6 +590,12 @@
                 <label class="properties-label">@repository.TranslateWeb("Chart type")</label>
                 <div class="properties-value">
                     <select id="property-chart" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-seriesort-group">
+                <label class="properties-label">@repository.TranslateWeb("Chart sort")</label>
+                <div class="properties-value">
+                    <select id="property-seriesort" data-width="100%"></select>
                 </div>
             </div>
             <div id="properties-aggregate-group">

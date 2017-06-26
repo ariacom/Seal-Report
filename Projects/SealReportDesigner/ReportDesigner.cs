@@ -77,6 +77,7 @@ namespace Seal
 
             InitializeComponent();
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
+            mainPropertyGrid.LineColor = SystemColors.ControlLight;
 
             treeViewHelper = new TreeViewEditorHelper() { Report = _report, sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, addFromToolStripMenuItem = addFromToolStripMenuItem, addToolStripMenuItem = addToolStripMenuItem, removeToolStripMenuItem = removeToolStripMenuItem, copyToolStripMenuItem = copyToolStripMenuItem, removeRootToolStripMenuItem = removeRootToolStripMenuItem, treeContextMenuStrip = treeContextMenuStrip, mainTreeView = mainTreeView, ForReport = true };
             mainTreeView.AfterSelect += treeViewHelper.AfterSelect;

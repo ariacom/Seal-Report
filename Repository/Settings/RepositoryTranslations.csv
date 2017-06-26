@@ -17,6 +17,7 @@ Element;Employees.City;City;;Ville;
 Element;Employees.Country;Country;;Pays;
 Element;Employees.Extension;Extension;;Extension;
 Element;Employees.Employee Name;Employee Name;;Nom de l'employé;
+Element;Employees.First Name;First Name;;Prénom;
 Element;Employees.Hire Date;Hire Date;;Date d'engagement;
 Element;Employees.Home Phone;Home Phone;;Téléphone maison;
 Element;Employees.Notes;Notes;;Notes;
