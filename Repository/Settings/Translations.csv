@@ -343,3 +343,9 @@ WebJS;weeks;;semaines;;;uker
 WebJS;Yes;;Oui;;;Ja
 WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés);;;Ja (vedlegget er zippet)
 WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message);;;Ja (HTML resultatet er i meldingen)
+WebJS;No Sort;;Pas de tri;;;Ingen sortering
+WebJS;By point ascending;;Par point ascendant;;;Etter Punkt i økende
+WebJS;By axis label ascending;;Par axe ascendant;;;Etter Axis etikett økende
+WebJS;By point descending;;Par point descendant;;;Etter Punkt synkende 
+WebJS;By axis label descending;;Par axe descendant;;;Etter Axis etikett synkende
+Web;Chart sort;;Tri graphe;;;Sorter på graf

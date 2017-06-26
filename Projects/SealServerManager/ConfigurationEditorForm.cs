@@ -34,6 +34,7 @@ namespace Seal.Forms
             mainPropertyGrid.ToolbarVisible = false;
             mainPropertyGrid.SelectedObject = configuration;
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
+            mainPropertyGrid.LineColor = SystemColors.ControlLight;
 
             publish1ToolStripButton.Visible = configuration.ForPublication;
             publish2ToolStripButton.Visible = configuration.ForPublication;

@@ -233,7 +233,7 @@ namespace Seal.Model
             SecurityFolder securityFolder = FindSecurityFolder(groups, folder2);
             if (securityFolder != null)
             {
-                result.AppendLine(string.Format("    Folder:'{0}' => Right:{1}; Use Sub-folders:{2}; Manage Sub-folders:{3};\r\n", folder2, Helper.GetEnumDescription(securityFolder.FolderRight.GetType(), securityFolder.FolderRight), securityFolder.UseSubFolders ? "Yes" : "No", securityFolder.UseSubFolders && securityFolder.ManageFolder ? "Yes" : "No"));
+                result.AppendLine(string.Format("    Folder:'{0}' => Right:{1}; Use Sub-folders:{2}; Manage Sub-folders:{3}; Files Only:{4}\r\n", folder2, Helper.GetEnumDescription(securityFolder.FolderRight.GetType(), securityFolder.FolderRight), securityFolder.UseSubFolders ? "Yes" : "No", securityFolder.UseSubFolders && securityFolder.ManageFolder ? "Yes" : "No", securityFolder.FilesOnly ? "Yes" : "No"));
             }
 
             foreach (string subFolder in Directory.GetDirectories(folder))
@@ -253,21 +253,24 @@ namespace Seal.Model
                 result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
                 foreach (var item in group.Devices)
                 {
-                    result.AppendFormat("    Device:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                    result.AppendFormat("  Device:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 foreach (var item in group.Sources)
                 {
-                    result.AppendFormat("    Source:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                    result.AppendFormat("  Source:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 foreach (var item in group.Connections)
                 {
-                    result.AppendFormat("    Connection:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                    result.AppendFormat("  Connection:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 foreach (var item in group.Columns)
                 {
-                    result.AppendFormat("    Column:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                    result.AppendFormat("  Column:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 result.AppendLine();
+                result.AppendFormat("    {0}\r\n", Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight));
+                result.AppendLine();
+
                 result.AppendLine(getSecuritySummary(group, Repository.ReportsFolder + "\\"));
             }
 
