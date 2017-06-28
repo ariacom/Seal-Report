@@ -821,6 +821,9 @@ namespace SealWebServer.Controllers
             report.WebUrl = Request.Url.OriginalString.Substring(0, index);
             repository.WebApplicationPath = Path.Combine(Request.PhysicalApplicationPath, "bin");
 
+            //Purge temp files here
+            FileHelper.PurgeTempApplicationDirectory();
+
             report.InitForExecution();
             initInputRestrictions(report);
             //Apply input restrictions if any

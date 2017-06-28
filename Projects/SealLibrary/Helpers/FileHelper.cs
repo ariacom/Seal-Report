@@ -43,8 +43,8 @@ namespace Seal.Helpers
                 if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
                 foreach (var file in Directory.GetFiles(directoryPath))
                 {
-                    //purge files older than 1 hours...
-                    if (File.GetLastWriteTime(file).AddHours(1) < DateTime.Now)
+                    //purge files older than 2 hours...
+                    if (File.GetLastWriteTime(file).AddHours(2) < DateTime.Now)
                     {
                         try
                         {
