@@ -236,6 +236,21 @@ namespace Seal.Model
             }
         }
 
+        public static Repository Create(string path)
+        {
+            Repository result = null;
+
+            if (Directory.Exists(path))
+            {
+                result = new Repository();
+                result.Init(path);
+            }
+            if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'.", path));
+
+            return result;
+        }
+
+
         public static Repository Create()
         {
             Repository result = null;
@@ -246,7 +261,7 @@ namespace Seal.Model
                 result = new Repository();
                 result.Init(path);
             }
-            if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'. Please check your configuration file", Properties.Settings.Default.RepositoryPath));
+            if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'. Please check your configuration file.", Properties.Settings.Default.RepositoryPath));
 
             return result;
         }
