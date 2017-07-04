@@ -30,7 +30,7 @@ Element;Employees.Title Of Courtesy;Title Of Courtesy;;Titre;
 Element;Orders/Shipping.Freight;Freight;;Poids;
 Element;Orders.Order Date;Order Date;;Date de la commande;
 Element;Orders.Order ID;Order ID;;ID Commande;
-Element;Orders.Required Date;Required Date;;Adresse nécessaire ;
+Element;Orders.Required Date;Required Date;;Date nécessaire;
 Element;Orders/Shipping.Ship Address;Ship Address;;Adresse de livraison;
 Element;Orders/Shipping.Ship City;Ship City;;Ville de livraison;
 Element;Orders/Shipping.Ship Country;Ship Country;;Pays de livraison;
