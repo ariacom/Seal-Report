@@ -57,7 +57,9 @@ namespace Seal.Forms
                     string newtext = string.Format(text, args);
                     _textToAppend += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), newtext);
                 }
-                catch { }
+                catch {
+                    _textToAppend += text;
+                }
             }
         }
 
@@ -70,7 +72,9 @@ namespace Seal.Forms
                     string newtext = string.Format(text, args);
                     _textToAppend += string.Format("{0} {1}", DateTime.Now.ToLongTimeString(), newtext);
                 }
-                catch { }
+                catch {
+                    _textToAppend += text;
+                }
             }
         }
 
@@ -82,7 +86,9 @@ namespace Seal.Forms
                 {
                     _textToAppend += string.Format(text, args);
                 }
-                catch { }
+                catch {
+                    _textToAppend += text;
+                }
             }
         }
 
