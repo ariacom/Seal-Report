@@ -202,8 +202,8 @@ Web;Zip attachments;;Options ZIP;;;Zip vedlegg
 Web;Zip password;;Mot de passe ZIP;;;Zip passord
 WebJS;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %;# av % valgt
 WebJS;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_);(filtrert fra _MAX_)
-WebJS;<No Output>;;<Aucune Destination>;;;<Ingen målområde>
-WebJS;<No Schedule>;;<Aucune Planification>;;;<Ingenting planlagt>
+WebJS;No Output;;Aucune Destination;;;Ingen målområde
+WebJS;No Schedule;;Aucune Planification;;;Ingenting planlagt
 WebJS;1 Decimal;;1 Décimale;;;1 desimal
 WebJS;2 Decimals;;2 Décimales;;;2 desimaler
 WebJS;3 Decimals;;3 Décimales;;;3 desimaler

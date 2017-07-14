@@ -116,7 +116,7 @@ namespace Seal.Forms
         private void AboutBoxForm_Shown(object sender, EventArgs e)
         {
             var defaultText = "A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n\r\n\r\n";
-            defaultText += "Copyright(c) Seal Report, Eric Pfirsch (sealreport@gmail.com).\r\n\r\n";
+            defaultText += "Copyright(c) Seal Report, Ariacom (www.ariacom.com).\r\n\r\n";
             defaultText += "Seal Report is licensed under the Apache License, Version 2.0.\r\nhttp://www.apache.org/licenses/LICENSE-2.0.";
             try
             {

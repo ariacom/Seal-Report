@@ -55,6 +55,10 @@ namespace SealWebServer.Controllers
         {
             Repository repository = Repository.Create();
             repository.WebApplicationPath = Path.Combine(Request.PhysicalApplicationPath, "bin");
+            //Set culture from cookie
+            string culture = GetCookie(SealCultureCookieName);
+            if (!string.IsNullOrEmpty(culture)) repository.SetCultureInfo(culture);
+
             Session[SessionRepository] = repository;
             return repository;
         }
@@ -160,9 +164,6 @@ namespace SealWebServer.Controllers
             try
             {
                 if (Repository == null) CreateRepository();
-                //Set culture from cookie
-                string culture = GetCookie(SealCultureCookieName);
-                if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
                 result = View(Repository);
             }
             catch (Exception ex)

@@ -80,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converter\RestrictionDateConverter.cs" />
     <Compile Include="Converter\RepositoryFolderConverter.cs" />
     <Compile Include="Converter\CultureInfoConverter.cs" />
     <Compile Include="Converter\SecurityProviderConverter.cs" />
