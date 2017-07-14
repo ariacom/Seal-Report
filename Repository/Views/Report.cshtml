@@ -255,6 +255,9 @@
                                 <table>
                                     @foreach (ReportRestriction restriction in Report.ExecutionCommonRestrictions.Where(i => !i.IsEnum))
                                     {
+                                        string restrClass = (restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"));
+                                        restrClass += (restriction.HasLongTime ? " dt_long_time" : "");
+                                        restrClass += (restriction.HasShortTime ? " dt_short_time" : "");
                                         <tr>
                                             <td style="vertical-align: middle;">
                                                 @(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : ""))
@@ -268,12 +271,12 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input class="@(restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"))" name="@(restriction.ValueHtmlId)_1" id="@(restriction.ValueHtmlId)_1" value="@Report.TranslateRestriction(restriction, restriction.Value1Html)" />
+                                                <input class="@restrClass" name="@(restriction.ValueHtmlId)_1" id="@(restriction.ValueHtmlId)_1" value="@Report.TranslateRestriction(restriction, restriction.Value1Html)" />
                                                 @if (restriction.Prompt != PromptType.PromptOneValue)
                                                 {
-                                                    <input class="@(restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"))" name="@(restriction.ValueHtmlId)_2" id="@(restriction.ValueHtmlId)_2" value="@Report.TranslateRestriction(restriction, restriction.Value2Html)" />
-                                                    <input class="@(restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"))" name="@(restriction.ValueHtmlId)_3" id="@(restriction.ValueHtmlId)_3" value="@Report.TranslateRestriction(restriction, restriction.Value3Html)" />
-                                                    <input class="@(restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"))" name="@(restriction.ValueHtmlId)_4" id="@(restriction.ValueHtmlId)_4" value="@Report.TranslateRestriction(restriction, restriction.Value4Html)" />
+                                                    <input class="@restrClass" name="@(restriction.ValueHtmlId)_2" id="@(restriction.ValueHtmlId)_2" value="@Report.TranslateRestriction(restriction, restriction.Value2Html)" />
+                                                    <input class="@restrClass" name="@(restriction.ValueHtmlId)_3" id="@(restriction.ValueHtmlId)_3" value="@Report.TranslateRestriction(restriction, restriction.Value3Html)" />
+                                                    <input class="@restrClass" name="@(restriction.ValueHtmlId)_4" id="@(restriction.ValueHtmlId)_4" value="@Report.TranslateRestriction(restriction, restriction.Value4Html)" />
                                                     <input type="button" value="+" class="more_restrictions" name="@(restriction.HtmlIndex)_MoreButton" id="@(restriction.HtmlIndex)_MoreButton" />
                                                 }
                                             </td>

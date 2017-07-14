@@ -425,15 +425,19 @@ namespace Seal.Model
 
 
         [CategoryAttribute("Restriction Values"), DisplayName("Value 1"), Description("Value used for the restriction."), Id(1, 2)]
+        [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date1 { get; set; }
 
         [CategoryAttribute("Restriction Values"), DisplayName("Value 2"), Description("Second value used for the restriction."), Id(3, 2)]
+        [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date2 { get; set; }
 
         [CategoryAttribute("Restriction Values"), DisplayName("Value 3"), Description("Third value used for the restriction."), Id(5, 2)]
+        [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date3 { get; set; }
 
         [CategoryAttribute("Restriction Values"), DisplayName("Value 4"), Description("Fourth value used for the restriction."), Id(7, 2)]
+        [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date4 { get; set; }
 
         [Category("Restriction Values"), DisplayName("Value 1 Keyword"), Description("Date keyword can be used to specify relative date and time for the restriction value."), Id(2, 2)]
@@ -985,6 +989,38 @@ namespace Seal.Model
             set { _htmlIndex = value; }
         }
 
+        public bool HasShortTime
+        {
+            get {
+                if (!IsDateTime || HasLongTime) return false;
+                var currentDate = DateTime.Now;
+                var culture = Model.Report.ExecutionView.CultureInfo;
+                return currentDate.ToString(FormatRe, culture).Contains(currentDate.ToString(culture.DateTimeFormat.ShortTimePattern, culture));
+            }
+        }
+
+        public bool HasLongTime
+        {
+            get
+            {
+                if (!IsDateTime) return false;
+                var currentDate = DateTime.Now;
+                var culture = Model.Report.ExecutionView.CultureInfo;
+                return currentDate.ToString(FormatRe, culture).Contains(currentDate.ToString(culture.DateTimeFormat.LongTimePattern, culture));
+            }
+        }
+
+        public string InputDateFormat
+        {
+            get
+            {
+                var format = Model.Report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern;
+                if (HasLongTime) format = "G";
+                else if (HasShortTime) format = "g";
+                return format;
+            }
+        }
+
         string GetHtmlValue(string value, string keyword, DateTime date)
         {
             string result = "";
@@ -1002,9 +1038,10 @@ namespace Seal.Model
                 else if (date == DateTime.MinValue && !HasDateKeyword(keyword)) result = "";
                 else
                 {
+                    var culture = Model.Report.ExecutionView.CultureInfo;
                     date = GetFinalDate(keyword, date);
                     //for date, format should be synchro with the date picker, whîch should use short date
-                    result = ((IFormattable)date).ToString(Model.Report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern, Model.Report.ExecutionView.CultureInfo);
+                    result = date.ToString(InputDateFormat, culture);
                 }
             }
             else

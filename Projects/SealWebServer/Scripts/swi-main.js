@@ -56,7 +56,7 @@ var SWIMain = (function () {
             _main.loginSuccess(data);
         }, function (data) {
             //Try to login without authentication
-            _gateway.Login("", "", function (data) { _main.loginSuccess(data); }, function (data) { _main.loginFailure(data); });
+            _gateway.Login("", "", function (data) { _main.loginSuccess(data); }, function (data) { _main.loginFailure(data, true); });
         });
         //General handler
         $(window).on('resize', function () {
@@ -267,10 +267,11 @@ var SWIMain = (function () {
             $waitDialog.modal('hide');
         });
     };
-    SWIMain.prototype.loginFailure = function (data) {
+    SWIMain.prototype.loginFailure = function (data, firstTry) {
         $waitDialog.modal('hide');
         _main._connected = false;
-        $("#login-modal-error").text(data.error);
+        if (!firstTry)
+            $("#login-modal-error").text(data.error);
         _main.showLogin();
         _main.enableControls();
     };
@@ -285,7 +286,7 @@ var SWIMain = (function () {
         _gateway.Login($("#username").val(), $("#password").val(), function (data) {
             _main.loginSuccess(data);
         }, function (data) {
-            _main.loginFailure(data);
+            _main.loginFailure(data, false);
         });
     };
     SWIMain.prototype.resize = function () {

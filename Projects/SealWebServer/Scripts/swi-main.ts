@@ -75,7 +75,7 @@ class SWIMain {
             },
             function (data) {
                 //Try to login without authentication
-                _gateway.Login("", "", function (data) { _main.loginSuccess(data) }, function (data) { _main.loginFailure(data) });
+                _gateway.Login("", "", function (data) { _main.loginSuccess(data) }, function (data) { _main.loginFailure(data, true) });
             }
         );
 
@@ -316,10 +316,10 @@ class SWIMain {
         });
     }
 
-    private loginFailure(data: any) {
+    private loginFailure(data: any, firstTry : boolean) {
         $waitDialog.modal('hide');
         _main._connected = false;
-        $("#login-modal-error").text(data.error);
+        if (!firstTry) $("#login-modal-error").text(data.error);
         _main.showLogin();
         _main.enableControls();
     }
@@ -338,7 +338,7 @@ class SWIMain {
                 _main.loginSuccess(data);
             },
             function (data) {
-                _main.loginFailure(data);
+                _main.loginFailure(data, false);
             });
     }
 
