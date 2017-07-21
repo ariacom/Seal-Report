@@ -529,6 +529,8 @@ namespace Seal.Forms
 
                 if (svc.ShowDialog(frm) == DialogResult.OK)
                 {
+                    if (string.IsNullOrEmpty(template)) template = "";
+
                     if (frm.textBox.Text.Trim() != template.Trim() || string.IsNullOrEmpty(template)) value = frm.textBox.Text;
                     else if (frm.textBox.Text.Trim() == template.Trim() && !string.IsNullOrEmpty(template)) value = "";
                 }
