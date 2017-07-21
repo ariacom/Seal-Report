@@ -259,7 +259,7 @@ namespace Seal.Model
                     if (!IsTitle && !IsTotal && !IsTotalTotal && Element != null)
                     {
                         var report = Element.Source.Report;
-                        if (report.IsDrillEnabled)
+                        if (report.IsDrillEnabled && Element.PivotPosition != PivotPosition.Data)
                         {
                             //Get Drill child links
                             var metaData = Element.Source.MetaData;
@@ -303,7 +303,7 @@ namespace Seal.Model
                         }
 
                         //Get sub reports links
-                        if (Element.Source.Report.IsSubReportsEnabled)
+                        if (Element.Source.Report.IsSubReportsEnabled && Element.PivotPosition != PivotPosition.Data)
                         {
                             foreach (var subreport in Element.MetaColumn.SubReports.Where(i => i.Restrictions.Count > 0))
                             {
