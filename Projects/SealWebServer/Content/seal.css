@@ -21,6 +21,8 @@ div  button { margin:4px;}
 /* support: IE7 */
 *+html #button_toolbar { display: inline; }
 
+#header_div { width: 100%; }
+#header_title_div { display: inline; float: left; vertical-align: middle; overflow: hidden;}
 #header_div img { vertical-align:middle; margin:2px;}
 #buttons_div { display: inline; float: right; margin-top: 10px; margin-right: 4px; }
 

@@ -113,7 +113,7 @@
     <div id="main-container" class="container-fluid" style="padding-top:70px; display:none;">
         <div class="row">
             <div id="folder-view" class="col-sm-4">
-                <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto;"></div>
+                <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto; max-height:800px;"></div>
             </div>
 
             <div id="file-view" class="col-sm-8">
@@ -659,6 +659,12 @@
                 <label class="properties-label">@repository.TranslateWeb("Values")</label>
                 <div class="properties-value">
                     <select id="property-evals" multiple="multiple"></select>
+                </div>
+            </div>
+            <div id="properties-restr-aggregate-group">
+                <label class="properties-label">@repository.TranslateWeb("Aggregate")</label>
+                <div class="properties-value">
+                    <select id="property-restr-aggregate" data-width="100%"></select>
                 </div>
             </div>
         </div>

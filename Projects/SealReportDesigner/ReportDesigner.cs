@@ -431,6 +431,7 @@ namespace Seal
         {
             if (_report.Models.Count > 0 && _report.Models[0].Elements.Count > 0) selectNode(_report.Models[0]);
             else if (_report.Tasks.Count > 0) selectNode(_report.Tasks.OrderBy(i => i.SortOrder).First());
+            else if (_report.Models.Count > 0) selectNode(_report.Models[0]);
             else if (_report.Sources.Count > 0) selectNode(_report.Sources[0]);
         }
 

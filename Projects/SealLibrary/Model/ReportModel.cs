@@ -557,7 +557,7 @@ namespace Seal.Model
         void AddSubReportsElements()
         {
             //Add elements for sub-reports
-            foreach (var el in Elements.Where(i => i.MetaColumn.SubReports.Count > 0).ToList())
+            foreach (var el in Elements.Where(i => i.MetaColumn.SubReports.Count > 0 && i.PivotPosition != PivotPosition.Data).ToList())
             {
                 foreach (var subreport in el.MetaColumn.SubReports)
                 {
@@ -706,7 +706,7 @@ namespace Seal.Model
                                         int index = path.joins.IndexOf(join);
                                         foreach (var join2 in path2.joins)
                                         {
-                                            //Note that we insert the joins just before the join having the RightTable...un peu limite tricky !
+                                            //Note that we insert the joins just before the join having the RightTable...
                                             if (!newPath.joins.Exists(i => i.GUID == join2.GUID))
                                             {
                                                 newPath.joins.Insert(index, join2);
@@ -857,12 +857,12 @@ namespace Seal.Model
         void JoinTables(JoinPath path, List<JoinPath> resultPath)
         {
             //TODO: optimize speed of this procedure...
-            //If the search is longer than 5 seconds, we exite with the first path found...
+            //If the search is longer than xx seconds, we exit with the first path found...
             if ((DateTime.Now - _buildTimer).TotalSeconds > BuildTimeout)
             {
                 if (resultPath.Exists(i => i.tablesToUse.Count == 0))
                 {
-                    Debug.WriteLine("Exiting the joins search after 5 seconds");
+                    Debug.WriteLine("Exiting the joins search after build timeout");
                     return;
                 }
             }
