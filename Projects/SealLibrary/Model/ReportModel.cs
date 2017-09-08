@@ -246,7 +246,7 @@ namespace Seal.Model
         }
 
         private string _avoidTableGUID;
-        [Category("Join Preferences"), DisplayName("Join table to avoid"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to avoid to use the table specified."), Id(3, 3)]
+        [Category("Join Preferences"), DisplayName("Join table to avoid"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to avoid the table specified."), Id(3, 3)]
         [TypeConverter(typeof(SourceTableConverter))]
         public string AvoidJoinTableGUID
         {
@@ -530,7 +530,7 @@ namespace Seal.Model
                 if (string.IsNullOrWhiteSpace(Restriction)) Restrictions.RemoveAt(i);
                 else if (Restrictions[i].MetaColumn == null)
                 {
-                    if (Restriction != null) Restriction = Restriction.Replace(Restrictions[i].GUID, "(Warning) Restriction lost: " + Restrictions[i].Name );
+                    if (Restriction != null) Restriction = Restriction.Replace(Restrictions[i].GUID, "(Warning) Restriction lost: " + Restrictions[i].Name);
                     Restrictions.RemoveAt(i);
                 }
                 else if (!Restriction.Contains(Restrictions[i].GUID)) Restrictions.RemoveAt(i);
@@ -681,28 +681,40 @@ namespace Seal.Model
                             JoinTables(rootPath, resultPaths);
 
                             //Optimisation: if many result paths, check if we have aready a relevant result, here a number of join almost equal to number of tables to reach
-                            if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout/2)
+                            if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout / 2)
                             {
                                 bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
-                                if (bestPath != null && bestPath.joins.Count <= _fromTables.Count + 2) break;
-                                Debug.WriteLine("Exiting the joins search after 2 seconds");
+                                if (bestPath != null && bestPath.joins.Count <= _fromTables.Count + 2)
+                                {
+                                    Debug.WriteLine("Exiting the joins search after xx seconds");
+                                    break;
+                                }
                             }
                             //Debug.WriteLine("{0}ms {1}", (DateTime.Now - _timer).TotalMilliseconds, resultPaths.Count);
                         }
+#if DEBUG
+                        foreach (var path in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count))
+                        {
+                            path.print();
+                        }
+#endif
+
                         //Choose the path having all tables, then preferred, then less joins...
                         if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
                         if (bestPath == null)
                         {
+                            List<JoinPath> resultPaths2 = new List<JoinPath>();
                             //no direct joins found...try using several path...
                             foreach (var path in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count))
                             {
-                                JoinPath newPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse) };
+                                JoinPath newPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), rank = path.rank };
                                 foreach (var join in path.joins)
                                 {
                                     //search a path starting from RightTable and finishing by a remaining table
                                     foreach (var path2 in resultPaths.Where(i => i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)))
                                     {
                                         //ok add joins to the newPath and remove tables to use
+                                        newPath.rank += path2.rank;
                                         int index = path.joins.IndexOf(join);
                                         foreach (var join2 in path2.joins)
                                         {
@@ -717,13 +729,22 @@ namespace Seal.Model
 
                                     if (newPath.tablesToUse.Count == 0)
                                     {
-                                        //got it
-                                        bestPath = newPath;
+                                        //got one
+                                        resultPaths2.Add(newPath);
+                                    }
+                                }
+
+                                if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout / 2)
+                                {
+                                    bestPath = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
+                                    if (bestPath != null)
+                                    {
+                                        Debug.WriteLine("Exiting the joins search after xx seconds");
                                         break;
                                     }
                                 }
-                                if (bestPath != null) break;
                             }
+                            bestPath = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
                         }
 
                         if (bestPath == null) throw new Exception("Unable to link all elements using the joins defined...\r\nAdd Joins to your Data Source\r\nOR remove elements or restrictions in your model\r\nOR add relevant elements or restrictions in your model.");
@@ -845,7 +866,7 @@ namespace Seal.Model
                 Debug.WriteLine("");
                 foreach (var join in joins)
                 {
-                //    Debug.Write(string.Format("{0} {1} {2}\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
+                    //    Debug.Write(string.Format("{0} {1} {2}\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
                 }
                 Debug.WriteLine("");
 
