@@ -665,6 +665,9 @@ namespace Seal.Forms
                 }
                 else if (entity is MetaTable)
                 {
+                    options.Add(autoCreateJoins);
+                    autoCreateJoins.Checked = false;
+
                     List<MetaColumn> columns = new List<MetaColumn>();
                     source.AddColumnsFromCatalog(columns, connection, ((MetaTable)entity));
                     selectSource = columns.OrderBy(i => i.Name).ToList();
