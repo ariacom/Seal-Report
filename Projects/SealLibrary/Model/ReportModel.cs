@@ -1260,7 +1260,7 @@ namespace Seal.Model
             {
                 if (Report.Cancel) break;
 
-                if (page.DataTable.Lines.Count > 0)
+                if (page.DataTable.Lines.Count > 0 && !page.DataTable.InvertDone)
                 {
                     ResultTable newTable = new ResultTable();
                     for (int i = 0; i < page.DataTable.Lines[0].Length; i++)
@@ -1282,6 +1282,7 @@ namespace Seal.Model
                         if (!page.DataTable.Lines[0][i].IsTotal) newTable.BodyEndRow++;
                     }
                     page.DataTable = newTable;
+                    page.DataTable.InvertDone = true;
                 }
             }
         }

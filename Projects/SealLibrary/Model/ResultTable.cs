@@ -21,6 +21,8 @@ namespace Seal.Model
 
         public List<ResultCell[]> Lines = new List<ResultCell[]>();
 
+        public bool InvertDone = false;
+
         private string _lastSearch = "";
         private List<ResultCell[]> _filteredLines = null;
 
