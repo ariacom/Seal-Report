@@ -711,7 +711,7 @@ namespace Seal.Model
                                 foreach (var join in path.joins)
                                 {
                                     //search a path starting from RightTable and finishing by a remaining table
-                                    foreach (var path2 in resultPaths.Where(i => i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)))
+                                    foreach (var path2 in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count).Where(i => ( (i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)) || (i.finalTable == join.RightTable && path.tablesToUse.Contains(i.startTable)))))
                                     {
                                         //ok add joins to the newPath and remove tables to use
                                         newPath.rank += path2.rank;
@@ -723,15 +723,19 @@ namespace Seal.Model
                                             {
                                                 newPath.joins.Insert(index, join2);
                                             }
+                                            newPath.tablesToUse.Remove(join2.LeftTable);
                                             newPath.tablesToUse.Remove(join2.RightTable);
+                                        }
+
+                                        if (newPath.tablesToUse.Count == 0)
+                                        {
+                                            //got one
+                                            resultPaths2.Add(newPath);
+                                            break;
                                         }
                                     }
 
-                                    if (newPath.tablesToUse.Count == 0)
-                                    {
-                                        //got one
-                                        resultPaths2.Add(newPath);
-                                    }
+                                    if (newPath.tablesToUse.Count == 0) break;
                                 }
 
                                 if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout / 2)
