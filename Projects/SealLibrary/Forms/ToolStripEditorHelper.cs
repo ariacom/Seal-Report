@@ -217,6 +217,9 @@ namespace Seal.Forms
                             try
                             {
                                 model.BuildSQL();
+                                frm.SqlToCheck = model.Sql;
+                                model.Report.CheckingExecution = false;
+                                model.BuildSQL();
                             }
                             finally
                             {
@@ -228,7 +231,7 @@ namespace Seal.Forms
                             }
                             frm.sqlTextBox.Text = model.Sql;
                             frm.SetReadOnly();
-                            if (key == Keys.F8) frm.checkSQLToolStripButton_Click(null, null);
+                            if (key == Keys.F8) frm.checkSQL();
                             frm.ShowDialog();
                         }
                     }

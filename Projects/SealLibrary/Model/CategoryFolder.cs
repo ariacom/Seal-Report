@@ -46,14 +46,23 @@ namespace Seal.Model
             set { _path = value; }
         }
 
+        #region Helpers
         string _information;
         [DisplayName("Information"), Description("Last information"), Category("Helpers"), Id(2, 1)]
+        [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
         public string Information
         {
             get { return _information; }
             set { _information = value; }
         }
 
+        public void SetInformation(string information)
+        {
+            _information = information;
+            UpdateEditorAttributes();
+        }
+
+        #endregion
     }
 
 }

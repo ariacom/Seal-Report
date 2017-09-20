@@ -19,6 +19,7 @@ namespace Seal.Forms
     {
         public object Instance;
         public string PropertyName;
+        public string SqlToCheck = null;
 
         static Size? LastSize = null;
         static Point? LastLocation = null;
@@ -82,6 +83,11 @@ namespace Seal.Forms
 
         public void checkSQLToolStripButton_Click(object sender, EventArgs e)
         {
+            checkSQL();
+        }
+
+        public void checkSQL()
+        {
             string initialSQL = "", error = "";
             try
             {
@@ -94,7 +100,7 @@ namespace Seal.Forms
                     }
                     else
                     {
-                        error = model.Source.CheckSQL(sqlTextBox.Text, model.FromTables, model, false);
+                        error = model.Source.CheckSQL(!string.IsNullOrEmpty(SqlToCheck) ? SqlToCheck : sqlTextBox.Text, model.FromTables, model, false);
                     }
                 }
                 if (Instance is MetaEnum)
