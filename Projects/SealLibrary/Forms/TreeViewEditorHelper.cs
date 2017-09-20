@@ -170,10 +170,31 @@ namespace Seal.Forms
         public void sortColumns_Click(object sender, EventArgs e, bool byPosition)
         {
             if (mainTreeView.SelectedNode == null) return;
-            MetaTable table = mainTreeView.SelectedNode.Tag as MetaTable;
-            if (table == null) return;
+            if (mainTreeView.SelectedNode.Tag is MetaTable)
+            {
+                MetaTable table = mainTreeView.SelectedNode.Tag as MetaTable;
+                table.SortColumns(byPosition);
+            }
+            if (mainTreeView.SelectedNode.Tag is CategoryFolder)
+            {
+                CategoryFolder folder = mainTreeView.SelectedNode.Tag as CategoryFolder;
+                List<MetaColumn> cols = new List<MetaColumn>();
+                List<string> colNames = new List<string>();
+                foreach (TreeNode child in mainTreeView.SelectedNode.Nodes)
+                {
+                    if (child.Tag is MetaColumn)
+                    {
+                        cols.Add(child.Tag as MetaColumn);
+                    }
+                }
+                int position = 0;
+                foreach (var col in cols.OrderBy(i => i.DisplayName))
+                {
+                    col.DisplayOrder = position++;
+                }
 
-            table.SortColumns(byPosition);
+                folder.SetInformation("Columns have been sorted by Name");
+            }
         }
 
         public object addToolStripMenuItem_Click(object sender, EventArgs e)
@@ -553,6 +574,24 @@ namespace Seal.Forms
                 treeContextMenuStrip.Items.Add(sortColumnSQLOrderToolStripMenuItem);
             }
 
+            if (entity is CategoryFolder && mainTreeView.SelectedNode.Parent != null && mainTreeView.SelectedNode.Parent.Tag is CategoryFolder)
+            {
+                bool canSort = true;
+                foreach (TreeNode child in mainTreeView.SelectedNode.Nodes)
+                {
+                    if (child.Tag is MetaColumn && !((MetaColumn)child.Tag).MetaTable.IsEditable)
+                    {
+                        canSort = false;
+                        break;
+                    }
+                }
+                if (canSort)
+                {
+                    if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                    treeContextMenuStrip.Items.Add(sortColumnAlphaOrderToolStripMenuItem);
+                }
+            }
+
             e.Cancel = (treeContextMenuStrip.Items.Count == 0);
         }
 
@@ -661,7 +700,7 @@ namespace Seal.Forms
                     options.Add(autoCreateJoins);
 
                     if (tables.Count > 0 && tables[0].Name.Contains(".")) options.Add(useTableSchemaName);
-                    if (tables.Count > 0 ) options.Add(keepColumnNames);
+                    if (tables.Count > 0) options.Add(keepColumnNames);
                 }
                 else if (entity is MetaTable)
                 {
@@ -791,8 +830,8 @@ namespace Seal.Forms
             if (selectedEntity is MetaSource && propertyName == "ConnectionGUID")
             {
                 var entity = selectedEntity as MetaSource;
-                if (newValue != ReportSource.DefaultRepositoryConnectionGUID && 
-                    newValue != ReportSource.DefaultReportConnectionGUID && 
+                if (newValue != ReportSource.DefaultRepositoryConnectionGUID &&
+                    newValue != ReportSource.DefaultReportConnectionGUID &&
                     !entity.Connections.Exists(i => i.GUID == newValue)) entity.ConnectionGUID = e.OldValue.ToString();
             }
             if (selectedEntity is ReportModel && propertyName == "ConnectionGUID")
