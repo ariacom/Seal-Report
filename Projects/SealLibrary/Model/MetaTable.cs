@@ -446,7 +446,8 @@ namespace Seal.Model
 
                     if (!string.IsNullOrEmpty(WhereSQL))
                     {
-                        sql += string.Format("\r\nAND ({0})", Helper.ParseRazor(WhereSQL, this));
+                        var where = Helper.ParseRazor(WhereSQL, this);
+                        if (!string.IsNullOrWhiteSpace(where)) sql += string.Format("\r\nAND ({0})", Helper.ParseRazor(where, this));
                     }
                     if (Columns.Exists(i => i.IsAggregate) && !string.IsNullOrEmpty(groupByNames))
                     {
