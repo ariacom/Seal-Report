@@ -7,25 +7,7 @@
   <WebProductName>Seal Report</WebProductName>
   <IsLocal>false</IsLocal>
   <InitScript />
-  <ReportCreationScript>@using Seal.Model
-@{
-    Report report = Model;
-
-    //Script executed when the report is created
-    
-    //Remove the default CSV view
-    if (report.Views.Count &gt; 1) {
-	   report.Views.Remove(report.Views[1]);
-    }
-   
-    //Change view parameter to display the Result Panel
-	report.ExecutionView.InitParameters(false);
-    var parameter = report.ExecutionView.GetParameter("result_button");
-	if (parameter != null) {
-		parameter.BoolValue = true;	
-	}	
-}
-</ReportCreationScript>
+  <ReportCreationScript />
   <TasksScript />
   <DefaultCulture />
   <NumericFormat>N0</NumericFormat>
