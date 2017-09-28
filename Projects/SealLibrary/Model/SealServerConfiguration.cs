@@ -51,6 +51,7 @@ namespace Seal.Model
                 GetProperty("DateTimeFormat").SetIsBrowsable(!ForPublication);
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("TasksScript").SetIsBrowsable(!ForPublication);
+                GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
 
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
@@ -125,8 +126,17 @@ namespace Seal.Model
             set { _initScript = value; }
         }
 
+        string _reportCreationScript = "";
+        [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(5, 3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string ReportCreationScript
+        {
+            get { return _reportCreationScript; }
+            set { _reportCreationScript = value; }
+        }
+
         string _tasksScript = "";
-        [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed. This may be useful to defined common functions."), Id(5, 3)]
+        [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed. This may be useful to defined common functions."), Id(6, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string TasksScript
         {

@@ -281,6 +281,7 @@ namespace Seal.Forms
             {
                 newEntity = Helper.Clone(entity);
                 source.MetaData.Enums.Add((MetaEnum)newEntity);
+                source.InitReferences(source.Repository);
                 ((RootComponent)newEntity).GUID = Guid.NewGuid().ToString();
                 ((RootComponent)newEntity).Name = Helper.GetUniqueName(((RootComponent)entity).Name + " - Copy", (from i in source.MetaData.Enums select i.Name).ToList());
             }

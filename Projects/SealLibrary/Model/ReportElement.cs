@@ -44,6 +44,7 @@ namespace Seal.Model
                 GetProperty("ShowTotal").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("CellScript").SetIsBrowsable(true);
                 GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data && IsNumeric);
+                GetProperty("EnumGUIDEL").SetIsBrowsable(true);
 
                 GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
                 GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
@@ -84,7 +85,7 @@ namespace Seal.Model
             get
             {
                 if (PivotPosition == PivotPosition.Data && AggregateFunction == AggregateFunction.Count) return false;
-                return (MetaColumn.Enum != null);
+                return (EnumEL != null);
             }
         }
 
@@ -256,16 +257,19 @@ namespace Seal.Model
         public string GetEnumSortValue(string enumValue, bool useDisplayValue)
         {
             string result = enumValue;
-            bool elementSortPosition = (IsSorted && MetaColumn.Enum.UsePosition);
+            MetaEnum en = EnumEL;
+
+            bool elementSortPosition = (IsSorted && en.UsePosition);
             MetaEV value = null;
-            if (useDisplayValue) value = MetaColumn.Enum.Values.FirstOrDefault(i => i.DisplayValue == enumValue);
-            else value = MetaColumn.Enum.Values.FirstOrDefault(i => i.Id == enumValue);
+            if (useDisplayValue) value = en.Values.FirstOrDefault(i => i.DisplayValue == enumValue);
+            else value = en.Values.FirstOrDefault(i => i.Id == enumValue);
 
             if (value != null)
             {
-                string sortPrefix = elementSortPosition ? string.Format("{0:000000}", MetaColumn.Enum.Values.LastIndexOf(value)) : "";
-                result = sortPrefix + Model.Report.EnumDisplayValue(MetaColumn.Enum, value.Id);
+                string sortPrefix = elementSortPosition ? string.Format("{0:000000}", en.Values.LastIndexOf(value)) : "";
+                result = sortPrefix + Model.Report.EnumDisplayValue(en, value.Id);
             }
+            else result = "000000" + result;
             return result;
         }
 
@@ -494,25 +498,23 @@ namespace Seal.Model
             set { _cellScript = value; }
         }
 
-        bool _drillEnabled = true;
-        [Category("Advanced"), DisplayName("Drill Enabled"), Description("If true, drill navigation is enabled for the column."), Id(3, 6)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public bool DrillEnabled
+        [Category("Advanced"), DisplayName("Custom Enumerated List"), Description("If defined, the enumerated list is used for the display and for sorting."), Id(4, 5)]
+        [TypeConverter(typeof(MetaEnumConverter))]
+        public string EnumGUIDEL
         {
-            get { return _drillEnabled; }
-            set { _drillEnabled = value; }
+            get { return _enumGUID; }
+            set { _enumGUID = value; }
         }
 
-        bool _subReportsEnabled = true;
-        [Category("Advanced"), DisplayName("Sub-Reports Enabled"), Description("If true, Sub-Report navigation is enabled for the column."), Id(3, 8)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public bool SubReportsEnabled
+        [XmlIgnore]
+        public MetaEnum EnumEL
         {
-            get { return _subReportsEnabled; }
-            set { _subReportsEnabled = value; }
+            get
+            {
+                if (Enum != null) return Enum;
+                return MetaColumn.Enum;
+            }
         }
-
-
 
         [XmlIgnore, Browsable(false)]
         public string RawSQLColumn

@@ -233,6 +233,29 @@ namespace Seal.Forms
     //Set the first value of an enum
     //var enums = report.Models[0].Source.MetaData.Enums.FirstOrDefault(i=>i.Name == ""Category"");
     //report.Models[0].GetRestrictionByName(""Category"").EnumValues.Add(enums.Values[0].Id);
+
+    //Change view parameter to display the Result Panel
+    //report.ExecutionView.GetParameter(""result_button"").BoolValue = true;
+}
+";
+
+        const string razorConfigurationReportCreationScriptTemplate = @"@using Seal.Model
+@{
+    Report report = Model;
+
+    //Script executed when the report is created
+    
+    //Remove the default CSV view
+    //if (report.Views.Count > 1) {
+	//   report.Views.Remove(report.Views[1]);
+    //}
+   
+    //Change view parameter to display the Result Panel
+	//report.ExecutionView.InitParameters(false);
+    //var parameter = report.ExecutionView.GetParameter(""result_button"");
+	//if (parameter != null) {
+	//	parameter.BoolValue = true;	
+	//}	
 }
 ";
 
@@ -494,19 +517,29 @@ namespace Seal.Forms
                     frm.Text = "Edit the script that will be added to all task scripts";
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
-                else if (context.Instance is SealServerConfiguration && context.PropertyDescriptor.Name == "InitScript")
+                else if (context.Instance is SealServerConfiguration) 
                 {
-                    template = razorConfigurationInitScriptTemplate;
-                    frm.TypeForCheckSyntax = typeof(Report);
-                    frm.Text = "Edit the init script";
-                    frm.textBox.ConfigurationManager.Language = "cs";
-                }
-                else if (context.Instance is SealServerConfiguration && context.PropertyDescriptor.Name == "TasksScript")
-                {
-                    template = razorTasksTemplate;
-                    frm.TypeForCheckSyntax = typeof(ReportTask);
-                    frm.Text = "Edit the script that will be added to all task scripts";
-                    frm.textBox.ConfigurationManager.Language = "cs";
+                    if (context.PropertyDescriptor.Name == "InitScript")
+                    {
+                        template = razorConfigurationInitScriptTemplate;
+                        frm.TypeForCheckSyntax = typeof(Report);
+                        frm.Text = "Edit the root init script";
+                        frm.textBox.ConfigurationManager.Language = "cs";
+                    }
+                    else if (context.PropertyDescriptor.Name == "TasksScript")
+                    {
+                        template = razorTasksTemplate;
+                        frm.TypeForCheckSyntax = typeof(ReportTask);
+                        frm.Text = "Edit the script that will be added to all task scripts";
+                        frm.textBox.ConfigurationManager.Language = "cs";
+                    }
+                    else if (context.PropertyDescriptor.Name == "ReportCreationScript")
+                    {
+                        template = razorConfigurationReportCreationScriptTemplate;
+                        frm.TypeForCheckSyntax = typeof(Report);
+                        frm.Text = "Edit the script executed when a new report is created";
+                        frm.textBox.ConfigurationManager.Language = "cs";
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(template) && string.IsNullOrWhiteSpace(valueToEdit) && !context.PropertyDescriptor.IsReadOnly)
