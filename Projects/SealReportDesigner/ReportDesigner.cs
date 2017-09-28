@@ -478,6 +478,8 @@ namespace Seal
 
                 toolsHelper.Report = _report;
                 _report.SchedulesWithCurrentUser = Properties.Settings.Default.SchedulesWithCurrentUser;
+
+                if (!string.IsNullOrEmpty(_report.ExecutionErrors)) MessageBox.Show(_report.ExecutionErrors, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {

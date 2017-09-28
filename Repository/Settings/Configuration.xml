@@ -6,33 +6,27 @@
   <LogDays>30</LogDays>
   <WebProductName>Seal Report</WebProductName>
   <IsLocal>false</IsLocal>
-  <InitScript>@using Seal.Model
-@using System.Data
+  <InitScript />
+  <ReportCreationScript>@using Seal.Model
 @{
     Report report = Model;
-	ReportExecutionLog log = Model;
 
-    //Script executed when the report is initialized at execution
-    if (log != null) {
-        log.LogMessage("Executing root server 'Init Script'");
-
-        //...
-    }
-
-    // Example to change the Thousand Separator or the Decimal Separator
-    	report.ExecutionView.CultureInfo.NumberFormat.NumberGroupSeparator = " ";
-        report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ".";	
+    //Script executed when the report is created
     
-}
-</InitScript>
-  <TasksScript>@using System.Text
-@functions {
-    //During execution, this script will be copied at the end of all task scripts...
-    public string MyConvertString(string input) {
-        return input.Replace("__","_"); 
+    //Remove the default CSV view
+    if (report.Views.Count &gt; 1) {
+	   report.Views.Remove(report.Views[1]);
     }
+   
+    //Change view parameter to display the Result Panel
+	report.ExecutionView.InitParameters(false);
+    var parameter = report.ExecutionView.GetParameter("result_button");
+	if (parameter != null) {
+		parameter.BoolValue = true;	
+	}	
 }
-</TasksScript>
+</ReportCreationScript>
+  <TasksScript />
   <DefaultCulture />
   <NumericFormat>N0</NumericFormat>
   <DateTimeFormat>d</DateTimeFormat>

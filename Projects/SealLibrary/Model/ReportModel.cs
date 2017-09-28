@@ -1217,7 +1217,7 @@ namespace Seal.Model
                             foreach (DataRow row in ResultTable.Rows)
                             {
                                 //to sort by position, we add 6 digits as a prefix
-                                if (element.IsSorted && element.MetaColumn.Enum.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
+                                if (element.IsSorted && element.EnumEL.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
                                 row[newcol] = element.GetEnumSortValue(row[col].ToString(), false);
                             }
                             ResultTable.Columns.Remove(col);

@@ -664,7 +664,20 @@ namespace Seal.Model
             ReportView defaultView = result.AddModelHTMLView();
             if (defaultView == null) throw new Exception(string.Format("Unable to find any view in your repository. Check that your repository folder '{0}' contains all the default sub-folders and files...", repository.RepositoryPath));
             result.ViewGUID = defaultView.GUID;
-            var csvView  = result.AddModelCSVView();
+            result.AddModelCSVView();
+
+            //Creation script
+            if (!string.IsNullOrEmpty(repository.Configuration.ReportCreationScript))
+            {
+                try
+                {
+                    Helper.ParseRazor(repository.Configuration.ReportCreationScript, result);
+                }
+                catch (Exception ex)
+                {
+                    result.ExecutionErrors = string.Format("Error executing configuration report creation script:\r\n{0}\r\n", ex.Message);
+                }
+            }
 
             return result;
         }
