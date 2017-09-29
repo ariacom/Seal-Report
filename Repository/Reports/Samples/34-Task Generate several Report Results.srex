@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>d12b976a-196a-45a4-a316-14076ef8a26e</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>ecb7bf25-4687-4420-98ff-c9315948edb7</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder>
+        <Information>11 column categories have been updated. Note that columns defined in Repository Sources cannot be updated from the Report Designer.</Information>
+      </CategoryFolder>
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IsNoSQL>false</IsNoSQL>
+      <InitScript />
+      <TasksScript />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>7e461eb3-b774-4a0c-9aa0-6eaf3d8c0caf</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <KeepColumnNames>false</KeepColumnNames>
+            <MustRefresh>false</MustRefresh>
+            <IgnorePrePostError>false</IgnorePrePostError>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>1a3b9779-91f1-4ec7-9bad-785a7b66e6a3</GUID>
+      <Name>RSS No SQL Source (Repository)</Name>
+      <ConnectionFolder />
+      <TableFolder />
+      <CategoryFolder />
+      <JoinFolder />
+      <EnumFolder />
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsDefault>false</IsDefault>
+      <IsNoSQL>true</IsNoSQL>
+      <InitScript />
+      <TasksScript />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <MetaData>
+        <Tables />
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>e0c0f746-6183-4855-8943-3813509121e6</GUID>
+      <Name>model</Name>
+      <SourceGUID>ecb7bf25-4687-4420-98ff-c9315948edb7</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements />
+      <Restriction />
+      <Restrictions />
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks>
+    <ReportTask>
+      <GUID>3ba1eb77-d3c4-4dd5-b124-f4718b563c84</GUID>
+      <Name>Generate 1 report per country</Name>
+      <CancelReport>false</CancelReport>
+      <DbInfoMessage>
+        <Capacity>16</Capacity>
+        <Length>0</Length>
+      </DbInfoMessage>
+      <SourceGUID>ecb7bf25-4687-4420-98ff-c9315948edb7</SourceGUID>
+      <ConnectionGUID>2</ConnectionGUID>
+      <Enabled>true</Enabled>
+      <Script>@using Seal.Model
+@using Seal.Helpers
+@using System.IO
+@using System.Data
+@{
+    ReportTask task = Model;
+	TaskHelper helper = new TaskHelper(task);
+	Repository repository = task.Report.Repository;
+    string result = "1"; //Set result to 0 to cancel the report.
+
+	//Load report to execute
+	Report report = Report.LoadFromFile(Path.Combine(repository.ReportsFolder, "Search - Orders.srex"), repository);
+	task.Report.LogMessage("Load done");
+	//Create an output for a folder
+	var folderDevice = repository.Devices.First(i =&gt; i is OutputFolderDevice);
+	var output = report.AddOutput(folderDevice);
+	output.FolderPath = repository.ReportsFolder;
+	
+	//Load list of countries
+	string connectionString = task.Connection.FullConnectionString;
+	string sql = @"select distinct Country from Customers";
+
+	var toProcess = helper.DatabaseHelper.LoadDataTable(connectionString, sql);
+	foreach (DataRow row in toProcess.Rows)
+	{
+		string country = (string)row[0];
+		//Set the restriction
+		var restriction = report.Models[0].GetRestrictionByName("Customer Country");
+		restriction.Prompt = PromptType.None;
+		restriction.Operator = Operator.Equal;
+		restriction.EnumValues.Clear();
+		restriction.EnumValues.Add(country);
+		
+	    ReportExecution execution = new ReportExecution() { Report = report };
+        report.OutputToExecute = output;
+        report.CurrentViewGUID = output.ViewGUID;
+		
+		//Set result file name and ciulture
+		output.FileName = "Search - Orders for " + country;		
+		report.ExecutionView.CultureName = "English";
+		
+		task.Report.LogMessage("Executing report for '{0}'", country);
+		execution.Execute();	
+		while (report.Status != ReportStatus.Executed) {
+			System.Threading.Thread.Sleep(1000);
+		}
+		task.Report.LogMessage("File generated in '{0}'", output.FileName);
+	}
+
+}
+@Raw(result)
+</Script>
+      <IgnoreError>false</IgnoreError>
+      <ExecuteForEachConnection>false</ExecuteForEachConnection>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <TasksScript />
+  <Views>
+    <ReportView>
+      <GUID>a06325e4-a227-437c-8dad-6386d5531efa</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>6e8dd630-6885-4a24-aa68-a32259866f41</GUID>
+          <Name>Model HTML View</Name>
+          <Views />
+          <ModelGUID>e0c0f746-6183-4855-8943-3813509121e6</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <Parameters />
+          <CultureName />
+          <CSS />
+          <SortOrder>1</SortOrder>
+          <ChartConfigurationXml />
+          <WebExec>true</WebExec>
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <ThemeName />
+      <UseCustomConfiguration>false</UseCustomConfiguration>
+      <UseCustomTemplate>false</UseCustomTemplate>
+      <Parameters>
+        <Parameter>
+          <Name>message_button</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <CultureName>English</CultureName>
+      <CSS />
+      <SortOrder>1</SortOrder>
+      <WebExec>true</WebExec>
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <InitScript>@using Seal.Model
+@{
+    Report report = Model;
+	ReportExecutionLog log = report;
+
+    //Script executed when the report is initialized
+    log.LogMessage("Executing Init Script");
+    //report.Models[0].Restrictions[0].Value1 = "1994"; 
+    //report.Models[0].Restrictions[0].Date1 = DateTime.Now.AddYears(-20);
+    //report.Models[0].GetRestrictionByName("Order Year").Value1 = "2015";
+    //report.Models[0].GetRestrictionByName("Category").EnumValues.Add("1");
+
+    //report.DisplayName = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + "-" + DateTime.Now.ToShortDateString();
+    
+    //Set the first value of an enum
+    //var enums = report.Models[0].Source.MetaData.Enums.FirstOrDefault(i=&gt;i.Name == "Category");
+    //report.Models[0].GetRestrictionByName("Category").EnumValues.Add(enums.Values[0].Id);
+
+    //Change view parameter
+    //report.ExecutionView.GetParameter("result_button").BoolValue = false;
+	
+    //Remove the default CSV view
+   if (report.Views.Count &gt; 1) {
+	   report.Views.Remove(report.Views[1]);
+   }
+   
+    //Change view parameter
+   report.Views[0].GetParameter("result_button").BoolValue = false;	
+}
+</InitScript>
+  <ViewGUID>a06325e4-a227-437c-8dad-6386d5531efa</ViewGUID>
+  <Schedules />
+</Report>
