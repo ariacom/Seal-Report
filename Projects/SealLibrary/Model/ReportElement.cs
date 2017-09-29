@@ -57,7 +57,7 @@ namespace Seal.Model
                 GetProperty("YAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("SerieSortOrder").SetIsBrowsable(PivotPosition == PivotPosition.Data && (SerieDefinition == SerieDefinition.Serie || SerieDefinition == SerieDefinition.NVD3Serie));
                 GetProperty("SerieSortType").SetIsBrowsable(PivotPosition == PivotPosition.Data && (SerieDefinition == SerieDefinition.Serie || SerieDefinition == SerieDefinition.NVD3Serie));
-                GetProperty("AxisUseValues").SetIsBrowsable(PivotPosition != PivotPosition.Data && (IsNumeric || IsDateTime));
+                GetProperty("AxisUseValues").SetIsBrowsable((PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column) && (IsNumeric || IsDateTime));
 
                 //Read only
                 GetProperty("Format").SetIsReadOnly((IsNumeric && NumericStandardFormat != NumericStandardFormat.Custom) || (IsDateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom));
