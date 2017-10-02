@@ -1295,7 +1295,6 @@ namespace Seal.Model
                     //Find the corresponding serie value...
                     ResultSerieValue value = resultSerie.Values.FirstOrDefault(i => i.XDimensionValues == xDimensionKey);
                     object yValue = (value != null ? value.Yvalue.Value : null);
-                    if (result.Length != 0) result.Append(",");
                     if (resultSerie.Element.YAxisType == AxisType.Primary && value != null && value.Yvalue.DisplayValue.Length > page.NVD3YPrimaryMaxLen) page.NVD3YPrimaryMaxLen = value.Yvalue.DisplayValue.Length;
                     if (resultSerie.Element.YAxisType == AxisType.Secondary && value != null && value.Yvalue.DisplayValue.Length > page.NVD3YSecondaryMaxLen) page.NVD3YSecondaryMaxLen = value.Yvalue.DisplayValue.Length;
 
@@ -1325,7 +1324,15 @@ namespace Seal.Model
                         yValue = ((Double)yValue).ToString(CultureInfo.InvariantCulture.NumberFormat);
                     }
 
-                    result.AppendFormat("{{x:{0},y:{1}}}", xValue, yValue == null ? "0" : yValue);
+                    if (yValue == null && GetBoolValue("nvd3_add_null_point"))
+                    {
+                        yValue = "0";
+                    }                     
+                    if (yValue != null)
+                    {
+                        if (result.Length != 0) result.Append(",");
+                        result.AppendFormat("{{x:{0},y:{1}}}", xValue, yValue);
+                    }
                 }
                 resultSerie.NVD3SerieValues = result.ToString();
             }
