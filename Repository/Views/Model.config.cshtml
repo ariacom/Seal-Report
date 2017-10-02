@@ -42,6 +42,7 @@
     Template.Parameters.Add(new Parameter() { Name = "nvd3_hide_controls", Category = ViewParameterCategory.NVD3, DisplayName = "Force Hide Controls", BoolValue = false, Description = "If true, controls (depending on chart type) to interact with the series are hidden" });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_show_legend", Category = ViewParameterCategory.NVD3, DisplayName = "Show Legend", BoolValue = true, Description = "If true, the legend is displayed in the chart" });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_bar_stacked", Category = ViewParameterCategory.NVD3, DisplayName = "Bar Stacked", BoolValue = false, Description = "If true, the Bar in chart are stacked (only for Bar chart)" });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_add_null_point", Category = ViewParameterCategory.NVD3, DisplayName = "Add Points with Null", BoolValue = false, Description = "If true, the point having an Y value equals to NULL will be inserted with a 0 value, otherwise no point is inserted in the chart" });
 
     Template.Parameters.Add(new Parameter()
     {
