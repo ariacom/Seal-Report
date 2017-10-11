@@ -35,6 +35,11 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
+    SWIGateway.prototype.IsAuthenticated = function (callback, errorcb) {
+        $.post(_sealServer + "SWIIsAuthenticated", {})
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    };
     SWIGateway.prototype.Login = function (user, password, callback, errorcb) {
         $.post(_sealServer + "SWILogin", {
             user: user, password: password

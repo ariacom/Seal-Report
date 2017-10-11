@@ -68,14 +68,16 @@ class SWIMain {
             }
         )
 
-        _gateway.GetUserProfile(
+        _gateway.IsAuthenticated(
             function (data) {
-                //User already connected
-                _main.loginSuccess(data);
-            },
-            function (data) {
-                //Try to login without authentication
-                _gateway.Login("", "", function (data) { _main.loginSuccess(data) }, function (data) { _main.loginFailure(data, true) });
+                if (data.authenticated) {
+                    //User already connected
+                    _main.loginSuccess(data);
+                }
+                else {
+                    //Try to login without authentication
+                    _gateway.Login("", "", function (data) { _main.loginSuccess(data) }, function (data) { _main.loginFailure(data, true) });
+                }
             }
         );
 

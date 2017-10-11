@@ -51,12 +51,15 @@ var SWIMain = (function () {
             $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + "\r\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\r\n" + data.Info);
             $("#footer-version").text(data.SWIVersion);
         });
-        _gateway.GetUserProfile(function (data) {
-            //User already connected
-            _main.loginSuccess(data);
-        }, function (data) {
-            //Try to login without authentication
-            _gateway.Login("", "", function (data) { _main.loginSuccess(data); }, function (data) { _main.loginFailure(data, true); });
+        _gateway.IsAuthenticated(function (data) {
+            if (data.authenticated) {
+                //User already connected
+                _main.loginSuccess(data);
+            }
+            else {
+                //Try to login without authentication
+                _gateway.Login("", "", function (data) { _main.loginSuccess(data); }, function (data) { _main.loginFailure(data, true); });
+            }
         });
         //General handler
         $(window).on('resize', function () {

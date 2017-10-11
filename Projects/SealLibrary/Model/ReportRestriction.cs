@@ -535,6 +535,7 @@ namespace Seal.Model
                 keyword.StartsWith(DateRestrictionKeyword.Today.ToString()) ||
                 keyword.StartsWith(DateRestrictionKeyword.ThisWeek.ToString()) ||
                 keyword.StartsWith(DateRestrictionKeyword.ThisMonth.ToString()) ||
+                keyword.StartsWith(DateRestrictionKeyword.ThisQuarter.ToString()) ||
                 keyword.StartsWith(DateRestrictionKeyword.ThisYear.ToString());
         }
 
@@ -564,6 +565,12 @@ namespace Seal.Model
                 else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisMonth.ToString()))
                 {
                     result = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(Convert.ToInt32(GetGap(dateKeyword, (DateRestrictionKeyword.ThisMonth.ToString()))));
+                }
+                else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisQuarter.ToString()))
+                {
+                    int thisQuarter = (DateTime.Today.Month + 2) / 3;
+                    int quarterGap = Convert.ToInt32(GetGap(dateKeyword, (DateRestrictionKeyword.ThisQuarter.ToString())));
+                    result = new DateTime(DateTime.Today.Year, 1 + 3 * (thisQuarter - 1), 1).AddMonths(3 * quarterGap);
                 }
                 else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisYear.ToString()))
                 {

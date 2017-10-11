@@ -214,6 +214,8 @@ namespace Seal.Model
         ThisWeek,
         [Description("This Month")]
         ThisMonth,
+        [Description("This Quarter")]
+        ThisQuarter,
         [Description("This Year")]
         ThisYear,
     }

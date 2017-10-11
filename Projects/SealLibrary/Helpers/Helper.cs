@@ -445,11 +445,47 @@ namespace Seal.Helpers
 
         private static void WriteLogEntry(string source, EventLogEntryType type, string message, params object[] args)
         {
+            string msg = message;
             try
             {
-                EventLog.WriteEntry(source, string.Format(message, args), type);
+                if (args.Length != 0) msg = string.Format(message, args);
             }
             catch { }
+            try
+            {
+                EventLog.WriteEntry(source, msg, type);
+            }
+            catch {}
+        }
+
+        public static void GetExceptionMessage(Exception ex)
+        {
+            var result = ex.Message;
+            if (ex.InnerException != null) result += "\r\n" + ex.InnerException.Message;
+        }
+
+        public static void WriteWebException(Exception ex, HttpRequestBase request, SecurityUser user)
+        {
+            var currentEx = ex;
+            var message = new StringBuilder("Unexpected error\r\n\r\n");
+            if (user != null) message.AppendFormat("User: '{0}', Groups: '{1}'\r\n", user.Name, user.SecurityGroupsDisplay);
+            message.AppendFormat("\r\nURL:'{0}'\r\n", request.Url.OriginalString);
+
+            if (request.Form.Count > 0)
+            {
+                foreach (string key in request.Form.Keys) message.AppendFormat("{0}={1}\r\n", key, request.Form[key]);
+            }
+            if (request.QueryString.Count > 0)
+            {
+                foreach (string key in request.QueryString.Keys) message.AppendFormat("{0}={1}\r\n", key, request.QueryString[key]);
+            }
+
+            while (currentEx != null)
+            {
+                message.AppendFormat("\r\n{0}\r\n({1})\r\n", currentEx.Message, currentEx.StackTrace);
+                currentEx = currentEx.InnerException;
+            }
+            Helper.WriteLogEntryWeb(EventLogEntryType.Error, message.ToString());
         }
 
         public static void WriteLogEntryWeb(EventLogEntryType type, string message, params object[] args)

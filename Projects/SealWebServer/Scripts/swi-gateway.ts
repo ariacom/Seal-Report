@@ -37,6 +37,12 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
+    public IsAuthenticated(callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWIIsAuthenticated", {})
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    }
+
     public Login(user: string, password: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWILogin", {
             user: user, password: password
