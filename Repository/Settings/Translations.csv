@@ -349,3 +349,6 @@ WebJS;By axis label ascending;;Par axe ascendant;;;Etter Axis etikett økende
 WebJS;By point descending;;Par point descendant;;;Etter Punkt synkende 
 WebJS;By axis label descending;;Par axe descendant;;;Etter Axis etikett synkende
 Web;Chart sort;;Tri graphe;;;Sorter på graf
+WebJS;Show summary table;;Afficher le sommaire;;;
+WebJS;Show page table;;Afficher le tableau des pages;;;
+WebJS;Show main table;;Afficher le tableau principal;;;

@@ -43,7 +43,7 @@
     <div class="container">
 
         <div class="col-lg-12">
-            <h2>Seal Web Interface Version 3.2</h2>
+            <h2>Seal Web Interface Version 3.2.4</h2>
         </div>
         <div class="col-lg-12">
             <h2>SWIGetVersions</h2>
@@ -83,7 +83,7 @@ $.post("http://demo.sealreport.org/SWIGetVersions")
                         <td>
 <pre>
 $.post("http://demo.sealreport.org/SWILogin", {
-    user: "the user name", // The use name
+    user: "the user name", // The user name
     password: "the password" // The password
 })
 .done(function (data) {
@@ -535,6 +535,32 @@ $.post("http://demo.sealreport.org/SWISaveReportDefinition", {
     f.children('input').attr('type', 'hidden');
     f.submit();
 </pre>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIIsAuthenticated</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Indicates if the current user is authenticated.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+<pre>
+$.post("http://demo.sealreport.org/SWIIsAuthenticated")
+.done(function (data) {
+        if (data.authenticated) { /* User is authenticated */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            authenticated (boolean): true is the user is authenticated<br />
                         </td>
                     </tr>
                 </tbody>

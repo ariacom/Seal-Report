@@ -1,0 +1,17 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = "Open HTML";
+
+    //If for model, the Model parameter object used for the parsing is the Model instead of the Report
+    Template.ForModel = false;
+
+    //Parameters for this template
+
+    //CSS
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Report", "Tab Page" };
+}

@@ -6,6 +6,7 @@ using Seal.Converter;
 using Seal.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -43,7 +44,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Helper.WriteLogEntryWeb(System.Diagnostics.EventLogEntryType.Error, string.Format("GetLoadTableData-> Error in parameter:{0}\r\n{1}", parameter, ex.Message));
+                Helper.WriteLogEntryWeb(EventLogEntryType.Error, string.Format("GetLoadTableData-> Error in parameter:{0}\r\n{1}", parameter, ex.Message));
                 echo = 1; len = 50; start = 0;
                 sort = ""; search = "";
             }

@@ -269,7 +269,11 @@ namespace Seal.Model
                 string sortPrefix = elementSortPosition ? string.Format("{0:000000}", en.Values.LastIndexOf(value)) : "";
                 result = sortPrefix + Model.Report.EnumDisplayValue(en, value.Id);
             }
-            else result = "000000" + result;
+            else
+            {
+                string sortPrefix = elementSortPosition ? "000000" : "";
+                result = sortPrefix + result;
+            }
             return result;
         }
 

@@ -28,7 +28,8 @@ namespace Seal.Converter
                 new string[] { "", DateRestrictionKeyword.Now.ToString(), 
                     DateRestrictionKeyword.Today.ToString(), DateRestrictionKeyword.Today.ToString() + "-1", 
                     DateRestrictionKeyword.ThisWeek.ToString(), DateRestrictionKeyword.ThisWeek.ToString() + "-1", 
-                    DateRestrictionKeyword.ThisMonth.ToString(), DateRestrictionKeyword.ThisMonth.ToString() + "-1", 
+                    DateRestrictionKeyword.ThisMonth.ToString(), DateRestrictionKeyword.ThisMonth.ToString() + "-1",
+                    DateRestrictionKeyword.ThisQuarter.ToString(), DateRestrictionKeyword.ThisQuarter.ToString() + "-1",
                     DateRestrictionKeyword.ThisYear.ToString(), DateRestrictionKeyword.ThisYear.ToString() + "-1" });
         }
     }

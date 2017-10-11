@@ -287,6 +287,18 @@ namespace Seal.Model
             return result;
         }
 
+        public void SetParameter(string name, string value)
+        {
+            var result = _parameters.FirstOrDefault(i => i.Name == name);
+            if (result != null) result.Value = value;
+        }
+
+        public void SetParameter(string name, bool value)
+        {
+            var result = _parameters.FirstOrDefault(i => i.Name == name);
+            if (result != null) result.BoolValue = value;
+        }
+
         public string GetHtmlValue(string name)
         {
             return Helper.ToHtml(GetValue(name));
@@ -316,6 +328,12 @@ namespace Seal.Model
             return css == null ? "" : css.Value;
         }
 
+        public void SetCSS(string name, string value)
+        {
+            Parameter css = _css.FirstOrDefault(i => i.Name == name);
+            if (css != null) css.Value = value;
+        }
+
         public string GetThemeValue(string name)
         {
             Parameter parameter = Theme.Values.FirstOrDefault(i => i.Name == name);
@@ -324,13 +342,21 @@ namespace Seal.Model
 
         public Color GetThemeColor(string name)
         {
-            Color result = Color.Red;
+            Color result = Color.Black;
             string colorText = GetThemeValue(name);
-            if (colorText.StartsWith("#") && colorText.Length == 7)
+            if (colorText.StartsWith("#") && colorText.Length == 7) //case #AABBCC
             {
                 try
                 {
-                    result = Color.FromArgb(int.Parse(colorText.Substring(1, 2), System.Globalization.NumberStyles.HexNumber), int.Parse(colorText.Substring(3, 2), System.Globalization.NumberStyles.HexNumber), int.Parse(colorText.Substring(5, 2), System.Globalization.NumberStyles.HexNumber));
+                    result = Color.FromArgb(int.Parse(colorText.Substring(1,2), NumberStyles.HexNumber), int.Parse(colorText.Substring(3,2), NumberStyles.HexNumber), int.Parse(colorText.Substring(5,2), NumberStyles.HexNumber));
+                }
+                catch { }
+            }
+            else if (colorText.StartsWith("#") && colorText.Length == 4) //case #ABC
+            {
+                try
+                {
+                    result = Color.FromArgb(int.Parse(colorText.Substring(1,1)+ colorText.Substring(1,1), NumberStyles.HexNumber), int.Parse(colorText.Substring(2,1)+ colorText.Substring(2,1), NumberStyles.HexNumber), int.Parse(colorText.Substring(3,1)+ colorText.Substring(3,1), NumberStyles.HexNumber));
                 }
                 catch { }
             }
@@ -1099,6 +1125,8 @@ namespace Seal.Model
 
                     serie.ChartType = serieElement.SerieType;
                     serie.LabelFormat = serieElement.FormatEl;
+                    serie.Points[0].YValues[0].ToString("");
+
 
                     if (ChartConfiguration.ChartAreas.Count > 0 && string.IsNullOrEmpty(ChartConfiguration.ChartAreas[0].AxisY.LabelStyle.Format) && serieElement.YAxisType == AxisType.Primary)
                     {
@@ -1432,6 +1460,9 @@ namespace Seal.Model
                         initMicrosoftChartConfigurationSeries();
                         page.Chart = ChartConfiguration;
                         buildMicrosoftSeries(page);
+
+                        page.Chart.Series[0].Color = System.Drawing.Color.FromArgb(179, 162, 199);
+                        Series serie = page.Chart.Series[0];
                     }
                     else if (Model.HasNVD3Serie)
                     {

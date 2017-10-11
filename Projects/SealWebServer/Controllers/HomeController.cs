@@ -99,7 +99,7 @@ namespace SealWebServer.Controllers
 
         ContentResult HandleException(Exception ex)
         {
-            Helper.WriteLogEntryWeb(EventLogEntryType.Error, "Unexpected error got:\r\n{0}\r\n\r\n{1}\r\n\r\n{2}", ex.Message, Request.Url.OriginalString, ex.StackTrace);
+            Helper.WriteWebException(ex, Request, WebUser);
 #if DEBUG
             return Content(string.Format("<b>Sorry, we got an unexpected exception.</b><br>{0}<br>{1}<br>{2}", ex.Message, Request.Url.OriginalString, ex.StackTrace));
 #else
@@ -566,6 +566,7 @@ namespace SealWebServer.Controllers
 
         JsonResult HandleSWIException(Exception ex)
         {
+            Helper.WriteWebException(ex, Request, WebUser);
             return Json(new { error = ex.Message, authenticated = (WebUser != null && WebUser.IsAuthenticated) });
         }
 
