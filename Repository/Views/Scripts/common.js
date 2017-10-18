@@ -250,6 +250,8 @@ function executeTimer() {
 
 function executeReport(nav) {
     if (hasErrors || isCancel) $("#information_div").css("display", "none");
+    if (refreshTimer) clearInterval(refreshTimer);
+
     var url = "";
     if (executionTimer == null) {
         $("#processing_message").html(startingExecText);
@@ -380,4 +382,6 @@ $(document).ready(function () {
     setButtonLabels();
 
     initNavMenu();
+
+    if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 });

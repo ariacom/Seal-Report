@@ -291,7 +291,7 @@ namespace Seal.Model
         public AggregateFunction AggregateFunction
         {
             get { return _aggregateFunction; }
-            set { _aggregateFunction = value; }
+            set { _aggregateFunction = value; UpdateEditorAttributes(); }
         }
 
         CalculationOption _calculationOption = CalculationOption.No;

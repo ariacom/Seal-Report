@@ -195,6 +195,7 @@ namespace SealWebServer.Controllers
                     execution.Execute();
                     return null;
                 }
+                else throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
             }
             catch (Exception ex)
             {
@@ -231,6 +232,7 @@ namespace SealWebServer.Controllers
                     execution.RenderHTMLDisplayForViewer();
                     return getFileResult(report.HTMLDisplayFilePath, report);
                 }
+                else throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
             }
             catch (Exception ex)
             {
@@ -323,6 +325,7 @@ namespace SealWebServer.Controllers
                     if (!System.IO.File.Exists(filePath)) throw new Exception("Error: Result file path does not exists...");
                     return getFileResult(filePath, report);
                 }
+                else throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
             }
             catch (Exception ex)
             {

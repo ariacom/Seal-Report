@@ -138,7 +138,7 @@
     <Compile Include="Forms\MultipleSelectForm.Designer.cs">
       <DependentUpon>MultipleSelectForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TreeViewEditorHelper.cs" />
+    <Compile Include="Helpers\TreeViewEditorHelper.cs" />
     <Compile Include="Forms\SQLEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
