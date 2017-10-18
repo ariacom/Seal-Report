@@ -464,11 +464,18 @@ namespace Seal.Helpers
             if (ex.InnerException != null) result += "\r\n" + ex.InnerException.Message;
         }
 
+
         public static void WriteWebException(Exception ex, HttpRequestBase request, SecurityUser user)
         {
             var currentEx = ex;
-            var message = new StringBuilder("Unexpected error\r\n\r\n");
-            if (user != null) message.AppendFormat("User: '{0}', Groups: '{1}'\r\n", user.Name, user.SecurityGroupsDisplay);
+            var message = new StringBuilder("Unexpected error:\r\n");
+            while (currentEx != null)
+            {
+                message.AppendFormat("\r\n{0}\r\n({1})\r\n", currentEx.Message, currentEx.StackTrace);
+                currentEx = currentEx.InnerException;
+            }
+
+            if (user != null) message.AppendFormat("\r\nUser: '{0}'; Groups: '{1}'; Windows User: '{2}'\r\n", user.Name, user.SecurityGroupsDisplay, Environment.UserName);
             message.AppendFormat("\r\nURL:'{0}'\r\n", request.Url.OriginalString);
 
             if (request.Form.Count > 0)
@@ -479,13 +486,7 @@ namespace Seal.Helpers
             {
                 foreach (string key in request.QueryString.Keys) message.AppendFormat("{0}={1}\r\n", key, request.QueryString[key]);
             }
-
-            while (currentEx != null)
-            {
-                message.AppendFormat("\r\n{0}\r\n({1})\r\n", currentEx.Message, currentEx.StackTrace);
-                currentEx = currentEx.InnerException;
-            }
-            Helper.WriteLogEntryWeb(EventLogEntryType.Error, message.ToString());
+            WriteLogEntryWeb(EventLogEntryType.Error, message.ToString());
         }
 
         public static void WriteLogEntryWeb(EventLogEntryType type, string message, params object[] args)

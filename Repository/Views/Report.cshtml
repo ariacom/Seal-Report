@@ -94,6 +94,8 @@
 
         var urlPrefix = "@Report.WebUrl";
         var executionTimer = null;
+        var refreshTimer = null;
+        var refreshRate = @View.GetNumericValue("refresh_rate");
         var hasRestrictions = @Helper.ToJS(Report.HasRestrictions);
         var hasErrors = @Helper.ToJS(Report.HasErrors);
         var hasNavigation = @Helper.ToJS(Report.HasNavigation && (Report.IsNavigating || Report.GenerateHTMLDisplay));/*SRKW do not modify*/

@@ -149,6 +149,9 @@ namespace Seal.Model
         public string ResultFilePath;
 
         [XmlIgnore]
+        public string FinalResultFilePath; //If set, the file is used as external file
+
+        [XmlIgnore]
         public string DisplayResultFilePath
         {
             get
@@ -835,21 +838,19 @@ namespace Seal.Model
         }
 
 
-        void checkRemoveModel(ReportView view, ReportModel model)
+        bool isModelUsedInViews(List<ReportView> views, ReportModel model)
         {
-            foreach (var childView in view.Views)
+            if (views.Exists(i => i.ModelGUID == model.GUID)) return true;
+            foreach (var childView in views)
             {
-                if (view.Views.Exists(i => i.ModelGUID == model.GUID)) throw new Exception(string.Format("The model '{0}' is already used by a view.", model.Name));
-                checkRemoveModel(childView, model);
+                if (isModelUsedInViews(childView.Views, model)) return true;
             }
+            return false;
         }
 
         public void RemoveModel(ReportModel model)
         {
-            foreach (ReportView view in Views)
-            {
-                checkRemoveModel(view, model);
-            }
+            if (isModelUsedInViews(Views, model)) throw new Exception(string.Format("The model '{0}' is already used by a view.", model.Name));
             if (Models.Count == 1) throw new Exception("Unable to remove the model: The report must contain at least one Model.");
 
             Models.Remove(model);
@@ -953,7 +954,19 @@ namespace Seal.Model
             result.Report = this;
             result.InitReferences();
             result.SortOrder = parent.Views.Count > 0 ? parent.Views.Max(i => i.SortOrder) + 1 : 1;
-            if (template.ForModel) result.ModelGUID = Models[0].GUID;
+            if (template.ForModel)
+            {
+                //take a model not used in views
+                result.ModelGUID = Models[0].GUID;
+                foreach (var model in Models)
+                {
+                    if (!isModelUsedInViews(Views, model))
+                    {
+                        result.ModelGUID = model.GUID;
+                        break;
+                    }
+                }
+            }
             parent.Views.Add(result);
             return result;
         }
@@ -1211,7 +1224,8 @@ namespace Seal.Model
             get
             {
                 List<ReportModel> result = new List<ReportModel>();
-                GetModelsToExecute(ExecutionView, result);
+                if (ExecutionView.GetBoolValue("force_models_load")) result = Models.ToList();
+                else GetModelsToExecute(ExecutionView, result);
                 return result;
             }
         }

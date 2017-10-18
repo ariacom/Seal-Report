@@ -15,8 +15,7 @@ namespace Seal.Model
         HTMLPrint,
         CSV,
         Excel,
-        PDF,
-        PDFPrint
+        PDF
     }
 
 

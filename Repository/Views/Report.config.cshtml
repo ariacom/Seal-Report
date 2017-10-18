@@ -28,6 +28,8 @@
     Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled" });
     Template.Parameters.Add(new Parameter() { Name = Parameter.ServerPaginationParameter, DisplayName = "Server Pagination Enabled", BoolValue = true, Description = "If true, data used by HTML data tables pagination are stored on the server" });
     Template.Parameters.Add(new Parameter() { Name = "additional_js", DisplayName = "Additional JavaScript", Type = ViewParameterType.Text, Description = "Additional JavaScript inserted at the top of the report result file"});
+    Template.Parameters.Add(new Parameter() { Name = "refresh_rate", DisplayName = "Auto-Refresh (seconds)", Type = ViewParameterType.Numeric, NumericValue = 0, Description = "Value in seconds to re-execute and refresh automatically the report. 0 means no refresh."});
+    Template.Parameters.Add(new Parameter() { Name = "force_models_load", DisplayName = "Load all Models", Type = ViewParameterType.Boolean, BoolValue = false, Description = "If true, all models defined in the report will be loaded and processed during execution. By default, false means to load only models belonging to the Views being parsed." });
 
     //CSS
     Template.CSS.Add(new Parameter() { Name = "header", DisplayName = "Header", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report header", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });

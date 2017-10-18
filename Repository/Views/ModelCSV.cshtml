@@ -17,7 +17,6 @@
 }
 @foreach (ResultPage page in ReportModel.Pages)
 {
-    View.InitPageChart(page);
     if (page.PageTable != null && page.PageTable.Lines.Count == 2 && page.PageTable.Lines[0].Length > 0)
     {
         for (int i = 0; i < page.PageTable.Lines[0].Length; i++)

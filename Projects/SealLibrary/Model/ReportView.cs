@@ -1125,8 +1125,6 @@ namespace Seal.Model
 
                     serie.ChartType = serieElement.SerieType;
                     serie.LabelFormat = serieElement.FormatEl;
-                    serie.Points[0].YValues[0].ToString("");
-
 
                     if (ChartConfiguration.ChartAreas.Count > 0 && string.IsNullOrEmpty(ChartConfiguration.ChartAreas[0].AxisY.LabelStyle.Format) && serieElement.YAxisType == AxisType.Primary)
                     {
@@ -1452,7 +1450,7 @@ namespace Seal.Model
                 try
                 {
                     checkChartIntegrity(page);
-                    if (Model.HasMicrosoftSerie)
+                    if (Model.HasMicrosoftSerie && ChartConfiguration != null)
                     {
                         Thread.CurrentThread.CurrentCulture = Report.ExecutionView.CultureInfo;
                         //reload it from configuration

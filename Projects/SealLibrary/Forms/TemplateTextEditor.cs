@@ -320,7 +320,7 @@ namespace Seal.Forms
                     if (context.PropertyDescriptor.Name == "CustomTemplate")
                     {
                         if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = frm.View.ViewTemplateText;
-                        template = frm.View.ViewTemplateText.Trim();
+                        template = frm.View.Template.Text.Trim();
                         frm.Text = "Edit custom template";
                         frm.TypeForCheckSyntax = frm.View.Template.ForModel ? typeof(ReportModel) : typeof(Report);
                         frm.textBox.ConfigurationManager.Language = "cs";
