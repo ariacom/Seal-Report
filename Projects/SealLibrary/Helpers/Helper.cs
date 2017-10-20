@@ -272,6 +272,7 @@ namespace Seal.Helpers
             else if (format == NumericStandardFormat.Numeric3) return "N3";
             else if (format == NumericStandardFormat.Numeric4) return "N4";
             else if (format == NumericStandardFormat.Percentage0) return "P0";
+            else if (format == NumericStandardFormat.Percentage1) return "P1";
             else if (format == NumericStandardFormat.Percentage2) return "P2";
             else if (format == NumericStandardFormat.Currency0) return "C0";
             else if (format == NumericStandardFormat.Currency2) return "C2";

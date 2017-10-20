@@ -1,9 +1,9 @@
 ﻿declare var tra;
 declare var availableDateKeywords;
-declare function setDatePickerDefaults() : void;
+declare function setDatePickerDefaults(): void;
 
 module SWIUtil {
-    export function tr(reference : string) : string {
+    export function tr(reference: string): string {
         var result = tra[reference];
         if (!result || result == "") result = reference;
         return result;
@@ -54,7 +54,7 @@ module SWIUtil {
     }
 
     export function IsEnabled(control: JQuery): boolean {
-        return ! (control.attr('disabled') || control.prop('disabled'))
+        return !(control.attr('disabled') || control.prop('disabled'))
     }
 
     export function ActivatePanel(button: JQuery, panel: JQuery, active: boolean) {
@@ -80,7 +80,7 @@ module SWIUtil {
         return $result;
     }
 
-    export function GetAnchorWithIcon(text: string, id: string, type: string, icon: string) : JQuery {
+    export function GetAnchorWithIcon(text: string, id: string, type: string, icon: string): JQuery {
         var $a = $("<a/>").text(text);
         $a.html("<i class='" + icon + "'></i> " + $a.html());
         if (id) $a.prop("id", id);
@@ -102,5 +102,13 @@ module SWIUtil {
             index++;
         }
         return result;
+    }
+
+    export function GetAggregateName(aggr: number) {
+        if (aggr == 1) return SWIUtil.tr2("Minimum of");
+        else if (aggr == 2) return SWIUtil.tr2("Maximum of");
+        else if (aggr == 3) return SWIUtil.tr2("Average of");
+        else if (aggr == 4) return SWIUtil.tr2("Count of");
+        return "";
     }
 }

@@ -116,5 +116,17 @@ var SWIUtil;
         return result;
     }
     SWIUtil.UniqueName = UniqueName;
+    function GetAggregateName(aggr) {
+        if (aggr == 1)
+            return SWIUtil.tr2("Minimum of");
+        else if (aggr == 2)
+            return SWIUtil.tr2("Maximum of");
+        else if (aggr == 3)
+            return SWIUtil.tr2("Average of");
+        else if (aggr == 4)
+            return SWIUtil.tr2("Count of");
+        return "";
+    }
+    SWIUtil.GetAggregateName = GetAggregateName;
 })(SWIUtil || (SWIUtil = {}));
 //# sourceMappingURL=swi-utils.js.map

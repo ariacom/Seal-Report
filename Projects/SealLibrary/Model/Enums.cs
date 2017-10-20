@@ -95,9 +95,11 @@ namespace Seal.Model
         Decimal3,
         [Description("Decimal 4  (1234.5678)")]
         Decimal4,
-        [Description("Percentage 0 Decimal (100 %)")]
+        [Description("Percentage 0 Decimal (12 %)")]
         Percentage0,
-        [Description("Percentage 2 Decimals (100.00 %)")]
+        [Description("Percentage 1 Decimal (12.3 %)")]
+        Percentage1,
+        [Description("Percentage 2 Decimals (12.34 %)")]
         Percentage2,
         [Description("Currency 0 Decimal ($123)")]
         Currency0,

@@ -136,7 +136,7 @@ namespace Seal.Controls
                     source.Controls.Remove(button);
                     element.PivotPosition = Position;
                     element.InitEditor();
-                    element.SetDefaults();
+                    //element.SetDefaults(); No need to set default aggregat
                     _modelPanel.Model.CheckSeries();
                     source.RedrawPanel();
                     Controls.Add(button);
