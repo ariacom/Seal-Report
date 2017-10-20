@@ -948,7 +948,7 @@ namespace Seal.Model
                             //Handle calculation
                             if (!totalCell.IsTitle)
                             {
-                                if (element.CalculationOption == CalculationOption.PercentageColumn)
+                                if (element.IsNumeric && element.CalculationOption == CalculationOption.PercentageColumn)
                                 {
                                     foreach (ResultCell cell in totalCell.Cells) cell.Value = cell.DoubleValue / totalCell.DoubleValue;
                                     totalCell.Value = 1;
@@ -1009,12 +1009,12 @@ namespace Seal.Model
                             //Handle calculations
                             if (!totalCell.IsTitle)
                             {
-                                if (element.CalculationOption == CalculationOption.PercentageRow)
+                                if (element.IsNumeric && element.CalculationOption == CalculationOption.PercentageRow)
                                 {
                                     foreach (ResultCell cell in totalCell.Cells) cell.Value = cell.DoubleValue / totalCell.DoubleValue;
                                     totalCell.Value = 1;
                                 }
-                                else if (element.CalculationOption == CalculationOption.PercentageAll)
+                                else if (element.IsNumeric && element.CalculationOption == CalculationOption.PercentageAll)
                                 {
                                     ResultTotalCell totalTotalCell = page.DataTable.TotalCells.FirstOrDefault(c => c.Element == element);
                                     if (totalTotalCell != null)
@@ -1024,7 +1024,7 @@ namespace Seal.Model
                                     }
                                 }
 
-                                if (i == page.DataTable.Lines.Count - 1 && element.CalculationOption != CalculationOption.No)
+                                if (element.IsNumeric && i == page.DataTable.Lines.Count - 1 && element.CalculationOption != CalculationOption.No)
                                 {
                                     //case of total of total cell with calc options, set value to 1
                                     totalCell.Value = 1;
@@ -1035,7 +1035,7 @@ namespace Seal.Model
                 }
 
                 //Set total totals to 1 if calculation options.
-                foreach (ResultTotalCell cell in page.DataTable.TotalCells.Where(i => i.Element.CalculationOption != CalculationOption.No)) cell.Value = 1;
+                foreach (ResultTotalCell cell in page.DataTable.TotalCells.Where(i => i.Element.CalculationOption != CalculationOption.No && i.Element.IsNumeric)) cell.Value = 1;
 
                 //Add totals for Page and Summary tables
                 if (page.PageTable != null && page.PageTable.Lines.Count == 2 && page.PageTable.Lines[0].Length > 0)

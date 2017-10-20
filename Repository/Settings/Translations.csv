@@ -200,6 +200,11 @@ Web;Values;;Valeurs;;;Verdier
 Web;Error: only files (and not reports) can be copied to this folder.;;Erreur: Seulement les fichiers (et non les rapports) peuvent être copiés dans ce répetoire.;;;Feil: Kun filer (og ikke rapporter) kan kopieres til denne folderen.
 Web;Zip attachments;;Options ZIP;;;Zip vedlegg
 Web;Zip password;;Mot de passe ZIP;;;Zip passord
+WebJS;Options;;Options;;;
+WebJS;No calculation option;;Pas d'option de calcul;;;
+WebJS;% of the row;;% de la ligne;;;
+WebJS;% of the column;;% de  la colonne;;;
+WebJS;% of the total;;% du total;;;
 WebJS;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %;# av % valgt
 WebJS;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_);(filtrert fra _MAX_)
 WebJS;No Output;;Aucune Destination;;;Ingen målområde
@@ -208,11 +213,15 @@ WebJS;1 Decimal;;1 Décimale;;;1 desimal
 WebJS;2 Decimals;;2 Décimales;;;2 desimaler
 WebJS;3 Decimals;;3 Décimales;;;3 desimaler
 WebJS;4 Decimals;;4 Décimales;;;4 desimaler
+WebJS;Percentage;;Pourcentage;;;
+WebJS;Percentage 1 Dec.;;Pourcentage 1 Déc.;;;
+WebJS;Percentage 2 Dec.;;Pourcentage 2 Déc.;;;
 WebJS;All selected;;Tout est sélectionné;Seleziona tutto;Selecionar tudo;Alle valgt
 WebJS;Ascendant;;Ascendant;;;Stigende
 WebJS;Automatic ascendant;;Automatique ascendant;;;Automatisk stignende
 WebJS;Automatic descendant;;Automatique descendant;;;Automatisk synkende
 WebJS;Average;;Moyenne;;;Gjennomsnitt
+WebJS;Average of;;Moyenne de;;;Gjennomsnitt av
 WebJS;Axis;;Axe;;;Aksis
 WebJS;Bar;;Barre;;;Bar
 WebJS;Contains;;Contient;;;Inneholder
@@ -274,6 +283,7 @@ WebJS;Long date;;Date longue;;;Lang dato
 WebJS;Maximum;;Maximum;;;Maskimum
 WebJS;Maximum of;;Maximum de;;;Maksimum av
 WebJS;Minimum;;Minimum;;;Minimum
+WebJS;Minimum of;;Minimum de;;;Minimum av
 WebJS;minute;;minute;;;minutt
 WebJS;minutes;;minutes;;;minutter
 WebJS;Modified;;Modifié;;;Endret

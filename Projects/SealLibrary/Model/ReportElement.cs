@@ -131,6 +131,7 @@ namespace Seal.Model
             else if (IsDateTime)
             {
                 AggregateFunction = AggregateFunction.Max;
+                TotalAggregateFunction = AggregateFunction.Max;
             }
             else
             {
@@ -305,11 +306,11 @@ namespace Seal.Model
                 _calculationOption = value;
                 if (Source != null)
                 {
-                    if (_calculationOption != Seal.Model.CalculationOption.No && string.IsNullOrEmpty(Format)) NumericStandardFormat = NumericStandardFormat.Percentage0;
-                    else if (_calculationOption == Seal.Model.CalculationOption.No && NumericStandardFormat != NumericStandardFormat.Custom)
+                    if (_calculationOption != CalculationOption.No && (string.IsNullOrEmpty(Format) || NumericStandardFormat == NumericStandardFormat.Default)) NumericStandardFormat = NumericStandardFormat.Percentage0;
+                    else if (_calculationOption == CalculationOption.No && (NumericStandardFormat == NumericStandardFormat.Percentage0 || NumericStandardFormat == NumericStandardFormat.Percentage1 || NumericStandardFormat == NumericStandardFormat.Percentage2))
                     {
                         Format = "";
-                        NumericStandardFormat = NumericStandardFormat.Custom;
+                        NumericStandardFormat = NumericStandardFormat.Default;
                     }
                 }
             }

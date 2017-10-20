@@ -201,8 +201,6 @@ namespace SealWebServer.Controllers
             {
                 return HandleException(ex);
             }
-
-            return null;
         }
 
         public ActionResult ActionNavigate(string execution_guid)
@@ -238,7 +236,6 @@ namespace SealWebServer.Controllers
             {
                 return HandleException(ex);
             }
-            return null;
         }
 
         public ActionResult ActionGetNavigationLinks(string execution_guid)
@@ -260,7 +257,7 @@ namespace SealWebServer.Controllers
                 return HandleException(ex);
             }
 
-            return null;
+            return null ;
         }
 
         public ActionResult ActionRefreshReport(string execution_guid)
@@ -331,8 +328,6 @@ namespace SealWebServer.Controllers
             {
                 return HandleException(ex);
             }
-
-            return Content(_noReportFoundMessage);
         }
 
 
@@ -392,6 +387,7 @@ namespace SealWebServer.Controllers
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
                     Report report = execution.Report;
                     report.UpdateViewParameter(parameter_view_id, parameter_view_name, parameter_view_value);
+                    return null;
                 }
             }
             catch (Exception ex)

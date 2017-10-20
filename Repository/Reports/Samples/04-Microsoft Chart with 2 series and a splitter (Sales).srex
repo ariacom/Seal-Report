@@ -14,8 +14,7 @@
       <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
       <IsDefault>false</IsDefault>
       <IsNoSQL>false</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
@@ -47,6 +46,7 @@
       <SqlGroupBy />
       <SqlOrderBy />
       <IgnorePrePostError>false</IgnorePrePostError>
+      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -81,8 +81,6 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>2cfaeb17-5ba9-486e-85ec-dc349855b9ed</GUID>
@@ -115,8 +113,6 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>318e4a99-855d-4c84-aa77-f45b5439b8d9</GUID>
@@ -149,8 +145,6 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>AxisLabel</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>f4fa164a-efe8-4597-bcc3-cdb124cc0975</GUID>
@@ -183,8 +177,6 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>6c333c9b-0303-40fe-87be-f89d161ec0a7</GUID>
@@ -217,8 +209,6 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[4e191487-5f6f-4509-be97-b1e1b731ef2b]
@@ -254,8 +244,6 @@
           <SerieSortOrder>Ascending</SerieSortOrder>
           <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>None</Prompt>
           <Required>false</Required>
           <TypeRe>Default</TypeRe>
@@ -311,7 +299,7 @@
           <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;Chart Palette="None" Size="900, 400"&gt;
   &lt;Series&gt;
-    &lt;Series Name="Amount(318e4a99-855d-4c84-aa77-f45b5439b8d9)" ChartArea="ChartArea1" LabelFormat="N0" Legend="Legend1" ChartType="StackedColumn"&gt;
+    &lt;Series Name="Amount(318e4a99-855d-4c84-aa77-f45b5439b8d9)" ChartArea="ChartArea1" LabelFormat="N0" Legend="Legend1" ChartType="StackedColumn" IsValueShownAsLabel="True"&gt;
     &lt;/Series&gt;
     &lt;Series Name="Quantity(f4fa164a-efe8-4597-bcc3-cdb124cc0975)" ChartArea="ChartArea1" LabelFormat="N0" Legend="Legend1" ChartType="Spline" YAxisType="Secondary" IsValueShownAsLabel="True"&gt;
     &lt;/Series&gt;
@@ -327,7 +315,7 @@
   &lt;ChartAreas&gt;
     &lt;ChartArea Name="ChartArea1" BackColor="255, 192, 128" BackGradientStyle="TopBottom"&gt;
       &lt;AxisY&gt;
-        &lt;LabelStyle Format="N2" /&gt;
+        &lt;LabelStyle Format="N0" /&gt;
       &lt;/AxisY&gt;
       &lt;AxisY2&gt;
         &lt;LabelStyle Format="N0" /&gt;
@@ -335,6 +323,7 @@
     &lt;/ChartArea&gt;
   &lt;/ChartAreas&gt;
 &lt;/Chart&gt;</ChartConfigurationXml>
+          <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
@@ -359,6 +348,7 @@
       <CultureName />
       <CSS />
       <SortOrder>0</SortOrder>
+      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
