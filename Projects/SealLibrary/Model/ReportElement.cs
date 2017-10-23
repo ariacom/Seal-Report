@@ -43,7 +43,7 @@ namespace Seal.Model
                 GetProperty("TotalAggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("ShowTotal").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("CellScript").SetIsBrowsable(true);
-                GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data && IsNumeric);
+                GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("EnumGUIDEL").SetIsBrowsable(true);
 
                 GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
@@ -68,6 +68,7 @@ namespace Seal.Model
                 GetProperty("SerieSortOrder").SetIsReadOnly((SerieDefinition != SerieDefinition.Serie && SerieDefinition != SerieDefinition.NVD3Serie) || _serieSortType == SerieSortType.None);
                 GetProperty("SerieSortType").SetIsReadOnly(SerieDefinition != SerieDefinition.Serie && SerieDefinition != SerieDefinition.NVD3Serie);
                 GetProperty("AxisUseValues").SetIsReadOnly(SerieDefinition != SerieDefinition.Axis);
+                GetProperty("CalculationOption").SetIsReadOnly(!IsNumeric);
 
                 TypeDescriptor.Refresh(this);
             }
