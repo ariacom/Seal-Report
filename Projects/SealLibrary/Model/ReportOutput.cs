@@ -40,7 +40,8 @@ namespace Seal.Model
                 GetProperty("PostScript").SetIsBrowsable(true);
                 GetProperty("ViewParameters").SetIsBrowsable(true);
                 GetProperty("ViewCSS").SetIsBrowsable(true);
-
+                GetProperty("OverwriteFromCfg").SetIsBrowsable(true);
+                
                 GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice);
                 GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice);
 
@@ -170,6 +171,21 @@ namespace Seal.Model
                 return _viewCSS;
             }
             set { _viewCSS = value; }
+        }
+
+        private bool _overwriteFromCfg = true;
+        [Category("Definition"), DisplayName("Overwrite if differs from the configuration"), Description("If true, the custom parameters and CSS values are used only if they are different from the default configuration value. If false, the custom values are used only if they are different from the root View values."), Id(8, 1)]
+        public bool OverwriteFromCfg
+        {
+            get
+            {
+                return _overwriteFromCfg;
+            }
+
+            set
+            {
+                _overwriteFromCfg = value;
+            }
         }
 
         private string _viewGUID;
@@ -454,10 +470,30 @@ namespace Seal.Model
             _tempParameters = ViewParameters.ToList();
             _tempCSS = ViewCSS.ToList();
 
-            //Remove parameters and CSS identical to config
-            ViewParameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
-            ViewCSS.RemoveAll(i => i.Value == i.ConfigValue);
+            //Remove parameters and CSS identical to config, or different from the current view value
+            if (OverwriteFromCfg)
+            {
+                ViewParameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
+                ViewCSS.RemoveAll(i => i.Value == i.ConfigValue);
+            }
+            else
+            {
+                ViewParameters.RemoveAll(i => i.Value == null || View.Parameters.Exists(j => j.Name == i.Name && j.Value == i.Value));
+                ViewCSS.RemoveAll(i => View.CSS.Exists(j => j.Name == i.Name && j.Value == i.Value));
+            }
         }
+
+
+        public void CopyParameters(List<Parameter> source, List<Parameter> destination)
+        {
+            var sources = (OverwriteFromCfg ? source.Where(i => i.Value != null && i.Value != i.ConfigValue) : source.Where(i => i.Value != null && source.Exists(j => j.Name == i.Name && j.Value == i.Value)));
+            foreach (var sourceParameter in sources)
+            {
+                var destParameter = destination.FirstOrDefault(i => i.Name == sourceParameter.Name);
+                if (destParameter != null) destParameter.Value = sourceParameter.Value;
+            }
+        }
+
 
         public void AfterSerialization()
         {

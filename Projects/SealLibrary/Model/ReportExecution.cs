@@ -1438,7 +1438,10 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Report.Cancel = true;
-                    SetError("Error processing output '{0}'\r\n{1}", output.Name, ex.Message);
+                    var extraMessage = "";
+                    if (output.Device is OutputEmailDevice) extraMessage = string.Format("\r\n\r\nUsing the Server Manager, check the configuration of the device: '{0}'", output.Device.FullName);
+
+                    SetError("Error processing output '{0}'\r\n{1}{2}", output.Name, ex.Message, extraMessage);
                 }
                 finally
                 {

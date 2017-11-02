@@ -199,15 +199,6 @@ namespace Seal.Model
             get { return "<Click to reset to the default value>"; }
         }
 
-        static public void CopyParameters(List<Parameter> source, List<Parameter> destination)
-        {
-            foreach (var sourceParameter in source.Where(i => i.Value != null && i.Value != i.ConfigValue))
-            {
-                var destParameter = destination.FirstOrDefault(i => i.Name == sourceParameter.Name);
-                if (destParameter != null) destParameter.Value = sourceParameter.Value;
-            }
-
-        }
     }
 
     public class SecurityParameter : Parameter
