@@ -274,8 +274,8 @@ namespace Seal.Model
             if (ForOutput)
             {
                 //Check custom Output Parameters and CSS
-                Parameter.CopyParameters(OutputToExecute.ViewParameters, OutputToExecute.View.Parameters);
-                Parameter.CopyParameters(OutputToExecute.ViewCSS, OutputToExecute.View.CSS);
+                OutputToExecute.CopyParameters(OutputToExecute.ViewParameters, OutputToExecute.View.Parameters);
+                OutputToExecute.CopyParameters(OutputToExecute.ViewCSS, OutputToExecute.View.CSS);
 
                 //Add the security context for the output if specified
                 if (!string.IsNullOrWhiteSpace(OutputToExecute.UserName) || !string.IsNullOrWhiteSpace(OutputToExecute.UserGroups))
