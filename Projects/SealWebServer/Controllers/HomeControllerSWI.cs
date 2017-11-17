@@ -23,6 +23,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIIsAuthenticated()
         {
+            WriteDebug("SWIIsAuthenticated");
             try
             {
                 return Json( new { authenticated = (WebUser != null && WebUser.IsAuthenticated) });
@@ -37,6 +38,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWILogin(string user, string password)
         {
+            WriteDebug("SWILogin");
             try
             {
                 if (WebUser == null || !WebUser.IsAuthenticated || WebUser.WebUserName != user)
@@ -68,6 +70,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetRootFolders()
         {
+            WriteDebug("SWIGetRootFolders");
             try
             {
                 checkSWIAuthentication();
@@ -96,6 +99,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetFolders(string path)
         {
+            WriteDebug("SWIGetFolders");
             try
             {
                 checkSWIAuthentication();
@@ -114,6 +118,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetFolderDetail(string path)
         {
+            WriteDebug("SWIGetFolderDetail");
             try
             {
                 SWIFolder folder = getFolder(path);
@@ -147,6 +152,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWISearch(string path, string pattern)
         {
+            WriteDebug("SWISearch");
             try
             {
                 SWIFolder folder = getFolder(path);
@@ -164,6 +170,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIDeleteFolder(string path)
         {
+            WriteDebug("SWIDeleteFolder");
             try
             {
                 SWIFolder folder = getFolder(path);
@@ -180,6 +187,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWICreateFolder(string path)
         {
+            WriteDebug("SWICreateFolder");
             try
             {
                 SWIFolder folder = getFolder(path);
@@ -196,6 +204,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIRenameFolder(string source, string destination)
         {
+            WriteDebug("SWIRenameFolder");
             try
             {
                 SWIFolder folderSource = getFolder(source);
@@ -213,6 +222,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetReportDetail(string path)
         {
+            WriteDebug("SWIGetReportDetail");
             try
             {
                 SWIFolder folder = getParentFolder(path);
@@ -241,6 +251,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIDeleteFiles(string paths)
         {
+            WriteDebug("SWIDeleteFiles");
             try
             {
                 checkSWIAuthentication();
@@ -276,6 +287,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIMoveFile(string source, string destination, bool copy)
         {
+            WriteDebug("SWIMoveFile");
             try
             {
                 SWIFolder folderSource = getParentFolder(source);
@@ -315,6 +327,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWExecuteReportToResult(string path, string viewGUID, string outputGUID, string format)
         {
+            WriteDebug("SWExecuteReportToResult");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -360,6 +373,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWExecuteReport(string path, bool? render, string viewGUID, string outputGUID)
         {
+            WriteDebug("SWExecuteReport");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -390,6 +404,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWViewFile(string path)
         {
+            WriteDebug("SWViewFile");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -412,6 +427,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWILogout()
         {
+            WriteDebug("SWILogout");
             try
             {
                 if (WebUser != null) WebUser.Logout();
@@ -428,6 +444,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWISetUserProfile(string culture)
         {
+            WriteDebug("SWISetUserProfile");
             try
             {
                 checkSWIAuthentication();
@@ -448,6 +465,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetUserProfile()
         {
+            WriteDebug("SWIGetUserProfile");
             try
             {
                 checkSWIAuthentication();
@@ -463,6 +481,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetCultures()
         {
+            WriteDebug("SWIGetCultures");
             try
             {
                 checkSWIAuthentication();
@@ -483,6 +502,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWITranslate(string context, string instance, string reference)
         {
+            WriteDebug("SWITranslate");
             try
             {
                 checkSWIAuthentication();
@@ -498,6 +518,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetVersions()
         {
+            WriteDebug("SWIGetVersions");
             try
             {
                 return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion, Info = Info });

@@ -357,11 +357,11 @@ namespace Seal.Helpers
         {
             //Force the load of the assemblies
             if (dummy == null) dummy = new HtmlString("");
-            if (dummy2 == null) dummy2 = new DataTable(); 
-            if (dummy3 == null) dummy3 = new OleDbConnection(); 
+            if (dummy2 == null) dummy2 = new DataTable();
+            if (dummy3 == null) dummy3 = new OleDbConnection();
             if (dummy4 == null) dummy4 = new LdapConnection("");
-            if (dummy5 == null) dummy5 = new SyndicationFeed(); 
-            if (dummy6 == null) dummy6 = new XDocument(); 
+            if (dummy5 == null) dummy5 = new SyndicationFeed();
+            if (dummy6 == null) dummy6 = new XDocument();
         }
 
         static public string ParseRazor(string script, object model)
@@ -456,7 +456,7 @@ namespace Seal.Helpers
             {
                 EventLog.WriteEntry(source, msg, type);
             }
-            catch {}
+            catch { }
         }
 
         public static void GetExceptionMessage(Exception ex)
@@ -465,6 +465,35 @@ namespace Seal.Helpers
             if (ex.InnerException != null) result += "\r\n" + ex.InnerException.Message;
         }
 
+
+        private static string GetIPAddress(HttpRequestBase request)
+        {
+            string ipAddress = request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (!string.IsNullOrEmpty(ipAddress))
+            {
+                string[] addresses = ipAddress.Split(',');
+                if (addresses.Length != 0)
+                {
+                    return addresses[0];
+                }
+            }
+            return request.ServerVariables["REMOTE_ADDR"];
+        }
+
+        private static string GetContextDetail(HttpRequestBase request, SecurityUser user)
+        {
+            var result = new StringBuilder("\r\n");
+            if (user != null) result.AppendFormat("User: '{0}'; Groups: '{1}'; Windows User: '{2}'\r\n", user.Name, user.SecurityGroupsDisplay, Environment.UserName);
+            if (request != null)
+            {
+                result.AppendFormat("URL: '{0}'\r\n", request.Url.OriginalString);
+                if (request.RequestContext != null && request.RequestContext.HttpContext != null) result.AppendFormat("Session: '{0}'\r\n", request.RequestContext.HttpContext.Session.SessionID);                
+                result.AppendFormat("IP: '{0}'\r\n", GetIPAddress(request));
+                if (request.Form.Count > 0) foreach (string key in request.Form.Keys) result.AppendFormat("{0}={1}\r\n", key, request.Form[key]);
+                if (request.QueryString.Count > 0) foreach (string key in request.QueryString.Keys) result.AppendFormat("{0}={1}\r\n", key, request.QueryString[key]);
+            }
+            return result.ToString();
+        }
 
         public static void WriteWebException(Exception ex, HttpRequestBase request, SecurityUser user)
         {
@@ -475,19 +504,8 @@ namespace Seal.Helpers
                 message.AppendFormat("\r\n{0}\r\n({1})\r\n", currentEx.Message, currentEx.StackTrace);
                 currentEx = currentEx.InnerException;
             }
-
-            if (user != null) message.AppendFormat("\r\nUser: '{0}'; Groups: '{1}'; Windows User: '{2}'\r\n", user.Name, user.SecurityGroupsDisplay, Environment.UserName);
-            message.AppendFormat("\r\nURL:'{0}'\r\n", request.Url.OriginalString);
-
-            if (request.Form.Count > 0)
-            {
-                foreach (string key in request.Form.Keys) message.AppendFormat("{0}={1}\r\n", key, request.Form[key]);
-            }
-            if (request.QueryString.Count > 0)
-            {
-                foreach (string key in request.QueryString.Keys) message.AppendFormat("{0}={1}\r\n", key, request.QueryString[key]);
-            }
-            WriteLogEntryWeb(EventLogEntryType.Error, message.ToString());
+            message.Append(GetContextDetail(request, user));
+            WriteLogEntry("Seal Web Server", EventLogEntryType.Error, message.ToString());
         }
 
         public static void WriteLogEntryWeb(EventLogEntryType type, string message, params object[] args)
@@ -495,8 +513,19 @@ namespace Seal.Helpers
             WriteLogEntry("Seal Web Server", type, message, args);
         }
 
+        public static void WriteLogEntryWeb(EventLogEntryType type, HttpRequestBase request, SecurityUser user, string message, params object[] args)
+        {
+            WriteLogEntry("Seal Web Server", type, message + GetContextDetail(request, user), args);
+        }
+
+        public static void WriteLogEntryWebDebug(HttpRequestBase request, SecurityUser user, string message)
+        {
+            WriteLogEntry("Seal Web Server", EventLogEntryType.Information, message + GetContextDetail(request, user));
+        }
+
         public static void WriteLogEntryScheduler(EventLogEntryType type, string message, params object[] args)
         {
+            var message2 = new StringBuilder("Unexpected error:\r\n");
             WriteLogEntry("Seal Task Scheduler", type, message, args);
         }
 
@@ -672,7 +701,7 @@ namespace Seal.Helpers
             var ext = Path.GetExtension(path);
             string type;
             if (ext == ".ico") type = "x-icon";
-            else type = ext.Replace(".","");
+            else type = ext.Replace(".", "");
             return "data:image/" + type + ";base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
         }
 

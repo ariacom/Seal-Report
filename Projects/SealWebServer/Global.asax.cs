@@ -13,6 +13,7 @@ using System.Web.Routing;
 using Seal.Helpers;
 using Seal.Model;
 using SealWebServer.Controllers;
+using System.Configuration;
 
 namespace SealWebServer
 {
@@ -20,7 +21,7 @@ namespace SealWebServer
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
-        public const string LiveSessionsCount = "LiveSessionsCount";
+        public static bool DebugMode = false;
 
         protected void Application_Start()
         {
@@ -30,9 +31,9 @@ namespace SealWebServer
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            Application[LiveSessionsCount] = 0;
-
             Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
+
+            DebugMode = (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["DebugMode"]) && ConfigurationManager.AppSettings["DebugMode"].ToLower() == "true");
         }
 
         protected void Application_End()
@@ -42,20 +43,21 @@ namespace SealWebServer
 
         protected void Session_Start()
         {
-            Application[LiveSessionsCount] = ((int)Application[LiveSessionsCount]) + 1;
         }
 
         protected void Session_End()
         {
-            Application[LiveSessionsCount] = ((int)Application[LiveSessionsCount]) - 1;
-            var securityUserName = "";
+            SecurityUser user = null;
             if (Session[HomeController.SessionUser] != null)
             {
-                var user = (SecurityUser)Session[HomeController.SessionUser];
-                securityUserName = user.Name;
+                user = (SecurityUser)Session[HomeController.SessionUser];
+                Helper.WriteLogEntryWeb(EventLogEntryType.Information, null, user, "Ending Web Session '{0}' for user '{1}'", Session.SessionID, user.Name);
                 user.Logout();
             }
-            Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Web Session for user '{0}'", securityUserName);
+            else
+            {
+                Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Web Session '{0}'", Session.SessionID);
+            }
         }
     }
 }
