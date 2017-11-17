@@ -83,13 +83,13 @@ namespace Seal.Model
                 }
             }
 
-            if (!SealSecurity.LoggedUsers.Contains(this)) SealSecurity.LoggedUsers.Add(this);
+            SealSecurity.AddLoggedUsed(this);
         }
 
         public void Logout()
         {
             SecurityGroups.Clear();
-            if (SealSecurity.LoggedUsers.Contains(this)) SealSecurity.LoggedUsers.Remove(this);
+            SealSecurity.RemoveLoggedUsed(this);
         }
 
 

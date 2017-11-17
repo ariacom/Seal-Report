@@ -398,5 +398,22 @@ namespace Seal.Model
         }
 
         static public List<SecurityUser> LoggedUsers = new List<SecurityUser>();
+
+        static public void AddLoggedUsed(SecurityUser user)
+        {
+            lock (LoggedUsers)
+            {
+                if (!LoggedUsers.Contains(user)) LoggedUsers.Add(user);
+            }
+        }
+
+        static public void RemoveLoggedUsed(SecurityUser user)
+        {
+            lock (LoggedUsers)
+            {
+                if (LoggedUsers.Contains(user)) LoggedUsers.Remove(user);
+            }
+
+        }
     }
 }

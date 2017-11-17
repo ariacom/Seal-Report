@@ -157,6 +157,15 @@ namespace SealWebServer.Controllers
             Response.Cookies.Add(cookie);
         }
 
+        public void WriteDebug(string message)
+        {
+            if (MvcApplication.DebugMode)
+            {
+                Debug.WriteLine(message);
+                Helper.WriteLogEntryWebDebug(Request, WebUser, message);
+            }
+        }
+
         public ActionResult Main()
         {
 
@@ -177,8 +186,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionExecuteReport(string execution_guid)
         {
-            Debug.WriteLine(string.Format("ActionExecuteReport {0}", execution_guid));
-
+            WriteDebug("ActionExecuteReport");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -188,7 +196,7 @@ namespace SealWebServer.Controllers
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
                     Report report = execution.Report;
 
-                    Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting report {1} for user '{0}'", WebUser.Name, report.FilePath);
+                    Helper.WriteLogEntryWeb(EventLogEntryType.Information, Request, WebUser, "Starting report '{0}'", report.FilePath);
                     initInputRestrictions(report);
                     while (execution.IsConvertingToExcel) Thread.Sleep(100);
                     report.IsNavigating = false;
@@ -205,8 +213,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionNavigate(string execution_guid)
         {
-            Debug.WriteLine(string.Format("ActionNavigate {0}", execution_guid));
-
+            WriteDebug("ActionNavigate");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -220,7 +227,7 @@ namespace SealWebServer.Controllers
                     Report report = execution.Report;
                     Session[report.ExecutionGUID] = execution;
 
-                    Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Navigation report {1} for user '{0}'", WebUser.Name, report.FilePath);
+                    Helper.WriteLogEntryWeb(EventLogEntryType.Information, Request, WebUser, "Navigation report '{0}'", report.FilePath);
 
                     report.ExecutionContext = ReportExecutionContext.WebReport;
                     report.SecurityContext = WebUser;
@@ -240,6 +247,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionGetNavigationLinks(string execution_guid)
         {
+            WriteDebug("ActionGetNavigationLinks");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -262,8 +270,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionRefreshReport(string execution_guid)
         {
-            Debug.WriteLine(string.Format("ActionRefreshReport {0}", execution_guid));
-
+            WriteDebug("ActionRefreshReport");
             string error = "";
             try
             {
@@ -304,8 +311,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult Result(string execution_guid)
         {
-            Debug.WriteLine(string.Format("Result {0}", execution_guid));
-
+            WriteDebug("Result");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -316,8 +322,8 @@ namespace SealWebServer.Controllers
                     Report report = execution.Report;
                     NavigationContext.SetNavigation(execution);
 
-                    Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Viewing result of report {1} for user '{0}'", WebUser.Name, report.FilePath);
-                    if (report.HasErrors) Helper.WriteLogEntryWeb(EventLogEntryType.Error, "Report {0} ({1}) execution errors:\r\n{2}", report.FilePath, WebUser.Name, report.ExecutionErrors);
+                    Helper.WriteLogEntryWeb(EventLogEntryType.Information, Request, WebUser, "Viewing result of report '{0}'", report.FilePath);
+                    if (report.HasErrors) Helper.WriteLogEntryWeb(EventLogEntryType.Error, Request, WebUser, "Report '{0}' execution errors:\r\n{1}", report.FilePath, report.ExecutionErrors);
                     string filePath = report.ForOutput || report.HasExternalViewer ? report.HTMLDisplayFilePath : report.ResultFilePath;
                     if (!System.IO.File.Exists(filePath)) throw new Exception("Error: Result file path does not exists...");
                     return getFileResult(filePath, report);
@@ -333,6 +339,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult OutputResult(string execution_guid)
         {
+            WriteDebug("OutputResult");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -355,6 +362,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionCancelReport(string execution_guid)
         {
+            WriteDebug("ActionCancelReport");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -378,6 +386,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionUpdateViewParameter(string execution_guid, string parameter_view_id, string parameter_view_name, string parameter_view_value)
         {
+            WriteDebug("ActionUpdateViewParameter");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -401,6 +410,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult HtmlResult(string execution_guid)
         {
+            WriteDebug("HtmlResult");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -422,6 +432,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult HtmlResultFile(string execution_guid)
         {
+            WriteDebug("HtmlResultFile {0}");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -443,6 +454,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult PrintResult(string execution_guid)
         {
+            WriteDebug("PrintResult");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -464,6 +476,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult PDFResult(string execution_guid)
         {
+            WriteDebug("PDFResult");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -496,6 +509,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult ExcelResult(string execution_guid)
         {
+            WriteDebug("ExcelResult");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -529,6 +543,7 @@ namespace SealWebServer.Controllers
 
         public ActionResult ActionGetTableData(string execution_guid, string viewid, string pageid, string parameters)
         {
+            WriteDebug("ActionGetTableData");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -556,7 +571,7 @@ namespace SealWebServer.Controllers
         }
 
 
-        #region private methods
+#region private methods
 
         void checkSWIAuthentication()
         {
@@ -1435,6 +1450,6 @@ namespace SealWebServer.Controllers
 
             return _mappings.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
         }
-        #endregion
+#endregion
     }
 }
