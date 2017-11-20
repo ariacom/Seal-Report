@@ -224,8 +224,10 @@ function executeTimer() {
 		        .done(function (data) {
 		            if (data.result_ready) {
 		                clearInterval(executionTimer);
-		                $("#header_form").attr("action", urlPrefix + "Result");
-                        $("#header_form").submit();
+		                if ($("#execution_guid").val() != null) {
+		                    $("#header_form").attr("action", urlPrefix + "Result");
+		                    $("#header_form").submit();
+		                }
 		            }
 		            else if (data.processing_message != null && data.execution_messages != null) {
 		                $("#processing_message").html(data.processing_message);
