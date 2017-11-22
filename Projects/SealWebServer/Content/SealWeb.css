@@ -37,6 +37,21 @@ a {
     font-size: 0.82em;
 }
 
+/* jstree *
+.jstree-default .jstree-anchor {
+    line-height: 32px !important;
+    height: 32px !important;
+}
+
+.jstree-default .jstree-wholerow {
+    height: 32px !important;
+}
+
+body {
+    font-size: 18px !important;
+}
+*/
+
 /* bootstrap override */
 
 .report-name, .output-name {
@@ -112,6 +127,19 @@ a {
     float: left;
 }
 
+#action-tableheader {
+    width: 120px;
+    min-width: 120px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    #action-tableheader {
+        width: 60px;
+        min-width: 60px;
+    }
+}
+
 /* Element buttons */
 .element-btn-group {
     display: none;
@@ -181,9 +209,9 @@ a.paginate_button {
     border-radius: 5px;
 }
 
-a.paginate_button:hover {
-    font-weight: normal;
-}
+    a.paginate_button:hover {
+        font-weight: normal;
+    }
 
 a.paginate_active {
     background-color: white;
@@ -234,8 +262,13 @@ div.dataTables_length, div.dataTables_filter, div.dataTables_paginate, div.dataT
     padding: 1px;
 }
 
-div.dataTables_filter {padding: 0px 4px;}
-div.dataTables_length {padding: 2px 40px 2px 4px;}
+div.dataTables_filter {
+    padding: 0px 4px;
+}
+
+div.dataTables_length {
+    padding: 2px 40px 2px 4px;
+}
 
 div.dataTables_processing {
     float: left;
@@ -314,4 +347,11 @@ html[xmlns] .dataTables_wrapper {
 
 * html .dataTables_wrapper {
     height: 1%;
+}
+
+
+@media (max-width: 768px) {
+    div.dataTableTop {
+        display: none;
+    }
 }

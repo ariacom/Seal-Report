@@ -128,5 +128,23 @@ var SWIUtil;
         return "";
     }
     SWIUtil.GetAggregateName = GetAggregateName;
+    function FindBootstrapEnvironment() {
+        var envs = ['xs', 'sm', 'md', 'lg'];
+        var $el = $('<div>');
+        $el.appendTo($('body'));
+        for (var i = envs.length - 1; i >= 0; i--) {
+            var env = envs[i];
+            $el.addClass('hidden-' + env);
+            if ($el.is(':hidden')) {
+                $el.remove();
+                return env;
+            }
+        }
+    }
+    SWIUtil.FindBootstrapEnvironment = FindBootstrapEnvironment;
+    function IsMobile() {
+        return SWIUtil.FindBootstrapEnvironment() == "xs";
+    }
+    SWIUtil.IsMobile = IsMobile;
 })(SWIUtil || (SWIUtil = {}));
 //# sourceMappingURL=swi-utils.js.map

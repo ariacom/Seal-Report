@@ -4,6 +4,9 @@
     Repository repository = Model as Repository;
 }
 <!DOCTYPE html>
+<META charset="utf-8">
+<META name="viewport" content="width=device-width, initial-scale=1">
+
 <html>
 <head>
     <title>@repository.Configuration.WebProductName</title>
@@ -11,9 +14,10 @@
     <link href="~/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link rel="stylesheet" href="~/Content/SealWeb.css" />
 
+    <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
+
     <script src='~/Scripts/jquery-1.11.3.min.js'></script>
     <link rel="stylesheet" href="~/Content/bootstrap-3.3.6.min.css" />
-    <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
     <script src='~/Scripts/bootstrap-3.3.6.min.js'></script>
 
     <link rel='stylesheet' href='~/Content/jquery-ui-1.11.3.min.css' />
@@ -92,33 +96,43 @@
     }
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
-            <a id="brand-id" class="navbar-brand">@repository.Configuration.WebProductName</a>
-            <ul class="nav navbar-nav pull-xs-right navbar-right">
-                <li class="nav-item"><a id="profile-nav-item">@repository.TranslateWeb("Profile")</a></li>
-                <li class="nav-item"><a id="disconnect-nav-item">@repository.TranslateWeb("Disconnect")</a></li>
-            </ul>
-            <div class="navbar-form navbar-right">
-                <div class="form-group"><input id="search-pattern" type="text" class="form-control input-sm" placeholder="@repository.TranslateWeb("Search")" /></div>
-                <button id="search-nav-item" class="btn btn-default btn-sm">@repository.TranslateWeb("OK")</button>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">@repository.Configuration.WebProductName</a>
             </div>
-            <ul class="nav navbar-nav pull-xs-right navbar-right">
-                <li class="nav-item"><a id="folders-nav-item" title="Manage folders">@repository.TranslateWeb("Folders")</a></li>
-                <li class="nav-item"><a id="refresh-nav-item">@repository.TranslateWeb("Refresh")</a></li>
-            </ul>
-        </div>
+            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+                <ul class="nav navbar-nav pull-xs-right navbar-right">
+                    <li class="nav-item"><a id="profile-nav-item">@repository.TranslateWeb("Profile")</a></li>
+                    <li class="nav-item"><a id="disconnect-nav-item">@repository.TranslateWeb("Disconnect")</a></li>
+                </ul>
+                <div class="navbar-form navbar-right">
+                    <div class="form-group"><input id="search-pattern" type="text" class="form-control input-sm" placeholder="@repository.TranslateWeb("Search")" /></div>
+                    <button id="search-nav-item" class="btn btn-default btn-sm">@repository.TranslateWeb("OK")</button>
+                </div>
+                <ul class="nav navbar-nav pull-xs-right navbar-right">
+                    <li class="nav-item hidden-xs"><a id="folders-nav-item" title="Manage folders">@repository.TranslateWeb("Folders")</a></li>
+                    <li class="nav-item"><a id="refresh-nav-item">@repository.TranslateWeb("Refresh")</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
     </nav>
 
     <div id="main-container" class="container-fluid" style="padding-top:70px; display:none;">
         <div class="row">
             <div id="folder-view" class="col-sm-4">
-                <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto; max-height:800px;"></div>
+                <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto;"></div>
             </div>
 
             <div id="file-view" class="col-sm-8">
                 <!-- Report Menus -->
-                <div class="lighticon-menu">
+                <div class="lighticon-menu hidden-xs">
                     <div id="report-edit-lightbutton" class="lightbutton report-edit"><span class="lightbutton-icon fa fa-file-o"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("New")</span></div>
                     <div id="report-cut-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-cut"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Cut")</span></div>
                     <div id="report-copy-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-copy"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Copy")</span></div>
@@ -131,10 +145,10 @@
                     <table id="file-table" class="table table-striped" style="margin:0px;">
                         <thead>
                             <tr>
-                                <th style="width:25px;"><input id="selectall-checkbox" type="checkbox" /></th>
+                                <th style="width:25px;" class="hidden-xs"><input id="selectall-checkbox" type="checkbox" /></th>
                                 <th>@repository.TranslateWeb("Report")</th>
-                                <th style="width: 120px ; min-width:120px; text-align:center; ">@repository.TranslateWeb("Actions")</th>
-                                <th style="width: 170px; min-width:170px; ">@repository.TranslateWeb("Last modification")</th>
+                                <th id="action-tableheader">@repository.TranslateWeb("Actions")</th>
+                                <th style="width: 170px; min-width:170px;" class="hidden-xs">@repository.TranslateWeb("Last modification")</th>
                             </tr>
                         </thead>
                         <tbody id="file-table-body"></tbody>
@@ -158,15 +172,14 @@
     </div>
 
     <!-- Views and Output -->
-    <div id="output-panel" class="panel panel-default" style="display:none;">
+    <div id="output-panel" class="panel panel-default" style="display:none; border-color:black;">
         <div class="panel-heading" style="height:20px;padding: 0px 10px;"><button type='button' id="output-panel-close" class='close'>&times;</button></div>
-        <div id="output-panel-content" class="panel-body">
+        <div id="output-panel-content">
             <table class="table table-striped">
                 <thead>
                     <tr><th>@repository.TranslateWeb("Name")</th><th>@repository.TranslateWeb("Type")</th></tr>
                 </thead>
-                <tbody id="output-table-body">
-                </tbody>
+                <tbody id="output-table-body"></tbody>
             </table>
         </div>
     </div>
