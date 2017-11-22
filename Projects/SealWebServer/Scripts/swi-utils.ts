@@ -111,4 +111,25 @@ module SWIUtil {
         else if (aggr == 4) return SWIUtil.tr2("Count of");
         return "";
     }
+
+    export function FindBootstrapEnvironment() {
+        var envs = ['xs', 'sm', 'md', 'lg'];
+
+        var $el = $('<div>');
+        $el.appendTo($('body'));
+
+        for (var i = envs.length - 1; i >= 0; i--) {
+            var env = envs[i];
+
+            $el.addClass('hidden-' + env);
+            if ($el.is(':hidden')) {
+                $el.remove();
+                return env;
+            }
+        }
+    }
+
+    export function IsMobile() {
+        return SWIUtil.FindBootstrapEnvironment() == "xs";
+    }
 }

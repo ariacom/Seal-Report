@@ -111,8 +111,8 @@ class SWIMain {
         //Refresh
         $("#refresh-nav-item").unbind('click').on("click", function (e) {
             _main.ReloadReportsTable();
+            if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been updated"), 5000);
-
         });
 
         //Folders
@@ -187,6 +187,7 @@ class SWIMain {
             });
 
             $("#profile-dialog").modal();
+            if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
         });
 
         //Disconnect
@@ -197,6 +198,7 @@ class SWIMain {
                 _main._connected = false;
                 $("#main-container").css("display", "none");
                 _main.showLogin();
+                if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             });
         });
 
@@ -315,10 +317,11 @@ class SWIMain {
             _main._searchMode = true;
             _main.buildReportsTable(data);
             $waitDialog.modal('hide');
+            if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
         });
     }
 
-    private loginFailure(data: any, firstTry : boolean) {
+    private loginFailure(data: any, firstTry: boolean) {
         $waitDialog.modal('hide');
         _main._connected = false;
         if (!firstTry) $("#login-modal-error").text(data.error);
@@ -345,7 +348,10 @@ class SWIMain {
     }
 
     private resize() {
-        $("#file-table-view").height($(window).height() - 125);
+        if (!SWIUtil.IsMobile()) {
+            $("#folder-tree").height($(window).height() - 80);
+            $("#file-table-view").height($(window).height() - 125);
+        }
     }
 
     private enableControls() {
@@ -442,15 +448,15 @@ class SWIMain {
             var $tr = $("<tr>");
             var file = data.files[i];
             $tableBody.append($tr);
-            $tr.append($("<td>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
+            $tr.append($("<td>").addClass("hidden-xs").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
             $tr.append($("<td>").append($("<a>").addClass("report-name").data("path", file.path).data("isReport", file.isReport).text(file.name)));
             var $td = $("<td>").css("text-align", "center").data("path", file.path);
             $tr.append($td);
             if (file.isReport) {
                 $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Views and outputs")).addClass("btn btn-default btn-table fa fa-list-ul report-output"));
-                if (file.right >= folderRightSchedule && hasEditor) $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Edit report")).addClass("btn btn-default fa fa-pencil report-edit"));
+                if (file.right >= folderRightSchedule && hasEditor) $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Edit report")).addClass("btn btn-default fa fa-pencil report-edit hidden-xs"));
             }
-            $tr.append($("<td>").css("text-align", "right").text(file.last));
+            $tr.append($("<td>").css("text-align", "right").addClass("hidden-xs").text(file.last));
         }
 
         var $cb = $("#selectall-checkbox");
@@ -473,14 +479,15 @@ class SWIMain {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             var $tableBody = $("#output-table-body");
+            var top = $target.offset().top + 40 - $outputPanel.height();
             $tableBody.empty();
             $tableBody.append($("<tr>").append($("<td colspan=2>").append($("<i>").addClass("fa fa-spinner fa-spin fa-1x fa-fw")).append($("<span>").text(SWIUtil.tr("Please wait") + "..."))));
             $outputPanel.css({
                 'display': 'inline',
                 'position': 'absolute',
                 'z-index': '10000',
-                'left': $target.offset().left - 120,
-                'top': $target.offset().top + $target.height() + 10
+                'left': $target.offset().left - $outputPanel.width(),
+                'top': top
             }).show();
 
             $("#output-panel-close").on("click", function () {
@@ -503,6 +510,11 @@ class SWIMain {
                         $tr.append($("<td>").html(SWIUtil.tr("Output")));
                     }
 
+                    //adjust position with the final size
+                    top = $target.offset().top + 40 - $outputPanel.height();
+                    $outputPanel.css({ top: top, left: $target.offset().left - $outputPanel.width(), position: 'absolute' });
+                    
+
                     $(".output-name").on("click", function (e) {
                         $outputPanel.hide();
                         _gateway.ExecuteReport($target.parent().data("path"), false, $(e.currentTarget).data("viewguid"), $(e.currentTarget).data("outputguid"));
@@ -515,18 +527,23 @@ class SWIMain {
             )
         });
 
+        $("#file-table-view").scroll(function () {
+            $outputPanel.hide();
+        });
+
         if (_editor) _editor.init();
 
+        var isMobile = SWIUtil.IsMobile();
         $('#file-table').dataTable({
             sDom: '<"dataTableTop"lfpir>t',
             bSort: true,
             stateSave: true,
             aaSorting: [],
-            bPaginate: true,
+            bPaginate: !isMobile,
             sPaginationType: "full_numbers",
             iDisplayLength: 25,
-            bInfo: true,
-            bFilter: true,
+            bInfo: !isMobile,
+            bFilter: !isMobile,
             bAutoWidth: false,
             oLanguage: {
                 oPaginate: {
