@@ -13,8 +13,6 @@ using Seal.Model;
 using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
-using Newtonsoft.Json;
-using Seal.Forms;
 
 namespace SealWebServer.Controllers
 {
@@ -834,7 +832,7 @@ namespace SealWebServer.Controllers
             Session[report.ExecutionGUID] = execution;
             int index = Request.Url.OriginalString.ToLower().IndexOf("swexecutereport");
             if (index == -1) throw new Exception("Invalid URL");
-            report.WebUrl = Request.Url.OriginalString.Substring(0, index);
+            report.WebUrl = HomeController.GetWebUrl(Request, Response);
             repository.WebApplicationPath = Path.Combine(Request.PhysicalApplicationPath, "bin");
 
             //Purge temp files here
@@ -858,9 +856,17 @@ namespace SealWebServer.Controllers
                 if (report != null) result.FileDownloadName = Helper.CleanFileName(report.DisplayNameEx + Path.GetExtension(path));
                 else result.FileDownloadName = Path.GetFileName(path);
             }
+
             return result;
         }
 
+
+        public static string GetWebUrl(HttpRequestBase request, HttpResponseBase response)
+        {
+            var appPath = request.ApplicationPath + (request.ApplicationPath.EndsWith("/") ? "" : "/");
+            if (!request.RequestContext.HttpContext.Session.IsCookieless) return appPath;
+            return response.ApplyAppPathModifier(appPath);
+        }
 
         //!! Use MimeMapping.GetMimeMapping(fileName); when .net 4.5
         //TODO

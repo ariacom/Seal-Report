@@ -798,11 +798,11 @@ namespace Seal
             }
             else if (entity is ViewFolder)
             {
-                if (_repository.ViewTemplates.Exists(i => i.Name == ReportViewTemplate.ModelHTMLName))
+                if (RepositoryServer.ViewTemplates.Exists(i => i.Name == ReportViewTemplate.ModelHTMLName))
                 {
                     addAddItem("Add a HTML View", null);
                 }
-                if (_repository.ViewTemplates.Exists(i => i.Name == ReportViewTemplate.ModelCSVExcelName))
+                if (RepositoryServer.ViewTemplates.Exists(i => i.Name == ReportViewTemplate.ModelCSVExcelName))
                 {
                     addAddItem("Add a CSV Excel View", null);
                 }
@@ -814,7 +814,7 @@ namespace Seal
                 string extension = ((ReportView)entity).Views.Max(i => i.Template.ExternalViewerExtension);
                 var currentTemplateName = ((ReportView)entity).TemplateName;
 
-                foreach (var template in _repository.ViewTemplates.Where(i => i.ParentNames.Contains(currentTemplateName) && (string.IsNullOrEmpty(extension) || i.ExternalViewerExtension == extension)))
+                foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(currentTemplateName) && (string.IsNullOrEmpty(extension) || i.ExternalViewerExtension == extension)))
                 {
                     addAddItem("Add a " + template.Name + " View", template);
                 }

@@ -28,7 +28,7 @@ namespace Seal.Converter
         {
             List<string> choices = new List<string>();
             choices.Add("");
-            choices.AddRange(from s in Repository.Instance.Themes select s.Name);
+            choices.AddRange(from s in RepositoryServer.Themes select s.Name);
             return new StandardValuesCollection(choices);
         }
 
@@ -43,7 +43,7 @@ namespace Seal.Converter
             {
                 if (value != null)
                 {
-                    Theme theme = Repository.Instance.Themes.FirstOrDefault(i => i.Name == value.ToString());
+                    Theme theme = RepositoryServer.GetTheme(value.ToString());
                     if (theme != null) return theme.Name;
                 }
             }
@@ -59,7 +59,7 @@ namespace Seal.Converter
         {
             if (value != null)
             {
-                Theme theme = Repository.Instance.Themes.FirstOrDefault(i => i.Name == value.ToString());
+                Theme theme = RepositoryServer.GetTheme(value.ToString());
                 if (theme != null) return theme.Name;
             }
             return base.ConvertFrom(context, culture, value);

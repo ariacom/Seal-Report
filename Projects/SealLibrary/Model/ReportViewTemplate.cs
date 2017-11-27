@@ -23,7 +23,7 @@ namespace Seal.Model
         public static readonly string[] DefaultFontSize = { "30pt", "24pt", "16pt", "14pt", "12pt", "10pt", "8pt", "6pt" };
         public static readonly string[] DefaultFontFamily = { "Verdana, Arial, Helvetica, sans-serif", "Times,Times New Roman, serif", "Courier New, Courier, monospace", "Comic Sans MS, cursive" };
 
-        string _name;
+        string _name = "";
         public string Name
         {
             get { return _name; }
@@ -120,24 +120,7 @@ namespace Seal.Model
             }
         }
 
-        public string Configuration
-        {
-            get
-            {
-                string result = "";
-                try
-                {
-                    StreamReader sr = new StreamReader(ConfigurationPath);
-                    result = sr.ReadToEnd();
-                    sr.Close();
-                }
-                catch (Exception ex)
-                {
-                    _error = ex.Message;
-                }
-                return result;
-            }
-        }
+        public string Configuration;
 
         string _error = "";
         public string Error
@@ -146,27 +129,29 @@ namespace Seal.Model
             set { _error = value; }
         }
 
+        public void Init(string path)
+        {
+            FilePath = path;
+            LastModification = File.GetLastWriteTime(path);
+            ConfigurationPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + ".config.cshtml");
+            if (File.Exists(ConfigurationPath))
+            {
+                LastConfigModification = File.GetLastWriteTime(ConfigurationPath);
+                Configuration = File.ReadAllText(ConfigurationPath);
+            }
+            IsParsed = false;
+        }
 
         public static List<ReportViewTemplate> LoadTemplates(string templateFolder)
         {
             List<ReportViewTemplate> viewTemplates = new List<ReportViewTemplate>();
             //Templates
-            foreach (var templatePath in Directory.GetFiles(templateFolder, "*.cshtml"))
+            foreach (var path in Directory.GetFiles(templateFolder, "*.cshtml"))
             {
-                if (templatePath.EndsWith(".config.cshtml")) continue;
-                ReportViewTemplate template = new ReportViewTemplate() { Name = Path.GetFileNameWithoutExtension(templatePath) };
-                template.FilePath = templatePath;
-                template.ConfigurationPath = Path.Combine(templateFolder, Path.GetFileNameWithoutExtension(templatePath) + ".config.cshtml");
+                if (path.EndsWith(".config.cshtml")) continue;
+                ReportViewTemplate template = new ReportViewTemplate();
+                template.Init(path);
                 viewTemplates.Add(template);
-
-                if (!File.Exists(template.ConfigurationPath))
-                {
-                    template.Error = string.Format("Unable to find configuration file '{0}' for the template '{1}'", template.ConfigurationPath, template.Name);
-                }
-                else
-                {
-                    template.ParseConfiguration(null);
-                }
             }
             return viewTemplates;
         }
@@ -179,20 +164,26 @@ namespace Seal.Model
         }
 
         public string _lastConfiguration = ""; //Cache to avoid re-compilation -> public for Cloning used in Repository.CreateFast()
-        public void ParseConfiguration(string configurationEx)
+        public bool IsParsed = false; //Flag for optimization, by default the template is not parsed...until it is used
+        public DateTime LastModification;
+        public DateTime LastConfigModification;
+
+
+        public void ParseConfiguration()
         {
             //Parse the configuration file to init the view template
             try
             {
                 string configuration = Configuration;
-                if (!string.IsNullOrEmpty(configurationEx)) configuration = configurationEx;
 
-                if (configuration.Replace("\r\n", "\n") != _lastConfiguration.Replace("\r\n", "\n"))
+                if (configuration.Replace("\r\n", "\n") != _lastConfiguration.Replace("\r\n", "\n") && !string.IsNullOrWhiteSpace(configuration))
                 {
+                    _error = "";
                     ClearConfiguration();
                     Razor.Parse(configuration, this);
                     _lastConfiguration = configuration;
                 }
+                IsParsed = true;
             }
             catch (TemplateCompilationException ex)
             {

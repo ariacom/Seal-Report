@@ -52,8 +52,6 @@ namespace Seal.Model
                 GetProperty("CultureName").SetIsBrowsable(IsRootView);
                 GetProperty("UseCustomTemplate").SetIsBrowsable(true);
                 GetProperty("CustomTemplate").SetIsBrowsable(true);
-                GetProperty("CustomConfiguration").SetIsBrowsable(true);
-                GetProperty("UseCustomConfiguration").SetIsBrowsable(true);
 
                 //PDF only on root view generating HTML...
                 if (AllowPDFConversion)
@@ -80,7 +78,6 @@ namespace Seal.Model
                 //Read only
                 GetProperty("TemplateName").SetIsReadOnly(true);
                 GetProperty("CustomTemplate").SetIsReadOnly(!UseCustomTemplate);
-                GetProperty("CustomConfiguration").SetIsReadOnly(!UseCustomConfiguration);
 
                 //Helpers
                 GetProperty("HelperReloadConfiguration").SetIsBrowsable(true);
@@ -156,7 +153,6 @@ namespace Seal.Model
             //remove undefined parameters
             int index = parameters.Count;
             while (--index >= 0) if (!configParameters.Exists(i => i.Name == parameters[index].Name)) parameters.RemoveAt(index);
-
         }
 
         //Temporary variables to help for report serialization...
@@ -188,16 +184,16 @@ namespace Seal.Model
             foreach (var view in Views) view.AfterSerialization();
         }
 
+        public void ReloadConfiguration()
+        {
+            _template = null;
+            var t = Template;
+            _information = "Configuration has been reloaded.";
+        }
 
         public void InitParameters(bool resetValues, bool cssOnly = false, bool nvd3Only = false)
         {
             if (Report == null || Template == null) return;
-
-            _error = "";
-            //Parse the configuration file to init the view template
-            Template.ParseConfiguration(ViewTemplateConfiguration);
-
-            if (string.IsNullOrEmpty(_error) && !string.IsNullOrEmpty(Template.Error)) _error = string.Format("Error parsing configuration of template '{0}':\r\nError:{1}\r\nPath:{2}", _template.Name, Template.Error, Template.ConfigurationPath);
 
             if (!cssOnly && !nvd3Only)
             {
@@ -213,13 +209,10 @@ namespace Seal.Model
                 InitParameters(Template.Parameters.Where(i => i.Category == ViewParameterCategory.NVD3).ToList(), _parameters.Where(i => i.Category == ViewParameterCategory.NVD3).ToList(), resetValues);
             }
 
-            if (!string.IsNullOrEmpty(_error)) _information = "Error loading the configuration";
-            else
-            {
-                _information = "Configuration has been loaded successfully";
-                if (resetValues) _information += " and values have been reset";
-            }
-            _information = Helper.FormatMessage(_information);
+            _error = Template.Error;
+            _information = "";
+            if (resetValues) _information += "Values have been reset";
+            if (!string.IsNullOrEmpty(_information))_information = Helper.FormatMessage(_information);
         }
 
         public void ResetChartConfiguration()
@@ -454,7 +447,7 @@ namespace Seal.Model
             {
                 if (_template == null)
                 {
-                    _template = _report.Repository.ViewTemplates.FirstOrDefault(i => i.Name == TemplateName);
+                    _template = RepositoryServer.GetViewTemplate(TemplateName);
                     if (_template == null)
                     {
                         _template = new ReportViewTemplate() { Name = TemplateName };
@@ -486,8 +479,12 @@ namespace Seal.Model
             {
                 if (_theme == null)
                 {
-                    if (string.IsNullOrEmpty(ThemeName)) _theme = _report.Repository.Themes.FirstOrDefault(i => i.IsDefault);
-                    else _theme = _report.Repository.Themes.FirstOrDefault(i => i.Name == ThemeName);
+                    if (string.IsNullOrEmpty(ThemeName)) {
+                        //Default theme
+                        if (!string.IsNullOrEmpty(_report.SecurityContext.DefaultTheme)) _theme = RepositoryServer.GetTheme(_report.SecurityContext.DefaultTheme);
+                        else _theme = RepositoryServer.GetTheme("");
+                    }
+                    else _theme = RepositoryServer.GetTheme(ThemeName);
                     if (_theme == null)
                     {
                         _theme = new Theme() { Name = ThemeName };
@@ -505,31 +502,6 @@ namespace Seal.Model
 
         public List<ReportView> Views = new List<ReportView>();
 
-        bool _useCustomConfiguration = false;
-        [DisplayName("Use custom configuration text"), Description("If true, the configuration text can be modified."), Category("Custom template configuration"), Id(2, 2)]
-        public bool UseCustomConfiguration
-        {
-            get { return _useCustomConfiguration; }
-            set
-            {
-                _useCustomConfiguration = value;
-                InitParameters(false);
-                UpdateEditorAttributes();
-            }
-        }
-
-        string _customConfiguration;
-        [DisplayName("Custom configuration"), Description("The custom configuration text used instead of the configuration of the template."), Category("Custom template configuration"), Id(3, 2)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string CustomConfiguration
-        {
-            get { return _customConfiguration; }
-            set
-            {
-                _customConfiguration = value;
-                InitParameters(false);
-            }
-        }
 
         bool _useCustomTemplate = false;
         [DisplayName("Use custom template text"), Description("If true, the template text can be modified."), Category("Custom template text"), Id(2, 3)]
@@ -967,20 +939,6 @@ namespace Seal.Model
         }
 
         #endregion
-
-        [XmlIgnore]
-        public string ViewTemplateConfiguration
-        {
-            get
-            {
-                if (UseCustomConfiguration)
-                {
-                    if (string.IsNullOrWhiteSpace(CustomConfiguration)) return Template.Configuration;
-                    return CustomConfiguration;
-                }
-                return Template.Configuration;
-            }
-        }
 
 
         [XmlIgnore]

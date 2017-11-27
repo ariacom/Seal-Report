@@ -66,7 +66,7 @@ class SWIMain {
                 $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + "\r\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\r\n" + data.Info);
                 $("#footer-version").text(data.SWIVersion);
             }
-        )
+        );
 
         _gateway.IsAuthenticated(
             function (data) {
@@ -106,6 +106,7 @@ class SWIMain {
         $("#login-modal-error").text("");
 
         _main.loadFolderTree();
+
         $("#main-container").css("display", "block");
 
         //Refresh
@@ -306,7 +307,6 @@ class SWIMain {
                 });
             }
         });
-
         _main.enableControls();
         _main.resize();
     }

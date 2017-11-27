@@ -915,7 +915,7 @@ namespace Seal.Model
 
         public ReportView AddRootView()
         {
-            ReportViewTemplate reportTemplate = Repository.ViewTemplates.FirstOrDefault(i => i.ParentNames.Count == 0 && i.Name == "Report");
+            ReportViewTemplate reportTemplate = RepositoryServer.GetViewTemplate("Report");
             ReportView view = null;
             if (reportTemplate != null)
             {
@@ -931,7 +931,7 @@ namespace Seal.Model
         public ReportView AddView(string modelName)
         {
             ReportView view = null;
-            ReportViewTemplate modelTemplate = Repository.ViewTemplates.FirstOrDefault(i => i.Name == modelName);
+            ReportViewTemplate modelTemplate = RepositoryServer.GetViewTemplate(modelName);
             if (modelTemplate != null)
             {
                 view = AddRootView();

@@ -1,5 +1,6 @@
 ﻿@using Seal.Model
 @using Seal.Helpers
+@using SealWebServer.Controllers
 @{
     Repository repository = Model as Repository;
 }
@@ -37,7 +38,7 @@
 
     <script type="text/javascript">
         //server
-        var WebApplicationName = '@repository.Configuration.WebApplicationName';
+        var WebApplicationName = '@HomeController.GetWebUrl(Request, Response)';
 
         //format for datatables
         var shortDateFormat = '@repository.CultureInfo.DateTimeFormat.ShortDatePattern';
