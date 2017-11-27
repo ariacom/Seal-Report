@@ -284,17 +284,8 @@
     <None Include="..\..\Repository\Views\Report.config.cshtml">
       <Link>Views\Report.config.cshtml</Link>
     </None>
-    <None Include="..\..\Repository\Views\ReportMobile.cshtml">
-      <Link>Views\ReportMobile.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ReportMobile.config.cshtml">
-      <Link>Views\ReportMobile.config.cshtml</Link>
-    </None>
     <None Include="..\..\Repository\Views\Scripts\common.js">
       <Link>Views\Scripts\common.js</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Scripts\commonMobile.js">
-      <Link>Views\Scripts\commonMobile.js</Link>
     </None>
     <None Include="..\..\Repository\Views\Scripts\nvd3.js">
       <Link>Views\Scripts\nvd3.js</Link>
@@ -404,7 +395,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)..\..\Repository\Views\Scripts\common.js" "$(ProjectDir)..\SealWebServer\Scripts\"
-	copy "$(ProjectDir)..\..\Repository\Views\Scripts\commonMobile.js" "$(ProjectDir)..\SealWebServer\Scripts\"
 copy "$(ProjectDir)..\..\Repository\Views\Scripts\dataTables.js" "$(ProjectDir)..\SealWebServer\Scripts\"
 copy "$(ProjectDir)..\..\Repository\Views\Scripts\datepicker.js" "$(ProjectDir)..\SealWebServer\Scripts\"
 copy "$(ProjectDir)..\..\Repository\Views\Scripts\nvd3.js" "$(ProjectDir)..\SealWebServer\Scripts\"
