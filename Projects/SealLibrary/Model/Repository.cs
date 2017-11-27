@@ -70,18 +70,6 @@ namespace Seal.Model
             }
         }
 
-        List<Theme> _themes = null;
-        public List<Theme> Themes
-        {
-            get
-            {
-                if (_themes == null)
-                {
-                    _themes = Theme.LoadThemes(ThemesFolder);
-                }
-                return _themes;
-            }
-        }
 
         List<MetaSource> _sources = new List<MetaSource>();
         public List<MetaSource> Sources
@@ -93,19 +81,6 @@ namespace Seal.Model
         public List<OutputDevice> Devices
         {
             get { return _devices; }
-        }
-
-        List<ReportViewTemplate> _viewTemplates = null;
-        public List<ReportViewTemplate> ViewTemplates
-        {
-            get
-            {
-                if (_viewTemplates == null)
-                {
-                    _viewTemplates = ReportViewTemplate.LoadTemplates(ViewsFolder);
-                }
-                return _viewTemplates;
-            }
         }
 
 
@@ -284,8 +259,6 @@ namespace Seal.Model
                 foreach (var source in result.Sources) source.InitReferences(result);
                 //Others collections should remain static/unchanged an can be shared...
                 result._translations = Translations;
-                result._viewTemplates = ViewTemplates;// (List<ReportViewTemplate>)Helper.Clone(ViewTemplates);-> Note that Parameters of ViewTemplates are not cloned correctely
-                result._themes = Themes;
                 result._devices = Devices;
                 result._configuration = Configuration;
                 result._path = path;

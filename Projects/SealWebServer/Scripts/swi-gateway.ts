@@ -1,5 +1,5 @@
 ﻿declare var WebApplicationName: string;
-var _sealServer: string = WebApplicationName + (WebApplicationName == "/" ? "" : "/");
+var _sealServer: string = WebApplicationName;
 var _errorServer: string = SWIUtil.tr("Error: Unable to connect to the server") + ": '" + _sealServer + "'"; 
 
 function callbackHandler(data: any, callback: (data: any) => void, errorcb?: (data: any) => void) {

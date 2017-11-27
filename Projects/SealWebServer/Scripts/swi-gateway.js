@@ -1,4 +1,4 @@
-var _sealServer = WebApplicationName + (WebApplicationName == "/" ? "" : "/");
+var _sealServer = WebApplicationName;
 var _errorServer = SWIUtil.tr("Error: Unable to connect to the server") + ": '" + _sealServer + "'";
 function callbackHandler(data, callback, errorcb) {
     if (!data.error) {

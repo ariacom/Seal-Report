@@ -44,18 +44,31 @@ namespace Seal.Model
             set { _values = value; }
         }
 
+        public bool IsParsed = false; //Flag for optimization, by default the theme is not parsed...until it is used
+        public DateTime LastModification;
+        public string Text = "";
+
         public static List<Theme> LoadThemes(string folder)
         {
             List<Theme> result = new List<Theme>();
             //Templates
             foreach (var path in Directory.GetFiles(folder, "*.cshtml"))
             {
-                Theme theme = new Theme() { Name = Path.GetFileNameWithoutExtension(path) };
-                theme.FilePath = path;
-                theme.Parse();
+                Theme theme = new Theme();
+                theme.Init(path);
                 result.Add(theme);
             }
             return result;
+        }
+
+        public void Init(string path)
+        {
+            Name = "";
+            FilePath = path;
+            Text = File.ReadAllText(path);
+            IsDefault = Text.Contains("Theme.IsDefault = true;");
+            LastModification = File.GetLastWriteTime(path);
+            IsParsed = false;
         }
 
         string _error = "";
@@ -76,7 +89,8 @@ namespace Seal.Model
             try
             {
                 Clear();
-                Razor.Parse(File.ReadAllText(FilePath), this);
+                Razor.Parse(Text, this);
+                IsParsed = true;
             }
             catch (TemplateCompilationException ex)
             {

@@ -378,7 +378,7 @@ namespace Seal.Forms
                 {
                     if (context.PropertyDescriptor.Name == "HelperReloadConfiguration")
                     {
-                        _reportView.InitParameters(false);
+                        _reportView.ReloadConfiguration();
                     }
                     else if (context.PropertyDescriptor.Name == "HelperResetParameters")
                     {

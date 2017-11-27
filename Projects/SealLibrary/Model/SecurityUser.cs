@@ -15,6 +15,7 @@ namespace Seal.Model
         public SealSecurity Security;
         public string Error = "";
         public string Warning = "";
+        public string DefaultTheme;
         public List<SWIFolder> Folders = new List<SWIFolder>();
 
         //Parameters to authenticate
@@ -105,12 +106,7 @@ namespace Seal.Model
         {
             if (!string.IsNullOrEmpty(theme))
             {
-                var defaultTheme = Security.Repository.Themes.FirstOrDefault(i => i.Name == theme);
-                if (defaultTheme != null)
-                {
-                    foreach (var t in Security.Repository.Themes) t.IsDefault = false;
-                    defaultTheme.IsDefault = true;
-                }
+                DefaultTheme = theme;
             }
         }
 
