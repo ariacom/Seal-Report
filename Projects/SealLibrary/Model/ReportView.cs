@@ -481,7 +481,7 @@ namespace Seal.Model
                 {
                     if (string.IsNullOrEmpty(ThemeName)) {
                         //Default theme
-                        if (!string.IsNullOrEmpty(_report.SecurityContext.DefaultTheme)) _theme = RepositoryServer.GetTheme(_report.SecurityContext.DefaultTheme);
+                        if (_report.SecurityContext != null && !string.IsNullOrEmpty(_report.SecurityContext.DefaultTheme)) _theme = RepositoryServer.GetTheme(_report.SecurityContext.DefaultTheme);
                         else _theme = RepositoryServer.GetTheme("");
                     }
                     else _theme = RepositoryServer.GetTheme(ThemeName);

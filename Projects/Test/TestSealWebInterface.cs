@@ -64,7 +64,7 @@ namespace Test
         {
             //Test the basic methods of SWI. The Server must be running... 
             var serverURL = "http://localhost:17178/";
-            //serverURL = "http://localhost/Seal/";
+            serverURL = "http://localhost/Seal/";
 
             var httpClient = new HttpClient();
 

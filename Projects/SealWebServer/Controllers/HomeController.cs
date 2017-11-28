@@ -801,11 +801,11 @@ namespace SealWebServer.Controllers
         }
 
 
-        private ReportExecution initReportExecution(Report report, string viewGUID, string outputGUID)
+        private ReportExecution initReportExecution(Report report, string viewGUID, string outputGUID, bool toResult)
         {
             Repository repository = report.Repository;
 
-            report.ExecutionContext = ReportExecutionContext.WebReport;
+            report.ExecutionContext = toResult ? ReportExecutionContext.WebOutput : ReportExecutionContext.WebReport;
             report.SecurityContext = WebUser;
             report.CurrentViewGUID = report.ViewGUID;
 
