@@ -34,7 +34,7 @@ div  button { margin:4px;}
 
 caption {font-weight: bold;}
 
-.datepicker { text-align:center; border-radius: 5px; width:70px; position: relative; z-index: 1001; font-weight: bold; border: 1px solid #808080; height: 20px; background: #fef5f3;}
+.datepicker { text-align:center; border-radius: 5px; width:75px; position: relative; z-index: 1001; font-weight: bold; border: 1px solid #808080; height: 20px; background: #fef5f3;}
 .dt_short_time { width:110px;}
 .dt_long_time { width:130px;}
 .operator_select {width: 120px; border-radius: 4px; height: 25px; background: #fef5f3; }

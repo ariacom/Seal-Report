@@ -341,7 +341,7 @@ namespace SealWebServer.Controllers
                 Repository repository = Repository.CreateFast();
                 Report report = Report.LoadFromFile(filePath, repository);
 
-                var execution = initReportExecution(report, viewGUID, outputGUID);
+                var execution = initReportExecution(report, viewGUID, outputGUID, true);
                 execution.Execute();
                 while (report.Status != ReportStatus.Executed) System.Threading.Thread.Sleep(100);
 
@@ -390,7 +390,7 @@ namespace SealWebServer.Controllers
                 repository = Repository.CreateFast();
                 report = Report.LoadFromFile(filePath, repository);
 
-                var execution = initReportExecution(report, viewGUID, outputGUID);
+                var execution = initReportExecution(report, viewGUID, outputGUID, false);
                 execution.RenderHTMLDisplayForViewer();
                 return getFileResult(report.HTMLDisplayFilePath, report);
             }

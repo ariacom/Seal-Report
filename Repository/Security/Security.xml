@@ -114,6 +114,7 @@
       <Connections />
       <Columns />
       <Culture />
+      <Theme>Seal Blue Theme</Theme>
     </SecurityGroup>
     <SecurityGroup>
       <Name>Group (Edit)</Name>
@@ -161,6 +162,7 @@
         </SecurityColumn>
       </Columns>
       <Culture />
+      <Theme>Seal Green Theme</Theme>
     </SecurityGroup>
   </Groups>
 </SealSecurity>
