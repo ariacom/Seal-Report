@@ -1055,7 +1055,7 @@ namespace Seal.Model
 
             if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<script type='text/javascript' src='{0}'></script>", cdnPath);
 
-            if (GenerateHTMLDisplay || ForPDFConversion)
+            if (GenerateHTMLDisplay)
             {
                 if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
                 {
