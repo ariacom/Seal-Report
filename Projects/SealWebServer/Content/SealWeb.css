@@ -37,21 +37,6 @@ a {
     font-size: 0.82em;
 }
 
-/* jstree *
-.jstree-default .jstree-anchor {
-    line-height: 32px !important;
-    height: 32px !important;
-}
-
-.jstree-default .jstree-wholerow {
-    height: 32px !important;
-}
-
-body {
-    font-size: 18px !important;
-}
-*/
-
 /* bootstrap override */
 
 .report-name, .output-name {
@@ -114,6 +99,12 @@ body {
     z-index: 100000 !important;
 }
 
+@media (min-width: 768px) {
+    #wait-dialog > .modal-dialog {
+        width:300px;
+    }
+}
+
 .properties-label {
     display: inline;
     padding-top: 8px;
@@ -157,13 +148,13 @@ body {
     width: 160px;
 }
 
-    .ms-choice > div {
-        display: none;
-    }
+.ms-choice > div {
+    display: none;
+}
 
-    .ms-choice > span {
-        position: initial !important;
-    }
+.ms-choice > span {
+    position: initial !important;
+}
 
 .ms-parent {
     width: 202px !important;
@@ -209,9 +200,9 @@ a.paginate_button {
     border-radius: 5px;
 }
 
-    a.paginate_button:hover {
-        font-weight: normal;
-    }
+a.paginate_button:hover {
+    font-weight: normal;
+}
 
 a.paginate_active {
     background-color: white;
@@ -245,7 +236,7 @@ div.dataTables_wrapper {
     border-radius: 4px;
     -moz-border-radius: 4px -webkit-border-radius: 4px;
     overflow: hidden; /*notice*/
-    padding: 5px;
+    padding: 1px;
     margin: 5px;
 }
 

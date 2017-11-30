@@ -352,6 +352,9 @@ class SWIMain {
             $("#folder-tree").height($(window).height() - 80);
             $("#file-table-view").height($(window).height() - 125);
         }
+        else {
+            $("#folder-tree").css("max-height", ($(window).height()/2 - 45));
+        }
     }
 
     private enableControls() {
@@ -394,7 +397,7 @@ class SWIMain {
             $folderTree.jstree({
                 core: {
                     "animation": 0,
-                    "themes": { "stripes": true },
+                    "themes": { "responsive": true, "stripes": true },
                     'data': _main.toJSTreeFolderData(data, result, "#")
                 },
                 types: {
@@ -402,9 +405,7 @@ class SWIMain {
                         "icon": "fa fa-folder-o"
                     }
                 },
-
                 plugins: ["types", "wholerow"]
-
             });
 
             $folderTree.on("changed.jstree", function (e, data) {
