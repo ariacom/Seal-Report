@@ -305,6 +305,9 @@ var SWIMain = (function () {
             $("#folder-tree").height($(window).height() - 80);
             $("#file-table-view").height($(window).height() - 125);
         }
+        else {
+            $("#folder-tree").css("max-height", ($(window).height() / 2 - 45));
+        }
     };
     SWIMain.prototype.enableControls = function () {
         var right = 0; //1 Execute,2 Shedule,3 Edit
@@ -341,7 +344,7 @@ var SWIMain = (function () {
             $folderTree.jstree({
                 core: {
                     "animation": 0,
-                    "themes": { "stripes": true },
+                    "themes": { "responsive": true, "stripes": true },
                     'data': _main.toJSTreeFolderData(data, result, "#")
                 },
                 types: {

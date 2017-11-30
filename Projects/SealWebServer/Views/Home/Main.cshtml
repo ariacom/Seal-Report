@@ -114,8 +114,10 @@
                     <li class="nav-item"><a id="disconnect-nav-item">@repository.TranslateWeb("Disconnect")</a></li>
                 </ul>
                 <div class="navbar-form navbar-right">
-                    <div class="form-group"><input id="search-pattern" type="text" class="form-control input-sm" placeholder="@repository.TranslateWeb("Search")" /></div>
-                    <button id="search-nav-item" class="btn btn-default btn-sm">@repository.TranslateWeb("OK")</button>
+                    <div class="form-group">
+                        <input id="search-pattern" type="text" style="display:inline-block; width:120px" class="form-control input-sm" placeholder="@repository.TranslateWeb("Search")" />
+                        <button id="search-nav-item" class="btn btn-default btn-sm">@repository.TranslateWeb("OK")</button>
+                    </div>
                 </div>
                 <ul class="nav navbar-nav pull-xs-right navbar-right">
                     <li class="nav-item hidden-xs"><a id="folders-nav-item" title="Manage folders">@repository.TranslateWeb("Folders")</a></li>
@@ -161,8 +163,8 @@
 
 
     <!--Wait Dialog-->
-    <div class="modal" id="wait-dialog" role="dialog">
-        <div class="modal-dialog" style="width: 300px;">
+    <div class="modal fade in" id="wait-dialog" role="dialog">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body" style="text-align:center">
                     <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
@@ -734,7 +736,6 @@
     <!-- Login Modal -->
     <div id="login-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="top:50px;">
         <div class="modal-dialog">
-
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #5cb85c;color:white;text-align: center;font-size: 30px;border-top-left-radius: 6px;border-top-right-radius: 6px;">
