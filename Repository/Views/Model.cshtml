@@ -236,7 +236,7 @@
             {
                 bool dataTitleHeader = true;
                 <div class='data_table_div' style='@View.GetCSS("data_table")'>
-                    <table class='data_table' viewid="@View.ViewId" pageid="@page.PageId" style='@View.GetCSS("data_table_table")'>
+                    <table class='data_table' id="@View.ViewId@page.PageId" viewid="@View.ViewId" pageid="@page.PageId" style='@View.GetCSS("data_table_table")'>
                         @if (View.HasValue("data_table_caption"))
                         {
                             <caption align="bottom" style="caption-side: bottom;">@Raw(View.GetHtmlValue("data_table_caption"))</caption>

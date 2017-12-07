@@ -176,6 +176,21 @@
             },
             sPaginationType: "full_numbers",
             bAutoWidth: false,
+            "fnStateSaveCallback": function ( settings, data ) {
+                try {
+                    (settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
+                        'DataTables_'+settings.sInstance+'_Result',
+                        JSON.stringify( data ));
+                } catch (e) {}
+            },
+            "fnStateLoadCallback": function ( settings ) {
+                try {
+                    return JSON.parse(
+                        (settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(
+                            'DataTables_'+settings.sInstance+'_Result'
+                        ));
+                } catch (e) {}
+            }
         } );
     </script>
 
