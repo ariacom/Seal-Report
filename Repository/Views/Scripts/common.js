@@ -116,7 +116,7 @@ function initButtons() {
             $("#body_div").animate({ scrollTop: 0 }, "slow");
         });
 
-    $("#nav_button").button({ text: false, label: ">", icons: { primary: "ui-icon-arrow-2-n-s" } })
+    $("#nav_button").button({ text: false, label: ">", icons: { primary: "ui-icon-triangle-2-n-s" } })
             .mouseenter(function () {
                 $("#nav_menu").empty();
                 if ($("#nav_button").attr("disabled") == "disabled") return;
