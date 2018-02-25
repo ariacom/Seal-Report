@@ -13,11 +13,11 @@ namespace Seal.Converter
 {
     public class SortOrderConverter : StringConverter
     {
-        public static string kAutomaticAscSortKeyword = "Automatic Ascendant";
-        public static string kAutomaticDescSortKeyword = "Automatic Descendant";
-        public static string kNoSortKeyword = "Not sorted";
-        public static string kAscendantSortKeyword = "Ascendant";
-        public static string kDescendantSortKeyword = "Descendant";
+        public const string kAutomaticAscSortKeyword = "Automatic Ascendant";
+        public const string kAutomaticDescSortKeyword = "Automatic Descendant";
+        public const string kNoSortKeyword = "Not sorted";
+        public const string kAscendantSortKeyword = "Ascendant";
+        public const string kDescendantSortKeyword = "Descendant";
 
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {

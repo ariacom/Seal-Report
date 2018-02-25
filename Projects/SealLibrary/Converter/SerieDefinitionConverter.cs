@@ -55,8 +55,10 @@ namespace Seal.Converter
             {
                 if (element.PivotPosition == PivotPosition.Data)
                 {
+                    /* not used from v4
                     choices.Add(SerieDefinition.Serie);
                     choices.Add(SerieDefinition.NVD3Serie);
+                    */
                 }
                 else
                 {

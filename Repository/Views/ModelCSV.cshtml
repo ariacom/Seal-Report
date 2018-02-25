@@ -1,46 +1,43 @@
-﻿@using System.Data
-@using Seal.Model
-@using Seal.Helpers
+﻿@using Seal.Model
 @{
-    ReportModel ReportModel = Model;
-    Repository Repository = ReportModel.Report.Repository;
-    Report Report = ReportModel.Report;
-    ReportView View = ReportModel.Report.View;
-    if (View.GetBoolValue("invert_data_tables"))
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel reportModel = view.Model;
+
+    if (view.GetBoolValue("invert_data_tables"))
     {
-        ReportModel.InvertDataTables();
+        reportModel.InvertDataTables();
     }
-    string separator = View.GetValue("csv_separator");
-    separator = string.IsNullOrEmpty(separator) ? Report.Repository.Configuration.CsvSeparator : separator;
-    separator = string.IsNullOrEmpty(separator) ? Report.Repository.CultureInfo.TextInfo.ListSeparator : separator;
-    bool useFormat = View.GetBoolValue("use_display_format");
+    string separator = view.GetValue("csv_separator");
+    separator = string.IsNullOrEmpty(separator) ? report.Repository.Configuration.CsvSeparator : separator;
+    separator = string.IsNullOrEmpty(separator) ? report.Repository.CultureInfo.TextInfo.ListSeparator : separator;
+    bool useFormat = view.GetBoolValue("use_display_format");
 }
-@foreach (ResultPage page in ReportModel.Pages)
+@foreach (ResultPage page in reportModel.Pages)
 {
-    if (page.PageTable != null && page.PageTable.Lines.Count == 2 && page.PageTable.Lines[0].Length > 0)
+    if (page.PageTable != null && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0)
     {
-        for (int i = 0; i < page.PageTable.Lines[0].Length; i++)
+        for (int i = 0; i < page.PageTable.ColumnCount; i++)
         {
-            ResultCell header = page.PageTable.Lines[0][i];
-            ResultCell value = page.PageTable.Lines[1][i];
+            ResultCell header = page.PageTable[0,i];
+            ResultCell value = page.PageTable[1,i];
             @Raw(header.CSVValue(false, separator) + value.CSVValue(useFormat, separator) + "\r\n")
         }
     }
     if (page.DataTable != null)
     {
-        for (int row = 0; row < page.DataTable.Lines.Count; row++)
+        for (int row = 0; row < page.DataTable.RowCount; row++)
         {
-            ResultCell[] line = page.DataTable.Lines[row];
-            for (int col = 0; col < line.Length; col++)
+            for (int col = 0; col < page.DataTable.ColumnCount; col++)
             {
-                @Raw(line[col].CSVValue(useFormat, separator))
+                @Raw(page.DataTable[row,col].CSVValue(useFormat, separator))
             }
             @Raw("\r\n")
         }
     }
 }
 
-@if (Model.Pages.Count == 0)
+@if (reportModel.Pages.Count == 0)
 {
-    @Report.Translate("No record");
+    @report.Translate("No record");
 }

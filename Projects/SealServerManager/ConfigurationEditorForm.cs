@@ -68,9 +68,7 @@ namespace Seal.Forms
 It creates an application under the 'Default Web Site' of IIS using the 'LocalSystem' Windows Account.
 
 IIS must be installed with the following features: 
-IIS version 7: Application Development/ASP.Net
-IIS version 8: Application Development/ASP.Net 3.5, Application Development/ASP.Net 4.5
-MVC 4 extension
+Application Development/ASP.Net 4.5
 
 The site can be configured with any user having the following rights:
 Read access to the repository directory ({0}).

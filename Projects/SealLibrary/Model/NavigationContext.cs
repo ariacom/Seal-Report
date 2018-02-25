@@ -79,7 +79,7 @@ namespace Seal.Model
                             string initialLabel = element.DisplayNameEl;
                             element.ChangeColumnGUID(dst);
                             destLabel = element.DisplayNameElTranslated;
-                            newReport.ExecutionView.ReplaceInParameterValues("chart_nvd3_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
+                            newReport.ExecutionView.ReplaceInParameterValues("nvd3_chart_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
                         }
 
                         if (val != null)

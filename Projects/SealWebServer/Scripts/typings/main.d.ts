@@ -5,8 +5,7 @@ interface JQuery {
     selectpicker(options: any, options2: any): JQuery;
 
     autocomplete(options: any): JQuery;
-    datepicker(options: any): JQuery;
-    multipleSelect(options: any): JQuery;
+    datetimepicker(options: any): JQuery;
 
     dataTable(options: any): JQuery;
     dataTable(): any;

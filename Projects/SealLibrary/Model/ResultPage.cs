@@ -10,6 +10,7 @@ using System.Data;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.IO;
 using Seal.Helpers;
+using System.Web;
 
 namespace Seal.Model
 {
@@ -40,25 +41,13 @@ namespace Seal.Model
         public ResultTable PageTable;
         public ResultTable DataTable;
 
-        //For MS Chart
-        public Chart Chart = null;
-        public string ChartPath = null;
-        public string ChartFileName = null;
-
-        //For NVD3 Chart
-        public string NVD3ChartType = "";
-        public string NVD3XLabels = "";
-        public string NVD3XAxisFormat = "";
-        public string NVD3PrimaryYAxisFormat = "";
-        public bool NVD3PrimaryYIsDateTime = false;
-        public string NVD3SecondaryYAxisFormat = "";
-        public bool NVD3SecondaryYIsDateTime = false;
-        public bool NVD3IsNumericAxis;
-        public bool NVD3IsDateTimeAxis;
+        //For Charts
+        public bool ChartInitDone = false;
+        public string ChartXLabels = "";
 
         //Max lengths to adjust margins
-        public int NVD3XLabelMaxLen = 0;
-        public int NVD3YPrimaryMaxLen = 0;
-        public int NVD3YSecondaryMaxLen = 0;
+        public int AxisXLabelMaxLen = 0;
+        public int AxisYPrimaryMaxLen = 0;
+        public int AxisYSecondaryMaxLen = 0;
     }
 }

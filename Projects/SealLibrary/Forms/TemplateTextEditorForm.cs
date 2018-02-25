@@ -32,6 +32,7 @@ namespace Seal.Forms
         {
             InitializeComponent();
             textBox.ConfigurationManager.Language = "html";
+            textBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
             toolStripStatusLabel.Image = null;
             ShowIcon = true;
             Icon = Repository.ProductIcon;
@@ -42,15 +43,25 @@ namespace Seal.Forms
             this.KeyDown += TextBox_KeyDown;
         }
 
+        bool CheckClose()
+        {
+            if (textBox.Modified)
+            {
+                if (MessageBox.Show("The text has been modified. Do you really want to exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return false;
+            }
+            return true;
+        }
+
         private void TemplateTextEditorForm_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Escape) Close();
+            if (e.KeyChar == (char)Keys.Escape) cancelToolStripButton_Click(sender, e);
         }
 
         void TemplateTextEditorForm_Load(object sender, EventArgs e)
         {
             if (LastSize != null) Size = LastSize.Value;
             if (LastLocation != null) Location = LastLocation.Value;
+            textBox.Modified = false;
         }
 
         void TemplateTextEditorForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -61,8 +72,11 @@ namespace Seal.Forms
 
         private void cancelToolStripButton_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
-            Close();
+            if (CheckClose())
+            {
+                DialogResult = DialogResult.Cancel;
+                Close();
+            }
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
@@ -91,7 +105,7 @@ namespace Seal.Forms
             {
                 string script = textBox.Text;
                 if (!string.IsNullOrEmpty(TextToAddForCheck)) script += "\r\n" + TextToAddForCheck;
-                Helper.CompileRazor(script, TypeForCheckSyntax, "acachename");
+                RazorHelper.Compile(script, TypeForCheckSyntax, Guid.NewGuid().ToString());
             }
             catch (TemplateCompilationException ex)
             {
@@ -123,8 +137,16 @@ namespace Seal.Forms
         {
             foreach (string sample in samples)
             {
-                ToolStripMenuItem item = new ToolStripMenuItem(sample);
+                string title = sample, value = sample;
+                if (sample.Contains("|"))
+                {
+                    var index = sample.LastIndexOf('|');
+                    title = sample.Substring(index+1);
+                    value = sample.Substring(0, index);
+                }
+                ToolStripMenuItem item = new ToolStripMenuItem(title);
                 item.Click += new System.EventHandler(this.item_Click);
+                item.ToolTipText = value;
                 samplesMenuItem.DropDownItems.Add(item);
             }
             if (!mainToolStrip.Items.Contains(samplesMenuItem)) mainToolStrip.Items.Add(samplesMenuItem);
@@ -132,7 +154,7 @@ namespace Seal.Forms
 
         void item_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem) textBox.Text = ((ToolStripMenuItem)sender).Text;
+            if (sender is ToolStripMenuItem) textBox.Text = string.IsNullOrEmpty(((ToolStripMenuItem)sender).ToolTipText) ? ((ToolStripMenuItem)sender).Text : ((ToolStripMenuItem)sender).ToolTipText;
         }
 
         public void SetResetText(string resetText)

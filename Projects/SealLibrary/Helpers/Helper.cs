@@ -4,7 +4,6 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.ComponentModel;
@@ -13,11 +12,10 @@ using System.Data.OleDb;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Web;
-using RazorEngine.Templating;
 using System.Windows.Forms.DataVisualization.Charting;
 using RazorEngine;
+using RazorEngine.Templating;
 using System.IO;
-using System.Threading;
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Data;
@@ -58,6 +56,13 @@ namespace Seal.Helpers
         {
             if (input == null) input = "";
             return string.Format("'{0}'", input.Replace("'", "''"));
+        }
+
+
+        static public string AddIfNotEmpty(string prefix, string input, string suffix)
+        {
+            if (!string.IsNullOrEmpty(input)) return prefix + input + suffix;
+            return "";
         }
 
         static public string AddNotEmpty(string separator, string input)
@@ -114,6 +119,11 @@ namespace Seal.Helpers
             return HttpUtility.JavaScriptStringEncode(value);
         }
 
+
+        static public string ToMomentJSFormat(string datetimeFormat)
+        {
+            return datetimeFormat.Replace("y", "Y").Replace("d", "D").Replace("tt", "A").Replace("z", "Z");
+        }
 
         static public string RemoveHTMLTags(string value)
         {
@@ -315,12 +325,12 @@ namespace Seal.Helpers
 
         static public string GetExceptionMessage(TemplateCompilationException ex)
         {
-            string result = "";
-            foreach (var error in ex.Errors)
+            var result = new StringBuilder("");
+            foreach (var err in ex.CompilerErrors)
             {
-                result += error.ErrorText + "\r\n";
+                result.AppendFormat("{0}\r\nLine {1} Column {2} Error Number {3}\r\n", err.ErrorText, err.Line, err.Column, err.ErrorNumber);
             }
-            return result;
+            return result.ToString();
         }
 
         static public Series CloneSeries(Series o)
@@ -345,43 +355,7 @@ namespace Seal.Helpers
             if (input != null && !input.Contains("Password=") && !string.IsNullOrEmpty(password)) result += string.Format(";Password={0}", password);
             return result;
         }
-
-        static HtmlString dummy = null;
-        static DataTable dummy2 = null;
-        static OleDbConnection dummy3 = null;
-        static LdapConnection dummy4 = null;
-        static SyndicationFeed dummy5 = null;
-        static XDocument dummy6 = null;
-
-        static public void LoadRazorAssemblies()
-        {
-            //Force the load of the assemblies
-            if (dummy == null) dummy = new HtmlString("");
-            if (dummy2 == null) dummy2 = new DataTable();
-            if (dummy3 == null) dummy3 = new OleDbConnection();
-            if (dummy4 == null) dummy4 = new LdapConnection("");
-            if (dummy5 == null) dummy5 = new SyndicationFeed();
-            if (dummy6 == null) dummy6 = new XDocument();
-        }
-
-        static public string ParseRazor(string script, object model)
-        {
-            if (script != null && script.StartsWith("@"))
-            {
-                LoadRazorAssemblies();
-                return Razor.Parse(script, model).Trim();
-            }
-            return script;
-        }
-
-        static public void CompileRazor(string script, Type modelType, string cacheName)
-        {
-            if (!string.IsNullOrEmpty(script))
-            {
-                LoadRazorAssemblies();
-                Razor.Compile(script, modelType, cacheName);
-            }
-        }
+        
 
         static public void ExecutePrePostSQL(DbConnection connection, string sql, object model, bool ignoreErrors)
         {
@@ -389,7 +363,7 @@ namespace Seal.Helpers
             {
                 if (!string.IsNullOrEmpty(sql))
                 {
-                    string finalSql = Helper.ParseRazor(sql, model);
+                    string finalSql = RazorHelper.CompileExecute(sql, model);
                     if (!string.IsNullOrEmpty(sql))
                     {
                         var command = connection.CreateCommand();
@@ -457,12 +431,6 @@ namespace Seal.Helpers
                 EventLog.WriteEntry(source, msg, type);
             }
             catch { }
-        }
-
-        public static void GetExceptionMessage(Exception ex)
-        {
-            var result = ex.Message;
-            if (ex.InnerException != null) result += "\r\n" + ex.InnerException.Message;
         }
 
 

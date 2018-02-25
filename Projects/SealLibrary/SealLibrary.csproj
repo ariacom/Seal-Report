@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -28,6 +28,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\Release\</OutputPath>
@@ -37,18 +38,18 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>SharedLibraries\Ionic.Zip.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.0.3.27276, Culture=neutral, PublicKeyToken=0d013ddd5178a2ae, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>SharedLibraries\Microsoft.Win32.TaskScheduler.dll</HintPath>
+    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.7.2.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
+      <HintPath>..\packages\TaskScheduler.2.7.2\lib\net40\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
-    <Reference Include="RazorEngine">
-      <HintPath>..\SharedLibraries\RazorEngine.dll</HintPath>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="ScintillaNET, Version=2.5.2.0, Culture=neutral, PublicKeyToken=948d6c9751444115, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -65,9 +66,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>SharedLibraries\System.Web.Razor.dll</HintPath>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -138,6 +138,9 @@
     <Compile Include="Forms\MultipleSelectForm.Designer.cs">
       <DependentUpon>MultipleSelectForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\WebBrowserHelper.cs" />
+    <Compile Include="Helpers\PropertyGridHelper.cs" />
+    <Compile Include="Helpers\RazorHelper.cs" />
     <Compile Include="Helpers\TreeViewEditorHelper.cs" />
     <Compile Include="Forms\SQLEditorForm.cs">
       <SubType>Form</SubType>
@@ -181,14 +184,16 @@
     <Compile Include="Model\NavigationLink.cs" />
     <Compile Include="Model\OutputEMailDevice.cs" />
     <Compile Include="Model\OutputFolderDevice.cs" />
+    <Compile Include="Forms\ParametersEditor.cs" />
     <Compile Include="Model\ReportTask.cs" />
     <Compile Include="Model\ReportSchedule.cs" />
     <Compile Include="Model\ReportOutput.cs" />
     <Compile Include="Model\OutputDevice.cs" />
+    <Compile Include="Model\ReportViewPartialTemplate.cs" />
     <Compile Include="Model\RepositoryServer.cs" />
     <Compile Include="Model\RepositoryTranslation.cs" />
     <Compile Include="Model\ReportViewTemplate.cs" />
-    <Compile Include="Model\ReportViewParameter.cs" />
+    <Compile Include="Model\Parameter.cs" />
     <Compile Include="Model\RootEditor.cs" />
     <Compile Include="Model\SealInterface.cs" />
     <Compile Include="Model\SealExcelConverter.cs" />
@@ -263,6 +268,51 @@
     <None Include="..\..\Repository\Views\Model.cshtml">
       <Link>Views\Model.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\Model.iSummaryTable.partial.cshtml">
+      <Link>Views\Model.iSummaryTable.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\ModelContainer.config.cshtml">
+      <Link>Views\ModelContainer.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\ModelContainer.cshtml">
+      <Link>Views\ModelContainer.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\PageTable.config.cshtml">
+      <Link>Views\PageTable.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\PageTable.cshtml">
+      <Link>Views\PageTable.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\DataTable.config.cshtml">
+      <Link>Views\DataTable.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\DataTable.cshtml">
+      <Link>Views\DataTable.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\ChartPlotly.config.cshtml">
+      <Link>Views\ChartPlotly.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\ChartPlotly.cshtml">
+      <Link>Views\ChartPlotly.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\ChartNVD3.config.cshtml">
+      <Link>Views\ChartNVD3.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\ChartNVD3.cshtml">
+      <Link>Views\ChartNVD3.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\ChartJS.config.cshtml">
+      <Link>Views\ChartJS.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\ChartJS.cshtml">
+      <Link>Views\ChartJS.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Model.iPages.partial.cshtml">
+      <Link>Views\Model.iPages.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Model.iMenu.partial.cshtml">
+      <Link>Views\Model.iMenu.partial.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Views\Model.config.cshtml">
       <Link>Views\Model.config.cshtml</Link>
     </None>
@@ -278,27 +328,49 @@
     <None Include="..\..\Repository\Views\ModelCSV.cshtml">
       <Link>Views\ModelCSV.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\Container.cshtml">
+      <Link>Views\Container.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Container.config.cshtml">
+      <Link>Views\Container.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Free.cshtml">
+      <Link>Views\Free.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Free.config.cshtml">
+      <Link>Views\Free.config.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Views\Report.cshtml">
       <Link>Views\Report.cshtml</Link>
     </None>
     <None Include="..\..\Repository\Views\Report.config.cshtml">
       <Link>Views\Report.config.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\Report.iHeader.partial.cshtml">
+      <Link>Views\Report.iHeader.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Report.iInformation.partial.cshtml">
+      <Link>Views\Report.iInformation.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Report.iMessages.partial.cshtml">
+      <Link>Views\Report.iMessages.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Report.iRestrictions.partial.cshtml">
+      <Link>Views\Report.iRestrictions.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Report.iViews.partial.cshtml">
+      <Link>Views\Report.iViews.partial.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Views\Scripts\common.js">
       <Link>Views\Scripts\common.js</Link>
     </None>
-    <None Include="..\..\Repository\Views\Scripts\nvd3.js">
-      <Link>Views\Scripts\nvd3.js</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Scripts\dataTables.js">
-      <Link>Views\Scripts\dataTables.js</Link>
-    </None>
-    <None Include="..\..\Repository\Views\Scripts\datepicker.js">
-      <Link>Views\Scripts\datepicker.js</Link>
+    <None Include="..\..\Repository\Views\Scripts\chartNVD3.js">
+      <Link>Views\Scripts\chartNVD3.js</Link>
     </None>
     <None Include="..\..\Repository\Views\Content\seal.css">
       <Link>Views\Content\seal.css</Link>
     </None>
+    <None Include="packages.config" />
     <None Include="Result.cd" />
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +430,12 @@
     <None Include="..\..\Repository\Views\TabControl.cshtml">
       <Link>Views\TabControl.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\TabControl.iMenu.partial.cshtml">
+      <Link>Views\TabControl.iMenu.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\TabControl.iContent.partial.cshtml">
+      <Link>Views\TabControl.iContent.partial.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Views\TabPage.config.cshtml">
       <Link>Views\TabPage.config.cshtml</Link>
     </None>
@@ -383,21 +461,16 @@
     <None Include="Resources\reportDesigner.ico" />
     <None Include="Resources\serverManager.ico" />
     <Content Include="SharedLibraries\Ionic.Zip.dll" />
-    <Content Include="SharedLibraries\Microsoft.Win32.TaskScheduler.dll" />
-    <Content Include="SharedLibraries\RazorEngine.dll" />
     <Content Include="SciLexer.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SharedLibraries\ScintillaNET.dll" />
-    <Content Include="SharedLibraries\System.Web.Razor.dll" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)..\..\Repository\Views\Scripts\common.js" "$(ProjectDir)..\SealWebServer\Scripts\"
-copy "$(ProjectDir)..\..\Repository\Views\Scripts\dataTables.js" "$(ProjectDir)..\SealWebServer\Scripts\"
-copy "$(ProjectDir)..\..\Repository\Views\Scripts\datepicker.js" "$(ProjectDir)..\SealWebServer\Scripts\"
-copy "$(ProjectDir)..\..\Repository\Views\Scripts\nvd3.js" "$(ProjectDir)..\SealWebServer\Scripts\"
+copy "$(ProjectDir)..\..\Repository\Views\Scripts\chartNVD3.js" "$(ProjectDir)..\SealWebServer\Scripts\"
 copy "$(ProjectDir)..\..\Repository\Views\Content\seal.css" "$(ProjectDir)..\SealWebServer\Content\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

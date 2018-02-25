@@ -1,22 +1,13 @@
 ﻿@using Seal.Model;
-@using System.Drawing;
 @{
     ReportViewTemplate Template = Model;
 
     //Template Name
-    Template.Name = "Model Detail HTML";
+    Template.Name = ReportViewTemplate.ModelDetailHTMLName;
 
-    //If for model, the Model parameter object used for the parsing is the Model instead of the Report
-    Template.ForModel = true;
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = true;
 
-    //CSS
-    Template.CSS.Add(new Parameter() { Name = "view", DisplayName = "View", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the full View", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "page", DisplayName = "Page", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Page of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "page_table", DisplayName = "Page table container", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Page table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "page_table_table", DisplayName = "Page table", Type = ViewParameterType.String, Description = "CSS style for the Page table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "data_table", DisplayName = "Data table container", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Data table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "data_table_table", DisplayName = "Data table", Type = ViewParameterType.String, Description = "CSS style for the Data table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    
     //Allowed template parent names
-    Template.ParentNames = new List<string>() { "Report", "Tab Page" };
+    Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container" };
 }

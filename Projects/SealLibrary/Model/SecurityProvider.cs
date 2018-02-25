@@ -106,7 +106,7 @@ namespace Seal.Model
                 if (configuration.Replace("\r\n", "\n") != _lastConfiguration.Replace("\r\n", "\n"))
                 {
                     ClearConfiguration();
-                    Razor.Parse(configuration, this);
+                    RazorHelper.CompileExecute(configuration, this);
                     _lastConfiguration = configuration;
                 }
             }

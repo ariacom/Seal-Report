@@ -78,6 +78,7 @@ namespace Seal
             InitializeComponent();
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
+            PropertyGridHelper.AddResetMenu(mainPropertyGrid);
 
             treeViewHelper = new TreeViewEditorHelper() { Report = _report, sortColumnAlphaOrderToolStripMenuItem = sortColumnAlphaOrderToolStripMenuItem, sortColumnSQLOrderToolStripMenuItem = sortColumnSQLOrderToolStripMenuItem, addFromToolStripMenuItem = addFromToolStripMenuItem, addToolStripMenuItem = addToolStripMenuItem, removeToolStripMenuItem = removeToolStripMenuItem, copyToolStripMenuItem = copyToolStripMenuItem, removeRootToolStripMenuItem = removeRootToolStripMenuItem, treeContextMenuStrip = treeContextMenuStrip, mainTreeView = mainTreeView, ForReport = true };
             mainTreeView.AfterSelect += treeViewHelper.AfterSelect;
@@ -100,40 +101,40 @@ namespace Seal
 
         private void ReportDesigner_Load(object sender, EventArgs e)
         {
-                KeyPreview = true;
+            KeyPreview = true;
 
-                //Set event handler for sub-property grids...
-                EntityCollectionEditor.MyPropertyValueChanged += mainPropertyGrid_PropertyValueChanged;
+            //Set event handler for sub-property grids...
+            EntityCollectionEditor.MyPropertyValueChanged += mainPropertyGrid_PropertyValueChanged;
 
-                //handle program args
-                string[] args = Environment.GetCommandLineArgs();
-                bool open = (args.Length >= 2 && args[1].ToLower() == "/o");
-                string reportToOpen = null;
-                if (args.Length >= 3 && File.Exists(args[2])) reportToOpen = args[2];
+            //handle program args
+            string[] args = Environment.GetCommandLineArgs();
+            bool open = (args.Length >= 2 && args[1].ToLower() == "/o");
+            string reportToOpen = null;
+            if (args.Length >= 3 && File.Exists(args[2])) reportToOpen = args[2];
 
-                //MRU = most recent used reports
-                if (Properties.Settings.Default.MRU == null) Properties.Settings.Default.MRU = new System.Collections.Specialized.StringCollection();
-                if (!open && Properties.Settings.Default.MRU.Count > 0 && File.Exists(Properties.Settings.Default.MRU[0]))
-                {
-                    open = true;
-                    reportToOpen = Properties.Settings.Default.MRU[0];
-                }
+            //MRU = most recent used reports
+            if (Properties.Settings.Default.MRU == null) Properties.Settings.Default.MRU = new System.Collections.Specialized.StringCollection();
+            if (!open && Properties.Settings.Default.MRU.Count > 0 && File.Exists(Properties.Settings.Default.MRU[0]))
+            {
+                open = true;
+                reportToOpen = Properties.Settings.Default.MRU[0];
+            }
 
-                showScriptErrorsToolStripMenuItem.Checked = Properties.Settings.Default.ShowScriptErrors;
-                if (!Helper.IsMachineAdministrator()) Properties.Settings.Default.SchedulesWithCurrentUser = true;
-                schedulesWithCurrentUserToolStripMenuItem.Checked = Properties.Settings.Default.SchedulesWithCurrentUser;
+            showScriptErrorsToolStripMenuItem.Checked = Properties.Settings.Default.ShowScriptErrors;
+            if (!Helper.IsMachineAdministrator()) Properties.Settings.Default.SchedulesWithCurrentUser = true;
+            schedulesWithCurrentUserToolStripMenuItem.Checked = Properties.Settings.Default.SchedulesWithCurrentUser;
 
-                if (open)
-                {
-                    if (!string.IsNullOrEmpty(reportToOpen)) openReport(reportToOpen);
-                    else newToolStripMenuItem_Click(null, null);
-                }
-                else
-                {
-                    _repository = Repository.Create();
-                    IsModified = false;
-                    init();
-                }
+            if (open)
+            {
+                if (!string.IsNullOrEmpty(reportToOpen)) openReport(reportToOpen);
+                else newToolStripMenuItem_Click(null, null);
+            }
+            else
+            {
+                _repository = Repository.Create();
+                IsModified = false;
+                init();
+            }
             if (_repository == null)
             {
                 _repository = new Repository();
@@ -312,7 +313,7 @@ namespace Seal
             bool result = true;
             if (_report != null && IsModified)
             {
-                DialogResult dlgResult = MessageBox.Show("The current report has been modified, do you want to save it ?", "Warning", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                DialogResult dlgResult = MessageBox.Show("The report has been modified, do you want to save it ?", "Warning", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (dlgResult == DialogResult.Cancel) result = false;
                 else if (dlgResult == DialogResult.Yes) saveToolStripMenuItem_Click(null, null);
             }
@@ -373,7 +374,7 @@ namespace Seal
             foreach (var mru in Properties.Settings.Default.MRU)
             {
                 ToolStripMenuItem item = new ToolStripMenuItem(mru);
-                item.Click += new EventHandler(delegate(object sender, EventArgs e)
+                item.Click += new EventHandler(delegate (object sender, EventArgs e)
                 {
                     if (!checkModified()) return;
                     openReport(((ToolStripMenuItem)sender).Text);
@@ -414,7 +415,7 @@ namespace Seal
             {
                 if (IsModified)
                 {
-                    DialogResult dlgResult = MessageBox.Show("The current report has been modified, are you sure you to reload it ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    DialogResult dlgResult = MessageBox.Show("The report has been modified, are you sure you to reload it ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                     if (dlgResult == DialogResult.Cancel) return;
                 }
                 if (_reportViewer != null && _reportViewer.Visible) _reportViewer.Close();
@@ -609,7 +610,7 @@ namespace Seal
         }
 
 
-        bool _pdfExpanded = false, _excelExpanded = false;
+        bool _pdfExpanded = false, _excelExpanded = false, _configurationExpanded = true;
         private void mainTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             modelPanel.Visible = false;
@@ -626,6 +627,8 @@ namespace Seal
             if (entry != null) _pdfExpanded = entry.Expanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "excel configuration");
             if (entry != null) _excelExpanded = entry.Expanded;
+            entry = Helper.GetGridEntry(mainPropertyGrid, "template configuration");
+            if (entry != null) _configurationExpanded = entry.Expanded;
 
             mainPropertyGrid.SelectedObject = null;
             if (selectedEntity is ReportModel)
@@ -661,6 +664,8 @@ namespace Seal
             if (entry != null) entry.Expanded = _pdfExpanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "excel configuration");
             if (entry != null) entry.Expanded = _excelExpanded;
+            entry = Helper.GetGridEntry(mainPropertyGrid, "template configuration");
+            if (entry != null) entry.Expanded = _configurationExpanded;
 
             toolStripHelper.SetHelperButtons(selectedEntity);
             enableControls();
@@ -1314,7 +1319,17 @@ namespace Seal
                 {
                     ReportView sourceView = sourceNode.Tag as ReportView;
                     ReportView targetView = targetNode.Tag as ReportView;
-                    if (sourceNode.Parent == targetNode.Parent)
+                    if (sourceView.Template.ParentNames.Contains(targetView.Template.Name) && !sourceView.IsAncestorOf(targetView))
+                    {
+                        //move the parent
+                        ReportView parent = sourceNode.Parent.Tag as ReportView;
+                        parent.Views.Remove(sourceView);
+                        targetView.Views.Add(sourceView);
+                        SetModified();
+                        init(sourceView);
+                        e.Effect = DragDropEffects.Move;
+                    }
+                    else if (sourceNode.Parent == targetNode.Parent)
                     {
                         //move the position
                         List<ReportView> views = (targetNode.Parent.Tag is ReportView) ? ((ReportView)targetNode.Parent.Tag).Views : _report.Views;
@@ -1339,16 +1354,6 @@ namespace Seal
                         }
                         SetModified();
                         mainTreeView.Sort();
-                        e.Effect = DragDropEffects.Move;
-                    }
-                    else if (sourceView.Template.ParentNames.Contains(targetView.Template.Name) && !sourceView.IsAncestorOf(targetView))
-                    {
-                        //move the parent
-                        ReportView parent = sourceNode.Parent.Tag as ReportView;
-                        parent.Views.Remove(sourceView);
-                        targetView.Views.Add(sourceView);
-                        SetModified();
-                        init(sourceView);
                         e.Effect = DragDropEffects.Move;
                     }
                 }

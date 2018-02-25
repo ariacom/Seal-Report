@@ -1,0 +1,22 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = ReportViewTemplate.ChartNVD3Name;
+
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = false;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_width", TextValue = "", DisplayName = "Chart width", Description = "The chart width. If empty, the size is automatic.", Enums = new string[] { "", "400px", "600px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_height", TextValue = "400px", DisplayName = "Chart height", Description = "The chart height. If empty, the size is automatic.", Enums = new string[] { "", "400px", "600px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_title", DisplayName = "Chart title", Description = "Optional title displayed for the NVD3 chart. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_hide_controls", DisplayName = "Force hide controls", BoolValue = false, Description = "If true, controls (depending on chart type) to interact with the series are hidden." });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_show_legend", DisplayName = "Show legend", BoolValue = true, Description = "If true, the legend is displayed in the chart." });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_bar_stacked", DisplayName = "Bar stacked", BoolValue = false, Description = "If true, the Bar in chart are stacked (only for Bar chart)." });
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Model HTML", "Model Container" };
+}
+  

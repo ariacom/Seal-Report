@@ -53,10 +53,11 @@ namespace Seal.Controls
             ModelGrid.Dock = DockStyle.Fill;
             ModelGrid.PropertyValueChanged += Grid_PropertyValueChanged;
             ModelGrid.ToolbarVisible = false;
-            ModelGrid.HelpVisible = false;
+            ModelGrid.HelpVisible = true;
             ModelGrid.PropertySort = PropertySort.Categorized;
             ModelGrid.LineColor = SystemColors.ControlLight;
             modelSourceSplitContainer.Panel1.Controls.Add(ModelGrid);
+            PropertyGridHelper.AddResetMenu(ModelGrid);
 
             ElementGrid.Dock = DockStyle.Fill;
             ElementGrid.PropertyValueChanged += Grid_PropertyValueChanged;
@@ -65,6 +66,7 @@ namespace Seal.Controls
             ElementGrid.LineColor = SystemColors.ControlLight;
             elementsContainer.Panel2.Controls.Add(ElementGrid);
             foreach (var panel in PanelList) elementsContainer.Panel1.Controls.Add(panel);
+            PropertyGridHelper.AddResetMenu(ElementGrid);
 
             RestrictionGrid.Dock = DockStyle.Fill;
             RestrictionGrid.PropertyValueChanged += Grid_PropertyValueChanged;
@@ -73,6 +75,7 @@ namespace Seal.Controls
             RestrictionGrid.PropertySort = PropertySort.Categorized;
             RestrictionGrid.LineColor = SystemColors.ControlLight;
             restrictionsContainer.Panel2.Controls.Add(RestrictionGrid);
+            PropertyGridHelper.AddResetMenu(RestrictionGrid);
         }
 
         public void Init(ReportDesigner mainForm)
@@ -97,6 +100,9 @@ namespace Seal.Controls
             RestrictionGrid.SelectedObject = null;
 
             resizeControls();
+
+            //adjust description height
+            PropertyGridHelper.ResizeDescriptionArea(ModelGrid, 3);
         }
 
         void initNoSQL()
@@ -457,10 +463,11 @@ namespace Seal.Controls
                     newElement.AggregateFunction = element.AggregateFunction;
                     newElement.CalculationOption = element.CalculationOption;
                     newElement.Nvd3Serie = element.Nvd3Serie;
+                    newElement.ChartJSSerie = element.ChartJSSerie;
+                    newElement.PlotlySerie = element.PlotlySerie;
                     newElement.SerieDefinition = element.SerieDefinition;
                     newElement.SerieSortOrder = element.SerieSortOrder;
                     newElement.SerieSortType = element.SerieSortType;
-                    newElement.SerieType = element.SerieType;
                     newElement.TotalAggregateFunction = element.TotalAggregateFunction;
                     newElement.ShowTotal = element.ShowTotal;
                     newElement.SortOrder = element.SortOrder;

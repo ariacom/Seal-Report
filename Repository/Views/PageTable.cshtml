@@ -1,0 +1,37 @@
+﻿@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = report.CurrentModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+}
+
+
+@if (page.PageTable != null && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0 && modelView.GetBoolValue("show_page_tables"))
+{
+    <table class='table table-striped table-hover table-bordered'>
+        @if (view.HasValue("page_table_caption"))
+        {
+            <caption align="bottom" style="caption-side: bottom;">@Raw(view.GetHtmlValue("page_table_caption"))</caption>
+        }
+        @for (int i = 0; i < page.PageTable.ColumnCount; i++)
+        {
+            ResultCell header = page.PageTable[0, i];
+            ResultCell value = page.PageTable[1, i];
+            if (!view.GetBoolValue("display_page_totals") && header.IsTotal)
+            {
+                break;
+            }
+            <tr>
+                <th>
+                    @Raw(header.HTMLValue)
+                </th>
+                <td @Raw(reportModel.GetNavigation(value))>
+                    @Raw(value.HTMLValue)
+                </td>
+            </tr>
+
+        }
+    </table>
+}

@@ -1,5 +1,5 @@
 ﻿/// <reference path="typings/jquery/jquery.d.ts" />
-/// <reference path="typings/bootstrap/bootstrap.d.ts" />
+/// <reference path="typings/bootstrap/index.d.ts" />
 /// <reference path="typings/jstree/jstree.d.ts" />
 /// <reference path="typings/main.d.ts" />
 
@@ -47,7 +47,7 @@ class SWIMain {
 
         $(".navbar-right").hide();
 
-        $waitDialog.modal();
+        $waitDialog.modal('show');
 
         $("#search-pattern").keypress(function (e) {
             if ((e.keyCode || e.which) == 13) _main.search();
@@ -536,7 +536,7 @@ class SWIMain {
 
         var isMobile = SWIUtil.IsMobile();
         $('#file-table').dataTable({
-            sDom: '<"dataTableTop"lfpir>t',
+           // sDom: '<"dataTableTop"lfpir>t',
             bSort: true,
             stateSave: true,
             aaSorting: [],
@@ -546,6 +546,7 @@ class SWIMain {
             bInfo: !isMobile,
             bFilter: !isMobile,
             bAutoWidth: false,
+            responsive: true,
             oLanguage: {
                 oPaginate: {
                     sFirst: "|&lt;",
@@ -564,6 +565,8 @@ class SWIMain {
             aoColumnDefs: [{ "bSortable": false, "aTargets": [0, 2] }]
         });
 
+    //    $(".dataTables_length select").selectpicker('refresh');
+  //      setTimeout(function () { $(".dataTables_length select").selectpicker('refresh'); }, 1000);
         //check box handler
         $(".report-checkbox").on("click", function () {
             _main.enableControls();

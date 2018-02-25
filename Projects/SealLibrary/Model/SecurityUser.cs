@@ -59,7 +59,7 @@ namespace Seal.Model
             string script = (Security.UseCustomScript && !string.IsNullOrEmpty(Security.Script) ? Security.Script : Security.ProviderScript);
             try
             {
-                Helper.ParseRazor(script, this);
+                RazorHelper.CompileExecute(script, this);
             }
             catch (Exception ex)
             {
@@ -69,7 +69,7 @@ namespace Seal.Model
                     _tryAgain = false;
                     try
                     {
-                        Helper.ParseRazor(script, this);
+                        RazorHelper.CompileExecute(script, this);
                     }
                     catch (Exception ex2)
                     {

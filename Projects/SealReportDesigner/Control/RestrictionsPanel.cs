@@ -48,6 +48,7 @@ namespace Seal.Controls
         {
             InitializeComponent();
             restrictionsTextBox.ConfigurationManager.Language = "mssql";
+            restrictionsTextBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
         }
 
         public void Init(ModelPanel modelPanel)

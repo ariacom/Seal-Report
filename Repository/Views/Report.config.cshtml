@@ -5,43 +5,32 @@
     //Template Name
     Template.Name = "Report";
 
-    //If for model, the Model parameter object used for the parsing is the Model instead of the Report
-    Template.ForModel = false;
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = false;
 
     //True if the template uses Theme values
     Template.UseThemeValues = true;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "report_description", Type = ViewParameterType.Text, DisplayName = "Report description", Description = "A report description displayed in the information panel" });
-    Template.Parameters.Add(new Parameter() { Name = "restriction_button", DisplayName = "Show restrictions", BoolValue = true, Description = "If true, show the restriction panel if the report has prompted restrictions" });
-    Template.Parameters.Add(new Parameter() { Name = "information_button", DisplayName = "Show report information", BoolValue = false, Description = "If true, show the report execution information panel" });
-    Template.Parameters.Add(new Parameter() { Name = "message_button", DisplayName = "Show execution messages", BoolValue = false, Description = "If true, show the report execution messages panel" });
-    Template.Parameters.Add(new Parameter() { Name = "result_button", DisplayName = "Show view results panel", BoolValue = false, Description = "If true, show the view results panel" });
-    Template.Parameters.Add(new Parameter() { Name = "converter_button", DisplayName = "Show converter buttons in view results panel", BoolValue = true, Description = "If true, the PDF and Excel converter buttons are displayed" });
-    Template.Parameters.Add(new Parameter() { Name = "display_messages", DisplayName = "Display execution messages panel and button", BoolValue = true, Description = "If true, the execution messages button and panel is displayed" });
-    Template.Parameters.Add(new Parameter() { Name = "force_execution", DisplayName = "Force execution", BoolValue = false, Description = "If true, force the report to be executed directly the first time even if some restrictions are prompted" });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.PrintLayoutParameter, DisplayName = "Print: Use print layout", BoolValue = false, Description = "If true, the report result is generated with a print layout" });
-    Template.Parameters.Add(new Parameter() { Name = "print_show_table_border", DisplayName = "Print: Show table borders", BoolValue = true, Description = "If true, table borders are displayed for the print layout" });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.PDFLayoutParameter, DisplayName = "PDF: Convert HTML to PDF", BoolValue = false, Description = "If true, the PDF document is always generated and displayed when the report is executed" });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.ExcelLayoutParameter, DisplayName = "Excel: Convert to Excel", BoolValue = false, Description = "If true, the Excel document is always generated and displayed when the report is executed" });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.DrillEnabledParameter, DisplayName = "Drill Enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled" });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled" });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.ServerPaginationParameter, DisplayName = "Server Pagination Enabled", BoolValue = true, Description = "If true, data used by HTML data tables pagination are stored on the server" });
-    Template.Parameters.Add(new Parameter() { Name = "additional_js", DisplayName = "Additional JavaScript", Type = ViewParameterType.Text, Description = "Additional JavaScript inserted at the top of the report result file"});
-    Template.Parameters.Add(new Parameter() { Name = "refresh_rate", DisplayName = "Auto-Refresh (seconds)", Type = ViewParameterType.Numeric, NumericValue = 0, Description = "Value in seconds to re-execute and refresh automatically the report. 0 means no refresh."});
-    Template.Parameters.Add(new Parameter() { Name = "force_models_load", DisplayName = "Load all Models", Type = ViewParameterType.Boolean, BoolValue = false, Description = "If true, all models defined in the report will be loaded and processed during execution. By default, false means to load only models belonging to the Views being parsed." });
-
-    //CSS
-    Template.CSS.Add(new Parameter() { Name = "header", DisplayName = "Header", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report header", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "result", DisplayName = "Result", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the view result buttons", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "message", DisplayName = "Message", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report message", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "information", DisplayName = "Information", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the report information", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "view", DisplayName = "View", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the full View", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "body_font_family", DisplayName = "Body font family",Value="Verdana, Arial, Helvetica, sans-serif", Description = "Font family used for the general texts of the report", Enums = ReportViewTemplate.DefaultFontFamily, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "body_font_size", DisplayName = "Body font size", Value = "10pt", Description = "Font size used for the general texts of the report", Enums = ReportViewTemplate.DefaultFontSize, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "table_font_family", DisplayName = "Table font family", Value = "Verdana, Arial, Helvetica, sans-serif", Description = "Font family used for the texts in tables", Enums = ReportViewTemplate.DefaultFontFamily, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "table_font_size", DisplayName = "Table font size", Value = "10pt", Description = "Font size used the texts in tables", Enums = ReportViewTemplate.DefaultFontSize, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "additional_css", DisplayName = "Additional CSS", Type = ViewParameterType.String, Description = "Additional CSS inserted in the page", Enums = new string[] { "table {margin: 10px; border: 2px;}",".title { font-weight:bold; font-size: 16pt;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "report_description", Type = ViewParameterType.Text, DisplayName = "Report description", Description = "Optional report description displayed in the information panel." });
+    Template.Parameters.Add(new Parameter() { Name = "restriction_button", DisplayName = "Display: Show restrictions", BoolValue = true, Description = "If true, the restrictions are displayed when the report is initialized (if the report has prompted restrictions)." });
+    Template.Parameters.Add(new Parameter() { Name = "information_button", DisplayName = "Display: Show information", BoolValue = false, Description = "If true, the report shows the information first when the report is initialized." });
+    Template.Parameters.Add(new Parameter() { Name = "message_button", DisplayName = "Display: Show messages", BoolValue = false, Description = "If true, the report shows the execution messages first when initialized. The 'Enable execution messages' parameter must be set to true." });
+    Template.Parameters.Add(new Parameter() { Name = "display_messages", DisplayName = "Display: Enable execution messages", BoolValue = true, Description = "If true, the execution messages are enabled and can be viewed." });
+    Template.Parameters.Add(new Parameter() { Name = "converter_button", DisplayName = "Display: Enable converter menus", BoolValue = true, Description = "If true, the PDF and Excel converter menus are displayed." });
+    Template.Parameters.Add(new Parameter() { Name = "restrictions_per_row", DisplayName = "Display: Restrictions per row", NumericValue = 4, Description = "Defines the number of prompted restrictions to be displayed per row (between 1 and 12)." });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.PrintLayoutParameter, DisplayName = "Layout: Use print layout", BoolValue = false, Description = "If true, the report result is generated with a print layout." });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.PDFLayoutParameter, DisplayName = "Layout: Convert HTML to PDF", BoolValue = false, Description = "If true, the PDF document is always generated and displayed when the report is executed. To be used in conjunction with the 'Use Print Layout' parameter." });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.ExcelLayoutParameter, DisplayName = "Layout: Convert to Excel", BoolValue = false, Description = "If true, the Excel document is always generated and displayed when the report is executed." });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.DrillEnabledParameter, DisplayName = "Navigation: Drill Enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled." });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Navigation: Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled." });
+    Template.Parameters.Add(new Parameter() { Name = "force_execution", DisplayName = "Options: Force execution", BoolValue = false, Description = "If true, force the report to be executed directly the first time even if some restrictions are prompted." });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.ServerPaginationParameter, DisplayName = "Options: Server Pagination Enabled", BoolValue = true, Description = "If true, data used by HTML data tables pagination are stored on the server." });
+    Template.Parameters.Add(new Parameter() { Name = "refresh_rate", DisplayName = "Options: Auto-Refresh (seconds)", Type = ViewParameterType.Numeric, NumericValue = 0, Description = "Value in seconds to re-execute and refresh automatically the report. 0 means no refresh." });
+    Template.Parameters.Add(new Parameter() { Name = "force_models_load", DisplayName = "Options: Load all Models", Type = ViewParameterType.Boolean, BoolValue = false, Description = "If true, all models defined in the report will be loaded and processed during execution. By default, false means to load only models belonging to the Views being parsed." });
+    Template.Parameters.Add(new Parameter() { Name = "additional_js", DisplayName = "Additional JavaScript", Type = ViewParameterType.Text, Description = "Additional JavaScript inserted at the top of the report result file." });
+    Template.Parameters.Add(new Parameter() { Name = "container_fluid", BoolValue = false, DisplayName = "Bootstrap: Main container is fluid", Description = "If true, the main container has a full width , spanning the entire width of the viewport, otherwise the container has a responsive fixed width." });
+    Template.Parameters.Add(new Parameter() { Name = "child_container_fluid", BoolValue = false, DisplayName = "Bootstrap: Child container is fluid", Description = "If true, the child container has a full width, spanning the entire width of the viewport, otherwise the container has a responsive fixed width." });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>();

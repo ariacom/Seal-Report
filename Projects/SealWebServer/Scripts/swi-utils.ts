@@ -1,6 +1,8 @@
 ﻿declare var tra;
 declare var availableDateKeywords;
-declare function setDatePickerDefaults(): void;
+declare var shortDateFormat;
+declare var shortDateTimeFormat;
+declare var languageName;
 
 module SWIUtil {
     export function tr(reference: string): string {

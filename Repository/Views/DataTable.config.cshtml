@@ -1,0 +1,26 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = ReportViewTemplate.DataTableName;
+
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = false;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "data_table_caption", DisplayName = "Caption", Description = "Optional caption or title displayed at the bottom of the data table." });
+    Template.Parameters.Add(new Parameter() { Name = "data_tables_enabled", DisplayName = "Data tables: Is enabled", BoolValue = true, Description = "If true, Data Tables feature is enabled to allow pagination, sorting and filtering in tables." });
+    Template.Parameters.Add(new Parameter() { Name = "data_tables_sort_enabled", DisplayName = "Data tables: Sort is enabled", BoolValue = true, Description = "If true, the sort feature of the data table is enabled." });
+    Template.Parameters.Add(new Parameter() { Name = "data_tables_filter_enabled", DisplayName = "Data tables: Filter is enabled", BoolValue = true, Description = "If true, the filter feature of the data table is enabled." });
+    Template.Parameters.Add(new Parameter() { Name = "data_tables_pagination_enabled", DisplayName = "Data tables: Pagination is enabled", BoolValue = true, Description = "If true, the pagination feature of the data table is enabled." });
+    Template.Parameters.Add(new Parameter() { Name = "data_tables_pagination_size", DisplayName = "Data tables: Pagination size", Value = "25", Enums = new string[] { "10", "25", "50", "100" }, Description = "Number of rows displayed in a page (if pagination is enabled).", UseOnlyEnumValues=false });
+    Template.Parameters.Add(new Parameter() { Name = "data_tables_show_information", DisplayName = "Data tables: Show information", BoolValue = true, Description = "If true, the number of records is displayed in the data table." });
+    Template.Parameters.Add(new Parameter() { Name = "data_tables_show_processing", DisplayName = "Data tables: Show processing", BoolValue = true, Description = "If true, a processing message is displayed when working." });
+    Template.Parameters.Add(new Parameter() { Name = "print_break_after_page", DisplayName = "Print: Force a break after a page", BoolValue = false, Description = "If true, a new page is started after a page is displayed for the print layout." });
+    Template.Parameters.Add(new Parameter() { Name = "invert_data_tables", DisplayName = "Options: Invert data table", BoolValue = false, Description = "If true, the columns and rows of the data table are swapped from their original presentation." });
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Model HTML", "Model Container" };
+}
+  

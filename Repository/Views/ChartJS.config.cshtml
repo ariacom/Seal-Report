@@ -1,0 +1,28 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = ReportViewTemplate.ChartJSName;
+
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = false;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_width", TextValue = "", DisplayName = "Chart width", Description = "The chart width. If empty, the size is automatic.", Enums = new string[] { "", "300px", "400px", "600px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_height", TextValue = "300px", DisplayName = "Chart height", Description = "The chart height. If empty, the size is automatic.", Enums = new string[] { "", "300px", "400px", "600px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_show_legend", DisplayName = "Show Legend", BoolValue = true, Description = "If true, the legend is displayed in the chart." });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_legend_position", DisplayName = "Legend position", Description = "The position of the legend in the chart.", Value = "top", Enums = new string[] { "top|Top", "left|Left", "right|Right", "bottom|Bottom" } });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_title", DisplayName = "Title", Description = "Optional title displayed for the Chart JS. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_title_position", DisplayName = "Title position", Description = "The position of the title in the chart.", Value = "top", Enums = new string[] { "top|Top", "left|Left", "right|Right", "bottom|Bottom" } });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_bar_stacked", DisplayName = "Bar: Is stacked", BoolValue = false, Description = "If true, the Bar in chart are stacked (only for Bar chart)." });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_bar_horizontal", DisplayName = "Bar: Horizontals", BoolValue = false, Description = "If true, the bars in the chart are horizontals (only for Bar chart)." });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_doughnut", DisplayName = "Pie: Is doughnut", BoolValue = false, Description = "If true, the chart is a doughnut (only for Pie chart)." });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_stepped_line", DisplayName = "Line: Stepped", Description = "Stepped line mode (only for Line chart).", Value = "false", Enums = new string[] { "false|No Step Interpolation (default)", "true|Step-before Interpolation", "'after'|Step-after Interpolation" } });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_fill", DisplayName = "Line: Fill area", BoolValue = false, Description = "If true, the area is filled (only for Line chart)." });
+
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Model HTML", "Model Container" };
+}
+  

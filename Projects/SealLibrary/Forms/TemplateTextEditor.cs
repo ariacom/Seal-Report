@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Windows.Forms.Design;
 using System.Windows.Forms;
 using Seal.Model;
+using System.IO;
 
 namespace Seal.Forms
 {
@@ -234,8 +235,8 @@ namespace Seal.Forms
     //var enums = report.Models[0].Source.MetaData.Enums.FirstOrDefault(i=>i.Name == ""Category"");
     //report.Models[0].GetRestrictionByName(""Category"").EnumValues.Add(enums.Values[0].Id);
 
-    //Change view parameter to display the Result Panel
-    //report.ExecutionView.GetParameter(""result_button"").BoolValue = true;
+    //Change view parameter to display the information Tab
+    //report.ExecutionView.GetParameter(""information_button"").BoolValue = true;
 }
 ";
 
@@ -250,9 +251,9 @@ namespace Seal.Forms
 	//   report.Views.Remove(report.Views[1]);
     //}
    
-    //Change view parameter to display the Result Panel
+    //Change view parameter to display the information Tab
 	//report.ExecutionView.InitParameters(false);
-    //var parameter = report.ExecutionView.GetParameter(""result_button"");
+    //var parameter = report.ExecutionView.GetParameter(""information_button"");
 	//if (parameter != null) {
 	//	parameter.BoolValue = true;	
 	//}	
@@ -298,7 +299,213 @@ namespace Seal.Forms
         //report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ""."";	    
 }
 ";
+        static readonly Tuple<string, string>[] tasksSamples =
+        {
+            new Tuple<string, string>(
+                "Refresh Data Sources enumerated lists",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+    helper.RefreshRepositoryEnums();
+"
+                ),
+            new Tuple<string, string>(
+                "Load a table from an Excel file, may need ODBC Office 2007 Drivers",
+@"ReportTask task = Model;
+	var helper = new TaskHelper(task);
+	//helper.DatabaseHelper.ExcelOdbcDriver = ""Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}}; DBQ={0}"";
+	//helper.DatabaseHelper.ExcelOdbcDriver = ""Driver={{Microsoft Excel Driver (*.xls)}};DBQ={0}"";
+	helper.LoadTableFromExcel(
+        @""c:\temp\loadFolder"", //Folder used to store the files processed 
+        @""c:\temp\excelFile.xlsx"", //source Excel file path
+        ""ExcelTabName"", //source Excel Tab Name
+        ""DestinationTableName"", //destination table name
+        false //if true, the table is loaded for all connections defined in the Source
+    );
+"
+                ),
+            new Tuple<string, string>(
+                "Load a table from a CSV file",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+	helper.LoadTableFromCSV(
+        @""c:\temp\loadFolder"", //Folder used to store the files processed 
+        @""c:\temp\aCSVFile.csv"", //source CSV file path
+        ""DestinationTableName"", //destination table name
+        null, //optional CSV separator (e.g. ',') 
+        false //if true, the table is loaded for all connections defined in the Source
+    );
+"
+                ),
+            new Tuple<string, string>(
+                "Load a table from a source table located in another source defined in the Repository",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+	helper.LoadTableFromDataSource(
+        ""DataSourceName"", //the name of the source Data Source defined in the Repository
+        ""SourceSelectStatement"", //Select SQL Statement to get the source table
+        ""DestinationTableName"", //destination table name
+        false, //if true, the table is loaded for all connections defined in the Source
+        """", //optional SQL Select Statement to get a Check table from the source connection
+        """" //optional SQL Select Statement to get a Check table from the destination connection, 
+        //if both source and destination Check tables are identicals, the table is not loaded
+    );
+"
+                ),
+            new Tuple<string, string>(
+                "Load a table from a source table located in an external data source defined with a connection string",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+	helper.LoadTableFromExternalSource(
+        ""SourceConnectionString"", //full connection string used to load the source table
+        ""SourceSelectStatement"", //Select SQL Statement to get the source table
+        ""DestinationTableName"", //destination table name
+        false, //if true, the table is loaded for all connections defined in the Source
+        """", //optional SQL Select Statement to get a Check table from the source connection
+        """" //optional SQL Select Statement to get a Check table from the destination connection, 
+        //if both source and destination Check tables are identicals, the table is not loaded
+    );
+"
+                ),
+            new Tuple<string, string>(
+                "Query or update the database",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+	string name = (string) helper.ExecuteScalar(""select LastName from employees"");
+    helper.LogMessage(""Name="" + name);
+    helper.ExecuteNonQuery(
+        ""update employees set LastName = '' where 1=0"", //SQL statement to execute 
+        false //if true, the statement is executed for all connections defined in the Source
+    );
+"
+                ),
+            new Tuple<string, string>(
+                "Execute a program and display Standard Output and Errors",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+	helper.ExecuteProcess(@""executablePath"");
+"
+                ),
+            new Tuple<string, string>(
+                "Database Helper configurations...",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+    var dbHelper = helper.DatabaseHelper;
+	// configuration of the database helper may be changed to control the table creation and load...	
+	dbHelper.ColumnCharType = """"; //Type of table created when text is detected
+	dbHelper.ColumnIntegerType = """"; //Type of table created when integer is detected
+	dbHelper.ColumnNumericType = """"; //Type of table created when numeric is detected
+	dbHelper.ColumnDateTimeType = """"; //Type of table created when datetime is detected
+	dbHelper.ColumnCharLength = 0; //char length, 0 means auto size (or max for SQLServer)
+	dbHelper.InsertBurstSize = 500; //number of insert per SQL command when inserting records in the destination table
+	dbHelper.LoadBurstSize = 0; //number of records to load from the table (to be used with LoadSortColumn), 0 means to load all records in one query, otherwise several queries are performed
+	dbHelper.LoadSortColumn = """"; //name of the column used to sort if LoadBurstSize is specified, 
+	dbHelper.ExcelOdbcDriver = ""Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}}; DBQ={0}""; //Excel ODBC Driver used to load table from Excel
+	dbHelper.DefaultEncoding = Encoding.Default; //encoding used to read the CSV file 
+	dbHelper.TrimText = true; //if true, all texts are trimmed when inserted in the destination table
+	dbHelper.RemoveCrLf = false; //if true, the CrLf are removed from text when inserted in the destination table
+	dbHelper.DebugMode = false; //if true, full debug traces are logged in dbHelper.DebugLog
+	dbHelper.SelectTimeout = 0; //timeout for the select statement, 0 means no timeout
+	dbHelper.InsertStartCommand = """"; //prefix text for the insert command
+	dbHelper.InsertEndCommand = """"; //suffix for the insert command
+"
+                ),
+            new Tuple<string, string>(
+                "Database Helper methods overwrites...",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+    var dbHelper = helper.DatabaseHelper;
+	// methods of the helper can be modified before the load...	
 
+    dbHelper.MyGetTableCreateCommand = new CustomGetTableCreateCommand(delegate(DataTable table) {
+        //return RootGetTableCreateCommand(table);
+        //Root implementation may be the following...
+        if (dbHelper.DatabaseType == DatabaseType.MSSQLServer)
+        {
+            return dbHelper.MSSQLCreateTABLECommand(dbHelper.CleanName(table.TableName), table);
+        }
+        else
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (DataColumn col in table.Columns)
+            {
+                if (result.Length > 0) result.Append(',');
+                result.AppendFormat(""{0} "", dbHelper.GetTableColumnName(col));
+                result.Append(dbHelper.GetTableColumnType(col));
+                result.Append("" NULL"");
+            }
+            return string.Format(""CREATE TABLE {0} ({1})"", dbHelper.CleanName(table.TableName), result);
+        }
+    });
+
+    dbHelper.MyGetTableColumnNames = new CustomGetTableColumnNames(delegate(DataTable table) {
+        //return dbHelper.RootGetTableColumnNames(table);
+        //Root implementation may be the following...
+        StringBuilder result = new StringBuilder();
+        foreach (DataColumn col in table.Columns)
+        {
+            if (result.Length > 0) result.Append(',');
+            result.AppendFormat(""{0}"", dbHelper.GetTableColumnName(col));
+        }
+        return result.ToString();
+    });
+
+    dbHelper.MyGetTableColumnName = new CustomGetTableColumnName(delegate(DataColumn col) {
+        //return dbHelper.RootGetTableColumnName(col);
+        //Root implementation may be the following...
+        var result = dbHelper.CleanName(col.ColumnName);
+        return (dbHelper.DatabaseType == DatabaseType.MSSQLServer) ? ""["" + result + ""]"" : result;
+    });
+
+    dbHelper.MyGetTableColumnType = new CustomGetTableColumnType(delegate(DataColumn col) {
+        return dbHelper.RootGetTableColumnType(col);
+    });
+
+    dbHelper.MyGetTableColumnValues = new CustomGetTableColumnValues(delegate(DataRow row, string dateTimeFormat) {
+        return dbHelper.RootGetTableColumnValues(row, dateTimeFormat);
+    });
+
+	dbHelper.MyGetTableColumnValue = new CustomGetTableColumnValue(delegate(DataRow row, DataColumn col, string dateTimeFormat) {
+        //return dbHelper.RootGetTableColumnValue(row, col, datetimeFormat);
+        //Root implementation may be the following...
+        StringBuilder result = new StringBuilder();
+        if (row.IsNull(col))
+        {
+            result.Append(""NULL"");
+        }
+        else if (dbHelper.IsNumeric(col))
+        {
+            result.AppendFormat(row[col].ToString().Replace(',', '.'));
+        }
+        else if (col.DataType.Name == ""DateTime"" || col.DataType.Name == ""Date"")
+        {
+            result.Append(Helper.QuoteSingle(((DateTime) row[col]).ToString(dateTimeFormat)));
+        }
+        else
+        {
+            string res = row[col].ToString();
+            if (dbHelper.TrimText) res = res.Trim();
+            if (dbHelper.RemoveCrLf) res = res.Replace(""\r"", "" "").Replace(""\n"", "" "");
+            result.Append(Helper.QuoteSingle(res));
+        }
+        return result.ToString();
+    });
+
+    dbHelper.MyLoadDataTable = new CustomLoadDataTable(delegate(string connectionString, string sql) {
+        return new DataTable(); //TODO
+    });
+
+    dbHelper.MyLoadDataTableFromExcel = new CustomLoadDataTableFromExcel(delegate(string excelPath, string tabName) {
+        return new DataTable(); //TODO
+    });
+
+    dbHelper.MyLoadDataTableFromCSV = new CustomLoadDataTableFromCSV(delegate(string csvPath, char? separator) {
+        return new DataTable(); //TODO
+    });
+"
+                ),
+        };
+
+        
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             if (context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
@@ -322,7 +529,7 @@ namespace Seal.Forms
                         if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = frm.View.ViewTemplateText;
                         template = frm.View.Template.Text.Trim();
                         frm.Text = "Edit custom template";
-                        frm.TypeForCheckSyntax = frm.View.Template.ForModel ? typeof(ReportModel) : typeof(Report);
+                        frm.TypeForCheckSyntax = typeof(Report);
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                     else if (context.PropertyDescriptor.Name == "CustomConfiguration")
@@ -334,22 +541,29 @@ namespace Seal.Forms
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                 }
+                else if (context.Instance is ReportViewPartialTemplate)
+                {
+                    var pt = context.Instance as ReportViewPartialTemplate;
+                    frm.View = pt.View;
+                    var templateText = frm.View.Template.GetPartialTemplateText(pt.Name);
+                    if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = templateText;
+                    template = templateText;
+                    frm.Text = "Edit custom partial template";
+                    frm.TypeForCheckSyntax = frm.View.Template.ForReportModel ? typeof(ReportModel) : typeof(Report);
+                    frm.textBox.ConfigurationManager.Language = "cs";
+                }
                 else if (context.Instance is ReportTask)
                 {
                     template = razorTaskTemplate;
                     frm.TypeForCheckSyntax = typeof(ReportTask);
                     frm.Text = "Edit task script";
                     frm.textBox.ConfigurationManager.Language = "cs";
-
-                    frm.TextToAddForCheck = "";
-                    frm.TextToAddForCheck = ((ReportTask)context.Instance).ScriptHeader; 
+                    frm.TextToAddForCheck = ((ReportTask)context.Instance).ScriptHeader;
                     List<string> samples = new List<string>();
-                    samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Refresh Data Sources enumerated lists\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.RefreshRepositoryEnums();\r\n}");
-                    samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Load a table from an Excel file, may need ODBC Office 2007 Drivers\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\t//helper.DatabaseHelper.ExcelOdbcDriver = \"Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}\";\r\n\t//helper.DatabaseHelper.ExcelOdbcDriver = \"Driver={{Microsoft Excel Driver (*.xls)}};DBQ={0}\";\r\n\thelper.LoadTableFromExcel(@\"c:\\temp\\loadFolder\", @\"c:\\temp\\excelFile.xlsx\", \"ExcelTabName\", \"DestinationTableName\", false /* true to load in all connections */);\r\n}");
-                    samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Load a table from a CSV file\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.LoadTableFromCSV(@\"c:\\temp\\loadFolder\", @\"c:\\temp\\aCSVFile.csv\", \"DestinationTableName\", null /* separator may be specified here */, false /* true to load in all connections */);\r\n}");
-                    samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Load a table from a source table located in an external data source\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.LoadTableFromExternalSource(\"SourceConnectionString\", \"SourceSelectStatement\", \"DestinationTableName\", false /* true to load in all connections */, \"OptionalSourceCheckSelect\", \"OptionalDestinationCheckSelect\");\r\n}");
-                    samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Query or update the database\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\tstring name = (string) helper.ExecuteScalar(\"select LastName from employees\");\r\n\thelper.LogMessage(\"Name=\" + name);\r\n\thelper.ExecuteNonQuery(\"update employees set LastName = '' where 1=0\", false /* true to execute in all connections */);\r\n}");
-                    samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n\t//Execute a program and display Standard Output and Errors\r\n\tReportTask task = Model;\r\n\tvar helper = new TaskHelper(task);\r\n\thelper.ExecuteProcess(@\"executablePath\");\r\n}");
+                    foreach (var sample in tasksSamples)
+                    {
+                        samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n\r\n@using System.Data@{\r\n\t//" + sample.Item1 + "\r\n\t" + sample.Item2 + "}\r\n|" + sample.Item1);
+                    }
                     frm.SetSamples(samples);
                 }
                 else if (context.Instance is ReportOutput)
@@ -360,12 +574,16 @@ namespace Seal.Forms
                     frm.Text = "Edit output script";
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
-                else if (context.Instance is Parameter)
+                else if (context.Instance is Parameter || context.Instance is ParametersEditor)
                 {
-                    Parameter parameter = context.Instance as Parameter;
-                    template = parameter.ConfigValue;
-                    frm.Text = parameter.DisplayName;
-                    frm.textBox.ConfigurationManager.Language = (string.IsNullOrEmpty(parameter.EditorLanguage) ? "" : parameter.EditorLanguage);
+                    Parameter parameter = context.Instance is Parameter ? context.Instance as Parameter : ((ParametersEditor)context.Instance).GetParameter(context.PropertyDescriptor.Name);
+                    if (parameter != null)
+                    {
+                        template = parameter.ConfigValue;
+                        frm.Text = parameter.DisplayName;
+                        frm.textBox.ConfigurationManager.Language = (string.IsNullOrEmpty(parameter.EditorLanguage) ? "" : parameter.EditorLanguage);
+                        if (parameter.TextSamples != null) frm.SetSamples(parameter.TextSamples.ToList());
+                    }
                 }
                 else if (context.Instance.GetType().ToString() == "SealPdfConverter.PdfConverter")
                 {
@@ -513,11 +731,12 @@ namespace Seal.Forms
                 else if ((context.Instance is TasksFolder || context.Instance is MetaSource) && context.PropertyDescriptor.Name == "TasksScript")
                 {
                     template = razorTasksTemplate;
+                    frm.TextToAddForCheck = ((ReportComponent)context.Instance).Report.Repository.Configuration.TasksScript + "\r\n";
                     frm.TypeForCheckSyntax = typeof(ReportTask);
                     frm.Text = "Edit the script that will be added to all task scripts";
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
-                else if (context.Instance is SealServerConfiguration) 
+                else if (context.Instance is SealServerConfiguration)
                 {
                     if (context.PropertyDescriptor.Name == "InitScript")
                     {

@@ -126,6 +126,7 @@ namespace Seal.Model
         }
 
         bool _dynamicColumns = false;
+        [DefaultValue(false)]
         [Category("Definition"), DisplayName("Dynamic Columns"), Description("If true, columns are generated automatically from the Table Name or the Select SQL Statement by reading the database catalog."), Id(6, 1)]
         public bool DynamicColumns
         {
@@ -138,6 +139,7 @@ namespace Seal.Model
         }
 
         bool _keepColumnNames = false;
+        [DefaultValue(false)]
         [Category("Definition"), DisplayName("Keep Column Names"), Description("If true, column names are kept when generated from the database catalog."), Id(7, 1)]
         public bool KeepColumnNames
         {
@@ -180,7 +182,8 @@ namespace Seal.Model
             set { _postSQL = value; }
         }
 
-        bool _ignorePrePostError;
+        bool _ignorePrePostError = false;
+        [DefaultValue(false)]
         [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(4, 2)]
         public bool IgnorePrePostError
         {
@@ -287,8 +290,8 @@ namespace Seal.Model
             lock (this)
             {
                 if (string.IsNullOrEmpty(DefinitionScript)) throw new Exception("No Definition Script for the table.");
-                Helper.ParseRazor(DefinitionScript, this);
-                if (withLoad && !string.IsNullOrEmpty(LoadScript)) Helper.ParseRazor(LoadScript, this);
+                RazorHelper.CompileExecute(DefinitionScript, this);
+                if (withLoad && !string.IsNullOrEmpty(LoadScript)) RazorHelper.CompileExecute(LoadScript, this);
             }
             return NoSQLTable;
         }
@@ -446,8 +449,8 @@ namespace Seal.Model
 
                     if (!string.IsNullOrEmpty(WhereSQL))
                     {
-                        var where = Helper.ParseRazor(WhereSQL, this);
-                        if (!string.IsNullOrWhiteSpace(where)) sql += string.Format("\r\nAND ({0})", Helper.ParseRazor(where, this));
+                        var where = RazorHelper.CompileExecute(WhereSQL, this);
+                        if (!string.IsNullOrWhiteSpace(where)) sql += string.Format("\r\nAND ({0})", RazorHelper.CompileExecute(where, this));
                     }
                     if (Columns.Exists(i => i.IsAggregate) && !string.IsNullOrEmpty(groupByNames))
                     {

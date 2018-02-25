@@ -1,0 +1,18 @@
+﻿@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = ReportViewTemplate.PageTableName;
+
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = false;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "page_table_caption", DisplayName = "Caption", Description = "Optional caption or title displayed at the bottom of the page table." });
+    Template.Parameters.Add(new Parameter() { Name = "display_page_totals", DisplayName = "Display totals", BoolValue = true, Description = "If true, the totals are displayed in the page table." });
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Model HTML", "Model Container" };
+}
+  

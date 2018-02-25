@@ -1,0 +1,173 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = report.CurrentModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+}
+
+@if (reportModel.HasChartJSSerie && modelView.GetBoolValue("show_charts"))
+{
+    <!--Chart JS-->
+    bool chartOk = false;
+    string chartId = string.Format("cjs_{0}{1}", view.ViewId, page.PageId).Replace("-", "");
+    if (modelView.InitPageChart(page))
+    {
+        string chartType = reportModel.ExecChartJSType;
+        if (chartType == "pie" && view.GetBoolValue("chartjs_doughnut"))
+        {
+            chartType = "doughnut";
+        }
+        else if (chartType == "bar" && view.GetBoolValue("chartjs_bar_horizontal"))
+        {
+            chartType = "horizontalBar";
+        }
+        <canvas id="@chartId" @Helper.AddIfNotEmpty("width=", view.GetValue("chartjs_width"), ";") @Helper.AddIfNotEmpty("height=", view.GetValue("chartjs_height"), ";")></canvas>
+
+        <script>
+            var ctx = $("#@chartId");
+            var data = {
+                labels: [@Raw(page.ChartXLabels)],
+//FUTURE    Navigation             navigations: [@Raw(page.ChartXLabels)],
+                datasets: [
+                    @foreach (ResultSerie serie in page.Series)
+                    {
+                        <text>
+                    {
+                        labels: [@Raw(page.ChartXLabels)],
+                        label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
+                        data: [@Raw(reportModel.ExecChartJSType == "bar" || reportModel.ExecChartJSType == "pie" ? serie.ChartYSerieValues : serie.ChartXYSerieValues)],
+                        borderColor: d3.scale.category10().range()@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
+                        backgroundColor: d3.scale.category10().range()@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
+                        borderWidth: 1,
+                        steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
+                        fill: @Helper.ToJS(view.GetBoolValue("chartjs_fill")),
+                    },
+                        </text>
+                    }
+                ]
+            };
+            var options = {
+                legend: {
+                    display: @Helper.ToJS(view.GetBoolValue("chartjs_show_legend")),
+                    position: '@view.GetValue("chartjs_legend_position")'
+                },
+                title: {
+                    display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_title")))),
+                    text: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_title"))))',
+                    position: '@view.GetValue("chartjs_title_position")'
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            @if (reportModel.ExecChartJSType == "pie")
+                            {
+                                <text>
+                                var allData = data.datasets[tooltipItem.datasetIndex].data;
+                                var tooltipLabel = data.labels[tooltipItem.index];
+                                var tooltipData = allData[tooltipItem.index];
+                                var total = 0;
+                                for (var i in allData) {
+                                    total += allData[i];
+                                }
+                                var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                                return tooltipLabel + ': ' + d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(Number(tooltipData)).valueFormat() + ' (' + tooltipPercentage + '%)';
+                                </text>
+                            }
+                            else if (reportModel.ExecChartJSType == "scatter")
+                            {
+                                <text>
+                                return data.labels[tooltipItem.index] + ': ' + d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(Number(tooltipItem.yLabel)).valueFormat();
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                return d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(Number(tooltipItem.yLabel)).valueFormat();
+                                </text>
+                            }
+                        }
+                    }
+                },
+                @if (reportModel.ExecChartJSType != "pie")
+                {
+                <text>
+                scales: {
+                    xAxes: [{
+                        stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked"))
+                            }],
+                    yAxes: [{
+                        stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
+                        ticks: {
+                            callback: function (label, index, labels) {
+                                return d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(label).valueFormat();
+                            }
+                        }
+                    }]
+                }
+                </text>
+                }
+            };
+
+
+            var @chartId = new Chart(ctx, {
+                type: '@chartType',
+                data: data,
+                options: options
+            });
+
+/* FUTURE: Navigation handling
+            $("#@chartId").click(
+                function (evt) {
+                    var activePoints = @(chartId).getElementsAtEvent(evt);
+                    if (activePoints && activePoints.length > 0) {
+                        var index = activePoints[0]["_index"];
+                        var label = @(chartId).data.labels[index];
+                        var value = @(chartId).data.datasets[0].data[index];
+                       var nav = @(chartId).data.navigations[index];
+                       if (nav) showPopupNavMenu2(evt, nav);
+                    }
+                }
+            );
+
+
+            function showPopupNavMenu2(source, content) {
+                var $popup = $('#nav_popupmenu');
+                if (!$popup.length) {
+                    $popup = $("<ul id='nav_popupmenu' class='dropdown-menu' role='menu'/>");
+                    $("body").append($popup);
+                    $popup
+                        .mouseenter(function () {
+                            $popup.show();
+                        })
+                        .mouseleave(function () {
+                            $popup.hide();
+                        });
+                }
+                $popup.html(content);
+                $('#nav_popupmenu li').click(function (e) {
+                    executeReport($(this).attr("nav"));
+                    $popup.hide();
+                });
+                $popup
+                    .show()
+                    .css({
+                        position: "absolute",
+                        left: source.offsetX,
+                        top: source.offsetY + 30
+                    });
+            }
+*/
+        </script>
+        chartOk = true;
+    }
+    if (!chartOk)
+    {
+        <div id="alert_status" class="alert alert-danger" role="alert">
+            @Raw(Helper.ToHtml(view.Error))
+        </div>
+        view.Error = "";
+    }
+}

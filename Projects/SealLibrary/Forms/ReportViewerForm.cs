@@ -77,6 +77,8 @@ namespace Seal.Forms
 
         public ReportViewerForm(bool exitOnClose, bool showScriptErrors)
         {
+            WebBrowserHelper.FixBrowserVersion();
+
             InitializeComponent();
 
             ShowIcon = true;
@@ -113,7 +115,7 @@ namespace Seal.Forms
             if (previousReport != null && render)
             {
                 //force execution
-                var parameter = _report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == "force_execution");
+                var parameter = _report.ExecutionView.Parameters.FirstOrDefault(i => i.Name ==Parameter.ForceExecutionParameter);
                 if (parameter != null) parameter.BoolValue = true;
 
                 //set previous data tables and restrictions
@@ -158,6 +160,18 @@ namespace Seal.Forms
             }
         }
 
+        private void setProgressBarInformation(string id, int progression, string message)
+        {
+            HtmlElement progress = webBrowser.Document.All[id];
+            if (progress != null)
+            {
+                progress.SetAttribute("aria-valuenow", progression.ToString());
+                progress.Style = string.Format("width:{0}%;min-width:140px;", progression);
+                progress.SetAttribute("innerHTML", message);
+            }
+
+        }
+
         private bool processAction(string action)
         {
             bool cancelNavigation = false;
@@ -192,12 +206,15 @@ namespace Seal.Forms
                         if (_report.IsExecuting)
                         {
                             cancelNavigation = true;
-                            HtmlElement message = webBrowser.Document.All[ReportExecution.HtmlId_processing_message];
-                            if (message != null) message.SetAttribute("innerHTML", _report.ExecutionHeader);
                             HtmlElement messages = webBrowser.Document.All[ReportExecution.HtmlId_execution_messages];
-                            if (messages != null) messages.SetAttribute("innerHTML", Helper.ToHtml(_report.ExecutionMessages));
-                            HtmlElement body = webBrowser.Document.All[ReportExecution.HtmlId_body_div];
-                            if (body != null) body.ScrollTop = body.ScrollRectangle.Height;
+                            if (_report.ExecutionView.GetBoolValue(Parameter.DisplayMessagesParameter) && messages != null)
+                            {
+                                messages.SetAttribute("innerHTML", Helper.ToHtml(_report.ExecutionMessages));
+                                messages.ScrollTop = messages.ScrollRectangle.Height;
+                            }
+                            setProgressBarInformation(ReportExecution.HtmlId_progress_bar, _report.ExecutionProgression, _report.ExecutionProgressionMessage);
+                            setProgressBarInformation(ReportExecution.HtmlId_progress_bar_tasks, _report.ExecutionProgressionTasks, _report.ExecutionProgressionTasksMessage);
+                            setProgressBarInformation(ReportExecution.HtmlId_progress_bar_models, _report.ExecutionProgressionModels, _report.ExecutionProgressionModelsMessage);
                         }
                         else if (!_reportDone)
                         {
@@ -276,7 +293,7 @@ namespace Seal.Forms
                             string pageid = webBrowser.Document.All[ReportExecution.HtmlId_pageid_tableload].GetAttribute("value");
                             HtmlElement dataload = webBrowser.Document.All[ReportExecution.HtmlId_parameter_tableload];
                             var view = report.ExecutionView.GetView(viewid);
-                            if (view != null)
+                            if (view != null && view.Model != null)
                             {
                                 var page = view.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
                                 if (page != null)

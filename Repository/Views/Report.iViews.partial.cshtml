@@ -1,0 +1,50 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+@{ 
+    ReportView view = Model;
+    Report report = view.Report;
+    Repository repository = report.Repository;
+}
+
+<!--view_div-->
+<div id='@view.ViewId' class='container@(view.GetBoolValue("child_container_fluid") ? "-fluid" : "") view tab-pane fade in active'>
+    @if (report.IsExecuting && !report.Cancel && (report.Status == ReportStatus.RenderingResult || report.IsBasicHTMLWithNoOutput))
+    {
+        @Raw(view.ParseChildren());
+    }
+    else if (report.ForOutput && report.Status == ReportStatus.RenderingDisplay)
+    {
+        <div class="panel panel-default panel-success">
+            <div class="panel-heading">
+                <p>@Raw(Helper.ToHtml(report.OutputToExecute.Information))</p>
+            </div>
+            <div class="panel-footer">
+                @if (!string.IsNullOrEmpty(report.ResultFilePath) && !report.HasErrors)
+                {
+                    string url = !string.IsNullOrEmpty(report.WebUrl) ? report.WebUrl + "OutputResult?execution_guid=" + report.ExecutionGUID : "file:///" + report.ResultFilePath;
+                    <a href="@url" target="_new" class="btn btn-info" role="button">@report.Translate("View report result file")</a><br />
+                }
+
+            </div>
+        </div>
+    }
+    else if (report.HasExternalViewer && report.Status == ReportStatus.RenderingDisplay)
+    {
+        <div class="panel panel-default panel-success">
+            <div class="panel-footer">
+                @if (!string.IsNullOrEmpty(report.ResultFilePath) && !report.HasErrors)
+                {
+                    string url = !string.IsNullOrEmpty(report.WebUrl) ? report.WebUrl + "OutputResult?execution_guid=" + report.ExecutionGUID : "file:///" + report.ResultFilePath;
+                    <a href="@url" target="_new" class="btn btn-info" role="button">@report.Translate("View report result file")</a><br />
+                    if (!string.IsNullOrEmpty(report.WebUrl))
+                    {
+                        <script>
+                                var win = window.open("@url", '_blank');
+                                win.focus();
+                        </script>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>

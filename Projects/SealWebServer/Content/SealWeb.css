@@ -45,19 +45,18 @@ a {
     cursor: pointer;
 }
 
-.pagination > .active > a {
-    background-color: #275058 !important;
-    border-color: #244a51 !important;
-    color: white !important;
+.bootstrap-select {
+    width:100% !important; 
 }
 
-.pagination > li > a {
-    color: #275058 !important;
+#file-table-view > div > .row {
+    margin-right: 0px !important; /* avoid overflow on datatable */
 }
 
 #schedule-row > div > .form-group, #schedule-exec > .form-group {
     margin-bottom: 2px;
 }
+
 
 /* jstree */
 .jstree-wholerow-clicked {
@@ -137,43 +136,6 @@ a {
     width: 100%;
 }
 
-/* multi select */
-.ms-drop {
-    z-index: 999 !important;
-}
-
-.ms-choice {
-    cursor: default;
-    margin: 0;
-    width: 160px;
-}
-
-.ms-choice > div {
-    display: none;
-}
-
-.ms-choice > span {
-    position: initial !important;
-}
-
-.ms-parent {
-    width: 202px !important;
-}
-
-.ms-drop input[type="checkbox"] {
-    vertical-align: middle;
-    margin: 2px;
-}
-
-/* datepicker */
-.datepicker {
-    text-align: right;
-    z-index: 1001;
-}
-
-.ui-front2 {
-    z-index: 10000;
-}
 
 .numeric {
     text-align: right;
@@ -184,165 +146,7 @@ a {
     height: 520px;
 }
 
-/* specific data tables */
-
-a.paginate_button {
-    background-color: white;
-    color: black;
-    display: inline-block;
-    padding: 0px 6px;
-    margin-left: 2px;
-    cursor: pointer;
-    *cursor: hand;
-    border: 1px solid white;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-}
-
-a.paginate_button:hover {
-    font-weight: normal;
-}
-
-a.paginate_active {
-    background-color: white;
-    color: black;
-    border: 1px solid black;
-    display: inline-block;
-    padding: 1px 6px;
-    margin-left: 2px;
-    cursor: pointer;
-    *cursor: hand;
-}
-
-    a.paginate_active:hover {
-        font-weight: normal;
-    }
-
-a.paginate_button.current, a.paginate_button.current:hover {
-    font-weight: bold;
-}
-
-a.paginate_button_disabled {
-    color: #999999;
-    border: 1px solid white;
-}
-
-.data_table {
-    width: 100%;
-}
-
-div.dataTables_wrapper {
-    border-radius: 4px;
-    -moz-border-radius: 4px -webkit-border-radius: 4px;
-    overflow: hidden; /*notice*/
-    padding: 1px;
-    margin: 5px;
-}
-
-div.dataTableTop {
-    height: 30px;
-    border-radius: 6px;
-    padding: 3px;
-    background-color: #e5e5e5;
-    overflow: hidden; /*notice*/
-}
-
-div.dataTables_length, div.dataTables_filter, div.dataTables_paginate, div.dataTables_info {
-    background-color: #e5e5e5;
-    padding: 1px;
-}
-
-div.dataTables_filter {
-    padding: 0px 4px;
-}
-
-div.dataTables_length {
-    padding: 2px 40px 2px 4px;
-}
-
-div.dataTables_processing {
-    float: left;
-    font-weight: bold;
-    color: orange;
-    padding-left: 10px;
-}
-
-.data_table thead .sorting_asc, .data_table thead .sorting_desc, .data_table thead .sorting {
-    cursor: pointer;
-    *cursor: hand;
-}
-
-div.dataTables_paginate, div.dataTables_filter, div.dataTables_length {
-    float: left;
-}
-
-
-div.dataTables_info {
-    font-style: italic;
-    float: left;
-    padding-left: 20px;
-    padding-top: 5px;
-}
-
-table.data_table {
-    clear: both;
-}
-
-div.dataTables_wrapper:after {
-    content: ".";
-    display: block;
-    clear: both;
-    visibility: hidden;
-    line-height: 0;
-    height: 0;
-}
-
-.dataTables_length select {
-    2border-radius: 2px;
-    height: 22px;
-    background: #f2f2f2;
-}
-
-.dataTables_filter input {
-    width: 70px;
-    border-radius: 5px;
-    border: 1px solid #808080;
-    height: 25px;
-    font-weight: bold;
-    background: #f2f2f2;
-}
-
-#file-table thead .sorting_asc {
-    background-image: url('../Images/sort_asc.png');
-    background-repeat: no-repeat;
-    background-position: right;
-}
-
-#file-table thead .sorting_desc {
-    background-image: url('../Images/sort_desc.png');
-    background-repeat: no-repeat;
-    background-position: right;
-}
-
-#file-table thead .sorting {
-    background-image: url('../Images/sort_both.png');
-    background-repeat: no-repeat;
-    background-position: right;
-}
-
-
-html[xmlns] .dataTables_wrapper {
-    display: block;
-}
-
-* html .dataTables_wrapper {
-    height: 1%;
-}
-
-
-@media (max-width: 768px) {
-    div.dataTableTop {
-        display: none;
-    }
+/* dataTables */
+table.dataTable {
+    margin: 0px !important;
 }

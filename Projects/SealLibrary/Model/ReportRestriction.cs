@@ -128,6 +128,7 @@ namespace Seal.Model
         }
 
         private PromptType _prompt = PromptType.None;
+        [DefaultValue(PromptType.None)]
         [CategoryAttribute("Definition"), DisplayName("Prompt restriction"), Description("Define if the value of the restriction is prompted to the user when the report is executed."), Id(3, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public PromptType Prompt
@@ -137,6 +138,7 @@ namespace Seal.Model
         }
 
         private bool _required = false;
+        [DefaultValue(false)]
         [CategoryAttribute("Definition"), DisplayName("Is required"), Description("If true and the restriction is prompted, a value is required to execute the report."), Id(4, 1)]
         public bool Required
         {
@@ -155,6 +157,7 @@ namespace Seal.Model
             set { _SQL = value; }
         }
 
+        [DefaultValue(ColumnType.Default)]
         [Category("Advanced"), DisplayName("Data Type"), Description("Data type of the restriction."), Id(2, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ColumnType TypeRe
@@ -167,6 +170,7 @@ namespace Seal.Model
             }
         }
 
+        [DefaultValue(DateTimeStandardFormat.Default)]
         [Category("Advanced"), DisplayName("Format"), Description("Standard display format applied to the restriction display value."), Id(3, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public DateTimeStandardFormat DateTimeStandardFormatRe
@@ -183,6 +187,7 @@ namespace Seal.Model
             }
         }
 
+        [DefaultValue(NumericStandardFormat.Default)]
         [Category("Advanced"), DisplayName("Format"), Description("Standard display format applied to the restriction display value."), Id(3, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public NumericStandardFormat NumericStandardFormatRe
@@ -220,7 +225,7 @@ namespace Seal.Model
             set { _operatorLabel = value; }
         }
 
-
+        [DefaultValue(null)]
         [Category("Advanced"), DisplayName("Custom Enumerated List"), Description("If defined, the restriction values are selected using the enumerated list."), Id(6, 3)]
         [TypeConverter(typeof(MetaEnumConverter))]
         public string EnumGUIDRE
@@ -229,7 +234,8 @@ namespace Seal.Model
             set { _enumGUID = value; }
         }
 
-        private bool _useAsParameter;
+        private bool _useAsParameter = false;
+        [DefaultValue(false)]
         [Category("Advanced"), DisplayName("Use as parameter"), Description("If true and the operator is set to Value Only, the restriction is replaced by '(1=1') and has no impact on the SQL generated. The value can then be used in scripts."), Id(7, 3)]
         public bool UseAsParameter
         {
@@ -238,6 +244,7 @@ namespace Seal.Model
         }
 
         Operator _operator = Operator.Equal;
+        [DefaultValue(Operator.Equal)]
         [TypeConverter(typeof(RestrictionOperatorConverter))]
         [Category("Definition"), DisplayName("Operator"), Description("The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator)."), Id(2, 1)]
         public Operator Operator
@@ -478,6 +485,8 @@ namespace Seal.Model
         {
             get
             {
+                if (string.IsNullOrEmpty(_value1)) return false;
+
                 return
                     (
                     IsDateTime && (HasDateKeyword(Date1Keyword) || Date1 != DateTime.MinValue)
@@ -491,6 +500,8 @@ namespace Seal.Model
         {
             get
             {
+                if (string.IsNullOrEmpty(_value2)) return false;
+
                 return
                     (
                     IsDateTime && (HasDateKeyword(Date2Keyword) || Date2 != DateTime.MinValue)
@@ -504,6 +515,8 @@ namespace Seal.Model
         {
             get
             {
+                if (string.IsNullOrEmpty(_value3)) return false;
+
                 return
                     (
                     IsDateTime && (HasDateKeyword(Date3Keyword) || Date3 != DateTime.MinValue)
@@ -517,6 +530,8 @@ namespace Seal.Model
         {
             get
             {
+                if (string.IsNullOrEmpty(_value4)) return false;
+
                 return
                     (
                     IsDateTime && (HasDateKeyword(Date4Keyword) || Date4 != DateTime.MinValue)
@@ -996,39 +1011,33 @@ namespace Seal.Model
             set { _htmlIndex = value; }
         }
 
-        public bool HasShortTime
+        [XmlIgnore]
+        public bool HasTime
         {
             get {
-                if (!IsDateTime || HasLongTime) return false;
-                var currentDate = DateTime.Now;
-                var culture = Model.Report.ExecutionView.CultureInfo;
-                return currentDate.ToString(FormatRe, culture).Contains(currentDate.ToString(culture.DateTimeFormat.ShortTimePattern, culture));
-            }
-        }
-
-        public bool HasLongTime
-        {
-            get
-            {
                 if (!IsDateTime) return false;
-                var currentDate = DateTime.Now;
-                var culture = Model.Report.ExecutionView.CultureInfo;
-                return currentDate.ToString(FormatRe, culture).Contains(currentDate.ToString(culture.DateTimeFormat.LongTimePattern, culture));
+                if (DateTimeStandardFormatRe.ToString().Contains("Time") ||
+                    (DateTimeStandardFormat == DateTimeStandardFormat.Custom && (Format.ToLower().Contains("h") || Format.Contains("m") || Format.Contains("s"))))
+                {
+                    return true;
+                }
+                else return false;
             }
         }
 
+
+        [XmlIgnore]
         public string InputDateFormat
         {
             get
             {
                 var format = Model.Report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern;
-                if (HasLongTime) format = "G";
-                else if (HasShortTime) format = "g";
+                if (HasTime) format = "G";
                 return format;
             }
         }
 
-        string GetHtmlValue(string value, string keyword, DateTime date)
+        string GetHtmlValue(string value, string keyword, DateTime date, bool forEdition)
         {
             string result = "";
             if (IsNumeric)
@@ -1038,16 +1047,19 @@ namespace Seal.Model
             }
             else if (IsDateTime)
             {
-                if (HasDateKeyword(keyword))
+                if (forEdition && HasDateKeyword(keyword))
                 {
-                    result = keyword;
+                    result = Model.Report.TranslateDateKeywords(keyword);
                 }
-                else if (date == DateTime.MinValue && !HasDateKeyword(keyword)) result = "";
+                else if (date == DateTime.MinValue && !HasDateKeyword(keyword))
+                {
+                    result = "";
+                }
                 else
                 {
                     var culture = Model.Report.ExecutionView.CultureInfo;
                     date = GetFinalDate(keyword, date);
-                    //for date, format should be synchro with the date picker, whîch should use short date
+                    //for date, format should be synchro with the date picker, which should use short date
                     result = date.ToString(InputDateFormat, culture);
                 }
             }
@@ -1059,41 +1071,12 @@ namespace Seal.Model
             return result;
         }
 
-        [XmlIgnore]
-        public string Value1Html
+        public string GetHtmlValue(int index, bool forEdition = false)
         {
-            get
-            {
-                return GetHtmlValue(Value1, Date1Keyword, Date1);
-            }
+            if (index == 2) return GetHtmlValue(Value2, Date2Keyword, Date2, forEdition);
+            if (index == 3) return GetHtmlValue(Value3, Date3Keyword, Date3, forEdition);
+            if (index == 4) return GetHtmlValue(Value4, Date4Keyword, Date3, forEdition);
+            return GetHtmlValue(Value1, Date1Keyword, Date1, forEdition);
         }
-
-        [XmlIgnore]
-        public string Value2Html
-        {
-            get
-            {
-                return GetHtmlValue(Value2, Date2Keyword, Date2);
-            }
-        }
-
-        [XmlIgnore]
-        public string Value3Html
-        {
-            get
-            {
-                return GetHtmlValue(Value3, Date3Keyword, Date3);
-            }
-        }
-
-        [XmlIgnore]
-        public string Value4Html
-        {
-            get
-            {
-                return GetHtmlValue(Value4, Date4Keyword, Date4);
-            }
-        }
-
     }
 }

@@ -141,6 +141,24 @@ namespace Seal.Model
 
             return sbFinal.ToString();
         }
+
+        //Helpers
+        public int RowCount
+        {
+            get { return Lines.Count; }
+        }
+        public int ColumnCount
+        {
+            get { return Lines.Count > 0 ?  Lines[0].Length : 0; }
+        }
+
+        public ResultCell this[int row, int column] {
+            get
+            {
+                return Lines[row][column];
+            }
+        }
+
     }
 
 }

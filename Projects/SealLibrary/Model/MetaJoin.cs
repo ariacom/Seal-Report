@@ -54,7 +54,7 @@ namespace Seal.Model
             return new MetaJoin() { GUID = Guid.NewGuid().ToString() };
         }
 
-
+        [DefaultValue(null)]
         [Category("Definition"), DisplayName("Name"), Description("Name of the join."), Id(1, 1)]
         public override string Name
         {
@@ -63,6 +63,7 @@ namespace Seal.Model
         }
 
         private string _leftTableGUID;
+        [DefaultValue(null)]
         [Category("Definition"), DisplayName("Left Table"), Description("Left table for the join definition."), Id(4, 1)]
         [TypeConverter(typeof(SourceTableConverter))]
         public string LeftTableGUID
@@ -78,6 +79,7 @@ namespace Seal.Model
         }
 
         private string _rightTableGUID;
+        [DefaultValue(null)]
         [Category("Definition"), DisplayName("Right Table"), Description("Right table for the join definition."), Id(5, 1)]
         [TypeConverter(typeof(SourceTableConverter))]
         public string RightTableGUID
@@ -102,6 +104,7 @@ namespace Seal.Model
         }
 
         private JoinType _joinType = JoinType.Inner;
+        [DefaultValue(JoinType.Inner)]
         [Category("Definition"), DisplayName("Join Type"), Description("The type of join used to link the 2 tables."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public JoinType JoinType
@@ -111,6 +114,7 @@ namespace Seal.Model
         }
 
         private bool _isBiDirectional = true;
+        [DefaultValue(true)]
         [Category("Definition"), DisplayName("Is Bi-Directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left)."), Id(3, 1)]
         public bool IsBiDirectional
         {

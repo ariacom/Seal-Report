@@ -31,6 +31,8 @@ namespace Seal.Model
         MSExcel,
         [Description("MS SQLServer")]
         MSSQLServer,
+        [Description("MySQL")]
+        MySQL,
     }
 
     public enum ColumnType
@@ -226,26 +228,30 @@ namespace Seal.Model
     {
         [Description("No Serie")]
         None,
-        [Description("Microsoft Serie")]
+        [Description("! Not used from v4: Microsoft Serie")]
         Serie,
+        [Description("Axis")]
         Axis,
+        [Description("Splitter")]
         Splitter,
         [Description("Splitter for Both Axes")]
         SplitterBoth,
-        [Description("NVD3 Serie")]
+        [Description("! Not used from v4: NVD3 Serie")]
         NVD3Serie,
     };
 
     public enum NVD3SerieDefinition
     {
-        [Description("Point")]
+        [Description("No Serie")]
+        None,
+        [Description("Scatter")]
         ScatterChart,
-        [Description("Pie")]
-        PieChart,
         [Description("Line")]
         Line,
         [Description("Bar")]
         MultiBarChart,
+        [Description("Pie")]
+        PieChart,
         [Description("Stacked Area")]
         StackedAreaChart,
         [Description("Horizontal Bar")]
@@ -256,6 +262,32 @@ namespace Seal.Model
         CumulativeLineChart,
        [Description("Discrete Bar")]
        DiscreteBarChart,
+    };
+
+    public enum ChartJSSerieDefinition
+    {
+        [Description("No Serie")]
+        None,
+        [Description("Scatter")]
+        Scatter,
+        [Description("Line")]
+        Line,
+        [Description("Bar")]
+        Bar,
+        [Description("Pie")]
+        Pie,
+    };
+
+    public enum PlotlySerieDefinition
+    {
+        [Description("No Serie")]
+        None,
+        [Description("Scatter")]
+        Scatter,
+        [Description("Bar")]
+        Bar,
+        [Description("Pie")]
+        Pie,
     };
 
     public enum SerieSortType
@@ -297,13 +329,6 @@ namespace Seal.Model
         Boolean,
         Enum,
         Text,
-    }
-
-    public enum ViewParameterCategory
-    {
-        General,
-        DataTables,
-        NVD3,
     }
 
     public enum ReportStatus

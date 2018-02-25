@@ -5,20 +5,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 using System.IO;
-using System.ComponentModel;
-using RazorEngine;
-using DynamicTypeDescriptor;
 using Seal.Helpers;
-using System.Drawing;
 using System.Web;
-using System.Windows.Forms;
 using System.Globalization;
 using Microsoft.Win32.TaskScheduler;
 using System.Threading;
-using System.Diagnostics;
+using System.Text;
 
 namespace Seal.Model
 {
@@ -96,7 +90,7 @@ namespace Seal.Model
                 {
                     try
                     {
-                        _displayNameEx = Helper.ParseRazor(_displayName, this);
+                        _displayNameEx = RazorHelper.CompileExecute(_displayName, this);
                     }
                     catch { }
                 }
@@ -223,7 +217,10 @@ namespace Seal.Model
 
         [XmlIgnore]
         public string WebUrl = "";
-        
+
+        [XmlIgnore]
+        public bool IsMobileDevice = false;
+
         [XmlIgnore]
         public string ExecutionGUID = Guid.NewGuid().ToString();
 
@@ -273,15 +270,14 @@ namespace Seal.Model
             string fileName = "", fileFolder = "";
             if (ForOutput)
             {
-                //Check custom Output Parameters and CSS
-                OutputToExecute.CopyParameters(OutputToExecute.ViewParameters, OutputToExecute.View.Parameters);
-                OutputToExecute.CopyParameters(OutputToExecute.ViewCSS, OutputToExecute.View.CSS);
+                //Check custom Output Parameters 
+                OutputToExecute.CopyParameters(OutputToExecute.View.Parameters);
 
                 //Add the security context for the output if specified
                 if (!string.IsNullOrWhiteSpace(OutputToExecute.UserName) || !string.IsNullOrWhiteSpace(OutputToExecute.UserGroups))
                 {
                     SecurityContext = new SecurityUser(Repository.Security) { Name = OutputToExecute.UserName };
-                    string[] groups= OutputToExecute.UserGroups.Replace(";", "\r").Replace("\n", "").Split('\r');
+                    string[] groups = OutputToExecute.UserGroups.Replace(";", "\r").Replace("\n", "").Split('\r');
                     foreach (string group in groups) SecurityContext.AddSecurityGroup(group);
                 }
 
@@ -328,7 +324,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    Helper.ParseRazor(Repository.Configuration.InitScript, this);
+                    RazorHelper.CompileExecute(Repository.Configuration.InitScript, this);
                 }
                 catch (Exception ex2)
                 {
@@ -343,7 +339,7 @@ namespace Seal.Model
                 {
                     try
                     {
-                        Helper.ParseRazor(source.InitScript, source);
+                        RazorHelper.CompileExecute(source.InitScript, source);
                     }
                     catch (Exception ex2)
                     {
@@ -357,9 +353,9 @@ namespace Seal.Model
             {
                 try
                 {
-                    Helper.ParseRazor(InitScript, this);
+                    RazorHelper.CompileExecute(InitScript, this);
                 }
-                catch(Exception ex2)
+                catch (Exception ex2)
                 {
                     ExecutionErrors += string.Format("Error executing report init script:\r\n{0}\r\n", ex2.Message);
                 }
@@ -377,7 +373,7 @@ namespace Seal.Model
         {
             get
             {
-                return !string.IsNullOrEmpty(WebUrl) && !HasValidationErrors ? Translate("This report has execution errors. Please check details in the Windows Event Viewer...") : ExecutionErrors;
+                return !string.IsNullOrEmpty(WebUrl) && !HasValidationErrors && !string.IsNullOrEmpty(ExecutionErrors) ? Translate("This report has execution errors. Please check details in the Windows Event Viewer...") : ExecutionErrors;
             }
         }
 
@@ -400,18 +396,88 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public string ExecutionHeader
+        public List<ReportTask> ExecutionTasks
         {
-            get 
+            get
             {
-                TimeSpan duration = DateTime.Now - ExecutionStartDate;
-                string message = "";
-                if (duration.Hours > 0) message = string.Format("{0:00}:", Convert.ToInt32(duration.TotalHours));
-                message += string.Format("{0:00}:{1:00} {2}", duration.Minutes, duration.Seconds, Cancel ? Translate("Cancelling report...") : Translate("Executing report..."));
-                return message;
+                return Tasks.Where(i => i.Enabled).ToList();
             }
         }
 
+        [XmlIgnore]
+        public List<ReportModel> ExecutionModels
+        {
+            get
+            {
+                List<ReportModel> result = new List<ReportModel>();
+                if (ExecutionView.GetBoolValue("force_models_load")) result = Models.ToList();
+                else GetModelsToExecute(ExecutionView, result);
+                return result;
+            }
+        }
+
+        //Progression values and messages
+        [XmlIgnore]
+        public int ExecutionProgression
+        {
+            get
+            {
+                int overall = ExecutionTasks.Count + ExecutionModels.Count;
+                int progression = 0;
+                foreach (var task in ExecutionTasks) progression += task.Progression;
+                foreach (var model in ExecutionModels) progression += model.Progression;
+                return overall == 0 ? 100 : progression / overall;
+            }
+        }
+
+        [XmlIgnore]
+        public string ExecutionProgressionMessage
+        {
+            get
+            {
+                TimeSpan duration = DateTime.Now - ExecutionStartDate;
+                StringBuilder message = new StringBuilder("");
+                if (duration.Hours > 0) message.AppendFormat("{0:00}:", Convert.ToInt32(duration.TotalHours));
+                message.Append(string.Format("{0:00}:{1:00} {2}", duration.Minutes, duration.Seconds, Cancel ? Translate("Cancelling report...") : Translate("Executing report...")));
+                return message.ToString();
+            }
+        }
+
+        [XmlIgnore]
+        public int ExecutionProgressionModels
+        {
+            get
+            {
+                return ExecutionModels.Count == 0 ? 100 : (100 * ExecutionModels.Count(i => i.Progression >= 100)) / ExecutionModels.Count;
+            }
+        }
+
+        [XmlIgnore]
+        public string ExecutionProgressionModelsMessage
+        {
+            get
+            {
+                return string.Format("{0}/{1} {2}", ExecutionModels.Count(i => i.Progression >= 100), ExecutionModels.Count, Translate("Model(s) loaded..."));
+            }
+        }
+
+        [XmlIgnore]
+        public int ExecutionProgressionTasks
+        {
+            get
+            {
+                return ExecutionTasks.Count == 0 ? 100 : (100 * ExecutionTasks.Count(i => i.Progression >= 100)) / ExecutionTasks.Count;
+            }
+        }
+
+        [XmlIgnore]
+        public string ExecutionProgressionTasksMessage
+        {
+            get
+            {
+                return string.Format("{0}/{1} {2}", ExecutionTasks.Count(i => i.Progression >= 100), ExecutionTasks.Count, Translate("Task(s) executed..."));
+            }
+        }
 
         [XmlIgnore]
         public bool CheckingExecution = false;
@@ -543,9 +609,27 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
+        public bool HasChart
+        {
+            get { return HasNVD3Chart || HasChartJSChart || HasPlotlyChart; }
+        }
+
+        [XmlIgnore]
         public bool HasNVD3Chart
         {
             get { return Models.Exists(i => i.HasNVD3Serie); }
+        }
+
+        [XmlIgnore]
+        public bool HasChartJSChart
+        {
+            get { return Models.Exists(i => i.HasChartJSSerie); }
+        }
+
+        [XmlIgnore]
+        public bool HasPlotlyChart
+        {
+            get { return Models.Exists(i => i.HasPlotlySerie); }
         }
 
         public void InitReferences()
@@ -674,7 +758,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    Helper.ParseRazor(repository.Configuration.ReportCreationScript, result);
+                    RazorHelper.CompileExecute(repository.Configuration.ReportCreationScript, result);
                 }
                 catch (Exception ex)
                 {
@@ -928,21 +1012,41 @@ namespace Seal.Model
             return view;
         }
 
-        public ReportView AddView(string modelName)
+        public ReportView AddView(string name)
         {
             ReportView view = null;
-            ReportViewTemplate modelTemplate = RepositoryServer.GetViewTemplate(modelName);
+            ReportViewTemplate modelTemplate = RepositoryServer.GetViewTemplate(name);
             if (modelTemplate != null)
             {
                 view = AddRootView();
                 view.SortOrder = Views.Count > 0 ? Views.Max(i => i.SortOrder) + 1 : 1;
                 if (view != null)
                 {
-                    view.Name = Helper.GetUniqueName((modelName == ReportViewTemplate.ModelCSVExcelName ? "CSV" : "view"), (from i in Views select i.Name).ToList());
-                    AddChildView(view, modelTemplate);
+                    view.Name = Helper.GetUniqueName((name == ReportViewTemplate.ModelCSVExcelName ? "CSV" : "view"), (from i in Views select i.Name).ToList());
+                    var child = AddChildView(view, modelTemplate);
+                    if (child.TemplateName == ReportViewTemplate.ModelHTMLName) AddDefaultModelViews(child);
                 }
             }
             return view;
+        }
+
+        public void AddDefaultModelViews(ReportView view)
+        {
+            if (view.Views.Count == 0)
+            {
+                var containerView = AddChildView(view, ReportViewTemplate.ModelContainerName);
+                AddChildView(containerView, ReportViewTemplate.PageTableName);
+                AddChildView(containerView, ReportViewTemplate.ChartJSName);
+                AddChildView(containerView, ReportViewTemplate.ChartNVD3Name);
+                AddChildView(containerView, ReportViewTemplate.ChartPlotlyName);
+                AddChildView(containerView, ReportViewTemplate.DataTableName);
+            }
+        }
+
+
+        public ReportView AddChildView(ReportView parent, string templateName)
+        {
+            return AddChildView(parent, RepositoryServer.GetViewTemplate(templateName));
         }
 
         public ReportView AddChildView(ReportView parent, ReportViewTemplate template)
@@ -950,11 +1054,11 @@ namespace Seal.Model
             if (Models.Count == 0) throw new Exception("Unable to create a view: No model available.\r\nPlease create a model first.");
 
             ReportView result = ReportView.Create(template);
-            result.Name = Helper.GetUniqueName(template.Name + " View", (from i in parent.Views select i.Name).ToList());
+            result.Name = Helper.GetUniqueName(template.Name, (from i in parent.Views select i.Name).ToList());
             result.Report = this;
             result.InitReferences();
             result.SortOrder = parent.Views.Count > 0 ? parent.Views.Max(i => i.SortOrder) + 1 : 1;
-            if (template.ForModel)
+            if (template.ForReportModel)
             {
                 //take a model not used in views
                 result.ModelGUID = Models[0].GUID;
@@ -968,6 +1072,7 @@ namespace Seal.Model
                 }
             }
             parent.Views.Add(result);
+            if (result.TemplateName == ReportViewTemplate.ModelHTMLName) AddDefaultModelViews(result);
             return result;
         }
 
@@ -1022,7 +1127,7 @@ namespace Seal.Model
 
         public string GetChartFileName()
         {
-            return FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, ResultFilePrefix + Guid.NewGuid().ToString() +  ".png"));
+            return FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, ResultFilePrefix + Guid.NewGuid().ToString() + ".png"));
         }
 
         public string AttachImageFile(string fileName)
@@ -1082,7 +1187,7 @@ namespace Seal.Model
             string sourceFilePath = Path.Combine(Repository.ViewContentFolder, fileName);
             if (!File.Exists(sourceFilePath)) return "";
 
-             if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", cdnPath);
+            if (!string.IsNullOrEmpty(cdnPath) && !Repository.Configuration.IsLocal) return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", cdnPath);
 
             if (GenerateHTMLDisplay)
             {
@@ -1101,33 +1206,8 @@ namespace Seal.Model
             //generating result file, set the CSS directly in the result
             string result = "<style type='text/css'>\r\n";
             result += File.ReadAllText(sourceFilePath);
-            //Hack to change JQuery Images URL...
-            if (!string.IsNullOrEmpty(cdnPath) && Repository.Configuration.IsLocal && cdnPath.ToLower().Contains("jquery.com"))
-            {
-                if (!string.IsNullOrEmpty(WebUrl)) result = result.Replace("url(\"images/", "url(\"" + WebUrl + "Content/images/");
-                else result = result.Replace("url(\"images/", "url(\"file://" + Path.Combine(Repository.ViewContentFolder, "images/").Replace("\\","/"));
-            }
             result += "\r\n</style>\r\n";
             return result;
-        }
-
-        [XmlIgnore]
-        public int NumberOfRestrictionValuesToShow
-        {
-            get
-            {
-                int result = 1;
-                foreach (ReportRestriction restriction in ExecutionCommonRestrictions)
-                {
-                    if (restriction.IsContainOperator || restriction.Operator == Operator.Equal || restriction.Operator == Operator.NotEqual)
-                    {
-                        if (restriction.HasValue4) result = 4;
-                        else if (restriction.HasValue3) result = 3;
-                        else if (restriction.HasValue2) result = 2;
-                    }
-                }
-                return result;
-            }
         }
 
         private List<ReportRestriction> _executionCommonRestrictions = null;
@@ -1173,13 +1253,6 @@ namespace Seal.Model
             }
         }
 
-        public bool HasOnlyRestrictionsWithNoOperator
-        {
-            get {
-                return !ExecutionCommonRestrictions.Exists(i => i.IsEnumRE && i.HasOperator);
-            }
-        }
-
         [XmlIgnore]
         public List<ReportRestriction> AllRestrictions
         {
@@ -1213,25 +1286,17 @@ namespace Seal.Model
 
         void GetModelsToExecute(ReportView view, List<ReportModel> result)
         {
-            if (view.Model != null && !result.Contains(view.Model)) result.Add(view.Model);
+            if (view.Model != null && view.Model.Elements.Count > 0 && !result.Contains(view.Model)) result.Add(view.Model);
             foreach (var child in view.Views) GetModelsToExecute(child, result);
         }
 
 
         [XmlIgnore]
-        public List<ReportModel> ExecutionModels
-        {
-            get
-            {
-                List<ReportModel> result = new List<ReportModel>();
-                if (ExecutionView.GetBoolValue("force_models_load")) result = Models.ToList();
-                else GetModelsToExecute(ExecutionView, result);
-                return result;
-            }
-        }
-
+        public ReportView CurrentView; //Current view used when parsing
         [XmlIgnore]
-        public ReportView View; //Current view used when parsing
+        public ReportView CurrentModelView; //Current model view used when parsing
+        [XmlIgnore]
+        public ResultPage CurrentPage; //Current result page used when parsing
 
         //Translations
         public string Translate(string reference)
@@ -1256,16 +1321,6 @@ namespace Seal.Model
             {
                 return reference;
             };
-        }
-
-        public string TranslateRestriction(ReportRestriction restriction, string value)
-        {
-            string result = value;
-            if (restriction.IsDateTime && ReportRestriction.HasDateKeyword(value))
-            {
-                result = TranslateDateKeywords(result);
-            }
-            return result;
         }
 
         public string TranslateDateKeywords(string value)
@@ -1385,12 +1440,6 @@ namespace Seal.Model
             get { return PrintLayoutParameter == null ? false : PrintLayoutParameter.BoolValue; }
         }
 
-        [XmlIgnore]
-        //Indicates if we can use a fixed html header
-        public bool UseFixedHTMLHeader
-        {
-            get { return (!PrintLayout && !ForPDFConversion) || GenerateHTMLDisplay; }
-        }
 
         [XmlIgnore]
         public List<string> DrillParents = new List<string>();
@@ -1444,12 +1493,22 @@ namespace Seal.Model
             try
             {
                 //string are supposed to be thread-safe...
-                ExecutionMessages +=  string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args));
+                ExecutionMessages += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args));
             }
             catch (Exception ex)
             {
                 ExecutionMessages += string.Format("Error logging {0}\r\n{1}\r\n", message, ex.Message);
             }
+        }
+
+        public ReportSource GetReportSource(string sourceName)
+        {
+            return _sources.FirstOrDefault(i => i.Name == sourceName);
+        }
+
+        public ReportModel GetReportModel(string modelName)
+        {
+            return _models.FirstOrDefault(i => i.Name == modelName);
         }
 
         #region Translation Helpers
@@ -1529,7 +1588,7 @@ namespace Seal.Model
                     }
                 }
             }
-            catch {}
+            catch { }
         }
 
         #endregion

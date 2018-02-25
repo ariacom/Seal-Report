@@ -1,0 +1,165 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = report.CurrentModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+}
+
+@if (reportModel.HasNVD3Serie && modelView.GetBoolValue("show_charts"))
+{
+    <!--Chart NVD3-->
+    bool chartOk = false;
+    string chartId = string.Format("cnvd3_{0}{1}", view.ViewId, page.PageId).Replace("-", "");
+    if (modelView.InitPageChart(page))
+    {
+        <div id='@chartId'>
+            <svg style="@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_height"), ";")" />
+        </div>
+            <script>
+                nv.addGraph(function () {
+                    var series = new Array();
+                    @foreach (ResultSerie serie in page.Series)
+                    {
+                        string multiChartOption = (reportModel.ExecNVD3ChartType == "multiChart" ? string.Format(",type:'{0}',yAxis:{1}", serie.NVD3MultiChartType, ((int)serie.Element.YAxisType + 1)) : "");
+                        <text>
+                            series.push({ key: '@Raw(Helper.ToJS(serie.SerieDisplayName))', values: [@Raw(serie.ChartXYSerieValues)] @Raw(multiChartOption) });
+                        </text>
+                    }
+
+                    var chartType = '@reportModel.ExecNVD3ChartType';
+                    var xLabels = [@Raw(page.ChartXLabels)];
+                    var XValueFormatter = function (value) {
+                        if (@Helper.ToJS(reportModel.ExecChartIsNumericAxis)) return d3.format('@reportModel.ExecD3XAxisFormat')(value).valueFormat();
+                        if (@Helper.ToJS(reportModel.ExecChartIsDateTimeAxis)) return d3.time.format('@reportModel.ExecD3XAxisFormat')(new Date(value));
+                        return xLabels[value];
+                    }
+                    var YPrimaryValueFormatter = function (value) {
+                        if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) return d3.time.format('@reportModel.ExecD3PrimaryYAxisFormat')(new Date(value));
+                        return d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(value).valueFormat();
+                    }
+                    var YSecondaryValueFormatter = function (value) {
+                        if (@Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime)) return d3.time.format('@reportModel.ExecD3SecondaryYAxisFormat')(new Date(value));
+                        return d3.format('@reportModel.ExecD3SecondaryYAxisFormat')(value).valueFormat();
+                    }
+                    var @chartId = nv.models.@(reportModel.ExecNVD3ChartType)();
+                    var svg = d3.select('#@chartId svg');
+                    var svgJQ = $("#@chartId svg");
+
+                    var chartTitle = '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("nvd3_chart_title"))))';
+
+                    //Root Script
+                    (@chartId).color(d3.scale.category10().range());
+                    //Axis format
+                    if ((@chartId).xAxis != null && (@chartId).xAxis.tickFormat != null) (@chartId).xAxis.tickFormat(XValueFormatter);
+                    if ((@chartId).yAxis != null && (@chartId).yAxis.tickFormat != null) (@chartId).yAxis.tickFormat(YPrimaryValueFormatter);
+                    //For line with focus
+                    if ((@chartId).x2Axis != null && (@chartId).x2Axis.tickFormat != null) (@chartId).x2Axis.tickFormat(XValueFormatter);
+                    if ((@chartId).y2Axis != null && (@chartId).y2Axis.tickFormat != null) (@chartId).y2Axis.tickFormat(YPrimaryValueFormatter);
+                    //For multichart
+                    if ((@chartId).yAxis1 != null && (@chartId).yAxis1.tickFormat != null) (@chartId).yAxis1.tickFormat(YPrimaryValueFormatter);
+                    if ((@chartId).yAxis2 != null && (@chartId).yAxis2.tickFormat != null) (@chartId).yAxis2.tickFormat(YSecondaryValueFormatter);
+
+                    if ((@chartId).showXAxis != null) (@chartId).showXAxis(true);
+                    if ((@chartId).showYAxis != null) (@chartId).showYAxis(true);
+
+                    if ((@chartId).showDistX != null) (@chartId).showDistX(true);
+                    if ((@chartId).showDistY != null) (@chartId).showDistY(true);
+
+                    if (chartType != 'discreteBarChart') {
+                        (@chartId).tooltip.headerFormatter(function (d, i) {
+                            return (@chartId).xAxis.tickFormat()(d, i);
+                        });
+                        (@chartId).tooltip.keyFormatter(function (d, i) {
+                            if (d == null) return '';
+                            return nvd3TranslateTextAxis(d);
+                        });
+
+                        if (chartType == 'multiChart') { //specific tooltip handler
+                            (@chartId).interactiveLayer.tooltip.contentGenerator(function (data) {
+                                return nvd3TooltipGenerator(data, series, XValueFormatter, YPrimaryValueFormatter, YSecondaryValueFormatter);
+                            });
+                        }
+                    }
+
+                    //Margins
+                    if (chartType == 'multiBarHorizontalChart') (@chartId).margin({ left: 30 + 4 * @page.AxisXLabelMaxLen, right: 30 });
+                    else if (chartType != 'pieChart') (@chartId).margin({ left: 30 + 5 * @page.AxisYPrimaryMaxLen, right: 30 + 5 * @page.AxisYPrimaryMaxLen });
+                    //(@chartId).margin({top: 30, left: 70, bottom: 40, right: 60});
+
+                    //Options
+                    var hideControls = (@Helper.ToJS(view.GetBoolValue("nvd3_hide_controls") || report.PrintLayout) || chartType == 'scatterChart' || (series.length == 1 && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
+                    if ((@chartId).showControls != null) (@chartId).showControls(!hideControls);
+                    if ((@chartId).showLegend != null) (@chartId).showLegend(@Helper.ToJS(view.GetBoolValue("nvd3_show_legend")));
+                    if ((@chartId).stacked != null && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')) (@chartId).stacked(@Helper.ToJS(view.GetBoolValue("nvd3_bar_stacked"))); //for Bar
+                    if ((@chartId).reduceXTicks != null) (@chartId).reduceXTicks(!@Helper.ToJS(view.GetBoolValue("chart_show_all_axis_labels")));
+
+                    if ((@chartId).useInteractiveGuideline != null) (@chartId).useInteractiveGuideline(true);
+                    if ((@chartId).interpolate != null) (@chartId).interpolate('cardinal');
+                    if ((@chartId).staggerLabels != null) (@chartId).staggerLabels(true);
+
+                    //if ((@chartId).rotateLabels != null) (@chartId).rotateLabels(90);  //for Bar
+                    //if ((@chartId).isArea != null) (@chartId).isArea(true); //for Line
+                    //(@chartId).xAxis.showMaxMin(false);
+
+                    //pie chart
+                    if (chartType == 'pieChart') {
+                        (@chartId)
+                            .x(function (d) { return xLabels[d.x] })
+                            .showLabels(true)
+                            .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+                            .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
+                            .donut(true)
+                            .donutRatio(0.35)     //Configure how big you want the donut hole size to be
+                            ;
+
+                        (@chartId).tooltip.valueFormatter(function (d) {
+                            return YPrimaryValueFormatter(d);
+                        });
+                    }
+                    //stacked area
+                    else if (chartType == 'pieChart') {
+                        (@chartId).interactiveLayer.tooltip.headerFormatter(function (d, i) {
+                            return d;
+                        });
+                    }
+
+                    //Title
+                    if (chartTitle.length > 0) {
+                        svg.append('text')
+                            .attr('class','chartTitleWrap')
+                            .attr('x', Math.max(1, (svgJQ.width() - 7*chartTitle.length) / 2))
+                            .attr('y', svgJQ.height() + (chartType == 'lineWithFocusChart' ? 10 : -4))
+                            .style('font-weight', 'bold')
+                            .style('font-size', '14px')
+                            .text(chartTitle);
+                    }
+
+                    svg
+                        .datum(@(reportModel.ExecNVD3ChartType != "pieChart" ? "series" : "series[0].values"))
+                        .transition().duration(500)
+                        .call(@chartId)
+                        ;
+
+                    if (nvd3Charts != null) nvd3Charts.push(@chartId);
+                    nvd3TranslateAll("#@(chartId)");
+                    return @chartId;
+                }
+                    , function () {
+                        d3.selectAll("#@chartId").on('click', function () {
+                            nvd3TranslateAll("#@(chartId)");
+                        });
+                    });
+            </script>
+        chartOk = true;
+    }
+    if (!chartOk)
+    {
+        <div id="alert_status" class="alert alert-danger" role="alert">
+            @Raw(Helper.ToHtml(view.Error))
+        </div>
+        view.Error = "";
+    }
+}

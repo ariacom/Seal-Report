@@ -1,0 +1,32 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Template Name
+    Template.Name = ReportViewTemplate.ModelContainerName;
+
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = false;
+
+    //True if the template uses Theme values
+    Template.UseThemeValues = true;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "grid_layout",
+        Type = ViewParameterType.Text,
+        TextValue = "col-xs-12 col-sm-8;\r\ncol-xs-12 col-sm-8;\r\ncol-sm-12;",
+        DisplayName = "Grid layout",
+        Description = "Defines the rows and the columns used for the child views. It follows the Bootstrap 3 Grid Model (refer to https://getbootstrap.com/docs/3.3/css/). One row is defined per line, columns are separed by semi-column. The last row definition is used if views are remaining.",
+        TextSamples = new string[] {
+                "col-xs-12 col-sm-8;\r\ncol-xs-12 col-sm-8;\r\ncol-sm-12;|Row 1 with 1 column having width 12 for phones or 8 for other devices\r\nRow 2 with 1 column having width 12 for phones or 8 for other devices\r\nRow 3 with 1 column full width",
+                "col-sm-6;col-sm-6\r\ncol-sm-12;|Row 1 with 2 columns same width\r\nRow 2 with 1 column",
+                "col-sm-8;col-sm-4\r\ncol-sm-12;|Row 1 with 1 column width 8 and 1 column width 4\r\nRow 3 with 1 column full width"
+            }
+    });
+
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Model HTML", "Model Container" };
+}

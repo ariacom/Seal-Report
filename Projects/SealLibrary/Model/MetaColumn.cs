@@ -102,6 +102,7 @@ namespace Seal.Model
         }
 
 
+        [DefaultValue(null)]
         [DisplayName("Name"), Description("The name of the column in the table or the SQL Statement used for the column."), Category("Definition"), Id(1, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public override string Name
@@ -110,7 +111,8 @@ namespace Seal.Model
             set { _name = value; }
         }
 
-        protected ColumnType _type = ColumnType.Text;
+        protected ColumnType _type = ColumnType.Default;
+        [DefaultValue(ColumnType.Default)]
         [Category("Definition"), DisplayName("Data Type"), Description("Data type of the column."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ColumnType Type
@@ -130,6 +132,7 @@ namespace Seal.Model
         }
 
         private bool _isAggregate = false;
+        [DefaultValue(false)]
         [Category("Definition"), DisplayName("Is Aggregate"), Description("Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,CNT,AVG."), Id(3, 1)]
         public bool IsAggregate
         {
@@ -163,6 +166,7 @@ namespace Seal.Model
         }
 
         int _displayOrder = 0;
+        [DefaultValue(0)]
         [Category("Display"), DisplayName("Display Order"), Description("The order number used to sort the column in the tree view (by table and by category)."), Id(4, 2)]
         public int DisplayOrder
         {
@@ -177,6 +181,7 @@ namespace Seal.Model
 
 
         protected NumericStandardFormat _numericStandardFormat = NumericStandardFormat.Default;
+        [DefaultValue(NumericStandardFormat.Default)]
         [Category("Options"), DisplayName("Format"), Description("Standard display format applied to the element."), Id(2, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public NumericStandardFormat NumericStandardFormat
@@ -194,6 +199,7 @@ namespace Seal.Model
         }
 
         protected DateTimeStandardFormat _datetimeStandardFormat = DateTimeStandardFormat.Default;
+        [DefaultValue(DateTimeStandardFormat.Default)]
         [Category("Options"), DisplayName("Format"), Description("Standard display format applied to the element."), Id(2, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public DateTimeStandardFormat DateTimeStandardFormat
@@ -273,6 +279,7 @@ namespace Seal.Model
         }
 
         protected string _enumGUID;
+        [DefaultValue(null)]
         [Category("Options"), DisplayName("Enumerated List"), Description("If defined, a list of values is proposed when the column is used for restrictions."), Id(4, 3)]
         [TypeConverter(typeof(MetaEnumConverter))]
         public string EnumGUID
@@ -282,7 +289,8 @@ namespace Seal.Model
         }
 
         private bool? _hasHTMLTags = null;
-        [Category("Options"), DisplayName("Contains HTML"), Description("If true, the result of the column contains HTML tags that will be used in the report result."), Id(5, 3)]
+        [DefaultValue(null)]
+        [Category("Options"), DisplayName("Contains HTML"), Description("If true, the result of the column contains HTML tags that will be displayed in the report result."), Id(5, 3)]
         public bool? HasHTMLTags
         {
             get { return _hasHTMLTags; }
@@ -357,6 +365,7 @@ namespace Seal.Model
         }
 
         bool _drillUpOnlyIfDD = false;
+        [DefaultValue(false)]
         [Category("Drill"), DisplayName("Drill Up only if drill down occured."), Description("If true, Drill Up is activated only if a drill down occured."), Id(2, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public bool DrillUpOnlyIfDD

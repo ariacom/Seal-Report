@@ -30,6 +30,7 @@ namespace Seal.Forms
         {
             InitializeComponent();
             sqlTextBox.ConfigurationManager.Language = "mssql";
+            sqlTextBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
             toolStripStatusLabel.Image = null;
 
             ShowIcon = true;
@@ -45,6 +46,16 @@ namespace Seal.Forms
         {
             if (LastSize != null) Size = LastSize.Value;
             if (LastLocation != null) Location = LastLocation.Value;
+            sqlTextBox.Modified = false;
+        }
+
+        bool CheckClose()
+        {
+            if (sqlTextBox.Modified)
+            {
+                if (MessageBox.Show("The text has been modified. Do you really want to exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return false;
+            }
+            return true;
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
@@ -71,8 +82,11 @@ namespace Seal.Forms
 
         private void cancelToolStripButton_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
-            Close();
+            if (CheckClose())
+            {
+                DialogResult = DialogResult.Cancel;
+                Close();
+            }
         }
 
         private void okToolStripButton_Click(object sender, EventArgs e)
@@ -96,7 +110,7 @@ namespace Seal.Forms
                     ReportModel model = Instance as ReportModel;
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
-                        error = model.Source.CheckSQL(Helper.ParseRazor(sqlTextBox.Text, model), null, model, true);
+                        error = model.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, model), null, model, true);
                     }
                     else
                     {
@@ -106,14 +120,14 @@ namespace Seal.Forms
                 if (Instance is MetaEnum)
                 {
                     MetaEnum anEnum = Instance as MetaEnum;
-                    error = anEnum.Source.CheckSQL(Helper.ParseRazor(sqlTextBox.Text, anEnum), null, null, false);
+                    error = anEnum.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, anEnum), null, null, false);
                 }
                 else if (Instance is MetaSource)
                 {
                     MetaSource source = Instance as MetaSource;
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
-                        error = source.CheckSQL(Helper.ParseRazor(sqlTextBox.Text, source), null, null, true);
+                        error = source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, source), null, null, true);
                     }
                 }
                 else if (Instance is MetaTable)
@@ -121,14 +135,14 @@ namespace Seal.Forms
                     MetaTable table = Instance as MetaTable;
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
-                        error = table.Source.CheckSQL(Helper.ParseRazor(sqlTextBox.Text, table), null, null, true);
+                        error = table.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, table), null, null, true);
                     }
                     else
                     {
                         if (PropertyName == "WhereSQL")
                         {
                             initialSQL = table.WhereSQL;
-                            table.WhereSQL = Helper.ParseRazor(sqlTextBox.Text, table);
+                            table.WhereSQL = RazorHelper.CompileExecute(sqlTextBox.Text, table);
                         }
                         else
                         {
@@ -173,7 +187,7 @@ namespace Seal.Forms
                 else if (Instance is ReportTask)
                 {
                     ReportTask task = Instance as ReportTask;
-                    error = task.Source.CheckSQL(Helper.ParseRazor(sqlTextBox.Text, task), null, null, false);
+                    error = task.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, task), null, null, false);
                 }
             }
             catch (Exception ex)

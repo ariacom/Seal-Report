@@ -30,7 +30,7 @@ namespace Seal.Converter
             ReportView view = context.Instance as ReportView;
             if (view != null)
             {
-                choices = (from s in view.Report.Models select s.Name).ToArray();
+                choices = (from s in view.Report.Models select s.Name).OrderBy(i => i).ToArray();
             }
 
             return new StandardValuesCollection(choices);

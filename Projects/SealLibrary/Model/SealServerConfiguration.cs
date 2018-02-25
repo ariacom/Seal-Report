@@ -86,6 +86,7 @@ namespace Seal.Model
 
         string _logoName = "logo.jpg";
         [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images'."), Id(5, 1)]
+        [DefaultValue("logo.jpg")]
         public string LogoName
         {
             get { return _logoName; }
@@ -94,6 +95,7 @@ namespace Seal.Model
 
         int _logDays = 30;
         [Category("Server Settings"), DisplayName("Log days to keep"), Description("Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled."), Id(6, 1)]
+        [DefaultValue(30)]
         public int LogDays
         {
             get { return _logDays; }
@@ -110,6 +112,7 @@ namespace Seal.Model
 
         bool _isLocal = false;
         [Category("Server Settings"), DisplayName("Server is local (No internet)"), Description("If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path)."), Id(8, 1)]
+        [DefaultValue(false)]
         public bool IsLocal
         {
             get { return _isLocal; }
@@ -157,6 +160,7 @@ namespace Seal.Model
         string _numericFormat = "N0";
         [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format"), Id(2, 2)]
         [TypeConverter(typeof(CustomFormatConverter))]
+        [DefaultValue("N0")]
         public string NumericFormat
         {
             get { return _numericFormat; }
@@ -166,12 +170,12 @@ namespace Seal.Model
         string _dateFormat = "d";
         [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format"), Id(3, 2)]
         [TypeConverter(typeof(CustomFormatConverter))]
+        [DefaultValue("d")]
         public string DateTimeFormat
         {
             get { return _dateFormat; }
             set { _dateFormat = value; }
         }
-
 
         string _csvSeparator = "";
         [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(4, 2)]

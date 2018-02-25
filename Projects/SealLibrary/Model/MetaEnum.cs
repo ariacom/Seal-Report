@@ -65,6 +65,7 @@ namespace Seal.Model
             return new MetaEnum() { GUID = Guid.NewGuid().ToString() };
         }
 
+        [DefaultValue(null)]
         [Category("Definition"), DisplayName("Name"), Description("Name of the enumerated list."), Id(1, 1)]
         public override string Name
         {
@@ -73,6 +74,7 @@ namespace Seal.Model
         }
 
         private Boolean _isDynamic = false;
+        [DefaultValue(false)]
         [Category("Definition"), DisplayName("List is dynamically loaded from database"), Description("If True, the list is loaded using the Select SQL statement defined."), Id(2, 1)]
         public Boolean IsDynamic
         {
@@ -85,6 +87,7 @@ namespace Seal.Model
         }
 
         private Boolean _isDbRefresh = false;
+        [DefaultValue(false)]
         [Category("Definition"), DisplayName("List is refreshed upon database connection"), Description("If True, the list is loaded before a report execution. Should be set to False if the SQL has poor performances."), Id(3, 1)]
         public Boolean IsDbRefresh
         {
@@ -93,6 +96,7 @@ namespace Seal.Model
         }
 
         private Boolean _usePosition = false;
+        [DefaultValue(false)]
         [Category("Definition"), DisplayName("Use defined position to sort in reports"), Description("If True, the current position of the values in the list is used to sort the column in the report result."), Id(5, 1)]
         public Boolean UsePosition
         {
@@ -101,6 +105,7 @@ namespace Seal.Model
         }
 
         private Boolean _translate = false;
+        [DefaultValue(false)]
         [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are transalted using the Repository translations."), Id(6, 1)]
         public Boolean Translate
         {
@@ -123,6 +128,7 @@ namespace Seal.Model
         }
 
         private List<MetaEV> _values = new List<MetaEV>();
+        [DefaultValue(null)]
         [Category("Values"), DisplayName("Values"), Description("The list of values used for this enumerated list"), Id(1, 2)]
         [Editor(typeof(EnumValueCollectionEditor), typeof(UITypeEditor))]
         public List<MetaEV> Values
@@ -138,6 +144,7 @@ namespace Seal.Model
         }
 
         private int _width = 160;
+        [DefaultValue(160)]
         [Category("Display"), DisplayName("Width in pixels"), Description("The width of the list when displayed in the restrictions panel."), Id(1, 3)]
         public int Width
         {
@@ -175,7 +182,7 @@ namespace Seal.Model
                 _error = "";
                 _information = "";
                 DbConnection connection = _source.GetOpenConnection();
-                DataTable table = Helper.GetDataTable(connection, Helper.ParseRazor(Sql, this));
+                DataTable table = Helper.GetDataTable(connection, RazorHelper.CompileExecute(Sql, this));
                 connection.Close();
 
                 if (checkOnly) return;
