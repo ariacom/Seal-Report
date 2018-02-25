@@ -1,0 +1,105 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = report.CurrentModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+}
+
+@if (reportModel.HasPlotlySerie && modelView.GetBoolValue("show_charts"))
+{
+    <!--Chart Plotly-->
+    bool chartOk = false;
+    string chartId = string.Format("cplotly_{0}{1}", view.ViewId, page.PageId).Replace("-", "");
+    if (modelView.InitPageChart(page))
+    {
+        <div id="@chartId" style="@Helper.AddIfNotEmpty("width:", view.GetValue("ploty_chart_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("ploty_chart_height"), ";")"></div>
+
+        <script>
+            var @chartId = $("#@chartId")[0];
+
+            var data = [
+                @foreach (ResultSerie serie in page.Series)
+                {
+                    <text>
+                    {
+                        type: '@reportModel.ExecPlotlyChartType',
+                        name: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
+                        @if (reportModel.ExecPlotlyChartType == "bar" && @view.GetValue("ploty_bar_orientation") == "h")
+                        {
+                        <text>
+                        y: [@Raw(page.ChartXLabels)],
+                        x: [@Raw(serie.ChartYSerieValues)],
+                        orientation: 'h',
+                        </text>
+                        }
+                        else if (reportModel.ExecPlotlyChartType == "pie")
+                        {
+                        <text>
+                        separators: decimalSeparator + thousandSeparator,
+                        labels: [@Raw(page.ChartXLabels)],
+                        values: [@Raw(serie.ChartYSerieValues)],
+                        hoverinfo: 'text',
+                        textinfo: 'percent',
+                        //hoverinfo: '@view.GetValue("plotly_pie_hoverinfo")',
+                        </text>
+                        }
+                        else
+                        {
+                        <text>
+                        x: [@Raw(page.ChartXLabels)],
+                        y: [@Raw(serie.ChartYSerieValues)],
+                        </text>
+                        }
+                        mode: '@view.GetValue("ploty_scatter_mode")',
+                        hole: @view.GetValue("ploty_pie_hole"),
+                    },
+                    </text>
+                }
+            ];
+
+            if ('@reportModel.ExecPlotlyChartType' == "pie") {
+                var total = data[0].values.reduce(function (a, b) { return a + b; });
+                var text = data[0].values.map(function (v, i) {
+                    return data[0].labels[i] + '<br>' + d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(v).valueFormat() + '<br>' + d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(v / total * 100).valueFormat() + '%'
+                });
+                data[0].text = text;
+            }
+
+            var layout =
+                {
+                separators: decimalSeparator + thousandSeparator,
+                title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_chart_title"))))',
+                xaxis: {
+                    title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_xaxis_title"))))',
+                    tickformat: '@reportModel.ExecD3XAxisFormat',
+                },
+                yaxis: {
+                    title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_yaxis_title"))))',
+                    tickformat: '@reportModel.ExecD3PrimaryYAxisFormat',
+                },
+                showlegend: @Helper.ToJS(view.GetBoolValue("ploty_show_legend")),
+                legend: {
+                    @Raw(view.GetValue("ploty_legend_position"))
+                    orientation: "@view.GetValue("ploty_legend_orientation")"
+                },
+                @Raw(view.GetBoolValue("ploty_bar_stacked") ? "barmode: 'stack'," : "")
+            }
+
+            Plotly.plot(@chartId,
+                data,
+                layout
+                );
+        </script>
+        chartOk = true;
+    }
+    if (!chartOk)
+    {
+        <div id="alert_status" class="alert alert-danger" role="alert">
+            @Raw(Helper.ToHtml(view.Error))
+        </div>
+        view.Error = "";
+    }
+}

@@ -1,59 +1,50 @@
-﻿@using System.Data
-@using Seal.Model
-@using Seal.Helpers
+﻿@using Seal.Model
 @{
-    ReportModel ReportModel = Model;
-    Repository Repository = ReportModel.Report.Repository;
-    Report Report = ReportModel.Report;
-    ReportView View = ReportModel.Report.View;
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportModel reportModel = view.Model;
 }
 
 
-<div id='@View.ViewId' class='view' style='@View.GetCSS("view")'>
+<div id='@view.ViewId'>
 
-    @foreach (ResultPage page in Model.Pages)
+    @foreach (ResultPage page in reportModel.Pages)
     {
-        <div class='page_div' style='@View.GetCSS("page")'>
+        <div>
 
-            <a name="@(View.ViewId + page.PageId)"></a>
+            <a name="@(view.ViewId + page.PageId)"></a>
             @if (page.PageTable != null && page.PageTable.Lines.Count == 2 && page.PageTable.Lines[0].Length > 0)
             {
-                <div class='page_table_div' style='@View.GetCSS("page_table")'>
-                    <table style='@View.GetCSS("page_table_table")'>
-                        <tr>
-                            @for (int i = 0; i < page.PageTable.Lines[0].Length; i++)
-                            {
-                                ResultCell header = page.PageTable.Lines[0][i];
-                                ResultCell value = page.PageTable.Lines[1][i];
-                                <!--<th class='cell_title'>@Raw(header.HTMLValue)</th>-->
-                                <td class='cell_title' style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
-                            }
-                        </tr>
-                    </table>
-                </div>
-                
+                <table class='table table-striped table-hover table-bordered'>
+                    <tr>
+                        @for (int i = 0; i < page.PageTable.Lines[0].Length; i++)
+                        {
+                            ResultCell header = page.PageTable.Lines[0][i];
+                            ResultCell value = page.PageTable.Lines[1][i];
+                            <td style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
+                        }
+                    </tr>
+                </table>
+
                 <hr style="display: block;" />
             }
 
 
             @if (page.DataTable != null && page.DataTable.Lines.Count == 2)
             {
-                bool dataTitleHeader = true;
                 ResultCell[] titles = page.DataTable.Lines[0];
                 ResultCell[] values = page.DataTable.Lines[1];
-                <div class='data_table_div' style='@View.GetCSS("data_table")'>
-                    <table style='@View.GetCSS("data_table_table")'>
-                        @for (int row = 0; row < titles.Length; row++)
-                        {
-                            ResultCell title = titles[row];
-                            ResultCell value = values[row];
-                            <tr>
-                                <th class='cell_detail_title' style='@title.FinalCssStyle'>@Raw(title.HTMLValue):</th>
-                                <td class='cell_detail_value' style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
-                            </tr>
-                        }
-                    </table>
-                </div>
+                <table class='table table-striped table-hover table-bordered'>
+                    @for (int row = 0; row < titles.Length; row++)
+                    {
+                        ResultCell title = titles[row];
+                        ResultCell value = values[row];
+                        <tr>
+                            <th style='@title.FinalCssStyle'>@Raw(title.HTMLValue):</th>
+                            <td style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
+                        </tr>
+                    }
+                </table>
             }
         </div>
     }

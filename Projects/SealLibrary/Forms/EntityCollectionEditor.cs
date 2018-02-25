@@ -28,7 +28,7 @@ namespace Seal.Forms
         RootComponent _component = null;
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
-            if (context.Instance is RootComponent) _component = (RootComponent) context.Instance;
+            if (context.Instance is RootComponent) _component = (RootComponent)context.Instance;
 
             if (context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
             return UITypeEditorEditStyle.Modal;
@@ -56,12 +56,22 @@ namespace Seal.Forms
             Form frmCollectionEditorForm = collectionForm as Form;
             frmCollectionEditorForm.HelpButton = false;
             frmCollectionEditorForm.Text = "Collection Editor";
-            if (CollectionItemType == typeof(ReportRestriction)) frmCollectionEditorForm.Text = "Restrictions Collection Editor";
-            else if (CollectionItemType == typeof(Parameter)) frmCollectionEditorForm.Text = "Template Parameters Collection Editor";
+            if (CollectionItemType == typeof(ReportRestriction))
+            {
+                frmCollectionEditorForm.Text = "Restrictions Collection Editor";
+            }
+            else if (CollectionItemType == typeof(OutputParameter))
+            {
+                frmCollectionEditorForm.Text = "Custom Output Parameters Collection Editor";
+            }
             else if (CollectionItemType == typeof(SecurityParameter))
             {
                 frmCollectionEditorForm.Text = "Security Parameters Collection Editor";
                 _useHandlerInterface = false;
+            }
+            else if (CollectionItemType == typeof(Parameter))
+            {
+                frmCollectionEditorForm.Text = "Template Parameters Collection Editor";
             }
             else if (CollectionItemType == typeof(SecurityGroup))
             {
@@ -111,6 +121,12 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = true;
             }
+            else if (CollectionItemType == typeof(ReportViewPartialTemplate))
+            {
+                frmCollectionEditorForm.Text = "Partial Templates Collection Editor";
+                _useHandlerInterface = false;
+            }
+
 
             TableLayoutPanel tlpLayout = frmCollectionEditorForm.Controls[0] as TableLayoutPanel;
 
@@ -195,6 +211,7 @@ namespace Seal.Forms
             else if (value is SecurityDevice) result = ((SecurityDevice)value).DisplayName;
             else if (value is SecurityConnection) result = ((SecurityConnection)value).DisplayName;
             else if (value is SubReport) result = ((SubReport)value).Name;
+            else if (value is ReportComponent) result = ((ReportComponent)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
     }

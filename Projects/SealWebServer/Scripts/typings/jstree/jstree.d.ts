@@ -1,8 +1,8 @@
-﻿// Type definitions for jsTree v3.3.1 
+﻿// Type definitions for jsTree v3.3.3 
 // Project: http://www.jstree.com/
 // Definitions by: Adam Pluciński <https://github.com/adaskothebeast>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// 1 commit 3b8f55d3797cd299eb36695b62d75c2313a3e3b3 2016-05-10
+// 1 commit 26e99ad5ec27c1a594ed57974cb16e0987482fd5 2016-11-19
 
 ///<reference path="../jquery/jquery.d.ts" />
 
@@ -375,6 +375,12 @@ interface JSTreeStaticDefaultsCoreThemes {
     icons?: boolean;
 
     /**
+    * a boolean indicating if node ellipsis should be shown - this only works with a fixed with on the container
+    * @name $.jstree.defaults.core.themes.ellipsis
+    */
+    ellipsis?: boolean;
+
+    /**
     * a boolean indicating if the tree background is striped
     * @name $.jstree.defaults.core.themes.stripes
     */
@@ -423,13 +429,13 @@ interface JSTreeStaticDefaultsCheckbox {
     keep_selected_style: boolean;
 
     /**
-    * This setting controls how cascading and undetermined nodes are applied. 
-    * If 'up' is in the string - cascading up is enabled, if 'down' is in the string - cascading down is enabled, if 'undetermined' is in the string - undetermined nodes will be used. 
+    * This setting controls how cascading and undetermined nodes are applied.
+    * If 'up' is in the string - cascading up is enabled, if 'down' is in the string - cascading down is enabled, if 'undetermined' is in the string - undetermined nodes will be used.
     * If `three_state` is set to `true` this setting is automatically set to 'up+down+undetermined'. Defaults to ''.
     * @name $.jstree.defaults.checkbox.cascade
     * @plugin checkbox
     */
-    cascade: boolean;
+    cascade: string;
 
     /**
     * This setting controls if checkbox are bound to the general tree selection 
@@ -465,6 +471,7 @@ interface JSTreeStaticDefaultsContextMenu {
     * * `separator_after` - a boolean indicating if there should be a separator after this item
     * * `_disabled` - a boolean indicating if this action should be disabled
     * * `label` - a string - the name of the action (could be a function returning a string)
+    * * `title` - a string - an optional tooltip for the item
     * * `action` - a function to be executed if this item is chosen, the function will receive 
     * * `icon` - a string, can be a path to an icon or a className, if using an image that is in the current directory use a `./` prefix, otherwise it will be detected as a class
     * * `shortcut` - keyCode which will trigger the action if the menu is open (for example `113` for rename, which equals F2)
@@ -737,6 +744,11 @@ interface JSTree extends JQuery {
     teardown: () => void;
 
     /**
+    * Create prototype node
+    */
+    _create_prototype_node: () => HTMLElement;
+
+    /**
     * bind all events. Used internally.
     * @private
     * @name bind()
@@ -830,7 +842,7 @@ interface JSTree extends JQuery {
     * @param  {Boolean} ids if set to true build the path using ID, otherwise node text is used
     * @return {mixed}
     */
-    get_path: (obj: any, glue: string, ids: boolean) => any;
+    get_path: (obj: any, glue?: string, ids?: boolean) => any;
 
     /**
     * get the next visible node that is below the `obj` node. If `strict` is set to `true` only sibling nodes are returned.
@@ -1033,8 +1045,6 @@ interface JSTree extends JQuery {
     * @param {Boolean} full if set to `true` all nodes are redrawn.
     */
     redraw: (full?: boolean) => void;
-
-    settings: any;
 
     /**
     * redraws a single node's children. Used internally.
@@ -1304,6 +1314,9 @@ interface JSTree extends JQuery {
     */
     refresh_node: (obj: any) => void;
 
+    //Add settings
+    settings: any;
+
     /**
     * set (change) the ID of a node
     * @name set_id(obj, id)
@@ -1341,6 +1354,8 @@ interface JSTree extends JQuery {
     * @param  {Boolean} options.no_id do not return ID
     * @param  {Boolean} options.no_children do not include children
     * @param  {Boolean} options.no_data do not include node data
+    * @param  {Boolean} options.no_li_attr do not include LI attributes
+    * @param  {Boolean} options.no_a_attr do not include A attributes
     * @param  {Boolean} options.flat return flat JSON instead of nested
     * @return {Object}
     */
@@ -1565,6 +1580,24 @@ interface JSTree extends JQuery {
     * @name toggle_icons()
     */
     toggle_icons: () => void;
+
+    /**
+    * show the node ellipsis
+    * @name show_icons()
+    */
+    show_ellipsis: () => void;
+
+    /**
+    * hide the node ellipsis
+    * @name hide_ellipsis()
+    */
+    hide_ellipsis: () => void;
+
+    /**
+    * toggle the node ellipsis
+    * @name toggle_icons()
+    */
+    toggle_ellipsis: () => void;
 
     /**
     * set the node icon for a node
@@ -1883,6 +1916,16 @@ interface JSTreeGetJsonOptions {
     * do not include node data
     */
     no_data: boolean;
+
+    /** 
+    * do not include LI attributes
+    */
+    no_li_attr: boolean;
+    
+    /**
+    * do not include A attributes
+    */
+    no_a_attr: boolean;
 
     /**
     * return flat JSON instead of nested

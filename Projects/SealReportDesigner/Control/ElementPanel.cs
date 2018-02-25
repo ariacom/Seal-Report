@@ -67,7 +67,7 @@ namespace Seal.Controls
                     if (button == _modelPanel.SelectedButton) button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     else button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     if (element.SerieDefinition == SerieDefinition.Axis) button.Image = ((System.Drawing.Image)(Properties.Resources.chartAxis));
-                    else if (element.IsSerie) button.Image = ((System.Drawing.Image)(Properties.Resources.chartSerie));
+                    else if (element.IsSerie && element.PivotPosition == PivotPosition.Data) button.Image = ((System.Drawing.Image)(Properties.Resources.chartSerie));
                     else if (element.SerieDefinition == SerieDefinition.Splitter || element.SerieDefinition == SerieDefinition.SplitterBoth) button.Image = ((System.Drawing.Image)(Properties.Resources.chartSplitter));
                     else button.Image = null;
                     button.ImageAlign = ContentAlignment.MiddleRight;

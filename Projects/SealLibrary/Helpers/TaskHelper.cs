@@ -89,11 +89,12 @@ namespace Seal.Helpers
         }
 
 
-        public bool LoadTablesFromExcel(string loadFolder, string sourceExcelPath, string[] sourceTabNames, string[] destinationTableNames, bool useAllConnections = false)
+        public bool LoadTablesFromExcel(string loadFolder, string sourceExcelPath, string[] sourceTabNames, string[] destTableNames = null, bool useAllConnections = false)
         {
             bool result = false;
             try
             {
+                string[] destinationTableNames = (destTableNames == null ? sourceTabNames : destTableNames);
                 if (sourceTabNames.Length != destinationTableNames.Length) throw new Exception("The number of Source Tabs number and the number of Destination Tables are different.");
                 if (CheckForNewFileSource(loadFolder, sourceExcelPath))
                 {
@@ -213,6 +214,13 @@ namespace Seal.Helpers
             }
         }
 
+        public bool LoadTableFromDataSource(string reportSourceName, string sourceSelectStatement, string destinationTableName, bool useAllConnections = false, string sourceCheckSelect = "", string destinationCheckSelect = "")
+        {
+            var source = _task.Report.GetReportSource(reportSourceName);
+            if (source == null) throw new Exception(string.Format("Invalid report source name: '{0}'", reportSourceName));
+            return LoadTableFromExternalSource(source.Connection.FullConnectionString, sourceSelectStatement, destinationTableName, useAllConnections, sourceCheckSelect, destinationCheckSelect);
+        }
+
         public bool LoadTableFromExternalSource(string sourceConnectionString, string sourceSelectStatement, string destinationTableName, bool useAllConnections = false, string sourceCheckSelect = "", string destinationCheckSelect = "")
         {
             bool result = false;
@@ -240,17 +248,44 @@ namespace Seal.Helpers
                     if (doIt && !_task.CancelReport)
                     {
                         result = true;
-                        if (table == null)
+                        var sourceSelect = _task.Repository.ReplaceRepositoryKeyword(sourceSelectStatement);
+                        if (DatabaseHelper.LoadBurstSize > 0 && !string.IsNullOrEmpty(DatabaseHelper.LoadSortColumn))
                         {
-                            table = DatabaseHelper.LoadDataTable(connectionString, _task.Repository.ReplaceRepositoryKeyword(sourceSelectStatement));
-                            table.TableName = destinationTableName;
-                        }
+                            //Load big tables...
+                            int lastIndex = 0;
+                            while (true)
+                            {
+                                string sql = string.Format("select * from (select ROW_NUMBER() over (order by UniqueKey) rn, a.* from ({0}) a) b where rn > {1} and rn <= {2}", sourceSelect, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
+                                table = DatabaseHelper.LoadDataTable(connectionString, sql);
+                                if (table.Rows.Count == 0) break;
 
-                        Log.LogMessage("Dropping and creating table '{1}'", connection.Name, destinationTableName);
-                        DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                        DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
-                        Log.LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
-                        DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
+                                table.TableName = destinationTableName;
+                                if (lastIndex == 0)
+                                {
+                                    Log.LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
+                                    DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
+                                    DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
+                                }
+                                Log.LogMessage("Copying {0} rows in '{1}' for index {2} to {3}", table.Rows.Count, destinationTableName, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
+                                DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
+                                lastIndex += DatabaseHelper.LoadBurstSize;
+                            }
+                        }
+                        else
+                        {
+
+                            if (table == null)
+                            {
+                                table = DatabaseHelper.LoadDataTable(connectionString, sourceSelect);
+                                table.TableName = destinationTableName;
+                            }
+
+                            Log.LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
+                            DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
+                            DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
+                            Log.LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                            DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
+                        }
                     }
                     else
                     {

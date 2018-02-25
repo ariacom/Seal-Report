@@ -5,23 +5,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Seal.Helpers;
-using System.Data.OleDb;
-using Seal.Converter;
 using System.Data;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.IO;
-using System.Collections;
 using System.Threading;
 using RazorEngine.Templating;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.Mail;
-using RazorEngine;
 using Microsoft.Win32.TaskScheduler;
-using System.Windows.Forms;
-using System.Web;
 
 namespace Seal.Model
 {
@@ -48,9 +41,10 @@ namespace Seal.Model
 
         //Html Ids Keywords
         public const string HtmlId_header_form = "header_form";
-        public const string HtmlId_processing_message = "processing_message";
+        public const string HtmlId_progress_bar = "progress_bar";
+        public const string HtmlId_progress_bar_tasks = "progress_bar_tasks";
+        public const string HtmlId_progress_bar_models = "progress_bar_models";
         public const string HtmlId_execution_messages = "execution_messages";
-        public const string HtmlId_body_div = "body_div";
         public const string HtmlId_parameter_view_id = "parameter_view_id";
         public const string HtmlId_parameter_view_name = "parameter_view_name";
         public const string HtmlId_parameter_view_value = "parameter_view_value";
@@ -74,7 +68,7 @@ namespace Seal.Model
             string templateErrors = "";
             ReportView masterView = Report.ExecutionView;
 
-            if (Report.ForPDFConversion) SetPDFRootViewHeaderCSS();
+          //  if (Report.ForPDFConversion) SetPDFRootViewHeaderCSS();
 
             masterView.InitTemplates(masterView, ref templateErrors);
             if (!string.IsNullOrEmpty(templateErrors))
@@ -529,18 +523,20 @@ namespace Seal.Model
                     model.FillResultTable();
                     if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
                 }
-
-                //For DEV: Simulate long query
+                
 #if DEBUG
-                //Thread.Sleep(5000);
+                //Thread.Sleep(5000); //For DEV: Simulate long query
 #endif
                 model.SetColumnsName();
                 Report.LogMessage("Model '{0}': Building pages...", model.Name);
                 if (!Report.Cancel) buildPages(model);
+                model.Progression = 75; //75% 
                 Report.LogMessage("Model '{0}': Building tables...", model.Name);
                 if (!Report.Cancel) buildTables(model);
+                model.Progression = 80; //80% 
                 Report.LogMessage("Model '{0}': Building totals...", model.Name);
                 if (!Report.Cancel) buildTotals(model);
+                model.Progression = 85; //85% 
                 //Scripts
                 if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
                 //Series 
@@ -549,7 +545,7 @@ namespace Seal.Model
                 if (!Report.Cancel) finalSort(model);
                 //Final script
                 if (!Report.Cancel) handleFinalScript(model);
-
+                model.Progression = 100; //100% 
             }
             catch (Exception ex)
             {
@@ -763,14 +759,18 @@ namespace Seal.Model
 
             //Summary table headers
             model.SummaryTable = new ResultTable();
-            model.SummaryTable.Lines.Add(headerPageValues);
-
+            if (model.Pages.Count > 1)
+            {
+                model.SummaryTable.Lines.Add(headerPageValues);
+                model.SummaryTable.BodyStartColumn = 0;
+                model.SummaryTable.BodyStartRow = 1;
+            }
             foreach (ResultPage page in model.Pages)
             {
                 if (Report.Cancel) break;
 
                 //Summary table values
-                model.SummaryTable.Lines.Add(page.Pages);
+                if (model.Pages.Count > 1) model.SummaryTable.Lines.Add(page.Pages);
                 //Page table
                 page.PageTable = new ResultTable();
                 page.PageTable.Lines.Add(headerPageValues);
@@ -1104,7 +1104,7 @@ namespace Seal.Model
                     if (!line0[i].IsTotal)
                     {
                         //empty cell
-                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true, Value = "" };
+                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true, Value = (i==0 ? Report.Translate("Total") : "") };
                     }
                     else
                     {
@@ -1116,6 +1116,7 @@ namespace Seal.Model
                         }
                     }
                 }
+                model.SummaryTable.BodyEndRow = model.SummaryTable.Lines.Count;
                 model.SummaryTable.Lines.Add(tttLine);
             }
 
@@ -1127,19 +1128,11 @@ namespace Seal.Model
             string script = cell.Element.CellScript;
             try
             {
-                if (!_cellCompilationKeys.ContainsKey(script))
-                {
-                    string newKey = Guid.NewGuid().ToString();
-                    Helper.CompileRazor(script, typeof(ResultCell), newKey);
-                    if (!_cellCompilationKeys.ContainsKey(script)) _cellCompilationKeys.Add(script, newKey);
-                }
-                string key = _cellCompilationKeys[script];
-                if (!string.IsNullOrEmpty(key)) Razor.Run(key, cell);
+                RazorHelper.CompileExecute(script, cell);
             }
             catch (Exception ex)
             {
                 Report.ExecutionMessages += string.Format("Error got when executing Cell Script for '{0}' in model '{1}'\r\n{2}\r\n", cell.Element.DisplayNameEl, cell.Element.Model.Name, ex.Message);
-                if (!_cellCompilationKeys.ContainsKey(script)) _cellCompilationKeys.Add(script, "");
             }
         }
 
@@ -1164,11 +1157,9 @@ namespace Seal.Model
             }
         }
 
-        Dictionary<string, string> _cellCompilationKeys = null;
 
         private void handleCellScript(ReportModel model)
         {
-            _cellCompilationKeys = new Dictionary<string, string>();
             foreach (ResultPage page in model.Pages)
             {
                 if (Report.Cancel) break;
@@ -1190,6 +1181,8 @@ namespace Seal.Model
             foreach (ResultPage page in model.Pages)
             {
                 if (Report.Cancel) break;
+                model.ExecNVD3ChartType = "";
+                page.ChartInitDone = false;
 
                 foreach (List<ResultData> datas in page.Datas.Values)
                 {
@@ -1396,7 +1389,7 @@ namespace Seal.Model
                     if (!string.IsNullOrEmpty(output.PreScript))
                     {
                         Report.LogMessage("Executing Pre-Execution script.");
-                        string result = Helper.ParseRazor(output.PreScript, output);
+                        string result = RazorHelper.CompileExecute(output.PreScript, output);
                         if (result != null && result == "0")
                         {
                             output.Information = Report.Translate("Pre-execution script returns 0. The report output generation has been cancelled.");
@@ -1426,7 +1419,7 @@ namespace Seal.Model
                         if (!string.IsNullOrEmpty(output.PostScript))
                         {
                             Report.LogMessage("Executing Post-execution script.");
-                            Helper.ParseRazor(output.PostScript, output);
+                            RazorHelper.CompileExecute(output.PostScript, output);
                         }
                     }
                 }
@@ -1677,6 +1670,7 @@ namespace Seal.Model
             return newPath;
         }
 
+        /* TO REMOVE
         void SetPDFRootViewHeaderCSS()
         {
             //Hide header by default for PDF...
@@ -1688,11 +1682,11 @@ namespace Seal.Model
             }
             if (string.IsNullOrEmpty(headerCSS.Value)) headerCSS.Value = "display:none;";
         }
-
+        */
         public string GeneratePDFResult()
         {
             string newPath = "";
-            SetPDFRootViewHeaderCSS();
+         //   SetPDFRootViewHeaderCSS();
             var pdfParameter = Report.ExecutionView.GetParameter(Parameter.PDFLayoutParameter);
             bool initialValue = pdfParameter.BoolValue;
             try
@@ -1716,29 +1710,6 @@ namespace Seal.Model
 
         public bool IsConvertingToPDF = false; //If true, do not run conversion again
         public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...
-
-        //cache management of template compilation
-        public static List<string> CompiledViews = new List<string>();
-        public static void CompiledViewAdd(string viewGUID)
-        {
-            lock (CompiledViews)
-            {
-                if (!CompiledViews.Exists(i => i == viewGUID)) CompiledViews.Add(viewGUID);
-            }
-        }
-        public static bool IsViewCompiled(string viewGUID)
-        {
-            lock (CompiledViews)
-            {
-                return CompiledViews.Exists(i => i == viewGUID);
-            }
-        }
-        public static void CompiledViewRemove(string viewGUID)
-        {
-            lock (CompiledViews)
-            {
-                if (CompiledViews.Exists(i => i == viewGUID)) CompiledViews.Remove(viewGUID);
-            }
-        }
+        
     }
 }

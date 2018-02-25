@@ -7,7 +7,7 @@ using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Test 
+namespace Test
 {
     [TestClass]
     public class TestReportExecution

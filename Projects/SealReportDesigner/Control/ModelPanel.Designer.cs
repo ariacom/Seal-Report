@@ -96,7 +96,7 @@
             // 
             this.modelSourceSplitContainer.Panel2.Controls.Add(this.elementTreeView);
             this.modelSourceSplitContainer.Size = new System.Drawing.Size(178, 497);
-            this.modelSourceSplitContainer.SplitterDistance = 93;
+            this.modelSourceSplitContainer.SplitterDistance = 120;
             this.modelSourceSplitContainer.TabIndex = 1;
             // 
             // elementTreeView

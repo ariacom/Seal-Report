@@ -1,0 +1,72 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+@{ 
+    ReportView view = Model;
+    Report report = view.Report;
+    Repository repository = report.Repository;
+}
+
+<!--restrictions_div-->
+@if (report.GenerateHTMLDisplay)
+            {
+    <div id="restrictions_div" class="collapse @((report.HasRestrictions && view.GetBoolValue("restriction_button")) ? "in" : "")">
+
+
+        <div class="panel-group" role="tablist">
+            <!--rows of xx restrictions -->
+            @for (int row = 0; row < report.ExecutionCommonRestrictions.Count / view.GetNumericValue("restrictions_per_row"); row++)
+            {
+                <div class="row">
+                    @for (int i = view.GetNumericValue("restrictions_per_row") * row; i < report.ExecutionCommonRestrictions.Count && i < view.GetNumericValue("restrictions_per_row") * (row + 1); i++)
+                    {
+                        var restriction = report.ExecutionCommonRestrictions[i];
+                        <div class="col-sm-@(12 / view.GetNumericValue("restrictions_per_row"))">
+                            <div class="form-group">
+                                <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select" style="display:@(restriction.HasOperator ? "inline" : "none");">
+                                    @foreach (Operator op in restriction.AllowedDisplayOperators)
+                                    {
+                                        <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(op)))</option>
+                                    }
+                                </select>
+                                @if (restriction.IsEnumRE)
+                                {
+                                    <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple")>
+                                        @for (int j = 0; j < restriction.EnumRE.Values.Count; j++)
+                                        {
+                                            var enumDef = restriction.EnumRE.Values[j];
+                                            <option id='@(restriction.OptionHtmlId + j.ToString())' value='@(restriction.OptionHtmlId + j.ToString())' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    for (int j = 1; j <= 4; j++)
+                                    {
+                                        if (restriction.IsDateTime)
+                                        {
+                                            <div class="form-group">
+                                                <div class='input-group date @(restriction.HasTime ? "datepicker_datetime" : "datepicker_date")'>
+                                                    <input type='text' class="form-control" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "text_input")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
+                                        }
+                                        if (restriction.Prompt == PromptType.PromptOneValue)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div> <!--col-->}
+                </div> <!--row-->}
+        </div>
+    </div>
+}
+

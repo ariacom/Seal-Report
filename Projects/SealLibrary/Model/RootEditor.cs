@@ -19,10 +19,29 @@ namespace Seal.Model
         protected DynamicCustomTypeDescriptor _dctd = null;
         public virtual void InitEditor()
         {
+            Init();
+            InitDefaultValues();
+        }
+
+        public virtual void Init()
+        {
             if (_dctd == null) _dctd = ProviderInstaller.Install(this);
             _dctd.CategorySortOrder = CustomSortOrder.AscendingById;
             _dctd.PropertySortOrder = CustomSortOrder.AscendingById;
             UpdateEditorAttributes();
+        }
+
+        public void InitDefaultValues()
+        {
+            foreach (var property in Properties.Where(i => i.IsBrowsable))
+            {
+                if (property.DefaultValue == null && (property.GetValue(this) is String))
+                {
+                    property.DefaultValue = "";
+                }
+
+                property.SetValue(this, property.GetValue(this));
+            }
         }
 
         virtual public void SetReadOnly()

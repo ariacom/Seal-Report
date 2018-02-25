@@ -50,23 +50,23 @@ namespace Seal.Model
                 GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
                 GetProperty("DateTimeStandardFormat").SetIsBrowsable(!IsEnum && IsDateTime && (TypeEd == ColumnType.DateTime || Type == ColumnType.Default));
 
-                GetProperty("SerieDefinition").SetIsBrowsable(PivotPosition != PivotPosition.Page);
-                GetProperty("SerieType").SetIsBrowsable(PivotPosition == PivotPosition.Data && _serieDefinition == SerieDefinition.Serie);
-                GetProperty("Nvd3Serie").SetIsBrowsable(PivotPosition == PivotPosition.Data && _serieDefinition == SerieDefinition.NVD3Serie);
-                GetProperty("XAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column || (PivotPosition == PivotPosition.Data && SerieDefinition == SerieDefinition.Serie));
+                GetProperty("SerieDefinition").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column);
+                GetProperty("Nvd3Serie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                GetProperty("ChartJSSerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                GetProperty("PlotlySerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                GetProperty("XAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column || PivotPosition == PivotPosition.Data);
                 GetProperty("YAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("SerieSortOrder").SetIsBrowsable(PivotPosition == PivotPosition.Data && (SerieDefinition == SerieDefinition.Serie || SerieDefinition == SerieDefinition.NVD3Serie));
-                GetProperty("SerieSortType").SetIsBrowsable(PivotPosition == PivotPosition.Data && (SerieDefinition == SerieDefinition.Serie || SerieDefinition == SerieDefinition.NVD3Serie));
+                GetProperty("SerieSortOrder").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                GetProperty("SerieSortType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("AxisUseValues").SetIsBrowsable((PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column) && (IsNumeric || IsDateTime));
 
                 //Read only
                 GetProperty("Format").SetIsReadOnly((IsNumeric && NumericStandardFormat != NumericStandardFormat.Custom) || (IsDateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom));
                 GetProperty("TotalAggregateFunction").SetIsReadOnly(ShowTotal == ShowTotal.No);
-                GetProperty("SerieType").SetIsReadOnly(SerieDefinition != SerieDefinition.Serie);
-                GetProperty("XAxisType").SetIsReadOnly(SerieDefinition == SerieDefinition.None || SerieDefinition == SerieDefinition.NVD3Serie || _serieDefinition == SerieDefinition.SplitterBoth);
-                GetProperty("YAxisType").SetIsReadOnly(SerieDefinition != SerieDefinition.Serie && SerieDefinition != SerieDefinition.NVD3Serie);
-                GetProperty("SerieSortOrder").SetIsReadOnly((SerieDefinition != SerieDefinition.Serie && SerieDefinition != SerieDefinition.NVD3Serie) || _serieSortType == SerieSortType.None);
-                GetProperty("SerieSortType").SetIsReadOnly(SerieDefinition != SerieDefinition.Serie && SerieDefinition != SerieDefinition.NVD3Serie);
+                GetProperty("XAxisType").SetIsReadOnly(!IsSerie || _serieDefinition == SerieDefinition.SplitterBoth);
+                GetProperty("YAxisType").SetIsReadOnly(!IsSerie);
+                GetProperty("SerieSortOrder").SetIsReadOnly(!IsSerie || _serieSortType == SerieSortType.None);
+                GetProperty("SerieSortType").SetIsReadOnly(!IsSerie);
                 GetProperty("AxisUseValues").SetIsReadOnly(SerieDefinition != SerieDefinition.Axis);
                 GetProperty("CalculationOption").SetIsReadOnly(!IsNumeric);
 
@@ -78,7 +78,7 @@ namespace Seal.Model
 
         public static ReportElement Create()
         {
-            return new ReportElement() { GUID = Guid.NewGuid().ToString(), _type = ColumnType.Default, _numericStandardFormat = NumericStandardFormat.Default, _datetimeStandardFormat = DateTimeStandardFormat.Default, SortOrder = SortOrderConverter.kAutomaticAscSortKeyword };
+            return new ReportElement() { GUID = Guid.NewGuid().ToString() };                                                           
         }
 
         public bool IsEnum
@@ -148,7 +148,7 @@ namespace Seal.Model
             set { _pivotPosition = value; }
         }
 
-
+        [DefaultValue(null)]
         [Category("Definition"), DisplayName("Name"), Description("Name of the element when displayed in result tables or restrictions."), Id(1, 1)]
         [XmlIgnore]
         [TypeConverter(typeof(CustomNameConverter))]
@@ -175,7 +175,8 @@ namespace Seal.Model
             }
         }
 
-        string _sortOrder;
+        string _sortOrder = SortOrderConverter.kAutomaticAscSortKeyword;
+        [DefaultValue(SortOrderConverter.kAutomaticAscSortKeyword)]
         [Category("Definition"), DisplayName("Sort Order"), Description("Sort the result tables. Page elements are sorted first, then Row, Column and Data elements."), Id(2, 1)]
         [TypeConverter(typeof(SortOrderConverter))]
         public string SortOrder
@@ -184,6 +185,7 @@ namespace Seal.Model
             set { _sortOrder = value; }
         }
 
+        [DefaultValue(ColumnType.Default)]
         [Category("Options"), DisplayName("Data Type"), Description("Data type of the column."), Id(1, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ColumnType TypeEd
@@ -288,6 +290,7 @@ namespace Seal.Model
         }
 
         AggregateFunction _aggregateFunction = AggregateFunction.Sum;
+        [DefaultValue(AggregateFunction.Sum)]
         [Category("Data Options"), DisplayName("Aggregate"), Description("Aggregate function applied to the Data element."), Id(1, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public AggregateFunction AggregateFunction
@@ -297,6 +300,7 @@ namespace Seal.Model
         }
 
         CalculationOption _calculationOption = CalculationOption.No;
+        [DefaultValue(CalculationOption.No)]
         [Category("Data Options"), DisplayName("Calculation Option"), Description("For numeric Data elements, define calculation option applied on the element in the table."), Id(2, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public CalculationOption CalculationOption
@@ -318,6 +322,7 @@ namespace Seal.Model
         }
 
         ShowTotal _showTotal = ShowTotal.No;
+        [DefaultValue(ShowTotal.No)]
         [Category("Data Options"), DisplayName("Show Total"), Description("For Data elements, add a row or a column showing the total of the element in the table."), Id(3, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ShowTotal ShowTotal
@@ -331,6 +336,7 @@ namespace Seal.Model
         }
 
         AggregateFunction _totalAggregateFunction = AggregateFunction.Sum;
+        [DefaultValue(AggregateFunction.Sum)]
         [Category("Data Options"), DisplayName("Total Aggregate"), Description("Aggregate function applied for the totals."), Id(4, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public AggregateFunction TotalAggregateFunction
@@ -341,7 +347,8 @@ namespace Seal.Model
 
         //Charts
         SerieDefinition _serieDefinition = SerieDefinition.None;
-        [Category("Chart"), DisplayName("Serie Definition"), Description("Define how the element is used in the chart depending on its position. Row or Column elements can be either Axis or Splitter. Data elements can define a Serie."), Id(1, 2)]
+        [DefaultValue(SerieDefinition.None)]
+        [Category("Chart"), DisplayName("Serie Definition"), Description("Defines how the element is used in the chart. Row or Column elements can be either Axis or Splitter (to create a serie for each splitter value)."), Id(1, 2)]
         [TypeConverter(typeof(SerieDefinitionConverter))]
         public SerieDefinition SerieDefinition
         {
@@ -355,11 +362,12 @@ namespace Seal.Model
 
         public bool IsSerie
         {
-            get { return _serieDefinition == SerieDefinition.Serie || _serieDefinition == SerieDefinition.NVD3Serie; }
+            get { return _nvd3Serie != NVD3SerieDefinition.None || _chartJSSerie != ChartJSSerieDefinition.None || _plotlySerie != PlotlySerieDefinition.None; }
         }
 
         bool _axisUseValues = true;
-        [Category("Chart"), DisplayName("Use values for axis"), Description("For Numeric or Date Time axis, if true the values are used to scale the axis, otherwise the values are the labels."), Id(2, 2)]
+        [DefaultValue(true)]
+        [Category("Chart"), DisplayName("Use values for axis"), Description("For Numeric or Date Time axis, if true, the values are used to scale the axis, otherwise the values are the labels."), Id(2, 2)]
         public bool AxisUseValues
         {
             get { return _axisUseValues; }
@@ -367,17 +375,19 @@ namespace Seal.Model
         }
 
 
-        SeriesChartType _serieType = SeriesChartType.Point;
-        [Category("Chart"), DisplayName("Serie Type"), Description("Define the type of serie for the element in the chart."), Id(2, 2)]
-        [Editor("System.Windows.Forms.Design.DataVisualization.Charting.ChartTypeEditor", "System.Drawing.Design.UITypeEditor")]
-        public SeriesChartType SerieType
+        ChartJSSerieDefinition _chartJSSerie = ChartJSSerieDefinition.None;
+        [DefaultValue(ChartJSSerieDefinition.None)]
+        [Category("Chart"), DisplayName("Chart JS Serie"), Description("Definition of the serie for the element in the Chart JS chart."), Id(2, 2)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        public ChartJSSerieDefinition ChartJSSerie
         {
-            get { return _serieType; }
-            set { _serieType = value; }
+            get { return _chartJSSerie; }
+            set { _chartJSSerie = value; }
         }
 
-        NVD3SerieDefinition _nvd3Serie = NVD3SerieDefinition.ScatterChart;
-        [Category("Chart"), DisplayName("Serie Type"), Description("Define the type of serie for the element in the chart."), Id(2, 2)]
+        NVD3SerieDefinition _nvd3Serie = NVD3SerieDefinition.None;
+        [DefaultValue(NVD3SerieDefinition.None)]
+        [Category("Chart"), DisplayName("NVD3 Serie"), Description("Definition of the serie for the element in the NVD3 chart."), Id(3, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public NVD3SerieDefinition Nvd3Serie
         {
@@ -385,33 +395,19 @@ namespace Seal.Model
             set { _nvd3Serie = value; }
         }
 
-        private AxisType _xAxisType = AxisType.Primary;
-        [Category("Chart"), DisplayName("X Axis Type"), Description("Define the X axis of the serie (Primary or Secondary). This option is only valid for Microsoft charts."), Id(5, 2)]
-        public AxisType XAxisType
-        {
-            get { return _xAxisType; }
-            set { _xAxisType = value; }
-        }
-
-        private AxisType _yAxisType = AxisType.Primary;
-        [Category("Chart"), DisplayName("Y Axis Type"), Description("Define the Y axis of the serie (Primary or Secondary). For NVD3 charts, this option is only valid if the chart contains Series of type Bar, Stacked Area and Line."), Id(6, 2)]
-        public AxisType YAxisType
-        {
-            get { return _yAxisType; }
-            set { _yAxisType = value; }
-        }
-
-        private PointSortOrder _serieSortOrder = PointSortOrder.Ascending;
-        [Category("Chart"), DisplayName("Sort Order"), Description("Define if the serie is sorted ascending or descending in the chart."), Id(4, 2)]
+        PlotlySerieDefinition _plotlySerie = PlotlySerieDefinition.None;
+        [DefaultValue(PlotlySerieDefinition.None)]
+        [Category("Chart"), DisplayName("Plotly Serie"), Description("Definition of the serie for the element in the Plotly chart."), Id(4, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
-        public PointSortOrder SerieSortOrder
+        public PlotlySerieDefinition PlotlySerie
         {
-            get { return _serieSortOrder; }
-            set { _serieSortOrder = value; }
+            get { return _plotlySerie; }
+            set { _plotlySerie = value; }
         }
 
         private SerieSortType _serieSortType = SerieSortType.Y;
-        [Category("Chart"), DisplayName("Sort Type"), Description("Define how the serie is sorted in the chart."), Id(3, 2)]
+        [DefaultValue(SerieSortType.Y)]
+        [Category("Chart"), DisplayName("Sort Type"), Description("Defines how the serie is sorted in the chart."), Id(5, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public SerieSortType SerieSortType
         {
@@ -421,6 +417,35 @@ namespace Seal.Model
                 _serieSortType = value;
                 UpdateEditorAttributes();
             }
+        }
+
+        private PointSortOrder _serieSortOrder = PointSortOrder.Ascending;
+        [DefaultValue(PointSortOrder.Ascending)]
+        [Category("Chart"), DisplayName("Sort Order"), Description("Defines if the serie is sorted ascending or descending in the chart."), Id(6, 2)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        public PointSortOrder SerieSortOrder
+        {
+            get { return _serieSortOrder; }
+            set { _serieSortOrder = value; }
+        }
+
+
+        private AxisType _xAxisType = AxisType.Primary;
+        [DefaultValue(AxisType.Primary)]
+        [Category("Chart"), DisplayName("X Axis Type"), Description("Definition of the X axis of the serie (Primary or Secondary). This option is not valid for NVD3 Charts."), Id(7, 2)]
+        public AxisType XAxisType
+        {
+            get { return _xAxisType; }
+            set { _xAxisType = value; }
+        }
+
+        private AxisType _yAxisType = AxisType.Primary;
+        [DefaultValue(AxisType.Primary)]
+        [Category("Chart"), DisplayName("Y Axis Type"), Description("Definition of the Y axis of the serie (Primary or Secondary). For NVD3 charts, this option is only valid if the chart contains Series of type Bar, Stacked Area and Line."), Id(8, 2)]
+        public AxisType YAxisType
+        {
+            get { return _yAxisType; }
+            set { _yAxisType = value; }
         }
 
 
@@ -504,6 +529,7 @@ namespace Seal.Model
             set { _cellScript = value; }
         }
 
+        [DefaultValue(null)]
         [Category("Advanced"), DisplayName("Custom Enumerated List"), Description("If defined, the enumerated list is used for the display and for sorting."), Id(4, 5)]
         [TypeConverter(typeof(MetaEnumConverter))]
         public string EnumGUIDEL
@@ -565,7 +591,7 @@ namespace Seal.Model
         [XmlIgnore, Browsable(false)]
         public bool IsForNavigation = false;
 
-        public string GetNVD3Format(CultureInfo culture, string NVD3ChartType)
+        public string GetD3Format(CultureInfo culture, string NVD3ChartType)
         {
             //try to convert from .net to d3 format... from https://github.com/mbostock/d3/wiki/Formatting
             if (IsNumeric)

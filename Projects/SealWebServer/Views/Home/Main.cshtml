@@ -5,120 +5,49 @@
     Repository repository = Model as Repository;
 }
 <!DOCTYPE html>
-<META charset="utf-8">
-<META name="viewport" content="width=device-width, initial-scale=1">
-
-<html>
+<html lang="en">
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@repository.Configuration.WebProductName</title>
     <meta charset="utf-8" />
     <link href="~/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link rel="stylesheet" href="~/Content/SealWeb.css" />
 
-
-    <script src='~/Scripts/jquery-1.11.3.min.js'></script>
-    <link rel="stylesheet" href="~/Content/bootstrap-3.3.6.min.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
     <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
-    <script src='~/Scripts/bootstrap-3.3.6.min.js'></script>
-
-    <link rel='stylesheet' href='~/Content/jquery-ui-1.11.3.min.css' />
-    <script src='~/Scripts/jquery-ui-1.11.3.min.js'></script>
-
     <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
-    <script src="~/Scripts/jstree.min.js"></script>
-
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
-    <script src="~/Scripts/bootstrap-select.min.js"></script>
-
-    <link rel="stylesheet" href="~/Content/multiple-select.css" />
-    <script src="~/Scripts/jquery.multiple.select.js"></script>
-    <script src="~/Scripts/datepicker.js"></script>
-
-    <script src="~/Scripts/jquery.dataTables-1.10.12.min.js"></script>
-
-    <script type="text/javascript">
-        //server
-        var WebApplicationName = '@HomeController.GetWebUrl(Request, Response)';
-
-        //format for datatables
-        var shortDateFormat = '@repository.CultureInfo.DateTimeFormat.ShortDatePattern';
-        var isUSdate = shortDateFormat.match(/^m/i);
-        var dateSeparator = '@repository.CultureInfo.DateTimeFormat.DateSeparator';
-        var decimalSeparator = '@repository.CultureInfo.NumberFormat.NumberDecimalSeparator';
-        //for datepicker
-        var languageName = '@repository.CultureInfo.EnglishName';
-        var dateFormat = '@(repository.CultureInfo.DateTimeFormat.ShortDatePattern.Replace("M", "m").Replace("yy", "y"))';
-        var shortDateFormat = '@repository.CultureInfo.DateTimeFormat.ShortDatePattern';
-        var isUSdate = shortDateFormat.match(/^m/i);
-
-        var folderRightSchedule = @((int) FolderRight.Schedule);
-        var folderRightEdit = @((int) FolderRight.Edit);
-
-        function setDatePickerDefaults() {
-            if (languageName.indexOf("French") == 0) $.datepicker.setDefaults($.datepicker.regional['fr']);
-            else if (languageName.indexOf("German") == 0) $.datepicker.setDefaults($.datepicker.regional['de']);
-            else if (languageName.indexOf("Spanish") == 0) $.datepicker.setDefaults($.datepicker.regional['es']);
-            else if (languageName.indexOf("Italian") == 0) $.datepicker.setDefaults($.datepicker.regional['it']);
-            else if (languageName.indexOf("English") == 0 && !isUSdate) $.datepicker.setDefaults($.datepicker.regional['en']);
-            else $.datepicker.setDefaults($.datepicker.regional['']);
-            $.datepicker.setDefaults({ dateFormat: dateFormat });
-        }
-
-        var availableDateKeywords = ['@repository.TranslateReport("Now")', '@repository.TranslateReport("Today")', '@repository.TranslateReport("Today")-1', '@repository.TranslateReport("ThisWeek")', '@repository.TranslateReport("ThisWeek")-1', '@repository.TranslateReport("ThisMonth")', '@repository.TranslateReport("ThisMonth")-1', '@repository.TranslateReport("ThisYear")', '@repository.TranslateReport("ThisYear")-1'];
-
-        //translations
-        var tra = [];
-        @foreach(var translation in repository.JSTranslations)
-        {
-        <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
-        }
-        //keyword
-        var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
-
-        var hasEditor = @Helper.ToJS(ServerOptions.HasEditor());
-    </script>
-    <script src='~/Scripts/dataTables.js'></script>
-
-    @if (!ServerOptions.HasMinifiedScripts())
-    {
-        <script src="~/Scripts/swi-utils.js"></script>
-        <script src="~/Scripts/swi-gateway.js"></script>
-        <script src="~/Scripts/swi-main.js"></script>
-        if (ServerOptions.HasEditor())
-        {
-            <script src="~/Scripts/swi-button-group.js"></script>
-            <script src="~/Scripts/swi-editor.js"></script>
-            <script src="~/Scripts/swi-properties.js"></script>
-        }
-    }
-    else
-    {
-        <script src="~/Scripts/swi.js"></script>
-    }
+    <link rel='stylesheet' href='~/Content/bootstrap-datetimepicker.min.css' />
+    <link rel="stylesheet" href="~/Content/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/responsive.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/SealWeb.css" />
 </head>
 <body>
     <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
+                    <span class="sr-only">@repository.TranslateWeb("Toggle navigation")</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
                 <a id="brand-id" class="navbar-brand" href="#">@repository.Configuration.WebProductName</a>
             </div>
-            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">
                 <ul class="nav navbar-nav pull-xs-right navbar-right">
                     <li class="nav-item"><a id="profile-nav-item">@repository.TranslateWeb("Profile")</a></li>
                     <li class="nav-item"><a id="disconnect-nav-item">@repository.TranslateWeb("Disconnect")</a></li>
                 </ul>
-                <div class="navbar-form navbar-right">
-                    <div class="form-group">
-                        <input id="search-pattern" type="text" style="display:inline-block; width:120px" class="form-control input-sm" placeholder="@repository.TranslateWeb("Search")" />
-                        <button id="search-nav-item" class="btn btn-default btn-sm">@repository.TranslateWeb("OK")</button>
+                <form class="navbar-form navbar-right">
+                    <div class="input-group">
+                        <input id="search-pattern" type="text" class="form-control input-sm col-sm-1" placeholder="@repository.TranslateWeb("Search")" />
+                        <span class="input-group-btn">
+                            <button id="search-nav-item" type="button" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
                     </div>
-                </div>
+                </form>
                 <ul class="nav navbar-nav pull-xs-right navbar-right">
                     <li class="nav-item hidden-xs"><a id="folders-nav-item" title="Manage folders">@repository.TranslateWeb("Folders")</a></li>
                     <li class="nav-item"><a id="refresh-nav-item">@repository.TranslateWeb("Refresh")</a></li>
@@ -127,15 +56,15 @@
         </div><!--/.container-fluid -->
     </nav>
 
-    <div id="main-container" class="container-fluid" style="padding-top:70px; display:none;">
+    <div id="main-container" class="container-fluid" style="padding: 62px 8px 0px 8px; display:none;">
         <div class="row">
-            <div id="folder-view" class="col-sm-4">
+            <div id="folder-view" class="col-sm-4" style="padding-right:0px">
                 <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto;"></div>
             </div>
 
-            <div id="file-view" class="col-sm-8">
+            <div id="file-view" class="col-sm-8" style="padding-right:0px">
                 <!-- Report Menus -->
-                <div class="lighticon-menu hidden-xs">
+                <div class="lighticon-menu hidden-xs" style="margin-bottom:10px">
                     <div id="report-edit-lightbutton" class="lightbutton report-edit"><span class="lightbutton-icon fa fa-file-o"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("New")</span></div>
                     <div id="report-cut-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-cut"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Cut")</span></div>
                     <div id="report-copy-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-copy"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Copy")</span></div>
@@ -145,10 +74,10 @@
                 </div>
 
                 <div id="file-table-view" style="overflow:auto;">
-                    <table id="file-table" class="table table-striped" style="margin:0px;">
+                    <table id="file-table" class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th style="width:25px;" class="hidden-xs"><input id="selectall-checkbox" type="checkbox" /></th>
+                                <th style="width:22px;" class="hidden-xs"><input id="selectall-checkbox" type="checkbox" /></th>
                                 <th>@repository.TranslateWeb("Report")</th>
                                 <th id="action-tableheader">@repository.TranslateWeb("Actions")</th>
                                 <th style="width: 170px; min-width:170px;" class="hidden-xs">@repository.TranslateWeb("Last modification")</th>
@@ -194,7 +123,6 @@
                 <div class="modal-header" style="padding: 0px;">
                     <nav id="dlgnav" class="navbar navbar-default" style="display: block; padding-right: 5px; margin-bottom: 0px;">
                         <div class="container-fluid">
-
                             <ul class="nav pagination" style="margin: 10px;">
                                 <li id="nav-dialog-elements" class="active"><a><span class="fa fa-cubes"></span> @repository.TranslateWeb("Elements")</a></li>
                                 <li id="nav-dialog-options"><a href="#"><span class="fa fa-list-ul"></span> @repository.TranslateWeb("Options")</a></li>
@@ -212,11 +140,12 @@
                                            <li><a href="#">Save as...</a></li>
                                        </ul>
                                    </li>-->
-                                <li><button id="nav-dialog-close" class="btn btn-default" style="margin:10px 1px" href="#"><span class="fa fa-close"></span> @repository.TranslateWeb("Close") </button></li>
+                                <li><button id="nav-dialog-close" class="btn btn-primary" style="margin:10px 1px" href="#"><span class="fa fa-close"></span> @repository.TranslateWeb("Close") </button></li>
                             </ul>
                         </div>
                     </nav>
-                </div><div class="modal-body" style="padding-top: 5px; padding-bottom: 5px;">
+                </div>
+                <div class="modal-body" style="padding-top: 5px; padding-bottom: 5px;">
                     <div id="elements-row" class="row editor-panel">
                         <div style="padding:0px 2px;" class="col-md-4">
                             <div style="margin-left:4px;">
@@ -422,7 +351,7 @@
                                     <select id="output-publicexec" data-width="100%"></select>
                                 </div>
                                 <div class="col-sm-5" style="text-align:right">
-                                    <button id="nav-dialog-execute-schedule" class="btn btn-default" style="text-align:right"><span class="fa fa-bolt"></span> @repository.TranslateWeb("Execute now")</button>
+                                    <button id="nav-dialog-execute-schedule" class="btn btn-success" style="text-align:right"><span class="fa fa-bolt"></span> @repository.TranslateWeb("Execute now")</button>
                                 </div>
                             </div>
                         </div>
@@ -449,13 +378,23 @@
                                     <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-start">@repository.TranslateWeb("Start date")</label>
                                         <div class="col-sm-7">
-                                            <input class="form-control datepicker" id="schedule-start" />
+                                            <div class="input-group date" id="schedule-start">
+                                                <input type='text' class="form-control" />
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-end">@repository.TranslateWeb("End date")</label>
                                         <div class="col-sm-7">
-                                            <input class="form-control datepicker" id="schedule-end" />
+                                            <div class="input-group date" id="schedule-end">
+                                                <input type='text' class="form-control" />
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group schedule">
@@ -529,7 +468,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div style="padding:2px;" class="modal-footer">
                     <row>
@@ -564,7 +502,7 @@
 
 
     <!--Properties Editor-->
-    <div id="properties-panel" class="panel panel-default" style="display:none;z-index:2000;width:340px;">
+    <div id="properties-panel" class="panel panel-default" style="display:none;z-index:2000;width:400px;">
         <div class="panel-heading" style="height:20px;padding: 0px 10px;">
             <span id="properties-title" style="font-style:italic"></span>
             <button type='button' id="properties-panel-close" class='close'>&times;</button>
@@ -821,8 +759,71 @@
 
     <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">
         <div>
-            <p>Copyright &copy; @DateTime.Now.Year Seal Report. All Rights Reserved (version <span id="footer-version"></span>)</p>
+            <p>Copyright &copy; @DateTime.Now.Year Seal Report. All Rights Reserved (version <span id="footer-version">@Repository.ProductVersion</span>)</p>
         </div>
     </div>
+
+    <script src='~/Scripts/jquery.min.js'></script>
+    <script src='~/Scripts/bootstrap.min.js'></script>
+    <script src="~/Scripts/jstree.min.js"></script>
+    <script src="~/Scripts/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
+    {
+        <script src="~/Scripts/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + "_" + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
+        <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+    }
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/dataTables.responsive.min.js"></script>
+    <script src="~/Scripts/responsive.bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        //server
+        var WebApplicationName = '@HomeController.GetWebUrl(Request, Response)';
+
+        //formats
+        var dateSeparator = '@repository.CultureInfo.DateTimeFormat.DateSeparator';
+        var decimalSeparator = '@repository.CultureInfo.NumberFormat.NumberDecimalSeparator';
+        //for datepicker
+        var languageName = '@repository.CultureInfo.TwoLetterISOLanguageName';
+        var shortDateFormat = '@Helper.ToMomentJSFormat(repository.CultureInfo.DateTimeFormat.ShortDatePattern)';
+        var shortDateTimeFormat = '@Helper.ToMomentJSFormat(repository.CultureInfo.DateTimeFormat.ShortDatePattern + ' ' + repository.CultureInfo.DateTimeFormat.LongTimePattern)';
+        var isUSdate = shortDateFormat.match(/^m/i);
+
+        var folderRightSchedule = @((int) FolderRight.Schedule);
+        var folderRightEdit = @((int) FolderRight.Edit);
+
+        var availableDateKeywords = ['@repository.TranslateReport("Now")', '@repository.TranslateReport("Today")', '@repository.TranslateReport("Today")-1', '@repository.TranslateReport("ThisWeek")', '@repository.TranslateReport("ThisWeek")-1', '@repository.TranslateReport("ThisMonth")', '@repository.TranslateReport("ThisMonth")-1', '@repository.TranslateReport("ThisYear")', '@repository.TranslateReport("ThisYear")-1'];
+
+        //translations
+        var tra = [];
+        @foreach(var translation in repository.JSTranslations)
+        {
+        <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
+        }
+        //keyword
+        var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
+
+        var hasEditor = @Helper.ToJS(ServerOptions.HasEditor());
+    </script>
+
+    @if (!ServerOptions.HasMinifiedScripts())
+    {
+        <script src="~/Scripts/swi-utils.js"></script>
+        <script src="~/Scripts/swi-gateway.js"></script>
+        <script src="~/Scripts/swi-main.js"></script>
+        if (ServerOptions.HasEditor())
+        {
+            <script src="~/Scripts/swi-button-group.js"></script>
+            <script src="~/Scripts/swi-editor.js"></script>
+            <script src="~/Scripts/swi-properties.js"></script>
+        }
+    }
+    else
+    {
+        <script src="~/Scripts/swi.js"></script>
+    }
 </body>
 </html>

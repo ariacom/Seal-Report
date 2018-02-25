@@ -1,189 +1,189 @@
-﻿@using System.Data
-@using Seal.Model
+﻿@using Seal.Model
 @using Seal.Helpers
-@using System.IO
-@using System.Diagnostics
-@using System.Web
-
-@{ Report Report = Model; ReportView View = Report.View; Repository Repository = Report.Repository; }
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    Repository repository = report.Repository;
+}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel='shortcut icon' href='@Model.AttachImageFile("favicon.ico")' type='image/x-icon' />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='shortcut icon' href='@report.AttachImageFile("favicon.ico")' type='image/x-icon' />
     <title>
-        @Report.ExecutionName
+        @report.ExecutionName
     </title>
-    @Raw(Report.AttachScriptFile("jquery-1.11.3.min.js", "https://code.jquery.com/jquery-1.11.3.min.js"))
-    @Raw(Report.AttachScriptFile("jquery-ui-1.11.3.min.js", "https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"))
-    @Raw(Report.AttachScriptFile("jquery.dataTables-1.10.12.min.js", "https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"))
-    @Raw(Report.AttachScriptFile("jquery.multiple.select.js"))
-    @Raw(Report.AttachScriptFile("datepicker.js"))
+    <!--CSS-->
+    @Raw(report.AttachCSSFile("bootstrap.min.css", "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"))
+    @Raw(report.AttachCSSFile("font-awesome.min.css"))
+    @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"))
+    @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css"))
+    @Raw(report.AttachCSSFile("dataTables.bootstrap.min.css", "https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"))
+    @Raw(report.AttachCSSFile("responsive.bootstrap.css", "https://cdn.datatables.net/responsive/2.2.1/css/responsive.bootstrap.min.css"))
+    @Raw(report.AttachCSSFile("seal.css"))
+    @Raw(report.AttachCSSFile("custom.css"))
 
-    @Raw(Report.AttachCSSFile("jquery-ui-1.11.3.min.css", "https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.min.css"))
-    @Raw(Report.AttachCSSFile("seal.css"))
-    @Raw(Report.AttachCSSFile("multiple-select.css"))
-
-    @if (Report.HasNVD3Chart)
+    <!--Scripts-->
+    @Raw(report.AttachScriptFile("jquery.min.js", "https://code.jquery.com/jquery-1.12.3.min.js"))
+    @Raw(report.AttachScriptFile("bootstrap.min.js", "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"))
+    @Raw(report.AttachScriptFile("bootstrap-select.min.js", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"))
+    @Raw(report.AttachScriptFile("moment.min.js"))
+    @if (view.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        <text>
-            @Raw(Report.AttachScriptFile("d3.min.js"))
-            @Raw(Report.AttachScriptFile("nv.d3.min.js"))
-            @Raw(Report.AttachCSSFile("nv.d3.min.css"))
-        </text>
+        @Raw(report.AttachScriptFile("i18n\\moment." + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
+        @Raw(report.AttachScriptFile("i18n\\selectpicker." + view.CultureInfo.TwoLetterISOLanguageName + ".min.js"))
+    }
+    @Raw(report.AttachScriptFile("bootstrap-datetimepicker.min.js"))
+    @Raw(report.AttachScriptFile("jquery.dataTables.min.js", "https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"))
+    @Raw(report.AttachScriptFile("dataTables.bootstrap.min.js", "https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"))
+    @Raw(report.AttachScriptFile("dataTables.responsive.min.js", "https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"))
+    @Raw(report.AttachScriptFile("responsive.bootstrap.min.js", "https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap.min.js"))
+
+    @if (report.HasChart)
+    {
+        @Raw(report.AttachScriptFile("d3.min.js"))
+    }
+
+    @if (report.HasChartJSChart)
+    {
+        @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"))
+    }
+
+    @if (report.HasPlotlyChart)
+    {
+        @Raw(report.AttachScriptFile("plotly-1.34.0.min.js", "https://cdn.plot.ly/plotly-1.34.0.min.js"))
+    }
+
+    @if (report.HasNVD3Chart)
+    {
+        @Raw(report.AttachScriptFile("nv.d3.min.js"))
+        @Raw(report.AttachCSSFile("nv.d3.min.css"))
         <script>
             function nvd3TranslateText(text)
             {
-                @foreach (RepositoryTranslation translation in Report.Repository.Translations.Where(i => i.Context == "NVD3"))
+                @foreach (RepositoryTranslation translation in repository.Translations.Where(i => i.Context == "NVD3"))
                 {
                 <text>
-                if (text == '@Raw(Helper.ToJS(translation.Reference))') return '@Raw(Helper.ToJS(Report.ContextTranslate("NVD3", translation.Reference)))';
+                if (text == '@Raw(Helper.ToJS(translation.Reference))') return '@Raw(Helper.ToJS(report.ContextTranslate("NVD3", translation.Reference)))';
                 </text>
                 }
                 return text;
             }
         </script>
-
-        @Raw(Report.AttachScriptFile("nvd3.js"))
+        @Raw(report.AttachScriptFile("chartNVD3.js"))
     }
 
-    <style type="text/css">
-        body { font-family: @View.GetCSS("body_font_family"); font-size: @View.GetCSS("body_font_size"); }
-        table { font-family: @View.GetCSS("table_font_family"); font-size: @View.GetCSS("table_font_size"); }
-
-		.title { font-weight: bold; color: @View.GetThemeValue("title_text_color"); font-size: 12pt; margin-left: 4px;}
-
-		/* tables */
-        .cell_title { background: @View.GetThemeValue("title_color"); font-weight: bold; padding: .4em; vertical-align: middle; color: @View.GetThemeValue("title_cell_text_color"); }
-        .cell_value { background: @View.GetThemeValue("value_color"); padding: .4em; }
-        .cell_value_odd { background: @View.GetThemeValue("value_odd_color"); padding: .4em; }
-        .cell_value_total { background: @View.GetThemeValue("total_color"); font-weight: bold; padding: .4em; white-space: nowrap; }
-
-        /* specific data tables */
-        .data_table, .page_table { background-color: @View.GetThemeValue("table_background_color");}
-
-        tr.odd td.row_value, tr.odd td.col_value, tr.odd td.cell_value { background: @View.GetThemeValue("value_odd_color");}
-        tr.odd { background: @View.GetThemeValue("value_color");}
-
-        .data_table thead .sorting_asc {
-	        background-image: url('@Report.AttachImageFile("sort_asc.png")');
-	        background-repeat:no-repeat; background-position:right;	padding: .4em 18px .4em .4em;
-        }
-        .data_table thead .sorting_desc {
-	        background-image: url('@Report.AttachImageFile("sort_desc.png")');
-	        background-repeat:no-repeat; background-position:right;	padding: .4em 18px .4em .4em;
-        }
-        .data_table thead .sorting {
-	        background-image: url('@Report.AttachImageFile("sort_both.png")');
-	        background-repeat:no-repeat; background-position:right; padding: .4em 18px .4em .4em;
-        }
-
-        @@media print
-        { /* print option */
-          .page_table, .data_table, .summary_table { empty-cells: show; display: table; border-collapse: collapse;}
-          .page_table td img, .data_table td img, .data_table th img {display:none; }
-          div.dataTables_paginate, div.dataTables_filter, div.dataTables_length, div.dataTables_info { display: none;}
-           .page_table th, .page_table td, .data_table td, .data_table th, .summary_table td {border: @(View.GetBoolValue("print_show_table_border") ? "1" : "0")px solid black; }
-        }
-    </style>
-
     <script type="text/javascript">
-        var generateHTMLDisplay =  @Helper.ToJS(Report.GenerateHTMLDisplay);
+        var generateHTMLDisplay =  @Helper.ToJS(report.GenerateHTMLDisplay);
 
-        var urlPrefix = "@Report.WebUrl";
+        var urlPrefix = "@report.WebUrl";
         var executionTimer = null;
         var refreshTimer = null;
-        var refreshRate = @View.GetNumericValue("refresh_rate");
-        var hasRestrictions = @Helper.ToJS(Report.HasRestrictions);
-        var hasErrors = @Helper.ToJS(Report.HasErrors);
-        var hasNavigation = @Helper.ToJS(Report.HasNavigation && (Report.IsNavigating || Report.GenerateHTMLDisplay));/*SRKW do not modify*/
-        var showRestrictions = (hasRestrictions && @Helper.ToJS(View.GetBoolValue("restriction_button")));
-        var showResult = @Helper.ToJS(View.GetBoolValue("result_button"));
-        var showInformation = @Helper.ToJS(View.GetBoolValue("information_button"));
-        var showMessage = @Helper.ToJS(View.GetBoolValue("message_button"));
-        var displayMessages = @Helper.ToJS(View.GetBoolValue("display_messages"));
-        var forceExecution = @Helper.ToJS(View.GetBoolValue("force_execution") || Report.HasNavigation);
-        var restrictionsToShow = @Report.NumberOfRestrictionValuesToShow;
-        var isExecuting = @Helper.ToJS(Report.IsExecuting);
-        var isCancel = @Helper.ToJS(Report.Cancel);
-        var printLayout = @Helper.ToJS(Report.PrintLayout);
+        var refreshRate = @view.GetNumericValue("refresh_rate");
+        var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
+    //    var hasErrors = @Helper.ToJS(report.HasErrors);
+        var hasNavigation = @Helper.ToJS(report.HasNavigation && (report.IsNavigating || report.GenerateHTMLDisplay));/*SRKW do not modify*/
+      //  var showRestrictions = (hasRestrictions && @Helper.ToJS(view.GetBoolValue("restriction_button")));
+        var showInformation = @Helper.ToJS(view.GetBoolValue("information_button") && string.IsNullOrEmpty(report.WebExecutionErrors));
+        var showMessage = @Helper.ToJS(view.GetBoolValue("message_button") || !string.IsNullOrEmpty(report.WebExecutionErrors));
+        var forceExecution = @Helper.ToJS(view.GetBoolValue("force_execution") || report.HasNavigation);
+        var isExecuting = @Helper.ToJS(report.IsExecuting);
+        var isCancel = @Helper.ToJS(report.Cancel);
+        var printLayout = @Helper.ToJS(report.PrintLayout);
 
-        var rootViewId = '@View.ViewId';
+        var rootViewId = '@view.ViewId';
 
         //text
-        var startingExecText = '@Report.Translate("Starting execution...")';
-        var cancelText = '@Report.Translate("Cancel")';
-        var showText = '@Report.Translate("Show")';
-        var hideText = '@Report.Translate("Hide")';
-        var reportCancelledText = '@Raw(Report.Translate("Report has been cancelled"))';
-        var backToTopText = '@Report.Translate("Back to top")';
-        var allSelectedText = '@Report.Translate("All selected")';
-        var countSelectedText = '@Report.Translate("# of % selected")';
-        var selectAllText = '@Report.Translate("Select all")';
+        var startingExecText = '@report.Translate("Starting execution...")';
+        var cancelText = '@report.Translate("Cancel")';
+       // var reportCancelledText = '@Raw(report.Translate("Report has been cancelled"))';
+       // var backToTopText = '@report.Translate("Back to top")';
+       // var allSelectedText = '@report.Translate("All selected")';
+       // var countSelectedText = '@report.Translate("# of % selected")';
+       // var selectAllText = '@report.Translate("Select all")';
 
-        //buttons
-        var showButtonIds = ['#result', '#information', '#message', '#restriction'];
-        var showButtonInitValues = [showResult, hasErrors || showInformation, showMessage, showRestrictions];
-        var showButtonLabels = ['@Report.Translate("report result panel")', '@Report.Translate("report information")', '@Report.Translate("execution messages")', '@Report.Translate("report restrictions")'];
-        var showButtonIcons = ['ui-icon-circle-triangle-e', 'ui-icon-info', 'ui-icon-gear', 'ui-icon-zoomin'];
-
-        //datatables and globalization
-        var languageName = '@View.CultureInfo.EnglishName';
-        var dateFormat = '@(View.CultureInfo.DateTimeFormat.ShortDatePattern.Replace("M", "m").Replace("yy", "y"))';
-        var availableDateKeywords = ['@Raw(Report.Translate("Now"))', '@Raw(Report.Translate("Today"))', '@Raw((Report.Translate("Today") + "-1"))', '@Raw(Report.Translate("ThisWeek"))', '@Raw((Report.Translate("ThisWeek") + "-1"))', '@Raw(Report.Translate("ThisMonth"))', '@Raw((Report.Translate("ThisMonth") + "-1"))', '@Raw(Report.Translate("ThisYear"))', '@Raw((Report.Translate("ThisYear") + "-1"))'];
-        var shortDateFormat = '@View.CultureInfo.DateTimeFormat.ShortDatePattern';
-        var isUSdate = shortDateFormat.match(/^m/i);
-        var dateSeparator = '@View.CultureInfo.DateTimeFormat.DateSeparator';
-        var decimalSeparator = '@View.CultureInfo.NumberFormat.NumberDecimalSeparator';
-        var thousandSeparator = '@Raw(Helper.ToJS(View.CultureInfo.NumberFormat.NumberGroupSeparator))';
-        var currencySymbol = '@Raw(Helper.ToJS(@View.CultureInfo.NumberFormat.CurrencySymbol))';
+        //formats
+    //    var dateSeparator = '@view.CultureInfo.DateTimeFormat.DateSeparator';
+        var decimalSeparator = '@view.CultureInfo.NumberFormat.NumberDecimalSeparator';
+        //for datepicker
+        var languageName = '@view.CultureInfo.TwoLetterISOLanguageName';
+        var shortDateFormat = '@Helper.ToMomentJSFormat(view.CultureInfo.DateTimeFormat.ShortDatePattern)';
+        var shortDateTimeFormat = '@Helper.ToMomentJSFormat(view.CultureInfo.DateTimeFormat.ShortDatePattern + ' ' + view.CultureInfo.DateTimeFormat.LongTimePattern)';
+       // var isUSdate = shortDateFormat.match(/^m/i);
+        var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
+        var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
 
         $.extend( true, $.fn.dataTable.defaults, {
-            sDom: '<"dataTableTop"lfpir>t',
-            stateSave: true,
-            aoColumnDefs: [
-        { "bSortable": false, "aTargets": ["firstcell"]}
-        @if (Report.IsServerPaginationEnabled) {<text>,
-            {
-                "targets": "_all",
-                "createdCell": function(td, cellData, rowData, row, col) {
-                    var cellDatas = cellData.split('§', 4);
-                    $(td).html(cellDatas[3]);
-                    $(td).attr("class", cellDatas[2]);
-                    $(td).attr("style", cellDatas[1]);
-                    $(td).attr("navigation", cellDatas[0]);
-                }
-            }
-        </text>}
-            ],
-            oLanguage: {
-                sProcessing: "@Report.Translate("Processing...")",
-                sLengthMenu: "@Report.Translate("Show _MENU_ rows")",
-                sZeroRecords: "@Report.Translate("No row")",
-                sInfo: "@Report.Translate("Showing _START_ to _END_ of _TOTAL_")",
-                sInfoEmpty: "@Report.Translate("Showing 0 to 0 of 0")",
-                sInfoFiltered: "@Report.Translate("(filtered from _MAX_)")",
-                sInfoPostFix: "",
-                sSearch: "@Report.Translate("Filter:")",
-                oPaginate: {
-                    sFirst: "|&lt;",
-                    sPrevious: "&lt;&lt;",
-                    sNext: ">>",
-                    sLast: ">|"
+            responsive: true,
+            responsive: {
+                details: {
+                    renderer: function (api, rowIdx, columns) {
+                        var data = $.map(columns, function (col, i) {
+                            var cellDatas = col.data.split('§', 4);
+                            return col.hidden ?
+                                '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                                '<th>' + col.title + ':' + '</th> ' +
+                                '<td style="' + cellDatas[1] + '" class="' + cellDatas[2] + '">' + cellDatas[3] + '</td>' +
+                                '</tr>' :
+                                '';
+                        }).join('');
+
+                        return data ?
+                            $('<table/>').append(data) :
+                            false;
+                    }
                 }
             },
-            sPaginationType: "full_numbers",
-            bAutoWidth: false,
-            "fnStateSaveCallback": function ( settings, data ) {
+            columnDefs: [
+                { orderable: false, targets: ["firstcell"]}
+                @if (report.IsServerPaginationEnabled)
+                {
+                    <text>,
+                    {
+                        targets: "_all",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            var cellDatas = cellData.split('§', 4);
+                            $(td).html(cellDatas[3]);
+                            $(td).attr("class", cellDatas[2]);
+                            $(td).attr("style", cellDatas[1]);
+                            $(td).attr("navigation", cellDatas[0]);
+                        }
+                    }
+                    </text>
+                }
+            ],
+            language: {
+                decimal: decimalSeparator,
+                thousands: thousandSeparator,
+                processing: "@report.Translate("Processing...")",
+                lengthMenu: "@report.Translate("Show _MENU_ rows")",
+                zeroRecords: "@report.Translate("No row")",
+                info: "@report.Translate("Showing _START_ to _END_ of _TOTAL_")",
+                infoEmpty: "@report.Translate("Showing 0 to 0 of 0")",
+                infoFiltered: "@report.Translate("(filtered from _MAX_)")",
+                infoPostFix: "",
+                search: "@report.Translate("Filter:")",
+                paginate: {
+                    first: "|&lt;",
+                    previous: "&lt;&lt;",
+                    next: ">>",
+                    last: ">|"
+                }
+            },
+            pagingType: "full_numbers",
+         //   autoWidth: false,
+            stateSave: @Helper.ToJS(!string.IsNullOrEmpty(report.WebUrl)),
+            stateSaveCallback: function ( settings, data ) {
                 try {
                     (settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
                         'DataTables_'+settings.sInstance+'_Result',
                         JSON.stringify( data ));
                 } catch (e) {}
             },
-            "fnStateLoadCallback": function ( settings ) {
+            stateLoadCallback: function ( settings ) {
                 try {
                     return JSON.parse(
                         (settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(
@@ -193,265 +193,71 @@
             }
         } );
     </script>
-
-    @Raw(Report.AttachScriptFile("common.js"))
-    @Raw(Report.AttachScriptFile("dataTables.js"))
-
-    @Raw(Report.AttachCSSFile("custom.css"))
-    @Raw(Report.AttachScriptFile("custom.js"))
-
-    <style>
-        @View.GetCSS("additional_css")
-    </style>
+    @Raw(report.AttachScriptFile("common.js"))
+    @Raw(report.AttachScriptFile("custom.js"))
     <script>
-        @Raw(View.GetValue("additional_js"));
+        @Raw(view.GetValue("additional_js"))
     </script>
 </head>
 <body>
-    <div id="header_div" style="@(Report.UseFixedHTMLHeader ? "position:absolute; width:100%; height:54px;" : View.GetCSS("header"))">
-        <div id="header_title_div" style="@(Report.UseFixedHTMLHeader ? "position:absolute; height:54px;" : "")@(Report.PrintLayout ? "" : ";width:70%")">
-            <img src='@Report.AttachImageFile(Report.Repository.Configuration.LogoName)' title="Logo" alt="Logo" />
-            <button id="nav_button" style="display:none;"></button>
-            <span class="title" title="@Report.ExecutionName">@Report.ExecutionName</span>
-            <span id="processing_message" class="info_message" style="margin-left:20px; display:@(Report.PrintLayout ? "none" : "inline")">@Report.Translate("Processing...")</span>
-        </div>
-        @if (Report.UseFixedHTMLHeader)
+    @Include(view.GetPartialTemplateKey("Report.iHeader", view), view)
+
+    <div class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")">
+        <form id="header_form" method="post" action="">
+            <input type="hidden" name="execution_guid" id="execution_guid" value="@report.ExecutionGUID" />
+            <input type="hidden" name="navigation_id" id="navigation_id" value="" />
+            <input type="hidden" name="viewid_tableload" id="viewid_tableload" value="" />
+            <input type="hidden" name="pageid_tableload" id="pageid_tableload" value="" />
+
+            <input type="hidden" name="parameter_view_id" id="parameter_view_id" value="" />
+            <input type="hidden" name="parameter_view_name" id="parameter_view_name" value="" />
+            <input type="hidden" name="parameter_view_value" id="parameter_view_value" value="" />
+
+            <span style="display: none;" id="parameter_tableload"></span>
+            @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
+        </form>
+
+        <!-- status-->
+        @if (report.Cancel || !string.IsNullOrEmpty(report.WebExecutionErrors))
         {
-            <div id="buttons_div" style="@(Report.GenerateHTMLDisplay ? "min-width:230px;" : "")">
-                <img id="wait_image" alt="@Report.Translate("Processing")" src='@Report.GetImageFile("wait.gif")' />
-                <div id="button_toolbar" class="ui-widget-header ui-corner-all" style="display: none;">
-                    <span id="show_button_span">
-                        @if (Report.GenerateHTMLDisplay)
-                        {
-                            <input type="checkbox" id="restriction_button" /><label for="restriction_button"></label>
-                            if (Report.IsBasicHTMLWithNoOutput)
-                            {
-                                <input type="checkbox" id="result_button" /><label for="result_button"></label>
-                            }
-                        }
-                        @if (View.GetBoolValue("display_messages"))
-                        {
-                            <input type="checkbox" id="message_button" /><label for="message_button"></label>
-                        }
-                        <input type="checkbox" id="information_button" /><label for="information_button"></label>
-                    </span>
-                    <button id="home_button"></button>
-                    @if (Report.GenerateHTMLDisplay)
-                    {
-                        <button id="execute_button" style="width: 80px;">@Report.Translate("Execute")</button>
-                    }
-                </div>
+            <div id="alert_status" class="alert alert-danger" role="alert">
+                @Raw(Helper.ToHtml(report.Cancel ? report.Translate("Report has been cancelled") : report.WebExecutionErrors))
             </div>
         }
-        <hr style="margin:0px;display: block; @(Report.UseFixedHTMLHeader ? "position:absolute; top:53px;" : "")" />
-    </div>
-    <div id="body_div" style='@(Report.UseFixedHTMLHeader ? "overflow:auto; position:absolute; width:100%; top:54px; bottom:0;" : "")'>
-        @if (Report.GenerateHTMLDisplay)
-        {
-            if (Report.IsBasicHTMLWithNoOutput)
-            {
-                <div id="result_div" style="display:none; @View.GetCSS("result")">
-                    <button id="HtmlResult" class="view_result">@Report.Translate("View HTML Result")</button>
-                    <button id="PrintResult" class="view_result">@Report.Translate("View Print Result")</button>
-                    @if (View.GetBoolValue("converter_button"))
-                    {
-                        <button id="PDFResult" class="view_result">@Report.Translate("View PDF Result")</button>
-                        <button id="ExcelResult" class="view_result">@Report.Translate("View Excel Result")</button>
-                    }
-                    <hr style="display: block;" />
-                </div>
-        <!--result_div-->
-            }
-
-            <form id="header_form" method="post" action="" style="display: none">
-                <!--header_div-->
-                <div id="restriction_div">
-                    <table>
-                        <tr>
-                            <td style="vertical-align: top;">
-                                <table>
-                                    @foreach (ReportRestriction restriction in Report.ExecutionCommonRestrictions.Where(i => !i.IsEnum))
-                                    {
-                                        string restrClass = (restriction.IsDateTime ? "datepicker" : (restriction.IsNumeric ? "numeric_input" : "text_input"));
-                                        restrClass += (restriction.HasLongTime ? " dt_long_time" : "");
-                                        restrClass += (restriction.HasShortTime ? " dt_short_time" : "");
-                                        <tr>
-                                            <td style="vertical-align: middle;">
-                                                @(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : ""))
-                                            </td>
-                                            <td style="vertical-align: middle;">
-                                                <select class="operator_select" id="@restriction.OperatorHtmlId" name="@restriction.OperatorHtmlId" size="1" style="display:@(restriction.HasOperator ? "block" : "none");">
-                                                    @foreach (Operator op in restriction.AllowedDisplayOperators)
-                                                    {
-                                                        <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetOperatorLabel(op)))</option>
-                                                    }
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input class="@restrClass" name="@(restriction.ValueHtmlId)_1" id="@(restriction.ValueHtmlId)_1" value="@Report.TranslateRestriction(restriction, restriction.Value1Html)" />
-                                                @if (restriction.Prompt != PromptType.PromptOneValue)
-                                                {
-                                                    <input class="@restrClass" name="@(restriction.ValueHtmlId)_2" id="@(restriction.ValueHtmlId)_2" value="@Report.TranslateRestriction(restriction, restriction.Value2Html)" />
-                                                    <input class="@restrClass" name="@(restriction.ValueHtmlId)_3" id="@(restriction.ValueHtmlId)_3" value="@Report.TranslateRestriction(restriction, restriction.Value3Html)" />
-                                                    <input class="@restrClass" name="@(restriction.ValueHtmlId)_4" id="@(restriction.ValueHtmlId)_4" value="@Report.TranslateRestriction(restriction, restriction.Value4Html)" />
-                                                    <input type="button" value="+" class="more_restrictions" name="@(restriction.HtmlIndex)_MoreButton" id="@(restriction.HtmlIndex)_MoreButton" />
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                </table>
-                            </td>
-                            <td>
-                                @foreach (ReportRestriction restriction in Report.ExecutionCommonRestrictions.Where(i => i.IsEnumRE))
-                                {
-                                    <div style="height: @(Report.HasOnlyRestrictionsWithNoOperator ? 178 : 198)px; display: inline; float: left; padding-left: 10px;">
-                                        <span style="display: block; margin-right: 5px;">@(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : ""))</span>
-                                        <select id="@restriction.OperatorHtmlId" class="operator_enum_select" name="@restriction.OperatorHtmlId" size="1" style="display:@(restriction.HasOperator ? "block" : "none"); margin-bottom:2px; ">
-                                            @foreach (Operator op in restriction.AllowedDisplayOperators)
-                                            {
-                                                <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetOperatorLabel(op)))</option>
-                                            }
-                                        </select>
-                                        <select class="enum@(restriction.Prompt == PromptType.PromptOneValue ? "_single" : "")" multiple="multiple" name="@(restriction.OptionValueHtmlId)" id="@(restriction.HtmlIndex)" style="width: @Math.Max(restriction.EnumRE.Width,100)px; display: block;">
-                                            @for (int i = 0; i < restriction.EnumRE.Values.Count; i++)
-                                            {
-                                                var enumDef = restriction.EnumRE.Values[i];
-                                                <option id='@(restriction.OptionHtmlId + i.ToString())' value='@(restriction.OptionHtmlId + i.ToString())' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
-                                            }
-                                        </select>
-                                    </div>
-                                }
-                            </td>
-                        </tr>
-                    </table>
-                    <hr style="display: block;" />
-                </div>
-                <!--restriction_div-->
-                <input type="hidden" name="parameter_view_id" id="parameter_view_id" value="" />
-                <input type="hidden" name="parameter_view_name" id="parameter_view_name" value="" />
-                <input type="hidden" name="parameter_view_value" id="parameter_view_value" value="" />
-
-                <input type="hidden" name="execution_guid" id="execution_guid" value="@Report.ExecutionGUID" />
-                <input type="hidden" name="navigation_id" id="navigation_id" value="" />
-                <input type="hidden" name="viewid_tableload" id="viewid_tableload" value="" />
-                <input type="hidden" name="pageid_tableload" id="pageid_tableload" value="" />
-                <span style="display: none;" id="parameter_tableload"></span>
-            </form>
-        }
-        else
-        {
-            <form id="header_form" method="post" action="" style="display: none"></form>
-        }
-        @if (View.GetBoolValue("display_messages"))
-        {
-            <div id="message_div" style="display: none; @View.GetCSS("message")">
-                <span id="execution_messages">@Raw(Helper.ToHtml(Report.ExecutionMessages))</span>
-                <hr style="display: block;" />
-            </div>
-        <!--message_div-->
-        }
-        <div id="information_div" style="display: none; @View.GetCSS("information")">
-            <span id="restriction_messages"></span>
-            @if (!Report.Cancel)
-            {
-                if (!string.IsNullOrEmpty(Report.ExecutionErrors))
-                {
-                    <p class="error_message">@Raw(Helper.ToHtml(Report.ExecutionErrors))</p>
-                }
-                else if (Report.Status != ReportStatus.NotExecuted)
-                {
-                    <div style="display: inline; float: left; margin-left:4px;">
-                        <b>@Report.Translate("Execution date")</b>: @Report.ExecutionStartDate.ToString("d", Report.ExecutionView.CultureInfo)  @Report.ExecutionStartDate.ToString("t", Report.ExecutionView.CultureInfo)
+        <!--progress-->
+        <div id="progress_panel" class="panel panel-default hidden">
+            <div class="panel-body">
+                <div class="progress hidden">
+                    <div id="progress_bar" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">
                     </div>
-                    <div style="display: inline; float: right; margin-right: 4px;">
-                        <b>@Report.Translate("Execution duration")</b>: @Report.ExecutionModelDuration.Seconds @Report.Translate("second(s)")
-                    </div>
-                    if (View.HasValue("report_description"))
-                    {
-                        <div style="display: block; clear: both; margin-left: 4px;">
-                            <b>@Report.Translate("Description")</b>:<br />@Raw(View.GetHtmlValue("report_description"))
+                </div>
+                @if (report.ExecutionTasks.Count > 0)
+                {
+                    <div class="progress hidden">
+                        <div id="progress_bar_tasks" class="progress-bar progress-bar-primary progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">
                         </div>
-                    }
-                    <table class='data_table' style="margin-left: 2px;">
-                        <tr>
-                            <th class='cell_title'>@Report.Translate("Model")</th>
-                            <th class='cell_title'>@Report.Translate("Records")</th>
-                            <th class='cell_title'>@Report.Translate("Pages")</th>
-                            <th class='cell_title'>@Report.Translate("Duration")</th>
-                            <th class='cell_title'>@Report.Translate("Restrictions")</th>
-                        </tr>
-                        @foreach (ReportModel item in Model.Models.Where(i => i.ResultTable != null && i.Pages != null))
-                        {
-                            <tr>
-                                <td class='cell_value_odd'>@item.Name (@item.Connection.Name)</td>
-                                <td class='cell_value_odd' style="text-align: center;">@item.ResultTable.Rows.Count</td>
-                                <td class='cell_value_odd' style="text-align: center;">@item.Pages.Count</td>
-                                <td class='cell_value_odd' style="text-align: center;">@item.ExecutionDuration</td>
-                                <td class='cell_value_odd'>@Raw(Helper.ToHtml(item.RestrictionText))</td>
-                            </tr>
-                        }
-                    </table>
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(Report.ExecutionErrors))
-                {
-                    <p class="error_message">@Raw(Helper.ToHtml(Report.WebExecutionErrors))</p>
-                }
-                else
-                {
-                    <p class="info_message">@Raw(Helper.ToHtml(Report.Translate("Report has been cancelled")))</p>
-                }
-            }
-            @if (Report.IsExecuting)
-            {
-                <hr style="display: block;" />
-            }
-        </div>
-        <!--information_div-->
-        <div id='@View.ViewId' class='view' style='@View.GetCSS("view");'>
-            @if (Report.IsExecuting && !Report.Cancel && (Report.Status == ReportStatus.RenderingResult || Report.IsBasicHTMLWithNoOutput))
-            {
-                @Raw(Report.ExecutionView.ParseChildren())
-
-                if (!string.IsNullOrEmpty(Report.ExecutionView.Error))
-                {
-                    <p class='error_message'>@Raw(Helper.ToHtml(Report.ExecutionView.Error))</p>
-                }
-            }
-            else if (Report.ForOutput && Report.Status == ReportStatus.RenderingDisplay)
-            {
-                <div style="margin:4px">
-                    @Raw(Helper.ToHtml(Report.OutputToExecute.Information))
-                    @if (!string.IsNullOrEmpty(Report.ResultFilePath) && !Report.HasErrors)
-                    {
-                        string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "OutputResult?execution_guid=" + Report.ExecutionGUID : "file:///" + Report.ResultFilePath;
-                        <a style="display:block;margin-top:10px" href="@url" target="_new">@Report.Translate("View report result file")</a><br />
-                    }
-                </div>
-            }
-            else if (Report.HasExternalViewer && Report.Status == ReportStatus.RenderingDisplay)
-            {
-                if (!string.IsNullOrEmpty(Report.ResultFilePath) && !Report.HasErrors)
-                {
-                    string url = !string.IsNullOrEmpty(Report.WebUrl) ? Report.WebUrl + "OutputResult?execution_guid=" + Report.ExecutionGUID : "file:///" + Report.ResultFilePath;
-                    <div style="margin:4px">
-                        @Raw(Helper.ToHtml(Report.Translate("The report has been generated.")))
-                        <a style="display:block;margin-top:10px" href="@url" target="_new">@Report.Translate("View report result file")</a><br />
-                        @if (!string.IsNullOrEmpty(Report.WebUrl))
-                        {
-                            <script>
-                                var win = window.open("@url", '_blank');
-                                win.focus();
-                            </script>
-                        }
                     </div>
                 }
-            }
-
+                @if (report.ExecutionModels.Count > 0)
+                {
+                    <div class="progress hidden">
+                        <div id="progress_bar_models" class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
-        <!--view-->
+
+        <div class="tab-content">
+            @Include(view.GetPartialTemplateKey("Report.iViews", view), view)
+            @Include(view.GetPartialTemplateKey("Report.iInformation", view), view)
+            @Include(view.GetPartialTemplateKey("Report.iMessages", view), view)
+        </div>
     </div>
+
+    <!--back to top-->
+    <a id="back-to-top" href="#" class="btn btn-warning btn-lg back-to-top" role="button" title="@report.Translate("Back to Top")" data-toggle="tooltip" data-placement="top">
+        <span>&#916;</span>
+    </a>
 </body>
 </html>

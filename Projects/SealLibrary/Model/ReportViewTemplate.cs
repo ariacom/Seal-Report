@@ -19,6 +19,12 @@ namespace Seal.Model
         public const string ModelHTMLName = "Model HTML";
         public const string ModelDetailHTMLName = "Model Detail HTML";
         public const string ModelCSVExcelName = "Model CSV Excel";
+        public const string DataTableName = "Data Table";
+        public const string PageTableName = "Page Table";
+        public const string ChartNVD3Name = "Chart NVD3";
+        public const string ChartJSName = "Chart JS";
+        public const string ChartPlotlyName = "Chart Plotly";
+        public const string ModelContainerName = "Model Container";
         public static readonly string[] DefaultCSS = { "display:none;", "display:inline; float:left;", "position:absolute; top:50px; left:500px;", "height: 600px; width: 400px;", "text-align:center;", "display:inline-block;", "page-break-after: always;" };
         public static readonly string[] DefaultFontSize = { "30pt", "24pt", "16pt", "14pt", "12pt", "10pt", "8pt", "6pt" };
         public static readonly string[] DefaultFontFamily = { "Verdana, Arial, Helvetica, sans-serif", "Times,Times New Roman, serif", "Courier New, Courier, monospace", "Comic Sans MS, cursive" };
@@ -51,13 +57,6 @@ namespace Seal.Model
             set { _parameters = value; }
         }
 
-        List<Parameter> _css = new List<Parameter>();
-        public List<Parameter> CSS
-        {
-            get { return _css; }
-            set { _css = value; }
-        }
-
         List<string> _parentNames = new List<string>();
         public List<string> ParentNames
         {
@@ -65,12 +64,13 @@ namespace Seal.Model
             set { _parentNames = value; }
         }
 
-        bool _forModel = false;
-        public bool ForModel
+        bool _forReportModel = false;
+        public bool ForReportModel
         {
-            get { return _forModel; }
-            set { _forModel = value; }
+            get { return _forReportModel; }
+            set { _forReportModel = value; }
         }
+
 
         bool _supportTheme = false;
         public bool UseThemeValues
@@ -92,13 +92,6 @@ namespace Seal.Model
         {
             get { return _skipFileAttachments; }
             set { _skipFileAttachments = value; }
-        }
-
-        string _chartConfigurationXML;
-        public string ChartConfigurationXML
-        {
-            get { return _chartConfigurationXML; }
-            set { _chartConfigurationXML = value; }
         }
 
         public string Text
@@ -129,6 +122,23 @@ namespace Seal.Model
             set { _error = value; }
         }
 
+        List<string> _partialTemplates = new List<string>();
+        public List<string> PartialTemplatesPath
+        {
+            get { return _partialTemplates; }
+            set { _partialTemplates = value; }
+        }
+
+        public string GetPartialTemplatePath(string name)
+        {
+            return Path.Combine(Path.GetDirectoryName(FilePath), name + ".partial.cshtml");
+        }
+
+        public string GetPartialTemplateText(string name)
+        {
+            return File.ReadAllText(GetPartialTemplatePath(name));
+        }
+
         public void Init(string path)
         {
             FilePath = path;
@@ -139,6 +149,13 @@ namespace Seal.Model
                 LastConfigModification = File.GetLastWriteTime(ConfigurationPath);
                 Configuration = File.ReadAllText(ConfigurationPath);
             }
+            //load partial templates related
+            PartialTemplatesPath.Clear();
+            foreach (var partialPath in Directory.GetFiles(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + ".*.partial.cshtml"))
+            {
+                PartialTemplatesPath.Add(partialPath);
+            }
+
             IsParsed = false;
         }
 
@@ -148,7 +165,7 @@ namespace Seal.Model
             //Templates
             foreach (var path in Directory.GetFiles(templateFolder, "*.cshtml"))
             {
-                if (path.EndsWith(".config.cshtml")) continue;
+                if (path.EndsWith(".config.cshtml") || path.EndsWith(".partial.cshtml")) continue;
                 ReportViewTemplate template = new ReportViewTemplate();
                 template.Init(path);
                 viewTemplates.Add(template);
@@ -160,29 +177,21 @@ namespace Seal.Model
         {
             _parameters.Clear();
             _parentNames.Clear();
-            _forModel = false;
+            _forReportModel = false;
         }
 
-        public string _lastConfiguration = ""; //Cache to avoid re-compilation -> public for Cloning used in Repository.CreateFast()
         public bool IsParsed = false; //Flag for optimization, by default the template is not parsed...until it is used
         public DateTime LastModification;
         public DateTime LastConfigModification;
-
-
         public void ParseConfiguration()
         {
             //Parse the configuration file to init the view template
             try
             {
-                string configuration = Configuration;
-
-                if (configuration.Replace("\r\n", "\n") != _lastConfiguration.Replace("\r\n", "\n") && !string.IsNullOrWhiteSpace(configuration))
-                {
-                    _error = "";
-                    ClearConfiguration();
-                    Razor.Parse(configuration, this);
-                    _lastConfiguration = configuration;
-                }
+                string key = key = string.Format("TPLCFG:{0}_{1}", ConfigurationPath, File.GetLastWriteTime(ConfigurationPath).ToString("s"));
+                _error = "";
+                ClearConfiguration();
+                RazorHelper.CompileExecute(Configuration, this);
                 IsParsed = true;
             }
             catch (TemplateCompilationException ex)

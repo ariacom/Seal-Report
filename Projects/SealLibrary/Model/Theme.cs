@@ -4,12 +4,8 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using Seal.Helpers;
-using System.Drawing;
-using RazorEngine;
 using RazorEngine.Templating;
 
 namespace Seal.Model
@@ -89,7 +85,7 @@ namespace Seal.Model
             try
             {
                 Clear();
-                Razor.Parse(Text, this);
+                RazorHelper.CompileExecute(Text, this);
                 IsParsed = true;
             }
             catch (TemplateCompilationException ex)

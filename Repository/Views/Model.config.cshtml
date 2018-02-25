@@ -1,215 +1,30 @@
 ﻿@using Seal.Model;
-@using System.Drawing;
 @{
     ReportViewTemplate Template = Model;
 
     //Template Name
-    Template.Name = "Model HTML";
+    Template.Name = ReportViewTemplate.ModelHTMLName;
 
-    //If for model, the Model parameter object used for the parsing is the Model instead of the Report
-    Template.ForModel = true;
-
-    //Default chart configuration
-    Template.ChartConfigurationXML = "<?xml version=\"1.0\" encoding=\"utf-16\"?><Chart Size=\"600, 400\"><Legends><Legend Name=\"Legend1\"></Legend></Legends><Titles><Title Name=\"Title1\" Visible=\"False\"></Title></Titles><ChartAreas><ChartArea Name=\"ChartArea1\"></ChartArea></ChartAreas></Chart>";
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = true;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "invert_data_tables", DisplayName = "Invert Data Tables", BoolValue = false, Description = "If true, the columns and rows of the data table are swapped from their original presentation" });
-    Template.Parameters.Add(new Parameter() { Name = "show_summary_table", DisplayName = "Show Summary table", BoolValue = true, Description = "If true, the summary table is displayed" });
-    Template.Parameters.Add(new Parameter() { Name = "show_page_tables", DisplayName = "Show Page tables", BoolValue = true, Description = "If true, the page tables are displayed" });
-    Template.Parameters.Add(new Parameter() { Name = "show_data_tables", DisplayName = "Show Data tables", BoolValue = true, Description = "If true, the data tables are displayed" });
-    Template.Parameters.Add(new Parameter() { Name = "show_charts", DisplayName = "Show Charts", BoolValue = true, Description = "If true, the charts are displayed" });
-    Template.Parameters.Add(new Parameter() { Name = "show_page_separator", DisplayName = "Show Page separator", BoolValue = true, Description = "If true, a separator if displayed between each pages of the model" });
-    Template.Parameters.Add(new Parameter() { Name = "data_tables_enabled", Category = ViewParameterCategory.DataTables, DisplayName = "Data Tables feature is enabled", BoolValue = true, Description = "If true, Data Tables feature is enabled to allow pagination, sorting and filtering in tables" });
-    Template.Parameters.Add(new Parameter() { Name = "data_tables_sort_enabled", Category = ViewParameterCategory.DataTables, DisplayName = "Data Tables sort is enabled", BoolValue = true, Description = "If true, the sort feature of the Data Tables is enabled" });
-    Template.Parameters.Add(new Parameter() { Name = "data_tables_filter_enabled", Category = ViewParameterCategory.DataTables, DisplayName = "Data Tables filter is enabled", BoolValue = true, Description = "If true, the filter feature of the Data Tables is enabled" });
-    Template.Parameters.Add(new Parameter() { Name = "data_tables_pagination_enabled", Category = ViewParameterCategory.DataTables, DisplayName = "Data Tables pagination is enabled", BoolValue = true, Description = "If true, the pagination feature of the Data Tables is enabled" });
-    Template.Parameters.Add(new Parameter() { Name = "data_tables_pagination_size", Category = ViewParameterCategory.DataTables, DisplayName = "Data Tables pagination size", Value = "50", Enums = new string[] { "10", "25", "50", "100" }, Description = "Number of rows displayed in a page (if pagination is enabled)", UseOnlyEnumValues=false });
-    Template.Parameters.Add(new Parameter() { Name = "data_tables_show_information", Category = ViewParameterCategory.DataTables, DisplayName = "Data Tables show information", BoolValue = true, Description = "If true, Data Tables display the number of records" });
-    Template.Parameters.Add(new Parameter() { Name = "data_tables_show_processing", Category = ViewParameterCategory.DataTables, DisplayName = "Data Tables show processing", BoolValue = true, Description = "If true, Data Tables display a processing message when working" });
-    Template.Parameters.Add(new Parameter() { Name = "summary_table_caption", DisplayName = "Summary table caption", Description = "Optional caption or title displayed at the bottom of the summary table" });
-    Template.Parameters.Add(new Parameter() { Name = "page_table_caption", DisplayName = "Page table caption", Description = "Optional caption or title displayed at the bottom of the page table" });
-    Template.Parameters.Add(new Parameter() { Name = "data_table_caption", DisplayName = "Data table caption", Description = "Optional caption or title displayed at the bottom of the data table" });
-    Template.Parameters.Add(new Parameter() { Name = "print_break_after_page", DisplayName = "Print: Force a break after a page", BoolValue = false, Description = "If true, a new page is started after a page is displayed for the print layout" });
-    Template.Parameters.Add(new Parameter() { Name = "display_summary_totals", DisplayName = "Totals: Display totals in summary table", BoolValue = true, Description = "If true, the totals are displayed in the summary table" });
-    Template.Parameters.Add(new Parameter() { Name = "display_page_totals", DisplayName = "Totals: Display totals in page table", BoolValue = true, Description = "If true, the totals are displayed in the page table" });
-    Template.Parameters.Add(new Parameter() { Name = "add_summary_totals_totals", DisplayName = "Totals: Add the total of totals line in summary table", BoolValue = true, Description = "If true, a line containing the totals is added at the end of the summary table" });
-    Template.Parameters.Add(new Parameter() { Name = "chart_show_all_axis_labels", DisplayName = "Chart show all axis labels", BoolValue = false, Description = "If true, force all axis labels to be shown. For NVD3 Chart, the option is only valid for Bar chart." });
-    Template.Parameters.Add(new Parameter() { Name = "drill_enabled", DisplayName = "Drill Enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled in this model if enabled in the root view" });
-    Template.Parameters.Add(new Parameter() { Name = "sub_report_enabled", DisplayName = "Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled for this model if enabled in the root view" });
-
-    //NVD3 Chart
-    Template.Parameters.Add(new Parameter() { Name = "chart_nvd3_title", Category = ViewParameterCategory.NVD3, DisplayName = "Chart Title", Description = "Optional title displayed for the NVD3 chart. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
-    Template.Parameters.Add(new Parameter() { Name = "nvd3_hide_controls", Category = ViewParameterCategory.NVD3, DisplayName = "Force Hide Controls", BoolValue = false, Description = "If true, controls (depending on chart type) to interact with the series are hidden" });
-    Template.Parameters.Add(new Parameter() { Name = "nvd3_show_legend", Category = ViewParameterCategory.NVD3, DisplayName = "Show Legend", BoolValue = true, Description = "If true, the legend is displayed in the chart" });
-    Template.Parameters.Add(new Parameter() { Name = "nvd3_bar_stacked", Category = ViewParameterCategory.NVD3, DisplayName = "Bar Stacked", BoolValue = false, Description = "If true, the Bar in chart are stacked (only for Bar chart)" });
-    Template.Parameters.Add(new Parameter() { Name = "nvd3_add_null_point", Category = ViewParameterCategory.NVD3, DisplayName = "Add Points with Null", BoolValue = true, Description = "If true, a point having an Y value equals to NULL will be inserted in the Serie with a 0 value; otherwise no point is inserted (Warning: missing points may cause JavaScript NVD3 errors for certain chart types like Bar, StackedArea, etc...)" });
-
-    Template.Parameters.Add(new Parameter()
-    {
-        Name = "nvd3_chart_configuration",
-        Category = ViewParameterCategory.NVD3,
-        EditorLanguage = "js",
-        DisplayName = "Script: Root Script",
-        Description = "The JavaScript to create and configure the NVD3 chart. The Width and Height are configured in a dedicated CSS parameter.",
-        TextValue = @"chart.color(d3.scale.category10().range());
-//Axis format
-if (chart.xAxis != null && chart.xAxis.tickFormat != null) chart.xAxis.tickFormat(XValueFormatter);
-if (chart.yAxis != null && chart.yAxis.tickFormat != null) chart.yAxis.tickFormat(YPrimaryValueFormatter);
-//For line with focus
-if (chart.x2Axis != null && chart.x2Axis.tickFormat != null ) chart.x2Axis.tickFormat(XValueFormatter);
-if (chart.y2Axis != null && chart.y2Axis.tickFormat != null ) chart.y2Axis.tickFormat(YPrimaryValueFormatter);
-//For multichart
-if (chart.yAxis1 != null && chart.yAxis1.tickFormat != null) chart.yAxis1.tickFormat(YPrimaryValueFormatter);
-if (chart.yAxis2 != null && chart.yAxis2.tickFormat != null) chart.yAxis2.tickFormat(YSecondaryValueFormatter);
-
-if (chart.showXAxis != null) chart.showXAxis(true);
-if (chart.showYAxis != null) chart.showYAxis(true);
-
-if (chart.showDistX != null) chart.showDistX(true);
-if (chart.showDistY != null) chart.showDistY(true);
-
-if (chartType != 'discreteBarChart') {
-	chart.tooltip.headerFormatter(function(d, i) {
-        return chart.xAxis.tickFormat()(d, i);
-	});
-	chart.tooltip.keyFormatter(function(d, i) {
-        if (d == null) return '';
-        return nvd3TranslateTextAxis(d);
-	});
-
-  if (chartType == 'multiChart') {
-      chart.tooltip.contentGenerator(function(data) {
-          return nvd3TooltipGenerator(data, series, XValueFormatter, YPrimaryValueFormatter, YSecondaryValueFormatter);
-      });
-  }
-}
-
-//More information at http://nvd3.org/ and https://nvd3-community.github.io/nvd3/
-"
-    });
-
-    Template.Parameters.Add(new Parameter()
-    {
-        Name = "nvd3_script_margin",
-        Category = ViewParameterCategory.NVD3,
-        DisplayName = "Script: Margins definition",
-        Description = "Custom script to configure chart margins",
-        EditorLanguage = "js",
-        TextValue = @"if (chartType == 'multiBarHorizontalChart') chart.margin({left: 30+4*XLabelsLen, right: 30 });
-else if (chartType != 'pieChart') chart.margin({left:30+5*YPrimaryLen, right:30+5*YSecondaryLen});
-//chart.margin({top: 30, left: 70, bottom: 40, right: 60});
-",
-    });
-
-    Template.Parameters.Add(new Parameter()
-    {
-        Name = "nvd3_script_options",
-        Category = ViewParameterCategory.NVD3,
-        DisplayName = "Script: Chart options",
-        Description = "Custom script to configure chart option",
-        EditorLanguage = "js",
-        TextValue = @"var hideControls = (forceHideControls || chartType == 'scatterChart' || (series.length == 1 && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
-if (chart.showControls != null) chart.showControls(!hideControls);
-if (chart.showLegend != null) chart.showLegend(showLegend);
-if (chart.stacked != null && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')) chart.stacked(barStacked); //for Bar
-if (chart.reduceXTicks != null) chart.reduceXTicks(!showAllAxisLabels);
-
-if (chart.useInteractiveGuideline != null) chart.useInteractiveGuideline(true);
-if (chart.interpolate != null) chart.interpolate('cardinal');
-if (chart.staggerLabels != null) chart.staggerLabels(true);
-",
-    });
-
-
-    Template.Parameters.Add(new Parameter()
-    {
-        Name = "nvd3_script_additional",
-        Category = ViewParameterCategory.NVD3,
-        DisplayName = "Script: Additional options",
-        Description = "Custom script to configure additional chart option",
-        EditorLanguage = "js",
-        TextValue = @"//if (chart.rotateLabels != null) chart.rotateLabels(90);  //for Bar
-//if (chart.isArea != null) chart.isArea(true); //for Line
-//chart.xAxis.showMaxMin(false);
-",
-    });
-
-    Template.Parameters.Add(new Parameter()
-    {
-        Name = "nvd3_script_pie",
-        Category = ViewParameterCategory.NVD3,
-        DisplayName = "Script: Pie Chart configuration",
-        Description = "Custom script to configure the Pie chart",
-        EditorLanguage = "js",
-        TextValue = @"chart
-    .x(function(d) { return xLabels[d.x]})
-    .showLabels(true)
-    .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-    .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
-    .donut(true)
-    .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-;
-
-chart.tooltip.valueFormatter(function(d){ 
-    return YPrimaryValueFormatter(d); 
-}); 	
-",
-    });
-
-    Template.Parameters.Add(new Parameter()
-    {
-        Name = "nvd3_script_stackedarea",
-        Category = ViewParameterCategory.NVD3,
-        DisplayName = "Script: Stacked Area Chart configuration",
-        Description = "Custom script to configure the Stacked Area chart",
-        EditorLanguage = "js",
-        TextValue = @"	chart.interactiveLayer.tooltip.headerFormatter(function(d, i) {
-    return d;
-});
-",
-    });
-
-    Template.Parameters.Add(new Parameter()
-    {
-        Name = "nvd3_script_title",
-        Category = ViewParameterCategory.NVD3,
-        DisplayName = "Script: Title configuration",
-        Description = "Custom script to configure the chart title",
-        EditorLanguage = "js",
-        TextValue = @"if (chartTitle.length > 0) {
-    svg.append('text')
-        .attr('x', Math.max(1, (svgJQ.width() - getTextSize(chartTitle))/2))
-        .attr('y', svgJQ.height()+ (chartType == 'lineWithFocusChart' ? 10 : -4))
-        .style('font-weight', 'bold')
-        .style('font-size', '14px')
-        .text(chartTitle);
-}",
-    });
-
-    Template.Parameters.Add(new Parameter()
-    {
-        Name = "nvd3_script_final",
-        Category = ViewParameterCategory.NVD3,
-        DisplayName = "Script: Final",
-        Description = "Custom script executed after the chart rendering",
-        EditorLanguage = "js",
-        TextValue = @"",
-    });
-
-    //CSS
-    Template.CSS.Add(new Parameter() { Name = "view", DisplayName = "View", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the full View", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "page", DisplayName = "Page", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Page of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "summary", DisplayName = "Summary table container", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Summary table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "summary_table", DisplayName = "Summary table", Type = ViewParameterType.String, Description = "CSS style for the Summary table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "page_table", DisplayName = "Page table container", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Page table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "page_table_table", DisplayName = "Page table", Type = ViewParameterType.String, Description = "CSS style for the Page table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "chart", DisplayName = "Chart container", Value = "page-break-inside:avoid;", Description = "CSS style for the DIV tag containing the Chart of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "chart_chart", DisplayName = "Chart", Value = "", Description = "CSS style for the Chart of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "data_table", DisplayName = "Data table container", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Data table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "data_table_table", DisplayName = "Data table", Type = ViewParameterType.String, Description = "CSS style for the Data table of the model", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
-    Template.CSS.Add(new Parameter() { Name = "nvd3_chart", EditorLanguage = "css", DisplayName = "NVD3 Chart", TextValue = "height:400px; width:600px; page-break-inside:avoid;", Description = "CSS style for the SVG tag defining the NVD3 Chart of the model" });
+    Template.Parameters.Add(new Parameter() { Name = "show_summary_table", DisplayName = "Display: Show summary table", BoolValue = true, Description = "If true, the summary table created when the model has several pages is displayed." });
+    Template.Parameters.Add(new Parameter() { Name = "show_page_tables", DisplayName = "Display: Show page tables", BoolValue = true, Description = "If true, the page tables created when the model has several pages are displayed." });
+    Template.Parameters.Add(new Parameter() { Name = "show_data_tables", DisplayName = "Display: Show Data tables", BoolValue = true, Description = "If true, the data tables are displayed." });
+    Template.Parameters.Add(new Parameter() { Name = "show_charts", DisplayName = "Display: Show Charts", BoolValue = true, Description = "If true, the charts are displayed." });
+    Template.Parameters.Add(new Parameter() { Name = "show_page_separator", DisplayName = "Display: Show page separator", BoolValue = true, Description = "If true, a separator if displayed between each pages of the model" });
+    Template.Parameters.Add(new Parameter() { Name = "model_menu_type", DisplayName = "Layout: Menu type", Value = "top", Enums = new string[] { "top|Top Menu", "left|Left Menu", "right|Right Menu", "none|No Menu" }, Description = "The style of the layout when the model has several pages: Either a menu on the Top, Left, Right or no menu." });
+    Template.Parameters.Add(new Parameter() { Name = "model_menu_style", DisplayName = "Layout: Menu style", Value = "pill", Enums = new string[] { "tab|Tabs", "pill|Pills" }, Description = "The style of the menu when the model has several pages: Pills or Tabs." });
+    Template.Parameters.Add(new Parameter() { Name = "model_menu_width", DisplayName = "Layout: Menu width", NumericValue = 3, Description = "For Left or Right menu, the width of the column between 1 and 11 on 12 spans (default is 3)." });
+    Template.Parameters.Add(new Parameter() { Name = "summary_table_caption", DisplayName = "Summary table: Caption", Description = "Optional caption or title displayed at the bottom of the summary table." });
+    Template.Parameters.Add(new Parameter() { Name = "display_summary_totals", DisplayName = "Summary table: Display totals", BoolValue = true, Description = "If true, the totals are displayed in the summary table." });
+    Template.Parameters.Add(new Parameter() { Name = "add_summary_totals_totals", DisplayName = "Summary table: Add a total of totals line", BoolValue = true, Description = "If true, a line containing the totals is added at the end of the summary table" });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.DrillEnabledParameter, DisplayName = "Navigation: Drill enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled in this model if enabled in the root view" });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Navigation: Sub-Reports enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled for this model if enabled in the root view" });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.NVD3AddNullPointParameter, DisplayName = "Chart Series: Add points with Null", BoolValue = true, Description = "If true, a point having an Y value equals to NULL will be inserted in the Serie with a 0 value; otherwise no point is inserted (Warning: missing points may cause JavaScript NVD3 errors for certain chart types like Bar, StackedArea, etc...)." });
+    Template.Parameters.Add(new Parameter() { Name = "print_break_after_page", DisplayName = "Print: Force a break after a page", BoolValue = false, Description = "If true, a new page is started after a page is displayed for the print layout." });
 
     //Allowed template parent names
-    Template.ParentNames = new List<string>() { "Report", "Tab Page" };
+    Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container" };
 }
-  

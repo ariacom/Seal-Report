@@ -1,21 +1,20 @@
 @using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
-        
+
     //Template Name
     Template.Name = "Tab Control";
 
-    //If for model, the Model parameter object used for the parsing is the Model instead of the Report
-    Template.ForModel = false;
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = false;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "tab_selected_index", DisplayName = "Tab selected index",  NumericValue = 0, Description = "The index of Tab Page selected when the report is loaded." });
-    Template.Parameters.Add(new Parameter() { Name = "tab_position", DisplayName = "Tabs position", Value = "Top", Enums = new string[] { "Top", "Vertical", "Bottom" }, Description = "The position of the tabs in the control (default is on the top)" });
-    Template.Parameters.Add(new Parameter() { Name = "print_break_after_view", DisplayName = "Print: Force a break after a view", BoolValue = true, Description = "If true, a new page is started after a view is displayed for the print layout" });
-    
-    //CSS
-    Template.CSS.Add(new Parameter() { Name = "tab_control", DisplayName = "Tab control", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Tab Control", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "tab_selected_index", DisplayName = "Tab selected index", NumericValue = 0, Description = "The index of Tab Page selected when the report is loaded." });
+    Template.Parameters.Add(new Parameter() { Name = "tab_position", DisplayName = "Tab menu position", Value = "top", Enums = new string[] { "top|Top", "left|Left", "right|Right" }, Description = "The position of the tab menu in the control (default is on the top)." });
+    Template.Parameters.Add(new Parameter() { Name = "tab_style", DisplayName = "Tab menu style", Value = "pill", Enums = new string[] { "tab|Tabs", "pill|Pills" }, Description = "The style of the tab menu: Pills or Tabs." });
+    Template.Parameters.Add(new Parameter() { Name = "tab_menu_width", DisplayName = "Tab menu width", NumericValue = 3, Description = "For Left or Right menu, the width of the column between 1 and 11 on 12 spans (default is 3)." });
+    Template.Parameters.Add(new Parameter() { Name = "print_break_after_view", DisplayName = "Print: Force a break after a view", BoolValue = true, Description = "If true, a new page is started after a view is displayed for the print layout." });
 
     //Allowed template parent names
-    Template.ParentNames = new List<string>() {"Report", "Tab Page"};
+    Template.ParentNames = new List<string>() { "Report", "Tab Page" };
 }

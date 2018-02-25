@@ -39,9 +39,7 @@ namespace Seal.Model
                 GetProperty("PreScript").SetIsBrowsable(true);
                 GetProperty("PostScript").SetIsBrowsable(true);
                 GetProperty("ViewParameters").SetIsBrowsable(true);
-                GetProperty("ViewCSS").SetIsBrowsable(true);
-                GetProperty("OverwriteFromCfg").SetIsBrowsable(true);
-                
+
                 GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice);
                 GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice);
 
@@ -91,20 +89,37 @@ namespace Seal.Model
 
         public void InitReferences()
         {
+            var initialParameters  = _viewParameters.Where(i=>i.CustomValue).ToList();
+            _viewParameters.Clear();
             if (Report != null && View != null)
             {
-                View.InitParameters(View.Template.Parameters, _viewParameters, false);
-                View.InitParameters(View.Template.CSS, _viewCSS, false);
+                foreach (var configParameter in View.Template.Parameters)
+                {
+                    OutputParameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
+                    if (parameter == null) parameter = new OutputParameter() { Name = configParameter.Name, Value = configParameter.Value };
+                    else parameter.CustomValue = true;
+                    _viewParameters.Add(parameter);
+                    parameter.Enums = configParameter.Enums;
+                    parameter.Description = configParameter.Description;
+                    parameter.Type = configParameter.Type;
+                    parameter.UseOnlyEnumValues = configParameter.UseOnlyEnumValues;
+                    parameter.DisplayName = configParameter.DisplayName;
+                    parameter.ConfigValue = configParameter.Value;
+                    parameter.EditorLanguage = configParameter.EditorLanguage;
+                    parameter.TextSamples = configParameter.TextSamples;
+                }
             }
         }
 
         private string _outputDeviceGUID;
         public string OutputDeviceGUID
         {
-            get {
+            get
+            {
                 if (string.IsNullOrEmpty(_outputDeviceGUID)) _outputDeviceGUID = OutputFolderDevice.DefaultGUID;
-                return 
-                    _outputDeviceGUID; }
+                return
+                    _outputDeviceGUID;
+            }
             set { _outputDeviceGUID = value; }
         }
 
@@ -118,8 +133,8 @@ namespace Seal.Model
             }
         }
 
-
-        bool _cancelIfNoRecords;
+        bool _cancelIfNoRecords = false;
+        [DefaultValue(false)]
         [Category("Definition"), DisplayName("Cancel generation if no records"), Description("If the models of the report do not have any record, the output generation is cancelled."), Id(3, 1)]
         public bool CancelIfNoRecords
         {
@@ -148,43 +163,16 @@ namespace Seal.Model
             set { _postScript = value; }
         }
 
-        List<Parameter> _viewParameters = new List<Parameter>();
-        [Category("Definition"), DisplayName("Custom View parameters"), Description("Custom parameters used for the Root View when the output is executed."), Id(6, 1)]
+        List<OutputParameter> _viewParameters = new List<OutputParameter>();
+        [Category("Definition"), DisplayName("Custom view parameters"), Description("Custom parameters used for the Root View when the output is executed."), Id(6, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<Parameter> ViewParameters
+        public List<OutputParameter> ViewParameters
         {
-            get
-            {
+            get {
                 return _viewParameters;
             }
-            set { _viewParameters = value; }
-        }
-
-
-        List<Parameter> _viewCSS = new List<Parameter>();
-        [Category("Definition"), DisplayName("Custom View CSS values"), Description("Custom CSS values used for the Root View when the output is executed."), Id(7, 1)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<Parameter> ViewCSS
-        {
-            get
-            {
-                return _viewCSS;
-            }
-            set { _viewCSS = value; }
-        }
-
-        private bool _overwriteFromCfg = true;
-        [Category("Definition"), DisplayName("Overwrite if differs from the configuration"), Description("If true, the custom parameters and CSS values are used only if they are different from the default configuration value. If false, the custom values are used only if they are different from the root View values."), Id(8, 1)]
-        public bool OverwriteFromCfg
-        {
-            get
-            {
-                return _overwriteFromCfg;
-            }
-
-            set
-            {
-                _overwriteFromCfg = value;
+            set {
+                _viewParameters = value;
             }
         }
 
@@ -272,6 +260,7 @@ namespace Seal.Model
 
 
         private bool _emailHtmlBody = false;
+        [DefaultValue(false)]
         [Category("Email Body"), DisplayName("Use HTML result for email body"), Description("If true, the report result is copied in the email body message."), Id(2, 4)]
         public bool EmailHtmlBody
         {
@@ -280,6 +269,7 @@ namespace Seal.Model
         }
 
         private bool _emailMessagesInBody = false;
+        [DefaultValue(false)]
         [Category("Email Body"), DisplayName("Use execution messages for email body"), Description("If true, the report execution messages are copied in the email body message."), Id(3, 4)]
         public bool EmailMessagesInBody
         {
@@ -297,6 +287,7 @@ namespace Seal.Model
         }
 
         private bool _emailZipAttachments = false;
+        [DefaultValue(false)]
         [Category("Email Attachments"), DisplayName("Zip attachements"), Description("If true, the email sent will have an attachement with all files zipped."), Id(2, 5)]
         public bool EmailZipAttachments
         {
@@ -313,6 +304,7 @@ namespace Seal.Model
         }
 
         private bool _emailSkipAttachments = false;
+        [DefaultValue(false)]
         [Category("Email Attachments"), DisplayName("Skip attachements"), Description("If true, the email sent will have no attachement. This may be useful if the report has only tasks."), Id(4, 5)]
         public bool EmailSkipAttachments
         {
@@ -348,6 +340,7 @@ namespace Seal.Model
         }
 
         private bool _publicExec = true;
+        [DefaultValue(true)]
         [Category("Security and Publication"), DisplayName("Public Execution"), Description("For the Web Report Server: If true, the output can be executed by all users having the execute right on the report. If false, only the user owner can execute the schedule."), Id(4, 6)]
         public bool PublicExec
         {
@@ -356,6 +349,7 @@ namespace Seal.Model
         }
 
         private bool _publicEdit = true;
+        [DefaultValue(true)]
         [Category("Security and Publication"), DisplayName("Public Edit"), Description("For the Web Report Server Designer: If true, the output and shedule can be edited by all users having the schedule right on the report. If false, only the user owner can edit the schedule."), Id(4, 6)]
         public bool PublicEdit
         {
@@ -375,12 +369,12 @@ namespace Seal.Model
         [XmlIgnore]
         public ReportView View
         {
-            get {
+            get
+            {
                 if (Report != null) return Report.FindView(Report.Views, _viewGUID);
-                return null; 
+                return null;
             }
         }
-
 
         void SynchronizeRestrictions()
         {
@@ -401,7 +395,6 @@ namespace Seal.Model
                 }
             }
 
-
             //Add new restrictions
             foreach (var restriction in allRestrictions)
             {
@@ -417,6 +410,7 @@ namespace Seal.Model
         }
 
         bool _useCustomRestrictions = false;
+        [DefaultValue(false)]
         [Category("Restrictions"), DisplayName("Use Custom restrictions"), Description("If true, custom restrictions can be defined for this output."), Id(2, 6)]
         public bool UseCustomRestrictions
         {
@@ -462,43 +456,28 @@ namespace Seal.Model
 
 
         //Temporary variables to help for report serialization...
-        private List<Parameter> _tempParameters;
-        private List<Parameter> _tempCSS;
+        private List<OutputParameter> _tempParameters;
 
         public void BeforeSerialization()
         {
-            _tempParameters = ViewParameters.ToList();
-            _tempCSS = ViewCSS.ToList();
-
-            //Remove parameters and CSS identical to config, or different from the current view value
-            if (OverwriteFromCfg)
-            {
-                ViewParameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
-                ViewCSS.RemoveAll(i => i.Value == i.ConfigValue);
-            }
-            else
-            {
-                ViewParameters.RemoveAll(i => i.Value == null || View.Parameters.Exists(j => j.Name == i.Name && j.Value == i.Value));
-                ViewCSS.RemoveAll(i => View.CSS.Exists(j => j.Name == i.Name && j.Value == i.Value));
-            }
+            _tempParameters = _viewParameters.ToList();
+            //Remove parameters not used
+            _viewParameters.RemoveAll(i => !i.CustomValue);
         }
 
-
-        public void CopyParameters(List<Parameter> source, List<Parameter> destination)
+        public void CopyParameters(List<Parameter> destination)
         {
-            var sources = (OverwriteFromCfg ? source.Where(i => i.Value != null && i.Value != i.ConfigValue) : source.Where(i => i.Value != null && source.Exists(j => j.Name == i.Name && j.Value == i.Value)));
-            foreach (var sourceParameter in sources)
+            foreach (var parameter in ViewParameters.Where(i => i.CustomValue))
             {
-                var destParameter = destination.FirstOrDefault(i => i.Name == sourceParameter.Name);
-                if (destParameter != null) destParameter.Value = sourceParameter.Value;
+                var destParameter = destination.FirstOrDefault(i => i.Name == parameter.Name);
+                if (destParameter != null) destParameter.Value = parameter.Value;
             }
         }
 
 
         public void AfterSerialization()
         {
-            ViewParameters = _tempParameters;
-            ViewCSS = _tempCSS;
+            _viewParameters = _tempParameters;
         }
 
 

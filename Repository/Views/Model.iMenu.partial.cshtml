@@ -1,0 +1,49 @@
+﻿@using Seal.Model
+@{
+    ReportView view = Model;
+    ReportModel reportModel = view.Model;
+    Report report = view.Report;
+}
+
+
+<script>
+    $(function () {
+        $('#tc_@(view.ViewId) a').click(function (e) {
+            submitViewParameter("@view.ViewId", "tab_selected_index", $($(this).attr('href')).index());
+            @if (report.HasNVD3Chart)
+            {<text>
+                    //redraw nvd3 charts
+                    setTimeout(function () { nvd3UpdateCharts(); }, 200);
+            </text>
+            }
+        });
+    });
+</script>
+
+
+@if (reportModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") != "None")
+{
+    <ul id="tc_@(view.ViewId)" class="nav nav-@(view.GetValue("model_menu_style"))s @(view.GetValue("model_menu_type") != "top" ? "nav-stacked" : "")">
+        @if (view.GetBoolValue("show_summary_table"))
+        {
+            <li class="active"><a data-toggle="@view.GetValue("model_menu_style")" href='#@(view.ViewId + "_summary")'>@report.Translate("Summary")</a></li>
+        }
+        @for (int row = 1; row < reportModel.SummaryTable.RowCount && row < reportModel.Pages.Count + 1; row++)
+        {
+            ResultPage page = reportModel.Pages[row - 1];
+            string val = "";
+            for (int col = 0; col < reportModel.SummaryTable.ColumnCount; col++)
+            {
+                ResultCell cell = reportModel.SummaryTable[row, col];
+                if (!cell.IsTotal)
+                {
+                    val += string.IsNullOrEmpty(val) ? "" : ",";
+                    val += cell.ValueNoHTML;
+                }
+            }
+            <li class='@(row==1 && !view.GetBoolValue("show_summary_table") ? "active" :"")'>
+                <a data-toggle="@view.GetValue("model_menu_style")" href='#@(view.ViewId + page.PageId)'>@Raw(val)</a>
+            </li>
+        }
+    </ul>
+}

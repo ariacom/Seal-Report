@@ -35,6 +35,7 @@ namespace Seal.Forms
 
         public int GetSort() { return 2; }
 
+        [DefaultValue(null)]
         [Category("Definition"), DisplayName("Current view"), Description("The current view used to execute the report.")]
         [TypeConverter(typeof(ReportViewConverter))]
         public string ViewGUID
@@ -44,7 +45,6 @@ namespace Seal.Forms
         }
 
         [Category("Definition"), DisplayName("Display name"), Description("The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'.")]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string DisplayName
         {
             get { return Report.DisplayName; }

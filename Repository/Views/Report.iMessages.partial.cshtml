@@ -1,0 +1,15 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+@{
+    ReportView view = Model;
+    Report report = view.Report;
+    Repository repository = report.Repository;
+}
+
+<!--message_div-->
+@if (view.GetBoolValue("display_messages"))
+{
+    <div id="message_div" class="tab-pane fade">
+        <div id="execution_messages" class="alert alert-info" role="alert">@Raw(Helper.ToHtml(report.ExecutionMessages))</div>
+    </div>
+}

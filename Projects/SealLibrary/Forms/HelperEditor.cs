@@ -385,21 +385,6 @@ namespace Seal.Forms
                         _reportView.InitParameters(true);
                         setModified();
                     }
-                    else if (context.PropertyDescriptor.Name == "HelperResetCSSParameters")
-                    {
-                        _reportView.InitParameters(true, true, false);
-                        setModified();
-                    }
-                    else if (context.PropertyDescriptor.Name == "HelperResetNVD3Parameters")
-                    {
-                        _reportView.InitParameters(true, false, true);
-                        setModified();
-                    }
-                    else if (context.PropertyDescriptor.Name == "HelperResetChartConfiguration")
-                    {
-                        _reportView.ResetChartConfiguration();
-                        setModified();
-                    }
                     else if (context.PropertyDescriptor.Name == "HelperResetPDFConfigurations")
                     {
                         _reportView.PdfConfigurations = new List<string>();

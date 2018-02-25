@@ -1,0 +1,65 @@
+﻿@using Seal.Model
+@{
+    ReportView view = Model;
+    Report report = view.Report;
+    Repository repository = report.Repository;
+}
+
+@if (report.GenerateHTMLDisplay || !report.ForPDFConversion)
+{
+    <nav id="bar_top" class='navbar navbar-default navbar-fixed-top'>
+        <div class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")">
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">@report.Translate("Toggle navigation")</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-left hidden-xs">
+                    <img src="@report.AttachImageFile(report.Repository.Configuration.LogoName)" class="img-responsive" alt="@report.ExecutionName">
+                </a>
+                <a id="nav_button" href="#" class="navbar-brand">@report.ExecutionName</a><span id="nav_badge" class="badge hidden">@report.Translate("Nav")</span>
+            </div>
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                @if (report.GenerateHTMLDisplay)
+                {
+                    <button id="execute_button" class="btn btn-success navbar-btn navbar-right">@report.Translate("Execute")</button>
+                    if (report.HasRestrictions)
+                    {
+                        <button id="restrictions_button" href="#restrictions_div" type="button" class="btn btn-info navbar-btn navbar-right" data-toggle="collapse" title="@report.Translate("Show/Hide Restrictions")">
+                            <span class="glyphicon glyphicon-filter"></span>
+                        </button>
+                    }
+                }
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a id="report_button" class="sr_tab" data-toggle="tab" href="#@view.ViewId">@report.Translate("Report")</a></li>
+                    <li><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">@report.Translate("Information")</a></li>
+                    @if (view.GetBoolValue("display_messages"))
+                {
+                        <li><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">@report.Translate("Messages")</a></li>
+                    }
+                    @if (report.GenerateHTMLDisplay)
+                {
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                @report.Translate("Results")
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a id="HtmlResult" class="sr_result" href="#">@report.Translate("View HTML Result")</a></li>
+                                <li><a id="PrintResult" class="sr_result" href="#">@report.Translate("View Print Result")</a></li>
+                                @if (view.GetBoolValue("converter_button"))
+                                {
+                                    <li><a id="PDFResult" class="sr_result" href="#">@report.Translate("View PDF Result")</a></li>
+                                    <li><a id="ExcelResult" class="sr_result" href="#">@report.Translate("View Excel Result")</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+}
+

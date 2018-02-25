@@ -1,0 +1,101 @@
+﻿@using System.Data
+@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = report.CurrentModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    if (view.GetBoolValue("invert_data_tables") && modelView.GetBoolValue("show_data_tables"))
+    {
+        reportModel.InvertDataTables();
+    }
+}
+
+@if (page.DataTable != null && page.DataTable.RowCount > 0 && page.DataTable.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
+{
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        var dt = $('#@("dt_" + view.ViewId+page.PageId)');
+        try {
+            if (dt != null && @Helper.ToJS(view.GetBoolValue("data_tables_enabled")) && !@Helper.ToJS(report.PrintLayout))
+            {
+                dt.dataTable({
+                ordering: @Helper.ToJS(view.GetBoolValue("data_tables_sort_enabled")),
+                paging: @Helper.ToJS(view.GetBoolValue("data_tables_pagination_enabled")),
+                lengthMenu: [[10, 25, 50, 100, 500], [10, 25, 50, 100, 500]],
+                pageLength: @(view.GetBoolValue("data_tables_pagination_enabled") ? view.GetValue("data_tables_pagination_size") : "-1"),
+                info: @Helper.ToJS(view.GetBoolValue("data_tables_show_information")),
+                searching: @Helper.ToJS(view.GetBoolValue("data_tables_filter_enabled")),
+                processing: @Helper.ToJS(view.GetBoolValue("data_tables_show_processing")),
+                order: [],
+                serverSide: @Helper.ToJS(report.IsServerPaginationEnabled && view.GetBoolValue("data_tables_enabled")),
+                @if (report.IsServerPaginationEnabled && view.GetBoolValue("data_tables_enabled"))
+                {<text>
+                        ajax: function(data, callback, settings) {
+                            getTableData($(this), "@report.ExecutionGUID", $(this).attr("viewid"), $(this).attr("pageid"), data, callback, settings);
+                        }
+                </text>}
+                });
+        }
+    }
+    catch (e) { };
+    });
+    </script>
+
+    <table class='data_table table-responsive table table-striped table-hover table-condensed' id='@("dt_" + view.ViewId+page.PageId)' viewid='@modelView.ViewId' pageid='@page.PageId'>
+        @if (view.HasValue("data_table_caption"))
+        {
+            <caption align="bottom" style="caption-side: bottom;">@Raw(view.GetHtmlValue("data_table_caption"))</caption>
+        }
+        <thead>
+            @for (int row = 0; row < page.DataTable.BodyStartRow; row++)
+                {
+                <tr>
+                    @for (int col = 0; col < page.DataTable.ColumnCount; col++)
+                    {
+                        //string className = "cell_title";
+                        ResultCell cell = page.DataTable[row, col];
+                        //Check if at least a value in the headers, this force data title to 'cell_value' css
+                        /*dataTitleHeader = ((row > 0 && !cell.IsTitle) ? false : true);
+                        if (row > 0 && !cell.IsTitle || ((cell.Class == "data_title" || cell.Class == "data_title_total") && !dataTitleHeader))
+                        {
+                            className = cell.IsTotal ? "cell_value_total" : "cell_value";
+                        }*/
+                        <th @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
+                    }
+                </tr>
+            }
+        </thead>
+        @if (!report.IsServerPaginationEnabled || !view.GetBoolValue("data_tables_enabled"))
+        {
+            <text>
+                <tbody>
+                    @for (int row = page.DataTable.BodyStartRow; row < page.DataTable.BodyEndRow; row++)
+                    {
+                        <tr>
+                            @for (int col = 0; col < page.DataTable.ColumnCount; col++)
+                            {
+                                ResultCell cell = page.DataTable[row, col];
+                                <td @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </text>}
+        <tfoot>
+            @for (int row = page.DataTable.BodyEndRow; row < page.DataTable.Lines.Count; row++)
+                {
+                <tr>
+                    @for (int col = 0; col < page.DataTable.ColumnCount; col++)
+                    {
+                        ResultCell cell = page.DataTable[row, col];
+                        <td>@Raw(cell.HTMLValue)</td>
+                    }
+                </tr>
+            }
+        </tfoot>
+    </table>
+}

@@ -97,14 +97,6 @@ namespace Seal.Forms
                 AddHelperButton("Edit SQL", "Edit the SQL Statement for the task", Keys.F8);
                 AddHelperButton("Edit Script", "Edit the Razor Script for the task", Keys.F7);
             }
-            else if (SelectedEntity is ReportView)
-            {
-                var view = (ReportView)SelectedEntity;
-                if (view.NVD3Parameters.Count > 0 && view.Model != null && view.Model.HasNVD3Serie) AddHelperButton("NVD3 Chart", "Edit the NVD3 Chart configuration values", Keys.F12);
-                if (view.DataTableParameters.Count > 0) AddHelperButton("Data Table", "Edit the Data Table configuration values", Keys.F9);
-                if (view.CSS.Count > 0) AddHelperButton("Edit CSS", "Edit the CSS parameters of the view", Keys.F8);
-                if (view.Parameters.Count > 0) AddHelperButton("Edit Parameters", "Edit the parameters of the view", Keys.F7);
-            }
             else if (SelectedEntity is ReportSchedule)
             {
                 AddHelperButton("Task Scheduler", "Run the Task Scheduler Microsoft Management Console", Keys.F9);

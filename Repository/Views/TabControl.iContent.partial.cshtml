@@ -1,0 +1,34 @@
+@using Seal.Model
+@using Seal.Helpers
+@{
+    ReportView view = Model;
+    Report report = view.Report;
+}
+
+@if (report.IsExecuting && !report.Cancel)
+{
+    List<ReportView> views = view.Views.OrderBy(i => i.SortOrderFull).ToList();
+    foreach (ReportView childView in views)
+    {
+        if (report.PrintLayout && view.GetBoolValue("print_break_after_view") && childView != views[0])
+        {
+            <div style="page-break-after:always;">
+            </div>
+        }
+
+        if (report.PrintLayout)
+        {
+            <h3>
+                @childView.ViewName
+            </h3>
+        }
+        @Raw(childView.Parse())
+
+        if (!string.IsNullOrEmpty(childView.Error))
+        {
+            <div id="alert_status" class="alert alert-danger" role="alert">
+                @Raw(Helper.ToHtml(childView.Error))
+            </div>
+        }
+    }
+}

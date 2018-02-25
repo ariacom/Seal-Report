@@ -83,7 +83,7 @@ namespace Seal.Forms
             {
                 sourceName = "[View Properties] ";
                 addRadioButton.Text = "Add the view to the destination views selected";
-                updateRadioButton.Text = "Update selected properties, parameters or CSS values to the destination views selected";
+                updateRadioButton.Text = "Update selected properties, parameter values to the destination views selected";
             }
             else if (_source is ReportTask)
             {
@@ -222,7 +222,6 @@ namespace Seal.Forms
             {
                 ReportView view = _source as ReportView;
                 source2CheckedListBox.Visible = true;
-                source3CheckedListBox.Visible = true;
 
                 properties = new List<PropertyItem>();
                 properties.Add(new PropertyItem() { Name = "[Parameters] Select/Unselect All", Object = null });
@@ -233,16 +232,6 @@ namespace Seal.Forms
                 source2CheckedListBox.DataSource = properties;
                 source2CheckedListBox.DisplayMember = "Name";
                 source2CheckedListBox.ClearSelected();
-
-                properties = new List<PropertyItem>();
-                properties.Add(new PropertyItem() { Name = "[CSS Values] Select/Unselect All", Object = null });
-                foreach (var item in view.CSS)
-                {
-                    properties.Add(new PropertyItem() { Name = item.DisplayName, Object = item });
-                }
-                source3CheckedListBox.DataSource = properties;
-                source3CheckedListBox.DisplayMember = "Name";
-                source3CheckedListBox.ClearSelected();
             }
 
             reportsListBox.DisplayMember = "Name";
@@ -807,38 +796,11 @@ namespace Seal.Forms
                             {
                                 if (descriptor.Name == "GeneralParameters")
                                 {
-                                    foreach (var item in viewSource.GeneralParameters)
+                                    foreach (var item in viewSource.Parameters)
                                     {
-                                        var param = view.GeneralParameters.FirstOrDefault(i => i.Name == item.Name);
+                                        var param = view.Parameters.FirstOrDefault(i => i.Name == item.Name);
                                         if (param != null) param.Value = item.Value;
                                         else view.Parameters.Add(new Parameter() { Name = item.Name, Value = item.Value });
-                                    }
-                                }
-                                else if (descriptor.Name == "DataTableParameters")
-                                {
-                                    foreach (var item in viewSource.DataTableParameters)
-                                    {
-                                        var param = view.DataTableParameters.FirstOrDefault(i => i.Name == item.Name);
-                                        if (param != null) param.Value = item.Value;
-                                        else view.Parameters.Add(new Parameter() { Name = item.Name, Value = item.Value });
-                                    }
-                                }
-                                else if (descriptor.Name == "CSS")
-                                {
-                                    foreach (var item in viewSource.CSS)
-                                    {
-                                        var param = view.CSS.FirstOrDefault(i => i.Name == item.Name);
-                                        if (param != null) param.Value = item.Value;
-                                        else view.CSS.Add(new Parameter() { Name = item.Name, Value = item.Value });
-                                    }
-                                }
-                                else if (descriptor.Name == "NVD3Parameters")
-                                {
-                                    foreach (var item in viewSource.NVD3Parameters)
-                                    {
-                                        var param = view.NVD3Parameters.FirstOrDefault(i => i.Name == item.Name);
-                                        if (param != null) param.Value = item.Value;
-                                        else view.NVD3Parameters.Add(new Parameter() { Name = item.Name, Value = item.Value });
                                     }
                                 }
                                 else if (descriptor.Name == "PdfConverter")
@@ -853,7 +815,6 @@ namespace Seal.Forms
                                 }
                                 else
                                 {
-                                    if (descriptor.Name == "ChartConfigurationXml") view.ResetChartConfiguration();
                                     descriptor.SetValue(view, descriptor.GetValue(_source));
                                 }
                             }
@@ -866,15 +827,6 @@ namespace Seal.Forms
                             Parameter parameter = view.Parameters.FirstOrDefault(i => i.Name == sourceParameter.Name);
                             if (parameter != null) parameter.Value = sourceParameter.Value;
                             else view.Parameters.Add(new Parameter() { Name = sourceParameter.Name, Value = sourceParameter.Value });
-                        }
-
-                        //CSS
-                        foreach (var item in source3CheckedListBox.CheckedItems.OfType<PropertyItem>().Where(i => i.Object != null))
-                        {
-                            Parameter sourceCSS = item.Object as Parameter;
-                            Parameter css = view.CSS.FirstOrDefault(i => i.Name == sourceCSS.Name);
-                            if (css != null) css.Value = sourceCSS.Value;
-                            else view.CSS.Add(new Parameter() { Name = sourceCSS.Name, Value = sourceCSS.Value });
                         }
                     }
                 }

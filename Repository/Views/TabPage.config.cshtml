@@ -5,14 +5,11 @@
     //Template Name
     Template.Name = "Tab Page";
 
-    //If for model, the Model parameter object used for the parsing is the Model instead of the Report
-    Template.ForModel = false;
+    //If true, the view can be configured for a report model
+    Template.ForReportModel = false;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "tab_description", Type = ViewParameterType.Text, DisplayName = "Tab page description", Description = "A description displayed in the tab page" });
-
-    //CSS
-    Template.CSS.Add(new Parameter() { Name = "tab_page", DisplayName = "Tab page", Type = ViewParameterType.String, Description = "CSS style for the DIV tag containing the Tab", Enums = ReportViewTemplate.DefaultCSS, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "tab_description", Type = ViewParameterType.Text, DisplayName = "Tab page description", Description = "An optional description displayed in the tab page." });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Tab Control" };

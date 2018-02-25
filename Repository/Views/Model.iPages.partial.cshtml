@@ -1,0 +1,40 @@
+﻿@using Seal.Model
+@{
+    ReportView view = Model;
+    Report report = view.Report;
+    ReportModel reportModel = view.Model;
+    bool activeFirst = true;
+}
+
+@if (!report.PrintLayout && reportModel.SummaryTable != null && reportModel.SummaryTable.RowCount > 0 && view.GetBoolValue("show_summary_table"))
+{
+    activeFirst = false;
+    <div class="tab-pane fade in active" id="@(view.ViewId + "_summary")">
+        @Include(view.GetPartialTemplateKey("Model.iSummaryTable", view), view)
+    </div>
+}
+
+@foreach (ResultPage page in reportModel.Pages)
+{
+    report.CurrentPage = page;
+    if (report.PrintLayout && view.GetBoolValue("print_break_after_page") && page != reportModel.Pages[0])
+    {
+        <div style="page-break-after: always;"></div>
+    }
+
+    var className = "";
+    if (view.GetValue("model_menu_type") != "None")
+    {
+        className = "tab-pane fade" + (activeFirst ? "in active": "");
+        activeFirst = false;
+    }
+
+    <div class="@className" id="@(view.ViewId + page.PageId)">
+        @Raw(view.ParseChildren())
+
+        @if (view.GetBoolValue("show_page_separator"))
+        {
+            <hr style="display: block;" />
+        }
+    </div>
+}

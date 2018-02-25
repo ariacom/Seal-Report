@@ -66,6 +66,7 @@ namespace Seal.Model
         }
 
         string _sourceGUID;
+        [DefaultValue(null)]
         [Category("Definition"), DisplayName("Source"), Description("The source used by the task."), Id(1, 1)]
         [TypeConverter(typeof(MetaSourceConverter))]
         public string SourceGUID
@@ -75,6 +76,7 @@ namespace Seal.Model
         }
 
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
+        [DefaultValue(ReportSource.DefaultReportConnectionGUID)]
         [DisplayName("Connection"), Description("The connection used by the task."), Category("Definition"), Id(2, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
         public string ConnectionGUID
@@ -93,6 +95,7 @@ namespace Seal.Model
 
 
         bool _enabled = true;
+        [DefaultValue(true)]
         [Category("Definition"), DisplayName("Is Enabled"), Description("If false, the task is ignorred and not executed."), Id(3, 1)]
         public bool Enabled
         {
@@ -181,7 +184,8 @@ namespace Seal.Model
             }
         }
 
-        bool _ignoreError;
+        bool _ignoreError = false;
+        [DefaultValue(false)]
         [Category("Options"), DisplayName("Ignore Errors"), Description("If true, errors occuring during the task execution are ignored and the report execution continues."), Id(2, 2)]
         public bool IgnoreError
         {
@@ -190,6 +194,7 @@ namespace Seal.Model
         }
 
         bool _executeForEachConnection = false;
+        [DefaultValue(false)]
         [Category("Options"), DisplayName("Execute for each connection"), Description("If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used."), Id(3, 2)]
         public bool ExecuteForEachConnection
         {
@@ -208,6 +213,9 @@ namespace Seal.Model
         {
             return _sortOrder;
         }
+
+        [XmlIgnore]
+        public int Progression = 0;
 
         #region Helpers
         string _information;
@@ -302,11 +310,12 @@ namespace Seal.Model
         public void Execute(MetaConnection currentConnection)
         {
             Report.LogMessage("Starting task with connection '{0}'", currentConnection.Name);
+            Progression = 0;
             if (!Report.Cancel && !string.IsNullOrEmpty(SQL))
             {
                 if (string.IsNullOrEmpty(currentConnection.ConnectionString)) throw new Exception("The connection string is not defined for this Task.");
                 _command = GetDbCommand(currentConnection);
-                string finalSql = Helper.ParseRazor(SQL, this);
+                string finalSql = RazorHelper.CompileExecute(SQL, this);
                 Report.LogMessage("Executing SQL: {0}", finalSql);
                 _command.CommandText = finalSql;
                 object sqlResult = _command.ExecuteScalar();
@@ -324,13 +333,15 @@ namespace Seal.Model
             if (!Report.Cancel && !string.IsNullOrEmpty(Script))
             {
                 Report.LogMessage("Executing Script...");
-                string result = Helper.ParseRazor(FullScript, this);
+                string result = RazorHelper.CompileExecute(FullScript, this);
                 if (result == "0")
                 {
                     Report.LogMessage("Script returns 0, the report is cancelled.");
                     CancelReport = true;
                 }
             }
+
+            Progression = 100; //100%
         }
 
         void OleDbInfoMessage(object sender, OleDbInfoMessageEventArgs e)

@@ -39,6 +39,7 @@ namespace Seal.Model
             {
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
+
                 //Then enable
                 GetProperty("SourceGUID").SetIsBrowsable(true);
                 GetProperty("ConnectionGUID").SetIsBrowsable(true);
@@ -83,8 +84,8 @@ namespace Seal.Model
             return new ReportModel() { GUID = Guid.NewGuid().ToString() };
         }
 
-
         string _sourceGUID;
+        [DefaultValue(null)]
         [Category("Model Definition"), DisplayName("Source"), Description("The source used to build the model."), Id(1, 1)]
         [TypeConverter(typeof(MetaSourceConverter))]
         public string SourceGUID
@@ -94,6 +95,7 @@ namespace Seal.Model
         }
 
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
+        [DefaultValue(ReportSource.DefaultReportConnectionGUID)]
         [DisplayName("Connection"), Description("The connection used to build the model."), Category("Model Definition"), Id(2, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
         public string ConnectionGUID
@@ -225,6 +227,7 @@ namespace Seal.Model
         }
 
         int _buildTimout = 4000;
+        [DefaultValue(4000)]
         [Category("SQL"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)."), Id(10, 2)]
         public int BuildTimeout
         {
@@ -279,25 +282,35 @@ namespace Seal.Model
         {
             get
             {
-                return Elements.Exists(i => i.SerieDefinition == SerieDefinition.Axis && (i.PivotPosition == PivotPosition.Column || i.PivotPosition == PivotPosition.Row)) && Elements.Exists(i => i.SerieDefinition != SerieDefinition.None && i.PivotPosition == PivotPosition.Data);
+                return Elements.Exists(i => i.SerieDefinition == SerieDefinition.Axis && (i.PivotPosition == PivotPosition.Column || i.PivotPosition == PivotPosition.Row)) && Elements.Exists(i => i.IsSerie && i.PivotPosition == PivotPosition.Data);
             }
         }
 
-        [XmlIgnore]
-        public bool HasMicrosoftSerie
-        {
-            get
-            {
-                return Elements.Exists(i => i.SerieDefinition == SerieDefinition.Axis && (i.PivotPosition == PivotPosition.Column || i.PivotPosition == PivotPosition.Row)) && Elements.Exists(i => i.SerieDefinition == SerieDefinition.Serie && i.PivotPosition == PivotPosition.Data);
-            }
-        }
 
         [XmlIgnore]
         public bool HasNVD3Serie
         {
             get
             {
-                return Elements.Exists(i => i.SerieDefinition == SerieDefinition.Axis && (i.PivotPosition == PivotPosition.Column || i.PivotPosition == PivotPosition.Row)) && Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.PivotPosition == PivotPosition.Data);
+                return Elements.Exists(i => i.SerieDefinition == SerieDefinition.Axis && (i.PivotPosition == PivotPosition.Column || i.PivotPosition == PivotPosition.Row)) && Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.None && i.PivotPosition == PivotPosition.Data);
+            }
+        }
+
+        [XmlIgnore]
+        public bool HasChartJSSerie
+        {
+            get
+            {
+                return Elements.Exists(i => i.SerieDefinition == SerieDefinition.Axis && (i.PivotPosition == PivotPosition.Column || i.PivotPosition == PivotPosition.Row)) && Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.PivotPosition == PivotPosition.Data);
+            }
+        }
+
+        [XmlIgnore]
+        public bool HasPlotlySerie
+        {
+            get
+            {
+                return Elements.Exists(i => i.SerieDefinition == SerieDefinition.Axis && (i.PivotPosition == PivotPosition.Column || i.PivotPosition == PivotPosition.Row)) && Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PivotPosition == PivotPosition.Data);
             }
         }
 
@@ -420,11 +433,159 @@ namespace Seal.Model
         public DataTable ResultTable;
 
         [XmlIgnore]
+        public int Progression = 0;
+
+        [XmlIgnore]
         public ResultTable SummaryTable;
         [XmlIgnore]
         public List<ResultPage> Pages = new List<ResultPage>();
         [XmlIgnore]
         public string ExecutionError = "";
+
+        //Execution for charts
+        [XmlIgnore]
+        public bool ExecChartIsNumericAxis;
+        [XmlIgnore]
+        public bool ExecChartIsDateTimeAxis;
+        [XmlIgnore]
+        public bool ExecAxisPrimaryYIsDateTime;
+        [XmlIgnore]
+        public bool ExecAxisSecondaryYIsDateTime;
+        [XmlIgnore]
+        public string ExecD3PrimaryYAxisFormat;
+        [XmlIgnore]
+        public string ExecD3SecondaryYAxisFormat;
+        [XmlIgnore]
+        public string ExecD3XAxisFormat;
+        [XmlIgnore]
+        public string ExecNVD3ChartType;
+        [XmlIgnore]
+        public string ExecPlotlyChartType;
+        [XmlIgnore]
+        public string ExecChartJSType;
+
+        public void CheckNVD3ChartIntegrity()
+        {
+            if (string.IsNullOrEmpty(ExecNVD3ChartType) && HasNVD3Serie)
+            {
+                bool hasArea = false, hasBar = false, hasLine = false;
+
+                //Check and choose the right chart
+                if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.ScatterChart))
+                {
+                    if (Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.ScatterChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Scatter Serie with another type.");
+                    ExecNVD3ChartType = "scatterChart";
+                }
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.PieChart))
+                {
+                    if (Elements.Count(i => i.Nvd3Serie != NVD3SerieDefinition.None) > 1) throw new Exception("Invalid chart configuration: Only one Pie Serie can be defined.");
+                    ExecNVD3ChartType = "pieChart";
+                }
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.MultiBarHorizontalChart))
+                {
+                    if (Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.MultiBarHorizontalChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Horizontal Bar Serie with another type.");
+                    ExecNVD3ChartType = "multiBarHorizontalChart";
+                }
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.LineWithFocusChart))
+                {
+                    if (Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.LineWithFocusChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Line with focus Serie with another type.");
+                    ExecNVD3ChartType = "lineWithFocusChart";
+                }
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.DiscreteBarChart))
+                {
+                    if (Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.DiscreteBarChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Discrete Bar Serie with another type.");
+                    ExecNVD3ChartType = "discreteBarChart";
+                }
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.CumulativeLineChart))
+                {
+                    if (Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.CumulativeLineChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Cumulative Line Serie with another type.");
+                    ExecNVD3ChartType = "cumulativeLineChart";
+                }
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart))
+                {
+                    hasArea = true;
+                    if (!Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.StackedAreaChart))
+                    {
+                        //if primary and secondary axis are used, keep the multi chart 
+                        if (!(Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart && i.YAxisType == AxisType.Primary) &&
+                            Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart && i.YAxisType == AxisType.Secondary)))
+                            ExecNVD3ChartType = "stackedAreaChart";
+                    }
+                }
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.Line))
+                {
+                    hasLine = true;
+                    if (!Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.Line))
+                    {
+                        //if primary and secondary axis are used, keep the multi chart 
+                        if (!(Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.Line && i.YAxisType == AxisType.Primary) &&
+                            Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.Line && i.YAxisType == AxisType.Secondary)))
+                            ExecNVD3ChartType = "lineChart";
+                    }
+                }
+                else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.Nvd3Serie == NVD3SerieDefinition.MultiBarChart))
+                {
+                    hasBar = true;
+                    if (!Elements.Exists(i => i.Nvd3Serie != NVD3SerieDefinition.None && i.Nvd3Serie != NVD3SerieDefinition.MultiBarChart))
+                    {
+                        //if primary and secondary axis are used, keep the multi chart 
+                        if (!(Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.MultiBarChart && i.YAxisType == AxisType.Primary) &&
+                            Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.MultiBarChart && i.YAxisType == AxisType.Secondary)))
+                            ExecNVD3ChartType = "multiBarChart";
+                    }
+                }
+
+                //If mix of Line, Bar and Area -> we go for multiChart
+                if (string.IsNullOrEmpty(ExecNVD3ChartType) && (hasArea || hasBar || hasLine)) ExecNVD3ChartType = "multiChart";
+            }
+        }
+
+
+        public void CheckPlotlyChartIntegrity()
+        {
+            //Check and choose the right chart
+            if (Elements.Exists(i => i.PlotlySerie == PlotlySerieDefinition.Scatter))
+            {
+                if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Scatter)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Scatter Serie with another type.");
+                ExecPlotlyChartType = "scatter";
+            }
+            else if (Elements.Exists(i => i.PlotlySerie == PlotlySerieDefinition.Bar))
+            {
+                if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Bar)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Bar Serie with another type.");
+                ExecPlotlyChartType = "bar";
+            }
+            else if (Elements.Exists(i => i.PlotlySerie == PlotlySerieDefinition.Pie))
+            {
+                if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Pie)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Pie Serie with another type.");
+                ExecPlotlyChartType = "pie";
+            }
+        }
+
+        public void CheckChartJSIntegrity()
+        {
+            //Check and choose the right chart
+            if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Scatter))
+            {
+                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Scatter)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Scatter Serie with another type.");
+                ExecChartJSType = "scatter";
+            }
+            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Line))
+            {
+                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Line)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Line Serie with another type.");
+                ExecChartJSType = "line";
+            }
+            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Bar))
+            {
+                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Bar)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Bar Serie with another type.");
+                ExecChartJSType = "bar";
+            }
+            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Pie))
+            {
+                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Pie)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Pie Serie with another type.");
+                ExecChartJSType = "pie";
+            }
+        }
+
         [XmlIgnore]
         public List<ReportRestriction> ExecutionRestrictions
         {
@@ -795,7 +956,7 @@ namespace Seal.Model
 
                                 if (extraWhereTable != null)
                                 {
-                                    string where = Helper.ParseRazor(extraWhereTable.WhereSQL, extraWhereTable);
+                                    string where = RazorHelper.CompileExecute(extraWhereTable.WhereSQL, extraWhereTable);
                                     if (!string.IsNullOrEmpty(where)) joinClause += " AND " + where;
                                     extraWhereTables.Remove(extraWhereTable);
                                 }
@@ -815,7 +976,7 @@ namespace Seal.Model
                     {
                         if (!string.IsNullOrEmpty(table.WhereSQL))
                         {
-                            string where = Helper.ParseRazor(table.WhereSQL, table);
+                            string where = RazorHelper.CompileExecute(table.WhereSQL, table);
                             if (!string.IsNullOrEmpty(where))
                             {
                                 if (execWhereClause.Length != 0) execWhereClause.Append("\r\nAND ");
@@ -999,7 +1160,7 @@ namespace Seal.Model
                 try
                 {
                     Report.LogMessage("Model '{0}': Executing {1}-SQL statement for '{2}'...", Name, prefix, name);
-                    string finalSql = Helper.ParseRazor(sql, model);
+                    string finalSql = RazorHelper.CompileExecute(sql, model);
                     if (!string.IsNullOrEmpty(finalSql))
                     {
                         _command.CommandText = finalSql;
@@ -1029,7 +1190,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    Helper.ParseRazor(script, model);
+                    RazorHelper.CompileExecute(script, model);
                 }
                 catch (Exception razorException)
                 {
@@ -1086,6 +1247,9 @@ namespace Seal.Model
 
         public void FillResultTable()
         {
+            bool isMaster = false;
+            Progression = 0;
+
             ExecutionDuration = 0;
             _resultTableAvailable = false;
             Pages.Clear();
@@ -1096,6 +1260,7 @@ namespace Seal.Model
             ExecutionError = "";
 
             BuildSQL();
+            Progression = 5; //5% after building SQL
 
             ResultTable = null;
             _command = null;
@@ -1116,7 +1281,7 @@ namespace Seal.Model
                         if (!string.IsNullOrEmpty(LoadScript))
                         {
                             ResultTable = Source.MetaData.MasterTable.BuildNoSQLTable(false);
-                            Helper.ParseRazor(LoadScript, this);
+                            RazorHelper.CompileExecute(LoadScript, this);
                         }
                         else
                         {
@@ -1154,6 +1319,7 @@ namespace Seal.Model
 
                     if (ResultTable == null)
                     {
+                        isMaster = true; //This model is the master fro the Result table
                         DbConnection connection = null;
                         if (_commandMutex.WaitOne(1000))
                         {
@@ -1201,55 +1367,60 @@ namespace Seal.Model
                 if (Report.Cancel) return;
 
                 //If enum, set enum values directly in the table
-                bool hasEnum = false;
-                List<ReportElement> specialSortByPositionElements = new List<ReportElement>();
-                foreach (var element in Elements)
+                if (isMaster)
                 {
-                    if (element.IsEnum)
+                    bool hasEnum = false;
+                    List<ReportElement> specialSortByPositionElements = new List<ReportElement>();
+                    foreach (var element in Elements)
                     {
-                        lock (ResultTable)
+                        if (element.IsEnum)
                         {
-                            hasEnum = true;
-                            DataColumn col = ResultTable.Columns[element.SQLColumnName];
-                            DataColumn newcol = new DataColumn("_seal_dummy_temp_col_", typeof(string));
-                            ResultTable.Columns.Add(newcol);
-
-                            foreach (DataRow row in ResultTable.Rows)
+                            lock (ResultTable)
                             {
-                                //to sort by position, we add 6 digits as a prefix
-                                if (element.IsSorted && element.EnumEL.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
-                                row[newcol] = element.GetEnumSortValue(row[col].ToString(), false);
+                                hasEnum = true;
+                                DataColumn col = ResultTable.Columns[element.SQLColumnName];
+                                DataColumn newcol = new DataColumn("_seal_dummy_temp_col_", typeof(string));
+                                ResultTable.Columns.Add(newcol);
+
+                                foreach (DataRow row in ResultTable.Rows)
+                                {
+                                    //to sort by position, we add 6 digits as a prefix
+                                    if (element.IsSorted && element.EnumEL.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
+                                    row[newcol] = element.GetEnumSortValue(row[col].ToString(), false);
+                                }
+                                ResultTable.Columns.Remove(col);
+                                newcol.ColumnName = element.SQLColumnName;
                             }
-                            ResultTable.Columns.Remove(col);
-                            newcol.ColumnName = element.SQLColumnName;
                         }
                     }
-                }
-
-                if (Report.Cancel) return;
-
-                if (hasEnum)
-                {
-                    //this re-sort the result with enum values...
-                    DataView dv = new DataView(ResultTable, null, execOrderByNameClause.ToString(), DataViewRowState.CurrentRows);
-                    ResultTable = dv.ToTable();
 
                     if (Report.Cancel) return;
 
-                    //remove the 6 digits used for special sort
-                    foreach (var element in specialSortByPositionElements)
+                    if (hasEnum)
                     {
-                        DataColumn col = ResultTable.Columns[element.SQLColumnName];
-                        foreach (DataRow row in ResultTable.Rows)
+                        //this re-sort the result with enum values...
+                        DataView dv = new DataView(ResultTable, null, execOrderByNameClause.ToString(), DataViewRowState.CurrentRows);
+                        ResultTable = dv.ToTable();
+
+                        if (Report.Cancel) return;
+
+                        //remove the 6 digits used for special sort
+                        foreach (var element in specialSortByPositionElements)
                         {
-                            string newValue = row[col].ToString();
-                            if (newValue.Length > 5) row[col] = newValue.Substring(6);
+                            DataColumn col = ResultTable.Columns[element.SQLColumnName];
+                            foreach (DataRow row in ResultTable.Rows)
+                            {
+                                string newValue = row[col].ToString();
+                                if (newValue.Length > 5) row[col] = newValue.Substring(6);
+                            }
                         }
                     }
                 }
 
                 ExecuteLoadScript(LoadScript, "Post Load Script", this);
             }
+
+            Progression = 70; //70% after getting result set
             _resultTableAvailable = true;
         }
 
@@ -1328,7 +1499,7 @@ namespace Seal.Model
             {
                 foreach (var link in cell.Links)
                 {
-                    if ((link.Href.StartsWith("exe=") && Report.View.GetBoolValue("drill_enabled")) || (link.Href.StartsWith("rpa=") && Report.View.GetBoolValue("sub_report_enabled")))
+                    if ((link.Href.StartsWith("exe=") && Report.ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter)) || (link.Href.StartsWith("rpa=") && Report.ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter)))
                     {
                         navigation += string.Format("<li nav='{0}'><a href='#'>{1}</a></li>", link.Href, link.Text);
                     }
@@ -1337,6 +1508,7 @@ namespace Seal.Model
             }
             return navigation;
         }
+
 
         //SANDBOX !
         //Just use this to code, compile and debug your Razor Script using Visual Studio...

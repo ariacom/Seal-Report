@@ -202,6 +202,7 @@ namespace Seal.Model
 
 
         int _errorNumberOfRetries = 0;
+        [DefaultValue(0)]
         [Category("Failover: Retries"), DisplayName("Number of retries"), Description("The maximum number of retries in case of error."), Id(2, 5)]
         public int ErrorNumberOfRetries
         {
@@ -210,6 +211,7 @@ namespace Seal.Model
         }
 
         int _errorMinutesBetweenRetries = 10;
+        [DefaultValue(10)]
         [Category("Failover: Retries"), DisplayName("Minutes between each retry"), Description("The number of minutes elapsed between a retry."), Id(3, 5)]
         public int ErrorMinutesBetweenRetries
         {

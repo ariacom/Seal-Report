@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using RazorEngine;
 using System.Xml.Serialization;
 using Seal.Helpers;
 using System.ComponentModel;
@@ -18,14 +17,12 @@ using DynamicTypeDescriptor;
 using RazorEngine.Templating;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
-using System.Diagnostics;
 using System.Globalization;
-using System.Collections;
 using System.Threading;
 using System.Web;
 using System.Data;
 using System.Windows.Forms;
-using System.Reflection;
+using System.Dynamic;
 
 namespace Seal.Model
 {
@@ -41,18 +38,17 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                GetProperty("ModelGUID").SetIsBrowsable(Template.ForModel);
+                GetProperty("ModelGUID").SetIsBrowsable(Template.ForReportModel);
                 GetProperty("TemplateName").SetIsBrowsable(true);
                 GetProperty("ThemeName").SetIsBrowsable(Template.UseThemeValues);
-                GetProperty("CSS").SetIsBrowsable(Template.CSS.Count > 0);
-                GetProperty("GeneralParameters").SetIsBrowsable(GeneralParameters.Count > 0);
-                GetProperty("DataTableParameters").SetIsBrowsable(Model != null && DataTableParameters.Count > 0);
 
                 //Set culture only on master view
                 GetProperty("CultureName").SetIsBrowsable(IsRootView);
                 GetProperty("UseCustomTemplate").SetIsBrowsable(true);
                 GetProperty("CustomTemplate").SetIsBrowsable(true);
+                GetProperty("PartialTemplates").SetIsBrowsable(PartialTemplates.Count > 0);
 
+                GetProperty("TemplateConfiguration").SetIsBrowsable(Parameters.Count > 0);
                 //PDF only on root view generating HTML...
                 if (AllowPDFConversion)
                 {
@@ -61,17 +57,6 @@ namespace Seal.Model
                 }
                 GetProperty("ExcelConverter").SetIsBrowsable(true);
                 ExcelConverter.InitEditor();
-
-                bool hasMSChartConfig = (Model != null && Model.HasMicrosoftSerie && !Model.HasNVD3Serie) && !string.IsNullOrEmpty(Template.ChartConfigurationXML);
-                GetProperty("ChartConfiguration").SetIsBrowsable(hasMSChartConfig);
-                GetProperty("ChartAxisX").SetIsBrowsable(hasMSChartConfig);
-                GetProperty("ChartAxisX2").SetIsBrowsable(hasMSChartConfig);
-                GetProperty("ChartAxisY").SetIsBrowsable(hasMSChartConfig);
-                GetProperty("ChartAxisY2").SetIsBrowsable(hasMSChartConfig);
-                GetProperty("ChartSeries").SetIsBrowsable(hasMSChartConfig);
-                GetProperty("ChartArea").SetIsBrowsable(hasMSChartConfig);
-                bool hasNVD3Config = (Model != null && Model.HasNVD3Serie && NVD3Parameters.Count > 0);
-                GetProperty("NVD3Parameters").SetIsBrowsable(hasNVD3Config);
 
                 GetProperty("WebExec").SetIsBrowsable(true);
 
@@ -82,9 +67,6 @@ namespace Seal.Model
                 //Helpers
                 GetProperty("HelperReloadConfiguration").SetIsBrowsable(true);
                 GetProperty("HelperResetParameters").SetIsBrowsable(true);
-                GetProperty("HelperResetCSSParameters").SetIsBrowsable(true);
-                GetProperty("HelperResetNVD3Parameters").SetIsBrowsable(hasNVD3Config);
-                GetProperty("HelperResetChartConfiguration").SetIsBrowsable(hasMSChartConfig);
                 GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(AllowPDFConversion);
                 GetProperty("HelperResetExcelConfigurations").SetIsBrowsable(true);
                 GetProperty("Information").SetIsBrowsable(true);
@@ -100,8 +82,6 @@ namespace Seal.Model
         public override void InitEditor()
         {
             base.InitEditor();
-            //init series
-            initMicrosoftChartConfigurationSeries();
         }
 
         #endregion
@@ -112,34 +92,31 @@ namespace Seal.Model
             return result;
         }
 
-
         public void InitReferences()
         {
             foreach (var childView in Views)
             {
                 childView.Report = Report;
                 childView.InitReferences();
-            }
 
-            if (GetValue("nvd3_chart_configuration").Contains(".tooltipContent"))
-            {
-                if (string.IsNullOrEmpty(Report.LoadErrors)) Report.UpgradeWarnings = "NVD3 Upgrade to version 2.0.\r\nPlease check your charts layout and adjust the options in your NVD3 parameters for each view impacted...\r\n\r\n";
-                Report.UpgradeWarnings += string.Format("Reseting NVD3 Chart configuration for View '{0}'\r\n", Name);
-                Parameters.RemoveAll(i => i.Name == "nvd3_chart_configuration");
+                if (childView.Views.Count == 0 && childView.TemplateName == ReportViewTemplate.ModelHTMLName)
+                {
+                    //Add default views for a model template
+                    Report.AddDefaultModelViews(childView);
+                }
             }
         }
 
-
         public void InitParameters(List<Parameter> configParameters, List<Parameter> parameters, bool resetValues)
         {
+            var initialParameters = parameters.ToList();
+            parameters.Clear();
             foreach (var configParameter in configParameters)
             {
-                Parameter parameter = parameters.FirstOrDefault(i => i.Name == configParameter.Name);
-                if (parameter == null)
-                {
-                    parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
-                    parameters.Add(parameter);
-                }
+                Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
+                if (parameter == null) parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
+
+                parameters.Add(parameter);
                 if (resetValues) parameter.Value = configParameter.Value;
                 parameter.Enums = configParameter.Enums;
                 parameter.Description = configParameter.Description;
@@ -148,29 +125,21 @@ namespace Seal.Model
                 parameter.DisplayName = configParameter.DisplayName;
                 parameter.ConfigValue = configParameter.Value;
                 parameter.EditorLanguage = configParameter.EditorLanguage;
-                parameter.Category = configParameter.Category;
+                parameter.TextSamples = configParameter.TextSamples;
             }
-            //remove undefined parameters
-            int index = parameters.Count;
-            while (--index >= 0) if (!configParameters.Exists(i => i.Name == parameters[index].Name)) parameters.RemoveAt(index);
         }
 
         //Temporary variables to help for report serialization...
         private List<Parameter> _tempParameters;
-        private List<Parameter> _tempCSS;
-        private string _tempChartConfigurationXML;
 
         public void BeforeSerialization()
         {
             _tempParameters = Parameters.ToList();
-            _tempCSS = CSS.ToList();
-            _tempChartConfigurationXML = ChartConfigurationXml;
-
-            //Remove parameters and CSS identical to config
-            if (string.IsNullOrEmpty(Template.ChartConfigurationXML)) _chartConfigurationXml = null;
-            else if (!string.IsNullOrEmpty(_chartConfigurationXml) && _chartConfigurationXml.Replace("\r\n", "").Replace(" ", "") == Template.ChartConfigurationXML.Replace(" ", "")) _chartConfigurationXml = "";
+            //Remove parameters identical to config
             Parameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
-            CSS.RemoveAll(i => i.Value == i.ConfigValue);
+
+            //Remove empty custom template
+            _partialTemplates.RemoveAll(i => string.IsNullOrWhiteSpace(i.Text));
 
             foreach (var view in Views) view.BeforeSerialization();
         }
@@ -178,8 +147,7 @@ namespace Seal.Model
         public void AfterSerialization()
         {
             Parameters = _tempParameters;
-            CSS = _tempCSS;
-            ChartConfigurationXml = _tempChartConfigurationXML;
+            InitPartialTemplates();
 
             foreach (var view in Views) view.AfterSerialization();
         }
@@ -191,35 +159,15 @@ namespace Seal.Model
             _information = "Configuration has been reloaded.";
         }
 
-        public void InitParameters(bool resetValues, bool cssOnly = false, bool nvd3Only = false)
+        public void InitParameters(bool resetValues)
         {
             if (Report == null || Template == null) return;
 
-            if (!cssOnly && !nvd3Only)
-            {
-                InitParameters(Template.Parameters, _parameters, resetValues);
-                InitParameters(Template.CSS, _css, resetValues);
-            }
-            else if (cssOnly)
-            {
-                InitParameters(Template.CSS, _css, resetValues);
-            }
-            else if (nvd3Only)
-            {
-                InitParameters(Template.Parameters.Where(i => i.Category == ViewParameterCategory.NVD3).ToList(), _parameters.Where(i => i.Category == ViewParameterCategory.NVD3).ToList(), resetValues);
-            }
-
+            InitParameters(Template.Parameters, _parameters, resetValues);
             _error = Template.Error;
             _information = "";
             if (resetValues) _information += "Values have been reset";
-            if (!string.IsNullOrEmpty(_information))_information = Helper.FormatMessage(_information);
-        }
-
-        public void ResetChartConfiguration()
-        {
-            _chartConfigurationXml = "";
-            _chartConfiguration = null;
-            _information = Helper.FormatMessage("Chart configuration has been reset");
+            if (!string.IsNullOrEmpty(_information)) _information = Helper.FormatMessage(_information);
         }
 
         public bool HasValue(string name)
@@ -236,14 +184,14 @@ namespace Seal.Model
         public string GetTranslatedMappedLabel(string text)
         {
             string result = text;
-            if(!string.IsNullOrEmpty(text) && text.Count(i => i=='%') > 1)
+            if (!string.IsNullOrEmpty(text) && text.Count(i => i == '%') > 1)
             {
                 List<ReportElement> values = new List<ReportElement>();
                 foreach (var element in Model.Elements)
                 {
                     if (result.Contains("%" + element.DisplayNameEl + "%"))
                     {
-                        result = result.Replace("%" + element.DisplayNameEl + "%",string.Format("%{0}%", values.Count));
+                        result = result.Replace("%" + element.DisplayNameEl + "%", string.Format("%{0}%", values.Count));
                         values.Add(element);
                     }
                 }
@@ -255,7 +203,8 @@ namespace Seal.Model
                     result = result.Replace(string.Format("%{0}%", i++), element.DisplayNameElTranslated);
                 }
             }
-            else {
+            else
+            {
                 result = Report.TranslateGeneral(text);
             }
             return result;
@@ -263,7 +212,7 @@ namespace Seal.Model
 
         public void ReplaceInParameterValues(string paramName, string pattern, string text)
         {
-            foreach(var param in Parameters.Where(i => i.Name == paramName && !string.IsNullOrEmpty(i.Value)))
+            foreach (var param in Parameters.Where(i => i.Name == paramName && !string.IsNullOrEmpty(i.Value)))
             {
                 param.Value = param.Value.Replace(pattern, text);
             }
@@ -315,18 +264,6 @@ namespace Seal.Model
             return parameter == null ? 0 : parameter.NumericValue;
         }
 
-        public string GetCSS(string name)
-        {
-            Parameter css = _css.FirstOrDefault(i => i.Name == name);
-            return css == null ? "" : css.Value;
-        }
-
-        public void SetCSS(string name, string value)
-        {
-            Parameter css = _css.FirstOrDefault(i => i.Name == name);
-            if (css != null) css.Value = value;
-        }
-
         public string GetThemeValue(string name)
         {
             Parameter parameter = Theme.Values.FirstOrDefault(i => i.Name == name);
@@ -341,7 +278,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    result = Color.FromArgb(int.Parse(colorText.Substring(1,2), NumberStyles.HexNumber), int.Parse(colorText.Substring(3,2), NumberStyles.HexNumber), int.Parse(colorText.Substring(5,2), NumberStyles.HexNumber));
+                    result = Color.FromArgb(int.Parse(colorText.Substring(1, 2), NumberStyles.HexNumber), int.Parse(colorText.Substring(3, 2), NumberStyles.HexNumber), int.Parse(colorText.Substring(5, 2), NumberStyles.HexNumber));
                 }
                 catch { }
             }
@@ -349,7 +286,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    result = Color.FromArgb(int.Parse(colorText.Substring(1,1)+ colorText.Substring(1,1), NumberStyles.HexNumber), int.Parse(colorText.Substring(2,1)+ colorText.Substring(2,1), NumberStyles.HexNumber), int.Parse(colorText.Substring(3,1)+ colorText.Substring(3,1), NumberStyles.HexNumber));
+                    result = Color.FromArgb(int.Parse(colorText.Substring(1, 1) + colorText.Substring(1, 1), NumberStyles.HexNumber), int.Parse(colorText.Substring(2, 1) + colorText.Substring(2, 1), NumberStyles.HexNumber), int.Parse(colorText.Substring(3, 1) + colorText.Substring(3, 1), NumberStyles.HexNumber));
                 }
                 catch { }
             }
@@ -391,24 +328,6 @@ namespace Seal.Model
             }
         }
 
-        public bool DisplaySummaryRow(int row)
-        {
-            bool result = false;
-            if (Model != null && Model.SummaryTable != null && row < Model.SummaryTable.Lines.Count)
-            {
-                ResultCell[] line = Model.SummaryTable.Lines[row];
-                if ((!GetBoolValue("add_summary_totals_totals") || !GetBoolValue("display_summary_totals") || !Model.HasTotals) && line[0].IsTotal && row == Model.SummaryTable.Lines.Count - 1)
-                {
-                    result = false;
-                }
-                else
-                {
-                    result = true;
-                }
-            }
-            return result;
-        }
-
         public string ViewName
         {
             get
@@ -426,7 +345,6 @@ namespace Seal.Model
             get { return _modelGUID; }
             set
             {
-                if (_modelGUID != value) _chartConfiguration = null;
                 _modelGUID = value;
                 UpdateEditorAttributes();
             }
@@ -438,6 +356,24 @@ namespace Seal.Model
         {
             get { return _templateName; }
             set { _templateName = value; }
+        }
+
+        public void InitPartialTemplates()
+        {
+            //Init partial templates
+            foreach (var partialPath in Template.PartialTemplatesPath)
+            {
+                var partialName = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(partialPath));
+                var pt = _partialTemplates.FirstOrDefault(i => i.Name == partialName);
+                if (pt == null)
+                {
+                    pt = new ReportViewPartialTemplate() { Name = partialName, UseCustom = false, Text = "" };
+                    _partialTemplates.Add(pt);
+                }
+                pt.View = this;
+            }
+            //Remove unused
+            _partialTemplates.RemoveAll(i => !Template.PartialTemplatesPath.Exists(j => Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(j)) == i.Name));
         }
 
         ReportViewTemplate _template = null;
@@ -457,6 +393,7 @@ namespace Seal.Model
                     {
                         _error = _template.Error;
                     }
+                    InitPartialTemplates();
                     InitParameters(false);
                 }
                 return _template;
@@ -479,7 +416,8 @@ namespace Seal.Model
             {
                 if (_theme == null)
                 {
-                    if (string.IsNullOrEmpty(ThemeName)) {
+                    if (string.IsNullOrEmpty(ThemeName))
+                    {
                         //Default theme
                         if (_report.SecurityContext != null && !string.IsNullOrEmpty(_report.SecurityContext.DefaultTheme)) _theme = RepositoryServer.GetTheme(_report.SecurityContext.DefaultTheme);
                         else _theme = RepositoryServer.GetTheme("");
@@ -504,7 +442,7 @@ namespace Seal.Model
 
 
         bool _useCustomTemplate = false;
-        [DisplayName("Use custom template text"), Description("If true, the template text can be modified."), Category("Custom template text"), Id(2, 3)]
+        [DisplayName("Use custom template text"), Description("If true, the template text can be modified."), Category("Custom template texts"), Id(2, 3)]
         public bool UseCustomTemplate
         {
             get { return _useCustomTemplate; }
@@ -517,7 +455,7 @@ namespace Seal.Model
 
         DateTime _lastTemplateModification = DateTime.Now;
         string _customTemplate;
-        [DisplayName("Custom template"), Description("The custom template text used instead of the template defined by the template name."), Category("Custom template text"), Id(3, 3)]
+        [DisplayName("Custom template"), Description("The custom template text used instead of the template defined by the template name."), Category("Custom template texts"), Id(3, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string CustomTemplate
         {
@@ -529,6 +467,16 @@ namespace Seal.Model
             }
         }
 
+        List<ReportViewPartialTemplate> _partialTemplates = new List<ReportViewPartialTemplate>();
+        [DisplayName("Custom Partial Templates"), Description("The custom partial template texts for the view."), Category("Custom template texts"), Id(4, 3)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<ReportViewPartialTemplate> PartialTemplates
+        {
+            get { return _partialTemplates; }
+            set { _partialTemplates = value; }
+        }
+
+
         List<Parameter> _parameters = new List<Parameter>();
         public List<Parameter> Parameters
         {
@@ -536,22 +484,18 @@ namespace Seal.Model
             set { _parameters = value; }
         }
 
-        [DisplayName("General Parameters"), Description("The view parameters values."), Category("View parameters"), Id(2, 4)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        [XmlIgnore]
-        public List<Parameter> GeneralParameters
-        {
-            get { return _parameters.Where(i => i.Category == ViewParameterCategory.General).ToList(); }
-            set { }
-        }
 
-        [DisplayName("Data Table Configuration"), Description("The configuration values for the Data Table."), Category("View parameters"), Id(3, 4)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Template configuration"), Description("The view configuration values."), Category("View parameters"), Id(2, 4)]
         [XmlIgnore]
-        public List<Parameter> DataTableParameters
+        public ParametersEditor TemplateConfiguration
         {
-            get { return _parameters.Where(i => i.Category == ViewParameterCategory.DataTables).ToList(); }
-            set { }
+            get
+            {
+                var editor = new ParametersEditor();
+                editor.Init(_parameters);
+                return editor;
+            }
         }
 
         string _cultureName = "";
@@ -565,25 +509,6 @@ namespace Seal.Model
                 _cultureInfo = null;
                 _cultureName = value;
             }
-        }
-
-
-        [DisplayName("NVD3 Chart Configuration"), Description("The configuration values for the NV3 Chart."), Category("View parameters"), Id(5, 4)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        [XmlIgnore]
-        public List<Parameter> NVD3Parameters
-        {
-            get { return _parameters.Where(i => i.Category == ViewParameterCategory.NVD3).ToList(); }
-            set { }
-        }
-
-        List<Parameter> _css = new List<Parameter>();
-        [DisplayName("CSS"), Description("The custom CSS values for the view."), Category("View parameters"), Id(6, 4)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<Parameter> CSS
-        {
-            get { return _css; }
-            set { _css = value; }
         }
 
         public int GetSort()
@@ -617,20 +542,6 @@ namespace Seal.Model
 
         public void SetAdvancedConfigurations()
         {
-            //Chart
-            if (Template.ForModel && ChartConfiguration != null && Model != null)
-            {
-                //clear points of dynamic series...
-                foreach (var serieElement in Model.Elements.Where(i => i.SerieDefinition == SerieDefinition.Serie))
-                {
-                    Series serie = ChartConfiguration.Series.FirstOrDefault(i => i.Name.Contains(serieElement.GUID));
-                    if (serie != null) serie.Points.Clear();
-                }
-
-                StringWriter sw = new StringWriter();
-                ChartConfiguration.Serializer.Save(sw);
-                ChartConfigurationXml = sw.ToString();
-            }
             //Pdf & Excel
             if (AllowPDFConversion && PdfConverterEdited)
             {
@@ -644,138 +555,6 @@ namespace Seal.Model
             foreach (var view in Views) view.SetAdvancedConfigurations();
         }
 
-        string _chartConfigurationXml;
-        public string ChartConfigurationXml
-        {
-            get { return _chartConfigurationXml; }
-            set { _chartConfigurationXml = value; }
-        }
-
-        Chart _chartConfiguration = null;
-        [DisplayName("Full configuration"), Description("The configuration of the chart if the model defines chart series."), Category("Microsoft Chart configuration"), Id(2, 6)]
-        [XmlIgnore]
-        public Chart ChartConfiguration
-        {
-            get
-            {
-                if (Template.ForModel && _chartConfiguration == null && !string.IsNullOrEmpty(Template.ChartConfigurationXML))
-                {
-                    _chartConfiguration = new Chart() { Width = 600, Height = 400 };
-                    //Add a legend by default
-                    _chartConfiguration.Legends.Add(new Legend());
-                    string configuration = Template.ChartConfigurationXML;
-                    if (!string.IsNullOrEmpty(_chartConfigurationXml)) configuration = _chartConfigurationXml;
-                    if (!string.IsNullOrEmpty(configuration))
-                    {
-                        try
-                        {
-                            StringReader sr = new StringReader(configuration);
-                            _chartConfiguration.Serializer.Load(sr);
-                        }
-                        catch (Exception ex)
-                        {
-                            if (!string.IsNullOrEmpty(_chartConfigurationXml))
-                            {
-                                _error = "Invalid chart configuration, reset it." + ex.Message;
-                                _chartConfigurationXml = "";
-                            }
-                            else
-                            {
-                                _error = "Invalid chart configuration in template." + ex.Message;
-                            }
-                        }
-                    }
-
-                    //Check basics chart elements
-                    //Area
-                    if (_chartConfiguration.ChartAreas.Count == 0)
-                    {
-                        ChartArea area = new ChartArea();
-                        _chartConfiguration.ChartAreas.Add(area);
-                    }
-                    //Title 
-                    if (_chartConfiguration.Titles.Count == 0)
-                    {
-                        Title title = new Title() { Visible = false };
-                        _chartConfiguration.Titles.Add(title);
-                    }
-                    initMicrosoftChartConfigurationSeries();
-                }
-                return _chartConfiguration;
-            }
-        }
-
-        [DisplayName("Chart area"), Description("The chart area."), Category("Microsoft Chart configuration"), Id(3, 6)]
-        [XmlIgnore]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public ChartArea ChartArea
-        {
-            get
-            {
-                if (ChartConfiguration != null && ChartConfiguration.ChartAreas.Count > 0) return ChartConfiguration.ChartAreas[0];
-                return null;
-            }
-        }
-
-        [DisplayName("Chart X axis"), Description("The primary X axis of the chart."), Category("Microsoft Chart configuration"), Id(4, 6)]
-        [XmlIgnore]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public Axis ChartAxisX
-        {
-            get
-            {
-                if (ChartConfiguration != null && ChartConfiguration.ChartAreas.Count > 0) return ChartConfiguration.ChartAreas[0].AxisX;
-                return null;
-            }
-        }
-
-        [DisplayName("Chart X2 axis"), Description("The secondary X axis of the chart."), Category("Microsoft Chart configuration"), Id(5, 6)]
-        [XmlIgnore]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public Axis ChartAxisX2
-        {
-            get
-            {
-                if (ChartConfiguration != null && ChartConfiguration.ChartAreas.Count > 0) return ChartConfiguration.ChartAreas[0].AxisX2;
-                return null;
-            }
-        }
-
-
-        [DisplayName("Chart Y axis"), Description("The primary Y axis of the chart."), Category("Microsoft Chart configuration"), Id(6, 6)]
-        [XmlIgnore]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public Axis ChartAxisY
-        {
-            get
-            {
-                if (ChartConfiguration != null && ChartConfiguration.ChartAreas.Count > 0) return ChartConfiguration.ChartAreas[0].AxisY;
-                return null;
-            }
-        }
-
-        [DisplayName("Chart Y2 axis"), Description("The secondary Y axis of the chart."), Category("Microsoft Chart configuration"), Id(7, 6)]
-        [XmlIgnore]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public Axis ChartAxisY2
-        {
-            get
-            {
-                if (ChartConfiguration != null && ChartConfiguration.ChartAreas.Count > 0) return ChartConfiguration.ChartAreas[0].AxisY2;
-                return null;
-            }
-        }
-
-        [DisplayName("Chart series"), Description("The chart series."), Category("Microsoft Chart configuration"), Id(3, 6)]
-        [XmlIgnore]
-        public SeriesCollection ChartSeries
-        {
-            get
-            {
-                if (ChartConfiguration != null) return ChartConfiguration.Series;
-                return null;
-            }
-        }
 
         private bool _webExec = true;
         [Category("Web Report Server"), DisplayName("Web Execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(1, 7)]
@@ -795,6 +574,7 @@ namespace Seal.Model
                 return _report.Models.FirstOrDefault(i => i.GUID == _modelGUID);
             }
         }
+
 
 
         #region PDF and Excel Converters
@@ -878,32 +658,11 @@ namespace Seal.Model
             get { return "<Click to reload the template configuration and refresh the parameters>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset parameter values"), Description("Reset parameters (including Data Tables and NVD3 Chart configuration) to their default values."), Id(3, 10)]
+        [Category("Helpers"), DisplayName("Reset template parameter values"), Description("Reset all template parameters to their default values."), Id(3, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetParameters
         {
             get { return "<Click to reset the view parameters to their default values>"; }
-        }
-
-        [Category("Helpers"), DisplayName("Reset CSS values"), Description("Reset CSS to their default values."), Id(4, 10)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-        public string HelperResetCSSParameters
-        {
-            get { return "<Click to reset the view CSS values to their default values>"; }
-        }
-
-        [Category("Helpers"), DisplayName("Reset NVD3 Chart values"), Description("Reset NVD3 Chart values to their default values."), Id(5, 10)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-        public string HelperResetNVD3Parameters
-        {
-            get { return "<Click to reset the view NVD3 Chart values to their default values>"; }
-        }
-
-        [Category("Helpers"), DisplayName("Reset Microsoft Chart configuration"), Description("Reset the Microsoft Chart configuration to default values."), Id(6, 10)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-        public string HelperResetChartConfiguration
-        {
-            get { return "<Click to reset the Microsoft Chart configuration to default values>"; }
         }
 
         [Category("Helpers"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to its default value."), Id(7, 10)]
@@ -942,26 +701,6 @@ namespace Seal.Model
 
 
         [XmlIgnore]
-        public string ViewTemplateCacheKey
-        {
-            get
-            {
-                string result;
-                if (!UseCustomTemplate || string.IsNullOrWhiteSpace(CustomTemplate))
-                {
-                    //template -> file path + last modification
-                    result = string.Format("TPL:{0}_{1}", Template.FilePath, File.GetLastWriteTime(Template.FilePath).ToString("s"));
-                }
-                else
-                {
-                    //view -> report path + last modification
-                    result = string.Format("REP:{0}_{1}_{2}", Report.FilePath, GUID, _lastTemplateModification.ToString("s"));
-                }
-                return result;
-            }
-        }
-
-        [XmlIgnore]
         public string ViewTemplateText
         {
             get
@@ -985,61 +724,80 @@ namespace Seal.Model
             }
         }
 
-        static HtmlString dummy = null;
-        static DataTable dummy2 = null;
-        static Control dummy3 = null;
+
+        public string GetPartialTemplateKey(string name, Object model)
+        {
+            var path = Template.GetPartialTemplatePath(name);
+            var partial = PartialTemplates.FirstOrDefault(i => i.Name == name);
+            if (!File.Exists(path) || partial == null) throw new Exception(string.Format("Unable to find partial template named '{0}'. Check the name and the file (.partial.cshtml) in the Views folder...", name));
+
+            string key, text = null;
+            if (partial.UseCustom && !string.IsNullOrWhiteSpace(partial.Text))
+            {
+                //custom template
+                key = string.Format("REP:{0}_{1}_{2}_{3}", Report.FilePath, GUID, partial.Name, partial.LastTemplateModification.ToString("s"));
+                text = partial.Text;
+            }
+            else
+            {
+                key = string.Format("TPL:{0}_{1}", path, File.GetLastWriteTime(path).ToString("s"));
+            }
+
+            try
+            {
+                if (string.IsNullOrEmpty(text)) text = Template.GetPartialTemplateText(name);
+                RazorHelper.Compile(text, model.GetType(), key);
+            }
+            catch (Exception ex)
+            {
+                var message = (ex is TemplateCompilationException ? Helper.GetExceptionMessage((TemplateCompilationException)ex) : ex.Message);
+                _error += string.Format("Execution error when compiling the partial view template '{0}({1})':\r\n{2}\r\n", Name, name, message);
+                if (ex.InnerException != null) _error += "\r\n" + ex.InnerException.Message;
+                Report.ExecutionErrors += _error;
+                throw ex;
+            }
+            return key;
+        }
 
         public string Parse()
         {
             string result = "";
+            string phase = "compiling";
             _error = "";
 
             try
             {
-                Report.View = this;
-
-                if (dummy == null) dummy = new HtmlString(""); //Force the load of System.Web
-                if (dummy2 == null) dummy2 = new DataTable(); //Force the load of System.Data
-                if (dummy3 == null) dummy3 = new Control(); //Force load of System.Windows.Forms
-
-                if (Template.ForModel)
+                Report.CurrentView = this;
+                string key = "";
+                if (!UseCustomTemplate || string.IsNullOrWhiteSpace(CustomTemplate))
                 {
-                    if (Model == null)
-                    {
-                        Report.ExecutionMessages += string.Format("Warning for view '{0}': Model has been lost for the view. Switching to the first model of the report...", Name);
-                        _modelGUID = Report.Models[0].GUID;
-                    }
-                    if (!ReportExecution.IsViewCompiled(ViewTemplateCacheKey))
-                    {
-                        Helper.CompileRazor(ViewTemplateText, typeof(ReportModel), ViewTemplateCacheKey);
-                        ReportExecution.CompiledViewAdd(ViewTemplateCacheKey);
-                    }
-                    result = Razor.Run(ViewTemplateCacheKey, Model);
+                    //template -> file path + last modification
+                    key = string.Format("TPL:{0}_{1}", Template.FilePath, File.GetLastWriteTime(Template.FilePath).ToString("s"));
                 }
                 else
                 {
-                    if (!ReportExecution.IsViewCompiled(ViewTemplateCacheKey))
-                    {
-                        Helper.CompileRazor(ViewTemplateText, typeof(Report), ViewTemplateCacheKey);
-                        ReportExecution.CompiledViewAdd(ViewTemplateCacheKey);
-                    }
-                    result = Razor.Run(ViewTemplateCacheKey, Report);
+                    //view -> report path + last modification
+                    key = string.Format("REP:{0}_{1}_{2}", Report.FilePath, GUID, _lastTemplateModification.ToString("s"));
                 }
-            }
-            catch (TemplateCompilationException ex)
-            {
-                _error = string.Format("Compilation error when parsing the view '{0}({1})':\r\n{2}", Name, Template.Name, Helper.GetExceptionMessage(ex));
-                if (ex.InnerException != null) _error += "\r\n" + ex.InnerException.Message;
+
+                if (Template.ForReportModel && Model == null)
+                {
+                    Report.ExecutionMessages += string.Format("Warning for view '{0}': Model has been lost for the view. Switching to the first model of the report...", Name);
+                    _modelGUID = Report.Models[0].GUID;
+                }
+                phase = "executing";
+                result = RazorHelper.CompileExecute(ViewTemplateText, Report, key);
             }
             catch (Exception ex)
             {
-                _error = string.Format("Execution error when parsing the view '{0} ({1})':\r\n{2}", Name, Template.Name, ex.Message);
+                var message = (ex is TemplateCompilationException ? Helper.GetExceptionMessage((TemplateCompilationException)ex) : ex.Message);
+                _error += string.Format("Error got when {0} the view '{1}({2})':\r\n{3}\r\n", phase, Name, Template.Name, message);
                 if (ex.InnerException != null) _error += "\r\n" + ex.InnerException.Message;
             }
             if (!string.IsNullOrEmpty(_error))
             {
                 Report.ExecutionErrors += _error;
-                result = _error;
+                result = Helper.ToHtml(_error);
             }
 
             return result;
@@ -1055,6 +813,27 @@ namespace Seal.Model
             return result;
         }
 
+        public string[] GetGridLayoutRows(string gridLayout)
+        {
+            if (string.IsNullOrEmpty(gridLayout)) return new string[] { "" };
+            return gridLayout.Replace("\r\n", "\n").Split('\n').Where(i => !string.IsNullOrWhiteSpace(i)).ToArray();
+        }
+        public string[] GetGridLayoutColumns(string rowLayout)
+        {
+            if (string.IsNullOrEmpty(rowLayout)) return new string[] { "" };
+            return rowLayout.Trim().Split(';').Where(i => !string.IsNullOrWhiteSpace(i)).ToArray();
+        }
+
+        public string GetGridLayoutColumnClass(string column)
+        {
+            if (!IsGridLayoutColumnForModel(column)) return column.Substring(1, column.Length-2);
+            return column;
+        }
+
+        public bool IsGridLayoutColumnForModel(string column)
+        {
+            return !(column.StartsWith("(") && column.EndsWith(")"));
+        }
 
         public void InitTemplates(ReportView view, ref string errors)
         {
@@ -1063,52 +842,9 @@ namespace Seal.Model
             foreach (var child in view.Views) InitTemplates(child, ref errors);
         }
 
-
-        void initMicrosoftChartConfigurationSeries()
-        {
-            if (Model != null && !string.IsNullOrEmpty(Template.ChartConfigurationXML) && ChartConfiguration != null && Model.HasSerie)
-            {
-                foreach (var serieElement in Model.Elements.Where(i => i.SerieDefinition == SerieDefinition.Serie))
-                {
-                    Series serie = ChartConfiguration.Series.FirstOrDefault(i => i.Name.Contains(serieElement.GUID));
-                    if (serie == null)
-                    {
-                        serie = new Series();
-                        serie.IsValueShownAsLabel = true;
-                        ChartConfiguration.Series.Add(serie);
-                    }
-                    serie.Name = string.Format("{0}({1})", serieElement.DisplayNameEl, serieElement.GUID);
-                    serie.XAxisType = serieElement.XAxisType;
-                    serie.YAxisType = serieElement.YAxisType;
-
-                    serie.ChartType = serieElement.SerieType;
-                    serie.LabelFormat = serieElement.FormatEl;
-
-                    if (ChartConfiguration.ChartAreas.Count > 0 && string.IsNullOrEmpty(ChartConfiguration.ChartAreas[0].AxisY.LabelStyle.Format) && serieElement.YAxisType == AxisType.Primary)
-                    {
-                        ChartConfiguration.ChartAreas[0].AxisY.LabelStyle.Format = serieElement.FormatEl;
-                    }
-                    if (ChartConfiguration.ChartAreas.Count > 0 && string.IsNullOrEmpty(ChartConfiguration.ChartAreas[0].AxisY2.LabelStyle.Format) && serieElement.YAxisType == AxisType.Secondary)
-                    {
-                        ChartConfiguration.ChartAreas[0].AxisY2.LabelStyle.Format = serieElement.FormatEl;
-                    }
-                }
-
-                //Cleanup lost series...
-                int index = ChartConfiguration.Series.Count;
-                while (--index >= 0)
-                {
-                    if (Model.Elements.FirstOrDefault(i => ChartConfiguration.Series[index].Name.Contains(i.GUID)) == null)
-                    {
-                        ChartConfiguration.Series.RemoveAt(index);
-                    }
-                }
-            }
-        }
-
         private void initAxisProperties(ResultPage page, List<ResultCell[]> XDimensions)
         {
-            bool hasNVD3Pie = Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.PieChart && i.PivotPosition == PivotPosition.Data);
+            bool hasNVD3Pie = Model.Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.PieChart && i.PivotPosition == PivotPosition.Data);
             var dimensions = XDimensions.FirstOrDefault();
             if (dimensions != null)
             {
@@ -1117,20 +853,18 @@ namespace Seal.Model
                 {
                     if (!dimensions[0].Element.IsEnum && dimensions[0].Element.AxisUseValues && !hasNVD3Pie)
                     {
-                        if (page.Chart != null) page.Chart.ChartAreas[0].AxisX.LabelStyle.Format = dimensions[0].Element.FormatEl;
-                        page.NVD3IsNumericAxis = dimensions[0].Element.IsNumeric;
-                        page.NVD3IsDateTimeAxis = dimensions[0].Element.IsDateTime;
-                        page.NVD3XAxisFormat = dimensions[0].Element.GetNVD3Format(CultureInfo, page.NVD3ChartType);
+                        Model.ExecChartIsNumericAxis = dimensions[0].Element.IsNumeric;
+                        Model.ExecChartIsDateTimeAxis = dimensions[0].Element.IsDateTime;
+                        Model.ExecD3XAxisFormat = dimensions[0].Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
                     }
                 }
             }
         }
 
-
         private Dictionary<object, object> initXValues(ResultPage page, List<ResultCell[]> XDimensions)
         {
             Dictionary<object, object> result = new Dictionary<object, object>();
-            bool hasNVD3Pie = Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.PieChart && i.PivotPosition == PivotPosition.Data);
+            bool hasNVD3Pie = Model.Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.PieChart && i.PivotPosition == PivotPosition.Data);
             foreach (var dimensions in XDimensions)
             {
                 //One value -> set the raw value, several values -> concat the display value
@@ -1159,44 +893,6 @@ namespace Seal.Model
             page.SecondaryXValues = initXValues(page, page.SecondaryXDimensions);
         }
 
-        private void buildMicrosoftSeries(ResultPage page)
-        {
-            initAxisProperties(page, page.PrimaryXDimensions);
-            initAxisProperties(page, page.SecondaryXDimensions);
-            initChartXValues(page);
-
-            foreach (ResultSerie resultSerie in page.Series)
-            {
-                if (Report.Cancel) break;
-
-                Series serieConfiguration = ChartConfiguration.Series.FirstOrDefault(i => i.Name.Contains(resultSerie.Element.GUID));
-                if (serieConfiguration != null)
-                {
-                    Series serie = Helper.CloneSeries(serieConfiguration);
-                    serie.Tag = 1;
-                    serie.Name = resultSerie.SerieDisplayName;
-                    page.Chart.Series.Add(serie);
-
-                    //Fill Serie
-                    Dictionary<object, object> XValues = (resultSerie.Element.XAxisType == AxisType.Primary ? page.PrimaryXValues : page.SecondaryXValues);
-                    foreach (var xDimensionKey in XValues.Keys)
-                    {
-                        //Find the corresponding serie value...
-                        ResultSerieValue value = resultSerie.Values.FirstOrDefault(i => i.XDimensionValues == xDimensionKey);
-                        object yValue = (value != null ? value.Yvalue.Value : null);
-                        serie.Points.AddXY(XValues[xDimensionKey], yValue);
-                    }
-
-                    //Sort serie
-                    if (resultSerie.Element.SerieSortType != SerieSortType.None) serie.Sort(resultSerie.Element.SerieSortOrder, resultSerie.Element.SerieSortType.ToString());
-                }
-            }
-
-            //clear the series used for configurations
-            int index = page.Chart.Series.Count;
-            while (--index >= 0) if (page.Chart.Series[index].Tag == null) page.Chart.Series.RemoveAt(index);
-        }
-
         ResultSerie _serieForSort = null;
         private int CompareXDimensionsWithSeries(ResultCell[] a, ResultCell[] b)
         {
@@ -1221,11 +917,13 @@ namespace Seal.Model
             return (_serieForSort.Element.SerieSortOrder == PointSortOrder.Ascending ? 1 : -1) * ResultCell.CompareCells(a, b);
         }
 
-        private void buildNVD3Series(ResultPage page)
+        private void buildChartSeries(ResultPage page)
         {
+            if (page.ChartInitDone) return;
+
             initAxisProperties(page, page.PrimaryXDimensions);
             //Sort series if necessary, only one serie is used for sorting...
-            if (!page.NVD3IsNumericAxis && !page.NVD3IsDateTimeAxis)
+            if (!Model.ExecChartIsNumericAxis && !Model.ExecChartIsDateTimeAxis)
             {
                 _serieForSort = page.Series.FirstOrDefault(i => i.Element.SerieSortType != SerieSortType.None);
                 if (_serieForSort != null)
@@ -1236,12 +934,12 @@ namespace Seal.Model
             }
             initChartXValues(page);
 
-            page.NVD3XLabelMaxLen = 10;
-            page.NVD3YPrimaryMaxLen = 6;
-            page.NVD3YSecondaryMaxLen = 6;
+            page.AxisXLabelMaxLen = 10;
+            page.AxisYPrimaryMaxLen = 6;
+            page.AxisYSecondaryMaxLen = 6;
 
             StringBuilder result = new StringBuilder();
-            if (!page.NVD3IsNumericAxis && !page.NVD3IsDateTimeAxis)
+            if (!Model.ExecChartIsNumericAxis && !Model.ExecChartIsDateTimeAxis)
             {
                 //Build X labels
                 foreach (var key in page.PrimaryXValues.Keys)
@@ -1249,28 +947,29 @@ namespace Seal.Model
                     if (result.Length != 0) result.Append(",");
                     var xval = page.PrimaryXValues[key].ToString();
                     result.Append(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(xval)));
-                    if (xval.Length > page.NVD3XLabelMaxLen) page.NVD3XLabelMaxLen = xval.Length;
+                    if (xval.Length > page.AxisXLabelMaxLen) page.AxisXLabelMaxLen = xval.Length;
                 }
 
-                page.NVD3XLabels = result.ToString();
+                page.ChartXLabels = result.ToString();
             }
 
             foreach (ResultSerie resultSerie in page.Series)
             {
                 if (Report.Cancel) break;
 
-                if (string.IsNullOrEmpty(page.NVD3PrimaryYAxisFormat) && resultSerie.Element.YAxisType == AxisType.Primary)
+                if (string.IsNullOrEmpty(Model.ExecD3PrimaryYAxisFormat) && resultSerie.Element.YAxisType == AxisType.Primary)
                 {
-                    page.NVD3PrimaryYAxisFormat = resultSerie.Element.GetNVD3Format(CultureInfo, page.NVD3ChartType);
-                    page.NVD3PrimaryYIsDateTime = resultSerie.Element.IsDateTime;
+                    Model.ExecD3PrimaryYAxisFormat = resultSerie.Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
+                    Model.ExecAxisPrimaryYIsDateTime = resultSerie.Element.IsDateTime;
                 }
-                else if (string.IsNullOrEmpty(page.NVD3SecondaryYAxisFormat) && resultSerie.Element.YAxisType == AxisType.Secondary)
+                else if (string.IsNullOrEmpty(Model.ExecD3SecondaryYAxisFormat) && resultSerie.Element.YAxisType == AxisType.Secondary)
                 {
-                    page.NVD3SecondaryYAxisFormat = resultSerie.Element.GetNVD3Format(CultureInfo, page.NVD3ChartType);
-                    page.NVD3SecondaryYIsDateTime = resultSerie.Element.IsDateTime;
+                    Model.ExecD3SecondaryYAxisFormat = resultSerie.Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
+                    Model.ExecAxisSecondaryYIsDateTime = resultSerie.Element.IsDateTime;
                 }
                 //Fill Serie
-                result = new StringBuilder();
+                StringBuilder chartXResult = new StringBuilder(), chartYResult = new StringBuilder();
+                StringBuilder chartXYResult = new StringBuilder(), chartYDisplayResult = new StringBuilder();
                 int index = 0;
                 foreach (var xDimensionKey in page.PrimaryXValues.Keys)
                 {
@@ -1279,17 +978,17 @@ namespace Seal.Model
                     //Find the corresponding serie value...
                     ResultSerieValue value = resultSerie.Values.FirstOrDefault(i => i.XDimensionValues == xDimensionKey);
                     object yValue = (value != null ? value.Yvalue.Value : null);
-                    if (resultSerie.Element.YAxisType == AxisType.Primary && value != null && value.Yvalue.DisplayValue.Length > page.NVD3YPrimaryMaxLen) page.NVD3YPrimaryMaxLen = value.Yvalue.DisplayValue.Length;
-                    if (resultSerie.Element.YAxisType == AxisType.Secondary && value != null && value.Yvalue.DisplayValue.Length > page.NVD3YSecondaryMaxLen) page.NVD3YSecondaryMaxLen = value.Yvalue.DisplayValue.Length;
+                    if (resultSerie.Element.YAxisType == AxisType.Primary && value != null && value.Yvalue.DisplayValue.Length > page.AxisYPrimaryMaxLen) page.AxisYPrimaryMaxLen = value.Yvalue.DisplayValue.Length;
+                    if (resultSerie.Element.YAxisType == AxisType.Secondary && value != null && value.Yvalue.DisplayValue.Length > page.AxisYSecondaryMaxLen) page.AxisYSecondaryMaxLen = value.Yvalue.DisplayValue.Length;
 
-                    if (page.NVD3IsNumericAxis)
+                    if (Model.ExecChartIsNumericAxis)
                     {
                         Double db = 0;
                         if (value == null) Double.TryParse(page.PrimaryXValues[xDimensionKey].ToString(), out db);
                         else if (value.XDimensionValues[0].DoubleValue != null) db = value.XDimensionValues[0].DoubleValue.Value;
                         xValue = db.ToString(CultureInfo.InvariantCulture.NumberFormat);
                     }
-                    else if (page.NVD3IsDateTimeAxis)
+                    else if (Model.ExecChartIsDateTimeAxis)
                     {
                         DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                         if (value == null) dt = ((DateTime)page.PrimaryXValues[xDimensionKey]);
@@ -1308,121 +1007,45 @@ namespace Seal.Model
                         yValue = ((Double)yValue).ToString(CultureInfo.InvariantCulture.NumberFormat);
                     }
 
-                    if (yValue == null && GetBoolValue("nvd3_add_null_point"))
+                    if (yValue == null && GetBoolValue(Parameter.NVD3AddNullPointParameter))
                     {
                         yValue = "0";
-                    }                     
+                    }
                     if (yValue != null)
                     {
-                        if (result.Length != 0) result.Append(",");
-                        result.AppendFormat("{{x:{0},y:{1}}}", xValue, yValue);
+                        if (chartXYResult.Length != 0) chartXYResult.Append(",");
+                        chartXYResult.AppendFormat("{{x:{0},y:{1}}}", xValue, yValue);
+
+                        if (chartXResult.Length != 0) chartXResult.Append(",");
+                        chartXResult.AppendFormat("{0}", xValue);
+
+                        if (chartYResult.Length != 0) chartYResult.Append(",");
+                        chartYResult.AppendFormat("{0}", yValue);
+
+                        if (chartYDisplayResult.Length != 0) chartYDisplayResult.Append(",");
+                        chartYDisplayResult.AppendFormat("'{0}'", Helper.ToJS(value.Yvalue.DisplayValue));
                     }
                 }
-                resultSerie.NVD3SerieValues = result.ToString();
+                resultSerie.ChartXYSerieValues = chartXYResult.ToString();
+                resultSerie.ChartXSerieValues = chartXResult.ToString();
+                resultSerie.ChartYSerieValues = chartYResult.ToString();
+                resultSerie.ChartYSerieDisplayValues = chartYDisplayResult.ToString();
             }
+            page.ChartInitDone = true;
         }
 
-
-        void checkChartIntegrity(ResultPage page)
-        {
-            if (Model.HasNVD3Serie && Model.HasMicrosoftSerie) throw new Exception("Invalid chart configuration: Cannot mix HTML5 and Microsoft Series.");
-
-            if (Model.HasNVD3Serie)
-            {
-                bool hasArea = false, hasBar = false, hasLine = false;
-                page.NVD3ChartType = "";
-
-                //Check and choose the right chart
-                if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.ScatterChart))
-                {
-                    if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie != NVD3SerieDefinition.ScatterChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Point Serie with another type.");
-                    page.NVD3ChartType = "scatterChart";
-                }
-                else if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.PieChart))
-                {
-                    if (Model.Elements.Count(i => i.SerieDefinition == SerieDefinition.NVD3Serie) > 1) throw new Exception("Invalid chart configuration: Only one Pie Serie can be defined.");
-                    page.NVD3ChartType = "pieChart";
-                }
-                else if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.MultiBarHorizontalChart))
-                {
-                    if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie != NVD3SerieDefinition.MultiBarHorizontalChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Horizontal Bar Serie with another type.");
-                    page.NVD3ChartType = "multiBarHorizontalChart";
-                }
-                else if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.LineWithFocusChart))
-                {
-                    if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie != NVD3SerieDefinition.LineWithFocusChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Line with focus Serie with another type.");
-                    page.NVD3ChartType = "lineWithFocusChart";
-                }
-                else if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.DiscreteBarChart))
-                {
-                    if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie != NVD3SerieDefinition.DiscreteBarChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Discrete Bar Serie with another type.");
-                    page.NVD3ChartType = "discreteBarChart";
-                }
-                else if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.CumulativeLineChart))
-                {
-                    if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie != NVD3SerieDefinition.CumulativeLineChart)) throw new Exception("Invalid chart configuration: Cannot mix NVD3 Cumulative Line Serie with another type.");
-                    page.NVD3ChartType = "cumulativeLineChart";
-                }
-                else if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart))
-                {
-                    hasArea = true;
-                    if (!Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie != NVD3SerieDefinition.StackedAreaChart))
-                    {
-                        //if primary and secondary axis are used, keep the multi chart 
-                        if (!(Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart && i.YAxisType == AxisType.Primary) &&
-                            Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.StackedAreaChart && i.YAxisType == AxisType.Secondary)))
-                            page.NVD3ChartType = "stackedAreaChart";
-                    }
-                }
-                else if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.Line))
-                {
-                    hasLine = true;
-                    if (!Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie != NVD3SerieDefinition.Line))
-                    {
-                        //if primary and secondary axis are used, keep the multi chart 
-                        if (!(Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.Line && i.YAxisType == AxisType.Primary) &&
-                            Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.Line && i.YAxisType == AxisType.Secondary)))
-                            page.NVD3ChartType = "lineChart";
-                    }
-                }
-                else if (Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.MultiBarChart))
-                {
-                    hasBar = true;
-                    if (!Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie != NVD3SerieDefinition.MultiBarChart))
-                    {
-                        //if primary and secondary axis are used, keep the multi chart 
-                        if (!(Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.MultiBarChart && i.YAxisType == AxisType.Primary) &&
-                            Model.Elements.Exists(i => i.SerieDefinition == SerieDefinition.NVD3Serie && i.Nvd3Serie == NVD3SerieDefinition.MultiBarChart && i.YAxisType == AxisType.Secondary)))
-                            page.NVD3ChartType = "multiBarChart";
-                    }
-                }
-
-                //If mix of Line, Bar and Area -> we go for multiChart
-                if (string.IsNullOrEmpty(page.NVD3ChartType) && (hasArea || hasBar || hasLine)) page.NVD3ChartType = "multiChart";
-            }
-        }
         public bool InitPageChart(ResultPage page)
         {
             if (Model != null)
             {
                 try
                 {
-                    checkChartIntegrity(page);
-                    if (Model.HasMicrosoftSerie && ChartConfiguration != null)
+                    if (Model.HasSerie && !page.ChartInitDone)
                     {
-                        Thread.CurrentThread.CurrentCulture = Report.ExecutionView.CultureInfo;
-                        //reload it from configuration
-                        _chartConfiguration = null;
-                        initMicrosoftChartConfigurationSeries();
-                        page.Chart = ChartConfiguration;
-                        buildMicrosoftSeries(page);
-
-                        page.Chart.Series[0].Color = System.Drawing.Color.FromArgb(179, 162, 199);
-                        Series serie = page.Chart.Series[0];
-                    }
-                    else if (Model.HasNVD3Serie)
-                    {
-                        buildNVD3Series(page);
+                        Model.CheckNVD3ChartIntegrity();
+                        Model.CheckPlotlyChartIntegrity();
+                        Model.CheckChartJSIntegrity();
+                        buildChartSeries(page);
                     }
                 }
                 catch (Exception ex)
@@ -1434,30 +1057,6 @@ namespace Seal.Model
             return true;
         }
 
-        public bool GenerateMicrosoftChartImage(ResultPage page)
-        {
-            if (page.Chart != null)
-            {
-                CultureInfo initialCulture = Thread.CurrentThread.CurrentCulture;
-                try
-                {
-                    Thread.CurrentThread.CurrentCulture = Report.ExecutionView.CultureInfo;
-                    page.ChartPath = Report.GetChartFileName();
-                    page.Chart.SaveImage(page.ChartPath, ChartImageFormat.Png);
-                    page.ChartFileName = Helper.HtmlMakeImageSrcData(page.ChartPath);
-                }
-                catch (Exception ex)
-                {
-                    _error = "Error got when generating chart:\r\n" + ex.Message;
-                    return false;
-                }
-                finally
-                {
-                    Thread.CurrentThread.CurrentCulture = initialCulture;
-                }
-            }
-            return true;
-        }
 
         public ReportView GetView(string viewId)
         {

@@ -1,0 +1,61 @@
+﻿@using Seal.Model
+@{
+    ReportView view = Model;
+    ReportModel reportModel = view.Model;
+    Report report = view.Report;
+}
+
+@helper SummaryRows(ReportModel reportModel, ReportView view, int rowStart, int rowEnd, bool isHead)
+{
+for (int row = rowStart; row < rowEnd; row++)
+{
+        <tr>
+            @for (int col = 0; col < reportModel.SummaryTable.ColumnCount; col++)
+            {
+                ResultCell cell = reportModel.SummaryTable[row, col];
+                if (!view.GetBoolValue("display_summary_totals") && cell.IsTotal)
+                {
+                    continue;
+                }
+                if (isHead)
+                {
+                    <th @Raw(reportModel.GetNavigation(cell))>
+                        @Raw(cell.HTMLValue)
+                    </th>
+                }
+                else
+                {
+                    <td @Raw(reportModel.GetNavigation(cell))>
+                        @Raw(cell.HTMLValue)
+                    </td>
+                }
+            }
+        </tr>
+}
+}
+
+<text>
+    <table class='table table-striped table-hover table-bordered'>
+        @if (view.HasValue("summary_table_caption"))
+            {
+            <caption align="bottom" style="caption-side: bottom;">@Raw(view.GetHtmlValue("summary_table_caption"))</caption>
+        }
+        <thead>
+            @SummaryRows(reportModel, view, 0, 1, true)
+        </thead>
+        <tbody>
+            @SummaryRows(reportModel, view, reportModel.SummaryTable.BodyStartRow, reportModel.SummaryTable.BodyEndRow, false)
+        </tbody>
+        @if (view.GetBoolValue("add_summary_totals_totals") && view.GetBoolValue("display_summary_totals") && reportModel.HasTotals)
+            {
+            <tfoot>
+                @SummaryRows(reportModel, view, reportModel.SummaryTable.BodyEndRow, reportModel.SummaryTable.RowCount, false)
+            </tfoot>
+        }
+    </table>
+
+    @if (view.GetBoolValue("show_page_separator"))
+    {
+    <hr style="display: block;" />
+    }
+</text>

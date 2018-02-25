@@ -1,0 +1,27 @@
+﻿@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+
+    int index = 0;
+    var views = view.Views.OrderBy(i => i.SortOrder).ToList();
+    foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout")))
+    {
+        <div class="row">
+            @foreach (string col in view.GetGridLayoutColumns(row))
+                {
+                <div class="@view.GetGridLayoutColumnClass(col)">
+                    @if (index < view.Views.Count && view.IsGridLayoutColumnForModel(col))
+                    {
+                        @Raw(views[index++].Parse());
+                    }
+                </div>
+            }
+        </div>
+    }
+    //Remaining views
+    while (index < views.Count)
+    {
+        @Raw(views[index++].Parse());
+    }
+}

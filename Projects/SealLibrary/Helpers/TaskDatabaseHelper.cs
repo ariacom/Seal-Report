@@ -36,6 +36,8 @@ namespace Seal.Helpers
         public string InsertStartCommand = "";
         public string InsertEndCommand = "";
         public int ColumnCharLength = 0; //0= means auto size
+        public int LoadBurstSize = 0; //0 = Load all records in one
+        public string LoadSortColumn = ""; //Sort column used if LoadBurstSize is specified
         public int InsertBurstSize = 500;
         public string ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
         public Encoding DefaultEncoding = Encoding.Default;
@@ -94,7 +96,7 @@ namespace Seal.Helpers
         public DataTable LoadDataTable(string connectionString, string sql)
         {
             if (MyLoadDataTable != null) return MyLoadDataTable(connectionString, sql);
-            
+
             DataTable table = new DataTable();
             DbDataAdapter adapter = null;
             var connection = Helper.DbConnectionFromConnectionString(connectionString);
@@ -124,11 +126,10 @@ namespace Seal.Helpers
         public DataTable LoadDataTableFromCSV(string csvPath, char? separator = null)
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
-            
+
             DataTable result = null;
             bool isHeader = true;
             Regex regexp = null;
-            List<string> languages = new List<string>();
 
             string[] lines = null;
             try
@@ -143,7 +144,7 @@ namespace Seal.Helpers
                 lines = File.ReadAllLines(newPath, DefaultEncoding);
                 FileHelper.PurgeTempApplicationDirectory();
             }
-            
+
 
             foreach (string line in lines)
             {
@@ -185,8 +186,10 @@ namespace Seal.Helpers
             return result;
         }
 
+        public DatabaseType DatabaseType = DatabaseType.MSSQLServer;
         public void SetDatabaseDefaultConfiguration(DatabaseType type)
         {
+            DatabaseType = type;
             if (type == DatabaseType.Oracle)
             {
                 _defaultColumnCharType = "varchar2";
@@ -248,7 +251,7 @@ namespace Seal.Helpers
                 }
 
                 StringBuilder sql = new StringBuilder("");
-                string sqlTemplate = string.Format("insert into {0} ({1})", CleanName(table.TableName), GetTableColumnNames(table)) + " values ({0});";
+                string sqlTemplate = string.Format("insert into {0} ({1})", CleanName(table.TableName), GetTableColumnNames(table)) + " values ({0});\r\n";
                 foreach (DataRow row in table.Rows)
                 {
                     sql.AppendFormat(sqlTemplate, GetTableColumnValues(row, dateTimeFormat));
@@ -275,18 +278,66 @@ namespace Seal.Helpers
             }
         }
 
+        public string MSSQLCreateTABLECommand(string tableName, DataTable table)
+        {
+            string sqlsc;
+            sqlsc = "CREATE TABLE " + tableName + "(";
+            for (int i = 0; i < table.Columns.Count; i++)
+            {
+                sqlsc += "\n [" + table.Columns[i].ColumnName + "] ";
+                string columnType = table.Columns[i].DataType.ToString();
+                switch (columnType)
+                {
+                    case "System.Int32":
+                        sqlsc += " int ";
+                        break;
+                    case "System.Int64":
+                        sqlsc += " bigint ";
+                        break;
+                    case "System.Int16":
+                        sqlsc += " smallint";
+                        break;
+                    case "System.Byte":
+                        sqlsc += " tinyint";
+                        break;
+                    case "System.Decimal":
+                        sqlsc += " decimal ";
+                        break;
+                    case "System.DateTime":
+                        sqlsc += " datetime ";
+                        break;
+                    case "System.String":
+                    default:
+                        sqlsc += string.Format(" nvarchar({0}) ", table.Columns[i].MaxLength == -1 ? "max" : table.Columns[i].MaxLength.ToString());
+                        break;
+                }
+                if (table.Columns[i].AutoIncrement)
+                    sqlsc += " IDENTITY(" + table.Columns[i].AutoIncrementSeed.ToString() + "," + table.Columns[i].AutoIncrementStep.ToString() + ") ";
+                if (!table.Columns[i].AllowDBNull)
+                    sqlsc += " NOT NULL ";
+                sqlsc += ",";
+            }
+            return sqlsc.Substring(0, sqlsc.Length - 1) + "\n)";
+        }
+
         public string RootGetTableCreateCommand(DataTable table)
         {
-            StringBuilder result = new StringBuilder();
-            foreach (DataColumn col in table.Columns)
+            if (DatabaseType == DatabaseType.MSSQLServer)
             {
-                if (result.Length > 0) result.Append(',');
-                result.AppendFormat("{0} ", GetTableColumnName(col));
-                result.Append(GetTableColumnType(col));
-                result.Append(" NULL");
+                return MSSQLCreateTABLECommand(CleanName(table.TableName), table);
             }
-
-            return string.Format("CREATE TABLE {0} ({1})", CleanName(table.TableName), result);
+            else
+            {
+                StringBuilder result = new StringBuilder();
+                foreach (DataColumn col in table.Columns)
+                {
+                    if (result.Length > 0) result.Append(',');
+                    result.AppendFormat("{0} ", GetTableColumnName(col));
+                    result.Append(GetTableColumnType(col));
+                    result.Append(" NULL");
+                }
+                return string.Format("CREATE TABLE {0} ({1})", CleanName(table.TableName), result); 
+            }
         }
 
 
@@ -315,7 +366,8 @@ namespace Seal.Helpers
 
         public string RootGetTableColumnName(DataColumn col)
         {
-            return CleanName(col.ColumnName);
+            var result = CleanName(col.ColumnName);
+            return (DatabaseType == DatabaseType.MSSQLServer) ? "[" + result + "]" : result;
         }
 
         public string GetTableColumnName(DataColumn col)
@@ -324,10 +376,18 @@ namespace Seal.Helpers
             return RootGetTableColumnName(col);
         }
 
+        public bool IsNumeric(DataColumn col)
+        {
+            if (col == null) return false;
+            // Make this const
+            var numericTypes = new[] { typeof(Byte), typeof(Decimal), typeof(Double), typeof(Int16), typeof(Int32), typeof(Int64), typeof(SByte), typeof(Single), typeof(UInt16), typeof(UInt32), typeof(UInt64) };
+            return numericTypes.Contains(col.DataType);
+        }
+
         public string RootGetTableColumnType(DataColumn col)
         {
             StringBuilder result = new StringBuilder();
-            if (col.DataType.Name == "Int32" || col.DataType.Name == "Integer" || col.DataType.Name == "Double" || col.DataType.Name == "Decimal" || col.DataType.Name == "Number")
+            if (IsNumeric(col))
             {
                 //Check for integer
                 bool isInteger = true;
@@ -344,7 +404,7 @@ namespace Seal.Helpers
                 if (isInteger) result.Append(Helper.IfNullOrEmpty(ColumnIntegerType, _defaultColumnIntegerType));
                 else result.Append(Helper.IfNullOrEmpty(ColumnNumericType, _defaultColumnNumericType));
             }
-            else if (col.DataType.Name == "DateTime")
+            else if (col.DataType.Name == "DateTime" || col.DataType.Name == "Date")
             {
                 result.Append(Helper.IfNullOrEmpty(ColumnDateTimeType, _defaultColumnDateTimeType));
             }
@@ -397,7 +457,7 @@ namespace Seal.Helpers
             {
                 result.Append("NULL");
             }
-            else if (col.DataType.Name == "Integer" || col.DataType.Name == "Double" || col.DataType.Name == "Decimal" || col.DataType.Name == "Number")
+            else if (IsNumeric(col))
             {
                 result.AppendFormat(row[col].ToString().Replace(',', '.'));
             }

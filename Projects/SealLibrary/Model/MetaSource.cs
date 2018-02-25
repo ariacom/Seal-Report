@@ -78,6 +78,7 @@ namespace Seal.Model
 
 
         protected string _connectionGUID;
+        [DefaultValue(null)]
         [Category("General"), DisplayName("Current Connection"), Description("The connection currently used for this data source"), Id(1, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
         public string ConnectionGUID
@@ -87,6 +88,7 @@ namespace Seal.Model
         }
 
         bool _isDefault = false;
+        [DefaultValue(false)]
         [Category("General"), DisplayName("Is Default"), Description("If true, this source is used as default when a new model is created in a report."), Id(2, 1)]
         public bool IsDefault
         {
@@ -95,6 +97,7 @@ namespace Seal.Model
         }
 
         bool _isNoSQL =false;
+        [DefaultValue(false)]
         [Category("General"), DisplayName("Is No SQL"), Description("If true, this source contains only a table built from a Razor script. The SQL engine will not be used to fill the models."), Id(3, 1)]
         public bool IsNoSQL
         {
@@ -138,7 +141,8 @@ namespace Seal.Model
             set { _postSQL = value; }
         }
 
-        bool _ignorePrePostError;
+        bool _ignorePrePostError = false;
+        [DefaultValue(false)]
         [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(7, 4)]
         public bool IgnorePrePostError
         {
@@ -472,16 +476,23 @@ namespace Seal.Model
             }
         }
 
+        string getDelimiters(DatabaseType dbType)
+        {
+            if (dbType == DatabaseType.Oracle) return "\"\"";
+            if (dbType == DatabaseType.MySQL) return "``";
+            return "[]";
+        }
+
         public string GetTableName(string rawName)
         {
-            string delimiters = (Connection.DatabaseType == DatabaseType.Oracle ? "\"\"" : "[]");
+            string delimiters = getDelimiters(Connection.DatabaseType);
             if (!rawName.StartsWith("[") && !rawName.EndsWith("]") && rawName.IndexOfAny(" '\"-$-".ToCharArray()) != -1) return string.Format("{0}{1}{2}", delimiters[0], rawName, delimiters[1]);
             return rawName;
         }
 
         public string GetColumnName(string rawName)
         {
-            string delimiters = (Connection.DatabaseType == DatabaseType.Oracle ? "\"\"" : "[]");
+            string delimiters = getDelimiters(Connection.DatabaseType);
             if (!rawName.StartsWith("[") && !rawName.EndsWith("]") && rawName.IndexOfAny(" '\"-".ToCharArray()) != -1) return string.Format("{0}{1}{2}", delimiters[0], rawName, delimiters[1]);
             return rawName;
         }

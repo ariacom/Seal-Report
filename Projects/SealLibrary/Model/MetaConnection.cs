@@ -68,6 +68,7 @@ namespace Seal.Model
             return new MetaConnection() { Name = "connection", GUID = Guid.NewGuid().ToString(), Source = source };
         }
 
+        [DefaultValue(null)]
         [DisplayName("Name"), Description("The name of the connection."), Category("Definition"), Id(1, 1)]
         public override string Name
         {
@@ -76,6 +77,7 @@ namespace Seal.Model
         }
 
         private DatabaseType _databaseType = DatabaseType.Standard;
+        [DefaultValue(DatabaseType.Standard)]
         [DisplayName("Database type"), Description("The type of the source database."), Category("Definition"), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public DatabaseType DatabaseType
@@ -85,6 +87,7 @@ namespace Seal.Model
         }
 
         private string _connectionString;
+        [DefaultValue(null)]
         [DisplayName("Connection string"), Description("OLEDB Connection string used to connect to the database. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(3, 1)]
         [Editor(typeof(ConnectionStringEditor), typeof(UITypeEditor))]
         public string ConnectionString
@@ -93,6 +96,7 @@ namespace Seal.Model
             set { _connectionString = value; }
         }
 
+        [DefaultValue(null)]
         [DisplayName("Connection string"), Description("OLEDB Connection string used to connect to the database."), Category("Definition"), Id(3, 1)]
         [XmlIgnore]
         public string ConnectionString2
@@ -101,6 +105,7 @@ namespace Seal.Model
         }
 
         private string _dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        [DefaultValue("yyyy-MM-dd HH:mm:ss")]
         [DisplayName("Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(4, 1)]
         public string DateTimeFormat
         {
