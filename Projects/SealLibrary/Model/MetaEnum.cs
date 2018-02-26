@@ -116,7 +116,7 @@ namespace Seal.Model
         public string DefaultSQL = "select col1,col2 from table order by col2";
 
         private string _sql;
-        [Category("Definition"), DisplayName("Select SQL Statement"), Description("If the list is loaded from the database, SQL Select statement with 1, 2, 3 or 4 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS applied to the result cell."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Select SQL Statement"), Description("If the list is loaded from the database, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell."), Id(4, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string Sql
         {
@@ -199,6 +199,7 @@ namespace Seal.Model
                             value.Val = table.Columns.Count > 1 ? (row.IsNull(1) ? null : row[1].ToString()) : null;
                             value.ValR = table.Columns.Count > 2 ? (row.IsNull(2) ? null : row[2].ToString()) : null;
                             value.Css = table.Columns.Count > 3 ? (row.IsNull(3) ? null : row[3].ToString()) : null;
+                            value.Class = table.Columns.Count > 4 ? (row.IsNull(4) ? null : row[4].ToString()) : null;
                             Values.Add(value);
                         }
                     }

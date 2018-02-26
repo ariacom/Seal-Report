@@ -42,11 +42,19 @@ namespace Seal.Model
         }
 
         string _css;
-        [Category("Definition"), DisplayName("CSS"), Description("The optional Cascade Style Sheet applied to the cell displayed")]
+        [Category("Definition"), DisplayName("CSS"), Description("The optional CSS Style applied to the cell displayed")]
         public string Css
         {
             get { return _css; }
             set { _css = value; }
+        }
+
+        string _class;
+        [Category("Definition"), DisplayName("CSS"), Description("The optional CSS Class applied to the cell displayed")]
+        public string Class
+        {
+            get { return _class; }
+            set { _class = value; }
         }
 
         [Category("Display"), DisplayName("\tValue"), Description("The final value displayed in the report")]

@@ -46,6 +46,7 @@
           <Name>Employees.Country</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
@@ -60,6 +61,7 @@
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <Format>MM/yyyy</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
@@ -94,7 +96,7 @@
           <Tag />
           <DisplayName>Progression</DisplayName>
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
+          <HasHTMLTags>true</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -104,6 +106,7 @@
           <SerieSortType>None</SerieSortType>
           <YAxisType>Secondary</YAxisType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <SQL />
           <CellScript>@using Seal.Model
 @{
     ResultCell cell = Model;
@@ -112,7 +115,8 @@
     cell.ContextCol indicates the current column (type = int)
     cell.ContextTable is the current table, summary or data (type = ResultTable)
     cell.ContextPage is the current result page (type = ResultPage), null for SummaryTable
-    cell.ContextIsSummaryTable indicates if the current table is the SummaryTable (and not the DataTable)
+    cell.ContextIsSummaryTable indicates if the current table is the SummaryTable
+    cell.ContextIsPageTable indicates if the current table is the PageTable (only Title cells are parsed for PageTable)
     cell.ContextCurrentLine is the current line of the table (type = ResultCell[]), null for SummaryTable
     cell.IsTotal indicates if it is a total cell
     cell.IsTotalTotal indicates if it is a total of total cell
@@ -120,57 +124,30 @@
     cell.IsSerie indicates if the cell is used for series, in this case, ContextRow and ContextCol is the common row and col used for the dimension values
 	
 	To customize your calculation and cell display, you can assign
-	cell.Value (type = object) is the cell value
+	cell.Value (type = object) is the cell value: string, double or DateTime
 	cell.FinalValue (type = string) is the final string used for the table cell
 	cell.FinalCssStyle (type = string) is the final CSS style used for the table cell
-	
-	e.g. to calculate a progression
-	if (cell.ContextRow == cell.ContextTable.Lines.Count - 1)
-	{
-		//No progression for last table line (summary or data)
-		cell.Value = null;		
-	}
-	else if (!cell.IsTitle &amp;&amp; cell.ContextRow &gt; 0)
-	{
-		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][cell.ContextCol-1].DoubleValue;
-		var currentValue = cell.ContextTable.Lines[cell.ContextRow][cell.ContextCol-1].DoubleValue;
-		cell.Value = 100*(currentValue - previousValue)/previousValue;
-	}
-
-	e.g. to change the cell style
-	if (cell.DoubleValue &lt; 0)
-	{
-		cell.FinalCssStyle = "font-weight:bold;color:red;text-align:right;";
-	}
-	else if (cell.DoubleValue &gt;50)
-	{
-		cell.FinalValue = string.Format("&lt;span style='font-size:12pt;'&gt;&amp;#9786;&lt;/span&gt; {0:N0} %", cell.DoubleValue);
-		cell.FinalCssStyle = "color:green;text-align:right;";
-	}		
-
-	e.g. to display the cell context
-	cell.FinalValue = string.Format("Row={0} Col={1} Title={2} Summary={3} Page={4} Data", cell.ContextRow, cell.ContextCol, cell.IsTitle, cell.ContextIsSummaryTable);
-	*/
-	
+	cell.FinalCssClass (type = string) is the final CSS classes used for the table cell, could be one or many Bootstrap classes
+	*/	
 	if (cell.IsSerie &amp;&amp; cell.ContextRow &gt; 0 &amp;&amp; cell.ContextCol == -1)
 	{
 		//For serie, ContextRow and ContextCol is the common row and col used for the dimension values
 		//In this case, we use the values of the Total (column before last)
 		var colIndex = cell.ContextCurrentLine.Length - 3;		
-		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][colIndex].DoubleValue;
-		var currentValue = cell.ContextTable.Lines[cell.ContextRow][colIndex].DoubleValue;
+		var previousValue = cell.ContextTable[cell.ContextRow-1,colIndex].DoubleValue;
+		var currentValue = cell.ContextTable[cell.ContextRow,colIndex].DoubleValue;
 		//Calculate the progression
-		cell.Value = 100*(currentValue - previousValue)/previousValue;
+		cell.Value = (currentValue - previousValue)/previousValue;
 	}
-	else if (cell.ContextRow == cell.ContextTable.Lines.Count - 1)
+	else if (cell.ContextRow == cell.ContextTable.RowCount - 1)
 	{
 		//No progression for last table line (summary or data)
 		cell.Value = null;		
 	}
 	else if (!cell.IsTitle &amp;&amp; cell.ContextRow &gt; 0)
 	{
-		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][cell.ContextCol-1].DoubleValue;
-		var currentValue = cell.ContextTable.Lines[cell.ContextRow][cell.ContextCol-1].DoubleValue;
+		var previousValue = cell.ContextTable[cell.ContextRow-1,cell.ContextCol-1].DoubleValue;
+		var currentValue = cell.ContextTable[cell.ContextRow,cell.ContextCol-1].DoubleValue;
 		//Calculate the progression
 		cell.Value = 100*(currentValue - previousValue)/previousValue;
 		if (cell.Value != null)
@@ -180,13 +157,19 @@
 		//Format
 		if (cell.DoubleValue &lt; 0)
 		{
-			cell.FinalCssStyle = "font-weight:bold;color:red;text-align:right;";
+			cell.FinalCssStyle = "font-weight:bold;";
+			cell.FinalCssClass = "danger text-center"; //Note that this is a standard BootStrap class
 		}
 		else if (cell.DoubleValue &gt;50)
 		{
 			cell.FinalValue = string.Format("&lt;span style='font-size:12pt;'&gt;&amp;#9786;&lt;/span&gt; {0:N0} %", cell.DoubleValue);
-			cell.FinalCssStyle = "color:green;text-align:right;";
+			cell.FinalCssStyle = "font-weight:bold;";
+			cell.FinalCssClass = "success text-center";	//Note that this is a standard BootStrap class		
 		}		
+		else
+		{
+			cell.FinalCssClass = "text-center";
+		}
 	}
 }
 </CellScript>
@@ -208,23 +191,7 @@
           <CellScript>@using Seal.Model
 @{
     ResultCell cell = Model;
-    //cell.ContextRow indicates the current row (int)
-    //cell.ContextCol indicates the current column (int)
-    //cell.ContextTable is the current table (ResultTable)
-    //cell.ContextPage is the current result page (ResultPage)
-    //cell.ContextIsPageTable indicates if the current table is the PageTable (and not the DataTable)
-    
-    //cell.IsTotal indicates if it is a total cell
-    //cell.IsTitle indicates if it is a title cell
-	/*
-	if (cell.ContextIsPageTable) 
-	{
-		cell.Value = null;
-		return;
-	}
-	*/
-	//bool isValue = !cell.IsTitle &amp;&amp; !cell.IsSerie &amp;&amp; !cell.IsTotalTotal;
-	
+
 	if (cell.ContextRow == cell.ContextTable.Lines.Count - 1)
 	{
 		//No running totals for last table line (summary or data)
@@ -236,6 +203,7 @@
 		var currentValue = cell.ContextTable.Lines[cell.ContextRow][cell.ContextCol-2].DoubleValue;
 		//Calculate the running total
 		cell.Value = currentValue + (previousValue != null ? previousValue : 0);
+		cell.FinalCssClass = "text-right";
 	}	
 	
     //Example to calculate the ratio between the 2 previous total cells in the result table:
@@ -355,7 +323,13 @@
               <ThemeName />
               <UseCustomTemplate>false</UseCustomTemplate>
               <PartialTemplates />
-              <Parameters />
+              <Parameters>
+                <Parameter>
+                  <Name>grid_layout</Name>
+                  <Value>col-sm-5;col-sm-7;
+col-sm-12;</Value>
+                </Parameter>
+              </Parameters>
               <CultureName />
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>

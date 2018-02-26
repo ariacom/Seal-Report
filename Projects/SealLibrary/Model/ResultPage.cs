@@ -44,6 +44,7 @@ namespace Seal.Model
         //For Charts
         public bool ChartInitDone = false;
         public string ChartXLabels = "";
+        public string ChartNavigations = "";
 
         //Max lengths to adjust margins
         public int AxisXLabelMaxLen = 0;

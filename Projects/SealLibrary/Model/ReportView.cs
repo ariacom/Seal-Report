@@ -864,21 +864,21 @@ namespace Seal.Model
         private Dictionary<object, object> initXValues(ResultPage page, List<ResultCell[]> XDimensions)
         {
             Dictionary<object, object> result = new Dictionary<object, object>();
-            bool hasNVD3Pie = Model.Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.PieChart && i.PivotPosition == PivotPosition.Data);
+            bool hasPie = Model.Elements.Exists(i => (i.Nvd3Serie == NVD3SerieDefinition.PieChart || i.ChartJSSerie == ChartJSSerieDefinition.Pie|| i.PlotlySerie == PlotlySerieDefinition.Pie) && i.PivotPosition == PivotPosition.Data);
             foreach (var dimensions in XDimensions)
             {
                 //One value -> set the raw value, several values -> concat the display value
                 if (dimensions.Length == 1)
                 {
 
-                    if (!dimensions[0].Element.IsEnum && dimensions[0].Element.AxisUseValues && !hasNVD3Pie)
-                    {
-                        result.Add(dimensions, dimensions[0].Value);
-                    }
-                    else
-                    {
+//                    if (!dimensions[0].Element.IsEnum && dimensions[0].Element.AxisUseValues && !hasPie)
+//                    {
+//                        result.Add(dimensions, dimensions[0].DisplayValue);
+//                    }
+//                    else
+//                    {
                         result.Add(dimensions, dimensions[0].ValueNoHTML);
-                    }
+ //                   }
                 }
                 else result.Add(dimensions, Helper.ConcatCellValues(dimensions, ","));
             }
@@ -938,9 +938,9 @@ namespace Seal.Model
             page.AxisYPrimaryMaxLen = 6;
             page.AxisYSecondaryMaxLen = 6;
 
-            StringBuilder result = new StringBuilder();
-            if (!Model.ExecChartIsNumericAxis && !Model.ExecChartIsDateTimeAxis)
-            {
+            StringBuilder result = new StringBuilder(), navs = new StringBuilder();
+       // TOCHECK ?    if (!Model.ExecChartIsNumericAxis && !Model.ExecChartIsDateTimeAxis)
+       //     {
                 //Build X labels
                 foreach (var key in page.PrimaryXValues.Keys)
                 {
@@ -948,10 +948,18 @@ namespace Seal.Model
                     var xval = page.PrimaryXValues[key].ToString();
                     result.Append(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(xval)));
                     if (xval.Length > page.AxisXLabelMaxLen) page.AxisXLabelMaxLen = xval.Length;
+
+                    var navigation = Model.GetNavigation(((ResultCell[])key)[0]);
+                    if (!string.IsNullOrEmpty(navigation))
+                    {
+                        if (navs.Length != 0) navs.Append(",");
+                        navs.Append(navigation);
+                    }
                 }
 
                 page.ChartXLabels = result.ToString();
-            }
+                page.ChartNavigations = navs.ToString();
+         //   }
 
             foreach (ResultSerie resultSerie in page.Series)
             {

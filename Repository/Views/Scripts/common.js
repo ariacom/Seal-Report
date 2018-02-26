@@ -70,7 +70,7 @@ function restrictionSelectChange(source) {
             if (val) restr += $("#" + idSel + " option:selected").text() + " " + val + " " + "\r\n";
         }
     });*/
- //   $("#restrictions_button").attr('title', restr).tooltip();
+    //   $("#restrictions_button").attr('title', restr).tooltip();
 }
 
 function initNavMenu() {
@@ -106,7 +106,7 @@ function showNavMenu() {
         });
 }
 
-function showPopupNavMenu(source, content) {
+function showPopupNavMenu(source, content, forChart) {
     var $popup = $('#nav_popupmenu');
     if (!$popup.length) {
         $popup = $("<ul id='nav_popupmenu' class='dropdown-menu' role='menu'/>");
@@ -124,26 +124,27 @@ function showPopupNavMenu(source, content) {
         executeReport($(this).attr("nav"));
         $popup.hide();
     });
+
     $popup
         .show()
         .css({
             position: "absolute",
-            left: source.offset().left,
-            top: source.offset().top + source.height() + 3
+            left: (forChart ? source.offsetX : source.offset().left),
+            top: (forChart ? source.offsetY + 35 : source.offset().top + source.height() + 3)
         });
 }
 
 
 function initNavCells() {
-    $(".cell_value").mouseenter(function (e) {
-        if ($(this).attr("navigation")) {
-            showPopupNavMenu($(this), $(this).attr("navigation"));
-        }
-    });
-
-    $(".cell_value").mouseleave(function () {
-        $("#nav_popupmenu").hide();
-    });
+    $("td:not([navigation=''])")
+        .mouseenter(function (e) {
+            if ($(this).attr("navigation")) {
+                showPopupNavMenu($(this), $(this).attr("navigation"), false);
+            }
+        })
+        .mouseleave(function () {
+            $("#nav_popupmenu").hide();
+        });
 }
 
 function executeTimer() {
@@ -288,8 +289,7 @@ function getTableData(datatable, guid, viewid, pageid, data, callback, settings)
     }
 }
 
-function resize()
-{
+function resize() {
     if (!printLayout) $("body").css("padding-top", $("#bar_top").height() + 15);
 }
 
@@ -424,7 +424,7 @@ $(document).ready(function () {
         resize();
     });
     resize();
-    
+
     if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 
     //back to top

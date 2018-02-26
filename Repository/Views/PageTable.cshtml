@@ -1,4 +1,5 @@
 ﻿@using Seal.Model
+@using Seal.Helpers
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
@@ -24,10 +25,10 @@
                 break;
             }
             <tr>
-                <th>
+                <th @Raw(Helper.AddIfNotEmpty("class='", header.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", header.CellCssStyle, "'"))>
                     @Raw(header.HTMLValue)
                 </th>
-                <td @Raw(reportModel.GetNavigation(value))>
+                <td @Raw(Helper.AddIfNotEmpty("class='", value.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", value.CellCssStyle, "'"))>
                     @Raw(value.HTMLValue)
                 </td>
             </tr>

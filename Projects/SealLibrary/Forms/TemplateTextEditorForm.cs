@@ -146,7 +146,8 @@ namespace Seal.Forms
                 }
                 ToolStripMenuItem item = new ToolStripMenuItem(title);
                 item.Click += new System.EventHandler(this.item_Click);
-                item.ToolTipText = value;
+                item.Tag = value;
+                item.ToolTipText = value.Length > 250 ? value.Substring(0,250) + "..." : value;
                 samplesMenuItem.DropDownItems.Add(item);
             }
             if (!mainToolStrip.Items.Contains(samplesMenuItem)) mainToolStrip.Items.Add(samplesMenuItem);
@@ -154,7 +155,7 @@ namespace Seal.Forms
 
         void item_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem) textBox.Text = string.IsNullOrEmpty(((ToolStripMenuItem)sender).ToolTipText) ? ((ToolStripMenuItem)sender).Text : ((ToolStripMenuItem)sender).ToolTipText;
+            if (sender is ToolStripMenuItem) textBox.Text = ((ToolStripMenuItem) sender).Tag.ToString();
         }
 
         public void SetResetText(string resetText)

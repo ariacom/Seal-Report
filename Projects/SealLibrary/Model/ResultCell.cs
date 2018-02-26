@@ -22,9 +22,10 @@ namespace Seal.Model
         public bool IsTotalTotal = false;
         public bool IsSerie = false;
 
-        //Final Values and CSS if set in the cell script
+        //Final Values and CSS, Class if set in the cell script
         public string FinalValue = "";
         public string FinalCssStyle = "";
+        public string FinalCssClass = "";
 
         public string HTMLValue
         {
@@ -117,17 +118,22 @@ namespace Seal.Model
             }
         }
 
-        public string Class
+        public string CellCssClass
         {
             get
             {
-                string result = IsTitle ? "empty_title" : "empty_value";
-                if (Element != null)
+                if (Element != null && Element.IsEnum)
                 {
-                    result = Element.PivotPosition.ToString().ToLower();
-                    if (IsTitle) result += "_title";
-                    else result += "_value";
-                    if (IsTotal) result += "_total";
+                    MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
+                    if (value != null) FinalCssClass = value.Class;
+                }
+
+                if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
+
+                string result = "";
+                if (!IsTitle && Element != null && !Element.IsEnum && string.IsNullOrEmpty(result))
+                {
+                    if (Element.IsNumeric || Element.IsDateTime) result = "text-right";
                 }
                 return result;
             }
@@ -144,29 +150,7 @@ namespace Seal.Model
                 }
 
                 if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;
-
-                string result = "";
-                if (IsTitle) return result;
-                else if (Element != null && !string.IsNullOrEmpty(Element.CellCss))
-                {
-                    //Handle multiple CSS definition
-                    string[] css = Element.CellCss.Split('|');
-                    if (css.Length == 1) result = Element.CellCss;
-                    else if (css.Length >= 2)
-                    {
-                        result = ((Value != null && Value.ToString() == "") || (DoubleValue != null && DoubleValue.Value == 0)) ? css[1] : css[0];
-                        if (css.Length == 3 && (DoubleValue != null && DoubleValue.Value != 0))
-                        {
-                            result = (DoubleValue.Value > 0) ? css[0] : css[2];
-                        }
-                    }
-                }
-
-                if (Element != null && !Element.IsEnum && string.IsNullOrEmpty(result))
-                {
-                    if (Element.IsNumeric || Element.IsDateTime) result = "text-align:right;";
-                }
-                return result;
+                return "";
             }
         }
 
@@ -251,8 +235,6 @@ namespace Seal.Model
                 //res : guid element for a restriction
                 //rpa : report path for sub-report
                 //dis : display value for sub-report
- 
-
                 if (_links == null)
                 {
                     _links = new List<NavigationLink>();
@@ -350,6 +332,11 @@ namespace Seal.Model
         public ResultCell[] ContextCurrentLine
         {
             get { return ContextTable != null && ContextRow != -1 ? ContextTable.Lines[ContextRow] : null; }
+        }
+
+        public bool ContextIsPageTable
+        {
+            get { return ContextPage != null && ContextTable != null && ContextPage.PageTable == ContextTable; }
         }
 
         public bool ContextIsSummaryTable

@@ -45,7 +45,8 @@ namespace Seal.Forms
     cell.ContextCol indicates the current column (type = int)
     cell.ContextTable is the current table, summary or data (type = ResultTable)
     cell.ContextPage is the current result page (type = ResultPage), null for SummaryTable
-    cell.ContextIsSummaryTable indicates if the current table is the SummaryTable (and not the DataTable)
+    cell.ContextIsSummaryTable indicates if the current table is the SummaryTable
+    cell.ContextIsPageTable indicates if the current table is the PageTable (only Title cells are parsed for PageTable)
     cell.ContextCurrentLine is the current line of the table (type = ResultCell[]), null for SummaryTable
     cell.IsTotal indicates if it is a total cell
     cell.IsTotalTotal indicates if it is a total of total cell
@@ -53,39 +54,106 @@ namespace Seal.Forms
     cell.IsSerie indicates if the cell is used for series, in this case, ContextRow and ContextCol is the common row and col used for the dimension values
 	
 	To customize your calculation and cell display, you can assign
-	cell.Value (type = object) is the cell value
+	cell.Value (type = object) is the cell value: string, double or DateTime
 	cell.FinalValue (type = string) is the final string used for the table cell
 	cell.FinalCssStyle (type = string) is the final CSS style used for the table cell
-	
-	e.g. to calculate a progression
-	if (cell.ContextRow == cell.ContextTable.Lines.Count - 1)
+	cell.FinalCssClass (type = string) is the final CSS classes used for the table cell, could be one or many Bootstrap classes
+	*/
+	}
+";
+
+        static readonly Tuple<string, string>[] razorCellScriptSamples =
+        {
+            new Tuple<string, string>(
+                "Simple format",
+@"if (cell.IsTitle)
+	{
+        if (cell.ContextIsSummaryTable) {
+    		cell.FinalCssStyle = ""font-weight:bold;"";
+	    	cell.FinalCssClass = ""warning lead""; //These are Bootstrap classes
+        }
+        else if (cell.ContextIsPageTable) {
+	    	cell.FinalCssClass = ""info""; //These are Bootstrap classes
+        }
+        else {
+    		cell.FinalCssStyle = ""font-weight:bold;"";
+	    	cell.FinalCssClass = ""warning""; //These are Bootstrap classes
+        }
+	}
+    else {
+		cell.FinalCssClass = ""success right""; //These are Bootstrap classes
+    }
+"
+                ),
+            new Tuple<string, string>(
+                "Display negative values in red and bold",
+@"if (cell.DoubleValue < 0)
+	{
+		cell.FinalCssStyle = ""font-weight:bold;"";
+		cell.FinalCssClass = ""danger lead text-right""; //These are Bootstrap classes
+	}
+"
+                ),
+            new Tuple<string, string>(
+                "Calculate a progression",
+@"if (cell.IsSerie && cell.ContextRow > 0 && cell.ContextCol == -1)
+	{
+		//For serie, ContextRow and ContextCol is the common row and col used for the dimension values
+		//In this case, we use the values of the Total (column before last)
+		var colIndex = cell.ContextCurrentLine.Length - 3;		
+		var previousValue = cell.ContextTable[cell.ContextRow-1,colIndex].DoubleValue;
+		var currentValue = cell.ContextTable[cell.ContextRow,colIndex].DoubleValue;
+		//Calculate the progression
+		cell.Value = (currentValue - previousValue)/previousValue;
+	}
+    else if (cell.ContextRow == cell.ContextTable.RowCount - 1)
 	{
 		//No progression for last table line (summary or data)
 		cell.Value = null;		
 	}
 	else if (!cell.IsTitle && cell.ContextRow > 0)
 	{
-		var previousValue = cell.ContextTable.Lines[cell.ContextRow-1][cell.ContextCol-1].DoubleValue;
-		var currentValue = cell.ContextTable.Lines[cell.ContextRow][cell.ContextCol-1].DoubleValue;
+        //Normal case for DataTable and SummaryTable
+		var previousValue = cell.ContextTable[cell.ContextRow-1,cell.ContextCol-1].DoubleValue;
+		var currentValue = cell.ContextTable[cell.ContextRow,cell.ContextCol-1].DoubleValue;
 		cell.Value = 100*(currentValue - previousValue)/previousValue;
 	}
-
-	e.g. to change the cell style
-	if (cell.DoubleValue < 0)
+"
+                ),
+            new Tuple<string, string>(
+                "Calculate a running total",
+@"if (cell.IsSerie && cell.ContextRow > 0 && cell.ContextCol == -1)
 	{
-		cell.FinalCssStyle = ""font-weight:bold;color:red;text-align:right;"";
+		//For serie, ContextRow and ContextCol is the common row and col used for the dimension values
+		//In this case, we use the values of the Total (column before last)
+		var colIndex = cell.ContextCurrentLine.Length - 3;		
+		var previousValue = cell.ContextTable[cell.ContextRow-1,colIndex].DoubleValue;
+		var currentValue = cell.ContextTable[cell.ContextRow,colIndex].DoubleValue;
+		//Calculate the running total
+		cell.Value = currentValue + (previousValue != null ? previousValue : 0);
 	}
-	else if (cell.DoubleValue >50)
+    else if (cell.ContextRow == cell.ContextTable.RowCount - 1)
 	{
-		cell.FinalValue = string.Format(""<span style='font-size:12pt;'>&#9786;</span> {0:N0} %"", cell.DoubleValue);
-		cell.FinalCssStyle = ""color:green;text-align:right;"";
-	}		
-
-	e.g. to display the cell context
-	cell.FinalValue = string.Format(""Row={0} Col={1} Title={2} Summary={3}"", cell.ContextRow, cell.ContextCol, cell.IsTitle, cell.ContextIsSummaryTable);
-	*/
+		//No running totals for last table line (summary or data)
+		cell.Value = null;		
 	}
-";
+	else if (!cell.IsTitle && cell.ContextRow > 0)
+	{
+        //Normal case for DataTable and SummaryTable
+		var previousValue = cell.ContextTable[cell.ContextRow-1,cell.ContextCol].DoubleValue;
+		var currentValue = cell.ContextTable[cell.ContextRow,cell.ContextCol-2].DoubleValue;
+		//Calculate the running total
+		cell.Value = currentValue + (previousValue != null ? previousValue : 0);
+    }	
+"
+                ),
+            new Tuple<string, string>(
+                "Display the cell context",
+@"cell.FinalValue = string.Format(""Row={0} Col={1} Title={2} Summary={3}"", cell.ContextRow, cell.ContextCol, cell.IsTitle, cell.ContextIsSummaryTable);
+"
+                ),
+        };
+
 
         const string razorTableDefinitionScriptTemplate = @"@using Seal.Model
 @using System.Data
@@ -491,15 +559,15 @@ namespace Seal.Forms
     });
 
     dbHelper.MyLoadDataTable = new CustomLoadDataTable(delegate(string connectionString, string sql) {
-        return new DataTable(); //TODO
+        return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
     });
 
     dbHelper.MyLoadDataTableFromExcel = new CustomLoadDataTableFromExcel(delegate(string excelPath, string tabName) {
-        return new DataTable(); //TODO
+        return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
     });
 
     dbHelper.MyLoadDataTableFromCSV = new CustomLoadDataTableFromCSV(delegate(string csvPath, char? separator) {
-        return new DataTable(); //TODO
+        return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
     });
 "
                 ),
@@ -562,7 +630,7 @@ namespace Seal.Forms
                     List<string> samples = new List<string>();
                     foreach (var sample in tasksSamples)
                     {
-                        samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n\r\n@using System.Data@{\r\n\t//" + sample.Item1 + "\r\n\t" + sample.Item2 + "}\r\n|" + sample.Item1);
+                        samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@using System.Data@{\r\n\t//" + sample.Item1 + "\r\n\t" + sample.Item2 + "}\r\n|" + sample.Item1);
                     }
                     frm.SetSamples(samples);
                 }
@@ -623,6 +691,13 @@ namespace Seal.Forms
                     {
                         frm.Text = "Edit custom script for the cell";
                         template = razorCellScriptTemplate;
+                        List<string> samples = new List<string>();
+                        foreach (var sample in razorCellScriptSamples)
+                        {
+                            samples.Add("@using Seal.Model\r\n@{\r\n\t//" + sample.Item1 + "\r\n\tResultCell cell=Model;\r\n\tReportElement element = cell.Element;\r\n\tReportModel reportModel = element.Model;\r\n\tReport report = reportModel.Report;\r\n\t" + sample.Item2 + "}\r\n|" + sample.Item1);
+                        }
+                        frm.SetSamples(samples);
+
                         frm.TypeForCheckSyntax = typeof(ResultCell);
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }

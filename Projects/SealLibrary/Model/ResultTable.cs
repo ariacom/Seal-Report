@@ -121,10 +121,8 @@ namespace Seal.Model
                 {
                     if (col > 0) sb.Append(",");
                     ResultCell cell = line[col];
-                    string className = cell.IsTitle && col == 0 ? "cell_title" : "cell_value";
-                    className = cell.IsTotal ? "cell_value_total" : className;
                     var cellValue = !string.IsNullOrEmpty(cell.FinalValue) ? cell.FinalValue : cell.DisplayValue;
-                    var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}", model.GetNavigation(cell, true), cell.CellCssStyle, className, cellValue));
+                    var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}", model.GetNavigation(cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
                     sb.AppendFormat("\"{0}\"", fullValue);
                 }
                 sb.Append("]");
