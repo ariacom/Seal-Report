@@ -1,4 +1,5 @@
 ﻿@using Seal.Model
+@using Seal.Helpers
 @{
     ReportView view = Model;
     ReportModel reportModel = view.Model;
@@ -19,13 +20,13 @@ for (int row = rowStart; row < rowEnd; row++)
                 }
                 if (isHead)
                 {
-                    <th @Raw(reportModel.GetNavigation(cell))>
+                    <th @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'")) @Raw(reportModel.GetNavigation(cell))>
                         @Raw(cell.HTMLValue)
                     </th>
                 }
                 else
                 {
-                    <td @Raw(reportModel.GetNavigation(cell))>
+                    <td @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'")) @Raw(reportModel.GetNavigation(cell))>
                         @Raw(cell.HTMLValue)
                     </td>
                 }

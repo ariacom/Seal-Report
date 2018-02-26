@@ -28,9 +28,10 @@
 
         <script>
             var ctx = $("#@chartId");
+            var colors = d3.scale.category@(page.PrimaryXDimensions.Count <= 10 ? "1" : "2")0().range();
             var data = {
                 labels: [@Raw(page.ChartXLabels)],
-//FUTURE    Navigation             navigations: [@Raw(page.ChartXLabels)],
+                navigations: [@Raw(page.ChartNavigations)],
                 datasets: [
                     @foreach (ResultSerie serie in page.Series)
                     {
@@ -39,8 +40,8 @@
                         labels: [@Raw(page.ChartXLabels)],
                         label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
                         data: [@Raw(reportModel.ExecChartJSType == "bar" || reportModel.ExecChartJSType == "pie" ? serie.ChartYSerieValues : serie.ChartXYSerieValues)],
-                        borderColor: d3.scale.category10().range()@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
-                        backgroundColor: d3.scale.category10().range()@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
+                        borderColor: colors@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
+                        backgroundColor: colors@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
                         borderWidth: 1,
                         steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
                         fill: @Helper.ToJS(view.GetBoolValue("chartjs_fill")),
@@ -118,7 +119,6 @@
                 options: options
             });
 
-/* FUTURE: Navigation handling
             $("#@chartId").click(
                 function (evt) {
                     var activePoints = @(chartId).getElementsAtEvent(evt);
@@ -127,39 +127,10 @@
                         var label = @(chartId).data.labels[index];
                         var value = @(chartId).data.datasets[0].data[index];
                        var nav = @(chartId).data.navigations[index];
-                       if (nav) showPopupNavMenu2(evt, nav);
+                       if (nav) showPopupNavMenu(evt, nav, true);
                     }
                 }
-            );
-
-
-            function showPopupNavMenu2(source, content) {
-                var $popup = $('#nav_popupmenu');
-                if (!$popup.length) {
-                    $popup = $("<ul id='nav_popupmenu' class='dropdown-menu' role='menu'/>");
-                    $("body").append($popup);
-                    $popup
-                        .mouseenter(function () {
-                            $popup.show();
-                        })
-                        .mouseleave(function () {
-                            $popup.hide();
-                        });
-                }
-                $popup.html(content);
-                $('#nav_popupmenu li').click(function (e) {
-                    executeReport($(this).attr("nav"));
-                    $popup.hide();
-                });
-                $popup
-                    .show()
-                    .css({
-                        position: "absolute",
-                        left: source.offsetX,
-                        top: source.offsetY + 30
-                    });
-            }
-*/
+            );           
         </script>
         chartOk = true;
     }

@@ -1212,11 +1212,13 @@ namespace Seal.Model
                     if (Source == runningModel.Source
                         && Connection.FullConnectionString == runningModel.Connection.FullConnectionString
                         && string.IsNullOrEmpty(runningModel.ExecutionError)
-                        && ((PreSQL == null && runningModel.PreSQL == null) || (PreSQL.ToLower().Trim() == runningModel.PreSQL.ToLower().Trim()))
-                        && ((PostSQL == null && runningModel.PostSQL == null) || (PostSQL.ToLower().Trim() == runningModel.PostSQL.ToLower().Trim()))
-                        && ((PreLoadScript == null && runningModel.PreLoadScript == null) || (PreLoadScript.ToLower().Trim() == runningModel.PreLoadScript.ToLower().Trim()))
+                        && ((PreSQL == null && runningModel.PreSQL == null) || (PreSQL.Trim() == runningModel.PreSQL.Trim()))
+                        && ((PostSQL == null && runningModel.PostSQL == null) || (PostSQL.Trim() == runningModel.PostSQL.Trim()))
+                        && ((PreLoadScript == null && runningModel.PreLoadScript == null) || (PreLoadScript.Trim() == runningModel.PreLoadScript.Trim()))
+                        && ((LoadScript == null && runningModel.LoadScript == null) || (LoadScript.Trim() == runningModel.LoadScript.Trim()))
+                        && ((FinalScript == null && runningModel.FinalScript == null) || (FinalScript.Trim() == runningModel.FinalScript.Trim()))
                         )
-                    {
+                    {                        
                         //we can wait to get the same data table 
                         Report.LogMessage("Model '{0}': Getting result table from '{1}'...", Name, runningModel.Name);
                         while (!Report.Cancel && !runningModel._resultTableAvailable)

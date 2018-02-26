@@ -106,7 +106,7 @@ function showNavMenu() {
         });
 }
 
-function showPopupNavMenu(source, content) {
+function showPopupNavMenu(source, content, forChart) {
     var $popup = $('#nav_popupmenu');
     if (!$popup.length) {
         $popup = $("<ul id='nav_popupmenu' class='dropdown-menu' role='menu'/>");
@@ -124,12 +124,13 @@ function showPopupNavMenu(source, content) {
         executeReport($(this).attr("nav"));
         $popup.hide();
     });
+
     $popup
         .show()
         .css({
             position: "absolute",
-            left: source.offset().left,
-            top: source.offset().top + source.height() + 3
+            left: (forChart ? source.offsetX : source.offset().left),
+            top: (forChart ? source.offsetY + 35 : source.offset().top + source.height() + 3)
         });
 }
 
@@ -137,7 +138,7 @@ function showPopupNavMenu(source, content) {
 function initNavCells() {
     $(".cell_value").mouseenter(function (e) {
         if ($(this).attr("navigation")) {
-            showPopupNavMenu($(this), $(this).attr("navigation"));
+            showPopupNavMenu($(this), $(this).attr("navigation"), false);
         }
     });
 

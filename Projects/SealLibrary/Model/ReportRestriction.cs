@@ -485,8 +485,6 @@ namespace Seal.Model
         {
             get
             {
-                if (string.IsNullOrEmpty(_value1)) return false;
-
                 return
                     (
                     IsDateTime && (HasDateKeyword(Date1Keyword) || Date1 != DateTime.MinValue)
@@ -500,8 +498,6 @@ namespace Seal.Model
         {
             get
             {
-                if (string.IsNullOrEmpty(_value2)) return false;
-
                 return
                     (
                     IsDateTime && (HasDateKeyword(Date2Keyword) || Date2 != DateTime.MinValue)
@@ -515,8 +511,6 @@ namespace Seal.Model
         {
             get
             {
-                if (string.IsNullOrEmpty(_value3)) return false;
-
                 return
                     (
                     IsDateTime && (HasDateKeyword(Date3Keyword) || Date3 != DateTime.MinValue)

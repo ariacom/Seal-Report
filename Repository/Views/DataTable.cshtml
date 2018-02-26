@@ -45,7 +45,7 @@
     });
     </script>
 
-    <table class='data_table table-responsive table table-striped table-hover table-condensed' id='@("dt_" + view.ViewId+page.PageId)' viewid='@modelView.ViewId' pageid='@page.PageId'>
+    <table class='table-responsive table table-striped table-hover table-condensed' id='@("dt_" + view.ViewId+page.PageId)' viewid='@modelView.ViewId' pageid='@page.PageId'>
         @if (view.HasValue("data_table_caption"))
         {
             <caption align="bottom" style="caption-side: bottom;">@Raw(view.GetHtmlValue("data_table_caption"))</caption>
@@ -56,15 +56,8 @@
                 <tr>
                     @for (int col = 0; col < page.DataTable.ColumnCount; col++)
                     {
-                        //string className = "cell_title";
                         ResultCell cell = page.DataTable[row, col];
-                        //Check if at least a value in the headers, this force data title to 'cell_value' css
-                        /*dataTitleHeader = ((row > 0 && !cell.IsTitle) ? false : true);
-                        if (row > 0 && !cell.IsTitle || ((cell.Class == "data_title" || cell.Class == "data_title_total") && !dataTitleHeader))
-                        {
-                            className = cell.IsTotal ? "cell_value_total" : "cell_value";
-                        }*/
-                        <th @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
+                        <th @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'")) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
                     }
                 </tr>
             }
@@ -79,7 +72,7 @@
                             @for (int col = 0; col < page.DataTable.ColumnCount; col++)
                             {
                                 ResultCell cell = page.DataTable[row, col];
-                                <td @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
+                                <td @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'")) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
                             }
                         </tr>
                     }
@@ -92,7 +85,7 @@
                     @for (int col = 0; col < page.DataTable.ColumnCount; col++)
                     {
                         ResultCell cell = page.DataTable[row, col];
-                        <td>@Raw(cell.HTMLValue)</td>
+                        <td @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'"))>@Raw(cell.HTMLValue)</td>
                     }
                 </tr>
             }

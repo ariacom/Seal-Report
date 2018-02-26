@@ -68,7 +68,7 @@ namespace Seal.Model
             string templateErrors = "";
             ReportView masterView = Report.ExecutionView;
 
-          //  if (Report.ForPDFConversion) SetPDFRootViewHeaderCSS();
+            //  if (Report.ForPDFConversion) SetPDFRootViewHeaderCSS();
 
             masterView.InitTemplates(masterView, ref templateErrors);
             if (!string.IsNullOrEmpty(templateErrors))
@@ -523,7 +523,7 @@ namespace Seal.Model
                     model.FillResultTable();
                     if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
                 }
-                
+
 #if DEBUG
                 //Thread.Sleep(5000); //For DEV: Simulate long query
 #endif
@@ -1104,7 +1104,7 @@ namespace Seal.Model
                     if (!line0[i].IsTotal)
                     {
                         //empty cell
-                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true, Value = (i==0 ? Report.Translate("Total") : "") };
+                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true, Value = (i == 0 ? Report.Translate("Total") : "") };
                     }
                     else
                     {
@@ -1151,12 +1151,15 @@ namespace Seal.Model
                         cell.ContextTable = table;
                         cell.ContextPage = page;
                         cell.ContextModel = model;
-                        executeCellScript(cell);
+                        if (!cell.ContextIsPageTable || (cell.ContextIsPageTable && cell.IsTitle))
+                        {
+                            //Do not execute the script for values of the page table as it will be done in the summary table (cells are referenced)
+                            executeCellScript(cell);
+                        }
                     }
                 }
             }
         }
-
 
         private void handleCellScript(ReportModel model)
         {
@@ -1165,8 +1168,8 @@ namespace Seal.Model
                 if (Report.Cancel) break;
 
                 handleCustomScripts(model, page, page.DataTable);
-                //We do not handle Page table as calculations will be done in the summary table, as the cells are shared amongst Page and Summary
-                //handleCustomScripts(model, page, page.PageTable, _compilationKeys);
+                handleCustomScripts(model, page, page.PageTable);
+                
             }
             handleCustomScripts(model, null, model.SummaryTable);
         }
@@ -1686,7 +1689,7 @@ namespace Seal.Model
         public string GeneratePDFResult()
         {
             string newPath = "";
-         //   SetPDFRootViewHeaderCSS();
+            //   SetPDFRootViewHeaderCSS();
             var pdfParameter = Report.ExecutionView.GetParameter(Parameter.PDFLayoutParameter);
             bool initialValue = pdfParameter.BoolValue;
             try
@@ -1696,7 +1699,8 @@ namespace Seal.Model
                 newPath = Path.Combine(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source)) + ".pdf";
                 Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(source, newPath);
             }
-            finally {
+            finally
+            {
                 pdfParameter.BoolValue = initialValue;
             }
             return newPath;
@@ -1710,6 +1714,6 @@ namespace Seal.Model
 
         public bool IsConvertingToPDF = false; //If true, do not run conversion again
         public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...
-        
+
     }
 }

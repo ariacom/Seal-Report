@@ -14,7 +14,7 @@
 
         <div class="panel-group" role="tablist">
             <!--rows of xx restrictions -->
-            @for (int row = 0; row < report.ExecutionCommonRestrictions.Count / view.GetNumericValue("restrictions_per_row"); row++)
+            @for (int row = 0; row <= report.ExecutionCommonRestrictions.Count / view.GetNumericValue("restrictions_per_row"); row++)
             {
                 <div class="row">
                     @for (int i = view.GetNumericValue("restrictions_per_row") * row; i < report.ExecutionCommonRestrictions.Count && i < view.GetNumericValue("restrictions_per_row") * (row + 1); i++)

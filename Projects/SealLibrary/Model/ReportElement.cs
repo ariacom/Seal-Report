@@ -34,7 +34,6 @@ namespace Seal.Model
 
                 GetProperty("DisplayNameEl").SetIsBrowsable(true);
                 GetProperty("SQL").SetIsBrowsable(!Source.IsNoSQL);
-                GetProperty("CellCss").SetIsBrowsable(true);
                 GetProperty("HasHTMLTags").SetIsBrowsable(true);
                 GetProperty("SortOrder").SetIsBrowsable(true);
                 GetProperty("TypeEd").SetIsBrowsable(!IsEnum && !Source.IsNoSQL);
@@ -508,15 +507,6 @@ namespace Seal.Model
                 return _SQL;
             }
             set { _SQL = value; }
-        }
-
-        private string _cellCss;
-        [Category("Advanced"), DisplayName("Custom Cell CSS"), Description("If not empty, overwrite the default CSS style of the cell used to display the element. Up to 3 CSS strings can be specified separated by '|'. The first CSS is applied by default, the second CSS is for empty or zero values, the third CSS string is for the negative values."), Id(2, 5)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string CellCss
-        {
-            get { return _cellCss; }
-            set { _cellCss = value; }
         }
 
 

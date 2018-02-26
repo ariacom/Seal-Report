@@ -21,7 +21,7 @@
 </script>
 
 
-@if (reportModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") != "None")
+@if (reportModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") != "none")
 {
     <ul id="tc_@(view.ViewId)" class="nav nav-@(view.GetValue("model_menu_style"))s @(view.GetValue("model_menu_type") != "top" ? "nav-stacked" : "")">
         @if (view.GetBoolValue("show_summary_table"))
