@@ -406,7 +406,7 @@ namespace Seal.Model
         {
             get
             {
-                if (!HasValue1) return null;
+                if (IsDateTime || !HasValue1) return null;
                 double result;
                 if (double.TryParse(Value1.ToString(), out result)) return result;
                 return null;
@@ -824,7 +824,7 @@ namespace Seal.Model
                 return;
             }
 
-            string sqlOperator = Helper.GetEnumDescription(typeof(Operator), _operator);
+            string sqlOperator = Helper.GetEnumDescription(typeof(Operator), _operator).ToUpper();
             if (_operator == Operator.IsNull || _operator == Operator.IsNotNull)
             {
                 //Not or Not Null
@@ -853,6 +853,8 @@ namespace Seal.Model
 
                 if (_operator == Operator.Between || _operator == Operator.NotBetween)
                 {
+                    sqlOperator = sqlOperator.Replace("IS ", "");
+
                     _displayText += " " + GetDisplayValue(Value1, FinalDate1);
                     _displayRestriction += " " + GetDisplayRestriction(Value1, Date1Keyword, Date1);
 

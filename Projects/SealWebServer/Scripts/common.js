@@ -70,7 +70,7 @@ function restrictionSelectChange(source) {
             if (val) restr += $("#" + idSel + " option:selected").text() + " " + val + " " + "\r\n";
         }
     });*/
- //   $("#restrictions_button").attr('title', restr).tooltip();
+    //   $("#restrictions_button").attr('title', restr).tooltip();
 }
 
 function initNavMenu() {
@@ -136,15 +136,15 @@ function showPopupNavMenu(source, content, forChart) {
 
 
 function initNavCells() {
-    $(".cell_value").mouseenter(function (e) {
-        if ($(this).attr("navigation")) {
-            showPopupNavMenu($(this), $(this).attr("navigation"), false);
-        }
-    });
-
-    $(".cell_value").mouseleave(function () {
-        $("#nav_popupmenu").hide();
-    });
+    $("td:not([navigation=''])")
+        .mouseenter(function (e) {
+            if ($(this).attr("navigation")) {
+                showPopupNavMenu($(this), $(this).attr("navigation"), false);
+            }
+        })
+        .mouseleave(function () {
+            $("#nav_popupmenu").hide();
+        });
 }
 
 function executeTimer() {
@@ -289,8 +289,7 @@ function getTableData(datatable, guid, viewid, pageid, data, callback, settings)
     }
 }
 
-function resize()
-{
+function resize() {
     if (!printLayout) $("body").css("padding-top", $("#bar_top").height() + 15);
 }
 
@@ -425,7 +424,7 @@ $(document).ready(function () {
         resize();
     });
     resize();
-    
+
     if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 
     //back to top

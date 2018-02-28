@@ -51,7 +51,8 @@
                     var chartTitle = '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("nvd3_chart_title"))))';
 
                     //Root Script
-                    (@chartId).color(d3.scale.category10().range());
+                    var colors = d3.scale.category@((reportModel.ExecNVD3ChartType == "pieChart" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+                    (@chartId).color(colors);
                     //Axis format
                     if ((@chartId).xAxis != null && (@chartId).xAxis.tickFormat != null) (@chartId).xAxis.tickFormat(XValueFormatter);
                     if ((@chartId).yAxis != null && (@chartId).yAxis.tickFormat != null) (@chartId).yAxis.tickFormat(YPrimaryValueFormatter);

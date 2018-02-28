@@ -129,6 +129,19 @@ namespace Seal.Helpers
             }
         }
 
+
+        public static string CreateAndGetDirectory(string root, string subFolder)
+        {
+            string result = root;
+            if (!Directory.Exists(result)) Directory.CreateDirectory(result);
+            if (!string.IsNullOrWhiteSpace(subFolder))
+            {
+                result = Path.Combine(root, subFolder);
+                if (!Directory.Exists(result)) Directory.CreateDirectory(result);
+            }
+            return result;
+        }
+
         public static void AddFolderChoices(string path, string prefix, List<string> choices)
         {
             foreach (var folder in Directory.GetDirectories(path))

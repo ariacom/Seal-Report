@@ -15,7 +15,6 @@ namespace Seal.Helpers
     {
         private static string TripleDESVector = "qOiä+-?$"; //8 chars
 
-
         static TripleDESCryptoServiceProvider getCryptoServiceProvider(string key)
         {
             TripleDESCryptoServiceProvider crypto = new TripleDESCryptoServiceProvider();

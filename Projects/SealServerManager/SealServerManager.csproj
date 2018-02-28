@@ -155,7 +155,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="SealServerManager_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\Settings.settings">
