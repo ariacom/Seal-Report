@@ -42,7 +42,7 @@ namespace Seal.Model
         public string ChartXYSerieValues;
         public string ChartXSerieValues;
         public string ChartYSerieValues;
-        public string ChartYSerieDisplayValues;
+        //?public string ChartYSerieDisplayValues;
 
         public static int CompareSeries(ResultSerie a, ResultSerie b)
         {

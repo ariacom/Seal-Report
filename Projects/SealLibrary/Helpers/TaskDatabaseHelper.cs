@@ -225,6 +225,44 @@ namespace Seal.Helpers
             }
         }
 
+        public DbCommand GetDbCommand(DbConnection connection)
+        {
+            DbCommand result = null;
+            if (connection is OdbcConnection) result = ((OdbcConnection)connection).CreateCommand();
+            else result = ((OleDbConnection)connection).CreateCommand();
+            result.CommandTimeout = SelectTimeout;
+            return result;
+        }
+
+        public void ExecuteNonQuery(string connectionString, string sql, string commandsSeparator = null)
+        {
+            DbConnection connection = Helper.DbConnectionFromConnectionString(connectionString);
+            connection.Open();
+            DbCommand command = GetDbCommand(connection);
+            string[] commandTexts = new string[] { sql };
+            if (!string.IsNullOrEmpty(commandsSeparator))
+            {
+                commandTexts = sql.Split(new string[] { commandsSeparator }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            foreach (var commandText in commandTexts)
+            {
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+            }
+            connection.Close();
+        }
+
+        public object ExecuteScalar(string connectionString, string sql)
+        {
+            DbConnection connection = Helper.DbConnectionFromConnectionString(connectionString);
+            connection.Open();
+            DbCommand command = GetDbCommand(connection);
+            command.CommandText = sql;
+            var result = command.ExecuteScalar();
+            connection.Close();
+            return result;
+        }
+
         public void CreateTable(DbCommand command, DataTable table)
         {
             try
@@ -367,7 +405,9 @@ namespace Seal.Helpers
         public string RootGetTableColumnName(DataColumn col)
         {
             var result = CleanName(col.ColumnName);
-            return (DatabaseType == DatabaseType.MSSQLServer) ? "[" + result + "]" : result;
+            if (DatabaseType == DatabaseType.MSSQLServer) return "[" + result + "]";
+            if (DatabaseType == DatabaseType.Oracle) return Helper.QuoteDouble(result);
+            return result;
         }
 
         public string GetTableColumnName(DataColumn col)

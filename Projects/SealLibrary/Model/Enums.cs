@@ -172,39 +172,39 @@ namespace Seal.Model
 
     public enum Operator
     {
-        [Description("=")]
+        [Description("Equals")]
         Equal,
-        [Description("!=")]
+        [Description("Is different from")]
         NotEqual,
-        [Description(">")]
+        [Description("Is greater than")]
         Greater,
-        [Description(">=")]
+        [Description("Is greater or equal than")]
         GreaterEqual,
-        [Description("<")]
+        [Description("Is smaller than")]
         Smaller,
-        [Description("<=")]
+        [Description("Is smaller or equal than")]
         SmallerEqual,
-        [Description("Between")]
+        [Description("Is between")]
         Between,
-        [Description("Not Between")]
+        [Description("Is not Between")]
         NotBetween,
         [Description("Contains")]
         Contains,
-        [Description("Not Contains")]
+        [Description("Does not contain")]
         NotContains,
-        [Description("Starts With")]
+        [Description("Starts with")]
         StartsWith,
-        [Description("Ends With")]
+        [Description("Ends with")]
         EndsWith,
-        [Description("Is Empty")]
+        [Description("Is empty")]
         IsEmpty,
-        [Description("Is Not Empty")]
+        [Description("Is not empty")]
         IsNotEmpty,
         [Description("Is Null")]
         IsNull,
-        [Description("Is Not Null")]
+        [Description("Is not Null")]
         IsNotNull,
-        [Description("Value Only")]
+        [Description("Value only")]
         ValueOnly,
     }
 

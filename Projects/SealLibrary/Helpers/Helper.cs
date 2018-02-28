@@ -652,12 +652,7 @@ namespace Seal.Helpers
 
         public static int CalculateHash(string str)
         {
-            int res = 0;
-            for (int i = 0; i < str.Length; i++)
-            {
-                res += (i * str[i]) % int.MaxValue;
-            }
-            return res;
+            return str.GetHashCode();
         }
 
 

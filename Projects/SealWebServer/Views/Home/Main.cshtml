@@ -803,6 +803,15 @@
         {
         <text>tra["@Helper.ToJS(translation.Key)"] = "@Helper.ToJS(translation.Value)";</text>
         }
+        var opers = [];
+        @if (ServerOptions.HasEditor())
+        {
+        foreach (var oper in Enum.GetValues(typeof(Operator)))
+        {
+        <text>opers[@((int)oper)] = "@Helper.ToJS(repository.TranslateWebJS(Helper.GetEnumDescription(typeof(Operator), oper)))";</text>
+        }
+        }
+
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
 

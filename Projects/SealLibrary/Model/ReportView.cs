@@ -665,18 +665,18 @@ namespace Seal.Model
             get { return "<Click to reset the view parameters to their default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to its default value."), Id(7, 10)]
+        [Category("Helpers"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(7, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetPDFConfigurations
         {
-            get { return "<Click to reset the PDF configuration values to default values>"; }
+            get { return "<Click to reset the PDF configuration values to their default values>"; }
         }
 
-        [Category("Helpers"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to its default value."), Id(8, 10)]
+        [Category("Helpers"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(8, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetExcelConfigurations
         {
-            get { return "<Click to reset the Excel configuration values to default values>"; }
+            get { return "<Click to reset the Excel configuration values to their default values>"; }
         }
 
         string _information;
@@ -871,14 +871,14 @@ namespace Seal.Model
                 if (dimensions.Length == 1)
                 {
 
-//                    if (!dimensions[0].Element.IsEnum && dimensions[0].Element.AxisUseValues && !hasPie)
-//                    {
-//                        result.Add(dimensions, dimensions[0].DisplayValue);
-//                    }
-//                    else
-//                    {
+                    if (!dimensions[0].Element.IsEnum && dimensions[0].Element.AxisUseValues && !hasPie)
+                    {
+                        result.Add(dimensions, dimensions[0].Value);
+                    }
+                    else
+                    {
                         result.Add(dimensions, dimensions[0].ValueNoHTML);
- //                   }
+                    }
                 }
                 else result.Add(dimensions, Helper.ConcatCellValues(dimensions, ","));
             }
@@ -1030,14 +1030,14 @@ namespace Seal.Model
                         if (chartYResult.Length != 0) chartYResult.Append(",");
                         chartYResult.AppendFormat("{0}", yValue);
 
-                        if (chartYDisplayResult.Length != 0) chartYDisplayResult.Append(",");
-                        chartYDisplayResult.AppendFormat("'{0}'", Helper.ToJS(value.Yvalue.DisplayValue));
+                        //? if (chartYDisplayResult.Length != 0) chartYDisplayResult.Append(",");
+                        //? chartYDisplayResult.AppendFormat("'{0}'", Helper.ToJS(value.Yvalue.DisplayValue));
                     }
                 }
                 resultSerie.ChartXYSerieValues = chartXYResult.ToString();
                 resultSerie.ChartXSerieValues = chartXResult.ToString();
                 resultSerie.ChartYSerieValues = chartYResult.ToString();
-                resultSerie.ChartYSerieDisplayValues = chartYDisplayResult.ToString();
+                //?resultSerie.ChartYSerieDisplayValues = chartYDisplayResult.ToString();
             }
             page.ChartInitDone = true;
         }

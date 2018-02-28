@@ -147,7 +147,7 @@ namespace Seal.Forms
                 ToolStripMenuItem item = new ToolStripMenuItem(title);
                 item.Click += new System.EventHandler(this.item_Click);
                 item.Tag = value;
-                item.ToolTipText = value.Length > 250 ? value.Substring(0,250) + "..." : value;
+                item.ToolTipText = value.Length > 900 ? value.Substring(0,900) + "..." : value;
                 samplesMenuItem.DropDownItems.Add(item);
             }
             if (!mainToolStrip.Items.Contains(samplesMenuItem)) mainToolStrip.Items.Add(samplesMenuItem);
