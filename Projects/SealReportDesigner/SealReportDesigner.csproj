@@ -77,7 +77,6 @@
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -106,12 +105,6 @@
     <Compile Include="Control\ModelPanel.Designer.cs">
       <DependentUpon>ModelPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Control\ViewPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ViewPanel.Designer.cs">
-      <DependentUpon>ViewPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="ReportDesigner.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,9 +122,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Control\ModelPanel.resx">
       <DependentUpon>ModelPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Control\ViewPanel.resx">
-      <DependentUpon>ViewPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

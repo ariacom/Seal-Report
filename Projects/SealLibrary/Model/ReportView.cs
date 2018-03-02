@@ -15,14 +15,10 @@ using Seal.Forms;
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
 using RazorEngine.Templating;
-using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
 using System.Globalization;
-using System.Threading;
 using System.Web;
 using System.Data;
-using System.Windows.Forms;
-using System.Dynamic;
 
 namespace Seal.Model
 {
@@ -826,7 +822,7 @@ namespace Seal.Model
 
         public string GetGridLayoutColumnClass(string column)
         {
-            if (!IsGridLayoutColumnForModel(column)) return column.Substring(1, column.Length-2);
+            if (!IsGridLayoutColumnForModel(column)) return column.Substring(1, column.Length - 2);
             return column;
         }
 
@@ -856,6 +852,7 @@ namespace Seal.Model
                         Model.ExecChartIsNumericAxis = dimensions[0].Element.IsNumeric;
                         Model.ExecChartIsDateTimeAxis = dimensions[0].Element.IsDateTime;
                         Model.ExecD3XAxisFormat = dimensions[0].Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
+                        Model.ExecMomentJSXAxisFormat = dimensions[0].Element.GetMomentJSFormat();
                     }
                 }
             }
@@ -864,14 +861,13 @@ namespace Seal.Model
         private Dictionary<object, object> initXValues(ResultPage page, List<ResultCell[]> XDimensions)
         {
             Dictionary<object, object> result = new Dictionary<object, object>();
-            bool hasPie = Model.Elements.Exists(i => (i.Nvd3Serie == NVD3SerieDefinition.PieChart || i.ChartJSSerie == ChartJSSerieDefinition.Pie|| i.PlotlySerie == PlotlySerieDefinition.Pie) && i.PivotPosition == PivotPosition.Data);
             foreach (var dimensions in XDimensions)
             {
                 //One value -> set the raw value, several values -> concat the display value
                 if (dimensions.Length == 1)
                 {
 
-                    if (!dimensions[0].Element.IsEnum && dimensions[0].Element.AxisUseValues && !hasPie)
+                    if (!dimensions[0].Element.IsEnum && dimensions[0].Element.AxisUseValues)
                     {
                         result.Add(dimensions, dimensions[0].Value);
                     }
@@ -939,27 +935,28 @@ namespace Seal.Model
             page.AxisYSecondaryMaxLen = 6;
 
             StringBuilder result = new StringBuilder(), navs = new StringBuilder();
-       // TOCHECK ?    if (!Model.ExecChartIsNumericAxis && !Model.ExecChartIsDateTimeAxis)
-       //     {
-                //Build X labels
-                foreach (var key in page.PrimaryXValues.Keys)
+            // TOCHECK ?    if (!Model.ExecChartIsNumericAxis && !Model.ExecChartIsDateTimeAxis)
+            //     {
+            //Build X labels
+            foreach (var key in page.PrimaryXValues.Keys)
+            {
+                ResultCell[] dimensions = key as ResultCell[];
+                if (result.Length != 0) result.Append(",");
+                var xval = (dimensions.Length == 1 ? dimensions[0].DisplayValue : page.PrimaryXValues[key].ToString());
+                result.Append(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(xval)));
+                if (xval.Length > page.AxisXLabelMaxLen) page.AxisXLabelMaxLen = xval.Length;
+
+                var navigation = Model.GetNavigation(((ResultCell[])key)[0]);
+                if (!string.IsNullOrEmpty(navigation))
                 {
-                    if (result.Length != 0) result.Append(",");
-                    var xval = page.PrimaryXValues[key].ToString();
-                    result.Append(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(xval)));
-                    if (xval.Length > page.AxisXLabelMaxLen) page.AxisXLabelMaxLen = xval.Length;
-
-                    var navigation = Model.GetNavigation(((ResultCell[])key)[0]);
-                    if (!string.IsNullOrEmpty(navigation))
-                    {
-                        if (navs.Length != 0) navs.Append(",");
-                        navs.Append(navigation);
-                    }
+                    if (navs.Length != 0) navs.Append(",");
+                    navs.Append(navigation);
                 }
+            }
 
-                page.ChartXLabels = result.ToString();
-                page.ChartNavigations = navs.ToString();
-         //   }
+            page.ChartXLabels = result.ToString();
+            page.ChartNavigations = navs.ToString();
+            //   }
 
             foreach (ResultSerie resultSerie in page.Series)
             {
@@ -976,12 +973,13 @@ namespace Seal.Model
                     Model.ExecAxisSecondaryYIsDateTime = resultSerie.Element.IsDateTime;
                 }
                 //Fill Serie
-                StringBuilder chartXResult = new StringBuilder(), chartYResult = new StringBuilder();
+                StringBuilder chartXResult = new StringBuilder(), chartXDateTimeResult = new StringBuilder(), chartYResult = new StringBuilder();
                 StringBuilder chartXYResult = new StringBuilder(), chartYDisplayResult = new StringBuilder();
                 int index = 0;
                 foreach (var xDimensionKey in page.PrimaryXValues.Keys)
                 {
                     string xValue = (index++).ToString(CultureInfo.InvariantCulture.NumberFormat);
+                    DateTime xValueDT = DateTime.MinValue;
 
                     //Find the corresponding serie value...
                     ResultSerieValue value = resultSerie.Values.FirstOrDefault(i => i.XDimensionValues == xDimensionKey);
@@ -1001,6 +999,7 @@ namespace Seal.Model
                         DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                         if (value == null) dt = ((DateTime)page.PrimaryXValues[xDimensionKey]);
                         else if (value.XDimensionValues[0].DateTimeValue != null) dt = value.XDimensionValues[0].DateTimeValue.Value;
+                        xValueDT = dt;
                         TimeSpan diff = dt.ToUniversalTime() - (new DateTime(1970, 1, 1, 0, 0, 0, 0));
                         xValue = string.Format("{0}000", Math.Floor(diff.TotalSeconds));
                     }
@@ -1027,6 +1026,12 @@ namespace Seal.Model
                         if (chartXResult.Length != 0) chartXResult.Append(",");
                         chartXResult.AppendFormat("{0}", xValue);
 
+                        if (Model.ExecChartIsDateTimeAxis)
+                        {
+                            if (chartXDateTimeResult.Length != 0) chartXDateTimeResult.Append(",");
+                            chartXDateTimeResult.AppendFormat("\"{0:yyyy-MM-dd HH:mm:ss}\"", xValueDT);
+                        }
+
                         if (chartYResult.Length != 0) chartYResult.Append(",");
                         chartYResult.AppendFormat("{0}", yValue);
 
@@ -1036,6 +1041,7 @@ namespace Seal.Model
                 }
                 resultSerie.ChartXYSerieValues = chartXYResult.ToString();
                 resultSerie.ChartXSerieValues = chartXResult.ToString();
+                resultSerie.ChartXDateTimeSerieValues = chartXDateTimeResult.ToString();
                 resultSerie.ChartYSerieValues = chartYResult.ToString();
                 //?resultSerie.ChartYSerieDisplayValues = chartYDisplayResult.ToString();
             }

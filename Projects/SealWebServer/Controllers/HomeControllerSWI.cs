@@ -21,21 +21,6 @@ namespace SealWebServer.Controllers
     public partial class HomeController : Controller
     {
         [HttpPost]
-        public ActionResult SWIIsAuthenticated()
-        {
-            WriteDebug("SWIIsAuthenticated");
-            try
-            {
-                return Json( new { authenticated = (WebUser != null && WebUser.IsAuthenticated) });
-            }
-            catch (Exception ex)
-            {
-                return HandleSWIException(ex);
-            }
-        }
-
-
-        [HttpPost]
         public ActionResult SWILogin(string user, string password)
         {
             WriteDebug("SWILogin");
@@ -470,11 +455,12 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
 
-                return Json(new SWIUserProfile() { name = WebUser.Name, group = WebUser.SecurityGroupsDisplay, culture = Repository.CultureInfo.EnglishName, folder = GetCookie(SealLastFolderCookieName) });
+                return Json(new SWIUserProfile() { authenticated = true, name = WebUser.Name, group = WebUser.SecurityGroupsDisplay, culture = Repository.CultureInfo.EnglishName, folder = GetCookie(SealLastFolderCookieName) });
             }
-            catch (Exception ex)
+            catch
             {
-                return HandleSWIException(ex);
+                //not authenticated
+                return Json(new SWIUserProfile() { authenticated = false });
             }
         }
 

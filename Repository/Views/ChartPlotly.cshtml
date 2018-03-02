@@ -30,8 +30,8 @@
                         @if (reportModel.ExecPlotlyChartType == "bar" && @view.GetValue("ploty_bar_orientation") == "h")
                         {
                         <text>
-                        y: [@Raw(page.ChartXLabels)],
                         x: [@Raw(serie.ChartYSerieValues)],
+                        y: [@Raw(reportModel.ExecChartIsDateTimeAxis ? serie.ChartXSerieValues : page.ChartXLabels)],
                         orientation: 'h',
                         </text>
                         }
@@ -43,14 +43,14 @@
                         values: [@Raw(serie.ChartYSerieValues)],
                         hoverinfo: 'text',
                         textinfo: 'percent',
-                        //hoverinfo: '@view.GetValue("plotly_pie_hoverinfo")',
                         </text>
                         }
                         else
                         {
                         <text>
-                        x: [@Raw(page.ChartXLabels)],
+                        x: [@Raw(reportModel.ExecChartIsDateTimeAxis ? serie.ChartXDateTimeSerieValues : page.ChartXLabels)],
                         y: [@Raw(serie.ChartYSerieValues)],
+                        @Raw(serie.Element.YAxisType == AxisType.Secondary ? "yaxis: 'y2'," : "")
                         </text>
                         }
                         mode: '@view.GetValue("ploty_scatter_mode")',
@@ -70,6 +70,7 @@
 
             var layout =
                 {
+                autosize: true,
                 separators: decimalSeparator + thousandSeparator,
                 title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_chart_title"))))',
                 xaxis: {
@@ -79,6 +80,12 @@
                 yaxis: {
                     title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_yaxis_title"))))',
                     tickformat: '@reportModel.ExecD3PrimaryYAxisFormat',
+                },
+                yaxis2: {
+                    title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_yaxis2_title"))))',
+                    tickformat: '@reportModel.ExecD3SecondaryYAxisFormat',
+                    overlaying: 'y', 
+                    side:'right',
                 },
                 showlegend: @Helper.ToJS(view.GetBoolValue("ploty_show_legend")),
                 legend: {

@@ -64,7 +64,7 @@ namespace Seal.Converter
                 {
                     choices.Add(SerieDefinition.Axis);
                     choices.Add(SerieDefinition.Splitter);
-                    choices.Add(SerieDefinition.SplitterBoth);
+                    //FUTURE ? choices.Add(SerieDefinition.SplitterBoth);
                 }
             }
             return new StandardValuesCollection(choices.ToArray());

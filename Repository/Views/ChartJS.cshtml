@@ -1,5 +1,6 @@
 ﻿@using Seal.Model
 @using Seal.Helpers
+
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
@@ -39,12 +40,13 @@
                     {
                         labels: [@Raw(page.ChartXLabels)],
                         label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
-                        data: [@Raw(reportModel.ExecChartJSType == "bar" || reportModel.ExecChartJSType == "pie" ? serie.ChartYSerieValues : serie.ChartXYSerieValues)],
+                        data: [@Raw(reportModel.ExecChartJSType == "pie" ? serie.ChartYSerieValues : serie.ChartXYSerieValues)],
                         borderColor: colors@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
                         backgroundColor: colors@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
                         borderWidth: 1,
                         steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
                         fill: @Helper.ToJS(view.GetBoolValue("chartjs_fill")),
+                        yAxisID: 'yaxis-@(serie.Element.YAxisType == AxisType.Secondary ? 2 : 1)'
                     },
                         </text>
                     }
@@ -63,30 +65,31 @@
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {
+                            var allData = data.datasets[tooltipItem.datasetIndex].data;
+                            var tooltipLabel = data.labels[tooltipItem.index];
+                            var tooltipData = allData[tooltipItem.index];
+                            var format = (data.datasets[tooltipItem.datasetIndex].yAxisID == 'yaxis-2' ? '@reportModel.ExecD3SecondaryYAxisFormat' : '@reportModel.ExecD3PrimaryYAxisFormat');
                             @if (reportModel.ExecChartJSType == "pie")
                             {
                                 <text>
-                                var allData = data.datasets[tooltipItem.datasetIndex].data;
-                                var tooltipLabel = data.labels[tooltipItem.index];
-                                var tooltipData = allData[tooltipItem.index];
                                 var total = 0;
                                 for (var i in allData) {
                                     total += allData[i];
                                 }
                                 var tooltipPercentage = Math.round((tooltipData / total) * 100);
-                                return tooltipLabel + ': ' + d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(Number(tooltipData)).valueFormat() + ' (' + tooltipPercentage + '%)';
+                                return tooltipLabel + ': ' + d3.format(format)(Number(tooltipData)).valueFormat() + ' (' + tooltipPercentage + '%)';
                                 </text>
                             }
                             else if (reportModel.ExecChartJSType == "scatter")
                             {
                                 <text>
-                                return data.labels[tooltipItem.index] + ': ' + d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(Number(tooltipItem.yLabel)).valueFormat();
+                                return data.labels[tooltipItem.index] + ': ' + d3.format(format)(Number(tooltipItem.yLabel)).valueFormat();
                                 </text>
                             }
                             else
                             {
                                 <text>
-                                return d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(Number(tooltipItem.yLabel)).valueFormat();
+                                return  d3.format(format)(Number(tooltipItem.yLabel)).valueFormat();
                                 </text>
                             }
                         }
@@ -97,16 +100,55 @@
                 <text>
                 scales: {
                     xAxes: [{
-                        stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked"))
-                            }],
-                    yAxes: [{
                         stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
-                        ticks: {
-                            callback: function (label, index, labels) {
-                                return d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(label).valueFormat();
+                        @if (reportModel.ExecChartIsDateTimeAxis) {
+                            <text>
+                                    type: 'time',
+                                    time: {
+                                        format: '@reportModel.ExecMomentJSXAxisFormat',
+                                        tooltipFormat: '@reportModel.ExecMomentJSXAxisFormat',
+                                        displayFormats: {
+                                            'second': '@reportModel.ExecMomentJSXAxisFormat',
+                                            'minute': '@reportModel.ExecMomentJSXAxisFormat',
+                                            'hour': '@reportModel.ExecMomentJSXAxisFormat',
+                                            'day': '@reportModel.ExecMomentJSXAxisFormat',
+                                            'week': '@reportModel.ExecMomentJSXAxisFormat',
+                                            'month': '@reportModel.ExecMomentJSXAxisFormat',
+                                            'quarter': '@reportModel.ExecMomentJSXAxisFormat',
+                                            'year': '@reportModel.ExecMomentJSXAxisFormat',
+                                        }
+                                    }
+                            </text>
                             }
+                        }],
+                    yAxes: [
+                        @if (reportModel.HasPrimaryYAxis) {
+                            <text>
+                                {
+                                id: 'yaxis-1',
+                                stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
+                                ticks: {
+                                    callback: function (label, index, labels) {
+                                        return d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(label).valueFormat();
+                                        }
+                                    }
+                                },
+                            </text>
                         }
-                    }]
+                        @if (reportModel.HasSecondaryYAxis) {
+                            <text>
+                                {
+                                id: 'yaxis-2',
+                                position: 'right',
+                                ticks: {
+                                    callback: function(label, index, labels) {
+                                        return d3.format('@reportModel.ExecD3SecondaryYAxisFormat')(label).valueFormat();
+                                        }
+                                    }
+                                },
+                            </text>
+                        }
+                    ]
                 }
                 </text>
                 }
@@ -130,7 +172,7 @@
                        if (nav) showPopupNavMenu(evt, nav, true);
                     }
                 }
-            );           
+            );
         </script>
         chartOk = true;
     }

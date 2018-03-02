@@ -51,8 +51,8 @@ var SWIMain = (function () {
             $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + "\r\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\r\n" + data.Info);
             $("#footer-version").text(data.SWIVersion);
         });
-        _gateway.IsAuthenticated(function (data) {
-            if (data.authenticated) {
+        _gateway.GetUserProfile(function (data) {
+            if (data.autenticated) {
                 //User already connected
                 _main.loginSuccess(data);
             }

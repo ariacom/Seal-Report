@@ -7,13 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RazorEngine;
 using System.Data;
 using System.Xml.Serialization;
 using Seal.Converter;
 using Seal.Helpers;
 using System.ComponentModel;
-using System.Windows.Forms.DataVisualization.Charting;
 using System.Data.OleDb;
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
@@ -286,6 +284,23 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        public bool HasPrimaryYAxis
+        {
+            get
+            {
+                return Elements.Exists(i => i.YAxisType == AxisType.Primary && i.PivotPosition == PivotPosition.Data && i.IsSerie);
+            }
+        }
+
+        [XmlIgnore]
+        public bool HasSecondaryYAxis
+        {
+            get
+            {
+                return Elements.Exists(i => i.YAxisType == AxisType.Secondary && i.PivotPosition == PivotPosition.Data && i.IsSerie);
+            }
+        }
 
         [XmlIgnore]
         public bool HasNVD3Serie
@@ -457,6 +472,8 @@ namespace Seal.Model
         public string ExecD3SecondaryYAxisFormat;
         [XmlIgnore]
         public string ExecD3XAxisFormat;
+        [XmlIgnore]
+        public string ExecMomentJSXAxisFormat;
         [XmlIgnore]
         public string ExecNVD3ChartType;
         [XmlIgnore]

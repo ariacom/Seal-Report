@@ -122,6 +122,17 @@ namespace Seal.Model
             }
         }
 
+        public string SQLServerConnectionString
+        {
+            get
+            {
+                OleDbConnectionStringBuilder builder = new System.Data.OleDb.OleDbConnectionStringBuilder(FullConnectionString);
+                string result = string.Format("Server={0};Database={1};", builder["Data Source"], builder["Initial Catalog"], builder["User ID"], builder["Password"]);
+                result += (builder.ContainsKey("User ID") ? string.Format("User Id={0};Password={1};", builder["User ID"], builder["Password"]) : "Trusted_Connection=True;");
+                return result;
+            }
+        }
+
         private string _userName;
         [DisplayName("User name"), Description("User name used to connect to the database."), Category("Security"), Id(1, 2)]
         public string UserName

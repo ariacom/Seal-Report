@@ -9,7 +9,9 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.Data.OleDb;
 using System.Diagnostics;
-
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Seal.Helpers
 {
@@ -36,36 +38,36 @@ namespace Seal.Helpers
         public void RefreshRepositoryEnums(string sourceName = "")
         {
             Repository repository = Repository.Create();
-            Log.LogMessage("Starting Refresh Enumerated Lists of all Repository sources.");
+            LogMessage("Starting Refresh Enumerated Lists of all Repository sources.");
             foreach (MetaSource source in repository.Sources.OrderBy(i => i.Name).Where(i => string.IsNullOrEmpty(sourceName) || i.Name.ToLower() == sourceName.ToLower()))
             {
                 try
                 {
-                    Log.LogMessage("Processing data source '{0}'", source.Name);
+                    LogMessage("Processing data source '{0}'", source.Name);
                     foreach (MetaEnum enumItem in source.MetaData.Enums.Where(i => i.IsDynamic).OrderBy(i => i.Name))
                     {
-                        Log.LogMessage("Refreshing Enum '{0}'", enumItem.Name);
+                        LogMessage("Refreshing Enum '{0}'", enumItem.Name);
                         enumItem.RefreshEnum(false);
                         if (!string.IsNullOrEmpty(enumItem.Error))
                         {
-                            Log.LogMessage("ERROR:" + enumItem.Error);
+                            LogMessage("ERROR:" + enumItem.Error);
                         }
                     }
-                    Log.LogMessage("Saving data source '{0}' in '{1}'\r\n", source.Name, source.FilePath);
+                    LogMessage("Saving data source '{0}' in '{1}'\r\n", source.Name, source.FilePath);
                     source.SaveToFile();
                 }
                 catch (Exception ex)
                 {
-                    Log.LogMessage("\r\n[UNEXPECTED ERROR RECEIVED]\r\n{0}\r\n", ex.Message);
+                    LogMessage("\r\n[UNEXPECTED ERROR RECEIVED]\r\n{0}\r\n", ex.Message);
                 }
             }
-            Log.LogMessage("Refresh Enumerated Lists terminated\r\n");
+            LogMessage("Refresh Enumerated Lists terminated\r\n");
         }
 
         public bool CheckForNewFileSource(string loadFolder, string sourceFilePath)
         {
             bool result = false;
-            Log.LogMessage("Checking for new version of '{0}'", sourceFilePath);
+            LogMessage("Checking for new version of '{0}'", sourceFilePath);
             string loadPath = Path.Combine(loadFolder, Path.GetFileName(sourceFilePath));
             if (!Directory.Exists(Path.GetDirectoryName(loadPath))) Directory.CreateDirectory(Path.GetDirectoryName(loadPath));
             if (!File.Exists(sourceFilePath)) throw new Exception(string.Format("Invalid Excel source file '{0}'", sourceFilePath));
@@ -73,7 +75,7 @@ namespace Seal.Helpers
             //Check if the file has changed
             if (File.Exists(sourceFilePath) && (!File.Exists(loadPath) || File.GetLastWriteTime(loadPath) < File.GetLastWriteTime(sourceFilePath)))
             {
-                Log.LogMessage("File has changed, reload it");
+                LogMessage("File has changed, reload it");
                 result = true;
             }
             return result;
@@ -83,7 +85,7 @@ namespace Seal.Helpers
         {
             if (DatabaseHelper.DebugLog.Length > 0)
             {
-                Log.LogMessage("Debug Log:\r\n{0}", DatabaseHelper.DebugLog.ToString());
+                LogMessage("Debug Log:\r\n{0}", DatabaseHelper.DebugLog.ToString());
                 DatabaseHelper.DebugLog = new StringBuilder();
             }
         }
@@ -107,7 +109,7 @@ namespace Seal.Helpers
                 }
                 else
                 {
-                    Log.LogMessage("No import done");
+                    LogMessage("No import done");
                 }
             }
             finally
@@ -131,7 +133,7 @@ namespace Seal.Helpers
                 }
                 else
                 {
-                    Log.LogMessage("No import done");
+                    LogMessage("No import done");
                 }
             }
             finally
@@ -146,17 +148,17 @@ namespace Seal.Helpers
             try
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceExcelPath);
-                Log.LogMessage("Starting Loading Excel Table from '{0}'", sourcePath);
+                LogMessage("Starting Loading Excel Table from '{0}'", sourcePath);
                 DataTable table = DatabaseHelper.LoadDataTableFromExcel(sourcePath, sourceTabName);
                 table.TableName = destinationTableName;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
                     if (_task.CancelReport) break;
-                    Log.LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
+                    LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
                     DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                    Log.LogMessage("Dropping and creating table '{0}'", destinationTableName);
+                    LogMessage("Dropping and creating table '{0}'", destinationTableName);
                     DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
-                    Log.LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                    LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
                     DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
                 }
             }
@@ -179,7 +181,7 @@ namespace Seal.Helpers
                 }
                 else
                 {
-                    Log.LogMessage("No import done");
+                    LogMessage("No import done");
                 }
             }
             finally
@@ -194,17 +196,17 @@ namespace Seal.Helpers
             try
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceCsvPath);
-                Log.LogMessage("Starting Loading CSV Table from '{0}'", sourcePath);
+                LogMessage("Starting Loading CSV Table from '{0}'", sourcePath);
                 DataTable table = DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator);
                 table.TableName = destinationTableName;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
                     if (_task.CancelReport) break;
-                    Log.LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
+                    LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
                     DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                    Log.LogMessage("Dropping and creating table '{0}'", destinationTableName);
+                    LogMessage("Dropping and creating table '{0}'", destinationTableName);
                     DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
-                    Log.LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                    LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
                     DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
                 }
             }
@@ -227,16 +229,16 @@ namespace Seal.Helpers
             try
             {
                 string connectionString = _task.Repository.ReplaceRepositoryKeyword(sourceConnectionString);
-                Log.LogMessage("Starting Loading Table using '{0}'", sourceSelectStatement);
+                LogMessage("Starting Loading Table using '{0}'", sourceSelectStatement);
                 DataTable table = null;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
                     if (_task.CancelReport) break;
-                    Log.LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
+                    LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
                     bool doIt = true;
                     if (!string.IsNullOrEmpty(sourceCheckSelect) && !string.IsNullOrEmpty(destinationCheckSelect))
                     {
-                        Log.LogMessage("Checking if load is required using '{0}' and '{1}'", sourceCheckSelect, destinationCheckSelect);
+                        LogMessage("Checking if load is required using '{0}' and '{1}'", sourceCheckSelect, destinationCheckSelect);
                         doIt = false;
                         DataTable checkTable1 = DatabaseHelper.LoadDataTable(connectionString, sourceCheckSelect);
                         if (_task.CancelReport) break;
@@ -255,18 +257,19 @@ namespace Seal.Helpers
                             int lastIndex = 0;
                             while (true)
                             {
-                                string sql = string.Format("select * from (select ROW_NUMBER() over (order by UniqueKey) rn, a.* from ({0}) a) b where rn > {1} and rn <= {2}", sourceSelect, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
+                                if (_task.CancelReport) break;
+                                string sql = string.Format("select * from (select ROW_NUMBER() over (order by {0}) rn, a.* from ({1}) a) b where rn > {2} and rn <= {3}", DatabaseHelper.LoadSortColumn, sourceSelect, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
                                 table = DatabaseHelper.LoadDataTable(connectionString, sql);
                                 if (table.Rows.Count == 0) break;
 
                                 table.TableName = destinationTableName;
                                 if (lastIndex == 0)
                                 {
-                                    Log.LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
+                                    LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
                                     DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
                                     DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
                                 }
-                                Log.LogMessage("Copying {0} rows in '{1}' for index {2} to {3}", table.Rows.Count, destinationTableName, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
+                                LogMessage("Copying {0} rows in '{1}' for index {2} to {3}", table.Rows.Count, destinationTableName, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
                                 DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
                                 lastIndex += DatabaseHelper.LoadBurstSize;
                             }
@@ -280,16 +283,16 @@ namespace Seal.Helpers
                                 table.TableName = destinationTableName;
                             }
 
-                            Log.LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
+                            LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
                             DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
                             DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
-                            Log.LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                            LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
                             DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
                         }
                     }
                     else
                     {
-                        Log.LogMessage("No import done");
+                        LogMessage("No import done");
                     }
                 }
             }
@@ -313,13 +316,13 @@ namespace Seal.Helpers
                     CreateNoWindow = true
                 }
             };
-            Log.LogMessage("Executing '{0}'", path);
+            LogMessage("Executing '{0}'", path);
             proc.Start();
             string output = proc.StandardOutput.ReadToEnd();
             string err = proc.StandardError.ReadToEnd();
             proc.WaitForExit();
 
-            Log.LogMessage(output);
+            LogMessage(output);
             if (!string.IsNullOrEmpty(err))
             {
                 throw new Exception(err);
@@ -349,6 +352,51 @@ namespace Seal.Helpers
             return null;
         }
 
+        public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false)
+        {
+            var files = Directory.GetFiles(scriptsDirectory, "*.sql");
+             foreach (var file in files.OrderBy(i => i))
+            {
+                LogMessage("Processing file '{0}'", file);
+                foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
+                {
+                    if (_task.CancelReport) break;
+
+                    SqlConnection conn = new SqlConnection(connection.SQLServerConnectionString);
+                    conn.FireInfoMessageEventOnUserErrors = true;
+                    conn.InfoMessage += MSSQLConnection_InfoMessage;
+                    conn.Open();
+                    string script = File.ReadAllText(file);
+                    // split script on GO command
+                    IEnumerable<string> commandStrings = Regex.Split(script, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                    foreach (string commandString in commandStrings)
+                    {
+                        if (!string.IsNullOrEmpty(commandString.Trim()))
+                        {
+                            DateTime startCommand = DateTime.Now;
+                            using (var command = new SqlCommand("", conn))
+                            {
+                                command.CommandTimeout = 0;
+                                command.CommandText = commandString;
+                                command.ExecuteNonQuery();
+                            }
+                            Thread.Sleep(200);
+                        }
+                    }
+                    Thread.Sleep(500);
+                    conn.Close();
+                }
+            }
+
+            LogMessage("File execution terminated.");
+        }
+
+
+        void MSSQLConnection_InfoMessage(object sender, SqlInfoMessageEventArgs e)
+        {
+            LogMessage(e.Message);
+            Thread.Sleep(20);
+        }
 
         //SANDBOX !
         //Just use this to code, compile and debug your Razor Script within Visual Studio...
