@@ -62,7 +62,6 @@ namespace Seal
         }
 
         ModelPanel modelPanel = new ModelPanel();
-        ViewPanel viewPanel = new ViewPanel();
         Repository _repository;
         ReportViewerForm _reportViewer = null;
 
@@ -92,8 +91,6 @@ namespace Seal
 
             mainSplitContainer.Panel2.Controls.Add(modelPanel);
             modelPanel.Dock = DockStyle.Fill;
-            mainSplitContainer.Panel2.Controls.Add(viewPanel);
-            viewPanel.Dock = DockStyle.Fill;
 
             ShowIcon = true;
             Icon = Properties.Resources.reportDesigner;
@@ -614,7 +611,6 @@ namespace Seal
         private void mainTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             modelPanel.Visible = false;
-            viewPanel.Visible = false;
             mainPropertyGrid.Visible = false;
 
             //refresh source
@@ -651,13 +647,6 @@ namespace Seal
                 if (selectedEntity is MetaEnum && !((MetaEnum)selectedEntity).IsEditable) entity.SetReadOnly();
 
                 if (selectedEntity is MetaColumn) ((MetaColumn)selectedEntity).HideSubReports();
-            }
-            else if (selectedEntity is ReportView)
-            {
-                viewPanel.Visible = true;
-                viewPanel.View = (ReportView)selectedEntity;
-                viewPanel.Init(this);
-
             }
             //Set default expanded
             entry = Helper.GetGridEntry(mainPropertyGrid, "pdf configuration");

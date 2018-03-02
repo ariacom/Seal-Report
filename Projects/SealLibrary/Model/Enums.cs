@@ -224,6 +224,18 @@ namespace Seal.Model
         ThisYear,
     }
 
+    public enum AxisType
+    {
+        Primary = 0,
+        Secondary = 1
+    }
+
+    public enum PointSortOrder
+    {
+        Ascending = 0,
+        Descending = 1
+    }
+
     public enum SerieDefinition
     {
         [Description("No Serie")]

@@ -3,7 +3,6 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -11,8 +10,6 @@ using System.ComponentModel;
 using Seal.Helpers;
 using DynamicTypeDescriptor;
 using Seal.Converter;
-using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 using System.Globalization;
 using Seal.Forms;
 using System.Drawing.Design;
@@ -53,7 +50,7 @@ namespace Seal.Model
                 GetProperty("Nvd3Serie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("ChartJSSerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("PlotlySerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("XAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column || PivotPosition == PivotPosition.Data);
+                //FUTURE GetProperty("XAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column || PivotPosition == PivotPosition.Data);
                 GetProperty("YAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("SerieSortOrder").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("SerieSortType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
@@ -62,7 +59,7 @@ namespace Seal.Model
                 //Read only
                 GetProperty("Format").SetIsReadOnly((IsNumeric && NumericStandardFormat != NumericStandardFormat.Custom) || (IsDateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom));
                 GetProperty("TotalAggregateFunction").SetIsReadOnly(ShowTotal == ShowTotal.No);
-                GetProperty("XAxisType").SetIsReadOnly(!IsSerie || _serieDefinition == SerieDefinition.SplitterBoth);
+                //FUTURE GetProperty("XAxisType").SetIsReadOnly(!IsSerie || _serieDefinition == SerieDefinition.SplitterBoth);
                 GetProperty("YAxisType").SetIsReadOnly(!IsSerie);
                 GetProperty("SerieSortOrder").SetIsReadOnly(!IsSerie || _serieSortType == SerieSortType.None);
                 GetProperty("SerieSortType").SetIsReadOnly(!IsSerie);
@@ -381,7 +378,10 @@ namespace Seal.Model
         public ChartJSSerieDefinition ChartJSSerie
         {
             get { return _chartJSSerie; }
-            set { _chartJSSerie = value; }
+            set {
+                _chartJSSerie = value;
+                UpdateEditorAttributes();
+            }
         }
 
         NVD3SerieDefinition _nvd3Serie = NVD3SerieDefinition.None;
@@ -391,7 +391,10 @@ namespace Seal.Model
         public NVD3SerieDefinition Nvd3Serie
         {
             get { return _nvd3Serie; }
-            set { _nvd3Serie = value; }
+            set {
+                _nvd3Serie = value;
+                UpdateEditorAttributes();
+            }
         }
 
         PlotlySerieDefinition _plotlySerie = PlotlySerieDefinition.None;
@@ -401,7 +404,10 @@ namespace Seal.Model
         public PlotlySerieDefinition PlotlySerie
         {
             get { return _plotlySerie; }
-            set { _plotlySerie = value; }
+            set {
+                _plotlySerie = value;
+                UpdateEditorAttributes();
+            }
         }
 
         private SerieSortType _serieSortType = SerieSortType.Y;
@@ -428,10 +434,10 @@ namespace Seal.Model
             set { _serieSortOrder = value; }
         }
 
-
+        //Not used from v4, FUTURE...
         private AxisType _xAxisType = AxisType.Primary;
         [DefaultValue(AxisType.Primary)]
-        [Category("Chart"), DisplayName("X Axis Type"), Description("Definition of the X axis of the serie (Primary or Secondary). This option is not valid for NVD3 Charts."), Id(7, 2)]
+        [Category("Chart"), DisplayName("X Axis Type"), Description("Definition of the X axis of the serie (Primary or Secondary)."), Id(7, 2)]
         public AxisType XAxisType
         {
             get { return _xAxisType; }
@@ -440,7 +446,7 @@ namespace Seal.Model
 
         private AxisType _yAxisType = AxisType.Primary;
         [DefaultValue(AxisType.Primary)]
-        [Category("Chart"), DisplayName("Y Axis Type"), Description("Definition of the Y axis of the serie (Primary or Secondary). For NVD3 charts, this option is only valid if the chart contains Series of type Bar, Stacked Area and Line."), Id(8, 2)]
+        [Category("Chart"), DisplayName("Y Axis Type"), Description("Definition of the Y axis of the serie (Primary or Secondary)."), Id(8, 2)]
         public AxisType YAxisType
         {
             get { return _yAxisType; }
@@ -653,42 +659,9 @@ namespace Seal.Model
             return "g";
         }
 
-        public string GetExcelFormat(CultureInfo culture)
+        public string GetMomentJSFormat()
         {
-            //try to convert from .net to Excel format... 
-            string format = FormatEl;
-            if (IsNumeric)
-            {
-                if (format == "N1" || format == "D1") return "#,##0.0";
-                else if (format == "N2" || format == "D2") return "#,##0.00";
-                else if (format == "N3" || format == "D3") return "#,##0.000";
-                else if (format == "N4" || format == "D4") return "#,##0.0000";
-                else if (format.StartsWith("N") || format.StartsWith("D")) return "#,##0";
-                else if (format == "P1") return "0.0%";
-                else if (format == "P2") return "0.00%";
-                else if (format == "P3") return "0.00%";
-                else if (format == "P4") return "0.0000%";
-                else if (format.StartsWith("P")) return "0%";
-                else if (format == "C1") return "$ #,##0.0";
-                else if (format == "C2") return "$ #,##0.00";
-                else if (format == "C3") return "$ #,##0.000";
-                else if (format == "C4") return "$ #,##0.0000";
-                else if (format.StartsWith("C")) return "$ #,##0";
-                else if (format == "0" || format.StartsWith("N") || format.StartsWith("D") || format.StartsWith("E") || format.StartsWith("F") || format.StartsWith("G") || format.StartsWith("H")) return "0";
-            }
-            else if (IsDateTime)
-            {
-                if (format == "d") return culture.DateTimeFormat.ShortDatePattern;
-                else if (format == "D") return culture.DateTimeFormat.LongDatePattern;
-                else if (format == "t") return culture.DateTimeFormat.ShortTimePattern;
-                else if (format == "T") return culture.DateTimeFormat.LongTimePattern;
-                else if (format == "g") return culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
-                else if (format == "G") return culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
-                else if (format == "f") return culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
-                else if (format == "F") return culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
-                else if (format == "g") return culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
-            }
-            return FormatEl;
+            return Helper.ToMomentJSFormat(FormatEl);
         }
     }
 }

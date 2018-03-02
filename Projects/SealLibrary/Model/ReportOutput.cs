@@ -5,18 +5,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 using System.ComponentModel;
 using Seal.Helpers;
 using DynamicTypeDescriptor;
 using Seal.Converter;
-using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing.Design;
 using Seal.Forms;
 using System.ComponentModel.Design;
-using System.Windows.Forms.Design;
 
 namespace Seal.Model
 {

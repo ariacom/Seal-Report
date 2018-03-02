@@ -61,10 +61,15 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
         public ConnectionFolder ConnectionFolder = new ConnectionFolder();
+        [XmlIgnore]
         public TableFolder TableFolder = new TableFolder();
+        [XmlIgnore]
         public CategoryFolder CategoryFolder = new CategoryFolder();
+        [XmlIgnore]
         public JoinFolder JoinFolder = new JoinFolder();
+        [XmlIgnore]
         public EnumFolder EnumFolder = new EnumFolder();
 
         #endregion

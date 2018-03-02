@@ -5,11 +5,6 @@
     <ReportSource>
       <GUID>37d5a3f0-cd71-4032-99b9-a2b2834ef7bc</GUID>
       <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
       <InitScript />
@@ -471,7 +466,7 @@
     </ReportModel>
     <ReportModel>
       <GUID>27bcfeaa-b61f-4ba5-8c02-6be7e4c9f0dd</GUID>
-      <Name>BAR - time axis</Name>
+      <Name>SCATTER - time axis</Name>
       <SourceGUID>37d5a3f0-cd71-4032-99b9-a2b2834ef7bc</SourceGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
@@ -519,9 +514,9 @@
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
-          <ChartJSSerie>Bar</ChartJSSerie>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
-          <PlotlySerie>Bar</PlotlySerie>
+          <ChartJSSerie>Scatter</ChartJSSerie>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <PlotlySerie>Scatter</PlotlySerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -591,6 +586,294 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
       <AggregateRestriction />
       <AggregateRestrictions />
     </ReportModel>
+    <ReportModel>
+      <GUID>71f52fff-b68c-438b-8f74-41243c4e180a</GUID>
+      <Name>SCATTER - numeric axis</Name>
+      <SourceGUID>37d5a3f0-cd71-4032-99b9-a2b2834ef7bc</SourceGUID>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>21f7ddf7-b7bb-4627-8ead-7ee3f7bb1c09</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c89cdaea-68f3-4700-ad68-2391a22345a0</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Scatter</ChartJSSerie>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <PlotlySerie>Scatter</PlotlySerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f4c5dfbb-2ecd-4704-9121-82ea82ab5bfc</GUID>
+          <Name>Products.UnitsInStock</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[ee5d8577-acb7-4e4b-8b3f-ec58487916f4]
+AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>ee5d8577-acb7-4e4b-8b3f-ec58487916f4</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <FormatRe />
+          <EnumValues>
+            <string>Davolio</string>
+            <string>Fuller</string>
+            <string>King</string>
+            <string>Suyama</string>
+          </EnumValues>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>1d754267-0c1a-4628-afcb-fa67844a24d8</GUID>
+          <Name>Products.UnitsInStock</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID>
+          <FormatRe>N0</FormatRe>
+          <Operator>Between</Operator>
+          <Value1>50</Value1>
+          <Value2>100</Value2>
+          <EnumValues />
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+    <ReportModel>
+      <GUID>f2caf022-fb55-450a-b0c9-ee2bf4508c51</GUID>
+      <Name>BAR - secondary Y Axis</Name>
+      <SourceGUID>37d5a3f0-cd71-4032-99b9-a2b2834ef7bc</SourceGUID>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>5314bf81-a7c0-4ff4-8986-29115aa10656</GUID>
+          <Name>Products.CategoryID</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>24953f85-00ff-4407-b3c6-52343064b60e</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <PlotlySerie>Bar</PlotlySerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>43fba9e0-154a-4abf-b16b-03a92a170794</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <NumericStandardFormat>Percentage0</NumericStandardFormat>
+          <Format>P0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <CalculationOption>PercentageAll</CalculationOption>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <PlotlySerie>Bar</PlotlySerie>
+          <YAxisType>Secondary</YAxisType>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[4d7ce0c3-ecce-4e71-9a3e-fc3b2f0b9125]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>4d7ce0c3-ecce-4e71-9a3e-fc3b2f0b9125</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <FormatRe />
+          <EnumValues>
+            <string>Davolio</string>
+            <string>Fuller</string>
+            <string>King</string>
+            <string>Suyama</string>
+          </EnumValues>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+    <ReportModel>
+      <GUID>980463f9-50f4-4eac-afa8-f8a025f6d6fd</GUID>
+      <Name>LINE - secondary Y Axis</Name>
+      <SourceGUID>37d5a3f0-cd71-4032-99b9-a2b2834ef7bc</SourceGUID>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>f5d8b47b-774d-426d-9315-10e74cc95088</GUID>
+          <Name>Products.CategoryID</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8d7a0c92-3375-4cb2-b5bb-cd5a12bacc19</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Line</ChartJSSerie>
+          <Nvd3Serie>Line</Nvd3Serie>
+          <PlotlySerie>Scatter</PlotlySerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>84a07328-22ea-4cd3-b654-ec3286be37c6</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <NumericStandardFormat>Percentage0</NumericStandardFormat>
+          <Format>P0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <CalculationOption>PercentageAll</CalculationOption>
+          <ChartJSSerie>Line</ChartJSSerie>
+          <Nvd3Serie>Line</Nvd3Serie>
+          <PlotlySerie>Scatter</PlotlySerie>
+          <YAxisType>Secondary</YAxisType>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[ee68ff52-5ccd-477f-b63f-8ebdaaa990d4]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>ee68ff52-5ccd-477f-b63f-8ebdaaa990d4</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <FormatRe />
+          <EnumValues>
+            <string>Davolio</string>
+            <string>Fuller</string>
+            <string>King</string>
+            <string>Suyama</string>
+          </EnumValues>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
   </Models>
   <Outputs />
   <Tasks />
@@ -651,10 +934,6 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters>
-                    <Parameter>
-                      <Name>nvd3_chart_width</Name>
-                      <Value>450px</Value>
-                    </Parameter>
                     <Parameter>
                       <Name>nvd3_chart_title</Name>
                       <Value>Chart NVD3</Value>
@@ -825,7 +1104,7 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
                   <Parameters>
                     <Parameter>
                       <Name>nvd3_chart_width</Name>
-                      <Value>450px</Value>
+                      <Value />
                     </Parameter>
                     <Parameter>
                       <Name>nvd3_chart_title</Name>
@@ -929,7 +1208,7 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>4</SortOrder>
+          <SortOrder>3</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations>
@@ -999,10 +1278,6 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters>
-                    <Parameter>
-                      <Name>nvd3_chart_width</Name>
-                      <Value>450px</Value>
-                    </Parameter>
                     <Parameter>
                       <Name>nvd3_chart_title</Name>
                       <Value>Chart NVD3</Value>
@@ -1176,10 +1451,6 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_width</Name>
-                      <Value>450px</Value>
-                    </Parameter>
-                    <Parameter>
                       <Name>nvd3_chart_title</Name>
                       <Value>Chart NVD3</Value>
                     </Parameter>
@@ -1281,7 +1552,7 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>3</SortOrder>
+          <SortOrder>2</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations>
@@ -1351,10 +1622,6 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters>
-                    <Parameter>
-                      <Name>nvd3_chart_width</Name>
-                      <Value>450px</Value>
-                    </Parameter>
                     <Parameter>
                       <Name>nvd3_chart_title</Name>
                       <Value>Chart NVD3</Value>
@@ -1528,6 +1795,10 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
+                      <Name>nvd3_chart_width</Name>
+                      <Value />
+                    </Parameter>
+                    <Parameter>
                       <Name>nvd3_chart_title</Name>
                       <Value>Chart NVD3</Value>
                     </Parameter>
@@ -1629,7 +1900,7 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>5</SortOrder>
+          <SortOrder>4</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations>
@@ -1699,10 +1970,6 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters>
-                    <Parameter>
-                      <Name>nvd3_chart_width</Name>
-                      <Value>450px</Value>
-                    </Parameter>
                     <Parameter>
                       <Name>nvd3_chart_title</Name>
                       <Value>Chart NVD3</Value>
@@ -1826,7 +2093,7 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
         </ReportView>
         <ReportView>
           <GUID>5659f126-6a35-4fd2-bd62-6bce2a9af448</GUID>
-          <Name>BAR - time axis</Name>
+          <Name>SCATTER - time axis</Name>
           <Views>
             <ReportView>
               <GUID>16451ad6-bf45-4043-838c-d7f160858e64</GUID>
@@ -1876,10 +2143,6 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_width</Name>
-                      <Value>450px</Value>
-                    </Parameter>
-                    <Parameter>
                       <Name>nvd3_chart_title</Name>
                       <Value>Chart NVD3</Value>
                     </Parameter>
@@ -1916,6 +2179,10 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
                     <Parameter>
                       <Name>ploty_chart_title</Name>
                       <Value>Chart Plotly</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>ploty_scatter_mode</Name>
+                      <Value>markers</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
@@ -1978,6 +2245,538 @@ AND [15b9004c-1937-437e-8bbb-5d4b568102f7]</Restriction>
           <Parameters />
           <CultureName />
           <SortOrder>8</SortOrder>
+          <WebExec>true</WebExec>
+          <PdfConfigurations />
+          <ExcelConfigurations>
+            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+          </ExcelConfigurations>
+        </ReportView>
+        <ReportView>
+          <GUID>8e51dfe9-796a-405d-ab42-95c632e61efc</GUID>
+          <Name>SCATTER - numeric axis</Name>
+          <Views>
+            <ReportView>
+              <GUID>999b1a13-16ab-4269-b1ec-963d5d28da0c</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>63aaa2ba-6a15-449f-aab8-8dc55ce58a67</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_title</Name>
+                      <Value>Chart JS</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+                <ReportView>
+                  <GUID>464d89b0-78d1-4d02-aa31-a4e4d2c95363</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>nvd3_chart_title</Name>
+                      <Value>Chart NVD3</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+                <ReportView>
+                  <GUID>cb14b464-d2ef-4811-8bd6-1c880d1b5037</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>ploty_chart_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>ploty_scatter_mode</Name>
+                      <Value>markers</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <ThemeName />
+              <UseCustomTemplate>false</UseCustomTemplate>
+              <PartialTemplates />
+              <Parameters>
+                <Parameter>
+                  <Name>grid_layout</Name>
+                  <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                </Parameter>
+              </Parameters>
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
+            </ReportView>
+          </Views>
+          <ModelGUID>71f52fff-b68c-438b-8f74-41243c4e180a</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <PartialTemplates />
+          <Parameters />
+          <CultureName />
+          <SortOrder>9</SortOrder>
+          <WebExec>true</WebExec>
+          <PdfConfigurations />
+          <ExcelConfigurations>
+            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+          </ExcelConfigurations>
+        </ReportView>
+        <ReportView>
+          <GUID>1c56269c-f4cc-4ec9-a7d4-3b63f54556c0</GUID>
+          <Name>BAR - secondary Y Axis</Name>
+          <Views>
+            <ReportView>
+              <GUID>fb8f2a42-ab5c-4e45-8336-b16ac8a496be</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>89621882-68bd-4fa7-afc1-5f612d07ec22</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_title</Name>
+                      <Value>Chart JS</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_bar_stacked</Name>
+                      <Value>False</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+                <ReportView>
+                  <GUID>ee0b62c4-ebb3-4fae-bf2d-e6d69879a31a</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>nvd3_chart_title</Name>
+                      <Value>Chart NVD3</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>nvd3_bar_stacked</Name>
+                      <Value>False</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+                <ReportView>
+                  <GUID>0cef60f9-e2c9-44dd-bc36-7c80799709e7</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>ploty_chart_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>ploty_bar_stacked</Name>
+                      <Value>False</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <ThemeName />
+              <UseCustomTemplate>false</UseCustomTemplate>
+              <PartialTemplates />
+              <Parameters>
+                <Parameter>
+                  <Name>grid_layout</Name>
+                  <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                </Parameter>
+              </Parameters>
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
+            </ReportView>
+          </Views>
+          <ModelGUID>f2caf022-fb55-450a-b0c9-ee2bf4508c51</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <PartialTemplates />
+          <Parameters />
+          <CultureName />
+          <SortOrder>10</SortOrder>
+          <WebExec>true</WebExec>
+          <PdfConfigurations />
+          <ExcelConfigurations>
+            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+          </ExcelConfigurations>
+        </ReportView>
+        <ReportView>
+          <GUID>d5a9fc18-e02f-4a92-9dd1-9c1ed9ba26ae</GUID>
+          <Name>LINE - secondary Y Axis</Name>
+          <Views>
+            <ReportView>
+              <GUID>eb2cc694-84aa-41bc-92e1-9c200dee4da4</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>4a8c75ae-fa4d-4205-a7e0-07e61c68678a</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_title</Name>
+                      <Value>Chart JS</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+                <ReportView>
+                  <GUID>6c64d7c1-0cb1-4a37-8465-a76088f0bce4</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>nvd3_chart_title</Name>
+                      <Value>Chart NVD3</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+                <ReportView>
+                  <GUID>cd0374e6-5d16-4b7d-a5b6-21879c6345c8</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>ploty_chart_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>ploty_yaxis2_title</Name>
+                      <Value>dsaldjsald sdaljd</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>ploty_legend_position</Name>
+                      <Value>x:0.2,y:1.2,</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>ploty_scatter_mode</Name>
+                      <Value>lines</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <ThemeName />
+              <UseCustomTemplate>false</UseCustomTemplate>
+              <PartialTemplates />
+              <Parameters>
+                <Parameter>
+                  <Name>grid_layout</Name>
+                  <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                </Parameter>
+              </Parameters>
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
+            </ReportView>
+          </Views>
+          <ModelGUID>980463f9-50f4-4eac-afa8-f8a025f6d6fd</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <PartialTemplates />
+          <Parameters />
+          <CultureName />
+          <SortOrder>10</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations>

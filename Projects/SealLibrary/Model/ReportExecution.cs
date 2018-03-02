@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Seal.Helpers;
 using System.Data;
-using System.Windows.Forms.DataVisualization.Charting;
 using System.IO;
 using System.Threading;
 using RazorEngine.Templating;

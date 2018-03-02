@@ -454,6 +454,16 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
+                "Execute MS SQLServer Scripts (files *.sql) located in a directory",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+	helper.ExecuteMSSQLScripts(
+        @""scriptsDirectory"",
+        false //if true, the scripts are executed for all connections defined in the Source
+    );
+"
+                ),
+            new Tuple<string, string>(
                 "Database Helper configurations...",
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);

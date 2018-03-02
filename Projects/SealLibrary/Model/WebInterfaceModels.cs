@@ -21,6 +21,7 @@ namespace Seal.Model
 
     public class SWIUserProfile
     {
+        public bool authenticated = false;
         public string name;
         public string group;
         public string culture;

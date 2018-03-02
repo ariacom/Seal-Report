@@ -68,9 +68,9 @@ class SWIMain {
             }
         );
 
-        _gateway.IsAuthenticated(
+        _gateway.GetUserProfile(
             function (data) {
-                if (data.authenticated) {
+                if (data.autenticated) {
                     //User already connected
                     _main.loginSuccess(data);
                 }

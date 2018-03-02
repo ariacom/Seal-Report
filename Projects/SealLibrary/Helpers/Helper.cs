@@ -12,8 +12,6 @@ using System.Data.OleDb;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Web;
-using System.Windows.Forms.DataVisualization.Charting;
-using RazorEngine;
 using RazorEngine.Templating;
 using System.IO;
 using System.Diagnostics;
@@ -22,9 +20,6 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Xml.Serialization;
-using System.DirectoryServices.Protocols;
-using System.Xml.Linq;
-using System.ServiceModel.Syndication;
 
 namespace Seal.Helpers
 {
@@ -331,21 +326,6 @@ namespace Seal.Helpers
                 result.AppendFormat("{0}\r\nLine {1} Column {2} Error Number {3}\r\n", err.ErrorText, err.Line, err.Column, err.ErrorNumber);
             }
             return result.ToString();
-        }
-
-        static public Series CloneSeries(Series o)
-        {
-            PropertyInfo[] properties = typeof(Series).GetProperties();
-            Series p = new Series();
-            foreach (PropertyInfo pi in properties)
-            {
-                if (pi.CanWrite && pi.Name != "Item")
-                {
-                    pi.SetValue(p, pi.GetValue(o, null), null);
-                }
-            }
-
-            return p;
         }
 
         static public string GetOleDbConnectionString(string input, string userName, string password)
