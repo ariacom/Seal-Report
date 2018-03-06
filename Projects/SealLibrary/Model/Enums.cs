@@ -288,6 +288,10 @@ namespace Seal.Model
         Bar,
         [Description("Pie")]
         Pie,
+        [Description("Polar Area")]
+        PolarArea,
+        [Description("Radar")]
+        Radar,
     };
 
     public enum PlotlySerieDefinition

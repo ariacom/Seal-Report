@@ -29,7 +29,7 @@
 
         <script>
             var ctx = $("#@chartId");
-            var colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+            var colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
             var data = {
                 labels: [@Raw(page.ChartXLabels)],
                 navigations: [@Raw(page.ChartNavigations)],
@@ -40,12 +40,12 @@
                     {
                         labels: [@Raw(page.ChartXLabels)],
                         label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
-                        data: [@Raw(reportModel.ExecChartJSType == "pie" ? serie.ChartYSerieValues : serie.ChartXYSerieValues)],
-                        borderColor: colors@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
-                        backgroundColor: colors@(reportModel.ExecChartJSType == "pie" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
+                        data: [@Raw(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" || reportModel.ExecChartJSType == "radar" ? serie.ChartYSerieValues : serie.ChartXYSerieValues)],
+                        borderColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
+                        backgroundColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
                         borderWidth: 1,
                         steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
-                        fill: @Helper.ToJS(view.GetBoolValue("chartjs_fill")),
+                        fill: '-1', // @Helper.ToJS(view.GetBoolValue("chartjs_fill")),
                         yAxisID: 'yaxis-@(serie.Element.YAxisType == AxisType.Secondary ? 2 : 1)'
                     },
                         </text>
@@ -69,7 +69,7 @@
                             var tooltipLabel = data.labels[tooltipItem.index];
                             var tooltipData = allData[tooltipItem.index];
                             var format = (data.datasets[tooltipItem.datasetIndex].yAxisID == 'yaxis-2' ? '@reportModel.ExecD3SecondaryYAxisFormat' : '@reportModel.ExecD3PrimaryYAxisFormat');
-                            @if (reportModel.ExecChartJSType == "pie")
+                            @if (reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea")
                             {
                                 <text>
                                 var total = 0;
@@ -95,7 +95,7 @@
                         }
                     }
                 },
-                @if (reportModel.ExecChartJSType != "pie")
+                @if (reportModel.ExecChartJSType != "pie" && reportModel.ExecChartJSType != "polarArea" && reportModel.ExecChartJSType != "radar")
                 {
                 <text>
                 scales: {

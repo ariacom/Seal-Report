@@ -193,7 +193,7 @@ namespace Seal.Helpers
             if (type == DatabaseType.Oracle)
             {
                 _defaultColumnCharType = "varchar2";
-                _defaultColumnNumericType = "number(18,3)";
+                _defaultColumnNumericType = "number(18,5)";
                 _defaultColumnIntegerType = "number(12)";
                 _defaultColumnDateTimeType = "date";
                 _defaultInsertStartCommand = "begin";
@@ -203,7 +203,7 @@ namespace Seal.Helpers
             {
                 //Default, tested on SQLServer...
                 _defaultColumnCharType = "varchar";
-                _defaultColumnNumericType = "numeric(18,3)";
+                _defaultColumnNumericType = "numeric(18,5)";
                 _defaultColumnIntegerType = "int";
                 _defaultColumnDateTimeType = "datetime";
                 _defaultInsertStartCommand = "";
@@ -316,66 +316,18 @@ namespace Seal.Helpers
             }
         }
 
-        public string MSSQLCreateTABLECommand(string tableName, DataTable table)
-        {
-            string sqlsc;
-            sqlsc = "CREATE TABLE " + tableName + "(";
-            for (int i = 0; i < table.Columns.Count; i++)
-            {
-                sqlsc += "\n [" + table.Columns[i].ColumnName + "] ";
-                string columnType = table.Columns[i].DataType.ToString();
-                switch (columnType)
-                {
-                    case "System.Int32":
-                        sqlsc += " int ";
-                        break;
-                    case "System.Int64":
-                        sqlsc += " bigint ";
-                        break;
-                    case "System.Int16":
-                        sqlsc += " smallint";
-                        break;
-                    case "System.Byte":
-                        sqlsc += " tinyint";
-                        break;
-                    case "System.Decimal":
-                        sqlsc += " decimal ";
-                        break;
-                    case "System.DateTime":
-                        sqlsc += " datetime ";
-                        break;
-                    case "System.String":
-                    default:
-                        sqlsc += string.Format(" nvarchar({0}) ", table.Columns[i].MaxLength == -1 ? "max" : table.Columns[i].MaxLength.ToString());
-                        break;
-                }
-                if (table.Columns[i].AutoIncrement)
-                    sqlsc += " IDENTITY(" + table.Columns[i].AutoIncrementSeed.ToString() + "," + table.Columns[i].AutoIncrementStep.ToString() + ") ";
-                if (!table.Columns[i].AllowDBNull)
-                    sqlsc += " NOT NULL ";
-                sqlsc += ",";
-            }
-            return sqlsc.Substring(0, sqlsc.Length - 1) + "\n)";
-        }
 
         public string RootGetTableCreateCommand(DataTable table)
         {
-            if (DatabaseType == DatabaseType.MSSQLServer)
+            StringBuilder result = new StringBuilder();
+            foreach (DataColumn col in table.Columns)
             {
-                return MSSQLCreateTABLECommand(CleanName(table.TableName), table);
+                if (result.Length > 0) result.Append(',');
+                result.AppendFormat("{0} ", GetTableColumnName(col));
+                result.Append(GetTableColumnType(col));
+                result.Append(" NULL");
             }
-            else
-            {
-                StringBuilder result = new StringBuilder();
-                foreach (DataColumn col in table.Columns)
-                {
-                    if (result.Length > 0) result.Append(',');
-                    result.AppendFormat("{0} ", GetTableColumnName(col));
-                    result.Append(GetTableColumnType(col));
-                    result.Append(" NULL");
-                }
-                return string.Format("CREATE TABLE {0} ({1})", CleanName(table.TableName), result); 
-            }
+            return string.Format("CREATE TABLE {0} ({1})", CleanName(table.TableName), result); 
         }
 
 
