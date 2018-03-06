@@ -601,6 +601,16 @@ namespace Seal.Model
                 if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Pie)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Pie Serie with another type.");
                 ExecChartJSType = "pie";
             }
+            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.PolarArea))
+            {
+                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.PolarArea)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Polar Area Serie with another type.");
+                ExecChartJSType = "polarArea";
+            }
+            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Radar))
+            {
+                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Radar)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Radar Serie with another type.");
+                ExecChartJSType = "radar";
+            }
         }
 
         [XmlIgnore]
