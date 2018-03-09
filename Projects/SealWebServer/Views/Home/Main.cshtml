@@ -540,10 +540,22 @@
                     <select id="property-serie" data-width="100%"></select>
                 </div>
             </div>
-            <div id="properties-chart-group">
-                <label class="properties-label">@repository.TranslateWeb("Chart type")</label>
+            <div id="properties-chart-groupjs">
+                <label class="properties-label">@repository.TranslateWeb("Chart JS")</label>
                 <div class="properties-value">
-                    <select id="property-chart" data-width="100%"></select>
+                    <select id="property-chartjs" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-chart-groupnv">
+                <label class="properties-label">@repository.TranslateWeb("Chart NVD3")</label>
+                <div class="properties-value">
+                    <select id="property-chartnv" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-chart-grouppl">
+                <label class="properties-label">@repository.TranslateWeb("Chart Plotly")</label>
+                <div class="properties-value">
+                    <select id="property-chartpl" data-width="100%"></select>
                 </div>
             </div>
             <div id="properties-seriesort-group">
@@ -770,8 +782,8 @@
     <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        <script src="~/Scripts/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + "_" + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
-        <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+        <script src="~/Scripts/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+        <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
     }
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     <script src="~/Scripts/jquery.dataTables.min.js"></script>

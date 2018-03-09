@@ -227,11 +227,22 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
         public bool HasHTMLTagsEl
         {
             get { return HasHTMLTags != null ? HasHTMLTags.Value : (MetaColumn.HasHTMLTags != null ? MetaColumn.HasHTMLTags.Value : false); }
         }
 
+
+        [XmlIgnore]
+        public bool HasTimeEl
+        {
+            get
+            {
+                if (!IsDateTime) return false;
+                return HasTimeFormat(DateTimeStandardFormat, FormatEl);
+            }
+        }
 
         public string ElementDisplayValue(object value)
         {

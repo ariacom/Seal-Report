@@ -53,6 +53,15 @@ namespace Seal.Helpers
             return string.Format("'{0}'", input.Replace("'", "''"));
         }
 
+        static public string FirstNotEmpty(string str1, string str2 = null, string str3 = null, string str4 = null, string str5 = null)
+        {
+            if (!string.IsNullOrEmpty(str1)) return str1;
+            if (!string.IsNullOrEmpty(str2)) return str2;
+            if (!string.IsNullOrEmpty(str3)) return str3;
+            if (!string.IsNullOrEmpty(str4)) return str4;
+            if (!string.IsNullOrEmpty(str5)) return str5;
+            return "";
+        }
 
         static public string AddIfNotEmpty(string prefix, string input, string suffix)
         {
@@ -179,7 +188,7 @@ namespace Seal.Helpers
 
             if (t == "char" || t == "varchar" || t == "varchar2" || t == "text" || t == "uniqueidentifier") return ColumnType.Text;
             if (t == "nchar" || t == "ntext" || t == "nvarchar") return ColumnType.UnicodeText;
-            if (t == "date" || t == "datetime" || t == "smalldatetime" || t == "timestamp") return ColumnType.DateTime;
+            if (t == "date" || t == "datetime" || t == "datetime2" || t == "smalldatetime" || t == "timestamp") return ColumnType.DateTime;
             return ColumnType.Numeric;
         }
 

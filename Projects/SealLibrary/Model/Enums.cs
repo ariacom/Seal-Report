@@ -186,7 +186,7 @@ namespace Seal.Model
         SmallerEqual,
         [Description("Is between")]
         Between,
-        [Description("Is not Between")]
+        [Description("Is not between")]
         NotBetween,
         [Description("Contains")]
         Contains,

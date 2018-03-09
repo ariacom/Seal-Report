@@ -54,7 +54,7 @@ namespace Seal.Forms
         {
             get
             {
-                if (_report == null) return true;
+                if (_report == null || !Visible) return true;
                 return !_report.IsExecuting;
             }
         }

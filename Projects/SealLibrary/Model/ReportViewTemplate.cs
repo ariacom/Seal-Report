@@ -183,6 +183,15 @@ namespace Seal.Model
         public bool IsParsed = false; //Flag for optimization, by default the template is not parsed...until it is used
         public DateTime LastModification;
         public DateTime LastConfigModification;
+
+        public bool IsModified
+        {
+            get
+            {
+                return LastModification != File.GetLastWriteTime(FilePath) || LastConfigModification != File.GetLastWriteTime(ConfigurationPath);
+            }
+        }
+
         public void ParseConfiguration()
         {
             //Parse the configuration file to init the view template

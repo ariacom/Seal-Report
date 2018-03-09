@@ -45,7 +45,7 @@
                                         if (restriction.IsDateTime)
                                         {
                                             <div class="form-group">
-                                                <div class='input-group date @(restriction.HasTime ? "datepicker_datetime" : "datepicker_date")'>
+                                                <div class='input-group date @(restriction.HasTimeRe ? "datepicker_datetime" : "datepicker_date")'>
                                                     <input type='text' class="form-control" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
                                                     <span class="input-group-addon">
                                                         <span class="glyphicon glyphicon-calendar"></span>

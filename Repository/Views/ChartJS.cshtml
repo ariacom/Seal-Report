@@ -13,7 +13,7 @@
 {
     <!--Chart JS-->
     bool chartOk = false;
-    string chartId = string.Format("cjs_{0}{1}", view.ViewId, page.PageId).Replace("-", "");
+    string chartId = "cjs" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
         string chartType = reportModel.ExecChartJSType;
@@ -25,7 +25,7 @@
         {
             chartType = "horizontalBar";
         }
-        <canvas id="@chartId" @Helper.AddIfNotEmpty("width=", view.GetValue("chartjs_width"), ";") @Helper.AddIfNotEmpty("height=", view.GetValue("chartjs_height"), ";")></canvas>
+        <canvas id="@chartId" @Raw(Helper.AddIfNotEmpty("width='", view.GetValue("chartjs_width"), "'")) @Raw(Helper.AddIfNotEmpty("height='", view.GetValue("chartjs_height"), "'"))></canvas>
 
         <script>
             var ctx = $("#@chartId");
@@ -38,6 +38,7 @@
                     {
                         <text>
                     {
+                        @Raw(reportModel.ExecChartJSType != "pie" && reportModel.ExecChartJSType != "polarArea" && reportModel.ExecChartJSType != "radar" ? "type: '" + serie.Element.ChartJSSerie.ToString().ToLower() + "'," : "")
                         labels: [@Raw(page.ChartXLabels)],
                         label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
                         data: [@Raw(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" || reportModel.ExecChartJSType == "radar" ? serie.ChartYSerieValues : serie.ChartXYSerieValues)],
@@ -45,7 +46,7 @@
                         backgroundColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
                         borderWidth: 1,
                         steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
-                        fill: '-1', // @Helper.ToJS(view.GetBoolValue("chartjs_fill")),
+                        fill: @Raw(view.GetValue("chartjs_fill")),
                         yAxisID: 'yaxis-@(serie.Element.YAxisType == AxisType.Secondary ? 2 : 1)'
                     },
                         </text>
@@ -53,6 +54,7 @@
                 ]
             };
             var options = {
+                responsive: true,
                 legend: {
                     display: @Helper.ToJS(view.GetBoolValue("chartjs_show_legend")),
                     position: '@view.GetValue("chartjs_legend_position")'
@@ -129,6 +131,7 @@
                                 stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                                 ticks: {
                                     callback: function (label, index, labels) {
+                                        if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) return d3.time.format('@reportModel.ExecD3PrimaryYAxisFormat')(new Date(label));
                                         return d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(label).valueFormat();
                                         }
                                     }
@@ -142,6 +145,7 @@
                                 position: 'right',
                                 ticks: {
                                     callback: function(label, index, labels) {
+                                        if (@Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime)) return d3.time.format('@reportModel.ExecD3SecondaryYAxisFormat')(new Date(label));
                                         return d3.format('@reportModel.ExecD3SecondaryYAxisFormat')(label).valueFormat();
                                         }
                                     }
@@ -160,7 +164,7 @@
                 data: data,
                 options: options
             });
-
+            /* Naviagation
             $("#@chartId").click(
                 function (evt) {
                     var activePoints = @(chartId).getElementsAtEvent(evt);
@@ -172,7 +176,7 @@
                        if (nav) showPopupNavMenu(evt, nav, true);
                     }
                 }
-            );
+            );*/
         </script>
         chartOk = true;
     }

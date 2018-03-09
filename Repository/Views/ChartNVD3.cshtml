@@ -12,7 +12,7 @@
 {
     <!--Chart NVD3-->
     bool chartOk = false;
-    string chartId = string.Format("cnvd3_{0}{1}", view.ViewId, page.PageId).Replace("-", "");
+    string chartId = "cnv" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
         <div id='@chartId'>
