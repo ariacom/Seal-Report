@@ -2,16 +2,9 @@
 // Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using Seal.Helpers;
-using RazorEngine;
-using System.Xml.Serialization;
-using System.Globalization;
-using System.Data;
 using System.Text.RegularExpressions;
 
 namespace Seal.Model
@@ -56,7 +49,7 @@ namespace Seal.Model
                 Regex regexp = null;
                 List<string> languages = new List<string>();
 
-                foreach (string line in File.ReadAllLines(filePath, System.Text.Encoding.Default))
+                foreach (string line in File.ReadAllLines(filePath, System.Text.Encoding.UTF8))
                 {
                     if (regexp == null)
                     {

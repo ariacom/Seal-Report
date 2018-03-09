@@ -19,7 +19,7 @@
     Template.Parameters.Add(new Parameter() { Name = "chartjs_bar_horizontal", DisplayName = "Bar: Horizontals", BoolValue = false, Description = "If true, the bars in the chart are horizontals (only for Bar chart)." });
     Template.Parameters.Add(new Parameter() { Name = "chartjs_doughnut", DisplayName = "Pie: Is doughnut", BoolValue = true, Description = "If true, the chart is a doughnut (only for Pie chart)." });
     Template.Parameters.Add(new Parameter() { Name = "chartjs_stepped_line", DisplayName = "Line: Stepped", Description = "Stepped line mode (only for Line chart).", Value = "false", Enums = new string[] { "false|No Step Interpolation (default)", "true|Step-before Interpolation", "'after'|Step-after Interpolation" } });
-    Template.Parameters.Add(new Parameter() { Name = "chartjs_fill", DisplayName = "Line: Fill area", BoolValue = false, Description = "If true, the area is filled (only for Line chart)." });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_fill", DisplayName = "Line or Radar: Fill area", Description = "Option used to create area between two datasets or a dataset and a boundary (only for Line or Radar chart).", Value = "false", Enums = new string[] { "true", "false", "'start'", "'end'", "'origin'", "1", "2", "3", "'-1'", "'-2'", "'-3'", "'+1'" }, UseOnlyEnumValues = false });
 
 
     //Allowed template parent names

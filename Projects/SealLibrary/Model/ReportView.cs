@@ -935,8 +935,6 @@ namespace Seal.Model
             page.AxisYSecondaryMaxLen = 6;
 
             StringBuilder result = new StringBuilder(), navs = new StringBuilder();
-            // TOCHECK ?    if (!Model.ExecChartIsNumericAxis && !Model.ExecChartIsDateTimeAxis)
-            //     {
             //Build X labels
             foreach (var key in page.PrimaryXValues.Keys)
             {
@@ -956,7 +954,6 @@ namespace Seal.Model
 
             page.ChartXLabels = result.ToString();
             page.ChartNavigations = navs.ToString();
-            //   }
 
             foreach (ResultSerie resultSerie in page.Series)
             {
@@ -972,14 +969,15 @@ namespace Seal.Model
                     Model.ExecD3SecondaryYAxisFormat = resultSerie.Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
                     Model.ExecAxisSecondaryYIsDateTime = resultSerie.Element.IsDateTime;
                 }
+
                 //Fill Serie
-                StringBuilder chartXResult = new StringBuilder(), chartXDateTimeResult = new StringBuilder(), chartYResult = new StringBuilder();
+                StringBuilder chartXResult = new StringBuilder(), chartXDateTimeResult = new StringBuilder(), chartYResult = new StringBuilder(), chartYDateResult = new StringBuilder();
                 StringBuilder chartXYResult = new StringBuilder(), chartYDisplayResult = new StringBuilder();
                 int index = 0;
                 foreach (var xDimensionKey in page.PrimaryXValues.Keys)
                 {
                     string xValue = (index++).ToString(CultureInfo.InvariantCulture.NumberFormat);
-                    DateTime xValueDT = DateTime.MinValue;
+                    DateTime xValueDT = DateTime.MinValue, yValueDT = DateTime.MinValue;
 
                     //Find the corresponding serie value...
                     ResultSerieValue value = resultSerie.Values.FirstOrDefault(i => i.XDimensionValues == xDimensionKey);
@@ -1006,7 +1004,8 @@ namespace Seal.Model
 
                     if (yValue is DateTime)
                     {
-                        TimeSpan diff = ((DateTime)yValue).ToUniversalTime() - (new DateTime(1970, 1, 1, 0, 0, 0, 0));
+                        yValueDT = (DateTime)yValue;
+                        TimeSpan diff = yValueDT.ToUniversalTime() - (new DateTime(1970, 1, 1, 0, 0, 0, 0));
                         yValue = string.Format("{0}000", Math.Floor(diff.TotalSeconds));
                     }
                     else if (yValue is Double)
@@ -1035,15 +1034,18 @@ namespace Seal.Model
                         if (chartYResult.Length != 0) chartYResult.Append(",");
                         chartYResult.AppendFormat("{0}", yValue);
 
-                        //? if (chartYDisplayResult.Length != 0) chartYDisplayResult.Append(",");
-                        //? chartYDisplayResult.AppendFormat("'{0}'", Helper.ToJS(value.Yvalue.DisplayValue));
+                        if (yValueDT != DateTime.MinValue)
+                        {
+                            if (chartYDateResult.Length != 0) chartYDateResult.Append(",");
+                            chartYDateResult.AppendFormat("\"{0:yyyy-MM-dd HH:mm:ss}\"", yValueDT);
+                        }
                     }
                 }
                 resultSerie.ChartXYSerieValues = chartXYResult.ToString();
                 resultSerie.ChartXSerieValues = chartXResult.ToString();
                 resultSerie.ChartXDateTimeSerieValues = chartXDateTimeResult.ToString();
                 resultSerie.ChartYSerieValues = chartYResult.ToString();
-                //?resultSerie.ChartYSerieDisplayValues = chartYDisplayResult.ToString();
+                resultSerie.ChartYDateSerieValues = chartYDateResult.ToString();
             }
             page.ChartInitDone = true;
         }

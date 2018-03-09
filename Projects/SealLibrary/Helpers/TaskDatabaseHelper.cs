@@ -205,7 +205,7 @@ namespace Seal.Helpers
                 _defaultColumnCharType = "varchar";
                 _defaultColumnNumericType = "numeric(18,5)";
                 _defaultColumnIntegerType = "int";
-                _defaultColumnDateTimeType = "datetime";
+                _defaultColumnDateTimeType = "datetime2";
                 _defaultInsertStartCommand = "";
                 _defaultInsertEndCommand = "";
             }

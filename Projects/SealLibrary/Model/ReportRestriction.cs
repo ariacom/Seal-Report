@@ -1008,16 +1008,11 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public bool HasTime
+        public bool HasTimeRe
         {
             get {
                 if (!IsDateTime) return false;
-                if (DateTimeStandardFormatRe.ToString().Contains("Time") ||
-                    (DateTimeStandardFormat == DateTimeStandardFormat.Custom && (Format.ToLower().Contains("h") || Format.Contains("m") || Format.Contains("s"))))
-                {
-                    return true;
-                }
-                else return false;
+                return HasTimeFormat(DateTimeStandardFormatRe, FormatRe);
             }
         }
 
@@ -1028,7 +1023,7 @@ namespace Seal.Model
             get
             {
                 var format = Model.Report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern;
-                if (HasTime) format = "G";
+                if (HasTimeRe) format = "G";
                 return format;
             }
         }

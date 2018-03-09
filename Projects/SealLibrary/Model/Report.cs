@@ -369,6 +369,8 @@ namespace Seal.Model
         [XmlIgnore]
         public string ExecutionErrors;
         [XmlIgnore]
+        public string ExecutionErrorStackTrace;
+        [XmlIgnore]
         public string WebExecutionErrors
         {
             get
@@ -457,7 +459,7 @@ namespace Seal.Model
         {
             get
             {
-                return string.Format("{0}/{1} {2}", ExecutionModels.Count(i => i.Progression >= 100), ExecutionModels.Count, Translate("Model(s) loaded..."));
+                return string.Format("{0}/{1} {2}", ExecutionModels.Count(i => i.Progression >= 100), ExecutionModels.Count, ExecutionModels.Count > 1 ? Translate("Models loaded...") : Translate("Model loaded..."));
             }
         }
 
@@ -475,7 +477,7 @@ namespace Seal.Model
         {
             get
             {
-                return string.Format("{0}/{1} {2}", ExecutionTasks.Count(i => i.Progression >= 100), ExecutionTasks.Count, Translate("Task(s) executed..."));
+                return string.Format("{0}/{1} {2}", ExecutionTasks.Count(i => i.Progression >= 100), ExecutionTasks.Count, ExecutionTasks.Count > 1 ? Translate("Tasks executed...") : Translate("Task executed..."));
             }
         }
 
@@ -1568,7 +1570,9 @@ namespace Seal.Model
                 if (!Directory.Exists(Repository.LogsFolder)) Directory.CreateDirectory(Repository.LogsFolder);
 
                 string logFileName = Path.Combine(Repository.LogsFolder, string.Format("log_{0:yyyy_MM_dd}.txt", DateTime.Now));
-                string log = string.Format("********************\r\nExecution of '{0}' on {1} {2}\r\n{3}********************\r\n", FilePath, DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), ExecutionMessages);
+                var message = ExecutionMessages;
+                if (!string.IsNullOrEmpty(ExecutionErrorStackTrace)) message += string.Format("\r\nError Stack Trace:\r\n{0}\r\n", ExecutionErrorStackTrace);
+                string log = string.Format("********************\r\nExecution of '{0}' on {1} {2}\r\n{3}********************\r\n", FilePath, DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), message);
                 File.AppendAllText(logFileName, log);
 
                 if (!PurgeIsDone)

@@ -121,13 +121,7 @@ namespace Seal.Model
             set
             {
                 _type = value;
-                if (_dctd != null)
-                {
-                    if (_type == ColumnType.Numeric) NumericStandardFormat = NumericStandardFormat.Default;
-                    else if (_type == ColumnType.DateTime) DateTimeStandardFormat = DateTimeStandardFormat.Default;
-                    else _format = "";
-                    UpdateEditorAttributes();
-                }
+                UpdateEditorAttributes();
             }
         }
 
@@ -230,6 +224,22 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        public bool HasTime
+        {
+            get
+            {
+                if (Type != ColumnType.DateTime) return false;
+                return HasTimeFormat(DateTimeStandardFormat, Format);
+            }
+        }
+
+        static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
+        {
+            if (formatType.ToString().Contains("Time")) return true;
+            return ((formatType == DateTimeStandardFormat.Custom || formatType == DateTimeStandardFormat.Default)  
+                && (format.ToLower().Contains("t") || format.Contains("H") || format.Contains("m") || format.Contains("s")));
+        }
 
         public void SetStandardFormat()
         {

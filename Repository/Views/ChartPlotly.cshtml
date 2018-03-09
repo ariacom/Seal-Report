@@ -12,7 +12,7 @@
 {
     <!--Chart Plotly-->
     bool chartOk = false;
-    string chartId = string.Format("cplotly_{0}{1}", view.ViewId, page.PageId).Replace("-", "");
+    string chartId = "cpl" + Guid.NewGuid().ToString().Replace("-","");
     if (modelView.InitPageChart(page))
     {
         <div id="@chartId" style="@Helper.AddIfNotEmpty("width:", view.GetValue("ploty_chart_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("ploty_chart_height"), ";")"></div>
@@ -25,7 +25,7 @@
                 {
                     <text>
                     {
-                        type: '@reportModel.ExecPlotlyChartType',
+                        type: '@serie.Element.PlotlySerie.ToString().ToLower()',
                         name: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
                         @if (reportModel.ExecPlotlyChartType == "bar" && @view.GetValue("ploty_bar_orientation") == "h")
                         {
@@ -49,7 +49,7 @@
                         {
                         <text>
                         x: [@Raw(reportModel.ExecChartIsDateTimeAxis ? serie.ChartXDateTimeSerieValues : page.ChartXLabels)],
-                        y: [@Raw(serie.ChartYSerieValues)],
+                        y: [@Raw(Helper.FirstNotEmpty(serie.ChartYDateSerieValues, serie.ChartYSerieValues))],
                         @Raw(serie.Element.YAxisType == AxisType.Secondary ? "yaxis: 'y2'," : "")
                         </text>
                         }

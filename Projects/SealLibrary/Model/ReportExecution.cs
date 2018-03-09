@@ -618,10 +618,11 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Report.LogMessage("Error in task '{0}': {1}\r\n{2}\r\n", task.Name, ex.Message, ex.StackTrace);
+                Report.LogMessage("Error in task '{0}': {1}\r\n", task.Name, ex.Message);
                 if (!task.IgnoreError)
                 {
                     Report.ExecutionErrors = ex.Message;
+                    Report.ExecutionErrorStackTrace = ex.StackTrace;
                     task.CancelReport = true;
                 }
             }

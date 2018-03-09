@@ -60,6 +60,8 @@ namespace Seal.Converter
             choices.Add("T");
             choices.Add("yyyy");
             choices.Add("MM/yyyy");
+            choices.Add("dd/MM/yyyy");
+            choices.Add("dd\'-\'MM\'-\'yyyy");
             choices.Add("MM/dd/yy H:mm:ss");
             choices.Add("MM/dd/yy H:mm:ss zzz");
             choices.Add("dd/MM/yyyy HH:mm:ss");

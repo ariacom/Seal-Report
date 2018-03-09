@@ -83,7 +83,7 @@ namespace Seal.Model
             if (result == null) throw new Exception(string.Format("Unable to find view template named '{0}'", name));
 
             //Check if the file has changed
-            if (result.LastModification != File.GetLastWriteTime(result.FilePath) || result.LastConfigModification != File.GetLastWriteTime(result.ConfigurationPath))
+            if (result.IsModified)
             {
                 lock (_viewLock)
                 {

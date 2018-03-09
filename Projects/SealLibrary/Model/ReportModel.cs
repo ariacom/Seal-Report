@@ -154,7 +154,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        [Category("SQL"), DisplayName("SQL Statement"), Id(2, 2)]
+        [Category("SQL"), DisplayName("SQL Statement"), Description("The Select SQL Statement sent to the server to generate the main Result Data Table."), Id(2, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string SqlEditor
         {
@@ -561,42 +561,27 @@ namespace Seal.Model
         public void CheckPlotlyChartIntegrity()
         {
             //Check and choose the right chart
-            if (Elements.Exists(i => i.PlotlySerie == PlotlySerieDefinition.Scatter))
+            if (Elements.Exists(i => i.PlotlySerie == PlotlySerieDefinition.Pie))
             {
-                if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Scatter)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Scatter Serie with another type.");
+                if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Pie)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Pie Serie with another type.");
+                ExecPlotlyChartType = "pie";
+            }
+            else if (Elements.Exists(i => i.PlotlySerie == PlotlySerieDefinition.Scatter))
+            {
+                //if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Scatter)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Scatter Serie with another type.");
                 ExecPlotlyChartType = "scatter";
             }
             else if (Elements.Exists(i => i.PlotlySerie == PlotlySerieDefinition.Bar))
             {
-                if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Bar)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Bar Serie with another type.");
+                //if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Bar)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Bar Serie with another type.");
                 ExecPlotlyChartType = "bar";
-            }
-            else if (Elements.Exists(i => i.PlotlySerie == PlotlySerieDefinition.Pie))
-            {
-                if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Pie)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Pie Serie with another type.");
-                ExecPlotlyChartType = "pie";
             }
         }
 
         public void CheckChartJSIntegrity()
         {
             //Check and choose the right chart
-            if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Scatter))
-            {
-                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Scatter)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Scatter Serie with another type.");
-                ExecChartJSType = "scatter";
-            }
-            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Line))
-            {
-                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Line)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Line Serie with another type.");
-                ExecChartJSType = "line";
-            }
-            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Bar))
-            {
-                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Bar)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Bar Serie with another type.");
-                ExecChartJSType = "bar";
-            }
-            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Pie))
+            if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Pie))
             {
                 if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Pie)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Pie Serie with another type.");
                 ExecChartJSType = "pie";
@@ -610,6 +595,19 @@ namespace Seal.Model
             {
                 if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Radar)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Radar Serie with another type.");
                 ExecChartJSType = "radar";
+            }
+            if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Scatter))
+            {
+                if (Elements.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None && i.ChartJSSerie != ChartJSSerieDefinition.Scatter)) throw new Exception("Invalid chart configuration: Cannot mix Chart JS Scatter Serie with another type.");
+                ExecChartJSType = "scatter";
+            }
+            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Bar))
+            {
+                ExecChartJSType = "bar";
+            }
+            else if (Elements.Exists(i => i.ChartJSSerie == ChartJSSerieDefinition.Line))
+            {
+                ExecChartJSType = "line";
             }
         }
 
