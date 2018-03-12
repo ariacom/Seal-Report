@@ -15,7 +15,7 @@
     string chartId = "cpl" + Guid.NewGuid().ToString().Replace("-","");
     if (modelView.InitPageChart(page))
     {
-        <div id="@chartId" style="@Helper.AddIfNotEmpty("width:", view.GetValue("ploty_chart_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("ploty_chart_height"), ";")"></div>
+        <div id="@chartId" style="@Helper.AddIfNotEmpty("width:", view.GetValue("ploty_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("ploty_height"), ";")"></div>
 
         <script>
             var @chartId = $("#@chartId")[0];
@@ -72,7 +72,7 @@
                 {
                 autosize: true,
                 separators: decimalSeparator + thousandSeparator,
-                title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_chart_title"))))',
+                title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_title"))))',
                 xaxis: {
                     title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_xaxis_title"))))',
                     tickformat: '@reportModel.ExecD3XAxisFormat',

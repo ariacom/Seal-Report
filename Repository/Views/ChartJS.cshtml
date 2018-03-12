@@ -25,7 +25,7 @@
         {
             chartType = "horizontalBar";
         }
-        <canvas id="@chartId" @Raw(Helper.AddIfNotEmpty("width='", view.GetValue("chartjs_width"), "'")) @Raw(Helper.AddIfNotEmpty("height='", view.GetValue("chartjs_height"), "'"))></canvas>
+        <canvas id="@chartId" style="@Helper.AddIfNotEmpty("width:", view.GetValue("chartjs_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("chartjs_height"), ";")"></canvas>
 
         <script>
             var ctx = $("#@chartId");
