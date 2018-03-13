@@ -1479,6 +1479,23 @@ namespace Seal.Model
             return result;
         }
 
+        public ReportView FindViewFromTemplate(List<ReportView> views, string templateName)
+        {
+            ReportView result = null;
+            foreach (var view in views)
+            {
+                if (view.TemplateName == templateName)
+                {
+                    result = view;
+                    break;
+                }
+                result = FindViewFromTemplate(view.Views, templateName);
+
+                if (result != null) break;
+            }
+            return result;
+        }
+
         public void CancelExecution()
         {
             int cnt = 30;

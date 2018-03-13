@@ -542,6 +542,8 @@ namespace Seal.Model
                 if (!Report.Cancel && model.HasSerie) buildSeries(model);
                 //Final sort
                 if (!Report.Cancel) finalSort(model);
+                //Sub-totals
+                if (!Report.Cancel) buildSubTotals(model);
                 //Final script
                 if (!Report.Cancel) handleFinalScript(model);
                 model.Progression = 100; //100% 
@@ -1172,6 +1174,75 @@ namespace Seal.Model
                 
             }
             handleCustomScripts(model, null, model.SummaryTable);
+        }
+
+        private void buildSubTotals(ReportModel model)
+        {
+            if (model.HasSubTotals)
+            {
+                Report.LogMessage("Processing sub-totals...");
+                ResultTable summaryTable = model.SummaryTable;
+                foreach (ResultPage page in model.Pages)
+                {
+                    ResultTable dataTable = page.DataTable;
+                    ResultTable pageTable = page.PageTable;
+
+                    ResultTotalCell[] subTotalLine = null;
+                    List<ResultTotalCell> totalCells = new List<ResultTotalCell>();
+                    int i = dataTable.BodyStartRow, cols = dataTable.ColumnCount;
+                    string breakValue = "";
+                    while (i < dataTable.BodyEndRow)
+                    {
+                        string currentValue = "";
+                        for (int j = 0; j < cols; j++)
+                        {
+                            var cell = dataTable[i, j];
+                            if (cell.Element != null && cell.Element.ShowSubTotals) currentValue += cell.DisplayValue + "§";
+                        }
+                        if (currentValue != breakValue)
+                        {
+                            var newSubTotalLine = new ResultTotalCell[cols];
+                            for (int j = 0; j < cols; j++)
+                            {
+                                var sourceCell = dataTable[i, j];
+                                var newCell = new ResultTotalCell() { IsTotal = true, FinalCssClass = "info" };
+                                newSubTotalLine[j] = newCell;
+                                if (sourceCell.Element != null && sourceCell.Element.PivotPosition == PivotPosition.Data)
+                                {
+                                    totalCells.Add(newCell);
+                                    newCell.Element = sourceCell.Element;
+                                    newCell.FinalCssClass += " text-right";
+                                    newCell.Cells.Add(sourceCell);
+                                }
+                            }
+                            newSubTotalLine[0].Value = Report.Translate("Subtotal");
+
+                            if (subTotalLine != null)
+                            {
+                                dataTable.Lines.Insert(i, subTotalLine);
+                                dataTable.BodyEndRow++;
+                                i++;
+                            }
+                            breakValue = currentValue;
+                            subTotalLine = newSubTotalLine;
+                        }
+                        else
+                        {
+                            for (int j = 0; j < cols; j++)
+                            {
+                                if (subTotalLine[j].Element != null && subTotalLine[j].Element.PivotPosition == PivotPosition.Data)
+                                {
+                                    subTotalLine[j].Cells.Add(dataTable[i, j]);
+                                }
+                            }
+                        }
+                        i++;
+                    }
+                    dataTable.Lines.Insert(i, subTotalLine);
+                    foreach (var cell in totalCells) cell.Calculate();
+                    dataTable.BodyEndRow++;
+                }
+            }
         }
 
         private void handleFinalScript(ReportModel model)

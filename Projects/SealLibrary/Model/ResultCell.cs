@@ -49,7 +49,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    if (Value == null) return "";
+                    if (Value == null || Element == null) return "";
                     if (IsTitle) return Element.Model.Report.TranslateElement(Element, Value.ToString());
                     if (Value is IFormattable) return ((IFormattable)Value).ToString(Element.FormatEl, Element.Model.Report.ExecutionView.CultureInfo);
                 }
@@ -122,7 +122,7 @@ namespace Seal.Model
         {
             get
             {
-                if (Element != null && Element.IsEnum)
+                if (Element != null && Value != null && Element.IsEnum)
                 {
                     MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
                     if (value != null) FinalCssClass = value.Class;
@@ -143,7 +143,7 @@ namespace Seal.Model
         {
             get
             {
-                if (Element != null && Element.IsEnum)
+                if (Element != null && Value != null && Element.IsEnum)
                 {
                     MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
                     if (value != null) FinalCssStyle = value.Css;

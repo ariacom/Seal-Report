@@ -588,6 +588,12 @@
                     <select id="property-totalsaggr" data-width="100%"></select>
                 </div>
             </div>
+            <div id="properties-subtot-group">
+                <label class="properties-label">@repository.TranslateWeb("Show sub-totals")</label>
+                <div class="properties-value">
+                    <select id="property-subtot" data-width="100%"></select>
+                </div>
+            </div>
             <div id="properties-operator-group">
                 <label class="properties-label">@repository.TranslateWeb("Operator")</label>
                 <div class="properties-value">
@@ -789,6 +795,7 @@
     <script src="~/Scripts/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
     <script src="~/Scripts/dataTables.responsive.min.js"></script>
+    <script src="~/Scripts/datetime-moment.js"></script>
     <script src="~/Scripts/responsive.bootstrap.min.js"></script>
 
     <script type="text/javascript">
@@ -823,6 +830,9 @@
         <text>opers[@((int)oper)] = "@Helper.ToJS(repository.TranslateWebJS(Helper.GetEnumDescription(typeof(Operator), oper)))";</text>
         }
         }
+
+        //date time sort
+        $.fn.dataTable.moment(shortDateTimeFormat);
 
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
