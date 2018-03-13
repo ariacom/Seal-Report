@@ -203,7 +203,7 @@ namespace Seal.Forms
     foreach (DataRow row in table.Rows)
     {
         /* e.g. Change the values of the column displaying the City element
-		ReportElement element = model.Elements.FirstOrDefault(i => i.DisplayNameEl == ""City"");
+		ReportElement element = model.GetRestrictionByName(""City"");
 		if (element != null && !row.IsNull(element.SQLColumnName)) {
 			row[element.SQLColumnName] = string.Format(""New value for '{0}'"", row[element.SQLColumnName]);
 		}
@@ -264,11 +264,11 @@ namespace Seal.Forms
     	ResultTable pageTable = page.PageTable;
 
         /* e.g to change the last line of the Data Tables
-        dataTable.Lines[dataTable.Lines.Count - 1][0].Value = ""Maximum"";
-		for (int i=0;i< dataTable.Lines[0].Length; i++)
+        dataTable[dataTable.RowCount - 1, 0].Value = ""Maximum"";
+		for (int i=0;i< dataTable.ColumnCount; i++)
 	    {
-		    string style =  ""background:orange;"" + (i > 0 ? ""text-align:right;"" : """");
-		    dataTable.Lines[dataTable.Lines.Count - 1][i].FinalCssStyle = style;
+		    string cssclass =  ""danger;"" + (i > 0 ? ""text-align:right;"" : """");
+		    dataTable[dataTable.Lines.Count - 1, i].FinalCssClass = cssclass;
 	    }
         */
     }
@@ -627,7 +627,7 @@ namespace Seal.Forms
                     if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = templateText;
                     template = templateText;
                     frm.Text = "Edit custom partial template";
-                    frm.TypeForCheckSyntax = frm.View.Template.ForReportModel ? typeof(ReportModel) : typeof(Report);
+                    frm.TypeForCheckSyntax = frm.View.Template.ForReportModel ? typeof(ReportModel) : typeof(ReportView);
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
                 else if (context.Instance is ReportTask)

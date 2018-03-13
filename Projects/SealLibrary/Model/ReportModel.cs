@@ -285,6 +285,15 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
+        public bool HasSubTotals
+        {
+            get
+            {
+                return Elements.Exists(i => i.PivotPosition == PivotPosition.Row && i.ShowSubTotals) && Elements.Exists(i => i.PivotPosition == PivotPosition.Data);
+            }
+        }
+
+        [XmlIgnore]
         public bool HasPrimaryYAxis
         {
             get

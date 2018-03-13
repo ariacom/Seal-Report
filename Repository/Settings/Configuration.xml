@@ -6,14 +6,7 @@
   <WebProductName>Seal Report</WebProductName>
   <InitScript />
   <ReportCreationScript />
-  <TasksScript>@using System.Text
-@functions {
-    //During execution, this script will be copied at the end of all task scripts...
-    public string MyConvertStringRoot(string input) {
-        return input.Replace("__","_");
-    }
-}
-</TasksScript>
+  <TasksScript />
   <DefaultCulture />
   <CsvSeparator />
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>

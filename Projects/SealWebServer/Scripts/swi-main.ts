@@ -536,7 +536,6 @@ class SWIMain {
 
         var isMobile = SWIUtil.IsMobile();
         $('#file-table').dataTable({
-           // sDom: '<"dataTableTop"lfpir>t',
             bSort: true,
             stateSave: true,
             aaSorting: [],
@@ -565,9 +564,6 @@ class SWIMain {
             aoColumnDefs: [{ "bSortable": false, "aTargets": [0, 2] }]
         });
 
-    //    $(".dataTables_length select").selectpicker('refresh');
-  //      setTimeout(function () { $(".dataTables_length select").selectpicker('refresh'); }, 1000);
-        //check box handler
         $(".report-checkbox").on("click", function () {
             _main.enableControls();
         });

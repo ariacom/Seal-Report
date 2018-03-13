@@ -45,6 +45,7 @@ namespace Seal.Forms
         }
 
         [Category("Definition"), DisplayName("Display name"), Description("The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'.")]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string DisplayName
         {
             get { return Report.DisplayName; }

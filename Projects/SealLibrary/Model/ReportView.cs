@@ -481,8 +481,21 @@ namespace Seal.Model
         }
 
 
+        string _cultureName = "";
+        [DisplayName("Culture name"), Description("The language and culture used to display the report. If empty, the default culture is used."), Category("View parameters"), Id(2, 4)]
+        [TypeConverter(typeof(CultureNameConverter))]
+        public string CultureName
+        {
+            get { return _cultureName; }
+            set
+            {
+                _cultureInfo = null;
+                _cultureName = value;
+            }
+        }
+
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Template configuration"), Description("The view configuration values."), Category("View parameters"), Id(2, 4)]
+        [DisplayName("Template configuration"), Description("The view configuration values."), Category("View parameters"), Id(3, 4)]
         [XmlIgnore]
         public ParametersEditor TemplateConfiguration
         {
@@ -494,18 +507,6 @@ namespace Seal.Model
             }
         }
 
-        string _cultureName = "";
-        [DisplayName("Culture name"), Description("The language and culture used to display the report. If empty, the default culture is used."), Category("View parameters"), Id(4, 4)]
-        [TypeConverter(typeof(CultureNameConverter))]
-        public string CultureName
-        {
-            get { return _cultureName; }
-            set
-            {
-                _cultureInfo = null;
-                _cultureName = value;
-            }
-        }
 
         public int GetSort()
         {

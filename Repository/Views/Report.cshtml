@@ -40,8 +40,9 @@
     @Raw(report.AttachScriptFile("jquery.dataTables.min.js", "https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"))
     @Raw(report.AttachScriptFile("dataTables.bootstrap.min.js", "https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"))
     @Raw(report.AttachScriptFile("dataTables.responsive.min.js", "https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"))
+    @Raw(report.AttachScriptFile("datetime-moment.js"))
     @Raw(report.AttachScriptFile("responsive.bootstrap.min.js", "https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap.min.js"))
-
+    
     @if (report.HasChart)
     {
         @Raw(report.AttachScriptFile("d3.min.js"))
@@ -84,9 +85,7 @@
         var refreshTimer = null;
         var refreshRate = @view.GetNumericValue("refresh_rate");
         var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
-    //    var hasErrors = @Helper.ToJS(report.HasErrors);
         var hasNavigation = @Helper.ToJS(report.HasNavigation && (report.IsNavigating || report.GenerateHTMLDisplay));/*SRKW do not modify*/
-      //  var showRestrictions = (hasRestrictions && @Helper.ToJS(view.GetBoolValue("restriction_button")));
         var showInformation = @Helper.ToJS(view.GetBoolValue("information_button") && string.IsNullOrEmpty(report.WebExecutionErrors));
         var showMessage = @Helper.ToJS(view.GetBoolValue("message_button") || !string.IsNullOrEmpty(report.WebExecutionErrors));
         var forceExecution = @Helper.ToJS(view.GetBoolValue("force_execution") || report.HasNavigation);
@@ -99,23 +98,17 @@
         //text
         var startingExecText = '@report.Translate("Starting execution...")';
         var cancelText = '@report.Translate("Cancel")';
-       // var reportCancelledText = '@Raw(report.Translate("Report has been cancelled"))';
-       // var backToTopText = '@report.Translate("Back to top")';
-       // var allSelectedText = '@report.Translate("All selected")';
-       // var countSelectedText = '@report.Translate("# of % selected")';
-       // var selectAllText = '@report.Translate("Select all")';
 
         //formats
-    //    var dateSeparator = '@view.CultureInfo.DateTimeFormat.DateSeparator';
         var decimalSeparator = '@view.CultureInfo.NumberFormat.NumberDecimalSeparator';
-        //for datepicker
         var languageName = '@view.CultureInfo.TwoLetterISOLanguageName';
         var shortDateFormat = '@Helper.ToMomentJSFormat(view.CultureInfo.DateTimeFormat.ShortDatePattern)';
         var shortDateTimeFormat = '@Helper.ToMomentJSFormat(view.CultureInfo.DateTimeFormat.ShortDatePattern + ' ' + view.CultureInfo.DateTimeFormat.LongTimePattern)';
-       // var isUSdate = shortDateFormat.match(/^m/i);
         var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
         var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
 
+        $.fn.dataTable.moment(shortDateFormat);
+        $.fn.dataTable.moment(shortDateTimeFormat);
         $.extend( true, $.fn.dataTable.defaults, {
             responsive: true,
             responsive: {
@@ -176,14 +169,14 @@
             pagingType: "full_numbers",
             autoWidth: false,
             stateSave: @Helper.ToJS(!string.IsNullOrEmpty(report.WebUrl)),
-            stateSaveCallback: function ( settings, data ) {
+            stateSaveCallback: function(settings,data) {
                 try {
                     (settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
                         'DataTables_'+settings.sInstance+'_Result',
                         JSON.stringify( data ));
                 } catch (e) {}
             },
-            stateLoadCallback: function ( settings ) {
+            stateLoadCallback: function(settings) {
                 try {
                     return JSON.parse(
                         (settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(

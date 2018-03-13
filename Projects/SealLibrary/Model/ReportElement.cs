@@ -34,6 +34,7 @@ namespace Seal.Model
                 GetProperty("HasHTMLTags").SetIsBrowsable(true);
                 GetProperty("SortOrder").SetIsBrowsable(true);
                 GetProperty("TypeEd").SetIsBrowsable(!IsEnum && !Source.IsNoSQL);
+                GetProperty("ShowSubTotals").SetIsBrowsable(PivotPosition == PivotPosition.Row);
 
                 GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
                 GetProperty("TotalAggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data);
@@ -200,6 +201,16 @@ namespace Seal.Model
             }
         }
 
+        bool _showSubTotals = false;
+        [Category("Options"), DisplayName("Show sub-totals"), Description("If true, a line showing sub-totals is added to the main data table when the value of the element changes."), Id(2, 3)]
+        [DefaultValue(false)]
+        public bool ShowSubTotals
+        {
+            get { return _showSubTotals; }
+            set { _showSubTotals = value; }
+        }
+
+        [XmlIgnore]
         public ColumnType TypeEl
         {
             get
@@ -209,6 +220,7 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
         public string FormatEl
         {
             get
@@ -260,6 +272,7 @@ namespace Seal.Model
             return value.ToString();
         }
 
+        [XmlIgnore]
         public bool IsSorted
         {
             get { return SortOrder != SortOrderConverter.kNoSortKeyword && !string.IsNullOrEmpty(SortOrder); }

@@ -15,7 +15,6 @@
 
 @if (page.DataTable != null && page.DataTable.RowCount > 0 && page.DataTable.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
 {
-
     <script type="text/javascript">
     $(document).ready(function () {
         var dt = $('#@("dt_" + view.ViewId+page.PageId)');
