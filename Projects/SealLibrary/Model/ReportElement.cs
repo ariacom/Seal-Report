@@ -687,5 +687,43 @@ namespace Seal.Model
         {
             return Helper.ToMomentJSFormat(FormatEl);
         }
+
+        public string GetExcelFormat(CultureInfo culture)
+        {
+            //try to convert from .net to Excel format... 
+            string format = FormatEl;
+            if (IsNumeric)
+            {
+                if (format == "N1" || format == "D1") return "#,##0.0";
+                else if (format == "N2" || format == "D2") return "#,##0.00";
+                else if (format == "N3" || format == "D3") return "#,##0.000";
+                else if (format == "N4" || format == "D4") return "#,##0.0000";
+                else if (format.StartsWith("N") || format.StartsWith("D")) return "#,##0";
+                else if (format == "P1") return "0.0%";
+                else if (format == "P2") return "0.00%";
+                else if (format == "P3") return "0.00%";
+                else if (format == "P4") return "0.0000%";
+                else if (format.StartsWith("P")) return "0%";
+                else if (format == "C1") return "$ #,##0.0";
+                else if (format == "C2") return "$ #,##0.00";
+                else if (format == "C3") return "$ #,##0.000";
+                else if (format == "C4") return "$ #,##0.0000";
+                else if (format.StartsWith("C")) return "$ #,##0";
+                else if (format == "0" || format.StartsWith("N") || format.StartsWith("D") || format.StartsWith("E") || format.StartsWith("F") || format.StartsWith("G") || format.StartsWith("H")) return "0";
+            }
+            else if (IsDateTime)
+            {
+                if (format == "d") return culture.DateTimeFormat.ShortDatePattern;
+                else if (format == "D") return culture.DateTimeFormat.LongDatePattern;
+                else if (format == "t") return culture.DateTimeFormat.ShortTimePattern;
+                else if (format == "T") return culture.DateTimeFormat.LongTimePattern;
+                else if (format == "g") return culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+                else if (format == "G") return culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+                else if (format == "f") return culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+                else if (format == "F") return culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+                else if (format == "g") return culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+            }
+            return FormatEl;
+        }
     }
 }

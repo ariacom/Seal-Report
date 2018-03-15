@@ -129,8 +129,8 @@ function showPopupNavMenu(source, content, forChart) {
         .show()
         .css({
             position: "absolute",
-            left: (forChart ? source.offsetX : source.offset().left),
-            top: (forChart ? source.offsetY + 35 : source.offset().top + source.height() + 3)
+            left: (forChart ? source.clientX : source.offset().left),
+            top: (forChart ? source.clientY : source.offset().top + source.height() + 3)
         });
 }
 

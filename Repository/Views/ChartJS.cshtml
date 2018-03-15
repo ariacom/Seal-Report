@@ -164,19 +164,19 @@
                 data: data,
                 options: options
             });
-            /* Naviagation
+            // Naviagation
             $("#@chartId").click(
                 function (evt) {
-                    var activePoints = @(chartId).getElementsAtEvent(evt);
-                    if (activePoints && activePoints.length > 0) {
-                        var index = activePoints[0]["_index"];
+                    var points = @(chartId).getElementsAtEvent(evt);
+                    if (points && points.length > 0) {
+                        var index = points[0]["_index"];
                         var label = @(chartId).data.labels[index];
                         var value = @(chartId).data.datasets[0].data[index];
                        var nav = @(chartId).data.navigations[index];
                        if (nav) showPopupNavMenu(evt, nav, true);
                     }
                 }
-            );*/
+            );
         </script>
         chartOk = true;
     }
