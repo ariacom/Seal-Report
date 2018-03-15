@@ -105,6 +105,8 @@
                     //if ((@chartId).isArea != null) (@chartId).isArea(true); //for Line
                     //(@chartId).xAxis.showMaxMin(false);
 
+                    (@chartId).navigations = [@Raw(page.ChartNavigations)];
+
                     //pie chart
                     if (chartType == 'pieChart') {
                         (@chartId)
@@ -146,6 +148,25 @@
 
                     if (nvd3Charts != null) nvd3Charts.push(@chartId);
                     nvd3TranslateAll("#@(chartId)");
+
+                    if ((@chartId).pie) {
+                        (@chartId).pie.dispatch.on("elementClick", function (e) {
+                            var nav = @(chartId).navigations[e.data.x];
+                            if (nav) showPopupNavMenu(e.event, nav, true);
+                        });
+                    }
+                    if ((@chartId).lines) {
+                        (@chartId).lines.dispatch.on("elementClick", function (e) {
+                            var nav = @(chartId).navigations[e.data.x];
+                            if (nav) showPopupNavMenu(e.event, nav, true);
+                        });
+                    }
+                    if ((@chartId).multibar) {
+                        (@chartId).multibar.dispatch.on("elementClick", function (e) {
+                            var nav = @(chartId).navigations[e.data.x];
+                            if (nav) showPopupNavMenu(e.event, nav, true);
+                        });
+                    }
                     return @chartId;
                 }
                     , function () {

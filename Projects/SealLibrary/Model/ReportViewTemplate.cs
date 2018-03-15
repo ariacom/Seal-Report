@@ -113,7 +113,7 @@ namespace Seal.Model
             }
         }
 
-        public string Configuration;
+        public string Configuration = "";
 
         string _error = "";
         public string Error
@@ -139,16 +139,15 @@ namespace Seal.Model
             return File.ReadAllText(GetPartialTemplatePath(name));
         }
 
-        public void Init(string path)
+        public bool Init(string path)
         {
             FilePath = path;
             LastModification = File.GetLastWriteTime(path);
             ConfigurationPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + ".config.cshtml");
-            if (File.Exists(ConfigurationPath))
-            {
-                LastConfigModification = File.GetLastWriteTime(ConfigurationPath);
-                Configuration = File.ReadAllText(ConfigurationPath);
-            }
+            if (!File.Exists(ConfigurationPath)) return false;
+
+            LastConfigModification = File.GetLastWriteTime(ConfigurationPath);
+            Configuration = File.ReadAllText(ConfigurationPath);
             //load partial templates related
             PartialTemplatesPath.Clear();
             foreach (var partialPath in Directory.GetFiles(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + ".*.partial.cshtml"))
@@ -157,6 +156,8 @@ namespace Seal.Model
             }
 
             IsParsed = false;
+
+            return true;
         }
 
         public static List<ReportViewTemplate> LoadTemplates(string templateFolder)
@@ -167,8 +168,7 @@ namespace Seal.Model
             {
                 if (path.EndsWith(".config.cshtml") || path.EndsWith(".partial.cshtml")) continue;
                 ReportViewTemplate template = new ReportViewTemplate();
-                template.Init(path);
-                viewTemplates.Add(template);
+                if (template.Init(path)) viewTemplates.Add(template);
             }
             return viewTemplates;
         }

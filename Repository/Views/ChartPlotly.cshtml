@@ -19,7 +19,6 @@
 
         <script>
             var @chartId = $("#@chartId")[0];
-
             var data = [
                 @foreach (ResultSerie serie in page.Series)
                 {
@@ -71,7 +70,7 @@
             var layout =
                 {
                 margin: {
-                    l: 20, r: 20, b: 10, t: 20
+                    l: 20, r: 20, b: 80, t: 20
                 },
                 autosize: true,
                 separators: decimalSeparator + thousandSeparator,
@@ -87,7 +86,7 @@
                 yaxis2: {
                     title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("ploty_yaxis2_title"))))',
                     tickformat: '@reportModel.ExecD3SecondaryYAxisFormat',
-                    overlaying: 'y', 
+                    overlaying: 'y',
                     side:'right',
                 },
                 showlegend: @Helper.ToJS(view.GetBoolValue("ploty_show_legend")),
@@ -95,6 +94,7 @@
                     @Raw(view.GetValue("ploty_legend_position"))
                     orientation: "@view.GetValue("ploty_legend_orientation")"
                 },
+                navigations: [@Raw(page.ChartNavigations)],
                 @Raw(view.GetBoolValue("ploty_bar_stacked") ? "barmode: 'stack'," : "")
             }
 
@@ -102,6 +102,16 @@
                 data,
                 layout
                 );
+
+            (@chartId).on('plotly_click', function (data) {
+                if (data.points.length > 0) {
+                    var idx = (@chartId).data[0].x.indexOf(data.points[0].x);
+                    if (idx != -1) {
+                       var nav = @(chartId).layout.navigations[idx];
+                       if (nav) showPopupNavMenu(data.event, nav, true);
+                    }
+                }
+            });
         </script>
         chartOk = true;
     }
