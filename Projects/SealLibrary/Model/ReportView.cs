@@ -853,7 +853,7 @@ namespace Seal.Model
                         Model.ExecChartIsNumericAxis = dimensions[0].Element.IsNumeric;
                         Model.ExecChartIsDateTimeAxis = dimensions[0].Element.IsDateTime;
                         Model.ExecD3XAxisFormat = dimensions[0].Element.GetD3Format(CultureInfo, Model.ExecNVD3ChartType);
-                        Model.ExecMomentJSXAxisFormat = dimensions[0].Element.GetMomentJSFormat();
+                        Model.ExecMomentJSXAxisFormat = dimensions[0].Element.GetMomentJSFormat(CultureInfo);
                     }
                 }
             }
@@ -931,9 +931,9 @@ namespace Seal.Model
             }
             initChartXValues(page);
 
-            page.AxisXLabelMaxLen = 10;
-            page.AxisYPrimaryMaxLen = 6;
-            page.AxisYSecondaryMaxLen = 6;
+            page.AxisXLabelMaxLen = 0;
+            page.AxisYPrimaryMaxLen = 0;
+            page.AxisYSecondaryMaxLen = 0;
 
             StringBuilder result = new StringBuilder(), navs = new StringBuilder();
             //Build X labels
@@ -973,7 +973,7 @@ namespace Seal.Model
 
                 //Fill Serie
                 StringBuilder chartXResult = new StringBuilder(), chartXDateTimeResult = new StringBuilder(), chartYResult = new StringBuilder(), chartYDateResult = new StringBuilder();
-                StringBuilder chartXYResult = new StringBuilder(), chartYDisplayResult = new StringBuilder();
+                StringBuilder chartXYResult = new StringBuilder(), chartYXResult = new StringBuilder(), chartYDisplayResult = new StringBuilder();
                 int index = 0;
                 foreach (var xDimensionKey in page.PrimaryXValues.Keys)
                 {
@@ -1023,6 +1023,9 @@ namespace Seal.Model
                         if (chartXYResult.Length != 0) chartXYResult.Append(",");
                         chartXYResult.AppendFormat("{{x:{0},y:{1}}}", xValue, yValue);
 
+                        if (chartYXResult.Length != 0) chartYXResult.Append(",");
+                        chartYXResult.AppendFormat("{{x:{0},y:{1}}}", yValue, xValue);
+
                         if (chartXResult.Length != 0) chartXResult.Append(",");
                         chartXResult.AppendFormat("{0}", xValue);
 
@@ -1043,6 +1046,7 @@ namespace Seal.Model
                     }
                 }
                 resultSerie.ChartXYSerieValues = chartXYResult.ToString();
+                resultSerie.ChartYXSerieValues = chartYXResult.ToString();
                 resultSerie.ChartXSerieValues = chartXResult.ToString();
                 resultSerie.ChartXDateTimeSerieValues = chartXDateTimeResult.ToString();
                 resultSerie.ChartYSerieValues = chartYResult.ToString();

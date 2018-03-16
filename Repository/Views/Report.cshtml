@@ -102,8 +102,8 @@
         //formats
         var decimalSeparator = '@view.CultureInfo.NumberFormat.NumberDecimalSeparator';
         var languageName = '@view.CultureInfo.TwoLetterISOLanguageName';
-        var shortDateFormat = '@Helper.ToMomentJSFormat(view.CultureInfo.DateTimeFormat.ShortDatePattern)';
-        var shortDateTimeFormat = '@Helper.ToMomentJSFormat(view.CultureInfo.DateTimeFormat.ShortDatePattern + ' ' + view.CultureInfo.DateTimeFormat.LongTimePattern)';
+        var shortDateFormat = '@repository.MomentJSShortDateFormat';
+        var shortDateTimeFormat = '@repository.MomentJSShortDateTimeFormat';
         var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
         var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
 

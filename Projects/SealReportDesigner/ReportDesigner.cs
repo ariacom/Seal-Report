@@ -172,8 +172,10 @@ namespace Seal
         {
             if (view != null)
             {
-                foreach (var childView in view.Views)
+                int index = 1;
+                foreach (var childView in view.Views.OrderBy(i => i.SortOrder))
                 {
+                    childView.SortOrder = index++;
                     TreeNode childNode = new TreeNode(childView.Name) { ImageIndex = 8, SelectedImageIndex = 8 };
                     childNode.Tag = childView;
                     node.Nodes.Add(childNode);

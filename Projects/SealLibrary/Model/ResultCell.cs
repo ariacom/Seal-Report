@@ -19,6 +19,7 @@ namespace Seal.Model
         public ReportElement Element;
         public bool IsTotal = false;
         public bool IsTitle = false;
+        public bool IsSubTotal = false;
         public bool IsTotalTotal = false;
         public bool IsSerie = false;
 
@@ -175,8 +176,14 @@ namespace Seal.Model
         public static int CompareCellsForTableLoad(ResultCell[] a, ResultCell[] b)
         {
             if (a.Length == 0 || a.Length != b.Length) return 0;
-            ReportModel model = a[0].Element.Model;
-            ReportElement element = model.Elements.FirstOrDefault(i => i.FinalSortOrder.Contains(" "));
+            ReportModel model = null;
+            int i = a.Length;
+            while (--i >= 0 && model == null)
+            {
+                if (a[i].Element != null) model = a[i].Element.Model;
+            }
+
+            ReportElement element = model.Elements.FirstOrDefault(j => j.FinalSortOrder.Contains(" "));
             if (element != null)
             {
                 var sortIndex = int.Parse(element.FinalSortOrder.Split(' ')[0]);

@@ -681,7 +681,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID>
           <FormatRe>N0</FormatRe>
-          <Operator>Between</Operator>
+          <Operator>NotBetween</Operator>
           <Value1>50</Value1>
           <Value2>100</Value2>
           <EnumValues />
@@ -874,6 +874,93 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
       <AggregateRestriction />
       <AggregateRestrictions />
     </ReportModel>
+    <ReportModel>
+      <GUID>1a89c9ae-46e4-4ba2-b23b-266fdb8d39de</GUID>
+      <Name>BAR - multiple - horizontal</Name>
+      <SourceGUID>37d5a3f0-cd71-4032-99b9-a2b2834ef7bc</SourceGUID>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>82a0083d-fed9-4e7f-8705-dc5951cc0a23</GUID>
+          <Name>Products.CategoryID</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>93447811-e7d8-41bd-89c9-42b7e3062968</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <Nvd3Serie>MultiBarHorizontalChart</Nvd3Serie>
+          <PlotlySerie>Bar</PlotlySerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c2458f1-c9bb-4cfe-be31-cacd84b48113</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[55d974fb-9fda-4c88-86a2-e285a36e3cc6]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>55d974fb-9fda-4c88-86a2-e285a36e3cc6</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <FormatRe />
+          <EnumValues>
+            <string>Davolio</string>
+            <string>Fuller</string>
+            <string>King</string>
+            <string>Suyama</string>
+          </EnumValues>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
   </Models>
   <Outputs />
   <Tasks />
@@ -906,24 +993,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>08b7d244-8c15-4a0a-bff0-87cac4f177f1</GUID>
@@ -940,24 +1013,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>c00d8605-2ff0-410a-9abf-80a17a883a73</GUID>
@@ -967,31 +1026,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <ThemeName />
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -1008,21 +1048,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>bff6defa-3e89-4bfa-b2d0-08f01a0282af</ModelGUID>
@@ -1032,24 +1058,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>0</SortOrder>
+          <SortOrder>1</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>30141a16-effb-43c9-9be5-4ac8a398cc42</GUID>
@@ -1074,24 +1086,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>dd1a1ee4-0ae5-4a6e-b71f-c47ac1fe6d47</GUID>
@@ -1103,33 +1101,15 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_width</Name>
-                      <Value />
-                    </Parameter>
-                    <Parameter>
                       <Name>nvd3_chart_title</Name>
                       <Value>Chart NVD3</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>060cd086-d17b-4a47-b0bd-12eb143d9765</GUID>
@@ -1139,35 +1119,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <ThemeName />
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_scatter_mode</Name>
-                      <Value>lines</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -1184,21 +1141,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>b3ab79bd-19f8-41af-af1d-29066fb7a4b7</ModelGUID>
@@ -1208,24 +1151,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>3</SortOrder>
+          <SortOrder>4</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>792e30c7-a6b1-4dce-b9ed-1a70f0194ab0</GUID>
@@ -1250,24 +1179,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>e667b78c-7c11-43c8-943a-e6aad9ca6191</GUID>
@@ -1284,24 +1199,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>38dbabb2-9b12-43f6-af05-b69b159236e7</GUID>
@@ -1313,33 +1214,15 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_scatter_mode</Name>
+                      <Name>plotly_scatter_mode</Name>
                       <Value>markers</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -1356,21 +1239,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>7ad0c9e9-77d3-467a-a9ec-02071d38449b</ModelGUID>
@@ -1383,21 +1252,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <SortOrder>6</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>bab0219a-c721-4e08-9d55-1b093555f539</GUID>
@@ -1422,24 +1277,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>b57574df-4308-439c-b133-6ba4512d6838</GUID>
@@ -1456,24 +1297,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>398e22ab-50b4-4abb-b1b3-e62535288f18</GUID>
@@ -1483,35 +1310,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <ThemeName />
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_scatter_mode</Name>
-                      <Value>markers</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -1528,21 +1332,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>3e157223-fb3a-464d-ab56-0c7a71c3756c</ModelGUID>
@@ -1552,24 +1342,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>2</SortOrder>
+          <SortOrder>3</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>4a994b6f-1edc-440c-8cb8-74da56814ec3</GUID>
@@ -1594,24 +1370,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>626b5cc5-dea4-4b57-87c9-b0a6e14d7de7</GUID>
@@ -1628,24 +1390,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>2630d28f-61ed-407a-95f8-69b1db6df988</GUID>
@@ -1655,31 +1403,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <ThemeName />
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -1696,21 +1425,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>6425108a-6420-44cd-a4f6-60e9b228f889</ModelGUID>
@@ -1720,24 +1435,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>1</SortOrder>
+          <SortOrder>2</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>06ec815e-0eb9-43cd-9a78-d7c5896ee295</GUID>
@@ -1766,24 +1467,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>ca1f17a7-6703-4adf-9b0b-8dc30e2c27de</GUID>
@@ -1795,33 +1482,15 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>nvd3_chart_width</Name>
-                      <Value />
-                    </Parameter>
-                    <Parameter>
                       <Name>nvd3_chart_title</Name>
                       <Value>Chart NVD3</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>166e7a74-83a2-4eb3-8bf7-b704e372d059</GUID>
@@ -1831,35 +1500,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <ThemeName />
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_scatter_mode</Name>
-                      <Value>lines</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -1876,21 +1522,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>c8de94d3-c1ee-4bd7-bda5-fd88ceffabf6</ModelGUID>
@@ -1900,24 +1532,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>4</SortOrder>
+          <SortOrder>5</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>35d61cfb-7889-42e2-9aa0-17a050b1173b</GUID>
@@ -1942,24 +1560,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>937a0d40-33f8-4a6f-9d32-b1b99338f45a</GUID>
@@ -1976,24 +1580,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>1aef7c29-76a5-441d-9626-b7e432f7f69d</GUID>
@@ -2005,33 +1595,15 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_scatter_mode</Name>
+                      <Name>plotly_scatter_mode</Name>
                       <Value>markers</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -2048,21 +1620,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>41626f41-00cf-4bd8-ac5b-62d99ec44e4f</ModelGUID>
@@ -2075,21 +1633,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <SortOrder>7</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>5659f126-6a35-4fd2-bd62-6bce2a9af448</GUID>
@@ -2114,24 +1658,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>ab9a1afe-2ab2-4786-a33d-4ba57db99c1d</GUID>
@@ -2148,24 +1678,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>ba16c08b-dfc6-48d9-ba63-9d0c6efa610d</GUID>
@@ -2177,33 +1693,15 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_scatter_mode</Name>
+                      <Name>plotly_scatter_mode</Name>
                       <Value>markers</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -2220,21 +1718,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>27bcfeaa-b61f-4ba5-8c02-6be7e4c9f0dd</ModelGUID>
@@ -2247,21 +1731,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <SortOrder>8</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>8e51dfe9-796a-405d-ab42-95c632e61efc</GUID>
@@ -2286,24 +1756,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>464d89b0-78d1-4d02-aa31-a4e4d2c95363</GUID>
@@ -2320,24 +1776,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>cb14b464-d2ef-4811-8bd6-1c880d1b5037</GUID>
@@ -2349,33 +1791,15 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_scatter_mode</Name>
+                      <Name>plotly_scatter_mode</Name>
                       <Value>markers</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -2392,21 +1816,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>71f52fff-b68c-438b-8f74-41243c4e180a</ModelGUID>
@@ -2419,21 +1829,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <SortOrder>9</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>1c56269c-f4cc-4ec9-a7d4-3b63f54556c0</GUID>
@@ -2462,24 +1858,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>ee0b62c4-ebb3-4fae-bf2d-e6d69879a31a</GUID>
@@ -2500,24 +1882,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>0cef60f9-e2c9-44dd-bc36-7c80799709e7</GUID>
@@ -2527,35 +1895,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <ThemeName />
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_bar_stacked</Name>
-                      <Value>False</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -2572,21 +1917,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>f2caf022-fb55-450a-b0c9-ee2bf4508c51</ModelGUID>
@@ -2596,24 +1927,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>10</SortOrder>
+          <SortOrder>11</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
         <ReportView>
           <GUID>d5a9fc18-e02f-4a92-9dd1-9c1ed9ba26ae</GUID>
@@ -2638,24 +1955,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>6c64d7c1-0cb1-4a37-8465-a76088f0bce4</GUID>
@@ -2672,24 +1975,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
                   <GUID>cd0374e6-5d16-4b7d-a5b6-21879c6345c8</GUID>
@@ -2699,43 +1988,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <ThemeName />
                   <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>ploty_chart_title</Name>
-                      <Value>Chart Plotly</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_yaxis2_title</Name>
-                      <Value>dsaldjsald sdaljd</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_legend_position</Name>
-                      <Value>x:0.2,y:1.2,</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>ploty_scatter_mode</Name>
-                      <Value>lines</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
@@ -2752,21 +2010,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
               <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
           </Views>
           <ModelGUID>980463f9-50f4-4eac-afa8-f8a025f6d6fd</ModelGUID>
@@ -2776,24 +2020,116 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
           <PartialTemplates />
           <Parameters />
           <CultureName />
+          <SortOrder>12</SortOrder>
+          <WebExec>true</WebExec>
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+        <ReportView>
+          <GUID>624a6135-bc4f-4516-9ef6-62ef32888fe5</GUID>
+          <Name>BAR - multiple - horizontal</Name>
+          <Views>
+            <ReportView>
+              <GUID>21a2bab6-52aa-4439-ba17-fd80d0a82fcc</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>0533eacf-44ff-4503-ae47-95e699103daa</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_title</Name>
+                      <Value>Chart JS</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_bar_horizontal</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>5ad17ed2-50e8-4fb7-a324-a8cf8c309d22</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>nvd3_chart_title</Name>
+                      <Value>Chart NVD3</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>634eeeeb-dd52-4047-876d-f25b9373be33</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <ThemeName />
+                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>plotly_legend_position</Name>
+                      <Value>x:0.5,y:1</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>plotly_bar_orientation</Name>
+                      <Value>h</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <ThemeName />
+              <UseCustomTemplate>false</UseCustomTemplate>
+              <PartialTemplates />
+              <Parameters>
+                <Parameter>
+                  <Name>grid_layout</Name>
+                  <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                </Parameter>
+              </Parameters>
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
+          <ModelGUID>1a89c9ae-46e4-4ba2-b23b-266fdb8d39de</ModelGUID>
+          <TemplateName>Model HTML</TemplateName>
+          <ThemeName />
+          <UseCustomTemplate>false</UseCustomTemplate>
+          <PartialTemplates />
+          <Parameters />
+          <CultureName />
           <SortOrder>10</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
+          <ExcelConfigurations />
         </ReportView>
       </Views>
       <ModelGUID />
@@ -2801,26 +2137,21 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
       <ThemeName />
       <UseCustomTemplate>false</UseCustomTemplate>
       <PartialTemplates />
-      <Parameters />
+      <Parameters>
+        <Parameter>
+          <Name>container_fluid</Name>
+          <Value>True</Value>
+        </Parameter>
+        <Parameter>
+          <Name>child_container_fluid</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
       <CultureName />
       <SortOrder>1</SortOrder>
       <WebExec>true</WebExec>
       <PdfConfigurations />
-      <ExcelConfigurations>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-      </ExcelConfigurations>
+      <ExcelConfigurations />
     </ReportView>
     <ReportView>
       <GUID>ca0f8a2d-9935-4690-86eb-bb1f7ad622b8</GUID>

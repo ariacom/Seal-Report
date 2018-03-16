@@ -36,6 +36,7 @@ namespace Seal.Model
         }
 
         public string ChartXYSerieValues;
+        public string ChartYXSerieValues;
         public string ChartXSerieValues;
         public string ChartXDateTimeSerieValues;
         public string ChartYSerieValues;
