@@ -30,24 +30,25 @@
         <script>
             var ctx = $("#@chartId");
             var colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+            colors = @Raw(view.GetValue("chartjs_colors") != "d3" ? view.GetValue("chartjs_colors") : "colors");
             var data = {
                 labels: [@Raw(page.ChartXLabels)],
                 navigations: [@Raw(page.ChartNavigations)],
                 datasets: [
-                    @foreach (ResultSerie serie in page.Series)
+                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.ChartJSSerie != ChartJSSerieDefinition.None))
                     {
                         <text>
                     {
-                        @Raw(reportModel.ExecChartJSType != "pie" && reportModel.ExecChartJSType != "polarArea" && reportModel.ExecChartJSType != "radar" ? "type: '" + serie.Element.ChartJSSerie.ToString().ToLower() + "'," : "")
+                        @Raw(chartType != "horizontalBar" && reportModel.ExecChartJSType != "pie" && chartType != "polarArea" && chartType != "radar" ? "type: '" + serie.Element.ChartJSSerie.ToString().ToLower() + "'," : "")
                         labels: [@Raw(page.ChartXLabels)],
                         label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
-                        data: [@Raw(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" || reportModel.ExecChartJSType == "radar" ? serie.ChartYSerieValues : serie.ChartXYSerieValues)],
+                        data: [@Raw(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" || reportModel.ExecChartJSType == "radar" ? serie.ChartYSerieValues : (chartType != "horizontalBar" ? serie.ChartXYSerieValues: serie.ChartYXSerieValues))],
                         borderColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
                         backgroundColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
                         borderWidth: 1,
                         steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
                         fill: @Raw(view.GetValue("chartjs_fill")),
-                        yAxisID: 'yaxis-@(serie.Element.YAxisType == AxisType.Secondary ? 2 : 1)'
+                        @(chartType == "horizontalBar" ? "x" : "y")AxisID: 'yaxis-@(serie.Element.YAxisType == AxisType.Secondary ? 2 : 1)'
                     },
                         </text>
                     }
@@ -71,27 +72,35 @@
                             var tooltipLabel = data.labels[tooltipItem.index];
                             var tooltipData = allData[tooltipItem.index];
                             var format = (data.datasets[tooltipItem.datasetIndex].yAxisID == 'yaxis-2' ? '@reportModel.ExecD3SecondaryYAxisFormat' : '@reportModel.ExecD3PrimaryYAxisFormat');
+                            var isDate = (data.datasets[tooltipItem.datasetIndex].yAxisID == 'yaxis-2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
+                            var val = tooltipItem.@(chartType == "horizontalBar" ? "x" : "y")Label;
+                            var valStr = "";
+                            if (isDate) valStr = d3.time.format(format)(new Date(val));
+                            else valStr = d3.format(format)(Number(val)).valueFormat();
+
                             @if (reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea")
                             {
                                 <text>
                                 var total = 0;
-                                for (var i in allData) {
-                                    total += allData[i];
+                                for (var i in allData) total += allData[i];
+                                if (isDate) valStr = d3.time.format(format)(new Date(tooltipData));
+                                else {
+                                    var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                                    valStr = d3.format(format)(Number(tooltipData)).valueFormat() + ' (' + tooltipPercentage + '%)';
                                 }
-                                var tooltipPercentage = Math.round((tooltipData / total) * 100);
-                                return tooltipLabel + ': ' + d3.format(format)(Number(tooltipData)).valueFormat() + ' (' + tooltipPercentage + '%)';
+                                return tooltipLabel + ': ' + valStr;
                                 </text>
                             }
                             else if (reportModel.ExecChartJSType == "scatter")
                             {
                                 <text>
-                                return data.labels[tooltipItem.index] + ': ' + d3.format(format)(Number(tooltipItem.yLabel)).valueFormat();
+                                return data.labels[tooltipItem.index] + ': ' + valStr;
                                 </text>
                             }
                             else
                             {
                                 <text>
-                                return  d3.format(format)(Number(tooltipItem.yLabel)).valueFormat();
+                                return valStr;
                                 </text>
                             }
                         }
@@ -101,7 +110,7 @@
                 {
                 <text>
                 scales: {
-                    xAxes: [{
+                    @(chartType != "horizontalBar" ? "x" : "y")Axes: [{
                         stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                         @if (reportModel.ExecChartIsDateTimeAxis) {
                             <text>
@@ -123,7 +132,7 @@
                             </text>
                             }
                         }],
-                    yAxes: [
+                    @(chartType != "horizontalBar" ? "y" : "x")Axes: [
                         @if (reportModel.HasPrimaryYAxis) {
                             <text>
                                 {

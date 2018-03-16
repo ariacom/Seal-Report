@@ -807,8 +807,8 @@
         var decimalSeparator = '@repository.CultureInfo.NumberFormat.NumberDecimalSeparator';
         //for datepicker
         var languageName = '@repository.CultureInfo.TwoLetterISOLanguageName';
-        var shortDateFormat = '@Helper.ToMomentJSFormat(repository.CultureInfo.DateTimeFormat.ShortDatePattern)';
-        var shortDateTimeFormat = '@Helper.ToMomentJSFormat(repository.CultureInfo.DateTimeFormat.ShortDatePattern + ' ' + repository.CultureInfo.DateTimeFormat.LongTimePattern)';
+        var shortDateFormat = '@repository.MomentJSShortDateFormat';
+        var shortDateTimeFormat = '@repository.MomentJSShortDateTimeFormat';
         var isUSdate = shortDateFormat.match(/^m/i);
 
         var folderRightSchedule = @((int) FolderRight.Schedule);

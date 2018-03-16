@@ -21,7 +21,7 @@
             <script>
                 nv.addGraph(function () {
                     var series = new Array();
-                    @foreach (ResultSerie serie in page.Series)
+                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.Nvd3Serie != NVD3SerieDefinition.None))
                     {
                         string multiChartOption = (reportModel.ExecNVD3ChartType == "multiChart" ? string.Format(",type:'{0}',yAxis:{1}", serie.NVD3MultiChartType, ((int)serie.Element.YAxisType + 1)) : "");
                         <text>
@@ -52,6 +52,7 @@
 
                     //Root Script
                     var colors = d3.scale.category@((reportModel.ExecNVD3ChartType == "pieChart" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+                    colors = @Raw(view.GetValue("nvd3_colors") != "d3" ? view.GetValue("nvd3_colors") : "colors");
                     (@chartId).color(colors);
                     //Axis format
                     if ((@chartId).xAxis != null && (@chartId).xAxis.tickFormat != null) (@chartId).xAxis.tickFormat(XValueFormatter);
@@ -86,9 +87,11 @@
                     }
 
                     //Margins
-                    if (chartType == 'multiBarHorizontalChart') (@chartId).margin({ left: 30 + 4 * @page.AxisXLabelMaxLen, right: 30 });
-                    else if (chartType != 'pieChart') (@chartId).margin({ left: 30 + 5 * @page.AxisYPrimaryMaxLen, right: 40 + 5 * @page.AxisYPrimaryMaxLen });
-                    //(@chartId).margin({top: 30, left: 70, bottom: 40, right: 60});
+                    var margins = null;
+                    if (chartType == 'multiBarHorizontalChart') margins = { left: 20 + 5*@page.AxisXLabelMaxLen, right: 22 };
+                    else if (chartType != 'pieChart') margins = { left: 20 + 6 * @page.AxisYPrimaryMaxLen, right: 30 + 6 * @page.AxisYSecondaryMaxLen };
+                    margins = @Raw(view.GetValue("nvd3_margins") != "auto" ? view.GetValue("nvd3_margins") : "margins");
+                    if (margins) (@chartId).margin(margins);
 
                     //Options
                     var hideControls = (@Helper.ToJS(view.GetBoolValue("nvd3_hide_controls") || report.PrintLayout) || chartType == 'scatterChart' || (series.length == 1 && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
@@ -151,18 +154,6 @@
 
                     if ((@chartId).pie) {
                         (@chartId).pie.dispatch.on("elementClick", function (e) {
-                            var nav = @(chartId).navigations[e.data.x];
-                            if (nav) showPopupNavMenu(e.event, nav, true);
-                        });
-                    }
-                    if ((@chartId).lines) {
-                        (@chartId).lines.dispatch.on("elementClick", function (e) {
-                            var nav = @(chartId).navigations[e.data.x];
-                            if (nav) showPopupNavMenu(e.event, nav, true);
-                        });
-                    }
-                    if ((@chartId).multibar) {
-                        (@chartId).multibar.dispatch.on("elementClick", function (e) {
                             var nav = @(chartId).navigations[e.data.x];
                             if (nav) showPopupNavMenu(e.event, nav, true);
                         });

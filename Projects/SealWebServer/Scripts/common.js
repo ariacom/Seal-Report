@@ -106,6 +106,24 @@ function showNavMenu() {
         });
 }
 
+function realMouseCoords(event) {
+    var totalOffsetX = 0;
+    var totalOffsetY = 0;
+    var canvasX = 0;
+    var canvasY = 0;
+    var currentElement = this;
+
+    do {
+        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+    }
+    while (currentElement = currentElement.offsetParent)
+
+    canvasX = event.pageX - totalOffsetX;
+    canvasY = event.pageY - totalOffsetY;
+    return { x: canvasX, y: canvasY }
+}
+
 function showPopupNavMenu(source, content, forChart) {
     var $popup = $('#nav_popupmenu');
     if (!$popup.length) {
@@ -129,8 +147,8 @@ function showPopupNavMenu(source, content, forChart) {
         .show()
         .css({
             position: "absolute",
-            left: (forChart ? source.clientX : source.offset().left),
-            top: (forChart ? source.clientY : source.offset().top + source.height() + 3)
+            left: (forChart ? source.clientX + document.body.scrollLeft + document.documentElement.scrollLeft: source.offset().left),
+            top: (forChart ? source.clientY + document.body.scrollTop + document.documentElement.scrollTop: source.offset().top + source.height() + 3)
         });
 }
 

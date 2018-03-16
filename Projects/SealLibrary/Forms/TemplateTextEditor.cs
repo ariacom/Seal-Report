@@ -50,6 +50,7 @@ namespace Seal.Forms
     cell.ContextCurrentLine is the current line of the table (type = ResultCell[]), null for SummaryTable
     cell.IsTotal indicates if it is a total cell
     cell.IsTotalTotal indicates if it is a total of total cell
+    cell.IsSubTotal indicates if it is a sub-total cell
     cell.IsTitle indicates if it is a title cell
     cell.IsSerie indicates if the cell is used for series, in this case, ContextRow and ContextCol is the common row and col used for the dimension values
 	
@@ -70,18 +71,26 @@ namespace Seal.Forms
 	{
         if (cell.ContextIsSummaryTable) {
     		cell.FinalCssStyle = ""font-weight:bold;"";
-	    	cell.FinalCssClass = ""warning lead""; //These are Bootstrap classes
+	    	cell.FinalCssClass = ""warning lead""; 
         }
         else if (cell.ContextIsPageTable) {
-	    	cell.FinalCssClass = ""info""; //These are Bootstrap classes
+	    	cell.FinalCssClass = ""info""; 
         }
         else {
     		cell.FinalCssStyle = ""font-weight:bold;"";
-	    	cell.FinalCssClass = ""warning""; //These are Bootstrap classes
+	    	cell.FinalCssClass = ""warning""; 
         }
 	}
     else {
-		cell.FinalCssClass = ""success right""; //These are Bootstrap classes
+        if (cell.IsSubTotal) {
+    		cell.FinalCssClass = ""danger"";
+        }
+        else if (cell.IsTotal) {
+    		cell.FinalCssClass = ""info"";
+        }
+        else {
+            cell.FinalCssClass = ""success right""; //These may be Bootstrap classes
+        }
     }
 "
                 ),

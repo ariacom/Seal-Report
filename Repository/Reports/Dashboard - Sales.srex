@@ -5,11 +5,6 @@
     <ReportSource>
       <GUID>db41093d-d76c-4e64-849a-27a024e52816</GUID>
       <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
       <InitScript />
@@ -51,7 +46,6 @@
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -66,7 +60,6 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -82,7 +75,6 @@
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarHorizontalChart</Nvd3Serie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -104,7 +96,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -126,7 +117,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -147,7 +137,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -176,7 +165,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -210,7 +198,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -225,7 +212,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarHorizontalChart</Nvd3Serie>
           <SerieSortType>AxisLabel</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -242,7 +228,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
         </ReportElement>
       </Elements>
@@ -262,7 +247,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -284,7 +268,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -305,7 +288,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -334,7 +316,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -368,7 +349,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -384,7 +364,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -400,7 +379,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarHorizontalChart</Nvd3Serie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -422,7 +400,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -444,7 +421,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -465,7 +441,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -494,7 +469,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -521,6 +495,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <NumericStandardFormat>Custom</NumericStandardFormat>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
@@ -529,7 +504,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -537,6 +511,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
@@ -544,7 +519,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>PieChart</Nvd3Serie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -565,7 +539,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -587,7 +560,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -608,7 +580,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -637,7 +608,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -671,7 +641,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -686,7 +655,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -702,7 +670,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -724,7 +691,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -746,7 +712,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -767,7 +732,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -796,7 +760,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -830,7 +793,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -845,7 +807,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -860,7 +821,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -882,7 +842,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -904,7 +863,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -925,7 +883,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -954,7 +911,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -988,7 +944,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1003,7 +958,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1011,15 +965,14 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <Tag />
-          <NumericStandardFormat>Custom</NumericStandardFormat>
-          <Format />
+          <DisplayName />
+          <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>StackedAreaChart</Nvd3Serie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
@@ -1041,7 +994,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -1063,7 +1015,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -1084,7 +1035,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1113,7 +1063,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1148,7 +1097,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1156,6 +1104,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
@@ -1163,7 +1112,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1178,7 +1127,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
       </Elements>
@@ -1198,7 +1146,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -1220,7 +1167,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -1241,7 +1187,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1270,7 +1215,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1304,7 +1248,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1320,7 +1263,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -1339,8 +1281,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <CalculationOption>PercentageAll</CalculationOption>
           <ShowTotal>Column</ShowTotal>
-          <SerieType>Point</SerieType>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -1356,7 +1296,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
         </ReportElement>
@@ -1374,8 +1313,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <CalculationOption>PercentageAll</CalculationOption>
           <ShowTotal>Column</ShowTotal>
-          <SerieType>Point</SerieType>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1392,10 +1329,9 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>Line</Nvd3Serie>
-          <YAxisType>Secondary</YAxisType>
           <SerieSortType>None</SerieSortType>
+          <YAxisType>Secondary</YAxisType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
           <CellScript>@using Seal.Model
 @{
@@ -1460,7 +1396,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -1482,7 +1417,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -1503,7 +1437,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1532,7 +1465,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1567,7 +1499,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1581,7 +1512,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1596,7 +1526,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>PieChart</Nvd3Serie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -1617,7 +1546,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -1639,7 +1567,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -1660,7 +1587,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1689,7 +1615,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1723,7 +1648,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1738,7 +1662,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1746,6 +1669,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
@@ -1753,8 +1677,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
-          <Nvd3Serie>StackedAreaChart</Nvd3Serie>
+          <Nvd3Serie>Line</Nvd3Serie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
       </Elements>
@@ -1774,7 +1697,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -1796,7 +1718,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -1817,7 +1738,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1846,7 +1766,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -1878,7 +1797,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1893,7 +1811,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1908,7 +1825,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>LineWithFocusChart</Nvd3Serie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -1924,7 +1840,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>LineWithFocusChart</Nvd3Serie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
         </ReportElement>
@@ -1940,7 +1855,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>LineWithFocusChart</Nvd3Serie>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
         </ReportElement>
@@ -1955,7 +1869,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1969,7 +1882,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1984,7 +1896,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -1999,7 +1910,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
         </ReportElement>
       </Elements>
@@ -2019,7 +1929,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
@@ -2041,7 +1950,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -2062,7 +1970,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -2091,7 +1998,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -2157,33 +2063,15 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Sales per %Category% and %Customer Country%</Value>
-                            </Parameter>
-                            <Parameter>
-                              <Name>nvd3_bar_stacked</Name>
-                              <Value>True</Value>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
                             </Parameter>
                           </Parameters>
                           <CultureName />
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
+                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
@@ -2198,24 +2086,10 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>0</SortOrder>
+                      <SortOrder>1</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>741b8c6c-d550-4889-b06f-be24b3308810</GUID>
@@ -2231,29 +2105,15 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Sales per %Customer Country% and %Order Month%</Value>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
                             </Parameter>
                           </Parameters>
                           <CultureName />
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
+                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <ModelGUID>57b96369-ed1b-4b96-9f91-47e501d794c7</ModelGUID>
@@ -2268,24 +2128,10 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>0</SortOrder>
+                      <SortOrder>2</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>ace413bf-dc0a-4988-8828-8ae3553397a1</GUID>
@@ -2301,7 +2147,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                           <PartialTemplates />
                           <Parameters />
                           <CultureName />
-                          <SortOrder>3</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
@@ -2317,21 +2163,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <SortOrder>3</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
@@ -2346,24 +2178,10 @@ col-sm-12</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -2372,7 +2190,7 @@ col-sm-12</Value>
               <PartialTemplates />
               <Parameters />
               <CultureName />
-              <SortOrder>2</SortOrder>
+              <SortOrder>3</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations>
@@ -2412,37 +2230,19 @@ col-sm-12</Value>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
                           <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
+                          <UseCustomTemplate>true</UseCustomTemplate>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Sales per %Category% and %Employee Name%</Value>
-                            </Parameter>
-                            <Parameter>
-                              <Name>nvd3_bar_stacked</Name>
-                              <Value>True</Value>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
                             </Parameter>
                           </Parameters>
                           <CultureName />
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
+                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
@@ -2450,101 +2250,12 @@ col-sm-12</Value>
                       <ThemeName />
                       <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
-                      <Parameters>
-                        <Parameter>
-                          <Name>show_data_tables</Name>
-                          <Value>False</Value>
-                        </Parameter>
-                      </Parameters>
+                      <Parameters />
                       <CultureName />
                       <SortOrder>1</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
-                    </ReportView>
-                    <ReportView>
-                      <GUID>27713e6a-bc38-454d-b3c5-1b84e71e885e</GUID>
-                      <Name>chart2</Name>
-                      <Views>
-                        <ReportView>
-                          <GUID>56b19aaf-5b2e-4a2c-ac2a-77118979b3e3</GUID>
-                          <Name>Chart NVD3</Name>
-                          <Views />
-                          <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
-                          <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Sales per %Employee Name% and %Order Month%</Value>
-                            </Parameter>
-                          </Parameters>
-                          <CultureName />
-                          <SortOrder>2</SortOrder>
-                          <WebExec>true</WebExec>
-                          <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
-                        </ReportView>
-                      </Views>
-                      <ModelGUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</ModelGUID>
-                      <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
-                      <PartialTemplates />
-                      <Parameters>
-                        <Parameter>
-                          <Name>show_data_tables</Name>
-                          <Value>False</Value>
-                        </Parameter>
-                      </Parameters>
-                      <CultureName />
-                      <SortOrder>2</SortOrder>
-                      <WebExec>true</WebExec>
-                      <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>be6792ac-8a2c-4db7-ab5e-7cdd1f3cd920</GUID>
@@ -2560,7 +2271,7 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters />
                           <CultureName />
-                          <SortOrder>3</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
@@ -2576,21 +2287,45 @@ col-sm-12</Value>
                       <SortOrder>3</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
+                    </ReportView>
+                    <ReportView>
+                      <GUID>8a32abe7-116f-4188-8799-d4af3645a611</GUID>
+                      <Name>chart2</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>8a35b067-e0e3-4625-957e-c94b46d3c403</GUID>
+                          <Name>Chart NVD3</Name>
+                          <Views />
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <ThemeName />
+                          <UseCustomTemplate>false</UseCustomTemplate>
+                          <CustomTemplate />
+                          <PartialTemplates />
+                          <Parameters>
+                            <Parameter>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
+                            </Parameter>
+                          </Parameters>
+                          <CultureName />
+                          <SortOrder>1</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                      </Views>
+                      <ModelGUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</ModelGUID>
+                      <TemplateName>Model HTML</TemplateName>
+                      <ThemeName />
+                      <UseCustomTemplate>false</UseCustomTemplate>
+                      <PartialTemplates />
+                      <Parameters />
+                      <CultureName />
+                      <SortOrder>2</SortOrder>
+                      <WebExec>true</WebExec>
+                      <PdfConfigurations />
+                      <ExcelConfigurations />
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
@@ -2605,24 +2340,10 @@ col-sm-12</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>4</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -2631,7 +2352,7 @@ col-sm-12</Value>
               <PartialTemplates />
               <Parameters />
               <CultureName />
-              <SortOrder>3</SortOrder>
+              <SortOrder>4</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations>
@@ -2675,33 +2396,15 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Sales per %Category% and %Order Month%</Value>
-                            </Parameter>
-                            <Parameter>
-                              <Name>nvd3_bar_stacked</Name>
-                              <Value>True</Value>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
                             </Parameter>
                           </Parameters>
                           <CultureName />
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
+                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <ModelGUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</ModelGUID>
@@ -2719,21 +2422,7 @@ col-sm-12</Value>
                       <SortOrder>1</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>d19e1403-04c3-459c-997d-befbd3a29ddd</GUID>
@@ -2749,29 +2438,15 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Discounts per %Category% and %Order Month%</Value>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
                             </Parameter>
                           </Parameters>
                           <CultureName />
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
+                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <ModelGUID>c19fa517-6db1-4436-a2e7-219168eee98c</ModelGUID>
@@ -2786,24 +2461,10 @@ col-sm-12</Value>
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>1</SortOrder>
+                      <SortOrder>2</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>d0da65ae-c117-4825-a593-619570705f2f</GUID>
@@ -2819,7 +2480,7 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters />
                           <CultureName />
-                          <SortOrder>3</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
@@ -2832,24 +2493,10 @@ col-sm-12</Value>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
-                      <SortOrder>2</SortOrder>
+                      <SortOrder>3</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
@@ -2864,24 +2511,10 @@ col-sm-12</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>3</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -2890,7 +2523,7 @@ col-sm-12</Value>
               <PartialTemplates />
               <Parameters />
               <CultureName />
-              <SortOrder>1</SortOrder>
+              <SortOrder>2</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations>
@@ -2934,29 +2567,15 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Sales per %Order Month%</Value>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
                             </Parameter>
                           </Parameters>
                           <CultureName />
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
+                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <ModelGUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</ModelGUID>
@@ -2971,24 +2590,10 @@ col-sm-12</Value>
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>0</SortOrder>
+                      <SortOrder>1</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>dadfc942-0bf2-4421-8915-a541d48fc8ba</GUID>
@@ -3004,29 +2609,15 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Sales per %Category%</Value>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
                             </Parameter>
                           </Parameters>
                           <CultureName />
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
+                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <ModelGUID>28577963-bd93-49f5-b117-8a983b7ec93c</ModelGUID>
@@ -3041,24 +2632,10 @@ col-sm-12</Value>
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>1</SortOrder>
+                      <SortOrder>2</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>7a228c9b-4126-4fd9-bfab-1634a19e315d</GUID>
@@ -3074,29 +2651,15 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Sales per %Employee Name%</Value>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
                             </Parameter>
                           </Parameters>
                           <CultureName />
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
+                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <ModelGUID>0ecae0c4-46e1-43df-994b-bdd16f629c7a</ModelGUID>
@@ -3111,24 +2674,10 @@ col-sm-12</Value>
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>2</SortOrder>
+                      <SortOrder>3</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>2f7603fc-381e-4f65-ab71-97191d1e4779</GUID>
@@ -3144,7 +2693,7 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters />
                           <CultureName />
-                          <SortOrder>3</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
@@ -3165,21 +2714,7 @@ col-sm-12</Value>
                       <SortOrder>4</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>a741e750-737e-4f1f-a0cd-2d5dec2aed6c</GUID>
@@ -3195,37 +2730,15 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>chart_nvd3_title</Name>
-                              <Value>Sales per %Customer Country% and %Employee Name%</Value>
-                            </Parameter>
-                            <Parameter>
-                              <Name>nvd3_bar_stacked</Name>
-                              <Value>True</Value>
-                            </Parameter>
-                            <Parameter>
-                              <Name>nvd3_chart</Name>
-                              <Value>height:500px; page-break-inside:avoid;</Value>
+                              <Name>nvd3_chart_width</Name>
+                              <Value />
                             </Parameter>
                           </Parameters>
                           <CultureName />
-                          <SortOrder>2</SortOrder>
+                          <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
                           <PdfConfigurations />
-                          <ExcelConfigurations>
-                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                          </ExcelConfigurations>
+                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <ModelGUID>5d49225d-cb74-4cd2-a30d-694061b98efe</ModelGUID>
@@ -3247,21 +2760,7 @@ col-sm-12</Value>
                       <SortOrder>5</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
-                      <ExcelConfigurations>
-                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                      </ExcelConfigurations>
+                      <ExcelConfigurations />
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
@@ -3277,24 +2776,10 @@ col-sm-7;col-sm-5;
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>6</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -3303,24 +2788,10 @@ col-sm-7;col-sm-5;
               <PartialTemplates />
               <Parameters />
               <CultureName />
-              <SortOrder>0</SortOrder>
+              <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
+              <ExcelConfigurations />
             </ReportView>
             <ReportView>
               <GUID>c2cdacb7-7df3-4b43-bd8f-d8304a187bc2</GUID>
@@ -3338,9 +2809,14 @@ col-sm-7;col-sm-5;
                       <ThemeName />
                       <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
-                      <Parameters />
+                      <Parameters>
+                        <Parameter>
+                          <Name>nvd3_chart_width</Name>
+                          <Value />
+                        </Parameter>
+                      </Parameters>
                       <CultureName />
-                      <SortOrder>2</SortOrder>
+                      <SortOrder>1</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
@@ -3355,7 +2831,7 @@ col-sm-7;col-sm-5;
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
-                      <SortOrder>3</SortOrder>
+                      <SortOrder>2</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
@@ -3371,21 +2847,7 @@ col-sm-7;col-sm-5;
                   <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
+                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -3394,7 +2856,7 @@ col-sm-7;col-sm-5;
               <PartialTemplates />
               <Parameters />
               <CultureName />
-              <SortOrder>4</SortOrder>
+              <SortOrder>5</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations>
@@ -3424,7 +2886,7 @@ col-sm-7;col-sm-5;
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <SortOrder>2</SortOrder>
+          <SortOrder>1</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
@@ -3453,12 +2915,14 @@ col-sm-7;col-sm-5;
 &lt;PdfConverterCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;HtmlViewerWidth&gt;1024&lt;/HtmlViewerWidth&gt;
   &lt;HtmlViewerHeight&gt;0&lt;/HtmlViewerHeight&gt;
+  &lt;HtmlViewerZoom&gt;100&lt;/HtmlViewerZoom&gt;
   &lt;ClipHtmlView&gt;false&lt;/ClipHtmlView&gt;
   &lt;JavaScriptEnabled&gt;true&lt;/JavaScriptEnabled&gt;
   &lt;Enable3DTransformations&gt;false&lt;/Enable3DTransformations&gt;
   &lt;EnableWebGL&gt;false&lt;/EnableWebGL&gt;
   &lt;EnableAccelerated2DCanvas&gt;false&lt;/EnableAccelerated2DCanvas&gt;
   &lt;EnablePersistentStorage&gt;false&lt;/EnablePersistentStorage&gt;
+  &lt;LocalFilesAccessEnabled&gt;true&lt;/LocalFilesAccessEnabled&gt;
   &lt;SvgFontsEnabled&gt;false&lt;/SvgFontsEnabled&gt;
   &lt;WebFontsEnabled&gt;true&lt;/WebFontsEnabled&gt;
   &lt;PostScriptFontsEnabled&gt;true&lt;/PostScriptFontsEnabled&gt;
@@ -3532,11 +2996,14 @@ col-sm-7;col-sm-5;
 &lt;PdfSecurityOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;CanAssembleDocument&gt;true&lt;/CanAssembleDocument&gt;
   &lt;CanCopyContent&gt;true&lt;/CanCopyContent&gt;
+  &lt;CanCopyAccessibilityContent&gt;true&lt;/CanCopyAccessibilityContent&gt;
   &lt;CanEditAnnotations&gt;true&lt;/CanEditAnnotations&gt;
   &lt;CanEditContent&gt;true&lt;/CanEditContent&gt;
   &lt;CanFillFormFields&gt;true&lt;/CanFillFormFields&gt;
   &lt;CanPrint&gt;true&lt;/CanPrint&gt;
+  &lt;CanPrintHighResolution&gt;true&lt;/CanPrintHighResolution&gt;
   &lt;KeySize&gt;EncryptKey128Bit&lt;/KeySize&gt;
+  &lt;EncryptionAlgorithm&gt;RC4&lt;/EncryptionAlgorithm&gt;
   &lt;OwnerPassword /&gt;
   &lt;UserPassword /&gt;
 &lt;/PdfSecurityOptions&gt;</string>

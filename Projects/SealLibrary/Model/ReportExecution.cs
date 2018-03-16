@@ -738,7 +738,7 @@ namespace Seal.Model
 
                 if (dataValues.Length > 0)
                 {
-                    ResultData data = new ResultData() { Row = rowValues, Column = columnValues, Data = dataValues };
+                    ResultData data = new ResultData() { Row = rowValues, Column = columnValues, Data = dataValues, Hidden = hiddenValues };
                     if (!currentPage.Datas.ContainsKey(rowValues))
                     {
                         currentPage.Datas.Add(rowValues, new List<ResultData>());
@@ -1138,7 +1138,7 @@ namespace Seal.Model
             }
         }
 
-        void handleCustomScripts(ReportModel model, ResultPage page, ResultTable table)
+        void handleCustomScripts(ReportModel model, ResultPage page, ResultTable table, bool subTotalsOnly = false)
         {
             for (int row = 0; row < table.Lines.Count; row++)
             {
@@ -1148,6 +1148,8 @@ namespace Seal.Model
                     var cell = line[col];
                     if (cell.Element != null && !string.IsNullOrWhiteSpace(cell.Element.CellScript))
                     {
+                        if (subTotalsOnly && !cell.IsSubTotal) continue;
+
                         cell.ContextRow = row;
                         cell.ContextCol = col;
                         cell.ContextTable = table;
@@ -1171,7 +1173,7 @@ namespace Seal.Model
 
                 handleCustomScripts(model, page, page.DataTable);
                 handleCustomScripts(model, page, page.PageTable);
-                
+
             }
             handleCustomScripts(model, null, model.SummaryTable);
         }
@@ -1184,8 +1186,9 @@ namespace Seal.Model
                 ResultTable summaryTable = model.SummaryTable;
                 foreach (ResultPage page in model.Pages)
                 {
+                    if (Report.Cancel) break;
+
                     ResultTable dataTable = page.DataTable;
-                    ResultTable pageTable = page.PageTable;
 
                     ResultTotalCell[] subTotalLine = null;
                     List<ResultTotalCell> totalCells = new List<ResultTotalCell>();
@@ -1205,7 +1208,7 @@ namespace Seal.Model
                             for (int j = 0; j < cols; j++)
                             {
                                 var sourceCell = dataTable[i, j];
-                                var newCell = new ResultTotalCell() { IsTotal = true, FinalCssClass = "info" };
+                                var newCell = new ResultTotalCell() { IsSubTotal = true, FinalCssClass = "info" };
                                 newSubTotalLine[j] = newCell;
                                 if (sourceCell.Element != null && sourceCell.Element.PivotPosition == PivotPosition.Data)
                                 {
@@ -1242,6 +1245,12 @@ namespace Seal.Model
                     foreach (var cell in totalCells) cell.Calculate();
                     dataTable.BodyEndRow++;
                 }
+
+                foreach (ResultPage page in model.Pages)
+                {
+                    if (Report.Cancel) break;
+                    handleCustomScripts(model, page, page.DataTable, true);
+                }
             }
         }
 
@@ -1256,6 +1265,8 @@ namespace Seal.Model
             {
                 if (Report.Cancel) break;
                 model.ExecNVD3ChartType = "";
+                model.ExecChartJSType = "";
+                model.ExecPlotlyChartType = "";
                 page.ChartInitDone = false;
 
                 foreach (List<ResultData> datas in page.Datas.Values)
@@ -1267,11 +1278,15 @@ namespace Seal.Model
                         if (Report.Cancel) break;
 
                         ResultCell[] xPrimaryDimensions = GetXSerieCells(AxisType.Primary, data.Row, data.Column, model);
+
                         int primaryIndex = FindDimension(xPrimaryDimensions, page.PrimaryXDimensions);
                         xPrimaryDimensions = page.PrimaryXDimensions[primaryIndex];
+                        setSubReportNavigation(xPrimaryDimensions, data.Hidden);
+
                         ResultCell[] xSecondaryDimensions = GetXSerieCells(AxisType.Secondary, data.Row, data.Column, model);
                         int secondaryIndex = FindDimension(xSecondaryDimensions, page.SecondaryXDimensions);
                         xSecondaryDimensions = page.SecondaryXDimensions[secondaryIndex];
+                        setSubReportNavigation(xSecondaryDimensions, data.Hidden);
 
                         ResultCell[] primarySplitterCells = GetSplitterSerieCells(AxisType.Primary, data.Row, data.Column, model);
                         string primarySplitterValues = Helper.ConcatCellValues(primarySplitterCells, ",");

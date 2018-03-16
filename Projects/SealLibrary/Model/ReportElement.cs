@@ -683,9 +683,9 @@ namespace Seal.Model
             return "g";
         }
 
-        public string GetMomentJSFormat()
+        public string GetMomentJSFormat(CultureInfo culture)
         {
-            return Helper.ToMomentJSFormat(FormatEl);
+            return Helper.ToMomentJSFormat(culture, FormatEl);
         }
 
         public string GetExcelFormat(CultureInfo culture)

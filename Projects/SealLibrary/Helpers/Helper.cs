@@ -20,6 +20,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Xml.Serialization;
+using System.Globalization;
 
 namespace Seal.Helpers
 {
@@ -124,9 +125,9 @@ namespace Seal.Helpers
         }
 
 
-        static public string ToMomentJSFormat(string datetimeFormat)
+        static public string ToMomentJSFormat(CultureInfo culture, string datetimeFormat)
         {
-            return datetimeFormat.Replace("y", "Y").Replace("d", "D").Replace("tt", "A").Replace("z", "Z");
+            return datetimeFormat.Replace("y", "Y").Replace("d", "D").Replace("tt", "A").Replace("z", "Z").Replace("/", culture.DateTimeFormat.DateSeparator);
         }
 
         static public string RemoveHTMLTags(string value)

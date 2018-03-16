@@ -97,6 +97,22 @@ namespace Seal.Model
             }
         }
 
+        public string MomentJSShortDateFormat
+        {
+            get
+            {
+                return Helper.ToMomentJSFormat(CultureInfo, CultureInfo.DateTimeFormat.ShortDatePattern);
+            }
+        }
+
+        public string MomentJSShortDateTimeFormat
+        {
+            get
+            {
+                return Helper.ToMomentJSFormat(CultureInfo, CultureInfo.DateTimeFormat.ShortDatePattern + ' ' + CultureInfo.DateTimeFormat.LongTimePattern);
+            }
+        }
+
         public bool SetCultureInfo(string cultureName)
         {
             bool result = false;
