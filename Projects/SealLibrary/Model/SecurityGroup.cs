@@ -27,7 +27,6 @@ namespace Seal.Model
                 GetProperty("Connections").SetIsBrowsable(true);
                 GetProperty("Sources").SetIsBrowsable(true);
                 GetProperty("Culture").SetIsBrowsable(true);
-                GetProperty("Theme").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
                 GetProperty("PersFolderRight").SetIsBrowsable(true);
 
@@ -105,15 +104,6 @@ namespace Seal.Model
         {
             get { return _culture; }
             set { _culture = value; }
-        }
-
-        string _theme;
-        [Category("Options"), DisplayName("Report Theme"), Description("The default report theme used for to generate the reports. If empty, the default theme is used."), Id(2, 3)]
-        [TypeConverter(typeof(Seal.Converter.ThemeConverter))]
-        public string Theme
-        {
-            get { return _theme; }
-            set { _theme = value; }
         }
 
         string _logoName;

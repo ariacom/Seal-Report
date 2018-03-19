@@ -2,9 +2,6 @@
 @{
     SecurityProvider provider = Model;
 
-    //If true, a login window is displayed to prompt user and password
-    provider.PromptUserPassword = true;
-
     //Parameters for this provider
     provider.Parameters.Add(new SecurityParameter() { Name = "oledb_connection_string", Value = "Provider=SQLOLEDB.1;Persist Security Info=False;Initial Catalog=master;Data Source=(local)", DisplayName = "Database connection string", Description = "The OleDb database connection string used to authenticate the user" });
 

@@ -123,7 +123,7 @@ namespace Seal.Model
             get { return _sql; }
             set { 
                 _sql = value;
-                if (IsDynamic && !string.IsNullOrEmpty(_sql) && _dctd != null) RefreshEnum();
+                if (IsDynamic && IsDbRefresh && !string.IsNullOrEmpty(_sql) && _dctd != null) RefreshEnum();
             }
         }
 

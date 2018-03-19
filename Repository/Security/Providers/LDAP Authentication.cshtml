@@ -2,9 +2,6 @@
 @{
     SecurityProvider provider = Model;
 
-    //If true, a login window is displayed to prompt user and password
-    provider.PromptUserPassword = true;
-
     //Parameters for this provider
     provider.Parameters.Add(new SecurityParameter() { Name = "ldap_server", DisplayName = "LDAP Server Name", Description = "The server name or address of the LDAP server" });
     provider.Parameters.Add(new SecurityParameter() { Name = "ldap_port", DisplayName = "LDAP Port", NumericValue = 389, Description = "The LDAP server port number" });

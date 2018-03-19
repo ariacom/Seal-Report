@@ -849,6 +849,10 @@ namespace Seal.Model
                 {
                     sqlOperator = (_operator == Operator.Equal ? "IN (" : "NOT IN (");
                 }
+                else if (_operator == Operator.Smaller) sqlOperator = "<";
+                else if (_operator == Operator.SmallerEqual) sqlOperator = "<=";
+                else if (_operator == Operator.Greater) sqlOperator = ">";
+                else if (_operator == Operator.GreaterEqual) sqlOperator = ">=";
 
 
                 if (_operator == Operator.Between || _operator == Operator.NotBetween)

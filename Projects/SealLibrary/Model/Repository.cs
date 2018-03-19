@@ -174,6 +174,11 @@ namespace Seal.Model
             set { _security = value; }
         }
 
+        public void ReloadSecurity()
+        {
+            _security = null;
+        }
+
         public static string FindDebugRepository(string path)
         {
             string result = Path.Combine(Path.GetDirectoryName(path), "Repository");
@@ -376,7 +381,6 @@ namespace Seal.Model
                 if (!Directory.Exists(DevicesFolder)) Directory.CreateDirectory(DevicesFolder);
                 if (!Directory.Exists(DevicesEmailFolder)) Directory.CreateDirectory(DevicesEmailFolder);
                 if (!Directory.Exists(ReportsFolder)) Directory.CreateDirectory(ReportsFolder);
-                if (!Directory.Exists(ThemesFolder)) Directory.CreateDirectory(ThemesFolder);
                 if (!Directory.Exists(SettingsFolder)) Directory.CreateDirectory(SettingsFolder);
                 if (!Directory.Exists(SecurityFolder)) Directory.CreateDirectory(SecurityFolder);
                 if (!Directory.Exists(SecurityProvidersFolder)) Directory.CreateDirectory(SecurityProvidersFolder);
@@ -391,11 +395,6 @@ namespace Seal.Model
         public string ViewsFolder
         {
             get { return Path.Combine(_path, "Views"); }
-        }
-
-        public string ThemesFolder
-        {
-            get { return Path.Combine(_path, "Themes"); }
         }
 
         public string SourcesFolder

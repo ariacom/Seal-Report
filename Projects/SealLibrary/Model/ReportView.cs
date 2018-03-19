@@ -36,7 +36,6 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("ModelGUID").SetIsBrowsable(Template.ForReportModel);
                 GetProperty("TemplateName").SetIsBrowsable(true);
-                GetProperty("ThemeName").SetIsBrowsable(Template.UseThemeValues);
 
                 //Set culture only on master view
                 GetProperty("CultureName").SetIsBrowsable(IsRootView);
@@ -260,35 +259,6 @@ namespace Seal.Model
             return parameter == null ? 0 : parameter.NumericValue;
         }
 
-        public string GetThemeValue(string name)
-        {
-            Parameter parameter = Theme.Values.FirstOrDefault(i => i.Name == name);
-            return parameter == null ? "" : parameter.Value;
-        }
-
-        public Color GetThemeColor(string name)
-        {
-            Color result = Color.Black;
-            string colorText = GetThemeValue(name);
-            if (colorText.StartsWith("#") && colorText.Length == 7) //case #AABBCC
-            {
-                try
-                {
-                    result = Color.FromArgb(int.Parse(colorText.Substring(1, 2), NumberStyles.HexNumber), int.Parse(colorText.Substring(3, 2), NumberStyles.HexNumber), int.Parse(colorText.Substring(5, 2), NumberStyles.HexNumber));
-                }
-                catch { }
-            }
-            else if (colorText.StartsWith("#") && colorText.Length == 4) //case #ABC
-            {
-                try
-                {
-                    result = Color.FromArgb(int.Parse(colorText.Substring(1, 1) + colorText.Substring(1, 1), NumberStyles.HexNumber), int.Parse(colorText.Substring(2, 1) + colorText.Substring(2, 1), NumberStyles.HexNumber), int.Parse(colorText.Substring(3, 1) + colorText.Substring(3, 1), NumberStyles.HexNumber));
-                }
-                catch { }
-            }
-            return result;
-        }
-
         public bool IsRootView
         {
             get { return Template.ParentNames.Count == 0; }
@@ -395,44 +365,6 @@ namespace Seal.Model
                 return _template;
             }
         }
-
-        string _themeName = "";
-        [DisplayName("Theme name"), Description("The name of the theme used for the view. If empty, the default theme is used. Themes are defined in the repository Themes folder."), Category("Definition"), Id(1, 1)]
-        [TypeConverter(typeof(ThemeConverter))]
-        public string ThemeName
-        {
-            get { return _themeName; }
-            set { _themeName = value; }
-        }
-
-        private Theme _theme = null;
-        public Theme Theme
-        {
-            get
-            {
-                if (_theme == null)
-                {
-                    if (string.IsNullOrEmpty(ThemeName))
-                    {
-                        //Default theme
-                        if (_report.SecurityContext != null && !string.IsNullOrEmpty(_report.SecurityContext.DefaultTheme)) _theme = RepositoryServer.GetTheme(_report.SecurityContext.DefaultTheme);
-                        else _theme = RepositoryServer.GetTheme("");
-                    }
-                    else _theme = RepositoryServer.GetTheme(ThemeName);
-                    if (_theme == null)
-                    {
-                        _theme = new Theme() { Name = ThemeName };
-                        _error = string.Format("Unable to find theme named '{0}'. Check your repository Themes folder.", ThemeName);
-                    }
-                    else
-                    {
-                        _error = _theme.Error;
-                    }
-                }
-                return _theme;
-            }
-        }
-
 
         public List<ReportView> Views = new List<ReportView>();
 

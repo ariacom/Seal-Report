@@ -45,7 +45,6 @@ namespace Seal.Model
                 GetProperty("Groups").SetIsBrowsable(true);
                 //GetProperty("ProviderScript").SetIsBrowsable(true);
                 GetProperty("UseCustomScript").SetIsBrowsable(true);
-                GetProperty("PromptUserPassword").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("TestUserName").SetIsBrowsable(true);
@@ -53,10 +52,8 @@ namespace Seal.Model
                 GetProperty("TestCurrentWindowsUser").SetIsBrowsable(true);
                 GetProperty("HelperSimulateLogin").SetIsBrowsable(true);
 
-                //GetProperty("ProviderScript").SetIsReadOnly(true); Let it writable to enable Reset
-                GetProperty("PromptUserPassword").SetIsReadOnly(true);
-                GetProperty("TestUserName").SetIsReadOnly(!Provider.PromptUserPassword);
-                GetProperty("TestPassword").SetIsReadOnly(!Provider.PromptUserPassword);
+                //GetProperty("TestUserName").SetIsReadOnly(!Provider.PromptUserPassword);
+                //GetProperty("TestPassword").SetIsReadOnly(!Provider.PromptUserPassword);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -77,13 +74,13 @@ namespace Seal.Model
             }
         }
 
-
+        /* Not used anymore
         [Category("Security Provider Definition"), DisplayName("Prompt User Name and Password"), Description("If true, a login screen is displayed to request a user name and password from the user. The user and password provided must then be used in the script below."), Id(2, 1)]
         [XmlIgnore]
         public bool PromptUserPassword
         {
             get { return Provider.PromptUserPassword; }
-        }
+        }*/
 
         [Category("Security Provider Definition"), DisplayName("Provider Security Script"), Description("The script executed to login and find the security group used to published reports."), Id(3, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]

@@ -15,7 +15,6 @@ namespace Seal.Model
         public SealSecurity Security;
         public string Error = "";
         public string Warning = "";
-        public string DefaultTheme;
         public List<SWIFolder> Folders = new List<SWIFolder>();
 
         //Parameters to authenticate
@@ -102,14 +101,6 @@ namespace Seal.Model
             }
         }
 
-        public void SetDefaultTheme(string theme)
-        {
-            if (!string.IsNullOrEmpty(theme))
-            {
-                DefaultTheme = theme;
-            }
-        }
-
         public void SetDefaultLogoName(string logoName)
         {
             if (!string.IsNullOrEmpty(logoName))
@@ -122,7 +113,6 @@ namespace Seal.Model
         {
             //set defaults from the group
             SetDefaultCulture(group.Culture);
-            SetDefaultTheme(group.Theme);
             SetDefaultLogoName(group.LogoName);
         }
 

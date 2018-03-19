@@ -37,6 +37,7 @@ namespace Seal.Model
             set { _script = value; }
         }
 
+        //Not used anymore...
         bool _promptUserPassword = false;
         public bool PromptUserPassword
         {
