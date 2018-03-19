@@ -163,7 +163,7 @@ namespace Seal
             }
             else
             {
-                //reset configuration
+                //reload configuration
                 _repository.ReloadConfiguration();
             }
         }
@@ -175,6 +175,11 @@ namespace Seal
             {
                 if (string.IsNullOrEmpty(_repository.Security.FilePath)) _repository.Security.FilePath = _repository.SecurityPath;
                 _repository.Security.SaveToFile();
+            }
+            else
+            {
+                //reload security
+                _repository.ReloadSecurity();
             }
         }
 

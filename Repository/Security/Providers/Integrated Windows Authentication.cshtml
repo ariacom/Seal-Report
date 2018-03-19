@@ -2,9 +2,6 @@
 @{
     SecurityProvider provider = Model;
 
-    //If true, a login window is displayed to prompt user and password
-    provider.PromptUserPassword = false;
-
     //Parameters for this provider
     provider.Parameters.Add(new SecurityParameter() { Name = "add_windows_groups", BoolValue = false, DisplayName = "Add security groups matching Windows groups", Description = "If true, the user will belong to the security groups having the name of his Windows groups." });
     provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_skip_domain", BoolValue = true, DisplayName = "Groups matching: Skip domain name", Description = "If true, the Windows-Security groups matching is done without the domain name." });

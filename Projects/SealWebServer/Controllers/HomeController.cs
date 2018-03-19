@@ -109,7 +109,7 @@ namespace SealWebServer.Controllers
         {
             if (WebUser == null) CreateWebUser();
 
-            if (!WebUser.IsAuthenticated && !WebUser.Security.PromptUserPassword)
+            if (!WebUser.IsAuthenticated)
             {
                 Authenticate();
             }

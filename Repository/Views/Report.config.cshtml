@@ -8,9 +8,6 @@
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
 
-    //True if the template uses Theme values
-    Template.UseThemeValues = true;
-
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "report_description", Type = ViewParameterType.Text, DisplayName = "Report description", Description = "Optional report description displayed in the information panel." });
     Template.Parameters.Add(new Parameter() { Name = "restriction_button", DisplayName = "Display: Show restrictions", BoolValue = true, Description = "If true, the restrictions are displayed when the report is initialized (if the report has prompted restrictions)." });

@@ -83,7 +83,6 @@
     <Compile Include="Converter\RepositoryFolderConverter.cs" />
     <Compile Include="Converter\CultureInfoConverter.cs" />
     <Compile Include="Converter\SecurityProviderConverter.cs" />
-    <Compile Include="Converter\ThemeConverter.cs" />
     <Compile Include="Converter\ReportViewConverter.cs" />
     <Compile Include="Converter\ViewParameterEnumConverter.cs" />
     <Compile Include="Converter\CultureNameConverter.cs" />
@@ -208,7 +207,6 @@
     <Compile Include="Model\SecurityUser.cs" />
     <Compile Include="Model\SealServerConfiguration.cs" />
     <Compile Include="Model\SubReport.cs" />
-    <Compile Include="Model\Theme.cs" />
     <Compile Include="Model\MetaEV.cs" />
     <Compile Include="Model\ReportSource.cs" />
     <Compile Include="Model\MetaJoin.cs" />
@@ -249,21 +247,6 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Repository\Themes\Default.cshtml">
-      <Link>Themes\Default.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Themes\Seal Grey.cshtml">
-      <Link>Themes\Seal Grey.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Themes\Seal Blue.cshtml">
-      <Link>Themes\Seal Blue.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Themes\Seal Green.cshtml">
-      <Link>Themes\Seal Green.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Themes\Seal Red.cshtml">
-      <Link>Themes\Seal Red.cshtml</Link>
-    </None>
     <None Include="..\..\Repository\Views\Model.cshtml">
       <Link>Views\Model.cshtml</Link>
     </None>

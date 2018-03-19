@@ -23,9 +23,7 @@ namespace Seal.Model
     public class RepositoryServer
     {
         private static List<ReportViewTemplate> _viewTemplates = null;
-        private static List<Theme> _themes = null;
         private static Object _viewLock = new object();
-        private static Object _themeLock = new object();
 
         //View templates
         public static List<ReportViewTemplate> ViewTemplates
@@ -102,90 +100,5 @@ namespace Seal.Model
 
             return result;
         }
-
-        //Themes
-        public static List<Theme> Themes
-        {
-            get
-            {
-                //used from the Report Designer, load and parse all...
-                if (_themes == null)
-                {
-                    _themes = Theme.LoadThemes(Repository.Instance.ThemesFolder);
-                }
-                foreach (var theme in _themes.Where(i => !i.IsParsed)) theme.Parse();
-                return _themes;
-            }
-        }
-
-
-        public static Theme GetTheme(string name)
-        {
-            lock (_themeLock)
-            {
-                if (_themes == null)
-                {
-                    _themes = Theme.LoadThemes(Repository.Instance.ThemesFolder);
-                }
-            }
-
-            Theme result;
-            if (string.IsNullOrEmpty(name)) result = _themes.FirstOrDefault(i => i.IsDefault);
-            else
-            {
-                result = _themes.FirstOrDefault(i => i.Name == name);
-                if (result == null)
-                {
-                    lock (_themeLock)
-                    {
-                        //Get the name for text to avoid useless parsing and save time
-                        foreach (var theme in _themes.Where(i => !i.IsParsed))
-                        {
-                            if (theme.Text.Contains(string.Format("\"{0}\";", name)))
-                            {
-                                theme.Parse();
-                                break;
-                            }
-                        }
-                    }
-                }
-                result = _themes.FirstOrDefault(i => i.Name == name);
-                if (result == null)
-                {
-
-                    lock (_themeLock)
-                    {
-                        //Name not found in configuration -> we parse all...
-                        foreach (var theme in _themes.Where(i => !i.IsParsed)) theme.Parse();
-                    }
-                    result = _themes.FirstOrDefault(i => i.Name == name);
-                }
-            }
-            if (result == null) throw new Exception(string.Format("Unable to find theme named '{0}'", name));
-
-
-            //Check if the file has changed
-            if (result.LastModification != File.GetLastWriteTime(result.FilePath))
-            {
-                lock (_themeLock)
-                {
-                    result.Init(result.FilePath);
-                }
-            }
-
-            //Check if themes has been parsed
-            if (!result.IsParsed)
-            {
-                lock (_themeLock)
-                {
-                    result.Parse();
-                }
-            }
-
-
-            return result;
-        }
-
-
     }
 }

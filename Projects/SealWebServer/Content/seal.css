@@ -9,6 +9,10 @@ body { /* navbar-fixed-top */
     }
 }
 
+#progress_panel {
+    margin: 15px;
+}
+
 #restrictions_button {
     margin-right: 5px;
 }

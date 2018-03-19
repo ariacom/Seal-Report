@@ -888,9 +888,12 @@ namespace Seal.Model
                             //Debug.WriteLine("{0}ms {1}", (DateTime.Now - _timer).TotalMilliseconds, resultPaths.Count);
                         }
 #if DEBUG
-                        foreach (var path in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count))
+                        if (resultPaths.Count < 500)
                         {
-                            path.print();
+                            foreach (var path in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count))
+                            {
+                                path.print();
+                            }
                         }
 #endif
 
@@ -1074,6 +1077,7 @@ namespace Seal.Model
             }
         }
 
+        int _creation = 0;
         void JoinTables(JoinPath path, List<JoinPath> resultPath)
         {
             //TODO: optimize speed of this procedure...
@@ -1089,14 +1093,16 @@ namespace Seal.Model
 
             if (path.tablesToUse.Count != 0)
             {
-                foreach (var join in path.joinsToUse.Where(i => i.LeftTableGUID == path.currentTable.GUID || (i.RightTableGUID == path.currentTable.GUID && i.IsBiDirectional)))
+                var joinsToProcess = path.joinsToUse.Where(i => i.LeftTableGUID == path.currentTable.GUID).ToList();
+                joinsToProcess.AddRange(path.joinsToUse.Where(i => i.RightTableGUID == path.currentTable.GUID && i.IsBiDirectional));
+                foreach (var join in joinsToProcess)
                 {
                     //Check that the new table has not already been reached
-                    if (path.joins.Exists(i => i.RightTable == (join.RightTable == path.currentTable && join.IsBiDirectional ? join.LeftTable : join.RightTable))) continue;
+                    if (path.joins.Exists(i => i.RightTableGUID == (join.RightTableGUID == path.currentTable.GUID && join.IsBiDirectional ? join.LeftTableGUID : join.RightTableGUID))) continue;
 
                     MetaTable newTable = join.RightTable;
                     MetaJoin newJoin = join;
-                    if (join.RightTable == path.currentTable && join.IsBiDirectional)
+                    if (join.RightTableGUID == path.currentTable.GUID && join.IsBiDirectional)
                     {
                         //Create a new join having the other left-right
                         newJoin = MetaJoin.Create();
@@ -1108,6 +1114,8 @@ namespace Seal.Model
                         newJoin.Clause = join.Clause;
                         //In this case the next table is the left one...
                         newTable = join.LeftTable;
+
+                        Debug.WriteLine("Creating {0}", _creation++);
                     }
                     //if (_level == 1) Debug.WriteLine("{0} {1}", resultPath.Count, newTable.Name);
 
@@ -1118,8 +1126,8 @@ namespace Seal.Model
                     newJoinPath.tablesToUse.Remove(newTable);
                     newJoinPath.joinsToUse.Remove(join);
                     //Set preferred path
-                    if (newTable == ForceJoinTable) newJoinPath.rank++;
-                    if (newTable == AvoidJoinTable) newJoinPath.rank--;
+                    if (newTable.GUID == ForceJoinTableGUID) newJoinPath.rank++;
+                    if (newTable.GUID == AvoidJoinTableGUID) newJoinPath.rank--;
                     JoinTables(newJoinPath, resultPath);
                 }
             }

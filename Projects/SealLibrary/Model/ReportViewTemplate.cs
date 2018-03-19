@@ -72,14 +72,6 @@ namespace Seal.Model
         }
 
 
-        bool _supportTheme = false;
-        public bool UseThemeValues
-        {
-            get { return _supportTheme; }
-            set { _supportTheme = value; }
-        }
-
-
         string _externalViewerExtension = "";
         public string ExternalViewerExtension
         {
