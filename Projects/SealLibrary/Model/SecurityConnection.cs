@@ -49,6 +49,7 @@ namespace Seal.Model
         EditorRight _right = EditorRight.NoSelection;
         [Category("Rights"), DisplayName("Connection Right"), Description("The right applied for the connection having this name."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(EditorRight.NoSelection)]
         public EditorRight Right
         {
             get { return _right; }

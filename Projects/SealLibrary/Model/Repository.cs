@@ -475,15 +475,16 @@ namespace Seal.Model
         public string GetPersonalFolder(SecurityUser user)
         {
             //add hash to the end of the name
-            var hash = Helper.CalculateHash(user.WebUserName);
-            string result = Path.Combine(PersonalFolder, string.Format("{0}_{1}", FileHelper.CleanFilePath(user.WebUserName), hash));
+            var name = user.GetPersonalFolderName();
+            var hash = Helper.CalculateHash(name);
+            string result = Path.Combine(PersonalFolder, string.Format("{0}_{1}", FileHelper.CleanFilePath(name), hash));
             if (!Directory.Exists(result)) Directory.CreateDirectory(result);
             return result;
         }
 
         public string GetPersonalFolderName(SecurityUser user)
         {
-            return TranslateWeb("Personal") + string.Format(" ({0})", user.WebUserName); ;
+            return TranslateWeb("Personal") + string.Format(" ({0})", user.GetPersonalFolderName()); ;
         }
 
         public string TranslationsPath

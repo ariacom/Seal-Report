@@ -40,6 +40,7 @@ namespace Seal.Model
         EditorRight _right = EditorRight.NoSelection;
         [Category("Rights"), DisplayName("Data Source Right"), Description("The right applied for the data source having this name."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(EditorRight.NoSelection)]
         public EditorRight Right
         {
             get { return _right; }
