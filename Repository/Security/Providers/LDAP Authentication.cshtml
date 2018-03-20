@@ -19,6 +19,7 @@
 	//user.WebPrincipal -> may be used for integrated windows authentication
 
 	user.Name = user.WebUserName; //Display name
+	//user.PersonalFolderName -> may be set to defined the personal folder name
 
     var credential = new NetworkCredential(user.WebUserName, user.WebPassword);
     var ldapConnection = new LdapConnection(new LdapDirectoryIdentifier(user.Security.GetValue(""ldap_server""), user.Security.GetNumericValue(""ldap_port""), false, false));
@@ -33,7 +34,6 @@
 
     //User default culture, theme and logo can be also overwritten with
     //user.SetDefaultCulture(group.Culture);
-    //user.SetDefaultTheme(group.Theme);
     //user.SetDefaultLogoName(group.LogoName);  
 
     /*

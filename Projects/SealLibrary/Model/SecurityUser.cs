@@ -11,6 +11,7 @@ namespace Seal.Model
     public class SecurityUser
     {
         public string Name = "";
+        public string PersonalFolderName = "";
         public List<SecurityGroup> SecurityGroups = new List<SecurityGroup>();
         public SealSecurity Security;
         public string Error = "";
@@ -381,5 +382,17 @@ namespace Seal.Model
             }
         }
 
+        public bool BelongsToGroup(string groupName)
+        {
+            return SecurityGroups.Exists(i => i.Name == groupName);
+        }
+
+        public string GetPersonalFolderName()
+        {
+            var result = Name;
+            if (!string.IsNullOrEmpty(PersonalFolderName)) result = PersonalFolderName;
+            else if (!string.IsNullOrEmpty(WebUserName)) result = WebUserName;
+            return result;
+        }
     }
 }

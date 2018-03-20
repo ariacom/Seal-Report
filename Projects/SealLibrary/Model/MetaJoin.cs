@@ -69,13 +69,21 @@ namespace Seal.Model
         public string LeftTableGUID
         {
             get { return _leftTableGUID; }
-            set { _leftTableGUID = value; }
+            set {
+                _leftTable = null;
+                _leftTableGUID = value;
+            }
         }
 
+
+        MetaTable _leftTable = null;
         [XmlIgnore]
         public MetaTable LeftTable
         {
-            get { return _source.MetaData.Tables.FirstOrDefault(i => i.GUID == _leftTableGUID); }
+            get {
+                if (_leftTable == null) _leftTable = _source.MetaData.Tables.FirstOrDefault(i => i.GUID == _leftTableGUID);
+                return _leftTable;
+            }
         }
 
         private string _rightTableGUID;
@@ -85,13 +93,20 @@ namespace Seal.Model
         public string RightTableGUID
         {
             get { return _rightTableGUID; }
-            set { _rightTableGUID = value; }
+            set {
+                _rightTable = null;
+                _rightTableGUID = value;
+            }
         }
 
+        MetaTable _rightTable = null;
         [XmlIgnore]
         public MetaTable RightTable
         {
-            get { return _source.MetaData.Tables.FirstOrDefault(i => i.GUID == _rightTableGUID); }
+            get {
+                if (_rightTable == null) _rightTable = _source.MetaData.Tables.FirstOrDefault(i => i.GUID == _rightTableGUID);
+                return _rightTable;
+            }
         }
 
         private string _clause;

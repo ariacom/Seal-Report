@@ -253,6 +253,8 @@ namespace Seal.Forms
     //restrictions[0].Value1 = ""1994""; 
     //restrictions[0].Date1 = DateTime.Now.AddYears(-20);
     //model.GetRestrictionByName(""Order Year"").Value1 = ""2015"";
+    //model.GetRestrictionByName(""Order Date"").Date1 = model.GetRestrictionByName(""Required Date"").Date1; 
+    //model.GetRestrictionByName(""Category"").EnumValues.Add(""beverages""); 
 }
 ";
 

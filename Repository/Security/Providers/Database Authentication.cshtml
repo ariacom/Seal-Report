@@ -16,6 +16,7 @@
 	//user.WebPassword -> password from the login screen
 
 	user.Name = user.WebUserName; //Display name
+	//user.PersonalFolderName -> may be set to defined the personal folder name
 
 	OleDbConnection connection = new OleDbConnection(Helper.GetOleDbConnectionString(user.Security.GetValue(""oledb_connection_string""), user.WebUserName, user.WebPassword));
 	connection.Open();
@@ -24,7 +25,6 @@
 
     //User default culture, theme and logo can be also overwritten with
     //user.SetDefaultCulture(group.Culture);
-    //user.SetDefaultTheme(group.Theme);
     //user.SetDefaultLogoName(group.LogoName);  
 
     /*

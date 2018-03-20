@@ -92,6 +92,7 @@ namespace Seal.Model
 
         bool _useCustomScript = false;
         [Category("Security Provider Configuration"), DisplayName("Use custom Security Script"), Description("If true, a custom script can be used for the authentication process."), Id(1, 2)]
+        [DefaultValue(false)]
         public bool UseCustomScript
         {
             get { return _useCustomScript; }
@@ -162,8 +163,7 @@ namespace Seal.Model
                     var paramProvider = Provider.Parameters.FirstOrDefault(j => j.Name == param.Name);
                     if (paramProvider != null) paramProvider.Value = param.Value;
                 }
-                //Then use the paramters of the provider
-                _parameters.RemoveAll(i => Provider.Parameters.Exists(j => j.Name == i.Name));
+                //Then use the parameters of the provider
                 _parameters.AddRange(Provider.Parameters.Where(i => !_parameters.Exists(j => j.Name == i.Name)));
                 return Provider.Parameters;
             }

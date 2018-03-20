@@ -26,6 +26,7 @@
     if (user.Identity != null) 
     {
         user.Name = user.WebUserName;
+		//user.PersonalFolderName -> may be set to defined the personal folder name
 		if (user.Security.GetBoolValue(""add_windows_groups""))
 		{
 			user.AddWindowsGroupToSecurityGroup(user.Security.GetBoolValue(""windows_groups_skip_domain""), user.Security.GetValue(""windows_groups_ad_context""));
@@ -42,7 +43,6 @@
 
         //User default culture, theme and logo can be also overwritten with
         //user.SetDefaultCulture(group.Culture);
-        //user.SetDefaultTheme(group.Theme);
         //user.SetDefaultLogoName(group.LogoName);  
     }
     else 

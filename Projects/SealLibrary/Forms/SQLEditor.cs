@@ -17,7 +17,24 @@ namespace Seal.Forms
     public class SQLEditor : UITypeEditor
     {
         const string razorTableTemplate = "@using Seal.Model\r\n@{\r\nMetaTable table = Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
-        const string razorTableWhereTemplate ="@using Seal.Model\r\n@using Seal.Helpers\r\n@{\r\n  MetaTable table = Model;\r\n  string restriction = Environment.UserName;\r\n  if (table.Source.Report != null && table.Source.Report.SecurityContext != null)\r\n  {\r\n    restriction = table.Source.Report.SecurityContext.Name;\r\n  }\r\n  string result = string.Format(\"aColumnName={0}\", Helper.QuoteSingle(restriction));\r\n}\r\n@Raw(result)";
+        const string razorTableWhereTemplate = @"@using Seal.Model
+@using Seal.Helpers
+@{
+    MetaTable table = Model;
+    string restriction = Environment.UserName; //This gives the windows user of the process running the engine
+    if (table.Source.Report != null && table.Source.Report.SecurityContext != null)
+    {
+        var securityContext = table.Source.Report.SecurityContext; //User is logged through a Web Report Servert and has a context
+        restriction = securityContext.Name; //Name of the user set during the login
+        restriction = securityContext.WebUserName; //Name got from the login window
+        //securityContext.SecurityGroups; //List of security groups set for the user
+        if (securityContext.BelongsToGroup(""Default Group"")) { //Test if the user belongs to a group
+            //Special restriction here
+        }
+    }
+    string result = string.Format(""aColumnName={0}"", Helper.QuoteSingle(restriction));
+    }
+@Raw(result)";
         const string razorSourceTemplate = "@using Seal.Model\r\n@{\r\nMetaSource source = Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
         const string razorModelTemplate = "@using Seal.Model\r\n@{\r\nReportModel model = Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
         const string razorTaskTemplate = "@using Seal.Model\r\n@{\r\nReportTask task= Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";

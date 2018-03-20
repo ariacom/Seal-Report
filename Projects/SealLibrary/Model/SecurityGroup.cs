@@ -55,6 +55,7 @@ namespace Seal.Model
         PersonalFolderRight _persFolderRight = PersonalFolderRight.None;
         [Category("Definition"), DisplayName("Personal folder"), Description("Define the right of the dedicated personal folder for each user of the group."), Id(3, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(PersonalFolderRight.None)]
         public PersonalFolderRight PersFolderRight
         {
             get { return _persFolderRight; }

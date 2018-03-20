@@ -37,21 +37,29 @@
 		user.AddDefaultSecurityGroup();
 	}
 }</Script>
-  <Parameters />
+  <Parameters>
+    <SecurityParameter>
+      <Name>add_windows_groups</Name>
+      <Value>True</Value>
+    </SecurityParameter>
+    <SecurityParameter>
+      <Name>windows_groups_skip_domain</Name>
+      <Value>True</Value>
+    </SecurityParameter>
+    <SecurityParameter>
+      <Name>windows_groups_ad_context</Name>
+      <Value>Machine</Value>
+    </SecurityParameter>
+    <SecurityParameter>
+      <Name>default_domain_name</Name>
+    </SecurityParameter>
+  </Parameters>
   <Groups>
     <SecurityGroup>
       <Name>Default Group</Name>
       <Folders>
-        <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
-          <FolderRight>Edit</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
-        </SecurityFolder>
+        <SecurityFolder />
       </Folders>
-      <PersFolderRight>None</PersFolderRight>
       <Devices />
       <Sources />
       <Connections />
@@ -62,15 +70,10 @@
       <Name>Group (Execute)</Name>
       <Folders>
         <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
           <ManageFolder>false</ManageFolder>
           <FolderRight>Execute</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
-      <PersFolderRight>None</PersFolderRight>
       <Devices />
       <Sources />
       <Connections />
@@ -81,15 +84,10 @@
       <Name>Group (Execute Output)</Name>
       <Folders>
         <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
           <ManageFolder>false</ManageFolder>
           <FolderRight>ExecuteReportOuput</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
-      <PersFolderRight>None</PersFolderRight>
       <Devices />
       <Sources />
       <Connections />
@@ -100,12 +98,8 @@
       <Name>Group (Schedule)</Name>
       <Folders>
         <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
           <ManageFolder>false</ManageFolder>
           <FolderRight>Schedule</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
         </SecurityFolder>
       </Folders>
       <PersFolderRight>Files</PersFolderRight>
@@ -118,32 +112,22 @@
     <SecurityGroup>
       <Name>Group (Edit)</Name>
       <Folders>
-        <SecurityFolder>
-          <Path>\</Path>
-          <UseSubFolders>true</UseSubFolders>
-          <ManageFolder>true</ManageFolder>
-          <FolderRight>Edit</FolderRight>
-          <ExpandSubFolders>true</ExpandSubFolders>
-          <FilesOnly>false</FilesOnly>
-        </SecurityFolder>
+        <SecurityFolder />
       </Folders>
       <PersFolderRight>Reports</PersFolderRight>
       <Devices>
         <SecurityDevice>
           <Name>Folder Device</Name>
-          <Right>NoSelection</Right>
         </SecurityDevice>
       </Devices>
       <Sources>
         <SecuritySource>
           <Name>RSS No SQL Source</Name>
-          <Right>NoSelection</Right>
         </SecuritySource>
       </Sources>
       <Connections>
         <SecurityConnection>
           <Name>connection</Name>
-          <Right>NoSelection</Right>
         </SecurityConnection>
       </Connections>
       <Columns>
@@ -151,13 +135,11 @@
           <Source>Northwind</Source>
           <Tag />
           <Category>Products</Category>
-          <Right>NoSelection</Right>
         </SecurityColumn>
         <SecurityColumn>
           <Source>Northwind</Source>
           <Tag />
           <Category>Customers</Category>
-          <Right>NoSelection</Right>
         </SecurityColumn>
       </Columns>
       <Culture />
