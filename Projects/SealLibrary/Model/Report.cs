@@ -1146,12 +1146,7 @@ namespace Seal.Model
             }
 
             //generating result file
-            string sourceFilePath = Path.Combine(Repository.ViewImagesFolder, fileName);
-            if (ForOutput || IsBasicHTMLWithNoOutput)
-            {
-                return Helper.HtmlMakeImageSrcData(sourceFilePath);
-            }
-            return Path.GetFileName(sourceFilePath);
+            return Helper.HtmlMakeImageSrcData(Path.Combine(Repository.ViewImagesFolder, fileName));
         }
 
 
@@ -1431,8 +1426,7 @@ namespace Seal.Model
         [XmlIgnore]
         public Parameter PrintLayoutParameter
         {
-            //Print layout option is only valid for HTML or PDF generation
-            get { return !HasExternalViewer || ExecutionView.GetBoolValue(Parameter.PDFLayoutParameter) ? ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.PrintLayoutParameter) : null; }
+            get { return ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.PrintLayoutParameter); }
         }
 
         [XmlIgnore]

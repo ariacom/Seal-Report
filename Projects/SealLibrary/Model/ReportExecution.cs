@@ -1712,24 +1712,22 @@ namespace Seal.Model
             Report.IsNavigating = false;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileName(Report.ResultFileName)));
             Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
-            if (Report.IsBasicHTMLWithNoOutput && paginationParameter != null)
+            bool initialValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
+            try
             {
-                bool initialValue = paginationParameter.BoolValue;
-                try
-                {
-                    paginationParameter.BoolValue = false;
-                    Report.Status = ReportStatus.RenderingResult;
-                    string result = Render();
-                    Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1} {2}", newPath, Report.Status, Report.ExecutionGUID));
-                    File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
-                }
-                finally
-                {
-                    paginationParameter.BoolValue = initialValue;
-                    Report.Status = ReportStatus.Executed;
-                    Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1}", Report.Status, Report.ExecutionGUID));
-                }
+                if (paginationParameter != null) paginationParameter.BoolValue = false;
+                Report.Status = ReportStatus.RenderingResult;
+                string result = Render();
+                Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1} {2}", newPath, Report.Status, Report.ExecutionGUID));
+                File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
             }
+            finally
+            {
+                if (paginationParameter != null) paginationParameter.BoolValue = initialValue;
+                Report.Status = ReportStatus.Executed;
+                Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1}", Report.Status, Report.ExecutionGUID));
+            }
+
             return newPath;
         }
 
@@ -1737,45 +1735,33 @@ namespace Seal.Model
         public string GeneratePrintResult()
         {
             Report.IsNavigating = false;
-            Parameter printParameter = Report.PrintLayoutParameter;
+            Parameter printParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.PrintLayoutParameter);
+            Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
+
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileName(Report.ResultFileName)));
-            if (printParameter != null)
+            bool initialPrintValue = (printParameter != null ? printParameter.BoolValue : false);
+            bool initialPaginationValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
+            try
             {
-                bool initialValue = printParameter.BoolValue;
-                try
-                {
-                    printParameter.BoolValue = true;
-                    Report.Status = ReportStatus.RenderingResult;
-                    string result = Render();
-                    File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
-                }
-                finally
-                {
-                    printParameter.BoolValue = initialValue;
-                    Report.Status = ReportStatus.Executed;
-                    Debug.WriteLine(string.Format("GeneratePrintResult {0} {1}", Report.Status, Report.ExecutionGUID));
-                }
+                if (printParameter != null) printParameter.BoolValue = true;
+                if (paginationParameter != null) paginationParameter.BoolValue = false;
+                Report.Status = ReportStatus.RenderingResult;
+                string result = Render();
+                File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
+            }
+            finally
+            {
+                if (printParameter != null) printParameter.BoolValue = initialPrintValue;
+                if (paginationParameter != null) paginationParameter.BoolValue = initialPaginationValue;
+                Report.Status = ReportStatus.Executed;
+                Debug.WriteLine(string.Format("GeneratePrintResult {0} {1}", Report.Status, Report.ExecutionGUID));
             }
             return newPath;
         }
 
-        /* TO REMOVE
-        void SetPDFRootViewHeaderCSS()
-        {
-            //Hide header by default for PDF...
-            var headerCSS = Report.ExecutionView.CSS.FirstOrDefault(i => i.Name == "header");
-            if (headerCSS == null)
-            {
-                headerCSS = new Parameter() { Name = "header" };
-                Report.ExecutionView.CSS.Add(headerCSS);
-            }
-            if (string.IsNullOrEmpty(headerCSS.Value)) headerCSS.Value = "display:none;";
-        }
-        */
         public string GeneratePDFResult()
         {
             string newPath = "";
-            //   SetPDFRootViewHeaderCSS();
             var pdfParameter = Report.ExecutionView.GetParameter(Parameter.PDFLayoutParameter);
             bool initialValue = pdfParameter.BoolValue;
             try

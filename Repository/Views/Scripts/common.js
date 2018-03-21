@@ -90,7 +90,7 @@ function initNavMenu() {
 
 function scrollMessages() {
     var $messages = $("#execution_messages");
-    if ($messages) {
+    if ($messages && $messages[0] && $messages[0].scrollHeight) {
         setTimeout(function () { $messages.scrollTop($messages[0].scrollHeight); }, 200);
     }
 }
@@ -347,11 +347,7 @@ function mainInit() {
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
     });
-
-    if (showInformation) $('[href="#information_div"]').tab('show');
-    else if (showMessage) $('[href="#message_div"]').tab('show');
-    else $('[href="#' + rootViewId + '"]').tab('show');
-
+    
     //result links
     $(".sr_result").click(function () {
         $("#header_form").attr("target", urlPrefix != "" ? "_blank" : "");
@@ -445,6 +441,9 @@ $(document).ready(function () {
 
     if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 
+    //show restrictions
+    if (showRestrictions) $("#restrictions_div").addClass("in");//.css("display", "block");
+
     //back to top
     $(window).scroll(function () {
         if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
@@ -459,6 +458,7 @@ $(document).ready(function () {
         return false;
     });
     $('#back-to-top').tooltip('show');
-
     scrollMessages();
+
+    $("#main_container").css("display", "block");
 });
