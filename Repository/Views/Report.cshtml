@@ -85,9 +85,8 @@
         var refreshTimer = null;
         var refreshRate = @view.GetNumericValue("refresh_rate");
         var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
+        var showRestrictions = @Helper.ToJS(report.HasRestrictions && view.GetBoolValue("restriction_button"));
         var hasNavigation = @Helper.ToJS(report.HasNavigation && (report.IsNavigating || report.GenerateHTMLDisplay));/*SRKW do not modify*/
-        var showInformation = @Helper.ToJS(view.GetBoolValue("information_button") && string.IsNullOrEmpty(report.WebExecutionErrors));
-        var showMessage = @Helper.ToJS(view.GetBoolValue("message_button") || !string.IsNullOrEmpty(report.WebExecutionErrors));
         var forceExecution = @Helper.ToJS(view.GetBoolValue("force_execution") || report.HasNavigation);
         var isExecuting = @Helper.ToJS(report.IsExecuting);
         var isCancel = @Helper.ToJS(report.Cancel);
@@ -195,7 +194,7 @@
 <body>
     @Include(view.GetPartialTemplateKey("Report.iHeader", view), view)
 
-    <div class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")">
+    <div id="main_container" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")" style="display:none;">
         <form id="header_form" method="post" action="">
             <input type="hidden" name="execution_guid" id="execution_guid" value="@report.ExecutionGUID" />
             <input type="hidden" name="navigation_id" id="navigation_id" value="" />

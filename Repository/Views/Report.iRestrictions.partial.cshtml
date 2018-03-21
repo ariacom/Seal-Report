@@ -8,10 +8,8 @@
 
 <!--restrictions_div-->
 @if (report.GenerateHTMLDisplay)
-            {
+{
     <div id="restrictions_div" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "") collapse @((report.HasRestrictions && view.GetBoolValue("restriction_button")) ? "in" : "")">
-
-
         <div class="panel-group" role="tablist">
             <!--rows of xx restrictions -->
             @for (int row = 0; row <= report.ExecutionCommonRestrictions.Count / view.GetNumericValue("restrictions_per_row"); row++)

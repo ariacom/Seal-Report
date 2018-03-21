@@ -25,7 +25,7 @@
     var className = "";
     if (view.GetValue("model_menu_type") != "none")
     {
-        className = "tab-pane fade" + (activeFirst ? "in active": "");
+        className = "tab-pane fade" + (activeFirst || report.PrintLayout ? "in active": "");
         activeFirst = false;
     }
 

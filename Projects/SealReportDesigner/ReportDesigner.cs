@@ -1045,6 +1045,8 @@ namespace Seal
                 ((RootComponent)newEntity).GUID = Guid.NewGuid().ToString();
                 ((ReportView)newEntity).ReinitGUIDChildren();
                 ((RootComponent)newEntity).Name = Helper.GetUniqueName(((RootComponent)selectedEntity).Name + " - Copy", (from i in views select i.Name).ToList());
+                int idx = 1;
+                foreach (var view in views.OrderBy(i => i.SortOrder)) view.SortOrder = idx++;
             }
             else if (selectedEntity is ReportTask)
             {
@@ -1053,6 +1055,8 @@ namespace Seal
                 _report.InitReferences();
                 ((RootComponent)newEntity).GUID = Guid.NewGuid().ToString();
                 ((RootComponent)newEntity).Name = Helper.GetUniqueName(((RootComponent)selectedEntity).Name + " - Copy", (from i in _report.Tasks select i.Name).ToList());
+                int idx = 1;
+                foreach (var task in _report.Tasks.OrderBy(i => i.SortOrder)) task.SortOrder = idx++;
             }
             else if (selectedEntity is ReportOutput)
             {

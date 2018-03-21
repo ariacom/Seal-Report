@@ -7,7 +7,7 @@
 }
 
 <!--view_div-->
-<div id='@view.ViewId' class='container@(view.GetBoolValue("child_container_fluid") ? "-fluid" : "") view tab-pane fade in active'>
+<div id='@(view.ViewId)_div' class='container@(view.GetBoolValue("child_container_fluid") ? "-fluid" : "") view tab-pane fade @(view.GetBoolValue("information_button") || (view.GetBoolValue("display_messages") && (view.GetBoolValue("message_button") || !string.IsNullOrEmpty(report.WebExecutionErrors))) ? "" : "active in")'>
     @if (report.IsExecuting && !report.Cancel && (report.Status == ReportStatus.RenderingResult || report.IsBasicHTMLWithNoOutput))
     {
         @Raw(view.ParseChildren());
