@@ -36,7 +36,7 @@ for (int row = rowStart; row < rowEnd; row++)
 }
 
 <text>
-    <table  @Raw(view.AddAttribute("class", "summary_table_class")) @Raw(view.AddAttribute("style", "summary_table_css"))>
+    <table @Raw(view.AddAttribute("class", "summary_table_class")) @Raw(view.AddAttribute("style", "summary_table_css"))>
         @if (view.HasValue("summary_table_caption"))
             {
             <caption @Raw(view.AddAttribute("style", "summary_table_caption_css"))>@Raw(view.GetHtmlValue("summary_table_caption"))</caption>
