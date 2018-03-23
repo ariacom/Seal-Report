@@ -380,6 +380,15 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
+        public bool ShowExecutionMessages
+        {
+            get
+            {
+                return ExecutionView.GetValue("messages_mode") == "enabledshown" || (ExecutionView.GetValue("messages_mode") == "enabled" && !string.IsNullOrEmpty(WebExecutionErrors));
+            }
+        }
+
+        [XmlIgnore]
         public string LoadErrors = "";
 
         [XmlIgnore]

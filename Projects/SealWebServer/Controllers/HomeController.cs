@@ -290,7 +290,7 @@ namespace SealWebServer.Controllers
                             progression_models_message = Helper.ToHtml(report.ExecutionProgressionModelsMessage),
                             progression_tasks = report.ExecutionProgressionTasks,
                             progression_tasks_message = Helper.ToHtml(report.ExecutionProgressionTasksMessage),
-                            execution_messages = report.ExecutionView.GetBoolValue("display_messages") ? Helper.ToHtml(report.ExecutionMessages) : null });
+                            execution_messages = report.ExecutionView.GetValue("messages_mode") != "disabled" ? Helper.ToHtml(report.ExecutionMessages) : null });
                     }
                     else if (execution.IsConvertingToExcel)
                     {
@@ -565,7 +565,7 @@ namespace SealWebServer.Controllers
                         var page = view.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
                         if (page != null)
                         {
-                            return Json(page.DataTable.GetLoadTableData(view.Model, parameters), JsonRequestBehavior.AllowGet);
+                            return Json(page.DataTable.GetLoadTableData(view, parameters), JsonRequestBehavior.AllowGet);
                         }
                     }
                 }

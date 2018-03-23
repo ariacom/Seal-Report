@@ -23,7 +23,7 @@
 
 @if (reportModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") != "none")
 {
-    <ul id="tc_@(view.ViewId)" class="nav nav-@(view.GetValue("model_menu_style"))s @(view.GetValue("model_menu_type") != "top" ? "nav-stacked" : "")">
+    <ul id="tc_@(view.ViewId)" class="nav nav-@(view.GetValue("model_menu_style"))s @(view.GetValue("model_menu_type") != "top" ? "nav-stacked" : "")  @(view.GetBoolValue("model_menu_justified") ? "nav-justified" : "")">
         @if (view.GetBoolValue("show_summary_table"))
         {
             <li class="active"><a data-toggle="@view.GetValue("model_menu_style")" href='#@(view.ViewId + "_summary")'>@report.Translate("Summary")</a></li>

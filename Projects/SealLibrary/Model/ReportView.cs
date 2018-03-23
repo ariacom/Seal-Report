@@ -176,6 +176,11 @@ namespace Seal.Model
             return parameter == null ? "" : parameter.Value;
         }
 
+        public string AddAttribute(string attrName, string paramName)
+        {
+            return Helper.AddAttribute(attrName, GetValue(paramName));
+        }
+
         public string GetTranslatedMappedLabel(string text)
         {
             string result = text;
@@ -371,6 +376,7 @@ namespace Seal.Model
 
         bool _useCustomTemplate = false;
         [DisplayName("Use custom template text"), Description("If true, the template text can be modified."), Category("Custom template texts"), Id(2, 3)]
+        [DefaultValue(false)]
         public bool UseCustomTemplate
         {
             get { return _useCustomTemplate; }

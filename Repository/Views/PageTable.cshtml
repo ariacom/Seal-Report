@@ -11,10 +11,10 @@
 
 @if (page.PageTable != null && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0 && modelView.GetBoolValue("show_page_tables"))
 {
-    <table class='table table-striped table-hover table-bordered'>
+    <table @Raw(view.AddAttribute("class", "page_table_class")) @Raw(view.AddAttribute("style", "page_table_css"))>
         @if (view.HasValue("page_table_caption"))
         {
-            <caption align="bottom" style="caption-side: bottom;">@Raw(view.GetHtmlValue("page_table_caption"))</caption>
+            <caption @Raw(view.AddAttribute("style", "page_table_caption_css"))>@Raw(view.GetHtmlValue("page_table_caption"))</caption>
         }
         @for (int i = 0; i < page.PageTable.ColumnCount; i++)
         {
@@ -25,10 +25,10 @@
                 break;
             }
             <tr>
-                <th @Raw(Helper.AddIfNotEmpty("class='", header.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", header.CellCssStyle, "'"))>
+                <th @Raw(Helper.AddAttribute("class", header.CellCssClass)) @Raw(Helper.AddAttribute("style", header.CellCssStyle))>
                     @Raw(header.HTMLValue)
                 </th>
-                <td @Raw(Helper.AddIfNotEmpty("class='", value.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", value.CellCssStyle, "'"))>
+                <td @Raw(Helper.AddAttribute("class", value.CellCssClass)) @Raw(Helper.AddAttribute("style", value.CellCssStyle))>
                     @Raw(value.HTMLValue)
                 </td>
             </tr>

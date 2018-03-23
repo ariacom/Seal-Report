@@ -12,6 +12,7 @@
     Template.Parameters.Add(new Parameter() { Name = "tab_selected_index", DisplayName = "Tab selected index", NumericValue = 0, Description = "The index of Tab Page selected when the report is loaded." });
     Template.Parameters.Add(new Parameter() { Name = "tab_position", DisplayName = "Tab menu position", Value = "top", Enums = new string[] { "top|Top", "left|Left", "right|Right" }, Description = "The position of the tab menu in the control (default is on the top)." });
     Template.Parameters.Add(new Parameter() { Name = "tab_style", DisplayName = "Tab menu style", Value = "pill", Enums = new string[] { "tab|Tabs", "pill|Pills" }, Description = "The style of the tab menu: Pills or Tabs." });
+    Template.Parameters.Add(new Parameter() { Name = "tab_justified", DisplayName = "Tab justified", BoolValue = false, Description = "If true, tabs or pills have equal widths." });
     Template.Parameters.Add(new Parameter() { Name = "tab_menu_width", DisplayName = "Tab menu width", NumericValue = 3, Description = "For Left or Right menu, the width of the column between 1 and 11 on 12 spans (default is 3)." });
     Template.Parameters.Add(new Parameter() { Name = "print_break_after_view", DisplayName = "Print: Force a break after a view", BoolValue = true, Description = "If true, a new page is started after a view is displayed for the print layout." });
 

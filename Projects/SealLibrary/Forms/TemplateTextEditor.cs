@@ -89,7 +89,7 @@ namespace Seal.Forms
     		cell.FinalCssClass = ""info"";
         }
         else {
-            cell.FinalCssClass = ""success right""; //These may be Bootstrap classes
+            cell.FinalCssClass = ""success right""; //These may be Bootstrap classes: active success info warning danger etc...
         }
     }
 "

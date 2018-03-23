@@ -1208,7 +1208,7 @@ namespace Seal.Model
                             for (int j = 0; j < cols; j++)
                             {
                                 var sourceCell = dataTable[i, j];
-                                var newCell = new ResultTotalCell() { IsSubTotal = true, FinalCssClass = "info" };
+                                var newCell = new ResultTotalCell() { IsSubTotal = true };
                                 newSubTotalLine[j] = newCell;
                                 if (sourceCell.Element != null && sourceCell.Element.PivotPosition == PivotPosition.Data)
                                 {

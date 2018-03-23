@@ -49,6 +49,7 @@ namespace Seal.Model
 
         bool _useCustom = false;
         [DisplayName("\tUse custom template text"), Description("If true, the partial template text for can be modified."), Category("Definition"), Id(2, 1)]
+        [DefaultValue(false)]
         public bool UseCustom
         {
             get { return _useCustom; }

@@ -27,8 +27,9 @@ namespace Seal.Model
         private string _lastSearch = "";
         private List<ResultCell[]> _filteredLines = null;
 
-        public string GetLoadTableData(ReportModel model, string parameter)
+        public string GetLoadTableData(ReportView view, string parameter)
         {
+            var model = view.Model;
             var parameters = parameter.Split('§');
 
             int echo = 1, len = 50, start = 0;
@@ -111,18 +112,23 @@ namespace Seal.Model
                 len = _filteredLines.Count;
             }
 
+            var dataTableView = view.Report.FindViewFromTemplate(view.Views, ReportViewTemplate.DataTableName);
+            var rowBodyClass = dataTableView.GetValue("data_table_body_class");
+            var rowBodyStyle = dataTableView.GetValue("data_table_body_css");
+            var rowSubClass = dataTableView.GetValue("data_table_subtotal_class");
+            var rowSubStyle = dataTableView.GetValue("data_table_subtotal_css");
+
             for (int row = start; row < _filteredLines.Count && row < start + len; row++)
             {
                 ResultCell[] line = _filteredLines[row];
                 if (row != start) sb.Append(",");
-
                 sb.Append("[");
                 for (int col = 0; col < line.Length; col++)
                 {
                     if (col > 0) sb.Append(",");
                     ResultCell cell = line[col];
                     var cellValue = !string.IsNullOrEmpty(cell.FinalValue) ? cell.FinalValue : cell.DisplayValue;
-                    var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}", model.GetNavigation(cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
+                    var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
                     sb.AppendFormat("\"{0}\"", fullValue);
                 }
                 sb.Append("]");
@@ -155,6 +161,11 @@ namespace Seal.Model
             {
                 return Lines[row][column];
             }
+        }
+
+        public bool IsSubTotalRow(int row)
+        {
+            return (row < RowCount && ColumnCount > 0 && Lines[row][0].IsSubTotal);
         }
 
     }

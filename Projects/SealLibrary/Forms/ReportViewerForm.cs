@@ -207,7 +207,7 @@ namespace Seal.Forms
                         {
                             cancelNavigation = true;
                             HtmlElement messages = webBrowser.Document.All[ReportExecution.HtmlId_execution_messages];
-                            if (_report.ExecutionView.GetBoolValue(Parameter.DisplayMessagesParameter) && messages != null)
+                            if (_report.ExecutionView.GetValue("messages_mode") != "disabled" && messages != null)
                             {
                                 messages.SetAttribute("innerHTML", Helper.ToHtml(_report.ExecutionMessages));
                                 messages.ScrollTop = messages.ScrollRectangle.Height;
@@ -298,7 +298,7 @@ namespace Seal.Forms
                                 var page = view.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
                                 if (page != null)
                                 {
-                                    dataload.InnerText = page.DataTable.GetLoadTableData(view.Model, dataload.InnerText);
+                                    dataload.InnerText = page.DataTable.GetLoadTableData(view, dataload.InnerText);
                                 }
                             }
                         }

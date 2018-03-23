@@ -20,13 +20,13 @@ for (int row = rowStart; row < rowEnd; row++)
                 }
                 if (isHead)
                 {
-                    <th @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'")) @Raw(reportModel.GetNavigation(cell))>
+                    <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>
                         @Raw(cell.HTMLValue)
                     </th>
                 }
                 else
                 {
-                    <td @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'")) @Raw(reportModel.GetNavigation(cell))>
+                    <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>
                         @Raw(cell.HTMLValue)
                     </td>
                 }
@@ -36,10 +36,10 @@ for (int row = rowStart; row < rowEnd; row++)
 }
 
 <text>
-    <table class='table table-striped table-hover table-bordered'>
+    <table  @Raw(view.AddAttribute("class", "summary_table_class")) @Raw(view.AddAttribute("style", "summary_table_css"))>
         @if (view.HasValue("summary_table_caption"))
             {
-            <caption align="bottom" style="caption-side: bottom;">@Raw(view.GetHtmlValue("summary_table_caption"))</caption>
+            <caption @Raw(view.AddAttribute("style", "summary_table_caption_css"))>@Raw(view.GetHtmlValue("summary_table_caption"))</caption>
         }
         <thead>
             @SummaryRows(reportModel, view, 0, 1, true)

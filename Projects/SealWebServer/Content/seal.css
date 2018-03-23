@@ -9,16 +9,21 @@ body { /* navbar-fixed-top */
     }
 }
 
-#progress_panel {
-    margin: 15px;
-}
-
 #restrictions_button {
     margin-right: 5px;
 }
 
 #execute_button {
     margin-right: 10px;
+}
+
+.tr-totals {
+    font-weight: bold;
+}
+
+.tr-sub-totals {
+    font-weight: bold;
+    font-style: italic;
 }
 
 .back-to-top {

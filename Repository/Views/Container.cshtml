@@ -2,18 +2,17 @@
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
-
     int index = 0;
     var views = view.Views.OrderBy(i => i.SortOrder).ToList();
     foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout").Trim()))
     {
         <div class="row">
             @foreach (string col in view.GetGridLayoutColumns(row))
-                {
+            {
                 <div class="@view.GetGridLayoutColumnClass(col)">
                     @if (index < view.Views.Count && view.IsGridLayoutColumnForModel(col))
                     {
-                        @Raw(views[index++].Parse());
+                        @Raw(views[index++].Parse())
                     }
                 </div>
             }
@@ -23,7 +22,7 @@
     while (index < views.Count)
     {
         <div class="row">
-            @Raw(views[index++].Parse());
+            @Raw(views[index++].Parse())
         </div>
     }
 }

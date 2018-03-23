@@ -441,14 +441,12 @@ $(document).ready(function () {
 
     if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 
-    //show restrictions
-    if (showRestrictions) $("#restrictions_div").addClass("in");//.css("display", "block");
-
     //back to top
     $(window).scroll(function () {
         if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
         else $('#back-to-top').fadeOut();
     });
+
     // scroll body to 0px on click
     $('#back-to-top').click(function () {
         $('#back-to-top').tooltip('hide');
