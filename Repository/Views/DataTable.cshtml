@@ -1,5 +1,4 @@
-﻿@using System.Data
-@using Seal.Model
+﻿@using Seal.Model
 @using Seal.Helpers
 @{
     Report report = Model;
@@ -12,6 +11,7 @@
     {
         reportModel.InvertDataTables();
     }
+    var columnsHidden = view.GetValue("columns_hidden").Split(',').ToList();
 }
 
 @if (table != null && table.RowCount > 0 && table.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
@@ -60,6 +60,7 @@
                 <tr @Raw(view.AddAttribute("class", "data_table_header_class")) @Raw(view.AddAttribute("style", "data_table_header_css"))>
                     @for (int col = 0; col < table.ColumnCount; col++)
                     {
+                        if (columnsHidden.Contains((col+1).ToString())) { continue; }
                         ResultCell cell = table[row, col];
                         <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
                     }
@@ -75,6 +76,7 @@
                         <tr @Raw(view.AddAttribute("class", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_class")) @Raw(view.AddAttribute("style", "data_table_"+ (table.IsSubTotalRow(row) ? "subtotal" : "body") +"_css"))>
                             @for (int col = 0; col < table.ColumnCount; col++)
                             {
+                                if (columnsHidden.Contains((col+1).ToString())) { continue; }
                                 ResultCell cell = table[row, col];
                                 <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
                             }
@@ -89,6 +91,7 @@
                 <tr @Raw(view.AddAttribute("class", "data_table_footer_class")) @Raw(view.AddAttribute("style", "data_table_footer_css"))>
                     @for (int col = 0; col < table.ColumnCount; col++)
                     {
+                        if (columnsHidden.Contains((col+1).ToString())) { continue; }
                         ResultCell cell = table[row, col];
                         <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle))>@Raw(cell.HTMLValue)</td>
                     }
