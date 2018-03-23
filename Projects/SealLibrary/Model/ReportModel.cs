@@ -988,12 +988,6 @@ namespace Seal.Model
                         }
                         else
                         {
-                            /* this was the old flat method that does not work with Access...but produce a clean select 
-                            foreach (MetaJoin join in bestPath.joins)
-                            {
-                                if (execFromClause.Length == 0) execFromClause = new StringBuilder(join.LeftTable.FullSQLName + "\r\n");
-                                execFromClause.AppendFormat("{0} {1} ON {2}\r\n", join.SQLJoinType, join.RightTable.FullSQLName, join.Clause.Trim());
-                            }*/
                             bestPath.print();
                             string lastTable = null;
                             List<MetaTable> tablesUsed = new List<MetaTable>();

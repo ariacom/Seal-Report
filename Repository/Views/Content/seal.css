@@ -17,6 +17,15 @@ body { /* navbar-fixed-top */
     margin-right: 10px;
 }
 
+.tr-totals {
+    font-weight: bold;
+}
+
+.tr-sub-totals {
+    font-weight: bold;
+    font-style: italic;
+}
+
 .back-to-top {
     cursor: pointer;
     position: fixed;

@@ -5,9 +5,9 @@
   <Connections>
     <MetaConnection>
       <Name>Connection</Name>
-      <DatabaseType>MSSQLServer</DatabaseType>
-      <ConnectionString>DRIVER=SQL Server;SERVER=HIS01-C61\internal;DATABASE=HIS2</ConnectionString>
+      <ConnectionString>Provider=SQLOLEDB.1;Persist Security Info=False;Initial Catalog=HIS2;Data Source=ariacomepp4</ConnectionString>
       <UserName>his</UserName>
+      <Password>GgAwbtY5Zbs=</Password>
     </MetaConnection>
   </Connections>
   <InitScript />
@@ -20,7 +20,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -55,7 +54,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -331,7 +329,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -366,7 +363,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -439,7 +435,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -1350,14 +1345,12 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
             <GUID>215</GUID>
-            <Name>AVG(dbo.fiches.date)</Name>
+            <Name>dbo.fiches.date</Name>
             <Type>DateTime</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Données de Base/Fiches</Category>
             <Tag />
             <DisplayName>Date</DisplayName>
@@ -1922,7 +1915,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL>dbo.fortunes.[libelleCategorie] is not NULL and dbo.fortunes.[libelleCategorie]&lt;&gt;''</WhereSQL>
         <Columns>
           <MetaColumn>
@@ -2702,9 +2694,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>293</GUID>
-            <Name>SUM(dbo.fortunes.quantiteTitres)</Name>
+            <Name>dbo.fortunes.quantiteTitres</Name>
             <Type>Numeric</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Fortunes/Fortune détaillée</Category>
             <Tag />
             <DisplayName>Quantite Titres</DisplayName>
@@ -2727,9 +2718,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>296</GUID>
-            <Name>SUM(dbo.fortunes.valDevEst)</Name>
+            <Name>dbo.fortunes.valDevEst</Name>
             <Type>Numeric</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Fortunes/Fortune détaillée</Category>
             <Tag />
             <DisplayName>Val Dev Est</DisplayName>
@@ -2818,7 +2808,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -2900,9 +2889,8 @@
         <Name>dbo.operations_bourse</Name>
         <MustRefresh>false</MustRefresh>
         <PreSQL />
-        <PostSQL>numOperationExt='' and CancellationTransactionNo is null</PostSQL>
-        <IgnorePrePostError>true</IgnorePrePostError>
-        <WhereSQL />
+        <PostSQL />
+        <WhereSQL>dbo.operations_bourse.numOperationExt='' and dbo.operations_bourse.CancellationTransactionNo is null</WhereSQL>
         <Columns>
           <MetaColumn>
             <GUID>315</GUID>
@@ -3300,7 +3288,7 @@
             <Tag />
             <DisplayName>Num Valeur</DisplayName>
             <Format />
-            <HasHTMLTags>true</HasHTMLTags>
+            <HasHTMLTags xsi:nil="true" />
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -3499,7 +3487,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -3571,7 +3558,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -3594,7 +3580,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -3617,7 +3602,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -4135,7 +4119,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -4254,7 +4237,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -4863,7 +4845,7 @@
             <Tag />
             <DisplayName>Libellé titre</DisplayName>
             <Format />
-            <HasHTMLTags>true</HasHTMLTags>
+            <HasHTMLTags xsi:nil="true" />
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -5071,8 +5053,24 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
-        <WhereSQL />
+        <WhereSQL>@using Seal.Model
+@using Seal.Helpers
+@{
+  MetaTable table = Model;
+  string result = "";
+  if (table.Source.Report != null &amp;&amp; table.Source.Report.SecurityContext != null)
+  {
+	var securityContext = table.Source.Report.SecurityContext;
+	if (securityContext.SecurityGroups.Exists(i =&gt; i.Name == "seal_pb")) {
+		result = string.Format("dbo.vclients.departement in (select ub from dimusersub where initiales={0})", Helper.QuoteSingle(securityContext.Name));
+	}
+	else if (securityContext.SecurityGroups.Exists(i =&gt; i.Name == "seal_eam")) {
+		result = string.Format("dbo.vclients.numracine in (select numracine from extractionshisclients where 'banque-heritage\\'+logon={0})", Helper.QuoteSingle(securityContext.Name));
+		result += string.Format("or dbo.vclients.canalarrivee in (select canalarrivee from extractionshisclients where 'banque-heritage\\'+logon={0})", Helper.QuoteSingle(securityContext.Name));
+	}
+  }
+}
+@Raw(result)</WhereSQL>
         <Columns>
           <MetaColumn>
             <GUID>11</GUID>
@@ -5137,9 +5135,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>17</GUID>
-            <Name>SUM(dbo.vclients.date)</Name>
+            <Name>dbo.vclients.date</Name>
             <Type>DateTime</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Données de Base/Clients</Category>
             <Tag />
             <DisplayName>Date</DisplayName>
@@ -5240,9 +5237,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>1363</GUID>
-            <Name>convert(datetime,convert(varchar,SUM(dbo.vclients.date),102))</Name>
+            <Name>convert(datetime,convert(varchar,dbo.vclients.date,102))</Name>
             <Type>DateTime</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Données de Base/Clients/Date</Category>
             <Tag />
             <DisplayName>Date Day Date</DisplayName>
@@ -5253,9 +5249,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>1367</GUID>
-            <Name>datepart(mm,SUM(dbo.vclients.date))</Name>
+            <Name>datepart(mm,dbo.vclients.date)</Name>
             <Type>Numeric</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Données de Base/Clients/Date</Category>
             <Tag />
             <DisplayName>Date Month</DisplayName>
@@ -5268,9 +5263,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>1364</GUID>
-            <Name>dateadd(dd, -datepart(dd,SUM(dbo.vclients.date))+1, convert(datetime,convert(varchar,SUM(dbo.vclients.date),102)))</Name>
+            <Name>dateadd(dd, -datepart(dd,dbo.vclients.date)+1, convert(datetime,convert(varchar,(dbo.vclients.date),102)))</Name>
             <Type>DateTime</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Données de Base/Clients/Date</Category>
             <Tag />
             <DisplayName>Date Month Date</DisplayName>
@@ -5283,9 +5277,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>1366</GUID>
-            <Name>datepart(dd,SUM(dbo.vclients.date))</Name>
+            <Name>datepart(dd,dbo.vclients.date)</Name>
             <Type>Numeric</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Données de Base/Clients/Date</Category>
             <Tag />
             <DisplayName>Date Month Day</DisplayName>
@@ -5386,9 +5379,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>1368</GUID>
-            <Name>datepart(qq,SUM(dbo.vclients.date))</Name>
+            <Name>datepart(qq,(dbo.vclients.date))</Name>
             <Type>Numeric</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Données de Base/Clients/Date</Category>
             <Tag />
             <DisplayName>Date Quarter</DisplayName>
@@ -5401,9 +5393,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>1369</GUID>
-            <Name>datepart(yy,SUM(dbo.vclients.date))</Name>
+            <Name>datepart(yy,(dbo.vclients.date))</Name>
             <Type>Numeric</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Données de Base/Clients/Date</Category>
             <Tag />
             <DisplayName>Date Year</DisplayName>
@@ -5416,9 +5407,8 @@
           </MetaColumn>
           <MetaColumn>
             <GUID>1365</GUID>
-            <Name>dateadd(mm, -datepart(mm,SUM(dbo.vclients.date))+1, dateadd(dd, -datepart(dd,SUM(dbo.vclients.date))+1, convert(datetime,convert(varchar,SUM(dbo.vclients.date),102))))</Name>
+            <Name>dateadd(mm, -datepart(mm,(dbo.vclients.date))+1, dateadd(dd, -datepart(dd,(dbo.vclients.date))+1, convert(datetime,convert(varchar,(dbo.vclients.date),102))))</Name>
             <Type>DateTime</Type>
-            <IsAggregate>true</IsAggregate>
             <Category>Données de Base/Clients/Date</Category>
             <Tag />
             <DisplayName>Date Year Date</DisplayName>
@@ -5563,7 +5553,7 @@
             <Tag />
             <DisplayName>Pseudo</DisplayName>
             <Format />
-            <HasHTMLTags>true</HasHTMLTags>
+            <HasHTMLTags xsi:nil="true" />
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -5757,7 +5747,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -5780,7 +5769,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -5875,7 +5863,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -5898,7 +5885,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -5921,7 +5907,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -6076,7 +6061,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -6196,7 +6180,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -6567,7 +6550,7 @@
             <Tag />
             <DisplayName>Num Client</DisplayName>
             <Format />
-            <HasHTMLTags>true</HasHTMLTags>
+            <HasHTMLTags xsi:nil="true" />
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -6783,7 +6766,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7190,7 +7172,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7333,7 +7314,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7405,7 +7385,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7501,7 +7480,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7560,7 +7538,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7706,7 +7683,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7765,7 +7741,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7824,7 +7799,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7883,7 +7857,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -7942,7 +7915,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -8001,7 +7973,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -8504,7 +8475,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -8647,7 +8617,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -8742,7 +8711,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -8777,7 +8745,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -8837,7 +8804,6 @@
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL>fortunes_brutes.[libelleCategorie] is not NULL 
 and fortunes_brutes.[categorie] not in 
 ('310',
@@ -8957,7 +8923,6 @@ and not(fortunes_brutes.valDevEst&lt;0 and fortunes_brutes.categorie='220')</Whe
         <MustRefresh>false</MustRefresh>
         <PreSQL />
         <PostSQL />
-        <IgnorePrePostError>true</IgnorePrePostError>
         <WhereSQL />
         <Columns>
           <MetaColumn>
@@ -9730,13 +9695,6 @@ dbo.vwDocumentsCheck.numRacine=dbo.vclients.numRacine</Clause>
         <Clause>dbo.fortunes.date=FortuneTotale.date AND
 dbo.fortunes.numRacine=FortuneTotale.numRacine</Clause>
         <JoinType>LeftOuter</JoinType>
-      </MetaJoin>
-      <MetaJoin>
-        <GUID>179</GUID>
-        <Name>dbo.vclients-dbo.AnomalieBanqueRestante</Name>
-        <LeftTableGUID>2</LeftTableGUID>
-        <RightTableGUID>157</RightTableGUID>
-        <Clause />
       </MetaJoin>
       <MetaJoin>
         <GUID>181</GUID>
@@ -17846,10 +17804,6 @@ ORDER BY 1</Sql>
           <MetaEV>
             <Id>0440</Id>
             <Val>0440</Val>
-          </MetaEV>
-          <MetaEV>
-            <Id>0444</Id>
-            <Val>0444</Val>
           </MetaEV>
           <MetaEV>
             <Id>0460</Id>

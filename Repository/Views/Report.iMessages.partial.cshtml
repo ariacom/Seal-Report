@@ -7,9 +7,9 @@
 }
 
 <!--message_div-->
-@if (view.GetBoolValue("display_messages"))
+@if (view.GetValue("messages_mode") != "disabled")
 {
-    <div id="message_div" class="tab-pane fade @(view.GetBoolValue("message_button") || !string.IsNullOrEmpty(report.WebExecutionErrors) ? "in active" : "")">
+    <div id="message_div" class="tab-pane fade @(report.ShowExecutionMessages ? "in active" : "")">
         <div id="execution_messages" class="alert alert-info" role="alert">@Raw(Helper.ToHtml(report.ExecutionMessages))</div>
     </div>
 }

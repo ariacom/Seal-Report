@@ -7,13 +7,14 @@
     ReportView modelView = report.CurrentModelView;
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
+    ResultTable table = page.DataTable;
     if (view.GetBoolValue("invert_data_tables") && modelView.GetBoolValue("show_data_tables"))
     {
         reportModel.InvertDataTables();
     }
 }
 
-@if (page.DataTable != null && page.DataTable.RowCount > 0 && page.DataTable.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
+@if (table != null && table.RowCount > 0 && table.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
 {
     <script type="text/javascript">
     $(document).ready(function () {
@@ -38,25 +39,29 @@
                         }
                 </text>}
                 });
-        }
+            }
+
+            $('.dataTables_filter input[type="search"]').css(
+                { 'width': '90px', 'display': 'inline-block' }
+            );
     }
     catch (e) { };
     });
     </script>
 
-    <table class='table-responsive table table-striped table-hover table-condensed' id='@("dt_" + view.ViewId+page.PageId)' viewid='@modelView.ViewId' pageid='@page.PageId'>
+    <table id='@("dt_" + view.ViewId+page.PageId)' viewid='@modelView.ViewId' pageid='@page.PageId' @Raw(view.AddAttribute("class", "data_table_class")) @Raw(view.AddAttribute("style", "data_table_css"))>
         @if (view.HasValue("data_table_caption"))
         {
-            <caption align="bottom" style="caption-side: bottom;">@Raw(view.GetHtmlValue("data_table_caption"))</caption>
+            <caption @Raw(view.AddAttribute("style", "data_table_caption_css"))>@Raw(view.GetHtmlValue("data_table_caption"))</caption>
         }
         <thead>
-            @for (int row = 0; row < page.DataTable.BodyStartRow; row++)
+            @for (int row = 0; row < table.BodyStartRow; row++)
                 {
-                <tr>
-                    @for (int col = 0; col < page.DataTable.ColumnCount; col++)
+                <tr @Raw(view.AddAttribute("class", "data_table_header_class")) @Raw(view.AddAttribute("style", "data_table_header_css"))>
+                    @for (int col = 0; col < table.ColumnCount; col++)
                     {
-                        ResultCell cell = page.DataTable[row, col];
-                        <th @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'")) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
+                        ResultCell cell = table[row, col];
+                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
                     }
                 </tr>
             }
@@ -65,26 +70,27 @@
         {
             <text>
                 <tbody>
-                    @for (int row = page.DataTable.BodyStartRow; row < page.DataTable.BodyEndRow; row++)
+                    @for (int row = table.BodyStartRow; row < table.BodyEndRow; row++)
                     {
-                        <tr>
-                            @for (int col = 0; col < page.DataTable.ColumnCount; col++)
+                        <tr @Raw(view.AddAttribute("class", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_class")) @Raw(view.AddAttribute("style", "data_table_"+ (table.IsSubTotalRow(row) ? "subtotal" : "body") +"_css"))>
+                            @for (int col = 0; col < table.ColumnCount; col++)
                             {
-                                ResultCell cell = page.DataTable[row, col];
-                                <td @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'")) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
+                                ResultCell cell = table[row, col];
+                                <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
                             }
                         </tr>
                     }
                 </tbody>
-            </text>}
+            </text>
+        }
         <tfoot>
-            @for (int row = page.DataTable.BodyEndRow; row < page.DataTable.Lines.Count; row++)
+            @for (int row = table.BodyEndRow; row < table.Lines.Count; row++)
                 {
-                <tr>
-                    @for (int col = 0; col < page.DataTable.ColumnCount; col++)
+                <tr @Raw(view.AddAttribute("class", "data_table_footer_class")) @Raw(view.AddAttribute("style", "data_table_footer_css"))>
+                    @for (int col = 0; col < table.ColumnCount; col++)
                     {
-                        ResultCell cell = page.DataTable[row, col];
-                        <td @Raw(Helper.AddIfNotEmpty("class='", cell.CellCssClass, "'")) @Raw(Helper.AddIfNotEmpty("style='", cell.CellCssStyle, "'"))>@Raw(cell.HTMLValue)</td>
+                        ResultCell cell = table[row, col];
+                        <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle))>@Raw(cell.HTMLValue)</td>
                     }
                 </tr>
             }

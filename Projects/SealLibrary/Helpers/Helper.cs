@@ -64,6 +64,12 @@ namespace Seal.Helpers
             return "";
         }
 
+        static public string AddAttribute(string name, string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value)) return string.Format("{0}='{1}'", name, value);
+            return "";
+        }
+
         static public string AddIfNotEmpty(string prefix, string input, string suffix)
         {
             if (!string.IsNullOrEmpty(input)) return prefix + input + suffix;

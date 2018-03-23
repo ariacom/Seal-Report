@@ -6,8 +6,8 @@
     report.CurrentModelView = view;
 }
 
-<div id='@view.ViewId'>
-    @if (!report.PrintLayout && view.GetValue("model_menu_type") == "right")
+<div id='@view.ViewId' @Raw(view.AddAttribute("class", "model_class")) @Raw(view.AddAttribute("style", "model_css"))>
+    @if (view.Model.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") == "right")
     {
         <div class="row">
             <div class="tab-content col-md-@(12-view.GetNumericValue("model_menu_width"))">
@@ -18,7 +18,7 @@
             </div>
         </div>
     }
-    else if (!report.PrintLayout && view.GetValue("model_menu_type") == "left")
+    else if (view.Model.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") == "left")
     {
         <div class="row">
             <div class="col-md-@view.GetNumericValue("model_menu_width")">

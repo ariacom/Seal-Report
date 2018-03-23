@@ -88,8 +88,8 @@
 
                     //Margins
                     var margins = null;
-                    if (chartType == 'multiBarHorizontalChart') margins = { left: 20 + 5*@page.AxisXLabelMaxLen, right: 22 };
-                    else if (chartType != 'pieChart') margins = { left: 20 + 6 * @page.AxisYPrimaryMaxLen, right: 30 + 6 * @page.AxisYSecondaryMaxLen };
+                    if (chartType == 'multiBarHorizontalChart') margins = { left: 20 + 6*@page.AxisXLabelMaxLen, right: 22 };
+                    else if (chartType != 'pieChart') margins = { left: 20 + 6*@page.AxisYPrimaryMaxLen, right: 30 + 6*@page.AxisYSecondaryMaxLen };
                     margins = @Raw(view.GetValue("nvd3_margins") != "auto" ? view.GetValue("nvd3_margins") : "margins");
                     if (margins) (@chartId).margin(margins);
 
