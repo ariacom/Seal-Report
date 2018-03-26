@@ -420,7 +420,7 @@ var SWIMain = (function () {
             $outputPanel.hide();
             var $target = $(e.currentTarget);
             var $tableBody = $("#output-table-body");
-            var top = $target.offset().top + 40 - $outputPanel.height();
+            var top = $target.offset().top - 30;
             $tableBody.empty();
             $tableBody.append($("<tr>").append($("<td colspan=2>").append($("<i>").addClass("fa fa-spinner fa-spin fa-1x fa-fw")).append($("<span>").text(SWIUtil.tr("Please wait") + "..."))));
             $outputPanel.css({
