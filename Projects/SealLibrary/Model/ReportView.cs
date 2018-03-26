@@ -779,14 +779,14 @@ namespace Seal.Model
 
         private void initAxisProperties(ResultPage page, List<ResultCell[]> XDimensions)
         {
-            bool hasNVD3Pie = Model.Elements.Exists(i => i.Nvd3Serie == NVD3SerieDefinition.PieChart && i.PivotPosition == PivotPosition.Data);
+            bool hasPie = Model.Elements.Exists(i => (i.Nvd3Serie == NVD3SerieDefinition.PieChart || i.ChartJSSerie == ChartJSSerieDefinition.Pie || i.ChartJSSerie == ChartJSSerieDefinition.PolarArea || i.PlotlySerie == PlotlySerieDefinition.Pie) && i.PivotPosition == PivotPosition.Data);
             var dimensions = XDimensions.FirstOrDefault();
             if (dimensions != null)
             {
                 //One value -> set the raw value, several values -> concat the display value
                 if (dimensions.Length == 1)
                 {
-                    if (!dimensions[0].Element.IsEnum && dimensions[0].Element.AxisUseValues && !hasNVD3Pie)
+                    if (!dimensions[0].Element.IsEnum && dimensions[0].Element.AxisUseValues && !hasPie)
                     {
                         Model.ExecChartIsNumericAxis = dimensions[0].Element.IsNumeric;
                         Model.ExecChartIsDateTimeAxis = dimensions[0].Element.IsDateTime;
@@ -1059,5 +1059,11 @@ namespace Seal.Model
             }
         }
 
+        List<string> _columnsHidden = null;
+        public bool IsColumnHidden(int col)
+        {
+            if (_columnsHidden == null) _columnsHidden = GetValue(Parameter.ColumnsHiddenParameter).Split(';').ToList();
+            return _columnsHidden.Contains((col + 1).ToString());
+        }
     }
 }

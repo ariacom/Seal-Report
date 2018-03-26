@@ -64,11 +64,11 @@ namespace Seal.Forms
                 catch { }
                 if (serverOk)
                 {
-                    infoTextBox.Text = string.Format(@"This simple helper allows to publish the Web Server application on your Internet Information Server version 7 or 8.
+                    infoTextBox.Text = string.Format(@"This simple helper allows to publish the Web Server application on your Internet Information Server.
 It creates an application under the 'Default Web Site' of IIS using the 'LocalSystem' Windows Account.
 
 IIS must be installed with the following features: 
-Application Development/ASP.Net 4.5
+Application Development/ASP.Net 4.5 or greater
 
 The site can be configured with any user having the following rights:
 Read access to the repository directory ({0}).
@@ -82,9 +82,7 @@ Note that publishing will stop the current Web Server instance.
                 {
                     infoTextBox.Text = @"No Internet Information Server detected on this machine.
 Please install IIS with the following features: 
-IIS version 7: Application Development/ASP.Net
-IIS version 8: Application Development/ASP.Net 3.5, Application Development/ASP.Net 4.5
-MVC 4 extension
+Application Development/ASP.Net 4.5 or greater
 ";
                 }
             }
@@ -180,12 +178,16 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                     pool.Enable32BitAppOnWin64 = true;
                     pool.ProcessModel.IdentityType = Microsoft.Web.Administration.ProcessModelIdentityType.LocalSystem;
 
-                    Microsoft.Web.Administration.Application application = site.Applications.FirstOrDefault(i => i.Path == _configuration.WebApplicationName);
+                    if (string.IsNullOrEmpty(_configuration.WebApplicationName)) _configuration.WebApplicationName = "/";
+                    var application = site.Applications.FirstOrDefault(i => i.Path == _configuration.WebApplicationName);
                     if (application == null)
                     {
                         log.Log("Creating Application");
                         application = site.Applications.Add(_configuration.WebApplicationName, _configuration.WebPublicationDirectory);
                     }
+                    Microsoft.Web.Administration.VirtualDirectory vDir = application.VirtualDirectories[0];
+                    vDir.Path = _configuration.WebApplicationName;
+                    vDir.PhysicalPath = _configuration.WebPublicationDirectory;
                     application.ApplicationPoolName = _configuration.WebApplicationPoolName;
                     if (!log.IsJobCancelled())
                     {

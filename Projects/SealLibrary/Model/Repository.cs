@@ -476,7 +476,7 @@ namespace Seal.Model
         {
             //add hash to the end of the name
             var name = user.GetPersonalFolderName();
-            var hash = Helper.CalculateHash(name);
+            var hash = Math.Abs(Helper.CalculateHash(name));
             string result = Path.Combine(PersonalFolder, string.Format("{0}_{1}", FileHelper.CleanFilePath(name), hash));
             if (!Directory.Exists(result)) Directory.CreateDirectory(result);
             return result;

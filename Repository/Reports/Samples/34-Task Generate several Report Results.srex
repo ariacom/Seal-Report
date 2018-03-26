@@ -5,29 +5,17 @@
     <ReportSource>
       <GUID>ecb7bf25-4687-4420-98ff-c9315948edb7</GUID>
       <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder>
-        <Information>11 column categories have been updated. Note that columns defined in Repository Sources cannot be updated from the Report Designer.</Information>
-      </CategoryFolder>
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>false</IsNoSQL>
       <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
           <MetaTable>
             <GUID>7e461eb3-b774-4a0c-9aa0-6eaf3d8c0caf</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
           </MetaTable>
         </Tables>
@@ -39,18 +27,11 @@
     <ReportSource>
       <GUID>1a3b9779-91f1-4ec7-9bad-785a7b66e6a3</GUID>
       <Name>RSS No SQL Source (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
       <IsNoSQL>true</IsNoSQL>
       <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables />
         <Joins />
@@ -64,9 +45,7 @@
       <GUID>e0c0f746-6183-4855-8943-3813509121e6</GUID>
       <Name>model</Name>
       <SourceGUID>ecb7bf25-4687-4420-98ff-c9315948edb7</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
-      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements />
@@ -87,8 +66,6 @@
         <Length>0</Length>
       </DbInfoMessage>
       <SourceGUID>ecb7bf25-4687-4420-98ff-c9315948edb7</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
-      <Enabled>true</Enabled>
       <Script>@using Seal.Model
 @using Seal.Helpers
 @using System.IO
@@ -126,7 +103,7 @@
         report.OutputToExecute = output;
         report.CurrentViewGUID = output.ViewGUID;
 		
-		//Set result file name and ciulture
+		//Set result file name and culture
 		output.FileName = "Search - Orders for " + country;		
 		report.ExecutionView.CultureName = "English";
 		
@@ -141,8 +118,6 @@
 }
 @Raw(result)
 </Script>
-      <IgnoreError>false</IgnoreError>
-      <ExecuteForEachConnection>false</ExecuteForEachConnection>
       <SortOrder>1</SortOrder>
     </ReportTask>
   </Tasks>
@@ -155,17 +130,94 @@
         <ReportView>
           <GUID>6e8dd630-6885-4a24-aa68-a32259866f41</GUID>
           <Name>Model HTML View</Name>
-          <Views />
+          <Views>
+            <ReportView>
+              <GUID>fc25ffe6-5d38-4ee1-9e28-832f8d0032f8</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>11e810e8-233f-47b8-86c0-f1f57a075c0b</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>5e14ef1b-2883-43e4-a4d8-3f16154003d5</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>02d2e775-1f83-4ea9-a43d-c31fa75e48c6</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>1780ad21-d21e-478a-8d20-70d25b61bf95</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>e24ccf28-b7eb-40dd-a7bb-e052c7a2629e</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
           <ModelGUID>e0c0f746-6183-4855-8943-3813509121e6</ModelGUID>
           <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
           <UseCustomTemplate>true</UseCustomTemplate>
+          <PartialTemplates />
           <Parameters />
           <CultureName />
-          <CSS />
           <SortOrder>1</SortOrder>
-          <ChartConfigurationXml />
           <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
@@ -173,17 +225,9 @@
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
-      <Parameters>
-        <Parameter>
-          <Name>message_button</Name>
-          <Value>True</Value>
-        </Parameter>
-      </Parameters>
+      <PartialTemplates />
+      <Parameters />
       <CultureName>English</CultureName>
-      <CSS />
       <SortOrder>1</SortOrder>
       <WebExec>true</WebExec>
       <PdfConfigurations />
@@ -191,36 +235,7 @@
     </ReportView>
   </Views>
   <DisplayName />
-  <InitScript>@using Seal.Model
-@{
-    Report report = Model;
-	ReportExecutionLog log = report;
-
-    //Script executed when the report is initialized
-    log.LogMessage("Executing Init Script");
-    //report.Models[0].Restrictions[0].Value1 = "1994"; 
-    //report.Models[0].Restrictions[0].Date1 = DateTime.Now.AddYears(-20);
-    //report.Models[0].GetRestrictionByName("Order Year").Value1 = "2015";
-    //report.Models[0].GetRestrictionByName("Category").EnumValues.Add("1");
-
-    //report.DisplayName = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + "-" + DateTime.Now.ToShortDateString();
-    
-    //Set the first value of an enum
-    //var enums = report.Models[0].Source.MetaData.Enums.FirstOrDefault(i=&gt;i.Name == "Category");
-    //report.Models[0].GetRestrictionByName("Category").EnumValues.Add(enums.Values[0].Id);
-
-    //Change view parameter
-    //report.ExecutionView.GetParameter("result_button").BoolValue = false;
-	
-    //Remove the default CSV view
-   if (report.Views.Count &gt; 1) {
-	   report.Views.Remove(report.Views[1]);
-   }
-   
-    //Change view parameter
-   report.Views[0].GetParameter("result_button").BoolValue = false;	
-}
-</InitScript>
+  <InitScript />
   <ViewGUID>a06325e4-a227-437c-8dad-6386d5531efa</ViewGUID>
   <Schedules />
 </Report>

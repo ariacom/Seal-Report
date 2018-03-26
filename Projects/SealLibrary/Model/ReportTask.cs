@@ -239,10 +239,16 @@ namespace Seal.Model
         Mutex _commandMutex = new Mutex();
         public StringBuilder DbInfoMessage = new StringBuilder();
 
+        //Log Interface implementation
+        public void LogMessage(string message, params object[] args)
+        {
+            Report.LogMessage(message, args);
+        }
+
         public void Cancel()
         {
             CancelReport = true;
-            Report.LogMessage("Cancelling task and report...");
+            LogMessage("Cancelling task and report...");
             if (_commandMutex.WaitOne(1000))
             {
                 try
@@ -303,14 +309,14 @@ namespace Seal.Model
 
         public void Execute(MetaConnection currentConnection)
         {
-            Report.LogMessage("Starting task with connection '{0}'", currentConnection.Name);
+            LogMessage("Starting task with connection '{0}'", currentConnection.Name);
             Progression = 0;
             if (!Report.Cancel && !string.IsNullOrEmpty(SQL))
             {
                 if (string.IsNullOrEmpty(currentConnection.ConnectionString)) throw new Exception("The connection string is not defined for this Task.");
                 _command = GetDbCommand(currentConnection);
                 string finalSql = RazorHelper.CompileExecute(SQL, this);
-                Report.LogMessage("Executing SQL: {0}", finalSql);
+                LogMessage("Executing SQL: {0}", finalSql);
                 _command.CommandText = finalSql;
                 object sqlResult = _command.ExecuteScalar();
 
@@ -318,7 +324,7 @@ namespace Seal.Model
                 {
                     if (sqlResult.ToString() == "0")
                     {
-                        Report.LogMessage("SQL returns 0, the report is cancelled.");
+                        LogMessage("SQL returns 0, the report is cancelled.");
                         CancelReport = true;
                     }
                 }
@@ -326,11 +332,11 @@ namespace Seal.Model
 
             if (!Report.Cancel && !string.IsNullOrEmpty(Script))
             {
-                Report.LogMessage("Executing Script...");
+                LogMessage("Executing Script...");
                 string result = RazorHelper.CompileExecute(FullScript, this);
                 if (result == "0")
                 {
-                    Report.LogMessage("Script returns 0, the report is cancelled.");
+                    LogMessage("Script returns 0, the report is cancelled.");
                     CancelReport = true;
                 }
             }

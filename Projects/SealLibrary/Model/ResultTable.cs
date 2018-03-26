@@ -125,12 +125,13 @@ namespace Seal.Model
                 sb.Append("[");
                 for (int col = 0; col < line.Length; col++)
                 {
-                    if (col > 0) sb.Append(",");
+                    if (dataTableView.IsColumnHidden(col)) { continue; }
                     ResultCell cell = line[col];
                     var cellValue = !string.IsNullOrEmpty(cell.FinalValue) ? cell.FinalValue : cell.DisplayValue;
                     var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
-                    sb.AppendFormat("\"{0}\"", fullValue);
+                    sb.AppendFormat("\"{0}\",", fullValue);
                 }
+                sb.Length = sb.Length - 1;
                 sb.Append("]");
             }
             sb.Append("]}");
@@ -153,7 +154,7 @@ namespace Seal.Model
         }
         public int ColumnCount
         {
-            get { return Lines.Count > 0 ?  Lines[0].Length : 0; }
+            get { return Lines.Count > 0 ? Lines[0].Length : 0; }
         }
 
         public ResultCell this[int row, int column] {
@@ -167,7 +168,6 @@ namespace Seal.Model
         {
             return (row < RowCount && ColumnCount > 0 && Lines[row][0].IsSubTotal);
         }
-
     }
 
 }

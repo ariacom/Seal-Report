@@ -2,35 +2,26 @@
 <MetaSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>a9f32151-1da0-474e-8ef0-5b3dee810058</GUID>
   <Name>RSS No SQL Source</Name>
-  <ConnectionFolder />
-  <TableFolder />
-  <CategoryFolder />
-  <JoinFolder />
-  <EnumFolder />
   <Connections>
     <MetaConnection>
       <GUID>e90c1623-d406-462f-9ec7-e95e42144eeb</GUID>
       <Name>RSS le monde</Name>
-      <DatabaseType>Standard</DatabaseType>
       <ConnectionString>http://www.lemonde.fr/rss/une.xml</ConnectionString>
-      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
       <UserName />
       <Password />
     </MetaConnection>
     <MetaConnection>
       <GUID>74f3e241-10fd-4c63-8721-00073801fd48</GUID>
       <Name>RSS libération</Name>
-      <DatabaseType>Standard</DatabaseType>
       <ConnectionString>http://liberation.fr.feedsportal.com/c/32268/fe.ed/rss.liberation.fr/rss/latest/</ConnectionString>
-      <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
       <UserName />
       <Password />
     </MetaConnection>
   </Connections>
   <ConnectionGUID>e90c1623-d406-462f-9ec7-e95e42144eeb</ConnectionGUID>
-  <IsDefault>false</IsDefault>
   <IsNoSQL>true</IsNoSQL>
-  <IgnorePrePostError>false</IgnorePrePostError>
+  <InitScript />
+  <TasksScript />
   <MetaData>
     <Tables>
       <MetaTable>
@@ -85,100 +76,111 @@
 </LoadScript>
         <Alias>SealMasterTable</Alias>
         <DynamicColumns>true</DynamicColumns>
-        <KeepColumnNames>false</KeepColumnNames>
         <MustRefresh>false</MustRefresh>
-        <IgnorePrePostError>false</IgnorePrePostError>
         <Columns>
           <MetaColumn>
             <GUID>66dea19c-71c8-4752-b4a7-4ff4bd2cfc86</GUID>
             <Name>Id</Name>
             <Type>Text</Type>
-            <IsAggregate>false</IsAggregate>
             <Category>Master</Category>
+            <Tag />
             <DisplayName>Id</DisplayName>
-            <DisplayOrder>0</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>64825607-9931-481c-ad2e-ce9dcfd9472f</GUID>
             <Name>Date</Name>
             <Type>DateTime</Type>
-            <IsAggregate>false</IsAggregate>
             <Category>Master</Category>
+            <Tag />
             <DisplayName>Date</DisplayName>
             <DisplayOrder>1</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDateTime</DateTimeStandardFormat>
             <Format>g</Format>
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>1fb35472-7ac6-4117-b22a-45b243bbced3</GUID>
             <Name>Title</Name>
             <Type>Text</Type>
-            <IsAggregate>false</IsAggregate>
             <Category>Master</Category>
+            <Tag />
             <DisplayName>Title</DisplayName>
             <DisplayOrder>2</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>0d1a7442-53c0-490f-b132-dcfe575b8e03</GUID>
             <Name>Summary</Name>
             <Type>Text</Type>
-            <IsAggregate>false</IsAggregate>
             <Category>Master</Category>
+            <Tag />
             <DisplayName>Summary</DisplayName>
             <DisplayOrder>3</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <HasHTMLTags>true</HasHTMLTags>
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>e557688d-2ed2-4b1e-9da2-3cb4666387e3</GUID>
             <Name>Link</Name>
             <Type>Text</Type>
-            <IsAggregate>false</IsAggregate>
             <Category>Master</Category>
+            <Tag />
             <DisplayName>Link</DisplayName>
             <DisplayOrder>4</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <HasHTMLTags>true</HasHTMLTags>
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>8544f42b-c74f-42c2-91cb-c09e27d1b9bd</GUID>
             <Name>Categories</Name>
             <Type>Text</Type>
-            <IsAggregate>false</IsAggregate>
             <Category>Master</Category>
+            <Tag />
             <DisplayName>Categories</DisplayName>
             <DisplayOrder>5</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <HasHTMLTags>false</HasHTMLTags>
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
           <MetaColumn>
             <GUID>edfc91bc-276c-4383-be8b-9efb53d3c640</GUID>
             <Name>TitleWithLink</Name>
             <Type>Text</Type>
-            <IsAggregate>false</IsAggregate>
             <Category>Master</Category>
+            <Tag />
             <DisplayName>Title With Link</DisplayName>
             <DisplayOrder>6</DisplayOrder>
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
             <HasHTMLTags>true</HasHTMLTags>
+            <DrillChildren />
+            <SubReports />
           </MetaColumn>
         </Columns>
       </MetaTable>

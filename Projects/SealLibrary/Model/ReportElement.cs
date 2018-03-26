@@ -387,7 +387,7 @@ namespace Seal.Model
 
         bool _axisUseValues = true;
         [DefaultValue(true)]
-        [Category("Chart"), DisplayName("Use values for axis"), Description("For Numeric or Date Time axis, if true, the values are used to scale the axis, otherwise the values are the labels."), Id(2, 2)]
+        [Category("Chart"), DisplayName("Use values for axis"), Description("For Numeric or Date Time axis, if true, the element values are used for the axis, otherwise axis values are linear. This feature does not work for all types of chart."), Id(2, 2)]
         public bool AxisUseValues
         {
             get { return _axisUseValues; }
