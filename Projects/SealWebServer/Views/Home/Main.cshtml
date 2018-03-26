@@ -56,7 +56,7 @@
         </div><!--/.container-fluid -->
     </nav>
 
-    <div id="main-container" class="container-fluid" style="padding: 62px 8px 0px 8px; display:none;">
+    <div id="main-container" class="container-fluid" style="padding-top:62px; display:none;">
         <div class="row">
             <div id="folder-view" class="col-sm-4" style="padding-right:0px">
                 <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto;"></div>
@@ -378,8 +378,8 @@
                                     <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-start">@repository.TranslateWeb("Start date")</label>
                                         <div class="col-sm-7">
-                                            <div class="input-group date" id="schedule-start">
-                                                <input type='text' class="form-control" />
+                                            <div class="input-group date">
+                                                <input id="schedule-start" type='text' class="form-control" />
                                                 <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </span>
@@ -389,8 +389,8 @@
                                     <div class="form-group schedule">
                                         <label class="control-label col-sm-5" for="schedule-end">@repository.TranslateWeb("End date")</label>
                                         <div class="col-sm-7">
-                                            <div class="input-group date" id="schedule-end">
-                                                <input type='text' class="form-control" />
+                                            <div class="input-group date">
+                                                <input id="schedule-end" type='text' class="form-control" />
                                                 <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </span>
@@ -534,36 +534,6 @@
                     <select id="property-format" data-width="100%"></select>
                 </div>
             </div>
-            <div id="properties-serie-group">
-                <label class="properties-label">@repository.TranslateWeb("Chart axis")</label>
-                <div class="properties-value">
-                    <select id="property-serie" data-width="100%"></select>
-                </div>
-            </div>
-            <div id="properties-chart-groupjs">
-                <label class="properties-label">@repository.TranslateWeb("Chart JS")</label>
-                <div class="properties-value">
-                    <select id="property-chartjs" data-width="100%"></select>
-                </div>
-            </div>
-            <div id="properties-chart-groupnv">
-                <label class="properties-label">@repository.TranslateWeb("Chart NVD3")</label>
-                <div class="properties-value">
-                    <select id="property-chartnv" data-width="100%"></select>
-                </div>
-            </div>
-            <div id="properties-chart-grouppl">
-                <label class="properties-label">@repository.TranslateWeb("Chart Plotly")</label>
-                <div class="properties-value">
-                    <select id="property-chartpl" data-width="100%"></select>
-                </div>
-            </div>
-            <div id="properties-seriesort-group">
-                <label class="properties-label">@repository.TranslateWeb("Chart sort")</label>
-                <div class="properties-value">
-                    <select id="property-seriesort" data-width="100%"></select>
-                </div>
-            </div>
             <div id="properties-aggregate-group">
                 <label class="properties-label">@repository.TranslateWeb("Aggregate")</label>
                 <div class="properties-value">
@@ -592,6 +562,42 @@
                 <label class="properties-label">@repository.TranslateWeb("Show sub-totals")</label>
                 <div class="properties-value">
                     <select id="property-subtot" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-serie-group">
+                <label class="properties-label">@repository.TranslateWeb("Chart axis")</label>
+                <div class="properties-value">
+                    <select id="property-serie" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-useval-group">
+                <label class="properties-label">@repository.TranslateWeb("Values for axis")</label>
+                <div class="properties-value">
+                    <select id="property-useval" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-chartjs-group">
+                <label class="properties-label">@repository.TranslateWeb("Chart JS")</label>
+                <div class="properties-value">
+                    <select id="property-chartjs" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-chartnv-group">
+                <label class="properties-label">@repository.TranslateWeb("Chart NVD3")</label>
+                <div class="properties-value">
+                    <select id="property-chartnv" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-chartpl-group">
+                <label class="properties-label">@repository.TranslateWeb("Chart Plotly")</label>
+                <div class="properties-value">
+                    <select id="property-chartpl" data-width="100%"></select>
+                </div>
+            </div>
+            <div id="properties-seriesort-group">
+                <label class="properties-label">@repository.TranslateWeb("Chart sort")</label>
+                <div class="properties-value">
+                    <select id="property-seriesort" data-width="100%"></select>
                 </div>
             </div>
             <div id="properties-operator-group">

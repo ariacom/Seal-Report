@@ -44,6 +44,7 @@ namespace Seal.Helpers
         {
             if (model != null && script != null && script.StartsWith("@"))
             {
+                string result = "";
                 LoadRazorAssemblies();
                 if (string.IsNullOrEmpty(key))
                 {
@@ -51,9 +52,14 @@ namespace Seal.Helpers
                 }
                 if (Engine.Razor.IsTemplateCached(key, model.GetType()))
                 {
-                    return Engine.Razor.Run(key, model.GetType(), model).Trim();
+                    result = Engine.Razor.Run(key, model.GetType(), model);
                 }
-                return Engine.Razor.RunCompile(script, key, model.GetType(), model).Trim();
+                else
+                {
+                    result = Engine.Razor.RunCompile(script, key, model.GetType(), model);
+
+                }
+                return string.IsNullOrEmpty(result) ? "" : result.Trim();
             }
             return script;
         }

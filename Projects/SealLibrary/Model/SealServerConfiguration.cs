@@ -194,7 +194,7 @@ namespace Seal.Model
         }
 
         string _webApplicationName = "/Seal";
-        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application."), Id(1, 1)]
+        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application. Use '/' to publish on 'Default Web Site'"), Id(1, 1)]
         public string WebApplicationName
         {
             get { return _webApplicationName; }

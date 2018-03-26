@@ -1496,6 +1496,7 @@ namespace Seal.Model
 
                 if (result != null) break;
             }
+            if (result != null) result.InitParameters(false);
             return result;
         }
 

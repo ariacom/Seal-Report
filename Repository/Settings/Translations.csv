@@ -317,6 +317,7 @@ WebJS;No prompt;;Pas de prompt;;;Ingen spørsmål
 WebJS;No report;;Aucun rapport;;;Ingen rapport
 WebJS;No schedule;;Pas de planification;;;Ingen planlegging
 WebJS;No total;;Pas de totaux;;;Ingen totaler
+WebJS;No (axis values are linear);;Les valeurs de l'axe sont linéaires;;;
 WebJS;None;;Aucun;;;Ingen
 WebJS;Not sorted;;Pas de tri;;;Ikke sortert
 WebJS;Number;;Nombre;;;Nummer
@@ -377,6 +378,7 @@ WebJS;Yes;;Oui;;;Ja
 WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés);;;Ja (vedlegget er zippet)
 WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message);;;Ja (HTML resultatet er i meldingen)
 WebJS;Yes (a new line with sub-totals is added when the value changes);;Oui (Une nouvelle ligne avec les sous-totaux est ajoutée lorsque la valeur change);;;
+WebJS;Yes (element values are used for the axis);;Oui (Les valeurs de l'élément sont utilisés pour l'axe);;;
 WebJS;No Sort;;Pas de tri;;;Ingen sortering
 WebJS;By point ascending;;Par point ascendant;;;Etter Punkt i økende
 WebJS;By axis label ascending;;Par axe ascendant;;;Etter Axis etikett økende

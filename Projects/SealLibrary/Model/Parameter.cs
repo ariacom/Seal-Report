@@ -22,6 +22,7 @@ namespace Seal.Model
         public const string ServerPaginationParameter = "serverpagination_enabled";
         public const string ForceExecutionParameter = "force_execution";
         public const string NVD3AddNullPointParameter = "nvd3_add_null_point";
+        public const string ColumnsHiddenParameter = "columns_hidden";
 
 
         #region Editor
