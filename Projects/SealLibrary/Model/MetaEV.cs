@@ -42,7 +42,7 @@ namespace Seal.Model
         }
 
         string _css;
-        [Category("Definition"), DisplayName("CSS"), Description("The optional CSS Style applied to the cell displayed")]
+        [Category("Definition"), DisplayName("CSS Style"), Description("The optional CSS Style applied to the cell displayed")]
         public string Css
         {
             get { return _css; }
@@ -50,7 +50,7 @@ namespace Seal.Model
         }
 
         string _class;
-        [Category("Definition"), DisplayName("CSS"), Description("The optional CSS Class applied to the cell displayed")]
+        [Category("Definition"), DisplayName("CSS Class"), Description("The optional CSS Class applied to the cell displayed")]
         public string Class
         {
             get { return _class; }

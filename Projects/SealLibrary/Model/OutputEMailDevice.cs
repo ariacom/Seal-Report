@@ -41,6 +41,7 @@ namespace Seal.Model
                 GetProperty("UseDefaultCredentials").SetIsBrowsable(true);
                 GetProperty("DeliveryMethod").SetIsBrowsable(true);
                 GetProperty("EnableSsl").SetIsBrowsable(true);
+                GetProperty("ChangeSender").SetIsBrowsable(true);
                 GetProperty("Timeout").SetIsBrowsable(true);
                 GetProperty("UsedForNotification").SetIsBrowsable(true);
 
@@ -81,6 +82,7 @@ namespace Seal.Model
 
         int _port = 25;
         [Category("Definition"), DisplayName("SMTP Port"), Description("SMTP Port used to connect to the server."), Id(2, 1)]
+        [DefaultValue(25)]
         public int Port
         {
             get { return _port; }
@@ -152,8 +154,9 @@ namespace Seal.Model
         }
 
 
-        SmtpDeliveryMethod _deliveryMethod;
+        SmtpDeliveryMethod _deliveryMethod = SmtpDeliveryMethod.Network;
         [Category("Advanced"), DisplayName("Delivery Method"), Description("Specifies how outgoing email messages will be handled."), Id(1, 2)]
+        [DefaultValue(SmtpDeliveryMethod.Network)]
         public SmtpDeliveryMethod DeliveryMethod
         {
             get { return _deliveryMethod; }
@@ -162,6 +165,7 @@ namespace Seal.Model
 
         bool _enableSsl = false;
         [Category("Advanced"), DisplayName("Enable SSL"), Description("If true, the client uses Secure Socket Layer."), Id(2, 2)]
+        [DefaultValue(false)]
         public bool EnableSsl
         {
             get { return _enableSsl; }
@@ -170,6 +174,7 @@ namespace Seal.Model
 
         int _timeout = 100000;
         [Category("Advanced"), DisplayName("Time out"), Description("Amount of time in milli-seconds after which the email is not sent."), Id(3, 2)]
+        [DefaultValue(100000)]
         public int Timeout
         {
             get { return _timeout; }
@@ -177,6 +182,7 @@ namespace Seal.Model
         }
         bool _useDefaultCredentials = false;
         [Category("Advanced"), DisplayName("Use Default Credentials"), Description("If true, the default credentials are used."), Id(4, 2)]
+        [DefaultValue(false)]
         public bool UseDefaultCredentials
         {
             get { return _useDefaultCredentials; }
@@ -185,12 +191,21 @@ namespace Seal.Model
 
         bool _usedForNotification = false;
         [Category("Advanced"), DisplayName("Used for notification"), Description("If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule)"), Id(5, 2)]
+        [DefaultValue(false)]
         public bool UsedForNotification
         {
             get { return _usedForNotification; }
             set { _usedForNotification = value; }
         }
 
+        bool _changeSender = true;
+        [Category("Advanced"), DisplayName("Allow to change Email Sender or Reply Address"), Description("If true, the Email Sender or Reply address can be changed in the Report Designer or the Web Report Designer."), Id(6, 2)]
+        [DefaultValue(true)]
+        public bool ChangeSender
+        {
+            get { return _changeSender; }
+            set { _changeSender = value; }
+        }
 
         string _emailTo;
         [XmlIgnore, Category("Helpers"), DisplayName("Email adress for the test"), Description("The destination email address used to send the test email."), Id(1, 10)]
@@ -299,11 +314,15 @@ namespace Seal.Model
             if (string.IsNullOrEmpty(output.EmailTo)) throw new Exception("No email address has been specified in the report output.");
 
             MailMessage message = new MailMessage();
-            message.From = new MailAddress(Helper.IfNullOrEmpty(output.EmailFrom, SenderEmail));
+            var email = SenderEmail;
+            if (ChangeSender && !string.IsNullOrEmpty(output.EmailFrom)) email = output.EmailFrom;
+            message.From = new MailAddress(email);
             AddEmailAddresses(message.To, output.EmailTo);
             AddEmailAddresses(message.CC, output.EmailCC);
             AddEmailAddresses(message.Bcc, output.EmailBCC);
-            AddEmailAddresses(message.ReplyToList, Helper.IfNullOrEmpty(output.EmailReplyTo, ReplyTo));
+            email = ReplyTo;
+            if (ChangeSender && !string.IsNullOrEmpty(output.EmailReplyTo)) email = output.EmailReplyTo;
+            AddEmailAddresses(message.ReplyToList, email);
             message.Subject = Helper.IfNullOrEmpty(output.EmailSubject, report.ExecutionName);
             if (output.EmailHtmlBody)
             {

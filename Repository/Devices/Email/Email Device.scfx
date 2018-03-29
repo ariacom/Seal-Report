@@ -4,12 +4,7 @@
   <Name>Email Device</Name>
   <FullName>Email Device (EMail)</FullName>
   <Server>aSmtpServer</Server>
-  <Port>25</Port>
   <UserName />
   <Password />
   <SenderEmail>takeAdive@sealreport.org</SenderEmail>
-  <DeliveryMethod>Network</DeliveryMethod>
-  <EnableSsl>false</EnableSsl>
-  <Timeout>100000</Timeout>
-  <UseDefaultCredentials>false</UseDefaultCredentials>
 </OutputEmailDevice>
