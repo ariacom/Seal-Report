@@ -73,10 +73,9 @@ Application Development/ASP.Net 4.5 or greater
 The site can be configured with any user having the following rights:
 Read access to the repository directory ({0}).
 Rights to connect to the databases defined in the Data Sources.
-Read/Write access to the temp sub-folder created in the published directory ({1}).
 
 Note that publishing will stop the current Web Server instance.
-", _configuration.Repository.RepositoryPath, Path.Combine(_configuration.WebPublicationDirectory, "temp"));
+", _configuration.Repository.RepositoryPath);
                 }
                 else
                 {

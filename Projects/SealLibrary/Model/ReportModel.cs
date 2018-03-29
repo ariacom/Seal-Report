@@ -791,10 +791,10 @@ namespace Seal.Model
 
                 execSelectClause = new StringBuilder();
                 execFromClause = new StringBuilder();
-                execWhereClause = new StringBuilder(Restriction);
+                execWhereClause = new StringBuilder(Restriction.Trim());
                 execGroupByClause = new StringBuilder();
                 execOrderByNameClause = new StringBuilder();
-                execHavingClause = new StringBuilder(AggregateRestriction);
+                execHavingClause = new StringBuilder(AggregateRestriction.Trim());
                 execOrderByClause = new StringBuilder();
 
                 //build restriction
@@ -1092,7 +1092,7 @@ namespace Seal.Model
                 Debug.WriteLine("");
                 foreach (var join in joins)
                 {
-                    //    Debug.Write(string.Format("{0} {1} {2}\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
+                        Debug.Write(string.Format("{0} {1} {2}\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
                 }
                 Debug.WriteLine("");
 

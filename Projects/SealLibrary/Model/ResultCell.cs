@@ -126,7 +126,7 @@ namespace Seal.Model
                 if (Element != null && Value != null && Element.IsEnum)
                 {
                     MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
-                    if (value != null) FinalCssClass = value.Class;
+                    if (value != null && !string.IsNullOrEmpty(value.Class)) FinalCssClass = value.Class;
                 }
 
                 if (!string.IsNullOrEmpty(FinalCssClass)) return FinalCssClass;
@@ -147,7 +147,7 @@ namespace Seal.Model
                 if (Element != null && Value != null && Element.IsEnum)
                 {
                     MetaEV value = Element.EnumEL.Values.FirstOrDefault(i => i.DisplayValue == Value.ToString());
-                    if (value != null) FinalCssStyle = value.Css;
+                    if (value != null && !string.IsNullOrEmpty(value.Css)) FinalCssStyle = value.Css;
                 }
 
                 if (!string.IsNullOrEmpty(FinalCssStyle)) return FinalCssStyle;

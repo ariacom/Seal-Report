@@ -49,8 +49,8 @@ namespace Seal.Model
                 GetProperty("EmailZipAttachments").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailZipPassword").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailSkipAttachments").SetIsBrowsable(Device is OutputEmailDevice);
-                GetProperty("EmailFrom").SetIsBrowsable(Device is OutputEmailDevice);
-                GetProperty("EmailReplyTo").SetIsBrowsable(Device is OutputEmailDevice);
+                GetProperty("EmailFrom").SetIsBrowsable(Device is OutputEmailDevice && ((OutputEmailDevice)Device).ChangeSender);
+                GetProperty("EmailReplyTo").SetIsBrowsable(Device is OutputEmailDevice && ((OutputEmailDevice)Device).ChangeSender);
 
                 GetProperty("UserName").SetIsBrowsable(true);
                 GetProperty("UserGroups").SetIsBrowsable(true);
