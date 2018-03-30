@@ -9,16 +9,6 @@ using System.Web;
 
 namespace Seal.Model
 {
-    public enum SWIReportFormat
-    {
-        HTML,
-        HTMLPrint,
-        CSV,
-        Excel,
-        PDF
-    }
-
-
     public class SWIUserProfile
     {
         public bool authenticated = false;

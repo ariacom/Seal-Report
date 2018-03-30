@@ -80,6 +80,7 @@ Report;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0;Mostrand
 Report;Starting execution...;;Exécution...;Esecuzione...;Iniciando execução...;Starter utføring…
 Report;Starts With;;Commence avec;Inizia con;Começa com;Starter med
 Report;Sum of;;Somme de;Somma di;Soma de;Sum av
+Report;Summary;;Sommaire;;;
 Report;The report has been generated.;;Le rapport a été généré.;Il report è stato generato;O relatório foi gerado.;Rapporten er ferdig.
 Report;This report has execution errors. Please check details in the Windows Event Viewer...;;Ce rapport a des erreurs d'exécutions. Veuillez consulter les détails dans le journal des événements Windows.;Questo report produce degli errori durante l'esecuzione. Per favore controllare i dettagli nella finestra relativa alla visualizzazione Evento;Este relatório possui erros. Por favor verifique os detalhes no Visualizador de Eventos do Windows...;Rapporten kan ikke utføres. Vennligst sjekk detaljer i Windows Event Viewer…
 Report;ThisMonth;;CeMois;QuestoMese;EsteMês;DenneMåned
@@ -92,6 +93,7 @@ Report;View Excel Result;;Afficher le résultat Excel;Vedi il risultato Excel;Mo
 Report;View HTML Result;;Afficher le résultat HTML;Vedi il risulato HTML;Mostrar em HTML;Vis i HTML
 Report;View PDF Result;;Afficher le résultat PDF;Vedi il risultato PDF;Mostrar em PDF;Vis i PDF
 Report;View Print Result;;Afficher le résultat Impression;Vedi il risultato di stampa;Mostrar Impressão;Vis for Print
+Report;View CSV Result;;Afficher le résultat CSV;Vedi il risultato CSV;Mostrar em CSV;Vis i CSV
 Report;View report result file;;Afficher le résultat du rapport;Visualizza il file del risultato del report;Mostrar o arquivo de relatório;Vis oppsummering av rapport
 Report;Equals;;Egale;;;Tilsvarer
 Report;Is between;;Est entre;;;Er mellom

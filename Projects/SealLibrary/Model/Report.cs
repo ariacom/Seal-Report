@@ -135,10 +135,6 @@ namespace Seal.Model
         public DateTime LastModification;
 
 
-
-        [XmlIgnore]
-        public string ResultFilePrefix;
-
         [XmlIgnore]
         public string ResultFilePath;
 
@@ -174,24 +170,6 @@ namespace Seal.Model
                 return _HTMLDisplayFilePath;
             }
             set { _HTMLDisplayFilePath = value; }
-        }
-
-        [XmlIgnore]
-        public string ResultFolder
-        {
-            get
-            {
-                string result = FileHelper.TempApplicationDirectory;
-
-                if (ForOutput)
-                {
-                    if (OutputToExecute.Device is OutputFolderDevice && !ForPDFConversion && !ForExcelConversion)
-                    {
-                        result = OutputFolderDeviceResultFolder;
-                    }
-                }
-                return result;
-            }
         }
 
         [XmlIgnore]
@@ -253,13 +231,6 @@ namespace Seal.Model
                 }
                 if (string.IsNullOrEmpty(fileName)) fileName = "result";
                 fileName = Helper.CleanFileName(fileName) + ".htm";
-                if (ExecutionContext == ReportExecutionContext.WebReport)
-                {
-                    //add salt to the file name for web security...
-                    string salt = Path.GetRandomFileName().Replace(".", "").Substring(0, 5);
-                    fileName = Path.GetFileNameWithoutExtension(fileName) + "_" + salt + Path.GetExtension(fileName);
-                }
-
                 if (!ForOutput) fileName = fileName.Replace(" ", "_");
                 return fileName;
             }
@@ -291,21 +262,21 @@ namespace Seal.Model
             {
                 var template = ExecutionView.Template; //This force to init parameters
                 fileName = ResultFileName;
-                fileFolder = ResultFolder;
+                fileFolder = FileHelper.TempApplicationDirectory;
+        
                 if (ForOutput && OutputToExecute.Device is OutputFolderDevice)
                 {
+                    if (Format != ReportFormat.pdf && Format != ReportFormat.excel) fileFolder = OutputFolderDeviceResultFolder;
                     //For folder output, we do not need a unique file name
-                    ResultFilePath = Path.Combine(ResultFolder, Path.GetFileNameWithoutExtension(fileName)) + (!HasExternalViewer || string.IsNullOrEmpty(ExecutionView.ExternalViewerExtension) ? Path.GetExtension(fileName) : "." + ExecutionView.ExternalViewerExtension);
+                    ResultFilePath = Path.Combine(fileFolder, Path.GetFileNameWithoutExtension(fileName)) + "." + ResultExtension;
                 }
                 else
                 {
                     //get unique file name in the result folder
-                    ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(ResultFolder, fileName), "." + ExecutionView.ExternalViewerExtension);
+                    ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension);
                 }
-                ResultFilePrefix = FileHelper.GetResultFilePrefix(ResultFilePath);
-
                 //Display path is always an HTML one...
-                HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, ResultFilePrefix + ".htm"));
+                HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".htm"));
 
                 //Clear some cache values...
                 _displayNameEx = null;
@@ -762,7 +733,6 @@ namespace Seal.Model
             ReportView defaultView = result.AddModelHTMLView();
             if (defaultView == null) throw new Exception(string.Format("Unable to find any view in your repository. Check that your repository folder '{0}' contains all the default sub-folders and files...", repository.RepositoryPath));
             result.ViewGUID = defaultView.GUID;
-            result.AddModelCSVView();
 
             //Creation script
             if (!string.IsNullOrEmpty(repository.Configuration.ReportCreationScript))
@@ -1000,12 +970,7 @@ namespace Seal.Model
 
         public ReportView AddModelHTMLView()
         {
-            return AddView(ReportViewTemplate.ModelHTMLName);
-        }
-
-        public ReportView AddModelCSVView()
-        {
-            return AddView(ReportViewTemplate.ModelCSVExcelName);
+            return AddView(ReportViewTemplate.ModelName);
         }
 
         public ReportView AddRootView()
@@ -1033,9 +998,9 @@ namespace Seal.Model
                 view.SortOrder = Views.Count > 0 ? Views.Max(i => i.SortOrder) + 1 : 1;
                 if (view != null)
                 {
-                    view.Name = Helper.GetUniqueName((name == ReportViewTemplate.ModelCSVExcelName ? "CSV" : "view"), (from i in Views select i.Name).ToList());
+                    view.Name = Helper.GetUniqueName("View", (from i in Views select i.Name).ToList());
                     var child = AddChildView(view, modelTemplate);
-                    if (child.TemplateName == ReportViewTemplate.ModelHTMLName) AddDefaultModelViews(child);
+                    if (child.TemplateName == ReportViewTemplate.ModelName) AddDefaultModelViews(child);
                 }
             }
             return view;
@@ -1083,7 +1048,7 @@ namespace Seal.Model
                 }
             }
             parent.Views.Add(result);
-            if (result.TemplateName == ReportViewTemplate.ModelHTMLName) AddDefaultModelViews(result);
+            if (result.TemplateName == ReportViewTemplate.ModelName) AddDefaultModelViews(result);
             return result;
         }
 
@@ -1135,12 +1100,6 @@ namespace Seal.Model
             return "file:///" + result.Replace("\\", "/");
         }
 
-
-        public string GetChartFileName()
-        {
-            return FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, ResultFilePrefix + Guid.NewGuid().ToString() + ".png"));
-        }
-
         public string AttachImageFile(string fileName)
         {
             if (ExecutionContext == ReportExecutionContext.WebReport)
@@ -1148,7 +1107,7 @@ namespace Seal.Model
                 return string.Format("{0}Images/{1}", WebUrl, fileName);
             }
 
-            if (GenerateHTMLDisplay || SkipImageAttachment || ForPDFConversion)
+            if (GenerateHTMLDisplay)
             {
                 //Rendering the display, we return full path with file:///
                 return GetImageFile(fileName);
@@ -1374,27 +1333,10 @@ namespace Seal.Model
         {
             get
             {
-                return !string.IsNullOrEmpty(ExecutionView.ExternalViewerExtension) || ExecutionView.GetBoolValue(Parameter.PDFLayoutParameter) || ExecutionView.GetBoolValue(Parameter.ExcelLayoutParameter);
+                return Format == ReportFormat.pdf || Format == ReportFormat.excel || Format == ReportFormat.csv;
             }
         }
 
-        [XmlIgnore]
-        public bool ForPDFConversion
-        {
-            get
-            {
-                return ExecutionView.AllowPDFConversion && ExecutionView.GetBoolValue(Parameter.PDFLayoutParameter);
-            }
-        }
-
-        [XmlIgnore]
-        public bool ForExcelConversion
-        {
-            get
-            {
-                return ExecutionView.GetBoolValue(Parameter.ExcelLayoutParameter);
-            }
-        }
 
         [XmlIgnore]
         public bool IsDrillEnabled
@@ -1419,30 +1361,38 @@ namespace Seal.Model
         {
             get
             {
-                return ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter) && !PrintLayout && !ForPDFConversion && !ForOutput;
+                return ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter) && !PrintLayout && Format != ReportFormat.csv && !ForOutput;
             }
         }
 
         [XmlIgnore]
-        public bool SkipImageAttachment
+        public bool PdfConversion = false;
+
+        [XmlIgnore]
+        public ReportFormat Format
         {
-            get
-            {
-                return ExecutionView.Views.Exists(i => i.Template.SkipFileAttachments);
-            }
+            get { return (ReportFormat) Enum.Parse(typeof(ReportFormat), ExecutionView.GetValue(Parameter.ReportFormatParameter)); }
+            set { ExecutionView.SetParameter(Parameter.ReportFormatParameter, value.ToString()); }
         }
 
         [XmlIgnore]
-        public Parameter PrintLayoutParameter
+        public string ResultExtension
         {
-            get { return ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.PrintLayoutParameter); }
+            get {
+                var format = Format;
+                if (format == ReportFormat.csv) return "csv";
+                if (format == ReportFormat.excel) return "xlsx";
+                if (format == ReportFormat.pdf) return "html"; //converter to pdf 
+                return "html";
+            }
         }
+
 
         [XmlIgnore]
         //Indicates if we use the print layout
         public bool PrintLayout
         {
-            get { return PrintLayoutParameter == null ? false : PrintLayoutParameter.BoolValue; }
+            get { return Format == ReportFormat.print || Format == ReportFormat.pdf; }
         }
 
 

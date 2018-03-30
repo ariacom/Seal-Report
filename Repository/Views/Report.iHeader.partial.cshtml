@@ -9,7 +9,7 @@
     var showReportClass = (string.IsNullOrEmpty(showMessageClass) && string.IsNullOrEmpty(showInfoClass) ? "class='active'" : "");
 }
 
-@if (report.GenerateHTMLDisplay || !report.ForPDFConversion)
+@if (report.GenerateHTMLDisplay || !report.PdfConversion)
 {
     <nav id="bar_top" class='navbar navbar-default navbar-fixed-top'>
         <div class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")">
@@ -53,6 +53,7 @@
                             <ul class="dropdown-menu">
                                 <li><a id="HtmlResult" class="sr_result" href="#">@report.Translate("View HTML Result")</a></li>
                                 <li><a id="PrintResult" class="sr_result" href="#">@report.Translate("View Print Result")</a></li>
+                                <li><a id="CSVResult" class="sr_result" href="#">@report.Translate("View CSV Result")</a></li>
                                 @if (view.GetBoolValue("converter_button"))
                                 {
                                     <li><a id="PDFResult" class="sr_result" href="#">@report.Translate("View PDF Result")</a></li>

@@ -245,6 +245,13 @@ namespace Seal.Forms
                         cancelNavigation = true;
                         break;
 
+                    case ReportExecution.ActionViewCSVResult:
+                        setCurrentExecution();
+                        resultPath = _execution.GenerateCSVResult();
+                        if (File.Exists(resultPath)) Process.Start(resultPath);
+                        cancelNavigation = true;
+                        break;
+
                     case ReportExecution.ActionViewPrintResult:
                         setCurrentExecution();
                         resultPath = _execution.GeneratePrintResult();

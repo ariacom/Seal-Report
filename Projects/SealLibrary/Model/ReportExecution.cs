@@ -31,6 +31,7 @@ namespace Seal.Model
         public const string ActionViewPrintResult = "PrintResult";
         public const string ActionViewPDFResult = "PDFResult";
         public const string ActionViewExcelResult = "ExcelResult";
+        public const string ActionViewCSVResult = "CSVResult";
         public const string ActionNavigate = "ActionNavigate";
         public const string ActionLogin = "ActionLogin";
         public const string ActionLogout = "ActionLogout";
@@ -67,8 +68,6 @@ namespace Seal.Model
             string templateErrors = "";
             ReportView masterView = Report.ExecutionView;
 
-            //  if (Report.ForPDFConversion) SetPDFRootViewHeaderCSS();
-
             masterView.InitTemplates(masterView, ref templateErrors);
             if (!string.IsNullOrEmpty(templateErrors))
             {
@@ -76,8 +75,7 @@ namespace Seal.Model
                 Report.ExecutionErrors += templateErrors;
             }
 
-            string result = "";
-            result = masterView.Parse();
+            string result = masterView.Parse();
             if (!string.IsNullOrEmpty(masterView.Error))
             {
                 result += Helper.ToHtml(string.Format("{0}\r\nExecution errors:\r\n{1}\r\nExecution messages:\r\n{2}", masterView.Error, Report.ExecutionErrors, Report.ExecutionMessages));
@@ -89,8 +87,10 @@ namespace Seal.Model
         public void RenderResult()
         {
             string result = "";
+            Report.PdfConversion = (Report.Format == ReportFormat.pdf);
+
             Report.Status = ReportStatus.RenderingResult;
-            if (Report.HasExternalViewer && !Report.ForPDFConversion)
+            if (Report.HasExternalViewer && Report.Format != ReportFormat.pdf)
             {
                 //use the children to render in a new extension file
                 result = Report.ExecutionView.ParseChildren();
@@ -109,13 +109,13 @@ namespace Seal.Model
             {
                 //unable to write in the result file -> get one from temp or web publish...
                 string newFolder = FileHelper.TempApplicationDirectory;
-                string newPath = FileHelper.GetUniqueFileName(Path.Combine(newFolder, Report.ResultFileName), "." + Report.ExecutionView.ExternalViewerExtension);
+                string newPath = FileHelper.GetUniqueFileName(Path.Combine(newFolder, Report.ResultFileName), "." + Report.ResultExtension);
                 Report.ExecutionErrors += string.Format("Unable to write to '{0}'.\r\nChanging report result to '{1}'.\r\n{2}\r\n", Report.ResultFilePath, newPath, ex.Message);
                 Report.ResultFilePath = newPath;
                 File.WriteAllText(Report.ResultFilePath, result.Trim(), System.Text.Encoding.UTF8);
             }
 
-            if (Report.ForPDFConversion)
+            if (Report.Format == ReportFormat.pdf)
             {
                 try
                 {
@@ -133,8 +133,9 @@ namespace Seal.Model
                 {
                     Report.ExecutionErrors = ex.Message;
                 }
+                Report.PdfConversion = false;
             }
-            else if (Report.ForExcelConversion)
+            else if (Report.Format == ReportFormat.excel)
             {
                 try
                 {
@@ -1710,19 +1711,22 @@ namespace Seal.Model
         public string GenerateHTMLResult()
         {
             Report.IsNavigating = false;
-            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileName(Report.ResultFileName)));
+            var originalFormat = Report.Format;
+            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".html"));
+ 
             Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
             bool initialValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
             try
             {
+                Report.Format = ReportFormat.print;
                 if (paginationParameter != null) paginationParameter.BoolValue = false;
                 Report.Status = ReportStatus.RenderingResult;
                 string result = Render();
-                Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1} {2}", newPath, Report.Status, Report.ExecutionGUID));
                 File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
             }
             finally
             {
+                Report.Format = originalFormat;
                 if (paginationParameter != null) paginationParameter.BoolValue = initialValue;
                 Report.Status = ReportStatus.Executed;
                 Debug.WriteLine(string.Format("GenerateHTMLResult {0} {1}", Report.Status, Report.ExecutionGUID));
@@ -1731,28 +1735,43 @@ namespace Seal.Model
             return newPath;
         }
 
+        public string GenerateCSVResult()
+        {
+            Report.IsNavigating = false;
+            var originalFormat = Report.Format;
+            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".csv"));
+            try
+            {
+                Report.Format = ReportFormat.csv;
+                Report.Status = ReportStatus.RenderingResult;
+                string result = Report.ExecutionView.ParseChildren();
+                File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
+            }
+            finally
+            {
+                Report.Format = originalFormat;
+                Report.Status = ReportStatus.Executed;
+                Debug.WriteLine(string.Format("GenerateCSVResult {0} {1}", Report.Status, Report.ExecutionGUID));
+            }
+
+            return newPath;
+        }
 
         public string GeneratePrintResult()
         {
             Report.IsNavigating = false;
-            Parameter printParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.PrintLayoutParameter);
-            Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
-
+            var originalFormat = Report.Format;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileName(Report.ResultFileName)));
-            bool initialPrintValue = (printParameter != null ? printParameter.BoolValue : false);
-            bool initialPaginationValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
             try
             {
-                if (printParameter != null) printParameter.BoolValue = true;
-                if (paginationParameter != null) paginationParameter.BoolValue = false;
+                Report.Format = ReportFormat.print;
                 Report.Status = ReportStatus.RenderingResult;
                 string result = Render();
                 File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
             }
             finally
             {
-                if (printParameter != null) printParameter.BoolValue = initialPrintValue;
-                if (paginationParameter != null) paginationParameter.BoolValue = initialPaginationValue;
+                Report.Format = originalFormat;
                 Report.Status = ReportStatus.Executed;
                 Debug.WriteLine(string.Format("GeneratePrintResult {0} {1}", Report.Status, Report.ExecutionGUID));
             }
@@ -1762,18 +1781,18 @@ namespace Seal.Model
         public string GeneratePDFResult()
         {
             string newPath = "";
-            var pdfParameter = Report.ExecutionView.GetParameter(Parameter.PDFLayoutParameter);
-            bool initialValue = pdfParameter.BoolValue;
+            var originalFormat = Report.Format;
+            Report.PdfConversion = true;
             try
             {
-                pdfParameter.BoolValue = true;
                 string source = GeneratePrintResult();
                 newPath = Path.Combine(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source)) + ".pdf";
                 Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(source, newPath);
             }
             finally
             {
-                pdfParameter.BoolValue = initialValue;
+                Report.PdfConversion = false;
+                Report.Format = originalFormat;
             }
             return newPath;
         }
@@ -1783,6 +1802,7 @@ namespace Seal.Model
             string path = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)) + ".xlsx");
             return Report.ExecutionView.ConvertToExcel(path);
         }
+
 
         public bool IsConvertingToPDF = false; //If true, do not run conversion again
         public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...

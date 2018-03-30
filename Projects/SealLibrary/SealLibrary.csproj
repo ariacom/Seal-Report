@@ -289,6 +289,9 @@
     <None Include="..\..\Repository\Views\ChartJS.cshtml">
       <Link>Views\ChartJS.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\Model.iCSV.partial.cshtml">
+      <Link>Views\Model.iCSV.partial.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Views\Model.iPages.partial.cshtml">
       <Link>Views\Model.iPages.partial.cshtml</Link>
     </None>
@@ -303,12 +306,6 @@
     </None>
     <None Include="..\..\Repository\Views\ModelDetail.config.cshtml">
       <Link>Views\ModelDetail.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ModelCSV.config.cshtml">
-      <Link>Views\ModelCSV.config.cshtml</Link>
-    </None>
-    <None Include="..\..\Repository\Views\ModelCSV.cshtml">
-      <Link>Views\ModelCSV.cshtml</Link>
     </None>
     <None Include="..\..\Repository\Views\Container.cshtml">
       <Link>Views\Container.cshtml</Link>

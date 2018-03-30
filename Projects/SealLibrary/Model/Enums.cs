@@ -63,6 +63,15 @@ namespace Seal.Model
         Count,
     };
 
+    public enum ReportFormat
+    {
+        html,
+        print,
+        csv,
+        pdf,
+        excel
+    }
+
     public enum NumericStandardFormat
     {
         [Description("Default")]

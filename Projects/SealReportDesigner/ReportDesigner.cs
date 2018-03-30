@@ -794,23 +794,16 @@ namespace Seal
             }
             else if (entity is ViewFolder)
             {
-                if (RepositoryServer.ViewTemplates.Exists(i => i.Name == ReportViewTemplate.ModelHTMLName))
+                if (RepositoryServer.ViewTemplates.Exists(i => i.Name == ReportViewTemplate.ModelName))
                 {
-                    addAddItem("Add a HTML View", null);
-                }
-                if (RepositoryServer.ViewTemplates.Exists(i => i.Name == ReportViewTemplate.ModelCSVExcelName))
-                {
-                    addAddItem("Add a CSV Excel View", null);
+                    addAddItem("Add a View", null);
                 }
                 addRemoveItem("Remove Views...");
             }
             else if (entity is ReportView)
             {
-                //Add only allowed template children names...and do not mix extensions
-                string extension = ((ReportView)entity).Views.Max(i => i.Template.ExternalViewerExtension);
                 var currentTemplateName = ((ReportView)entity).TemplateName;
-
-                foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(currentTemplateName) && (string.IsNullOrEmpty(extension) || i.ExternalViewerExtension == extension)))
+                foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(currentTemplateName)))
                 {
                     addAddItem("Add a " + template.Name + " View", template);
                 }
@@ -915,7 +908,7 @@ namespace Seal
             }
             else if (selectedEntity is ViewFolder)
             {
-                newEntity = ((ToolStripMenuItem)sender).Text.Contains("CSV") ? _report.AddModelCSVView() : _report.AddModelHTMLView();
+                newEntity = _report.AddModelHTMLView();
             }
             else if (selectedEntity is ReportView)
             {

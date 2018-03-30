@@ -75,6 +75,7 @@ namespace Seal.Model
                     //Name not found in configuration -> we parse all...
                     foreach (var template in _viewTemplates.Where(i => !i.IsParsed)) template.ParseConfiguration();
                 }
+                if (name.EndsWith(" HTML")) name = name.Replace(" HTML", ""); //backward compatibility
                 result = _viewTemplates.FirstOrDefault(i => i.Name == name);
             }
 
