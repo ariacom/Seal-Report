@@ -16,18 +16,15 @@ namespace Seal.Model
 {
     public class ReportViewTemplate
     {
-        public const string ModelHTMLName = "Model HTML";
-        public const string ModelDetailHTMLName = "Model Detail HTML";
-        public const string ModelCSVExcelName = "Model CSV Excel";
+        public const string ReportName = "Report";
+        public const string ModelName = "Model";
+        public const string ModelDetailName = "Model Detail";
         public const string DataTableName = "Data Table";
         public const string PageTableName = "Page Table";
         public const string ChartNVD3Name = "Chart NVD3";
         public const string ChartJSName = "Chart JS";
         public const string ChartPlotlyName = "Chart Plotly";
         public const string ModelContainerName = "Model Container";
-        public static readonly string[] DefaultCSS = { "display:none;", "display:inline; float:left;", "position:absolute; top:50px; left:500px;", "height: 600px; width: 400px;", "text-align:center;", "display:inline-block;", "page-break-after: always;" };
-        public static readonly string[] DefaultFontSize = { "30pt", "24pt", "16pt", "14pt", "12pt", "10pt", "8pt", "6pt" };
-        public static readonly string[] DefaultFontFamily = { "Verdana, Arial, Helvetica, sans-serif", "Times,Times New Roman, serif", "Courier New, Courier, monospace", "Comic Sans MS, cursive" };
 
         string _name = "";
         public string Name
@@ -69,21 +66,6 @@ namespace Seal.Model
         {
             get { return _forReportModel; }
             set { _forReportModel = value; }
-        }
-
-
-        string _externalViewerExtension = "";
-        public string ExternalViewerExtension
-        {
-            get { return _externalViewerExtension; }
-            set { _externalViewerExtension = value; }
-        }
-
-        bool _skipFileAttachments = false;
-        public bool SkipFileAttachments
-        {
-            get { return _skipFileAttachments; }
-            set { _skipFileAttachments = value; }
         }
 
         public string Text

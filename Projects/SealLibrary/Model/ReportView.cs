@@ -44,13 +44,9 @@ namespace Seal.Model
                 GetProperty("PartialTemplates").SetIsBrowsable(PartialTemplates.Count > 0);
 
                 GetProperty("TemplateConfiguration").SetIsBrowsable(Parameters.Count > 0);
-                //PDF only on root view generating HTML...
-                if (AllowPDFConversion)
-                {
-                    GetProperty("PdfConverter").SetIsBrowsable(true);
-                    PdfConverter.InitEditor();
-                }
-                GetProperty("ExcelConverter").SetIsBrowsable(true);
+                GetProperty("PdfConverter").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
+                PdfConverter.InitEditor();
+                GetProperty("ExcelConverter").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName || Template.ForReportModel);
                 ExcelConverter.InitEditor();
 
                 GetProperty("WebExec").SetIsBrowsable(true);
@@ -62,7 +58,7 @@ namespace Seal.Model
                 //Helpers
                 GetProperty("HelperReloadConfiguration").SetIsBrowsable(true);
                 GetProperty("HelperResetParameters").SetIsBrowsable(true);
-                GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(AllowPDFConversion);
+                GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(true);
                 GetProperty("HelperResetExcelConfigurations").SetIsBrowsable(true);
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
@@ -94,7 +90,7 @@ namespace Seal.Model
                 childView.Report = Report;
                 childView.InitReferences();
 
-                if (childView.Views.Count == 0 && childView.TemplateName == ReportViewTemplate.ModelHTMLName)
+                if (childView.Views.Count == 0 && childView.TemplateName == ReportViewTemplate.ModelName)
                 {
                     //Add default views for a model template
                     Report.AddDefaultModelViews(childView);
@@ -121,6 +117,14 @@ namespace Seal.Model
                 parameter.ConfigValue = configParameter.Value;
                 parameter.EditorLanguage = configParameter.EditorLanguage;
                 parameter.TextSamples = configParameter.TextSamples;
+            }
+
+            if (TemplateName == "Report")
+            {
+                //backward compatibility...to remove later
+                if (initialParameters.Exists(i => i.Name == "excel_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "excel");
+                else if (initialParameters.Exists(i => i.Name == "pdf_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "pdf");
+                else if (initialParameters.Exists(i => i.Name == "print_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "print");
             }
         }
 
@@ -179,6 +183,20 @@ namespace Seal.Model
         public string AddAttribute(string attrName, string paramName)
         {
             return Helper.AddAttribute(attrName, GetValue(paramName));
+        }
+
+        public string ChartTitle
+        {
+            get
+            {
+                var view = Report.FindViewFromTemplate(Views, ReportViewTemplate.ChartJSName);
+                if (view != null) return view.GetValue("chartjs_title");
+                view = Report.FindViewFromTemplate(Views, ReportViewTemplate.ChartNVD3Name);
+                if (view != null) return view.GetValue("nvd3_chart_title");
+                view = Report.FindViewFromTemplate(Views, ReportViewTemplate.ChartPlotlyName);
+                if (view != null) return view.GetValue("plotly_title");
+                return "";
+            }
         }
 
         public string GetTranslatedMappedLabel(string text)
@@ -267,11 +285,6 @@ namespace Seal.Model
         public bool IsRootView
         {
             get { return Template.ParentNames.Count == 0; }
-        }
-
-        public bool AllowPDFConversion
-        {
-            get { return IsRootView && string.IsNullOrEmpty(ExternalViewerExtension); }
         }
 
         public bool IsAncestorOf(ReportView view)
@@ -478,7 +491,7 @@ namespace Seal.Model
         public void SetAdvancedConfigurations()
         {
             //Pdf & Excel
-            if (AllowPDFConversion && PdfConverterEdited)
+            if (PdfConverterEdited)
             {
                 _pdfConfigurations = PdfConverter.GetConfigurations();
             }
@@ -529,7 +542,7 @@ namespace Seal.Model
         {
             get
             {
-                if (AllowPDFConversion && _pdfConverter == null)
+                if (_pdfConverter == null)
                 {
                     _pdfConverter = SealPdfConverter.Create(Report.Repository.ApplicationPath);
                     _pdfConverter.SetConfigurations(PdfConfigurations, this);
@@ -579,6 +592,11 @@ namespace Seal.Model
         }
 
         public string ConvertToExcel(string destination)
+        {
+            return ExcelConverter.ConvertToExcel(destination);
+        }
+
+        public string ConvertToCSV(string destination)
         {
             return ExcelConverter.ConvertToExcel(destination);
         }
@@ -743,7 +761,15 @@ namespace Seal.Model
             string result = "";
             foreach (ReportView view in Views.OrderBy(i => i.SortOrder))
             {
-                result += view.Parse();
+                if (view.Report.Format == ReportFormat.csv && !view.Template.ForReportModel)
+                {
+                    //add result for csv only for model
+                    result += view.ParseChildren();
+                }
+                else
+                {
+                    result += view.Parse();
+                }
             }
             return result;
         }
@@ -1040,24 +1066,6 @@ namespace Seal.Model
             }
         }
 
-
-        [XmlIgnore]
-        public bool HasExternalViewer
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(ExternalViewerExtension);
-            }
-        }
-
-        [XmlIgnore]
-        public string ExternalViewerExtension
-        {
-            get
-            {
-                return Views.Where(i => !string.IsNullOrEmpty(i.Template.ExternalViewerExtension)).Max(i => i.Template.ExternalViewerExtension);
-            }
-        }
 
         List<string> _columnsHidden = null;
         public bool IsColumnHidden(int col)

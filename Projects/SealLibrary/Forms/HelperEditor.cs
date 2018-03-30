@@ -236,7 +236,7 @@ namespace Seal.Forms
                         Report report = Report.Create(Repository.Create());
                         //Only on detail view
                         report.Views.Clear();
-                        report.AddView(ReportViewTemplate.ModelDetailHTMLName);
+                        report.AddView(ReportViewTemplate.ModelDetailName);
                         report.Views[0].InitParameters(true);
                         report.Views[0].Parameters.First(i => i.Name == "restriction_button").BoolValue = false; 
 

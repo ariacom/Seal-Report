@@ -324,7 +324,7 @@ namespace Seal.Model
             if (ChangeSender && !string.IsNullOrEmpty(output.EmailReplyTo)) email = output.EmailReplyTo;
             AddEmailAddresses(message.ReplyToList, email);
             message.Subject = Helper.IfNullOrEmpty(output.EmailSubject, report.ExecutionName);
-            if (output.EmailHtmlBody)
+            if (output.EmailHtmlBody && (output.Format == ReportFormat.html || output.Format == ReportFormat.print))
             {
                 message.Body = File.ReadAllText(report.ResultFilePath);
                 message.IsBodyHtml = true;

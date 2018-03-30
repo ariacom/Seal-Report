@@ -3,7 +3,7 @@
     ReportViewTemplate Template = Model;
 
     //Template Name
-    Template.Name = ReportViewTemplate.ModelHTMLName;
+    Template.Name = ReportViewTemplate.ModelName;
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = true;
@@ -11,7 +11,7 @@
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "show_summary_table", DisplayName = "Display: Show summary table", BoolValue = true, Description = "If true, the summary table created when the model has several pages is displayed." });
     Template.Parameters.Add(new Parameter() { Name = "show_page_tables", DisplayName = "Display: Show page tables", BoolValue = true, Description = "If true, the page tables created when the model has several pages are displayed." });
-    Template.Parameters.Add(new Parameter() { Name = "show_data_tables", DisplayName = "Display: Show Data tables", BoolValue = true, Description = "If true, the data tables are displayed." });
+    Template.Parameters.Add(new Parameter() { Name = "show_data_tables", DisplayName = "Display: Show main tables", BoolValue = true, Description = "If true, the main tables are displayed." });
     Template.Parameters.Add(new Parameter() { Name = "show_charts", DisplayName = "Display: Show Charts", BoolValue = true, Description = "If true, the charts are displayed." });
     Template.Parameters.Add(new Parameter() { Name = "show_page_separator", DisplayName = "Display: Show page separator", BoolValue = true, Description = "If true, a separator if displayed between each pages of the model" });
     Template.Parameters.Add(new Parameter() { Name = "model_class", Value = "", DisplayName = "Model: CSS class", Description = "CSS class attribute main model DIV.", Enums = new string[] { "alert alert-info", "alert alert-success" }, UseOnlyEnumValues = false });
@@ -30,6 +30,8 @@
     Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Navigation: Sub-Reports enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled for this model if enabled in the root view" });
     Template.Parameters.Add(new Parameter() { Name = Parameter.NVD3AddNullPointParameter, DisplayName = "Chart Series: Add points with Null", BoolValue = true, Description = "If true, a point having an Y value equals to NULL will be inserted in the Serie with a 0 value; otherwise no point is inserted (Warning: missing points may cause JavaScript NVD3 errors for certain chart types like Bar, StackedArea, etc...)." });
     Template.Parameters.Add(new Parameter() { Name = "print_break_after_page", DisplayName = "Print: Force a break after a page", BoolValue = false, Description = "If true, a new page is started after a page is displayed for the print layout." });
+    Template.Parameters.Add(new Parameter() { Name = "csv_separator", Value = "", DisplayName = "CSV: Separator", Description = "For CSV format, the separator used to generate the CSV file. If empty, the default value of the current culture is used." });
+    Template.Parameters.Add(new Parameter() { Name = "use_display_format", DisplayName = "CSV: Use display format", BoolValue = true, Description = "For CSV format, if true, the display format is applied to the values displayed in the CSV file" });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container" };

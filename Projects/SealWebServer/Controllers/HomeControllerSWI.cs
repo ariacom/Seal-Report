@@ -397,10 +397,6 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
 
-
-                string tempFolder = Path.Combine(Path.Combine(Request.PhysicalApplicationPath, "temp"));
-                FileHelper.PurgeTempDirectory(tempFolder);
-
                 return getFileResult(getFullPath(path), null);
             }
             catch (Exception ex)

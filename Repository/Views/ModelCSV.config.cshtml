@@ -3,16 +3,10 @@
     ReportViewTemplate Template = Model;
 
     //Template Name
-    Template.Name = ReportViewTemplate.ModelCSVExcelName;
+    Template.Name = "aaa";// ReportViewTemplate.ModelCSVExcelName;
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = true;
-
-    //This specify to open the view in a dedicated file having the extension
-    Template.ExternalViewerExtension = "csv";
-
-    //Do not attach images when using this template
-    Template.SkipFileAttachments = true;
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "csv_separator", Value = "", DisplayName = "CSV Separator", Description = "The separator used to generate the CSV file. If empty, the default value of the current culture is used." });

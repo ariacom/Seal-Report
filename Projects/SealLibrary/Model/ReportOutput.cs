@@ -353,6 +353,24 @@ namespace Seal.Model
             set { _publicEdit = value; }
         }
 
+
+        [XmlIgnore]
+        public ReportFormat Format
+        {
+            get {
+                var param = ViewParameters.FirstOrDefault(i => i.Name == Parameter.ReportFormatParameter && i.CustomValue);
+                if (param != null) return (ReportFormat)Enum.Parse(typeof(ReportFormat), param.Value);
+                return Report.Format;
+            }
+            set {
+                var param = ViewParameters.FirstOrDefault(i => i.Name == Parameter.ReportFormatParameter);
+                if (param != null) {
+                    param.CustomValue = true;
+                    param.Value = value.ToString();
+                }
+            }
+        }
+
         [XmlIgnore]
         public OutputDevice Device
         {

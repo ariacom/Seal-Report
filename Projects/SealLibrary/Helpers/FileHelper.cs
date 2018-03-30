@@ -34,13 +34,23 @@ namespace Seal.Helpers
         public static void PurgeTempApplicationDirectory()
         {
             PurgeTempDirectory(TempApplicationDirectory);
+            //Purge razor directories
+            foreach (var dir in Directory.GetDirectories(Path.GetTempPath(), "RazorEngine_*"))
+            {
+                try
+                {
+                    //purge razor dir older than 1 hour
+                    if (Directory.GetLastWriteTime(dir).AddHours(1) < DateTime.Now)
+                    Directory.Delete(dir, true);
+                }
+                catch { }
+            }
         }
 
         public static void PurgeTempDirectory(string directoryPath)
         {
             try
             {
-                if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
                 foreach (var file in Directory.GetFiles(directoryPath))
                 {
                     //purge files older than 8 hours...

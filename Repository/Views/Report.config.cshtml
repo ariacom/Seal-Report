@@ -3,21 +3,19 @@
     ReportViewTemplate Template = Model;
 
     //Template Name
-    Template.Name = "Report";
+    Template.Name = ReportViewTemplate.ReportName;
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
 
     //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = Parameter.ReportFormatParameter, Value = "html", Enums = new string[] { "html|HTML", "print|HTML Print", "csv|CSV Excel", "pdf|PDF", "excel|Excel" }, DisplayName = "Report format", Description = "Format of the report result." });
     Template.Parameters.Add(new Parameter() { Name = "report_description", Type = ViewParameterType.Text, DisplayName = "Report description", Description = "Optional report description displayed in the information panel." });
     Template.Parameters.Add(new Parameter() { Name = "restriction_button", DisplayName = "Display: Show restrictions", BoolValue = true, Description = "If true, the restrictions are displayed when the report is initialized (if the report has prompted restrictions)." });
     Template.Parameters.Add(new Parameter() { Name = "information_button", DisplayName = "Display: Show information", BoolValue = false, Description = "If true, the report shows the information first when the report is initialized." });
     Template.Parameters.Add(new Parameter() { Name = "messages_mode", DisplayName = "Display: Execution messages", Description = "Defines if the execution messages panel is enabled and if messages are shown first when the report is initialized.", Value = "enabled", Enums = new string[] { "enabled|Messages enabled", "enabledshown|Messages enabled and shown", "disabled|Messages disabled" } });
     Template.Parameters.Add(new Parameter() { Name = "converter_button", DisplayName = "Display: Enable converter menus", BoolValue = true, Description = "If true, the PDF and Excel converter menus are displayed." });
     Template.Parameters.Add(new Parameter() { Name = "restrictions_per_row", DisplayName = "Display: Restrictions per row", NumericValue = 4, Description = "Defines the number of prompted restrictions to be displayed per row (between 1 and 12)." });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.PrintLayoutParameter, DisplayName = "Layout: Use print layout", BoolValue = false, Description = "If true, the report result is generated with a print layout." });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.PDFLayoutParameter, DisplayName = "Layout: Convert HTML to PDF", BoolValue = false, Description = "If true, the PDF document is always generated and displayed when the report is executed. To be used in conjunction with the 'Use Print Layout' parameter." });
-    Template.Parameters.Add(new Parameter() { Name = Parameter.ExcelLayoutParameter, DisplayName = "Layout: Convert to Excel", BoolValue = false, Description = "If true, the Excel document is always generated and displayed when the report is executed." });
     Template.Parameters.Add(new Parameter() { Name = Parameter.DrillEnabledParameter, DisplayName = "Navigation: Drill Enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled." });
     Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Navigation: Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled." });
     Template.Parameters.Add(new Parameter() { Name = "force_execution", DisplayName = "Options: Force execution", BoolValue = false, Description = "If true, force the report to be executed directly the first time even if some restrictions are prompted." });
