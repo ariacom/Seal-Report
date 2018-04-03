@@ -747,6 +747,12 @@ namespace Seal.Model
                     currentPage.Datas[rowValues].Add(data);
                 }
             }
+
+            if (model.Pages.Count == 0)
+            {
+                model.Pages.Add(new ResultPage() { Report = Report });
+
+            }
         }
 
         private void buildTables(ReportModel model)
@@ -775,10 +781,12 @@ namespace Seal.Model
                 //Summary table values
                 if (model.Pages.Count > 1) model.SummaryTable.Lines.Add(page.Pages);
                 //Page table
-                page.PageTable = new ResultTable();
-                page.PageTable.Lines.Add(headerPageValues);
-                page.PageTable.Lines.Add(page.Pages);
-
+                if (page.Rows.Count > 0)
+                {
+                    page.PageTable = new ResultTable();
+                    page.PageTable.Lines.Add(headerPageValues);
+                    page.PageTable.Lines.Add(page.Pages);
+                }
 
                 //Data table
                 page.DataTable = new ResultTable();
@@ -885,14 +893,30 @@ namespace Seal.Model
 
                 //Set end row 
                 page.DataTable.BodyEndRow = page.DataTable.Lines.Count;
+
+                if (model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && (i.ShowTotal == ShowTotal.RowHidden || i.ShowTotal == ShowTotal.RowColumnHidden)))
+                {
+                    for (int col = 0; col < page.DataTable.ColumnCount; col++)
+                    {
+                        for (int row = 0; row < page.DataTable.RowCount; row++)
+                        {
+                            var cell = page.DataTable[row, col];
+                            if (cell != null && cell.Element != null && !cell.IsTotal && !cell.IsTotalTotal && (cell.Element.ShowTotal == ShowTotal.RowHidden || cell.Element.ShowTotal == ShowTotal.RowColumnHidden))
+                            {
+                                page.DataTable.SetColumnHidden(col);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
 
 
         private void buildTotals(ReportModel model)
         {
-            var colTotalElements = model.GetElements(PivotPosition.Data).Where(e => e.ShowTotal == ShowTotal.Column || e.ShowTotal == ShowTotal.RowColumn || e.CalculationOption == CalculationOption.PercentageColumn);
-            var rowTotalElements = model.GetElements(PivotPosition.Data).Where(e => e.ShowTotal == ShowTotal.Row || e.ShowTotal == ShowTotal.RowColumn || e.CalculationOption == CalculationOption.PercentageRow || e.CalculationOption == CalculationOption.PercentageAll);
+            var colTotalElements = model.GetElements(PivotPosition.Data).Where(e => e.ShowTotal == ShowTotal.Column || e.ShowTotal == ShowTotal.RowColumn || e.ShowTotal == ShowTotal.RowColumnHidden || e.CalculationOption == CalculationOption.PercentageColumn);
+            var rowTotalElements = model.GetElements(PivotPosition.Data).Where(e => e.ShowTotal == ShowTotal.Row || e.ShowTotal == ShowTotal.RowColumn || e.ShowTotal == ShowTotal.RowHidden || e.ShowTotal == ShowTotal.RowColumnHidden || e.CalculationOption == CalculationOption.PercentageRow || e.CalculationOption == CalculationOption.PercentageAll);
             var totalElements = colTotalElements.Union(rowTotalElements);
             Dictionary<string, string> compilationKeys = new Dictionary<string, string>();
 
@@ -934,7 +958,7 @@ namespace Seal.Model
                             }
                             totalCell.Calculate();
 
-                            if (element.ShowTotal == ShowTotal.Column || element.ShowTotal == ShowTotal.RowColumn)
+                            if (element.ShowTotal == ShowTotal.Column || element.ShowTotal == ShowTotal.RowColumn || element.ShowTotal == ShowTotal.RowColumnHidden)
                             {
                                 //Add titles if not a value
                                 if (totalCell.Cells.Count == 0)
@@ -963,7 +987,7 @@ namespace Seal.Model
                     }
 
                     //Add line only if a total is set (not only calculation options)
-                    if (model.GetElements(PivotPosition.Data).Count(e => e.ShowTotal == ShowTotal.Column || e.ShowTotal == ShowTotal.RowColumn) > 0) page.DataTable.Lines.Add(totalLine);
+                    if (model.GetElements(PivotPosition.Data).Count(e => e.ShowTotal == ShowTotal.Column || e.ShowTotal == ShowTotal.RowColumn || e.ShowTotal == ShowTotal.RowColumnHidden) > 0) page.DataTable.Lines.Add(totalLine);
                 }
 
                 //Totals per rows
@@ -989,7 +1013,7 @@ namespace Seal.Model
                             totalCell.Calculate();
 
                             //Add the cell
-                            if (element.ShowTotal == ShowTotal.Row || element.ShowTotal == ShowTotal.RowColumn)
+                            if (element.ShowTotal == ShowTotal.Row || element.ShowTotal == ShowTotal.RowColumn || element.ShowTotal == ShowTotal.RowHidden || element.ShowTotal == ShowTotal.RowColumnHidden)
                             {
                                 Array.Resize<ResultCell>(ref rowLine, rowLine.Length + 1);
                                 //Add titles if not a value

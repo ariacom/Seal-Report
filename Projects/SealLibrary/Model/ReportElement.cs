@@ -343,7 +343,7 @@ namespace Seal.Model
 
         ShowTotal _showTotal = ShowTotal.No;
         [DefaultValue(ShowTotal.No)]
-        [Category("Data Options"), DisplayName("Show Total"), Description("For Data elements, add a row or a column showing the total of the element in the table."), Id(3, 4)]
+        [Category("Data Options"), DisplayName("Show Total"), Description("For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed."), Id(3, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ShowTotal ShowTotal
         {

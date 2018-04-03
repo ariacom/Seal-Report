@@ -15,9 +15,6 @@ namespace Seal.Model
     public class Parameter : RootComponent
     {
         public const string ReportFormatParameter = "report_format";
-//        public const string PrintLayoutParameter = "print_layout";
-//        public const string PDFLayoutParameter = "pdf_layout";
-//        public const string ExcelLayoutParameter = "excel_layout";
         public const string DrillEnabledParameter = "drill_enabled";
         public const string SubReportsEnabledParameter = "subreports_enabled";
         public const string ServerPaginationParameter = "serverpagination_enabled";

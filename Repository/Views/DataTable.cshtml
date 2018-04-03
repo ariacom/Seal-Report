@@ -7,7 +7,7 @@
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     ResultTable table = page.DataTable;
-    if (view.GetBoolValue("invert_data_tables") && modelView.GetBoolValue("show_data_tables"))
+    if (view.GetBoolValue("invert_data_tables") && modelView.GetBoolValue("show_data_tables") && !report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter))
     {
         reportModel.InvertDataTables();
     }
@@ -59,7 +59,7 @@
                 <tr @Raw(view.AddAttribute("class", "data_table_header_class")) @Raw(view.AddAttribute("style", "data_table_header_css"))>
                     @for (int col = 0; col < table.ColumnCount; col++)
                     {
-                        if (view.IsColumnHidden(col)) { continue; }
+                        if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
                         ResultCell cell = table[row, col];
                         <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
                     }
@@ -75,7 +75,7 @@
                         <tr @Raw(view.AddAttribute("class", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_class")) @Raw(view.AddAttribute("style", "data_table_"+ (table.IsSubTotalRow(row) ? "subtotal" : "body") +"_css"))>
                             @for (int col = 0; col < table.ColumnCount; col++)
                             {
-                                if (view.IsColumnHidden(col)) { continue; }
+                                if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
                                 ResultCell cell = table[row, col];
                                 <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
                             }
@@ -90,7 +90,7 @@
                 <tr @Raw(view.AddAttribute("class", "data_table_footer_class")) @Raw(view.AddAttribute("style", "data_table_footer_css"))>
                     @for (int col = 0; col < table.ColumnCount; col++)
                     {
-                        if (view.IsColumnHidden(col)) { continue; }
+                        if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
                         ResultCell cell = table[row, col];
                         <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle))>@Raw(cell.HTMLValue)</td>
                     }

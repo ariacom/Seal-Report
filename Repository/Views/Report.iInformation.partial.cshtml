@@ -12,7 +12,7 @@
     {
         <ul class="list-group">
             <li class="list-group-item">@report.Translate("Execution date"): @report.ExecutionStartDate.ToString("d", view.CultureInfo)  @report.ExecutionStartDate.ToString("t", view.CultureInfo)</li>
-            <li class="list-group-item">@report.Translate("Execution duration"): @report.ExecutionModelDuration.Seconds @report.Translate("second(s)")</li>
+            <li class="list-group-item">@report.Translate("Execution duration"): @Math.Floor(report.ExecutionModelDuration.TotalSeconds) @report.Translate(report.ExecutionModelDuration.TotalSeconds > 2 ? "seconds": "second")</li>
             @if (view.HasValue("report_description"))
             {
                 <li class="list-group-item">@Raw(view.GetHtmlValue("report_description"))</li>
@@ -23,7 +23,7 @@
                             <th>@report.Translate("Model")</th>
                             <th>@report.Translate("Records")</th>
                             <th>@report.Translate("Pages")</th>
-                            <th>@report.Translate("Duration")</th>
+                            <th>@report.Translate("Duration (seconds)")</th>
                             <th>@report.Translate("Restrictions")</th>
                         </tr>
                         @foreach (ReportModel item in report.Models.Where(i => i.ResultTable != null && i.Pages != null))

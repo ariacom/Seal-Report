@@ -6,7 +6,7 @@
     ReportView datatableView = report.FindViewFromTemplate(view.Views, ReportViewTemplate.DataTableName);
 
 
-    if (datatableView != null && datatableView.GetBoolValue("invert_data_tables"))
+    if (datatableView != null && datatableView.GetBoolValue("invert_data_tables") && !report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter))
     {
         reportModel.InvertDataTables();
     }
@@ -32,14 +32,10 @@
         {
             for (int col = 0; col < page.DataTable.ColumnCount; col++)
             {
-                if (datatableView != null && datatableView.IsColumnHidden(col)) { continue; }
+                if ((datatableView != null && datatableView.IsColumnHidden(col)) || page.DataTable.IsColumnHidden(col)) { continue; }
                 @Raw(page.DataTable[row,col].CSVValue(useFormat, separator))
             }
             @Raw("\r\n")
         }
     }
-}
-@if (reportModel.Pages.Count == 0)
-{
-    @report.Translate("No record");
 }

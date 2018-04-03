@@ -165,6 +165,10 @@ namespace Seal.Model
         Column,
         [Description("For Rows and Columns")]
         RowColumn,
+        [Description("For Rows (Show only total column)")]
+        RowHidden,
+        [Description("For Rows and Columns (Show only total column)")]
+        RowColumnHidden,
     };
 
     public enum CalculationOption
