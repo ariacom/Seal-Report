@@ -9,7 +9,7 @@
     ResultPage page = report.CurrentPage;
 }
 
-@if (reportModel.HasChartJSSerie && modelView.GetBoolValue("show_charts"))
+@if (reportModel.HasChartJSSerie && page.Series.Count > 0 && modelView.GetBoolValue("show_charts"))
 {
     <!--Chart JS-->
     bool chartOk = false;

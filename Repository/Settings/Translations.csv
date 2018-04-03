@@ -27,7 +27,7 @@ Report;Count of;;Nombre de;Conteggio di;Contagem de;Telling av
 Report;Description;;Description;Descrizione;Descrição;Beskrivelse
 Report;Drill <;;Navigation <;Navigation <;Drill <;Nivå ut <
 Report;Drill >;;Navigation >;Navigation >;Drill >;Nivå inn >
-Report;Duration;;Durée;Durata;Duração;Brukt tid
+Report;Duration (seconds);;Durée (secondes);Durata;Duração;Brukt tid
 Report;Ends With;;Se termine par;Finisce con;Termina com;Ender med
 Report;Execute;;Exécuter;Esegui;Executar;Utfør;تنتهي بـ
 Report;Executing report...;;Exécution...;Esecuzione...;Executando relatório...;Utfører rapport…
@@ -48,7 +48,7 @@ Report;Model;;Modèle;Modello;Modelo;Modell
 Report;New report;;Nouveau rapport;;;Ny rapport
 Report;No records. The report output generation has been cancelled.;;Aucun enregistrement. La  génération a été annulée.;;;Ingen rader tilgjengelig. Rapporten er avbrutt.
 Report;No reports;;Pas de rapports;Nessun report;Nenhum relatório;Ingen rapporter
-Report;No row;;Pas de ligne;Nessuna riga;Nenhuma linha;Ingen rad
+Report;No rows;;Pas de lignes;Nessuna riga;Nenhuma linha;Ingen rad
 Report;Not Between;;En dehors de l'intervalle;Non compreso;Não está entre;Ikke mellom
 Report;Not Contains;;Ne contient pas;Non contiene;Não contém;Inneholder ikke
 Report;Now;;Maintenant;Ora;Agora;Nå
@@ -59,6 +59,7 @@ Report;Processing;;En cours;Processamento;Processando;Utfører
 Report;Processing...;;En cours…;In corso;Processando...;Utfører…
 Report;Report;;Rapport;;;
 Report;Model loaded...;;Modèle chargé;;;
+Report;No records;;Aucun enregistrement;;;
 Report;Task executed...;;Tâche exécutée;;;
 Report;Models loaded...;;Modèles chargés;;;
 Report;Tasks executed...;;Tâches exécutées;;;
@@ -70,7 +71,8 @@ Report;report restrictions;;les restrictions du rapport;restrizioni report;Restr
 Report;Report result generated in '{0}';;Rapport généré dans  '{0}';Il risultato del report è stato generato in '{0}';Relatóro gerado em '{0}';Rapport generert på '{0}'
 Report;report result panel;;le panneau des résultats;pannello risultati report;Painél de resultados;
 Report;Restrictions;;Restrictions;Restrizioni;Restrições;Restriksjoner
-Report;second(s);;seconde(s);secondo(i);Segundo(s);sekund(er)
+Report;second;;seconde;secondo;Segundo;sekund
+Report;seconds;;secondes;secondi;Segundos;sekunder
 Report;Select all;;Tout;Seleziona tutto;Selecionar tudo;Velg alle
 Report;Show;;Montrer;Mostra;Mostrar;Vis
 Report;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports;Mostrar_MENU_ relatórios;Vis _MENU_ rapporter

@@ -125,7 +125,8 @@ namespace Seal.Model
                 if (initialParameters.Exists(i => i.Name == "excel_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "excel");
                 else if (initialParameters.Exists(i => i.Name == "pdf_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "pdf");
                 else if (initialParameters.Exists(i => i.Name == "print_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "print");
-            }
+                if (initialParameters.Exists(i => i.Name == "display_messages" && i.Value == "True")) SetParameter("messages_mode", "enabledshown");
+           }
         }
 
         //Temporary variables to help for report serialization...

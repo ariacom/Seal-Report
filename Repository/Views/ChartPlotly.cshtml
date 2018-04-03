@@ -8,7 +8,7 @@
     ResultPage page = report.CurrentPage;
 }
 
-@if (reportModel.HasPlotlySerie && modelView.GetBoolValue("show_charts"))
+@if (reportModel.HasPlotlySerie && page.Series.Count > 0 && modelView.GetBoolValue("show_charts"))
 {
     <!--Chart Plotly-->
     bool chartOk = false;

@@ -125,7 +125,7 @@ namespace Seal.Model
                 sb.Append("[");
                 for (int col = 0; col < line.Length; col++)
                 {
-                    if (dataTableView.IsColumnHidden(col)) { continue; }
+                    if (dataTableView.IsColumnHidden(col) || IsColumnHidden(col)) { continue; }
                     ResultCell cell = line[col];
                     var cellValue = !string.IsNullOrEmpty(cell.FinalValue) ? cell.FinalValue : cell.DisplayValue;
                     var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
@@ -147,6 +147,19 @@ namespace Seal.Model
             return sbFinal.ToString();
         }
 
+        List<int> _columnsHidden = null;
+        public void SetColumnHidden(int col)
+        {
+            if (_columnsHidden == null) _columnsHidden = new List<int>();
+            if (!_columnsHidden.Contains(col)) _columnsHidden.Add(col);
+        }
+
+        public bool IsColumnHidden(int col)
+        {
+            if (_columnsHidden != null) return _columnsHidden.Contains(col);
+            return false;
+        }
+
         //Helpers
         public int RowCount
         {
@@ -157,7 +170,8 @@ namespace Seal.Model
             get { return Lines.Count > 0 ? Lines[0].Length : 0; }
         }
 
-        public ResultCell this[int row, int column] {
+        public ResultCell this[int row, int column]
+        {
             get
             {
                 return Lines[row][column];
