@@ -76,6 +76,8 @@ namespace Seal.Model
                     foreach (var template in _viewTemplates.Where(i => !i.IsParsed)) template.ParseConfiguration();
                 }
                 if (name.EndsWith(" HTML")) name = name.Replace(" HTML", ""); //backward compatibility
+                if (name == "Model CSV Excel") name = "Model"; //backward compatibility                    
+
                 result = _viewTemplates.FirstOrDefault(i => i.Name == name);
             }
 

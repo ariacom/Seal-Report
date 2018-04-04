@@ -36,6 +36,8 @@
                         </button>
                     }
                 }
+                @if (report.GenerateHTMLDisplay || !report.PrintLayout)
+                {
                 <ul class="nav navbar-nav navbar-right">
                     <li @Raw(showReportClass)><a id="report_button" class="sr_tab" data-toggle="tab" href="#@(view.ViewId)_div">@report.Translate("Report")</a></li>
                     <li @Raw(showInfoClass)><a id="information_button" class="sr_tab" data-toggle="tab" href="#information_div">@report.Translate("Information")</a></li>
@@ -44,7 +46,7 @@
                         <li @Raw(showMessageClass)><a id="message_button" class="sr_tab" data-toggle="tab" href="#message_div">@report.Translate("Messages")</a></li>
                     }
                     @if (report.GenerateHTMLDisplay)
-                {
+                    {
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 @report.Translate("Results")
@@ -63,6 +65,7 @@
                         </li>
                     }
                 </ul>
+                }
             </div>
         </div>
     </nav>
