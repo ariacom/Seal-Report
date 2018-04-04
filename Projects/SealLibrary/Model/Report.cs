@@ -798,10 +798,14 @@ namespace Seal.Model
                     throw new Exception("Unable to save the report file. The file has been modified by another user.");
                 }
             }
-            Serialize(path);
-            FilePath = path;
-            LastModification = File.GetLastWriteTime(path);
-
+            try
+            {
+                Serialize(path);
+            }
+            finally {
+                FilePath = path;
+                LastModification = File.GetLastWriteTime(path);
+            }
             //Clear and synchronize tasks
             if (SchedulesModified) SynchronizeTasks();
             SchedulesModified = false;

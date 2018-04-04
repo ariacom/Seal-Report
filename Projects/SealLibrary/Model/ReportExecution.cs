@@ -1742,7 +1742,7 @@ namespace Seal.Model
             bool initialValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
             try
             {
-                Report.Format = ReportFormat.print;
+                Report.Format = ReportFormat.html;
                 if (paginationParameter != null) paginationParameter.BoolValue = false;
                 Report.Status = ReportStatus.RenderingResult;
                 string result = Render();

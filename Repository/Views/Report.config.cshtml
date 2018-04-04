@@ -24,7 +24,6 @@
     Template.Parameters.Add(new Parameter() { Name = "force_models_load", DisplayName = "Options: Load all Models", Type = ViewParameterType.Boolean, BoolValue = false, Description = "If true, all models defined in the report will be loaded and processed during execution. By default, false means to load only models belonging to the Views being parsed." });
     Template.Parameters.Add(new Parameter() { Name = "additional_js", DisplayName = "Additional JavaScript", Type = ViewParameterType.Text, Description = "Additional JavaScript inserted at the top of the report result file." });
     Template.Parameters.Add(new Parameter() { Name = "container_fluid", BoolValue = false, DisplayName = "Bootstrap: Main container is fluid", Description = "If true, the main container has a full width , spanning the entire width of the viewport, otherwise the container has a responsive fixed width." });
-    Template.Parameters.Add(new Parameter() { Name = "child_container_fluid", BoolValue = false, DisplayName = "Bootstrap: Child container is fluid", Description = "If true, the child container has a full width, spanning the entire width of the viewport, otherwise the container has a responsive fixed width." });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>();
