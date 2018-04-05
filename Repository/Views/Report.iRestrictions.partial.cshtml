@@ -54,9 +54,9 @@
                                                 </div>
                                             </div>
                                         }
-                                        else if (j == 1 && restriction.InputRows > 0)
+                                        else if (j == 1 && restriction.InputRows1 > 0)
                                         {
-                                            <textarea class="form-control" rows="@restriction.InputRows" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId">@restriction.GetHtmlValue(j)</textarea>
+                                            <textarea class="form-control" rows="@restriction.InputRows1" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId">@restriction.GetHtmlValue(j)</textarea>
                                         }
                                         else
                                         {
