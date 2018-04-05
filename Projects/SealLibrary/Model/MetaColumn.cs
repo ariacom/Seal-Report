@@ -183,12 +183,13 @@ namespace Seal.Model
             get { return _numericStandardFormat; }
             set
             {
-                _numericStandardFormat = value;
-                if (_dctd != null)
+                if (_dctd != null && _numericStandardFormat != value)
                 {
+                    _numericStandardFormat = value;
                     SetStandardFormat();
                     UpdateEditorAttributes();
                 }
+                else _numericStandardFormat = value;
             }
         }
 
@@ -201,12 +202,13 @@ namespace Seal.Model
             get { return _datetimeStandardFormat; }
             set
             {
-                _datetimeStandardFormat = value;
-                if (_dctd != null)
+                if (_dctd != null && _datetimeStandardFormat != value)
                 {
+                    _datetimeStandardFormat = value;
                     SetStandardFormat();
                     UpdateEditorAttributes();
                 }
+                else _datetimeStandardFormat = value;
             }
         }
 

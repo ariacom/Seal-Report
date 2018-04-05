@@ -300,13 +300,15 @@ namespace Seal.Model
 
         private static bool validateNumeric(Report report, string val)
         {
-            string val2 = report.TranslateDateKeywordsToEnglish(val);
-            Double result;
-            if (!Double.TryParse(val, out result))
+            foreach (var v in ReportRestriction.GetVals(val))
             {
-                report.HasValidationErrors = true;
-                report.ExecutionErrors += string.Format("{0}: '{1}'\r\n", report.Translate("Invalid numeric value"), val);
-                return false;
+                Double result;
+                if (!Double.TryParse(v, out result))
+                {
+                    report.HasValidationErrors = true;
+                    report.ExecutionErrors += string.Format("{0}: '{1}'\r\n", report.Translate("Invalid numeric value"), v);
+                    return false;
+                }
             }
             return true;
         }

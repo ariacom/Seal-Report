@@ -2058,15 +2058,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>nvd3_chart_width</Name>
-                              <Value />
-                            </Parameter>
-                          </Parameters>
+                          <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
@@ -2076,8 +2069,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       </Views>
                       <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2100,15 +2091,8 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>nvd3_chart_width</Name>
-                              <Value />
-                            </Parameter>
-                          </Parameters>
+                          <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
@@ -2118,8 +2102,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       </Views>
                       <ModelGUID>57b96369-ed1b-4b96-9f91-47e501d794c7</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2142,8 +2124,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                           <Name>Data Table</Name>
                           <Views />
                           <TemplateName>Data Table</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
                           <Parameters />
                           <CultureName />
@@ -2155,8 +2135,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       </Views>
                       <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
@@ -2167,8 +2145,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
@@ -2185,8 +2161,6 @@ col-sm-12</Value>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <PartialTemplates />
               <Parameters />
               <CultureName />
@@ -2229,15 +2203,9 @@ col-sm-12</Value>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
                           <UseCustomTemplate>true</UseCustomTemplate>
                           <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>nvd3_chart_width</Name>
-                              <Value />
-                            </Parameter>
-                          </Parameters>
+                          <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
@@ -2247,8 +2215,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
@@ -2266,8 +2232,6 @@ col-sm-12</Value>
                           <Name>Data Table</Name>
                           <Views />
                           <TemplateName>Data Table</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
                           <Parameters />
                           <CultureName />
@@ -2279,8 +2243,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
@@ -2298,16 +2260,9 @@ col-sm-12</Value>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <CustomTemplate />
                           <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>nvd3_chart_width</Name>
-                              <Value />
-                            </Parameter>
-                          </Parameters>
+                          <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
@@ -2317,8 +2272,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
@@ -2329,8 +2282,6 @@ col-sm-12</Value>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
@@ -2347,8 +2298,6 @@ col-sm-12</Value>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <PartialTemplates />
               <Parameters />
               <CultureName />
@@ -2391,15 +2340,8 @@ col-sm-12</Value>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>nvd3_chart_width</Name>
-                              <Value />
-                            </Parameter>
-                          </Parameters>
+                          <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
@@ -2409,8 +2351,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2433,15 +2373,8 @@ col-sm-12</Value>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>nvd3_chart_width</Name>
-                              <Value />
-                            </Parameter>
-                          </Parameters>
+                          <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
@@ -2451,8 +2384,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>c19fa517-6db1-4436-a2e7-219168eee98c</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2475,8 +2406,6 @@ col-sm-12</Value>
                           <Name>Data Table</Name>
                           <Views />
                           <TemplateName>Data Table</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
                           <Parameters />
                           <CultureName />
@@ -2488,8 +2417,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>04aef73f-dc3c-478f-875b-d78af6f53f5d</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
@@ -2500,8 +2427,6 @@ col-sm-12</Value>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
@@ -2518,8 +2443,6 @@ col-sm-12</Value>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <PartialTemplates />
               <Parameters />
               <CultureName />
@@ -2562,15 +2485,8 @@ col-sm-12</Value>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>nvd3_chart_width</Name>
-                              <Value />
-                            </Parameter>
-                          </Parameters>
+                          <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
@@ -2580,8 +2496,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2604,15 +2518,8 @@ col-sm-12</Value>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>nvd3_chart_width</Name>
-                              <Value />
-                            </Parameter>
-                          </Parameters>
+                          <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
@@ -2622,8 +2529,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>28577963-bd93-49f5-b117-8a983b7ec93c</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2646,15 +2551,8 @@ col-sm-12</Value>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
-                          <Parameters>
-                            <Parameter>
-                              <Name>nvd3_chart_width</Name>
-                              <Value />
-                            </Parameter>
-                          </Parameters>
+                          <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <WebExec>true</WebExec>
@@ -2664,8 +2562,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>0ecae0c4-46e1-43df-994b-bdd16f629c7a</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2688,8 +2584,6 @@ col-sm-12</Value>
                           <Name>Data Table</Name>
                           <Views />
                           <TemplateName>Data Table</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
                           <Parameters />
                           <CultureName />
@@ -2701,8 +2595,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2725,13 +2617,15 @@ col-sm-12</Value>
                           <Name>Chart NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <ThemeName />
-                          <UseCustomTemplate>false</UseCustomTemplate>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_width</Name>
                               <Value />
+                            </Parameter>
+                            <Parameter>
+                              <Name>nvd3_chart_height</Name>
+                              <Value>500px</Value>
                             </Parameter>
                           </Parameters>
                           <CultureName />
@@ -2743,8 +2637,6 @@ col-sm-12</Value>
                       </Views>
                       <ModelGUID>5d49225d-cb74-4cd2-a30d-694061b98efe</ModelGUID>
                       <TemplateName>Model HTML</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2764,8 +2656,6 @@ col-sm-12</Value>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
@@ -2783,8 +2673,6 @@ col-sm-7;col-sm-5;
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <PartialTemplates />
               <Parameters />
               <CultureName />
@@ -2806,15 +2694,8 @@ col-sm-7;col-sm-5;
                       <Name>Chart NVD3</Name>
                       <Views />
                       <TemplateName>Chart NVD3</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
-                      <Parameters>
-                        <Parameter>
-                          <Name>nvd3_chart_width</Name>
-                          <Value />
-                        </Parameter>
-                      </Parameters>
+                      <Parameters />
                       <CultureName />
                       <SortOrder>1</SortOrder>
                       <WebExec>true</WebExec>
@@ -2826,8 +2707,6 @@ col-sm-7;col-sm-5;
                       <Name>Data Table</Name>
                       <Views />
                       <TemplateName>Data Table</TemplateName>
-                      <ThemeName />
-                      <UseCustomTemplate>false</UseCustomTemplate>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
@@ -2839,8 +2718,6 @@ col-sm-7;col-sm-5;
                   </Views>
                   <ModelGUID>b9b267bb-eeb4-4bd3-ac5c-e7b4e4ae609d</ModelGUID>
                   <TemplateName>Model HTML</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
@@ -2851,8 +2728,6 @@ col-sm-7;col-sm-5;
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <PartialTemplates />
               <Parameters />
               <CultureName />
@@ -2880,8 +2755,6 @@ col-sm-7;col-sm-5;
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>
-          <ThemeName />
-          <UseCustomTemplate>false</UseCustomTemplate>
           <CustomTemplate />
           <PartialTemplates />
           <Parameters />
@@ -2894,8 +2767,6 @@ col-sm-7;col-sm-5;
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomTemplate>false</UseCustomTemplate>
       <PartialTemplates />
       <Parameters>
         <Parameter>
