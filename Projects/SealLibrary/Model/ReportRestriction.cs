@@ -311,6 +311,19 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        public int InputRows1
+        {
+            get
+            {
+                if (IsText || IsNumeric) {
+                    if (InputRows > 0) return InputRows;
+                    else if (!string.IsNullOrEmpty(Value1) && Value1.Contains("\n")) return 2;
+                }
+                return 0;
+            }
+        }
+
         public string GetOperatorLabel(Operator op)
         {
             if (Operator == Operator.ValueOnly) return OperatorLabel;
