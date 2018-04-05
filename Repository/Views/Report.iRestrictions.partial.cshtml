@@ -1,6 +1,6 @@
 ﻿@using Seal.Model
 @using Seal.Helpers
-@{ 
+@{
     ReportView view = Model;
     Report report = view.Report;
     Repository repository = report.Repository;
@@ -23,7 +23,10 @@
                                 <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select" style="display:@(restriction.HasOperator ? "inline" : "none");">
                                     @foreach (Operator op in restriction.AllowedDisplayOperators)
                                     {
-                                        <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(op)))</option>
+                                        if (restriction.ChangeOperator || restriction.Operator == op)
+                                        {
+                                           <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(op)))</option>
+                                        }
                                     }
                                 </select>
                                 @if (restriction.IsEnumRE)
@@ -51,9 +54,13 @@
                                                 </div>
                                             </div>
                                         }
+                                        else if (j == 1 && restriction.InputRows > 0)
+                                        {
+                                            <textarea class="form-control" rows="@restriction.InputRows" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId">@restriction.GetHtmlValue(j)</textarea>
+                                        }
                                         else
                                         {
-                                            <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "text_input")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
+                                            <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
                                         }
                                         if (restriction.Prompt == PromptType.PromptOneValue)
                                         {

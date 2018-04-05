@@ -543,7 +543,7 @@ namespace Seal.Model
                         value = translation.Translations[CultureInfo.TwoLetterISOLanguageName];
                         if (string.IsNullOrEmpty(value)) value = translation.Reference;
                     }
-                    result.Add(translation.Reference, value);
+                    if (!result.ContainsKey(translation.Reference)) result.Add(translation.Reference, value);
                 }
                 return result;
             }

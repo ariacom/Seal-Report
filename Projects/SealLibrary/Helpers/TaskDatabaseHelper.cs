@@ -148,22 +148,23 @@ namespace Seal.Helpers
 
             foreach (string line in lines)
             {
-                if (string.IsNullOrWhiteSpace(line)) continue;
+                var line2 = line.Trim();
+                if (string.IsNullOrWhiteSpace(line2)) continue;
 
                 if (regexp == null)
                 {
-                    string exp = "(?<=^|,)(\"(?:[^\"]|\"\")*\"|[^,]*)";
                     if (separator == null)
                     {
                         //use the first line to determine the separator between , and ;
                         separator = ',';
-                        if (line.Split(';').Length > line.Split(',').Length) separator = ';';
+                        if (line2.Split(';').Length > line2.Split(',').Length) separator = ';';
                     }
-                    if (separator != ',') exp = exp.Replace(',', separator.Value);
+                    var sep2 = (separator.Value == '|' || separator.Value == ':' ? "\\" : "") + separator.Value;
+                    string exp = "(?<=^|"+sep2+ ")(\"(?:[^\"]|\"\")*\"|[^" + sep2 + "]*)";
                     regexp = new Regex(exp);
                 }
 
-                MatchCollection collection = regexp.Matches(line);
+                MatchCollection collection = regexp.Matches(line2);
                 if (isHeader)
                 {
                     result = new DataTable();

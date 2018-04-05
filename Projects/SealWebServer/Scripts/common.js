@@ -48,29 +48,6 @@ function restrictionSelectChange(source) {
         $(idValue + "_3").css("display", display3);
         $(idValue + "_4").css("display", display4);
     }
-    /*
-    var restr = "";
-    $(".operator_select").each(function (key, value) {
-        var idSel = $(value).attr("id");
-        if (idSel) {
-            var idVal = "#" + idSel.replace("Operator", "Value");
-            var val = "";
-            if ($(idVal + "_1").val()) val += $(idVal + "_1").val() + ";";
-            if ($(idVal + "_2").val()) val += $(idVal + "_2").val() + ";";
-            if ($(idVal + "_3").val()) val += $(idVal + "_3").val() + ";";
-            if ($(idVal + "_4").val()) val += $(idVal + "_4").val() + ";";
-
-            if (val == "") { //Enum
-                idVal = idSel.replace("Operator", "Option_Value");
-                if ($("#" + idVal).length) {
-                    var selText = $("button[data-id=" + idVal + "]").attr("title");
-                    if (selText != "") val = selText + ";";
-                }
-            }
-            if (val) restr += $("#" + idSel + " option:selected").text() + " " + val + " " + "\r\n";
-        }
-    });*/
-    //   $("#restrictions_button").attr('title', restr).tooltip();
 }
 
 function initNavMenu() {
@@ -253,6 +230,7 @@ function executeReport(nav) {
     //disable controls during execution
     $('#restrictions_div input').prop("disabled", true);
     $('#restrictions_div select').attr("disabled", true);
+    $('#restrictions_div textarea').prop("disabled", true);
     $('#restrictions_div select').selectpicker('refresh');
     $('.view').css("display", "none");
     $("#nav_button").attr("disabled", "disabled");

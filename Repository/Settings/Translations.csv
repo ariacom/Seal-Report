@@ -28,7 +28,7 @@ Report;Description;;Description;Descrizione;Descrição;Beskrivelse
 Report;Drill <;;Navigation <;Navigation <;Drill <;Nivå ut <
 Report;Drill >;;Navigation >;Navigation >;Drill >;Nivå inn >
 Report;Duration (seconds);;Durée (secondes);Durata;Duração;Brukt tid
-Report;Ends With;;Se termine par;Finisce con;Termina com;Ender med
+Report;Ends with;;Se termine par;Finisce con;Termina com;Ender med
 Report;Execute;;Exécuter;Esegui;Executar;Utfør;تنتهي بـ
 Report;Executing report...;;Exécution...;Esecuzione...;Executando relatório...;Utfører rapport…
 Report;Execution date;;Date d'exécution;Data di esecuzione;Data de execução;Utført dato
@@ -80,7 +80,7 @@ Report;Show _MENU_ rows;;Afficher _MENU_ lignes;Mostra _MENU_ righe;Mostra_MENU_
 Report;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_;Mostrando _START_ até _END_ de _TOTAL_;Viser _START_ til _END_ av _TOTAL_
 Report;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0;Mostrando 0 até 0 de 0;Viser 0 to 0 av 0
 Report;Starting execution...;;Exécution...;Esecuzione...;Iniciando execução...;Starter utføring…
-Report;Starts With;;Commence avec;Inizia con;Começa com;Starter med
+Report;Starts with;;Commence par;Inizia con;Começa com;Starter med
 Report;Sum of;;Somme de;Somma di;Soma de;Sum av
 Report;Summary;;Sommaire;;;
 Report;The report has been generated.;;Le rapport a été généré.;Il report è stato generato;O relatório foi gerado.;Rapporten er ferdig.
@@ -272,16 +272,18 @@ WebJS;Drop your Restrictions;;Restrictions;;;Slipp dine Restriksjoner
 WebJS;Drop your Row elements;;Eléments de type Ligne;;;Slipp dine elementer for Rader
 WebJS;Edit report;;Editer le rapport;;;Endre rapport
 WebJS;Email;;Courriel;;;Epost
-WebJS;Ends with;;Finit par;;;Ender med
+WebJS;Ends with;;Se termine par;;;Ender med
 WebJS;Equals;;Egale;;;Tilsvarer
 WebJS;Error;;Erreur;;;Feil
 WebJS;Error : Unable to connect to the server;;Erreur: Impossible de se connecter au serveur;;;Feil: Kan ikke kople til server
 WebJS;Excel;;Excel;;;Excel
 WebJS;Filter;;Filtre;Filtro;Filtro;Filter
 WebJS;Folder;;Répertoire;Repertorio;Pasta;Mappe
-WebJS;For columns;;Pour les colonnes;;;For kolonner
 WebJS;For rows;;Pour les lignes;;;For rader
+WebJS;For columns;;Pour les colonnes;;;For kolonner
 WebJS;For rows and columns;;Pour les lignes et colonnes;;;For rader og kolonner
+WebJS;For rows (total only);;Pour les lignes (Uniquement le total);;;For rader
+WebJS;For rows and columns (total only);;Pour les lignes et colonnes (Uniquement le total);;;For rader og kolonner
 WebJS;Force execution;;Forcer l'exécution;;;Tving utføring
 WebJS;General;;Général;;;Generell
 WebJS;General date long time;;Date générale avec le temps long;;;Generell dato lang tid

@@ -190,13 +190,14 @@ namespace Seal.Model
             get { return _type; }
             set
             {
-                Type = value;
-                if (_dctd != null)
+                if (Type != value && _dctd != null)
                 {
+                    Type = value;
                     _numericStandardFormat = NumericStandardFormat.Default;
                     _datetimeStandardFormat = DateTimeStandardFormat.Default;
                     SetStandardFormat();
-                }                
+                }
+                else Type = value;
                 UpdateEditorAttributes();
             }
         }
