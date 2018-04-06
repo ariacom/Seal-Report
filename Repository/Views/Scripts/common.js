@@ -199,8 +199,8 @@ function executeReport(nav) {
         $("#execution_messages").addClass('hidden');
         $("#execution_messages").html("");
 
-        $("#alert_status").addClass('hidden');
-        $("#alert_status").html("");
+        $(".alert-danger").addClass('hidden');
+        $(".alert-danger").html("");
 
         $("#execute_button").text(cancelText);
         $("#execute_button").removeClass("btn-success").addClass("btn-warning");

@@ -5,22 +5,27 @@
     ReportModel reportModel = view.Model;
 }
 
-
-<div id='@view.ViewId'>
+@if (report.Format == ReportFormat.csv)
+{
+    @Include(view.GetPartialTemplateKey("ModelDetail.iCSV", view), view)
+}
+else
+{
+<div id='@view.ViewId' @Raw(view.AddAttribute("class", "modeldetail_class")) @Raw(view.AddAttribute("style", "modeldetail_css"))>
 
     @foreach (ResultPage page in reportModel.Pages)
     {
         <div>
 
             <a name="@(view.ViewId + page.PageId)"></a>
-            @if (page.PageTable != null && page.PageTable.Lines.Count == 2 && page.PageTable.Lines[0].Length > 0)
+            @if (page.PageTable != null && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0)
             {
                 <table class='table table-striped table-hover table-bordered'>
                     <tr>
-                        @for (int i = 0; i < page.PageTable.Lines[0].Length; i++)
+                        @for (int i = 0; i < page.PageTable.ColumnCount; i++)
                         {
-                            ResultCell header = page.PageTable.Lines[0][i];
-                            ResultCell value = page.PageTable.Lines[1][i];
+                            ResultCell header = page.PageTable[0, i];
+                            ResultCell value = page.PageTable[1, i];
                             <td style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
                         }
                     </tr>
@@ -30,15 +35,13 @@
             }
 
 
-            @if (page.DataTable != null && page.DataTable.Lines.Count == 2)
+            @if (page.DataTable != null && page.DataTable.RowCount == 2)
             {
-                ResultCell[] titles = page.DataTable.Lines[0];
-                ResultCell[] values = page.DataTable.Lines[1];
                 <table class='table table-striped table-hover table-bordered'>
-                    @for (int row = 0; row < titles.Length; row++)
+                    @for (int i = 0; i < page.DataTable.ColumnCount; i++)
                     {
-                        ResultCell title = titles[row];
-                        ResultCell value = values[row];
+                        ResultCell title = page.DataTable[0, i];
+                        ResultCell value = page.DataTable[1, i];
                         <tr>
                             <th style='@title.FinalCssStyle'>@Raw(title.HTMLValue):</th>
                             <td style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
@@ -49,3 +52,4 @@
         </div>
     }
 </div>
+}
