@@ -215,13 +215,13 @@
         <!-- status-->
         @if (report.Cancel)
         {
-            <div id="alert_status" class="alert alert-danger" role="alert">
+            <div class="alert alert-danger" role="alert">
                 @Raw(Helper.ToHtml(report.Translate("Report has been cancelled")))
             </div>
         }
         @if (!string.IsNullOrEmpty(report.WebExecutionErrors))
         {
-            <div id="alert_status" class="alert alert-danger" role="alert">
+            <div class="alert alert-danger" role="alert">
                 @Raw(Helper.ToHtml(report.WebExecutionErrors))
             </div>
         }

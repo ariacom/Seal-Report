@@ -26,7 +26,7 @@
 
         if (!string.IsNullOrEmpty(childView.Error))
         {
-            <div id="alert_status" class="alert alert-danger" role="alert">
+            <div class="alert alert-danger" role="alert">
                 @Raw(Helper.ToHtml(childView.Error))
             </div>
         }

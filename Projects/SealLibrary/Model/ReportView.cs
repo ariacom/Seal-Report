@@ -85,16 +85,11 @@ namespace Seal.Model
 
         public void InitReferences()
         {
+            AddDefaultModelViews();
             foreach (var childView in Views)
             {
                 childView.Report = Report;
                 childView.InitReferences();
-
-                if (childView.Views.Count == 0 && childView.TemplateName == ReportViewTemplate.ModelName)
-                {
-                    //Add default views for a model template
-                    Report.AddDefaultModelViews(childView);
-                }
 
                 //backward compatibility for CSV before 4.0...
                 if (childView.TemplateName == "Model CSV Excel" && TemplateName == ReportViewTemplate.ReportName)
@@ -175,6 +170,19 @@ namespace Seal.Model
             _information = "";
             if (resetValues) _information += "Values have been reset";
             if (!string.IsNullOrEmpty(_information)) _information = Helper.FormatMessage(_information);
+        }
+
+        public void AddDefaultModelViews()
+        {
+            if (TemplateName == ReportViewTemplate.ModelName && Views.Count == 0)
+            {
+                var containerView = Report.AddChildView(this, ReportViewTemplate.ModelContainerName);
+                Report.AddChildView(containerView, ReportViewTemplate.PageTableName);
+                Report.AddChildView(containerView, ReportViewTemplate.ChartJSName);
+                Report.AddChildView(containerView, ReportViewTemplate.ChartNVD3Name);
+                Report.AddChildView(containerView, ReportViewTemplate.ChartPlotlyName);
+                Report.AddChildView(containerView, ReportViewTemplate.DataTableName);
+            }
         }
 
         public bool HasValue(string name)
@@ -346,7 +354,10 @@ namespace Seal.Model
         [DisplayName("Template name"), Description("The name of the view template. View templates are defined in the repository Views folder."), Category("Definition"), Id(2, 1)]
         public string TemplateName
         {
-            get { return _templateName; }
+            get {
+                if (_templateName.EndsWith(" HTML")) return _templateName.Replace(" HTML", ""); //backward compatibility
+                return _templateName;
+            }
             set { _templateName = value; }
         }
 

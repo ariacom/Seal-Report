@@ -1,0 +1,37 @@
+﻿@using Seal.Model
+@{
+    ReportView view = Model;
+    Report report = view.Report;
+    ReportModel reportModel = view.Model;
+
+
+    string separator = view.GetValue("csv_separator");
+    separator = string.IsNullOrEmpty(separator) ? report.Repository.Configuration.CsvSeparator : separator;
+    separator = string.IsNullOrEmpty(separator) ? report.Repository.CultureInfo.TextInfo.ListSeparator : separator;
+    bool useFormat = view.GetBoolValue("use_display_format");
+}
+@foreach (ResultPage page in reportModel.Pages)
+{
+    if (page.PageTable != null && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0)
+    {
+        for (int i = 0; i < page.PageTable.ColumnCount; i++)
+        {
+            ResultCell header = page.PageTable[0,i];
+            ResultCell value = page.PageTable[1,i];
+            @Raw(header.CSVValue(false, separator) + value.CSVValue(useFormat, separator) + "\r\n")
+        }
+        @Raw("\r\n")
+    }
+    if (page.DataTable != null)
+    {
+        for (int row = 0; row < page.DataTable.RowCount; row++)
+        {
+            for (int col = 0; col < page.DataTable.ColumnCount; col++)
+            {
+                @Raw(page.DataTable[row,col].CSVValue(useFormat, separator))
+            }
+            @Raw("\r\n")
+        }
+        @Raw("\r\n")
+    }
+}

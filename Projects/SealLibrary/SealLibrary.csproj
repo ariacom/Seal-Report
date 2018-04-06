@@ -301,6 +301,9 @@
     <None Include="..\..\Repository\Views\Model.config.cshtml">
       <Link>Views\Model.config.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\ModelDetail.iCSV.partial.cshtml">
+      <Link>Views\ModelDetail.iCSV.partial.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Views\ModelDetail.cshtml">
       <Link>Views\ModelDetail.cshtml</Link>
     </None>

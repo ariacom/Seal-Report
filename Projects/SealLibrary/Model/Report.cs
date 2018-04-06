@@ -1004,25 +1004,11 @@ namespace Seal.Model
                 {
                     view.Name = Helper.GetUniqueName("View", (from i in Views select i.Name).ToList());
                     var child = AddChildView(view, modelTemplate);
-                    if (child.TemplateName == ReportViewTemplate.ModelName) AddDefaultModelViews(child);
+                    if (child.TemplateName == ReportViewTemplate.ModelName) child.AddDefaultModelViews();
                 }
             }
             return view;
         }
-
-        public void AddDefaultModelViews(ReportView view)
-        {
-            if (view.Views.Count == 0)
-            {
-                var containerView = AddChildView(view, ReportViewTemplate.ModelContainerName);
-                AddChildView(containerView, ReportViewTemplate.PageTableName);
-                AddChildView(containerView, ReportViewTemplate.ChartJSName);
-                AddChildView(containerView, ReportViewTemplate.ChartNVD3Name);
-                AddChildView(containerView, ReportViewTemplate.ChartPlotlyName);
-                AddChildView(containerView, ReportViewTemplate.DataTableName);
-            }
-        }
-
 
         public ReportView AddChildView(ReportView parent, string templateName)
         {
@@ -1052,7 +1038,7 @@ namespace Seal.Model
                 }
             }
             parent.Views.Add(result);
-            if (result.TemplateName == ReportViewTemplate.ModelName) AddDefaultModelViews(result);
+            if (result.TemplateName == ReportViewTemplate.ModelName) result.AddDefaultModelViews();
             return result;
         }
 
