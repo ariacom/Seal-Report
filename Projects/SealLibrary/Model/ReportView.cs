@@ -128,7 +128,7 @@ namespace Seal.Model
                 else if (initialParameters.Exists(i => i.Name == "pdf_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "pdf");
                 else if (initialParameters.Exists(i => i.Name == "print_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "print");
                 if (initialParameters.Exists(i => i.Name == "display_messages" && i.Value == "True")) SetParameter("messages_mode", "enabledshown");
-           }
+            }
         }
 
         //Temporary variables to help for report serialization...
@@ -354,7 +354,8 @@ namespace Seal.Model
         [DisplayName("Template name"), Description("The name of the view template. View templates are defined in the repository Views folder."), Category("Definition"), Id(2, 1)]
         public string TemplateName
         {
-            get {
+            get
+            {
                 if (_templateName.EndsWith(" HTML")) return _templateName.Replace(" HTML", ""); //backward compatibility
                 return _templateName;
             }
@@ -905,10 +906,35 @@ namespace Seal.Model
             //Sort series if necessary, only one serie is used for sorting...
             if (!Model.ExecChartIsNumericAxis && !Model.ExecChartIsDateTimeAxis)
             {
-                _serieForSort = page.Series.FirstOrDefault(i => i.Element.SerieSortType != SerieSortType.None);
-                if (_serieForSort != null)
+                var rootSerie = page.Series.FirstOrDefault(i => i.Element.SerieSortType != SerieSortType.None);
+                if (rootSerie != null)
                 {
-                    if (_serieForSort.Element.SerieSortType == SerieSortType.Y) page.PrimaryXDimensions.Sort(CompareXDimensionsWithSeries);
+                    _serieForSort = new ResultSerie() { Element = rootSerie.Element };
+                    if (_serieForSort.Element.SerieSortType == SerieSortType.Y)
+                    {
+                        foreach (var dimension in page.PrimaryXDimensions)
+                        {
+                            //add the values of all series of this element for the sort
+                            foreach (var serie in page.Series.Where(i => i.Element == rootSerie.Element))
+                            {
+                                ResultSerieValue sortValue = _serieForSort.Values.FirstOrDefault(i => i.XDimensionValues == dimension);
+                                if (sortValue == null)
+                                {
+                                    sortValue = new ResultSerieValue() { XDimensionValues = dimension };
+                                    sortValue.Yvalue = new ResultTotalCell() { Element = rootSerie.Element, IsSerie = true };
+                                    _serieForSort.Values.Add(sortValue);
+                                }
+                                ResultSerieValue serieValue = serie.Values.FirstOrDefault(i => i.XDimensionValues == dimension);
+                                if (serieValue != null) sortValue.Yvalue.Cells.Add(new ResultCell() { Element = rootSerie.Element, Value = serieValue.Yvalue.Value });
+                            }
+                        }
+                        foreach (var serieValue in _serieForSort.Values)
+                        {
+                            //Classic calculation
+                            serieValue.Yvalue.Calculate();
+                        }
+                        page.PrimaryXDimensions.Sort(CompareXDimensionsWithSeries);
+                    }
                     else page.PrimaryXDimensions.Sort(CompareXDimensionsWithAxis);
                 }
             }

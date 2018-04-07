@@ -841,6 +841,8 @@ namespace Seal.Model
 
         static public string[] GetVals(string value)
         {
+            if (string.IsNullOrEmpty(value)) return new string[0];
+
             if (value.Contains("\n")) return value.Replace("\r", "").Split('\n');
             else return new string[] { value };
         }
@@ -849,9 +851,13 @@ namespace Seal.Model
         {
             Helper.AddValue(ref displayText, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
             Helper.AddValue(ref displayRestriction, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayRestriction(value, dateKeyword, date));
-            foreach (var val in GetVals(value))
+            if (IsDateTime) Helper.AddValue(ref sqlText, ",", GetSQLValue(value, finalDate, _operator));
+            else
             {
-                Helper.AddValue(ref sqlText, ",", GetSQLValue(val, finalDate, _operator));
+                foreach (var val in GetVals(value))
+                {
+                    Helper.AddValue(ref sqlText, ",", GetSQLValue(val, finalDate, _operator));
+                }
             }
         }
 
@@ -860,9 +866,13 @@ namespace Seal.Model
             string separator = (_operator == Operator.NotContains ? " AND " : " OR ");
             Helper.AddValue(ref displayText, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
             Helper.AddValue(ref displayRestriction, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayRestriction(value, dateKeyword, date));
-            foreach (var val in GetVals(value))
+            if (IsDateTime) Helper.AddValue(ref sqlText, separator, string.Format("{0} {1}{2}", SQLColumn, sqlOperator, GetSQLValue(value, finalDate, _operator)));
+            else
             {
-                Helper.AddValue(ref sqlText, separator, string.Format("{0} {1}{2}", SQLColumn, sqlOperator, GetSQLValue(val, finalDate, _operator)));
+                foreach (var val in GetVals(value))
+                {
+                    Helper.AddValue(ref sqlText, separator, string.Format("{0} {1}{2}", SQLColumn, sqlOperator, GetSQLValue(val, finalDate, _operator)));
+                }
             }
         }
 

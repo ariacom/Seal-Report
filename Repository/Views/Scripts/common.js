@@ -21,13 +21,13 @@ function restrictionSelectChange(source) {
 
     var op = $(idSelect).val().toLowerCase();
     var display1 = "inline", display2 = "inline", display3 = "inline", display4 = "inline";
-    if (op == 'isnull' || op == 'isnotnull') {
+    if (op == 'isnull' || op == 'isnotnull' || op == 'isempty' || op == 'isnotempty') {
         display1 = "none", display2 = "none"; display3 = "none"; display4 = "none";
     }
-    else if (op == 'greater' || op == 'greaterequal' || op == 'smaller' || op == 'smallerequal' || op == 'valueonly') {
+    else if (op == 'greater' || op == 'greaterequal' || op == 'smaller' || op == 'smallerequal') {
         display2 = "none"; display3 = "none"; display4 = "none";
     }
-    else if (op == 'between' || op == 'notbetween' || op == 'valueonly') {
+    else if (op == 'between' || op == 'notbetween') {
         display3 = "none"; display4 = "none";
     }
     else {
