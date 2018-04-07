@@ -402,8 +402,8 @@ namespace Seal.Model
         private string _restriction;
         public string Restriction
         {
-            get { return _restriction; }
-            set { _restriction = value; }
+            get { return string.IsNullOrEmpty(_restriction) ? "" : _restriction; }
+            set {  _restriction = value; }
         }
 
         private List<ReportRestriction> _restrictions = new List<ReportRestriction>();
@@ -418,7 +418,7 @@ namespace Seal.Model
         private string _aggregateRestriction;
         public string AggregateRestriction
         {
-            get { return _aggregateRestriction; }
+            get { return string.IsNullOrEmpty(_aggregateRestriction) ? "" : _aggregateRestriction; }
             set { _aggregateRestriction = value; }
         }
 
@@ -936,20 +936,21 @@ namespace Seal.Model
                             foreach (var path in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count))
                             {
                                 JoinPath newPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), rank = path.rank };
+                                //newPath.print();
                                 foreach (var join in path.joins)
                                 {
                                     //search a path starting from RightTable and finishing by a remaining table
-                                    foreach (var path2 in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count).Where(i => ( (i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)) || (i.finalTable == join.RightTable && path.tablesToUse.Contains(i.startTable)))))
+                                    foreach (var path2 in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count).Where(i => i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)))
                                     {
                                         //ok add joins to the newPath and remove tables to use
                                         newPath.rank += path2.rank;
-                                        int index = path.joins.IndexOf(join);
                                         foreach (var join2 in path2.joins)
                                         {
-                                            //Note that we insert the joins just before the join having the RightTable...
+                                            //Add the join to the path
                                             if (!newPath.joins.Exists(i => i.GUID == join2.GUID))
                                             {
-                                                newPath.joins.Insert(index, join2);
+                                                newPath.joins.Insert(0,join2); // Fix 108
+                                                //newPath.print();
                                             }
                                             newPath.tablesToUse.Remove(join2.LeftTable);
                                             newPath.tablesToUse.Remove(join2.RightTable);

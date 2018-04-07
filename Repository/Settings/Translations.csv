@@ -100,6 +100,7 @@ Report;View report result file;;Afficher le résultat du rapport;Visualizza il f
 Report;Equals;;Egale;;;Tilsvarer
 Report;Is between;;Est entre;;;Er mellom
 Report;Is different from;;Est différent de;;;Er forskjellig fra
+Report;Does not contain;;Ne contient pas;;;Inneholder ikke
 Report;Is empty;;Est vide;;;Er tom
 Report;Is greater or equal than;;Est plus grand ou égal à;;;Er større eller lik
 Report;Is greater than;;Est plus grand que;;;Er større enn
@@ -164,6 +165,7 @@ Web;Inconsistent duration or interval for the schedule. Check your entries.;;La 
 Web;Invalid user name or password;;Utilisateur ou mot de passe invalide;;;Feil brukernavn eller passord
 Web;Is enabled;;Actif;;;Er aktivert
 Web;Is required;;Requis;;;Er påkrevet
+Web;Is Multiline;;Multi-lignes;;;
 Web;Last;;Dernier;Ultima;Última;Siste
 Web;Last modification;;Modification;Ultima modifica;Última modificação;Sist endret
 Web;Licensed to;;Licence pour;;;Registrert til
@@ -392,5 +394,5 @@ WebJS;By point descending;;Par point descendant;;;Etter Punkt synkende
 WebJS;By axis label descending;;Par axe descendant;;;Etter Axis etikett synkende
 Web;Chart sort;;Tri graphe;;;Sorter på graf
 WebJS;Show summary table;;Afficher le sommaire;;;
-WebJS;Show page table;;Afficher le tableau des pages;;;
-WebJS;Show main table;;Afficher le tableau principal;;;
+WebJS;Show page tables;;Afficher les tableaux des pages;;;
+WebJS;Show data tables;;Afficher les tableaux des données;;;
