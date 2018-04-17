@@ -168,14 +168,14 @@ namespace Seal.Helpers
             }
         }
 
-        public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator=null, bool useAllConnections = false)
+        public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator=null, bool useAllConnections = false, bool useVBParser = false)
         {
             bool result = false;
             try
             {
                 if (CheckForNewFileSource(loadFolder, sourceCsvPath))
                 {
-                    LoadTableFromCSV(sourceCsvPath, destinationTableName, separator, useAllConnections);
+                    LoadTableFromCSV(sourceCsvPath, destinationTableName, separator, useAllConnections, useVBParser);
                     File.Copy(sourceCsvPath, Path.Combine(loadFolder, Path.GetFileName(sourceCsvPath)), true);
                     result = true;
                 }
@@ -191,13 +191,13 @@ namespace Seal.Helpers
             return result;
         }
 
-        public void LoadTableFromCSV(string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false)
+        public void LoadTableFromCSV(string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = false) 
         {
             try
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceCsvPath);
                 LogMessage("Starting Loading CSV Table from '{0}'", sourcePath);
-                DataTable table = DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator);
+                DataTable table = (!useVBParser ? DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator) : DatabaseHelper.LoadDataTableFromCSV2(sourcePath, separator));
                 table.TableName = destinationTableName;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {

@@ -1,15 +1,14 @@
 ﻿using Seal.Model;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Data.OleDb;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic.FileIO;
 
 namespace Seal.Helpers
 {
@@ -160,7 +159,7 @@ namespace Seal.Helpers
                         if (line2.Split(';').Length > line2.Split(',').Length) separator = ';';
                     }
                     var sep2 = (separator.Value == '|' || separator.Value == ':' ? "\\" : "") + separator.Value;
-                    string exp = "(?<=^|"+sep2+ ")(\"(?:[^\"]|\"\")*\"|[^" + sep2 + "]*)";
+                    string exp = "(?<=^|" + sep2 + ")(\"(?:[^\"]|\"\")*\"|[^" + sep2 + "]*)";
                     regexp = new Regex(exp);
                 }
 
@@ -180,9 +179,62 @@ namespace Seal.Helpers
                     for (int i = 0; i < collection.Count && i < result.Columns.Count; i++)
                     {
                         row[i] = ExcelHelper.FromCsv(collection[i].Value);
+                        if (row[i].ToString().Contains("\0")) row[i] = "";
                     }
                 }
             }
+
+            return result;
+        }
+
+
+        public DataTable LoadDataTableFromCSV2(string csvPath, char? separator = null)
+        {
+            if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
+
+            DataTable result = null;
+            bool isHeader = true;
+            TextFieldParser csvParser = null;
+            try
+            {
+                csvParser = new TextFieldParser(csvPath, DefaultEncoding);
+            }
+            catch
+            {
+                //Try by copying the file...
+                string newPath = FileHelper.GetTempUniqueFileName(csvPath);
+                File.Copy(csvPath, newPath);
+                csvParser = new TextFieldParser(newPath, DefaultEncoding);
+                FileHelper.PurgeTempApplicationDirectory();
+            }
+            if (separator == null) separator = ',';
+            csvParser.CommentTokens = new string[] { "#" };
+            csvParser.SetDelimiters(new string[] { separator.ToString() });
+            csvParser.HasFieldsEnclosedInQuotes = true;
+
+            while (!csvParser.EndOfData)
+            {
+                string[] fields = csvParser.ReadFields();
+                if (isHeader)
+                {
+                    result = new DataTable();
+                    for (int i = 0; i < fields.Length; i++)
+                    {
+                        result.Columns.Add(new DataColumn(fields[i], typeof(string)));
+                    }
+                    isHeader = false;
+                }
+                else
+                {
+                    var row = result.Rows.Add();
+                    for (int i = 0; i < fields.Length && i < result.Columns.Count; i++)
+                    {
+                        row[i] = fields[i];
+                        if (row[i].ToString().Contains("\0")) row[i] = "";
+                    }
+                }
+            }
+            csvParser.Close();
 
             return result;
         }
@@ -328,7 +380,7 @@ namespace Seal.Helpers
                 result.Append(GetTableColumnType(col));
                 result.Append(" NULL");
             }
-            return string.Format("CREATE TABLE {0} ({1})", CleanName(table.TableName), result); 
+            return string.Format("CREATE TABLE {0} ({1})", CleanName(table.TableName), result);
         }
 
 
@@ -414,7 +466,10 @@ namespace Seal.Helpers
                         if (row[col].ToString().Length > len) len = row[col].ToString().Length + 1;
                     }
                 }
-                result.AppendFormat("{0}({1})", Helper.IfNullOrEmpty(ColumnCharType, _defaultColumnCharType), len);
+                if (ColumnCharLength <= 0 && DatabaseType == DatabaseType.MSSQLServer && len > 8000)
+                    result.AppendFormat("{0}(max)", Helper.IfNullOrEmpty(ColumnCharType, _defaultColumnCharType));
+                else
+                    result.AppendFormat("{0}({1})", Helper.IfNullOrEmpty(ColumnCharType, _defaultColumnCharType), len);
             }
             return result.ToString();
         }
