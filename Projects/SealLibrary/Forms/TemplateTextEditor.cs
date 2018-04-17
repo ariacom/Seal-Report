@@ -54,6 +54,10 @@ namespace Seal.Forms
     cell.IsTitle indicates if it is a title cell
     cell.IsSerie indicates if the cell is used for series, in this case, ContextRow and ContextCol is the common row and col used for the dimension values
 	
+    cell.DisplayValue (type = string) is the display value
+    cell.DoubleValue (type = double?) is the cell value for numeric
+    cell.DateTimeValue (type = DateTime? ) is the cell value for date time
+
 	To customize your calculation and cell display, you can assign
 	cell.Value (type = object) is the cell value: string, double or DateTime
 	cell.FinalValue (type = string) is the final string used for the table cell
@@ -411,7 +415,8 @@ namespace Seal.Forms
         @""c:\temp\aCSVFile.csv"", //source CSV file path
         ""DestinationTableName"", //destination table name
         null, //optional CSV separator (e.g. ',') 
-        false //if true, the table is loaded for all connections defined in the Source
+        false, //optional, if true, the table is loaded for all connections defined in the Source
+        false //optional, if true, the MS Visual Basic Parser is used (can be used if values contain new line characters) 
     );
 "
                 ),
