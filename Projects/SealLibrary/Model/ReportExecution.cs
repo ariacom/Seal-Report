@@ -1167,6 +1167,8 @@ namespace Seal.Model
 
         void handleCustomScripts(ReportModel model, ResultPage page, ResultTable table, bool subTotalsOnly = false)
         {
+            if (table == null) return;
+
             for (int row = 0; row < table.Lines.Count; row++)
             {
                 var line = table.Lines[row];

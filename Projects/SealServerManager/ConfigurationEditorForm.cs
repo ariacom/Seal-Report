@@ -44,7 +44,7 @@ namespace Seal.Forms
             Text = Repository.SealRootProductName + (!configuration.ForPublication ? " Server Configuration Editor" : " Web Server Publisher");
 
             ShowIcon = true;
-            Icon = Properties.Resources.serverManager; 
+            Icon = Properties.Resources.serverManager;
         }
 
         private void ConfigurationEditorForm_Load(object sender, EventArgs e)
@@ -110,7 +110,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
         bool _publicationInError = false;
         private void publishToolStripButton_Click(object sender, EventArgs e)
         {
-            Thread thread = new Thread(delegate(object param) { publish((ExecutionLogInterface)param, (sender == publish2ToolStripButton)); });
+            Thread thread = new Thread(delegate (object param) { publish((ExecutionLogInterface)param, (sender == publish2ToolStripButton)); });
             if (thread != null)
             {
                 ExecutionForm frm = new ExecutionForm(thread);
@@ -184,9 +184,12 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                         log.Log("Creating Application");
                         application = site.Applications.Add(_configuration.WebApplicationName, _configuration.WebPublicationDirectory);
                     }
-                    Microsoft.Web.Administration.VirtualDirectory vDir = application.VirtualDirectories[0];
-                    vDir.Path = _configuration.WebApplicationName;
-                    vDir.PhysicalPath = _configuration.WebPublicationDirectory;
+                    if (_configuration.WebApplicationName == "/")
+                    {
+                        Microsoft.Web.Administration.VirtualDirectory vDir = application.VirtualDirectories[0];
+                        vDir.Path = _configuration.WebApplicationName;
+                        vDir.PhysicalPath = _configuration.WebPublicationDirectory;
+                    }
                     application.ApplicationPoolName = _configuration.WebApplicationPoolName;
                     if (!log.IsJobCancelled())
                     {
@@ -207,7 +210,8 @@ New parameter values may require a restart of the Report Designer or the Web Ser
 
         private void browseToolStripButton_Click(object sender, EventArgs e)
         {
-            string url = string.Format("http://localhost{0}/Main", _configuration.WebApplicationName);
+            string appName = (_configuration.WebApplicationName == "/" ? "" : _configuration.WebApplicationName);
+            string url = string.Format("http://localhost{0}/Main", appName);
             Process.Start(url);
         }
 
