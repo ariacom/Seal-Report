@@ -2022,7 +2022,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
       <ViewParameters />
       <ViewGUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</ViewGUID>
       <FolderPath>%SEALREPORTSREPOSITORY%\</FolderPath>
-      <FileName>Dashboard - Sales_{0:yyyy_MM_dd}</FileName>
+      <FileName>Dashboard - Sales</FileName>
       <EmailZipPassword />
       <UserName />
       <UserGroups>Default Group</UserGroups>
@@ -2999,54 +2999,55 @@ col-sm-7;col-sm-5;
     var currentSheet = converter.Sheet;
 	converter.Sheet = converter.SetAdditionalSheet(converter.Sheet.Name + " " + view.Report.Repository.TranslateReport("Charts"), ref rowStart, ref colStart);
 
-    if (view.Model.HasSerie &amp;amp;&amp;amp; view.GetBoolValue(ExcelConverter.show_charts, true))
+    if (view.Model.HasSerie &amp;amp;&amp;amp; view.GetBoolValue("show_charts", true))
     {
-        var firstSerie = page.Series[0];
+        if (view.InitPageChart(page)) {
+            var firstSerie = page.Series[0];
+            ExcelChartType chartType = ExcelConverter.ConvertChartType(firstSerie.Element);
+            ExcelChart chart = converter.Sheet.Charts.AddChart(chartType, colStart, rowStart, colStart + converter.ChartWidth, rowStart + converter.ChartHeight);
+            chart.Title.Text = view.GetTranslatedMappedLabel(view.ChartTitle);
+            rowStart += converter.ChartHeight;
 
-        ExcelChartType chartType = (firstSerie.Element.SerieDefinition == Seal.Model.SerieDefinition.Serie ? ExcelConverter.ConvertChartType(page.Series[0].Element.SerieType) : ExcelConverter.ConvertChartType(page.Series[0].Element.Nvd3Serie));
-        ExcelChart chart = converter.Sheet.Charts.AddChart(chartType, colStart, rowStart, colStart + converter.ChartWidth, rowStart + converter.ChartHeight);
-        chart.Title.Text = view.GetTranslatedMappedLabel(view.GetValue("chart_nvd3_title"));
-        rowStart += converter.ChartHeight;
-
-        //Series Y values, support only of the Primary Axis...
-        int serieIndex = 1;
-        int colIndex = 0;
-        foreach (var serie in page.Series)
-        {
-            colIndex = 0;
-			foreach (var xDimensionKey in page.PrimaryXValues.Keys)
-			{
-				//Find the corresponding serie value...
-				var value = serie.Values.FirstOrDefault(i =&amp;gt; i.XDimensionValues == xDimensionKey);
-				if (value != null) {
-					converter.SetValue(rowStart + serieIndex, colStart + colIndex, value.Yvalue);
-				}
-                colIndex++;
-			}
-
-            ExcelChartSeries chartSerie = chart.Series.AddSeries(serie.SerieDisplayName);
-            chartSerie.ChartType = chartType;
-            chartSerie.CategoryNamesRange = converter.Sheet[rowStart, colStart, rowStart, colStart + page.PrimaryXValues.Keys.Count - 1];
-            chartSerie.ValuesRange = converter.Sheet[rowStart + serieIndex, colStart, rowStart + serieIndex, colStart + page.PrimaryXValues.Keys.Count - 1];
-            serieIndex++;
-        }
-
-        //Series X Values must be set after...
-        colIndex = 0;
-        foreach (var xValue in page.PrimaryXValues.Keys)
-        {
-            converter.Sheet[rowStart, colStart + colIndex].Value = page.PrimaryXValues[xValue];
-            var xCells = xValue as Seal.Model.ResultCell[];
-            if (xCells != null &amp;amp;&amp;amp; converter.UseElementFormat)
+            //Series Y values, support only of the Primary Axis...
+            int serieIndex = 1;
+            int colIndex = 0;
+            foreach (var serie in page.Series)
             {
-                converter.Sheet[rowStart, colStart + colIndex].Style.Number.NumberFormatString = xCells[0].Element.GetExcelFormat(view.CultureInfo);
-            }
-            colIndex++;
-        }
+                colIndex = 0;
+			    foreach (var xDimensionKey in page.PrimaryXValues.Keys)
+			    {
+				    //Find the corresponding serie value...
+				    var value = serie.Values.FirstOrDefault(i =&amp;gt; i.XDimensionValues == xDimensionKey);
+				    if (value != null) {
+					    converter.SetValue(rowStart + serieIndex, colStart + colIndex, value.Yvalue);
+				    }
+                    colIndex++;
+			    }
 
-        if (converter.Sheet == currentSheet) 
-        {
-            converter.CurrentRow += converter.ChartHeight + serieIndex + 1;
+                ExcelChartSeries chartSerie = chart.Series.AddSeries(serie.SerieDisplayName);
+                chartSerie.ChartType = chartType;
+                chartSerie.CategoryNamesRange = converter.Sheet[rowStart, colStart, rowStart, colStart + page.PrimaryXValues.Keys.Count - 1];
+                chartSerie.ValuesRange = converter.Sheet[rowStart + serieIndex, colStart, rowStart + serieIndex, colStart + page.PrimaryXValues.Keys.Count - 1];
+                serieIndex++;
+            }
+
+            //Series X Values must be set after...
+            colIndex = 0;
+            foreach (var xValue in page.PrimaryXValues.Keys)
+            {
+                converter.Sheet[rowStart, colStart + colIndex].Value = page.PrimaryXValues[xValue];
+                var xCells = xValue as Seal.Model.ResultCell[];
+                if (xCells != null &amp;amp;&amp;amp; converter.UseElementFormat)
+                {
+                    converter.Sheet[rowStart, colStart + colIndex].Style.Number.NumberFormatString = xCells[0].Element.GetExcelFormat(view.CultureInfo);
+                }
+                colIndex++;
+            }
+
+            if (converter.Sheet == currentSheet) 
+            {
+                converter.CurrentRow += converter.ChartHeight + serieIndex + 1;
+            }
         }
     }
     converter.Sheet = currentSheet;

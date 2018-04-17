@@ -2,7 +2,6 @@
 <SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString>
   <TaskFolderName>Seal Report</TaskFolderName>
-  <LogoName>logo.png</LogoName>
   <WebProductName>Seal Report</WebProductName>
   <InitScript />
   <ReportCreationScript />

@@ -17,8 +17,7 @@
         @report.ExecutionName
     </title>
     <!--CSS-->
-    @Raw(report.AttachCSSFile("bootstrap.min.css", "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"))
-    @Raw(report.AttachCSSFile("font-awesome.min.css"))
+    @Raw(report.AttachCSSFile("bootstrap.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"))
     @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"))
     @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css"))
     @Raw(report.AttachCSSFile("dataTables.bootstrap.min.css", "https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"))

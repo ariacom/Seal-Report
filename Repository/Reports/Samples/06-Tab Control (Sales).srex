@@ -5,11 +5,6 @@
     <ReportSource>
       <GUID>879f4f0c-3c94-4979-a867-825f45b161a6</GUID>
       <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
       <InitScript />
@@ -53,7 +48,6 @@
           <DrillChildren />
           <SubReports />
           <PivotPosition>Page</PivotPosition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -69,7 +63,6 @@
           <SortOrder>Not sorted</SortOrder>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -85,7 +78,6 @@
           <SortOrder>1 Descendant</SortOrder>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>StackedColumn</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -103,7 +95,6 @@
           <SortOrder>Not sorted</SortOrder>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
         </ReportElement>
@@ -120,7 +111,6 @@
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Not sorted</SortOrder>
           <ShowTotal>Column</ShowTotal>
-          <SerieType>StackedColumn</SerieType>
           <YAxisType>Secondary</YAxisType>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
         </ReportElement>
@@ -142,7 +132,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -162,7 +151,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>yyyy</FormatRe>
@@ -183,7 +171,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -204,7 +191,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -225,7 +211,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -262,7 +247,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Page</PivotPosition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -278,7 +262,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SortOrder>Not sorted</SortOrder>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -286,6 +269,7 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
@@ -295,7 +279,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SortOrder>1 Descendant</SortOrder>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>StackedColumn</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -304,6 +287,7 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
@@ -312,7 +296,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
         </ReportElement>
@@ -321,6 +304,7 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <Name>[Order Details].Quantity</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
@@ -329,7 +313,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SortOrder>Not sorted</SortOrder>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>StackedColumn</SerieType>
           <Nvd3Serie>MultiBarChart</Nvd3Serie>
           <YAxisType>Secondary</YAxisType>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
@@ -352,7 +335,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -372,7 +354,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>yyyy</FormatRe>
@@ -393,7 +374,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -414,7 +394,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -435,7 +414,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -472,7 +450,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Page</PivotPosition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -488,7 +465,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <SortOrder>Not sorted</SortOrder>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -505,7 +481,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <SortOrder>1 Descendant</SortOrder>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>StackedColumn</SerieType>
           <Nvd3Serie>Line</Nvd3Serie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -522,7 +497,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>Line</Nvd3Serie>
           <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
         </ReportElement>
@@ -538,7 +512,6 @@ AND [d06c797f-f9f7-48f3-a289-54355fc5e159]</Restriction>
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Not sorted</SortOrder>
           <ShowTotal>Column</ShowTotal>
-          <SerieType>StackedColumn</SerieType>
           <YAxisType>Secondary</YAxisType>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
         </ReportElement>
@@ -560,7 +533,6 @@ AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -580,7 +552,6 @@ AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>yyyy</FormatRe>
@@ -601,7 +572,6 @@ AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -622,7 +592,6 @@ AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -643,7 +612,6 @@ AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -681,7 +649,6 @@ AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SerieDefinition>Axis</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -689,6 +656,7 @@ AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
@@ -698,8 +666,7 @@ AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
           <SortOrder>1 Descendant</SortOrder>
           <ShowTotal>Row</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <SerieType>Doughnut</SerieType>
-          <Nvd3Serie>StackedAreaChart</Nvd3Serie>
+          <ChartJSSerie>Line</ChartJSSerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -714,7 +681,6 @@ AND [e02cc36e-3b4a-44fb-a7bd-8f139a7ed384]</Restriction>
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
         </ReportElement>
       </Elements>
@@ -735,7 +701,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
@@ -755,7 +720,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>yyyy</FormatRe>
@@ -776,7 +740,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -797,7 +760,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -818,7 +780,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <SerieType>Point</SerieType>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe />
@@ -853,21 +814,93 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
                 <ReportView>
                   <GUID>9bf4e31a-ca4c-4f82-8fb8-ef2a1189b8b6</GUID>
                   <Name>Model HTML View</Name>
-                  <Views />
+                  <Views>
+                    <ReportView>
+                      <GUID>0191a345-eacc-4f17-bd0e-62fa1b07c794</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>9c83ae27-882f-4b15-9b94-7c4d456db529</GUID>
+                          <Name>Page Table</Name>
+                          <Views />
+                          <TemplateName>Page Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>1</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>df20633c-a621-495b-a479-1b127311e552</GUID>
+                          <Name>Chart JS</Name>
+                          <Views />
+                          <TemplateName>Chart JS</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>2</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>a387f93b-1839-41eb-b110-2f55d8efc010</GUID>
+                          <Name>Chart NVD3</Name>
+                          <Views />
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>3</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>03f1d10a-1db5-48b8-8dd7-36353b49e390</GUID>
+                          <Name>Chart Plotly</Name>
+                          <Views />
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>4</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>4b5c2115-11cb-41c0-aa9a-0c3239592d99</GUID>
+                          <Name>Data Table</Name>
+                          <Views />
+                          <TemplateName>Data Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>5</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Model Container</TemplateName>
+                      <PartialTemplates />
+                      <Parameters />
+                      <CultureName />
+                      <SortOrder>1</SortOrder>
+                      <WebExec>true</WebExec>
+                      <PdfConfigurations />
+                      <ExcelConfigurations />
+                    </ReportView>
+                  </Views>
                   <ModelGUID>5837ccad-1f72-4939-bd25-46a6805eefc3</ModelGUID>
-                  <TemplateName>Model HTML</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <TemplateName>Model</TemplateName>
                   <CustomTemplate />
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
-                  <CSS>
-                    <Parameter>
-                      <Name>summary</Name>
-                      <Value />
-                    </Parameter>
-                  </CSS>
                   <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
@@ -875,14 +908,11 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <CustomTemplate />
               <PartialTemplates />
               <Parameters />
               <CultureName />
-              <CSS />
-              <SortOrder>1</SortOrder>
+              <SortOrder>2</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations />
@@ -894,16 +924,93 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
                 <ReportView>
                   <GUID>057eb836-3b35-4777-b26b-4f42dfcffb0c</GUID>
                   <Name>Model HTML View</Name>
-                  <Views />
+                  <Views>
+                    <ReportView>
+                      <GUID>463a5a0e-9b61-4fe8-9fe5-7de1d20d0529</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>3a53af91-2579-4563-9b70-de33663788ee</GUID>
+                          <Name>Page Table</Name>
+                          <Views />
+                          <TemplateName>Page Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>1</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>e5cd411e-c5ec-415f-b1f3-c6478af49dd9</GUID>
+                          <Name>Chart JS</Name>
+                          <Views />
+                          <TemplateName>Chart JS</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>2</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>ee6a5175-895a-44f4-be01-a0a3038e25f2</GUID>
+                          <Name>Chart NVD3</Name>
+                          <Views />
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>3</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>fa1c148b-7fe3-4135-96e4-7a2f783560b7</GUID>
+                          <Name>Chart Plotly</Name>
+                          <Views />
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>4</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>4f67dbd0-1a07-442b-bd66-fbb18f071d2e</GUID>
+                          <Name>Data Table</Name>
+                          <Views />
+                          <TemplateName>Data Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>5</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Model Container</TemplateName>
+                      <PartialTemplates />
+                      <Parameters />
+                      <CultureName />
+                      <SortOrder>1</SortOrder>
+                      <WebExec>true</WebExec>
+                      <PdfConfigurations />
+                      <ExcelConfigurations />
+                    </ReportView>
+                  </Views>
                   <ModelGUID>54edbed7-9dce-4ff7-9609-3192bf5add66</ModelGUID>
-                  <TemplateName>Model HTML</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <TemplateName>Model</TemplateName>
                   <CustomTemplate />
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
-                  <CSS />
                   <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
@@ -911,14 +1018,11 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <CustomTemplate />
               <PartialTemplates />
               <Parameters />
               <CultureName />
-              <CSS />
-              <SortOrder>2</SortOrder>
+              <SortOrder>3</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations />
@@ -930,21 +1034,93 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
                 <ReportView>
                   <GUID>97621ac8-7ea4-4db7-83e2-972387883c2c</GUID>
                   <Name>Model HTML View</Name>
-                  <Views />
+                  <Views>
+                    <ReportView>
+                      <GUID>f695ba5f-33e7-4b2a-a75b-5089a81723b6</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>006a89d3-28f0-412a-b131-c7993d257b68</GUID>
+                          <Name>Page Table</Name>
+                          <Views />
+                          <TemplateName>Page Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>1</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>1864a126-0c1e-4b84-a998-5f7c61a146a7</GUID>
+                          <Name>Chart JS</Name>
+                          <Views />
+                          <TemplateName>Chart JS</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>2</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>495696b8-412c-4248-8878-db7cb7feb799</GUID>
+                          <Name>Chart NVD3</Name>
+                          <Views />
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>3</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>148780ac-856c-4425-b17f-1f0b88c1e2cc</GUID>
+                          <Name>Chart Plotly</Name>
+                          <Views />
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>4</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>6f7d70c8-dead-4595-a5e1-e25479dac77d</GUID>
+                          <Name>Data Table</Name>
+                          <Views />
+                          <TemplateName>Data Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>5</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Model Container</TemplateName>
+                      <PartialTemplates />
+                      <Parameters />
+                      <CultureName />
+                      <SortOrder>1</SortOrder>
+                      <WebExec>true</WebExec>
+                      <PdfConfigurations />
+                      <ExcelConfigurations />
+                    </ReportView>
+                  </Views>
                   <ModelGUID>0a24cc8f-4110-46a6-a4ed-7b0d08198a47</ModelGUID>
-                  <TemplateName>Model HTML</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <TemplateName>Model</TemplateName>
                   <CustomTemplate />
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
-                  <CSS>
-                    <Parameter>
-                      <Name>page</Name>
-                      <Value />
-                    </Parameter>
-                  </CSS>
                   <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
@@ -952,14 +1128,11 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <CustomTemplate />
               <PartialTemplates />
               <Parameters />
               <CultureName />
-              <CSS />
-              <SortOrder>3</SortOrder>
+              <SortOrder>4</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations />
@@ -971,16 +1144,93 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
                 <ReportView>
                   <GUID>86ecfb9b-e1d0-46ae-b3f5-0cab7705bb23</GUID>
                   <Name>Model HTML View</Name>
-                  <Views />
+                  <Views>
+                    <ReportView>
+                      <GUID>fa3b5f35-e719-40c1-aff5-083c7cbbe325</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>bcff5b92-6a61-42a3-801e-1a8cb9e4130f</GUID>
+                          <Name>Page Table</Name>
+                          <Views />
+                          <TemplateName>Page Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>1</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>d3ba771e-9ce1-465f-a031-cdd16026f832</GUID>
+                          <Name>Chart JS</Name>
+                          <Views />
+                          <TemplateName>Chart JS</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>2</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>36ebcc63-d86e-4a42-b125-3756f331d54b</GUID>
+                          <Name>Chart NVD3</Name>
+                          <Views />
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>3</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>2a64f5c9-86c1-42fc-9740-160107585429</GUID>
+                          <Name>Chart Plotly</Name>
+                          <Views />
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>4</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>b827facf-7d65-4550-b772-4817a2dcaa0e</GUID>
+                          <Name>Data Table</Name>
+                          <Views />
+                          <TemplateName>Data Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>5</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Model Container</TemplateName>
+                      <PartialTemplates />
+                      <Parameters />
+                      <CultureName />
+                      <SortOrder>1</SortOrder>
+                      <WebExec>true</WebExec>
+                      <PdfConfigurations />
+                      <ExcelConfigurations />
+                    </ReportView>
+                  </Views>
                   <ModelGUID>67dfa309-0cfa-44a6-9f60-d1876ee6a9cc</ModelGUID>
-                  <TemplateName>Model HTML</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
+                  <TemplateName>Model</TemplateName>
                   <CustomTemplate />
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
-                  <CSS />
                   <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
@@ -988,19 +1238,11 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <CustomTemplate />
               <PartialTemplates />
-              <Parameters>
-                <Parameter>
-                  <Name>tab_description</Name>
-                  <Value />
-                </Parameter>
-              </Parameters>
+              <Parameters />
               <CultureName />
-              <CSS />
-              <SortOrder>0</SortOrder>
+              <SortOrder>1</SortOrder>
               <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations>
@@ -1021,13 +1263,10 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>
-          <ThemeName />
-          <UseCustomTemplate>false</UseCustomTemplate>
           <CustomTemplate />
           <PartialTemplates />
           <Parameters />
           <CultureName />
-          <CSS />
           <SortOrder>1</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
@@ -1050,8 +1289,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomTemplate>false</UseCustomTemplate>
       <CustomTemplate />
       <PartialTemplates />
       <Parameters>
@@ -1069,7 +1306,6 @@ AND [5375d4de-2616-4d28-bb30-16e1f6b88869]</Restriction>
         </Parameter>
       </Parameters>
       <CultureName />
-      <CSS />
       <SortOrder>1</SortOrder>
       <WebExec>true</WebExec>
       <PdfConfigurations />

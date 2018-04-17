@@ -5,27 +5,17 @@
     <ReportSource>
       <GUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</GUID>
       <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>false</IsNoSQL>
       <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
           <MetaTable>
             <GUID>55dc8e4b-9040-4547-a15d-3ccc6286f66b</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
           </MetaTable>
         </Tables>
@@ -40,151 +30,72 @@
       <GUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</GUID>
       <Name>model</Name>
       <SourceGUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
       <SqlSelect />
       <SqlFrom />
       <SqlGroupBy />
       <SqlOrderBy />
       <IgnorePrePostError>false</IgnorePrePostError>
-      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>3e8c1b78-2884-4638-ae2c-80b8ab544abe</GUID>
           <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>yyyy</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Page</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>32f79895-2da2-4b75-a2d8-36e73707e925</GUID>
           <Name>Products.CategoryID</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Column</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>53402a75-0948-44bc-8d4e-b1c89eeb6001</GUID>
           <Name>Customers.Country</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>318e4a99-855d-4c84-aa77-f45b5439b8d9</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <DisplayName />
           <Format>N0</Format>
           <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Data</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <ShowTotal>RowColumn</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Doughnut</SerieType>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
+          <ChartJSSerie>Bar</ChartJSSerie>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction />
@@ -204,51 +115,103 @@
         <ReportView>
           <GUID>d8cb2182-2ec0-48d7-8659-68002b6b35f9</GUID>
           <Name>Model HTML View</Name>
-          <Views />
+          <Views>
+            <ReportView>
+              <GUID>f1f9b36c-5f47-47e0-93f2-aa08865dccd0</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>1b8d9cb1-0b51-43eb-a99e-111af8062616</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>fe81614a-17b3-4f9e-b3f7-86e0b337052e</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_width</Name>
+                      <Value>800px</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_height</Name>
+                      <Value>500px</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>a6be3fb0-f5be-40a6-a82c-836f0a0fb6a7</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>60f8243c-fda3-4243-9be3-489826f90123</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>a27ab27a-b0ae-4a85-9532-5054d0536f7b</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
           <ModelGUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <CustomConfiguration />
-          <UseCustomTemplate>false</UseCustomTemplate>
+          <TemplateName>Model</TemplateName>
           <CustomTemplate />
-          <Parameters>
-            <Parameter>
-              <Name>data_tables_enabled</Name>
-              <Value>False</Value>
-            </Parameter>
-            <Parameter>
-              <Name>chart_nvd3_title</Name>
-              <Value />
-            </Parameter>
-          </Parameters>
+          <PartialTemplates />
+          <Parameters />
           <CultureName />
-          <CSS>
-            <Parameter>
-              <Name>nvd3_chart</Name>
-              <Value>height:400px; width:800px; page-break-inside:avoid;</Value>
-            </Parameter>
-          </CSS>
           <SortOrder>1</SortOrder>
-          <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;Chart Size="600, 400"&gt;
-  &lt;Series&gt;
-    &lt;Series Name="Amount(318e4a99-855d-4c84-aa77-f45b5439b8d9)" ChartArea="ChartArea1" LabelFormat="N2" IsValueShownAsLabel="True" Legend="Legend1" ChartType="Doughnut"&gt;
-    &lt;/Series&gt;
-  &lt;/Series&gt;
-  &lt;Legends&gt;
-    &lt;Legend Name="Legend1"&gt;
-    &lt;/Legend&gt;
-  &lt;/Legends&gt;
-  &lt;Titles&gt;
-    &lt;Title Name="Title1" Visible="False"&gt;
-    &lt;/Title&gt;
-  &lt;/Titles&gt;
-  &lt;ChartAreas&gt;
-    &lt;ChartArea Name="ChartArea1"&gt;
-    &lt;/ChartArea&gt;
-  &lt;/ChartAreas&gt;
-&lt;/Chart&gt;</ChartConfigurationXml>
           <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
@@ -256,11 +219,8 @@
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <CustomConfiguration />
-      <UseCustomTemplate>false</UseCustomTemplate>
       <CustomTemplate />
+      <PartialTemplates />
       <Parameters>
         <Parameter>
           <Name>force_execution</Name>
@@ -268,7 +228,6 @@
         </Parameter>
       </Parameters>
       <CultureName />
-      <CSS />
       <SortOrder>0</SortOrder>
       <WebExec>true</WebExec>
       <PdfConfigurations />
@@ -284,14 +243,10 @@
           <Views />
           <ModelGUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</ModelGUID>
           <TemplateName>Model CSV Excel</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <CustomConfiguration />
-          <UseCustomTemplate>false</UseCustomTemplate>
           <CustomTemplate />
+          <PartialTemplates />
           <Parameters />
           <CultureName />
-          <CSS />
           <SortOrder>1</SortOrder>
           <WebExec>true</WebExec>
           <PdfConfigurations />
@@ -300,19 +255,19 @@
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <CustomConfiguration />
-      <UseCustomTemplate>false</UseCustomTemplate>
       <CustomTemplate />
+      <PartialTemplates />
       <Parameters>
+        <Parameter>
+          <Name>report_format</Name>
+          <Value>csv</Value>
+        </Parameter>
         <Parameter>
           <Name>report_description</Name>
           <Value>A simple cross tab with a chart</Value>
         </Parameter>
       </Parameters>
       <CultureName />
-      <CSS />
       <SortOrder>0</SortOrder>
       <WebExec>true</WebExec>
       <PdfConfigurations />
