@@ -548,6 +548,29 @@ namespace SealWebServer.Controllers
             return Content(_noReportFoundMessage);
         }
 
+        public ActionResult CSVResult(string execution_guid)
+        {
+            WriteDebug("CSVResult");
+            try
+            {
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
+                {
+                    ReportExecution execution = Session[execution_guid] as ReportExecution;
+                    string resultPath = "";
+                    resultPath = execution.GenerateCSVResult();
+                    return getFileResult(resultPath, execution.Report);
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+
+            return Content(_noReportFoundMessage);
+        }
+
 
         public ActionResult ActionGetTableData(string execution_guid, string viewid, string pageid, string parameters)
         {
