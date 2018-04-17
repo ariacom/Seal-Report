@@ -1372,8 +1372,8 @@ namespace Seal.Model
                 var format = Format;
                 if (format == ReportFormat.csv) return "csv";
                 if (format == ReportFormat.excel) return "xlsx";
-                if (format == ReportFormat.pdf) return "html"; //converter to pdf 
-                return "html";
+                if (format == ReportFormat.pdf) return "htm"; //converter to pdf 
+                return "htm";
             }
         }
 

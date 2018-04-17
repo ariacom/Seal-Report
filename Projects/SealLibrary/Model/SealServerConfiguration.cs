@@ -84,9 +84,9 @@ namespace Seal.Model
             set { _taskFolderName = value; }
         }
 
-        string _logoName = "logo.jpg";
+        string _logoName = "logo.png";
         [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images'."), Id(5, 1)]
-        [DefaultValue("logo.jpg")]
+        [DefaultValue("logo.png")]
         public string LogoName
         {
             get { return _logoName; }

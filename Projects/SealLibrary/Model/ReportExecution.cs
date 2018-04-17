@@ -1740,7 +1740,7 @@ namespace Seal.Model
         {
             Report.IsNavigating = false;
             var originalFormat = Report.Format;
-            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".html"));
+            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".htm"));
  
             Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
             bool initialValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
