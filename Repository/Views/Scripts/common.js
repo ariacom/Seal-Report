@@ -297,6 +297,8 @@ function mainInit() {
     });
 
     $("#execute_button").click(function () {
+        //Collapse navbar
+        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
         executeReport();
     });
 
@@ -321,6 +323,10 @@ function mainInit() {
             scrollMessages();
         }
         submitViewParameter(rootViewId, $(this).attr("id"), true);
+
+        setTimeout(function () { //redraw dataTables
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+        }, 200);
 
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
