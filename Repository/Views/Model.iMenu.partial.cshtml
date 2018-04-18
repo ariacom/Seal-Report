@@ -16,6 +16,9 @@
                     setTimeout(function () { nvd3UpdateCharts(); }, 200);
             </text>
             }
+            setTimeout(function () { //redraw dt
+                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+            }, 200);
         });
     });
 </script>

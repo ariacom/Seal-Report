@@ -6,36 +6,60 @@
     Repository repository = report.Repository;
 }
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        var dt = $('#information_table');
+        try {
+            if (dt != null && !@Helper.ToJS(report.PrintLayout))
+            {
+                dt.dataTable({
+                    ordering: true,
+                    paging: false,
+                    info: false,
+                    searching: false,
+                    processing: false
+                });
+            }
+        }
+        catch (e) {
+        };
+    });
+</script>
+
 <!--information_div-->
 <div id="information_div" class="tab-pane fade @(view.GetBoolValue("information_button") && string.IsNullOrEmpty(report.WebExecutionErrors) ? "active in" : "")">
     @if (!report.Cancel && report.Status != ReportStatus.NotExecuted && string.IsNullOrEmpty(report.WebExecutionErrors))
     {
         <ul class="list-group">
             <li class="list-group-item">@report.Translate("Execution date"): @report.ExecutionStartDate.ToString("d", view.CultureInfo)  @report.ExecutionStartDate.ToString("t", view.CultureInfo)</li>
-            <li class="list-group-item">@report.Translate("Execution duration"): @Math.Floor(report.ExecutionModelDuration.TotalSeconds) @report.Translate(report.ExecutionModelDuration.TotalSeconds > 2 ? "seconds": "second")</li>
+            <li class="list-group-item">@report.Translate("Execution duration"): @Math.Floor(report.ExecutionModelDuration.TotalSeconds) @report.Translate(report.ExecutionModelDuration.TotalSeconds > 2 ? "seconds" : "second")</li>
             @if (view.HasValue("report_description"))
             {
                 <li class="list-group-item">@Raw(view.GetHtmlValue("report_description"))</li>
             }
         </ul>
-                    <table class='table table-striped table-hover table-bordered'>
-                        <tr class="info">
-                            <th>@report.Translate("Model")</th>
-                            <th>@report.Translate("Records")</th>
-                            <th>@report.Translate("Pages")</th>
-                            <th>@report.Translate("Duration (seconds)")</th>
-                            <th>@report.Translate("Restrictions")</th>
-                        </tr>
-                        @foreach (ReportModel item in report.Models.Where(i => i.ResultTable != null && i.Pages != null))
-                        {
-                            <tr>
-                                <td>@item.Name (@item.Connection.Name)</td>
-                                <td style="text-align: center;">@item.ResultTable.Rows.Count</td>
-                                <td style="text-align: center;">@item.Pages.Count</td>
-                                <td style="text-align: center;">@item.ExecutionDuration</td>
-                                <td>@Raw(Helper.ToHtml(item.RestrictionText))</td>
-                            </tr>
-                        }
-                    </table>
+        <table id="information_table" class='table-responsive table table-striped table-hover table-bordered'>
+            <thead>
+                <tr class="info">
+                    <th>@report.Translate("Model")</th>
+                    <th>@report.Translate("Records")</th>
+                    <th>@report.Translate("Pages")</th>
+                    <th>@report.Translate("Duration (seconds)")</th>
+                    <th>@report.Translate("Restrictions")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ReportModel item in report.Models.Where(i => i.ResultTable != null && i.Pages != null))
+                {
+                    <tr>
+                        <td>@item.Name (@item.Connection.Name)</td>
+                        <td class="text-center">@item.ResultTable.Rows.Count</td>
+                        <td class="text-center">@item.Pages.Count</td>
+                        <td class="text-center">@item.ExecutionDuration</td>
+                        <td>@Raw(Helper.ToHtml(item.RestrictionText))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 </div>
