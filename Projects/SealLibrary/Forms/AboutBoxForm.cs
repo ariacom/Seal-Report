@@ -138,7 +138,7 @@ namespace Seal.Forms
                 }
                 else
                 {
-                    linkLabel.Text = "http://wwww.sealreport.org";
+                    linkLabel.Text = "http://www.sealreport.org";
                     this.textBoxDescription.Text = text;
                 }
             }

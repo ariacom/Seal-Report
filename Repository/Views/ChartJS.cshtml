@@ -25,9 +25,10 @@
         {
             chartType = "horizontalBar";
         }
-        <canvas id="@chartId" style="@Helper.AddIfNotEmpty("width:", view.GetValue("chartjs_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("chartjs_height"), ";")"></canvas>
-
-        <script>
+        <div class="chart-container" style="position:relative; @Helper.AddIfNotEmpty("width:", view.GetValue("chartjs_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("chartjs_contheight"), ";")">
+            <canvas id="@chartId" @Raw(Helper.AddIfNotEmpty("width='", view.GetValue("chartjs_width"), "'")) @Raw(Helper.AddIfNotEmpty("height='", view.GetValue("chartjs_height"), "'"))></canvas>
+        </div>
+            <script>
             var ctx = $("#@chartId");
             var colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
             colors = @Raw(view.GetValue("chartjs_colors") != "d3" ? view.GetValue("chartjs_colors") : "colors");
@@ -55,7 +56,7 @@
                 ]
             };
             var options = {
-                responsive: false,
+                responsive: @Helper.ToJS(view.GetBoolValue("chartjs_responsive")),
                 legend: {
                     display: @Helper.ToJS(view.GetBoolValue("chartjs_show_legend")),
                     position: '@view.GetValue("chartjs_legend_position")'
@@ -186,7 +187,7 @@
                     }
                 }
             );
-        </script>
+            </script>
         chartOk = true;
     }
     if (!chartOk)

@@ -15,7 +15,7 @@
     string chartId = "cnv" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
-        <div id='@chartId'>
+        <div id='@chartId'  style="position: relative;@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_contheight"), ";")">
             <svg style="@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_height"), ";")" />
         </div>
             <script>
@@ -89,7 +89,7 @@
                     //Margins
                     var margins = null;
                     if (chartType == 'multiBarHorizontalChart') margins = { left: 20 + 6*@page.AxisXLabelMaxLen, right: 22 };
-                    else if (chartType != 'pieChart') margins = { left: 20 + 6*@page.AxisYPrimaryMaxLen, right: 30 + 6*@page.AxisYSecondaryMaxLen };
+                    else if (chartType != 'pieChart') margins = { left: 20 + 6*@page.AxisYPrimaryMaxLen, right: 50 + 6*@page.AxisYSecondaryMaxLen };
                     margins = @Raw(view.GetValue("nvd3_margins") != "auto" ? view.GetValue("nvd3_margins") : "margins");
                     if (margins) (@chartId).margin(margins);
 

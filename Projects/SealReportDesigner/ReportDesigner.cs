@@ -778,6 +778,27 @@ namespace Seal
             treeContextMenuStrip.Items.Add(ts);
         }
 
+        void addExecuteRenderContextItem(string name)
+        {
+            if (executeToolStripMenuItem.Enabled)
+            {
+                ToolStripMenuItem ts = new ToolStripMenuItem();
+                ts.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
+                ts.Tag = false;
+                ts.Text = "Execute " + Helper.QuoteSingle(name);
+                if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                treeContextMenuStrip.Items.Add(ts);
+                if (renderToolStripMenuItem.Enabled)
+                {
+                    ts = new ToolStripMenuItem();
+                    ts.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
+                    ts.Tag = true;
+                    ts.Text = "Render " + Helper.QuoteSingle(name);
+                    treeContextMenuStrip.Items.Add(ts);
+                }
+            }
+        }
+
         private void treeContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             object entity = mainTreeView.SelectedNode.Tag;
@@ -808,9 +829,10 @@ namespace Seal
                     addAddItem("Add a " + template.Name + " View", template);
                 }
                 addRemoveItem("Remove Views...");
-                addCopyItem("Copy " + ((RootComponent)entity).Name, entity);
-                addRemoveRootItem("Remove " + ((RootComponent)entity).Name, entity);
+                addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                 addSmartCopyItem("Smart copy...", entity);
+                if (mainTreeView.SelectedNode.Parent.Tag is ViewFolder) addExecuteRenderContextItem(((RootComponent)entity).Name);
             }
             else if (entity is TasksFolder)
             {
@@ -830,7 +852,7 @@ namespace Seal
             {
                 foreach (var output in _report.Outputs.OrderBy(i => i.Name))
                 {
-                    addAddItem("Add Schedule for " + output.Name, output);
+                    addAddItem("Add Schedule for " + Helper.QuoteSingle(output.Name), output);
                 }
                 if (_report.Tasks.Count > 0)
                 {
@@ -842,29 +864,30 @@ namespace Seal
             }
             else if (entity is ReportModel)
             {
-                addCopyItem("Copy " + ((RootComponent)entity).Name, entity);
-                addRemoveRootItem("Remove " + ((RootComponent)entity).Name, entity);
+                addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                 addSmartCopyItem("Smart copy...", entity);
             }
             else if (entity is ReportTask)
             {
-                addCopyItem("Copy " + ((RootComponent)entity).Name, entity);
-                addRemoveRootItem("Remove " + ((RootComponent)entity).Name, entity);
+                addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                 addSmartCopyItem("Smart copy...", entity);
             }
             else if (entity is ReportOutput)
             {
-                addCopyItem("Copy " + ((RootComponent)entity).Name, entity);
-                addRemoveRootItem("Remove " + ((RootComponent)entity).Name, entity);
+                addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                 addSmartCopyItem("Smart copy...", entity);
+                addExecuteRenderContextItem(((RootComponent)entity).Name);
             }
             else if (entity is ReportSchedule)
             {
-                addRemoveRootItem("Remove " + ((RootComponent)entity).Name, entity);
+                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
             }
             else if (entity is ReportSource)
             {
-                addRemoveRootItem("Remove " + ((RootComponent)entity).Name, entity);
+                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
 
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                 ToolStripMenuItem ts = new ToolStripMenuItem();
@@ -1203,6 +1226,11 @@ namespace Seal
 
         private void executeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (sender is ToolStripMenuItem && ((ToolStripMenuItem)sender).Tag is bool)
+            {
+                sender = ((bool)((ToolStripMenuItem)sender).Tag) ? renderViewOutputToolStripMenuItem : executeViewOutputToolStripMenuItem;
+            }
+
             bool render = (sender == renderToolStripButton || sender == renderToolStripMenuItem || sender == renderViewOutputToolStripButton || sender == renderViewOutputToolStripMenuItem);
             string viewGUID = null, outputGUID = null;
             if (sender == renderViewOutputToolStripMenuItem || sender == executeViewOutputToolStripMenuItem || sender == renderViewOutputToolStripButton || sender == executeViewOutputToolStripButton)

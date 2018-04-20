@@ -21,7 +21,7 @@
         try {
             if (dt != null && @Helper.ToJS(view.GetBoolValue("data_tables_enabled")) && !@Helper.ToJS(report.PrintLayout))
             {
-                dt.dataTable({
+                var dto = dt.dataTable({
                 ordering: @Helper.ToJS(view.GetBoolValue("data_tables_sort_enabled")),
                 paging: @Helper.ToJS(view.GetBoolValue("data_tables_pagination_enabled")),
                 lengthMenu: [[10, 25, 50, 100, 500], [10, 25, 50, 100, 500]],
@@ -38,7 +38,20 @@
                         }
                 </text>}
                 });
-            }
+
+                @if (table.BodyStartRow > 1)
+                {<text>
+                        //issue github 71: multi header cols are not hidden in responsive mode
+                        dto.on('responsive-resize.dt', function(e, datatable, columns) {
+                            columns.forEach(function(is_visible, index) {
+                        $.each($('tr', datatable.table().header()), function() {
+                                    var col = $($(this).children()[index]);
+                                    is_visible == true ? col.show() : col.hide();
+                                });
+                            });
+                        });
+                </text>}
+                }
 
             $('.dataTables_filter input[type="search"]').css(
                 { 'width': '90px', 'display': 'inline-block' }
@@ -72,7 +85,7 @@
                 <tbody>
                     @for (int row = table.BodyStartRow; row < table.BodyEndRow; row++)
                     {
-                        <tr @Raw(view.AddAttribute("class", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_class")) @Raw(view.AddAttribute("style", "data_table_"+ (table.IsSubTotalRow(row) ? "subtotal" : "body") +"_css"))>
+                        <tr @Raw(view.AddAttribute("class", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_class")) @Raw(view.AddAttribute("style", "data_table_" + (table.IsSubTotalRow(row) ? "subtotal" : "body") + "_css"))>
                             @for (int col = 0; col < table.ColumnCount; col++)
                             {
                                 if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
