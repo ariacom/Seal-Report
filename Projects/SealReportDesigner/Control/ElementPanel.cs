@@ -66,9 +66,9 @@ namespace Seal.Controls
                     button.UseVisualStyleBackColor = true;
                     if (button == _modelPanel.SelectedButton) button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     else button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    if (element.SerieDefinition == SerieDefinition.Axis) button.Image = ((System.Drawing.Image)(Properties.Resources.chartAxis));
+                    if ((element.PivotPosition == PivotPosition.Column || element.PivotPosition == PivotPosition.Row) && element.SerieDefinition == SerieDefinition.Axis) button.Image = ((System.Drawing.Image)(Properties.Resources.chartAxis));
                     else if (element.IsSerie && element.PivotPosition == PivotPosition.Data) button.Image = ((System.Drawing.Image)(Properties.Resources.chartSerie));
-                    else if (element.SerieDefinition == SerieDefinition.Splitter || element.SerieDefinition == SerieDefinition.SplitterBoth) button.Image = ((System.Drawing.Image)(Properties.Resources.chartSplitter));
+                    else if ((element.PivotPosition == PivotPosition.Column || element.PivotPosition == PivotPosition.Row) && (element.SerieDefinition == SerieDefinition.Splitter || element.SerieDefinition == SerieDefinition.SplitterBoth)) button.Image = ((System.Drawing.Image)(Properties.Resources.chartSplitter));
                     else button.Image = null;
                     button.ImageAlign = ContentAlignment.MiddleRight;
                 }
@@ -136,8 +136,6 @@ namespace Seal.Controls
                     source.Controls.Remove(button);
                     element.PivotPosition = Position;
                     element.InitEditor();
-                    //element.SetDefaults(); No need to set default aggregat
-                    _modelPanel.Model.CheckSeries();
                     source.RedrawPanel();
                     Controls.Add(button);
                     _modelPanel.MainForm.IsModified = true;

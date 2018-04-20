@@ -116,7 +116,7 @@
                             var cellDatas = col.data.split('§', 6);
                             return col.hidden ?
                                 '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
-                                '<th>' + col.title + ':' + '</th> ' +
+                                '<th>' + col.title + (col.title != '' ? ':' : '') + '</th> ' +
                                 (cellDatas.length == 1 ? '<td>' + col.data : '<td style="' + cellDatas[3] + '" class="' + cellDatas[4] + '">' + cellDatas[5]) + '</td>' +
                                 '</tr>' :
                                 '';

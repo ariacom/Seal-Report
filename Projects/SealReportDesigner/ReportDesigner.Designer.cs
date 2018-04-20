@@ -275,7 +275,7 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // helpToolStripMenuItem
@@ -304,7 +304,7 @@
             this.sortColumnAlphaOrderToolStripMenuItem,
             this.sortColumnSQLOrderToolStripMenuItem});
             this.treeContextMenuStrip.Name = "treeContextMenuStrip";
-            this.treeContextMenuStrip.Size = new System.Drawing.Size(233, 158);
+            this.treeContextMenuStrip.Size = new System.Drawing.Size(233, 180);
             this.treeContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.treeContextMenuStrip_Opening);
             // 
             // addToolStripMenuItem

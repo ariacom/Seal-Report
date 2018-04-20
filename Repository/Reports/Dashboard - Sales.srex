@@ -2026,7 +2026,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
       <EmailZipPassword />
       <UserName />
       <UserGroups>Default Group</UserGroups>
-      <UserCulture>French</UserCulture>
+      <UserCulture />
       <Restrictions />
     </ReportOutput>
   </Outputs>

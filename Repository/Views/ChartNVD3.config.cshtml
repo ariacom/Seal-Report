@@ -9,8 +9,10 @@
     Template.ForReportModel = false;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_width", TextValue = "400px", DisplayName = "Chart width", Description = "The chart width. If empty, the size is automatic.", Enums = new string[] { "", "400px", "600px" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_height", TextValue = "400px", DisplayName = "Chart height", Description = "The chart height. If empty, the size is automatic.", Enums = new string[] { "", "400px", "600px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_width", TextValue = "", DisplayName = "Chart width", Description = "The chart width. If empty, the size is automatic (responsive).", Enums = new string[] { "", "400px", "600px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_height", TextValue = "", DisplayName = "Chart height", Description = "The chart height.", Enums = new string[] { "", "400px", "600px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_contwidth", TextValue = "", DisplayName = "Chart container width", Description = "The width of chart in its container (vw is the % of the viewport width).", Enums = new string[] { "", "100vw", "90vw", "50vw", "400px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_contheight", TextValue = "400px", DisplayName = "Chart container height", Description = "The height of the chart in its container (vh is the % of the viewport height).", Enums = new string[] { "100vh", "90vh", "50vh", "400px" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_chart_title", DisplayName = "Chart title", Description = "Optional title displayed for the NVD3 chart. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_hide_controls", DisplayName = "Force hide controls", BoolValue = false, Description = "If true, controls (depending on chart type) to interact with the series are hidden." });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_show_legend", DisplayName = "Show legend", BoolValue = true, Description = "If true, the legend is displayed in the chart." });

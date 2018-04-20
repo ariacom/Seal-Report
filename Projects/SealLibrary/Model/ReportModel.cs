@@ -388,16 +388,6 @@ namespace Seal.Model
             }
         }
 
-        public void CheckSeries()
-        {
-            foreach (var element in Elements)
-            {
-                if (element.PivotPosition == PivotPosition.Page) element.SerieDefinition = SerieDefinition.None;
-                else if ((element.PivotPosition == PivotPosition.Row || element.PivotPosition == PivotPosition.Column) && element.IsSerie) element.SerieDefinition = SerieDefinition.None;
-                else if (element.PivotPosition == PivotPosition.Data && !element.IsSerie) element.SerieDefinition = SerieDefinition.None;
-            }
-        }
-
         //Restrictions
         private string _restriction;
         public string Restriction

@@ -547,7 +547,7 @@ namespace Seal.Forms
             if (!string.IsNullOrEmpty(copyEntityName) && !isNoSQL)
             {
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
-                copyToolStripMenuItem.Text = string.Format("Copy {0}", copyEntityName);
+                copyToolStripMenuItem.Text = string.Format("Copy {0}", Helper.QuoteSingle(copyEntityName));
                 treeContextMenuStrip.Items.Add(copyToolStripMenuItem);
             }
 
@@ -559,7 +559,7 @@ namespace Seal.Forms
             if (!string.IsNullOrEmpty(copyEntityName) && !isNoSQL)
             {
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
-                removeRootToolStripMenuItem.Text = string.Format("Remove {0}", copyEntityName);
+                removeRootToolStripMenuItem.Text = string.Format("Remove {0}", Helper.QuoteSingle(copyEntityName));
                 treeContextMenuStrip.Items.Add(removeRootToolStripMenuItem);
             }
 
