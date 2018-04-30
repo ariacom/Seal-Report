@@ -233,7 +233,7 @@ namespace Seal.Model
 
         private int _inputRows = 0;
         [DefaultValue(0)]
-        [Category("Advanced"), DisplayName("Input rows for value 1"), Description("If greater than 0, specifies the number of rows available to edit the value 1 for text or numeric when the restriction is prompted."), Id(6, 3)]
+        [Category("Advanced"), DisplayName("Input rows for first value"), Description("If greater than 0, specifies the number of rows available to edit the first restriction value (only valid for text or numeric when the restriction is prompted)."), Id(6, 3)]
         public int InputRows
         {
             get { return _inputRows; }
@@ -261,7 +261,7 @@ namespace Seal.Model
 
         private bool _useAsParameter = false;
         [DefaultValue(false)]
-        [Category("Advanced"), DisplayName("Use as parameter"), Description("If true and the operator is set to Value Only, the restriction is replaced by '(1=1') and has no impact on the SQL generated. The value can then be used in scripts."), Id(9, 3)]
+        [Category("Advanced"), DisplayName("Use as parameter"), Description("If true and the operator is set to Value Only, the restriction is replaced by '(1=1)' and has no impact on the SQL generated. The value can then be used in scripts."), Id(9, 3)]
         public bool UseAsParameter
         {
             get { return _useAsParameter; }

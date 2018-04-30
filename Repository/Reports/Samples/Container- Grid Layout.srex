@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>b2f8bfdd-c19d-43a8-83a1-88d6bd0a3bc4</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</GUID>
+      <Name>Northwind (Repository)</Name>
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <InitScript />
+      <TasksScript />
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>918dd2c7-c7a5-4377-9cbd-feae7b7838f8</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>cd0caa1f-cd7a-4e0c-9a70-f247ca33721f</GUID>
+      <Name>RSS No SQL Source (Repository)</Name>
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <InitScript />
+      <TasksScript />
+      <MetaData>
+        <Tables />
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</GUID>
+      <Name>model table</Name>
+      <SourceGUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</SourceGUID>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>287860fc-f508-4c69-95f5-e2ebff863bd6</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction />
+      <Restrictions />
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks />
+  <TasksScript />
+  <Views>
+    <ReportView>
+      <GUID>48434652-2e24-4390-ab3c-116b5c9dcf41</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>e7e2dec4-038a-4c78-b9cc-33e9e9b2a5b0</GUID>
+          <Name>Container Blue Border</Name>
+          <Views>
+            <ReportView>
+              <GUID>a891be9a-d648-4b3a-89ec-662c88449b85</GUID>
+              <Name>Text1 Left Row1</Name>
+              <Views />
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+
+&lt;h1&gt;@view.Name&lt;/h1&gt;
+
+</CustomTemplate>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+            <ReportView>
+              <GUID>37e9da5a-15e0-4ce9-b1b3-961a9ffa22db</GUID>
+              <Name>Text2 Right Row1</Name>
+              <Views />
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+
+&lt;h1&gt;@view.Name&lt;/h1&gt;
+
+</CustomTemplate>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>2</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+            <ReportView>
+              <GUID>073cb874-1927-4c34-a090-7c6a4262149d</GUID>
+              <Name>Text3 Center Row2</Name>
+              <Views />
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+
+&lt;h1&gt;@view.Name&lt;/h1&gt;
+
+</CustomTemplate>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>3</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+            <ReportView>
+              <GUID>68cc45f1-d683-4f90-b3a6-80fb89075b4f</GUID>
+              <Name>Text4 Left Row3</Name>
+              <Views />
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+
+&lt;h1&gt;@view.Name&lt;/h1&gt;
+
+</CustomTemplate>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>4</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+            <ReportView>
+              <GUID>4ea493a4-4d43-4fbf-91ff-ee163d7c16dd</GUID>
+              <Name>Text5 Right Row3</Name>
+              <Views />
+              <TemplateName>Free</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+
+&lt;h1&gt;@view.Name&lt;/h1&gt;
+
+</CustomTemplate>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>5</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+            <ReportView>
+              <GUID>49b55cbf-7b41-4651-8542-a3ad348b0cbd</GUID>
+              <Name>Model Table</Name>
+              <Views>
+                <ReportView>
+                  <GUID>ccc76f4a-86c3-445a-903e-c2aff9f2030a</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+              </Views>
+              <ModelGUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</ModelGUID>
+              <TemplateName>Model</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>7</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
+            </ReportView>
+            <ReportView>
+              <GUID>b871a4a8-e7d5-47c4-9aec-c28df8aa81f6</GUID>
+              <Name>Container Red Border</Name>
+              <Views>
+                <ReportView>
+                  <GUID>957f415b-17e0-49d2-941f-6bd46b89fe69</GUID>
+                  <Name>Text6</Name>
+                  <Views />
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+
+&lt;h1&gt;@view.Name&lt;/h1&gt;
+
+</CustomTemplate>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+                <ReportView>
+                  <GUID>7ed9648b-f8cc-43b4-8292-9b36482f46e9</GUID>
+                  <Name>Text7</Name>
+                  <Views />
+                  <TemplateName>Free</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+
+&lt;h1&gt;@view.Name&lt;/h1&gt;
+
+</CustomTemplate>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <UseCustomTemplate>true</UseCustomTemplate>
+              <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    int index = 0;
+    var views = view.Views.OrderBy(i =&gt; i.SortOrder).ToList();
+    foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout").Trim()))
+    {
+        &lt;div class="row"&gt;
+            @foreach (string col in view.GetGridLayoutColumns(row))
+            {
+                &lt;div class="@view.GetGridLayoutColumnClass(col)"  style="border: solid red 2px"&gt;
+                    @if (index &lt; view.Views.Count &amp;&amp; view.IsGridLayoutColumnForModel(col))
+                    {
+                        @Raw(views[index++].Parse())
+                    }
+                &lt;/div&gt;
+            }
+        &lt;/div&gt;
+    }
+    //Remaining views
+    while (index &lt; views.Count)
+    {
+        &lt;div class="row"&gt;
+            @Raw(views[index++].Parse())
+        &lt;/div&gt;
+    }
+}
+</CustomTemplate>
+              <PartialTemplates />
+              <Parameters>
+                <Parameter>
+                  <Name>grid_layout</Name>
+                  <Value>(col-sm-6);col-sm-6 text-right;
+col-sm-12;</Value>
+                </Parameter>
+              </Parameters>
+              <CultureName />
+              <SortOrder>6</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
+          <TemplateName>Container</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    int index = 0;
+    var views = view.Views.OrderBy(i =&gt; i.SortOrder).ToList();
+    foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout").Trim()))
+    {
+        &lt;div class="row"&gt;
+            @foreach (string col in view.GetGridLayoutColumns(row))
+            {
+                &lt;div class="@view.GetGridLayoutColumnClass(col)"  style="border: 2px solid blue"&gt;
+                    @if (index &lt; view.Views.Count &amp;&amp; view.IsGridLayoutColumnForModel(col))
+                    {
+                        @Raw(views[index++].Parse())
+                    }
+                &lt;/div&gt;
+            }
+        &lt;/div&gt;
+    }
+    //Remaining views
+    while (index &lt; views.Count)
+    {
+        &lt;div class="row"&gt;
+            @Raw(views[index++].Parse())
+        &lt;/div&gt;
+    }
+}
+</CustomTemplate>
+          <PartialTemplates />
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>col-sm-4;(col-sm-4);col-sm-4 text-right;
+(col-sm-4);col-sm-4 text-center;(col-sm-4);
+col-sm-4;(col-sm-4);col-sm-4 text-right;
+col-sm-6;col-sm-6;</Value>
+            </Parameter>
+          </Parameters>
+          <CultureName />
+          <SortOrder>1</SortOrder>
+          <WebExec>true</WebExec>
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <PartialTemplates />
+      <Parameters />
+      <CultureName />
+      <SortOrder>1</SortOrder>
+      <WebExec>true</WebExec>
+      <PdfConfigurations />
+      <ExcelConfigurations>
+        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+      </ExcelConfigurations>
+    </ReportView>
+    <ReportView>
+      <GUID>38dc7211-dbd0-4088-85eb-3030e12d8821</GUID>
+      <Name>CSV</Name>
+      <Views>
+        <ReportView>
+          <GUID>06abd93f-21aa-4779-8fac-cb03c667164e</GUID>
+          <Name>Model CSV Excel</Name>
+          <Views />
+          <ModelGUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</ModelGUID>
+          <TemplateName>Model CSV Excel</TemplateName>
+          <PartialTemplates />
+          <Parameters />
+          <CultureName />
+          <SortOrder>1</SortOrder>
+          <WebExec>true</WebExec>
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <PartialTemplates />
+      <Parameters>
+        <Parameter>
+          <Name>report_format</Name>
+          <Value>csv</Value>
+        </Parameter>
+      </Parameters>
+      <CultureName />
+      <SortOrder>2</SortOrder>
+      <WebExec>true</WebExec>
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <InitScript />
+  <ViewGUID>48434652-2e24-4390-ab3c-116b5c9dcf41</ViewGUID>
+  <Schedules />
+</Report>

@@ -2740,12 +2740,7 @@ col-sm-7;col-sm-5;
                       <Views />
                       <TemplateName>Chart NVD3</TemplateName>
                       <PartialTemplates />
-                      <Parameters>
-                        <Parameter>
-                          <Name>nvd3_chart_width</Name>
-                          <Value>800px</Value>
-                        </Parameter>
-                      </Parameters>
+                      <Parameters />
                       <CultureName />
                       <SortOrder>1</SortOrder>
                       <WebExec>true</WebExec>

@@ -1020,7 +1020,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
                   <PartialTemplates />
-                  <Parameters />
+                  <Parameters>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                  </Parameters>
                   <CultureName />
                   <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
@@ -1133,7 +1138,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
                   <PartialTemplates />
-                  <Parameters />
+                  <Parameters>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                  </Parameters>
                   <CultureName />
                   <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
@@ -1221,6 +1231,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                       <Name>plotly_scatter_mode</Name>
                       <Value>markers</Value>
                     </Parameter>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
                   </Parameters>
                   <CultureName />
                   <SortOrder>3</SortOrder>
@@ -1304,7 +1318,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
                   <PartialTemplates />
-                  <Parameters />
+                  <Parameters>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                  </Parameters>
                   <CultureName />
                   <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
@@ -1387,7 +1406,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
                   <PartialTemplates />
-                  <Parameters />
+                  <Parameters>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                  </Parameters>
                   <CultureName />
                   <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
@@ -1470,7 +1494,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
                   <PartialTemplates />
-                  <Parameters />
+                  <Parameters>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                  </Parameters>
                   <CultureName />
                   <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
@@ -1557,6 +1586,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     <Parameter>
                       <Name>plotly_scatter_mode</Name>
                       <Value>markers</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
@@ -1646,6 +1679,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                       <Name>plotly_scatter_mode</Name>
                       <Value>markers</Value>
                     </Parameter>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
                   </Parameters>
                   <CultureName />
                   <SortOrder>3</SortOrder>
@@ -1733,6 +1770,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     <Parameter>
                       <Name>plotly_scatter_mode</Name>
                       <Value>markers</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
@@ -1825,7 +1866,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
                   <PartialTemplates />
-                  <Parameters />
+                  <Parameters>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                  </Parameters>
                   <CultureName />
                   <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
@@ -1908,7 +1954,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
                   <PartialTemplates />
-                  <Parameters />
+                  <Parameters>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
+                    </Parameter>
+                  </Parameters>
                   <CultureName />
                   <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
@@ -2003,6 +2054,10 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     <Parameter>
                       <Name>plotly_bar_orientation</Name>
                       <Value>h</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Chart Plotly</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
