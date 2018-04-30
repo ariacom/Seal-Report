@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>56320037-fbd5-4333-920b-c06af871880a</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>3a9da049-076b-4e19-83e7-a81201419cbf</GUID>
+      <Name>Northwind (Repository)</Name>
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <InitScript />
+      <TasksScript />
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>1eb83827-3297-4480-b2e1-0cd355682d65</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>0859ae9d-75bf-4527-80d4-29000834b83b</GUID>
+      <Name>RSS No SQL Source (Repository)</Name>
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <InitScript />
+      <TasksScript />
+      <MetaData>
+        <Tables />
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>b657ccd6-8b4b-43b5-8b33-f2ef4f004647</GUID>
+      <Name>model</Name>
+      <SourceGUID>3a9da049-076b-4e19-83e7-a81201419cbf</SourceGUID>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>98171287-d8ec-4fac-9dd3-7cb4ddf206a5</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>34ec4d27-803e-4d22-82ed-ce836cb8f3c7</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>RowColumn</ShowTotal>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+          <SQL />
+        </ReportElement>
+        <ReportElement>
+          <GUID>20d227ec-695a-4fbc-ae30-880260a3b74b</GUID>
+          <Name>Products.CategoryID</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Page</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[a83a4c37-a9c9-40a5-bd1e-50c8d320d2c7]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>a83a4c37-a9c9-40a5-bd1e-50c8d320d2c7</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <FormatRe />
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+            <string>Dodsworth</string>
+          </EnumValues>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks />
+  <TasksScript />
+  <Views>
+    <ReportView>
+      <GUID>85f5297e-098f-4b98-8a1f-0c62162b2349</GUID>
+      <Name>view</Name>
+      <Views>
+        <ReportView>
+          <GUID>978ac050-cf2a-498a-989f-46e973131a38</GUID>
+          <Name>Tab Control</Name>
+          <Views>
+            <ReportView>
+              <GUID>39f5894b-0126-4b58-865a-bc52172e1239</GUID>
+              <Name>Tab Page</Name>
+              <Views>
+                <ReportView>
+                  <GUID>d8930002-9d0c-4d00-9949-f027735f0f43</GUID>
+                  <Name>Container</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>295cc754-90e5-4b93-a71a-12e3826df377</GUID>
+                      <Name>Model HTML</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>921cacf9-6e8a-40f2-8599-05880763af0c</GUID>
+                          <Name>Model Container</Name>
+                          <Views>
+                            <ReportView>
+                              <GUID>1e9016fe-43f2-4731-8ebb-3057698a1b14</GUID>
+                              <Name>Page Table</Name>
+                              <Views />
+                              <TemplateName>Page Table</TemplateName>
+                              <PartialTemplates />
+                              <Parameters>
+                                <Parameter>
+                                  <Name>page_table_caption</Name>
+                                  <Value>a caption</Value>
+                                </Parameter>
+                                <Parameter>
+                                  <Name>page_table_caption_css</Name>
+                                  <Value>caption-side:top; text-align:right; font-weight:bold;</Value>
+                                </Parameter>
+                              </Parameters>
+                              <CultureName />
+                              <SortOrder>1</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                            <ReportView>
+                              <GUID>195c721a-1060-444a-a8a2-34882aecc1b6</GUID>
+                              <Name>Chart JS</Name>
+                              <Views />
+                              <TemplateName>Chart JS</TemplateName>
+                              <PartialTemplates />
+                              <Parameters />
+                              <CultureName />
+                              <SortOrder>2</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                            <ReportView>
+                              <GUID>be625688-ba86-4eee-9db9-8f593beff7ae</GUID>
+                              <Name>Chart NVD3</Name>
+                              <Views />
+                              <TemplateName>Chart NVD3</TemplateName>
+                              <PartialTemplates />
+                              <Parameters />
+                              <CultureName />
+                              <SortOrder>3</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                            <ReportView>
+                              <GUID>ba16fde4-2f47-4b21-b465-5cd1e1c898b7</GUID>
+                              <Name>Chart Plotly</Name>
+                              <Views />
+                              <TemplateName>Chart Plotly</TemplateName>
+                              <PartialTemplates />
+                              <Parameters />
+                              <CultureName />
+                              <SortOrder>4</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                            <ReportView>
+                              <GUID>97aa7864-8bea-4ee6-8302-c9e836f46095</GUID>
+                              <Name>Data Table</Name>
+                              <Views />
+                              <TemplateName>Data Table</TemplateName>
+                              <PartialTemplates />
+                              <Parameters>
+                                <Parameter>
+                                  <Name>data_table_caption</Name>
+                                  <Value>da caption</Value>
+                                </Parameter>
+                                <Parameter>
+                                  <Name>data_table_caption_css</Name>
+                                  <Value>caption-side:top; text-align:right; font-weight:bold;</Value>
+                                </Parameter>
+                              </Parameters>
+                              <CultureName />
+                              <SortOrder>5</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                          </Views>
+                          <TemplateName>Model Container</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>1</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                      </Views>
+                      <ModelGUID>b657ccd6-8b4b-43b5-8b33-f2ef4f004647</ModelGUID>
+                      <TemplateName>Model</TemplateName>
+                      <PartialTemplates />
+                      <Parameters>
+                        <Parameter>
+                          <Name>model_menu_type</Name>
+                          <Value>left</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>summary_table_caption</Name>
+                          <Value>summary caption</Value>
+                        </Parameter>
+                      </Parameters>
+                      <CultureName />
+                      <SortOrder>0</SortOrder>
+                      <WebExec>true</WebExec>
+                      <PdfConfigurations />
+                      <ExcelConfigurations />
+                    </ReportView>
+                    <ReportView>
+                      <GUID>8b1da1ec-6447-4adf-a981-a998a5542f28</GUID>
+                      <Name>Model HTML2</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>9a1c1d0d-5460-4141-a3b8-384748156e10</GUID>
+                          <Name>Model Container</Name>
+                          <Views>
+                            <ReportView>
+                              <GUID>6795aad5-b199-4572-a28e-651d40ae5167</GUID>
+                              <Name>Page Table</Name>
+                              <Views />
+                              <TemplateName>Page Table</TemplateName>
+                              <PartialTemplates />
+                              <Parameters />
+                              <CultureName />
+                              <SortOrder>1</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                            <ReportView>
+                              <GUID>29bafd99-cbf0-4a6e-ad6b-ec893619d3b6</GUID>
+                              <Name>Chart JS</Name>
+                              <Views />
+                              <TemplateName>Chart JS</TemplateName>
+                              <PartialTemplates />
+                              <Parameters />
+                              <CultureName />
+                              <SortOrder>2</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                            <ReportView>
+                              <GUID>2be463b8-ee57-47f8-a726-c0a2f3fc45a4</GUID>
+                              <Name>Chart NVD3</Name>
+                              <Views />
+                              <TemplateName>Chart NVD3</TemplateName>
+                              <PartialTemplates />
+                              <Parameters />
+                              <CultureName />
+                              <SortOrder>3</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                            <ReportView>
+                              <GUID>f6634e26-6c15-4401-b802-ddd1a6fd3f0c</GUID>
+                              <Name>Chart Plotly</Name>
+                              <Views />
+                              <TemplateName>Chart Plotly</TemplateName>
+                              <PartialTemplates />
+                              <Parameters />
+                              <CultureName />
+                              <SortOrder>4</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                            <ReportView>
+                              <GUID>8209041a-e27f-4972-a3eb-d4962085e437</GUID>
+                              <Name>Data Table</Name>
+                              <Views />
+                              <TemplateName>Data Table</TemplateName>
+                              <PartialTemplates />
+                              <Parameters />
+                              <CultureName />
+                              <SortOrder>5</SortOrder>
+                              <WebExec>true</WebExec>
+                              <PdfConfigurations />
+                              <ExcelConfigurations />
+                            </ReportView>
+                          </Views>
+                          <TemplateName>Model Container</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>1</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                      </Views>
+                      <ModelGUID>b657ccd6-8b4b-43b5-8b33-f2ef4f004647</ModelGUID>
+                      <TemplateName>Model</TemplateName>
+                      <PartialTemplates />
+                      <Parameters />
+                      <CultureName />
+                      <SortOrder>1</SortOrder>
+                      <WebExec>true</WebExec>
+                      <PdfConfigurations />
+                      <ExcelConfigurations />
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Container</TemplateName>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>grid_layout</Name>
+                      <Value>col-sm-6;col-sm-6;</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+            <ReportView>
+              <GUID>ae0ef25f-d13b-46e6-97c1-845fec90c788</GUID>
+              <Name>Tab Page2</Name>
+              <Views>
+                <ReportView>
+                  <GUID>0f9e2822-df6b-4a62-bca5-8aa42e59d544</GUID>
+                  <Name>Model HTML</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>993c69b1-bbef-4d09-84bf-e0365b9ac3bf</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>a9db4913-7ef6-47e8-8069-c315ce0187a1</GUID>
+                          <Name>Page Table</Name>
+                          <Views />
+                          <TemplateName>Page Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>1</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>7c1a2f14-f0c0-47a7-a815-81ae09a22340</GUID>
+                          <Name>Chart JS</Name>
+                          <Views />
+                          <TemplateName>Chart JS</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>2</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>09be5e6d-de15-412d-9869-89be311e9094</GUID>
+                          <Name>Chart NVD3</Name>
+                          <Views />
+                          <TemplateName>Chart NVD3</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>3</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>5a7d91e5-ac3e-4c1f-84bb-059053f87c34</GUID>
+                          <Name>Chart Plotly</Name>
+                          <Views />
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>4</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                        <ReportView>
+                          <GUID>89614a7a-e397-4821-84c7-ad500daa6c9b</GUID>
+                          <Name>Data Table</Name>
+                          <Views />
+                          <TemplateName>Data Table</TemplateName>
+                          <PartialTemplates />
+                          <Parameters />
+                          <CultureName />
+                          <SortOrder>5</SortOrder>
+                          <WebExec>true</WebExec>
+                          <PdfConfigurations />
+                          <ExcelConfigurations />
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Model Container</TemplateName>
+                      <PartialTemplates />
+                      <Parameters />
+                      <CultureName />
+                      <SortOrder>1</SortOrder>
+                      <WebExec>true</WebExec>
+                      <PdfConfigurations />
+                      <ExcelConfigurations />
+                    </ReportView>
+                  </Views>
+                  <ModelGUID>b657ccd6-8b4b-43b5-8b33-f2ef4f004647</ModelGUID>
+                  <TemplateName>Model</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>2</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <PartialTemplates />
+          <Parameters>
+            <Parameter>
+              <Name>tab_justified</Name>
+              <Value>True</Value>
+            </Parameter>
+          </Parameters>
+          <CultureName />
+          <SortOrder>1</SortOrder>
+          <WebExec>true</WebExec>
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <PartialTemplates />
+      <Parameters>
+        <Parameter>
+          <Name>restriction_button</Name>
+          <Value>False</Value>
+        </Parameter>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+        <Parameter>
+          <Name>container_fluid</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <CultureName />
+      <SortOrder>1</SortOrder>
+      <WebExec>true</WebExec>
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <InitScript />
+  <ViewGUID>85f5297e-098f-4b98-8a1f-0c62162b2349</ViewGUID>
+  <Schedules />
+</Report>

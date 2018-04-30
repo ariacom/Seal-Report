@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GUID>8ac134e3-601f-4c1e-b6f7-aea0b6c37e6f</GUID>
+  <GUID>094c4a77-16a3-45c4-b7df-67940a9d9421</GUID>
   <Sources>
     <ReportSource>
       <GUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</GUID>
@@ -44,7 +44,7 @@
           <Category>Master</Category>
           <Tag />
           <Format>yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
+          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Page</PivotPosition>
@@ -52,35 +52,33 @@
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>32f79895-2da2-4b75-a2d8-36e73707e925</GUID>
-          <Name>Products.CategoryID</Name>
+          <GUID>2cfaeb17-5ba9-486e-85ec-dc349855b9ed</GUID>
+          <Name>Shippers.CompanyName</Name>
           <Category>Master</Category>
           <Tag />
-          <Format>N0</Format>
-          <HasHTMLTags xsi:nil="true" />
+          <Format />
+          <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>SplitterBoth</SerieDefinition>
+          <Nvd3Serie>ScatterChart</Nvd3Serie>
+          <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6c333c9b-0303-40fe-87be-f89d161ec0a7</GUID>
+          <Name>DatePart('m',[Orders.OrderDate],1,0)</Name>
+          <Category>Master</Category>
+          <Tag />
+          <Format>MM/yyyy</Format>
+          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>318e4a99-855d-4c84-aa77-f45b5439b8d9</GUID>
-          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
-          <Category>Master</Category>
-          <Tag />
-          <DisplayName />
-          <Format>N0</Format>
-          <HasHTMLTags xsi:nil="true" />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Data</PivotPosition>
-          <ShowTotal>RowColumn</ShowTotal>
-          <SerieDefinition>NVD3Serie</SerieDefinition>
-          <ChartJSSerie>Bar</ChartJSSerie>
-          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>f4fa164a-efe8-4597-bcc3-cdb124cc0975</GUID>
@@ -89,31 +87,37 @@
           <Tag />
           <DisplayName />
           <Format>N0</Format>
-          <HasHTMLTags xsi:nil="true" />
+          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
-          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieDefinition>Serie</SerieDefinition>
+          <ChartJSSerie>Line</ChartJSSerie>
+          <SerieSortType>None</SerieSortType>
+          <YAxisType>Secondary</YAxisType>
           <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>2cfaeb17-5ba9-486e-85ec-dc349855b9ed</GUID>
-          <Name>Shippers.CompanyName</Name>
+          <GUID>318e4a99-855d-4c84-aa77-f45b5439b8d9</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <Tag />
-          <Format />
-          <HasHTMLTags xsi:nil="true" />
+          <DisplayName />
+          <Format>N0</Format>
+          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
-          <PivotPosition>Column</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <SerieDefinition>Splitter</SerieDefinition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>RowColumn</ShowTotal>
+          <SerieDefinition>Serie</SerieDefinition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[4e191487-5f6f-4509-be97-b1e1b731ef2b]</Restriction>
+      <Restriction>[4e191487-5f6f-4509-be97-b1e1b731ef2b]
+</Restriction>
       <Restrictions>
         <ReportRestriction>
           <GUID>4e191487-5f6f-4509-be97-b1e1b731ef2b</GUID>
@@ -123,7 +127,7 @@
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <Format />
-          <HasHTMLTags xsi:nil="true" />
+          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -163,11 +167,11 @@
           <Name>Model HTML View</Name>
           <Views>
             <ReportView>
-              <GUID>98cc9aa0-40cc-459c-80a9-e0688cb202a8</GUID>
+              <GUID>a9b9577d-edc5-4c76-bf2c-3204fa401ff2</GUID>
               <Name>Model Container</Name>
               <Views>
                 <ReportView>
-                  <GUID>3e526c66-183b-4391-a792-93b44dc0bbf0</GUID>
+                  <GUID>a1447235-2ad0-44bd-8152-e6577998f301</GUID>
                   <Name>Page Table</Name>
                   <Views />
                   <TemplateName>Page Table</TemplateName>
@@ -180,7 +184,7 @@
                   <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
-                  <GUID>b65b5f10-9959-41e1-9125-a53650ebb0b6</GUID>
+                  <GUID>0b01a3e0-e9c8-4310-af51-fe1be32d0420</GUID>
                   <Name>Chart JS</Name>
                   <Views />
                   <TemplateName>Chart JS</TemplateName>
@@ -193,17 +197,12 @@
                   <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
-                  <GUID>46006585-0e16-4a6a-a54c-630fb3fa0a03</GUID>
+                  <GUID>9576830a-1983-4f56-8a5c-7bf8a20a796a</GUID>
                   <Name>Chart NVD3</Name>
                   <Views />
                   <TemplateName>Chart NVD3</TemplateName>
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>nvd3_chart_width</Name>
-                      <Value>600px</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
                   <SortOrder>3</SortOrder>
                   <WebExec>true</WebExec>
@@ -211,7 +210,7 @@
                   <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
-                  <GUID>fdee4f0e-f3fd-4488-9fd4-cc35690130de</GUID>
+                  <GUID>a4bd9605-e975-48e9-935b-75265d224b86</GUID>
                   <Name>Chart Plotly</Name>
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
@@ -224,7 +223,7 @@
                   <ExcelConfigurations />
                 </ReportView>
                 <ReportView>
-                  <GUID>6d6dd059-e5c8-4484-b6cd-53abe7103336</GUID>
+                  <GUID>3037184a-c5c9-4bf6-ad7a-240f84fd9479</GUID>
                   <Name>Data Table</Name>
                   <Views />
                   <TemplateName>Data Table</TemplateName>

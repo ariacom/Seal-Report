@@ -138,7 +138,7 @@
                         svg.append('text')
                             .attr('class','chartTitleWrap')
                             .attr('x', Math.max(1, (svgJQ.width() - 7*chartTitle.length) / 2))
-                            .attr('y', svgJQ.height() + (chartType == 'lineWithFocusChart' ? 10 : -4))
+                            .attr('y', Math.max(svgJQ.height(), $("#@chartId").height()) + (chartType == 'lineWithFocusChart' ? 10 : -4))
                             .style('font-weight', 'bold')
                             .style('font-size', '14px')
                             .text(chartTitle);
