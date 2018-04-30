@@ -1133,7 +1133,7 @@ namespace Seal.Model
                     if (!line0[i].IsTotal)
                     {
                         //empty cell
-                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true, Value = (i == 0 ? Report.Translate("Total") : "") };
+                        tttLine[i] = new ResultTotalCell() { Element = line0[i].Element, IsTotal = true, IsTitle = true, Value = (i == 0 ? Report.Translate("Total") : "") };
                     }
                     else
                     {

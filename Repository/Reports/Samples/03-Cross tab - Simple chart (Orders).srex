@@ -141,12 +141,8 @@
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>chartjs_width</Name>
-                      <Value>800px</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>chartjs_height</Name>
-                      <Value>500px</Value>
+                      <Name>chartjs_contwidth</Name>
+                      <Value>50vw</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
@@ -209,7 +205,12 @@
           <TemplateName>Model</TemplateName>
           <CustomTemplate />
           <PartialTemplates />
-          <Parameters />
+          <Parameters>
+            <Parameter>
+              <Name>print_break_after_page</Name>
+              <Value>True</Value>
+            </Parameter>
+          </Parameters>
           <CultureName />
           <SortOrder>1</SortOrder>
           <WebExec>true</WebExec>

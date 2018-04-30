@@ -6,12 +6,16 @@
     bool activeFirst = true;
 }
 
-@if (!report.PrintLayout && reportModel.SummaryTable != null && reportModel.SummaryTable.RowCount > 0 && view.GetBoolValue("show_summary_table"))
+@if (reportModel.SummaryTable != null && reportModel.SummaryTable.RowCount > 0 && view.GetBoolValue("show_summary_table"))
 {
     activeFirst = false;
     <div class="tab-pane fade in active" id="@(view.ViewId + "_summary")">
         @Include(view.GetPartialTemplateKey("Model.iSummaryTable", view), view)
     </div>
+    if (report.PrintLayout && view.GetBoolValue("print_break_after_page"))
+    {
+        <div style="page-break-after: always;"></div>
+    }
 }
 
 @foreach (ResultPage page in reportModel.Pages)

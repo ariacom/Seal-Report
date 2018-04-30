@@ -15,10 +15,11 @@
     string chartId = "cnv" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
-        <div id='@chartId'  style="position: relative;@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_contheight"), ";")">
+        <div id='@chartId' style="position: relative;@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_contheight"), ";")">
             <svg style="@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_height"), ";")" />
         </div>
-            <script>
+        <script>
+            $(document).ready(function () {
                 nv.addGraph(function () {
                     var series = new Array();
                     @foreach (ResultSerie serie in page.Series.Where(i => i.Element.Nvd3Serie != NVD3SerieDefinition.None))
@@ -165,7 +166,8 @@
                             nvd3TranslateAll("#@(chartId)");
                         });
                     });
-            </script>
+            });//document.ready
+        </script>
         chartOk = true;
     }
     if (!chartOk)

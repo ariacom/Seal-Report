@@ -1,4 +1,5 @@
 ﻿using DynamicTypeDescriptor;
+using Seal.Forms;
 using Seal.Model;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,7 @@ namespace Seal.Helpers
                 {
                     grid.ResetSelectedProperty();
                     if (grid.SelectedObject is RootEditor) ((RootEditor)grid.SelectedObject).UpdateEditor();
+                    if (HelperEditor.HandlerInterface != null) HelperEditor.HandlerInterface.SetModified();
                 }
             });
             grid.ContextMenuStrip.Items.Add(resetToolStripMenuItem);

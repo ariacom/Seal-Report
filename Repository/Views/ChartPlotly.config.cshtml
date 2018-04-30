@@ -9,8 +9,8 @@
     Template.ForReportModel = false;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "plotly_width", TextValue = "400px", DisplayName = "Chart width", Description = "The chart width. If empty, the size is automatic.", Enums = new string[] { "", "300px", "400px", "500px", "600px" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "plotly_height", TextValue = "400px", DisplayName = "Chart height", Description = "The chart height. If empty, the size is automatic.", Enums = new string[] { "", "300px", "400px", "500px", "600px" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "plotly_width", TextValue = "", DisplayName = "Chart width", Description = "The chart width. If empty, the size is automatic.", Enums = new string[] { "", "300px", "400px", "500px", "600px", "50%", "80%" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "plotly_height", TextValue = "400px", DisplayName = "Chart height", Description = "The chart height. If empty, the size is automatic.", Enums = new string[] { "", "300px", "400px", "500px", "600px", "50%", "80%" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "plotly_title", DisplayName = "Chart title", Description = "Optional title displayed for the Plotly chart. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
     Template.Parameters.Add(new Parameter() { Name = "plotly_xaxis_title", DisplayName = "X Axis title", Description = "Optional title displayed for the X Axis. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
     Template.Parameters.Add(new Parameter() { Name = "plotly_yaxis_title", DisplayName = "Y Axis title", Description = "Optional title displayed for the Y Axis. To handle drill navigation, the title can contain element label keyword like '%Label Text%' that will be replaced (e.g. 'Sales per %Order Month%')'." });
