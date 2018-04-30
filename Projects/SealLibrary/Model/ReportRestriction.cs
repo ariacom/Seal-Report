@@ -233,7 +233,7 @@ namespace Seal.Model
 
         private int _inputRows = 0;
         [DefaultValue(0)]
-        [Category("Advanced"), DisplayName("Input rows for first value"), Description("If greater than 0, specifies the number of rows available to edit the first restriction value (only valid for text or numeric when the restriction is prompted)."), Id(6, 3)]
+        [Category("Advanced"), DisplayName("Input lines for first value"), Description("If greater than 0, specifies the number of lines available to edit the first restriction value (only valid for text or numeric when the restriction is prompted)."), Id(6, 3)]
         public int InputRows
         {
             get { return _inputRows; }
