@@ -986,16 +986,12 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <PartialTemplates />
                   <Parameters>
                     <Parameter>
-                      <Name>chartjs_contheight</Name>
-                      <Value />
-                    </Parameter>
-                    <Parameter>
                       <Name>chartjs_title</Name>
                       <Value>Chart JS</Value>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>0</SortOrder>
+                  <SortOrder>1</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -1013,7 +1009,7 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                     </Parameter>
                   </Parameters>
                   <CultureName />
-                  <SortOrder>1</SortOrder>
+                  <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -1439,10 +1435,6 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
                   <TemplateName>Chart JS</TemplateName>
                   <PartialTemplates />
                   <Parameters>
-                    <Parameter>
-                      <Name>chartjs_width</Name>
-                      <Value>450px</Value>
-                    </Parameter>
                     <Parameter>
                       <Name>chartjs_title</Name>
                       <Value>Chart JS</Value>

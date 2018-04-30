@@ -25,10 +25,11 @@
         {
             chartType = "horizontalBar";
         }
-        <div class="chart-container" style="position:relative; @Helper.AddIfNotEmpty("width:", view.GetValue("chartjs_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("chartjs_contheight"), ";")">
+        <div class="chart-container" style="@(view.GetBoolValue("chartjs_responsive") ? "position:relative;" : "") @Helper.AddIfNotEmpty("width:", view.GetValue("chartjs_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("chartjs_contheight"), ";")">
             <canvas id="@chartId" @Raw(Helper.AddIfNotEmpty("width='", view.GetValue("chartjs_width"), "'")) @Raw(Helper.AddIfNotEmpty("height='", view.GetValue("chartjs_height"), "'"))></canvas>
         </div>
-            <script>
+        <script>
+            $(document).ready(function () {
             var ctx = $("#@chartId");
             var colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
             colors = @Raw(view.GetValue("chartjs_colors") != "d3" ? view.GetValue("chartjs_colors") : "colors");
@@ -57,6 +58,7 @@
             };
             var options = {
                 responsive: @Helper.ToJS(view.GetBoolValue("chartjs_responsive")),
+                maintainAspectRatio: @Helper.ToJS(view.GetBoolValue("chartjs_maintainratio")),
                 legend: {
                     display: @Helper.ToJS(view.GetBoolValue("chartjs_show_legend")),
                     position: '@view.GetValue("chartjs_legend_position")'
@@ -168,26 +170,26 @@
                 }
             };
 
-
-            var @chartId = new Chart(ctx, {
-                type: '@chartType',
-                data: data,
-                options: options
-            });
-            // Naviagation
-            $("#@chartId").click(
-                function (evt) {
-                    var points = @(chartId).getElementsAtEvent(evt);
-                    if (points && points.length > 0) {
-                        var index = points[0]["_index"];
-                        var label = @(chartId).data.labels[index];
-                        var value = @(chartId).data.datasets[0].data[index];
-                       var nav = @(chartId).data.navigations[index];
-                       if (nav) showPopupNavMenu(evt, nav, true);
+                var @chartId = new Chart(ctx, {
+                    type: '@chartType',
+                    data: data,
+                    options: options
+                });
+                // Navigation
+                $("#@chartId").click(
+                    function (evt) {
+                        var points = @(chartId).getElementsAtEvent(evt);
+                        if (points && points.length > 0) {
+                            var index = points[0]["_index"];
+                            var label = @(chartId).data.labels[index];
+                            var value = @(chartId).data.datasets[0].data[index];
+                            var nav = @(chartId).data.navigations[index];
+                            if (nav) showPopupNavMenu(evt, nav, true);
+                        }
                     }
-                }
-            );
-            </script>
+                );
+            });//document.ready
+        </script>
         chartOk = true;
     }
     if (!chartOk)
