@@ -1437,6 +1437,23 @@ namespace Seal
             }
         }
 
+        private void mainTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (selectedEntity is ReportTask)
+            {
+                if (!string.IsNullOrEmpty(((ReportTask)selectedEntity).SQL)) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
+                else toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F7));
+            }
+            else if (selectedEntity is ReportModel)
+            {
+                if (((ReportModel)selectedEntity).Elements.Count >0) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
+            }
+            else if (selectedEntity is ReportSchedule)
+            {
+                toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
+            }
+        }
+
         private void mainTimer_Tick(object sender, EventArgs e)
         {
             executeToolStripMenuItem.Enabled = (_report != null && (_reportViewer == null || (_reportViewer != null && _reportViewer.CanExecute)));
