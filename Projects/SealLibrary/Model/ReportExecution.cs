@@ -1218,6 +1218,7 @@ namespace Seal.Model
                     if (Report.Cancel) break;
 
                     ResultTable dataTable = page.DataTable;
+                    if (dataTable.BodyStartRow == dataTable.BodyEndRow) continue;
 
                     ResultTotalCell[] subTotalLine = null;
                     List<ResultTotalCell> totalCells = new List<ResultTotalCell>();

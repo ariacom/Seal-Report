@@ -304,7 +304,7 @@
             this.sortColumnAlphaOrderToolStripMenuItem,
             this.sortColumnSQLOrderToolStripMenuItem});
             this.treeContextMenuStrip.Name = "treeContextMenuStrip";
-            this.treeContextMenuStrip.Size = new System.Drawing.Size(233, 180);
+            this.treeContextMenuStrip.Size = new System.Drawing.Size(233, 158);
             this.treeContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.treeContextMenuStrip_Opening);
             // 
             // addToolStripMenuItem
@@ -491,6 +491,7 @@
             this.mainTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.mainTreeView_BeforeSelect);
             this.mainTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.mainTreeView_AfterSelect);
             this.mainTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.mainTreeView_NodeMouseClick);
+            this.mainTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.mainTreeView_NodeMouseDoubleClick);
             this.mainTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragDrop);
             this.mainTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragEnter);
             this.mainTreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.mainTreeView_DragOver);
