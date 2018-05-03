@@ -153,11 +153,6 @@ namespace Seal.Model
                     Report.ExecutionErrors = ex.Message;
                 }
             }
-            else if (!string.IsNullOrEmpty(Report.FinalResultFilePath) && File.Exists(Report.FinalResultFilePath))
-            {
-                Report.ResultFilePath = Report.FinalResultFilePath;
-            }
-
         }
 
 
