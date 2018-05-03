@@ -139,9 +139,6 @@ namespace Seal.Model
         public string ResultFilePath;
 
         [XmlIgnore]
-        public string FinalResultFilePath; //If set, the file is used as external file
-
-        [XmlIgnore]
         public string DisplayResultFilePath
         {
             get
