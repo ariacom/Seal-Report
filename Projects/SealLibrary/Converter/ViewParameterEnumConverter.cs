@@ -43,8 +43,9 @@ namespace Seal.Converter
         {
             if (context != null && value != null)
             {
-                if (context.Instance is Parameter) return value.ToString();
-                Parameter parameter = ((ParametersEditor)context.Instance).GetParameter(context.PropertyDescriptor.Name);
+                Parameter parameter = null;
+                if (context.Instance is Parameter) parameter = (Parameter)context.Instance;
+                else parameter = ((ParametersEditor)context.Instance).GetParameter(context.PropertyDescriptor.Name);
                 if (parameter != null) return (parameter.EnumGetDisplayFromValue(value.ToString()));
             }
             return base.ConvertTo(context, culture, value, destType);
@@ -57,8 +58,9 @@ namespace Seal.Converter
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (context.Instance is Parameter) return value.ToString();
-            Parameter parameter = ((ParametersEditor)context.Instance).GetParameter(context.PropertyDescriptor.Name);
+            Parameter parameter = null;
+            if (context.Instance is Parameter) parameter = (Parameter)context.Instance;
+            else parameter = ((ParametersEditor)context.Instance).GetParameter(context.PropertyDescriptor.Name);
             if (parameter != null) return (parameter.EnumGetValueFromDisplay(value.ToString()));
             return base.ConvertFrom(context, culture, value);
         }
