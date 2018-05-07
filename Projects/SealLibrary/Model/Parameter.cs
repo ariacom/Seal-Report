@@ -21,6 +21,7 @@ namespace Seal.Model
         public const string ForceExecutionParameter = "force_execution";
         public const string NVD3AddNullPointParameter = "nvd3_add_null_point";
         public const string ColumnsHiddenParameter = "columns_hidden";
+        public const string CSVUtf8Parameter = "csv_utf8";
 
 
         #region Editor
