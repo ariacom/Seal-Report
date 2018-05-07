@@ -148,10 +148,10 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                 }
 
                 //Check web config...
-                if (!File.Exists(Path.Combine(publicationDirectory, "web.config")) && File.Exists(Path.Combine(publicationDirectory, "web.release.config")))
+                if (!filesOnly || (!File.Exists(Path.Combine(publicationDirectory, "web.config")) && File.Exists(Path.Combine(publicationDirectory, "web.release.config"))))
                 {
                     log.Log("Creating web.config file");
-                    File.Copy(Path.Combine(publicationDirectory, "web.release.config"), Path.Combine(publicationDirectory, "web.config"));
+                    File.Copy(Path.Combine(publicationDirectory, "web.release.config"), Path.Combine(publicationDirectory, "web.config"), true);
                 }
 
                 if (!filesOnly && !log.IsJobCancelled())

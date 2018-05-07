@@ -611,6 +611,16 @@ namespace Seal.Model
             get { return Models.Exists(i => i.HasPlotlySerie); }
         }
 
+        [XmlIgnore]
+        public Encoding ResultFileEncoding
+        {
+            get
+            {
+                //Utf8 by default, except for CSV if specified
+                return (Format == ReportFormat.csv && !ExecutionView.GetBoolValue(Parameter.CSVUtf8Parameter)) ? Encoding.Default : Encoding.UTF8;
+            }
+        }
+
         public void InitReferences()
         {
             //init report references in objects

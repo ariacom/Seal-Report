@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net.Mail;
 using Microsoft.Win32.TaskScheduler;
+using System.Text;
 
 namespace Seal.Model
 {
@@ -103,7 +104,7 @@ namespace Seal.Model
 
             try
             {
-                File.WriteAllText(Report.ResultFilePath, result.Trim(), System.Text.Encoding.UTF8);
+                File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
             }
             catch (Exception ex)
             {
@@ -112,7 +113,7 @@ namespace Seal.Model
                 string newPath = FileHelper.GetUniqueFileName(Path.Combine(newFolder, Report.ResultFileName), "." + Report.ResultExtension);
                 Report.ExecutionErrors += string.Format("Unable to write to '{0}'.\r\nChanging report result to '{1}'.\r\n{2}\r\n", Report.ResultFilePath, newPath, ex.Message);
                 Report.ResultFilePath = newPath;
-                File.WriteAllText(Report.ResultFilePath, result.Trim(), System.Text.Encoding.UTF8);
+                File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
             }
 
             if (Report.Format == ReportFormat.pdf)
@@ -166,7 +167,7 @@ namespace Seal.Model
             }
             string result = Render();
             Debug.WriteLine(string.Format("RenderHTMLDisplay {0} {1} {2}", Report.HTMLDisplayFilePath, Report.Status, Report.ExecutionGUID));
-            File.WriteAllText(Report.HTMLDisplayFilePath, result, System.Text.Encoding.UTF8);
+            File.WriteAllText(Report.HTMLDisplayFilePath, result, Encoding.UTF8);
         }
 
         public void RenderHTMLDisplayForViewer()
@@ -174,7 +175,7 @@ namespace Seal.Model
             string result = Render();
             Debug.WriteLine(string.Format("RenderHTMLDisplayForViewer {0} {1} {2}", Report.HTMLDisplayFilePath, Report.Status, Report.ExecutionGUID));
 
-            File.WriteAllText(Report.HTMLDisplayFilePath, result, System.Text.Encoding.UTF8);
+            File.WriteAllText(Report.HTMLDisplayFilePath, result, Encoding.UTF8);
         }
 
 
@@ -1746,7 +1747,7 @@ namespace Seal.Model
                 if (paginationParameter != null) paginationParameter.BoolValue = false;
                 Report.Status = ReportStatus.RenderingResult;
                 string result = Render();
-                File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
+                File.WriteAllText(newPath, result.Trim(), Encoding.UTF8);
             }
             finally
             {
@@ -1769,7 +1770,7 @@ namespace Seal.Model
                 Report.Format = ReportFormat.csv;
                 Report.Status = ReportStatus.RenderingResult;
                 string result = Report.ExecutionView.ParseChildren();
-                File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
+                File.WriteAllText(newPath, result.Trim(), Report.ResultFileEncoding);
             }
             finally
             {
@@ -1791,7 +1792,7 @@ namespace Seal.Model
                 Report.Format = ReportFormat.print;
                 Report.Status = ReportStatus.RenderingResult;
                 string result = Render();
-                File.WriteAllText(newPath, result.Trim(), System.Text.Encoding.UTF8);
+                File.WriteAllText(newPath, result.Trim(), Encoding.UTF8);
             }
             finally
             {
