@@ -40,13 +40,13 @@ In addition to the Open Source version, **<a href="http://www.ariacom.com" targe
 ## System Requirements
 **For use:**
 * Windows XP, Vista, 2003, Windows 7, 2008, Windows 8, 2012, Windows 10
-* .Net Framework 4.0
+* .Net Framework 4.5
 * Database OLE DB or ODBC Drivers
-* For the Web Report Server: Internet Information Server version 7 or 8 with MVC4
+* For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater
 * For the Task Scheduler: Windows Vista, 7, 2008, 8, 10 or 2012
 
 **For development:**
-* Visual Studio 2015 with MVC 4
+* Visual Studio 2017
 
 ## License
 Seal Report is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>
