@@ -1311,7 +1311,7 @@
                     }
                 }
 
-                if (handler && handler.call(picker, widget)) {
+                if (handler && handler.call(picker, widget)) { //fix https://github.com/Eonasdan/bootstrap-datetimepicker/issues/1989
                     e.stopPropagation();
                     e.preventDefault();
                 }
