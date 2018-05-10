@@ -450,40 +450,6 @@ col-sm-6;col-sm-6;</Value>
 &lt;/SealExcelCfg&gt;</string>
       </ExcelConfigurations>
     </ReportView>
-    <ReportView>
-      <GUID>38dc7211-dbd0-4088-85eb-3030e12d8821</GUID>
-      <Name>CSV</Name>
-      <Views>
-        <ReportView>
-          <GUID>06abd93f-21aa-4779-8fac-cb03c667164e</GUID>
-          <Name>Model CSV Excel</Name>
-          <Views />
-          <ModelGUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</ModelGUID>
-          <TemplateName>Model CSV Excel</TemplateName>
-          <PartialTemplates />
-          <Parameters />
-          <CultureName />
-          <SortOrder>1</SortOrder>
-          <WebExec>true</WebExec>
-          <PdfConfigurations />
-          <ExcelConfigurations />
-        </ReportView>
-      </Views>
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <PartialTemplates />
-      <Parameters>
-        <Parameter>
-          <Name>report_format</Name>
-          <Value>csv</Value>
-        </Parameter>
-      </Parameters>
-      <CultureName />
-      <SortOrder>2</SortOrder>
-      <WebExec>true</WebExec>
-      <PdfConfigurations />
-      <ExcelConfigurations />
-    </ReportView>
   </Views>
   <DisplayName />
   <InitScript />

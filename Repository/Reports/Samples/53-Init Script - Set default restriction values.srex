@@ -5,19 +5,10 @@
     <ReportSource>
       <GUID>651d9841-53de-4676-84bd-134ec53b62c1</GUID>
       <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>false</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
           <MetaTable>
@@ -25,9 +16,7 @@
             <Sql>select * from employees</Sql>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
             <WhereSQL>@using Seal.Model
 @using Seal.Helpers
 @{
@@ -44,289 +33,221 @@
                 <GUID>61f9708f-5531-4a65-8e96-1a062337a17a</GUID>
                 <Name>SealMasterTable.EmployeeID</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Employee ID</DisplayName>
                 <DisplayOrder>1</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format>N0</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>26f8313d-9768-406b-a71b-7e6be0bc56c3</GUID>
                 <Name>SealMasterTable.LastName</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Last Name</DisplayName>
                 <DisplayOrder>2</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>c7723eb3-ca23-4c0d-95b1-5f1b0a467d91</GUID>
                 <Name>SealMasterTable.FirstName</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>First Name</DisplayName>
                 <DisplayOrder>3</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>bbe90c11-d28c-40bb-a770-2d0911dcc4a7</GUID>
                 <Name>SealMasterTable.Title</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Title</DisplayName>
                 <DisplayOrder>4</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>9d0f9fe7-1969-497a-b33d-1b324169cd25</GUID>
                 <Name>SealMasterTable.TitleOfCourtesy</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Title Of Courtesy</DisplayName>
                 <DisplayOrder>5</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>7460e4b3-34e3-42a7-bdc8-4efec0261dae</GUID>
                 <Name>SealMasterTable.BirthDate</Name>
                 <Type>DateTime</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Birth Date</DisplayName>
                 <DisplayOrder>6</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format>d</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>77db904d-0d58-4837-87e3-8a06e03f5e62</GUID>
                 <Name>SealMasterTable.HireDate</Name>
                 <Type>DateTime</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Hire Date</DisplayName>
                 <DisplayOrder>7</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format>d</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>974cffc5-a7a9-4916-85d5-1a1749d1d778</GUID>
                 <Name>SealMasterTable.Address</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Address</DisplayName>
                 <DisplayOrder>8</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>22a5718f-071f-499e-bb4d-91d5fda3ec5a</GUID>
                 <Name>SealMasterTable.City</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>City</DisplayName>
                 <DisplayOrder>9</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>bb85d214-6cbe-4108-b1b4-b2925d8daf48</GUID>
                 <Name>SealMasterTable.Region</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Region</DisplayName>
                 <DisplayOrder>10</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>fe9b4b67-342d-451b-afe6-f7eebd0a7fc4</GUID>
                 <Name>SealMasterTable.PostalCode</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Postal Code</DisplayName>
                 <DisplayOrder>11</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>f03dc4cb-6c8b-401e-ac31-dc1bcee7e8fa</GUID>
                 <Name>SealMasterTable.Country</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Country</DisplayName>
                 <DisplayOrder>12</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>5bc2f094-5cc3-4912-9983-b071d3c7a53d</GUID>
                 <Name>SealMasterTable.HomePhone</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Home Phone</DisplayName>
                 <DisplayOrder>13</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>7e0768c5-7700-41d4-a464-0d8bd5af2f62</GUID>
                 <Name>SealMasterTable.Extension</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Extension</DisplayName>
                 <DisplayOrder>14</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>a8d447d4-e268-47a0-8402-edfff901813d</GUID>
                 <Name>SealMasterTable.Photo</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Photo</DisplayName>
                 <DisplayOrder>15</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format>N0</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>1fcf64a1-ad89-442d-a46c-554ab87ea8bb</GUID>
                 <Name>SealMasterTable.Notes</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Notes</DisplayName>
                 <DisplayOrder>16</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>2ee3fc71-6348-4d7c-b897-488436382e12</GUID>
                 <Name>SealMasterTable.ReportsTo</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Reports To</DisplayName>
                 <DisplayOrder>17</DisplayOrder>
-                <NumericStandardFormat>Default</NumericStandardFormat>
-                <DateTimeStandardFormat>Default</DateTimeStandardFormat>
                 <Format>N0</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
             </Columns>
@@ -340,19 +261,11 @@
     <ReportSource>
       <GUID>c9a708d8-d69f-4910-ae35-499fd9dc2150</GUID>
       <Name>RSS No SQL Source (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
       <IsNoSQL>true</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables />
         <Joins />
@@ -366,45 +279,7 @@
       <GUID>ee8de4d1-1c22-42bf-8c6f-2afd971d4369</GUID>
       <Name>model</Name>
       <SourceGUID>651d9841-53de-4676-84bd-134ec53b62c1</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
-      <FinalScript>@using Seal.Model
-@using System.Data
-@{
-    ReportModel model = Model;
- 	ReportExecutionLog log = model.Report;
-
-    //Final script executed to modify the model result tables after their generations
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    log.LogMessage("Modifying result values with the 'Final Script'...");
-    ResultTable summaryTable = model.SummaryTable;
-    foreach (ResultPage page in model.Pages)
-    {
-        ResultTable dataTable = page.DataTable;
-    	ResultTable pageTable = page.PageTable;
-
-
-		ResultTable newTable = new ResultTable() { BodyStartRow = dataTable.BodyStartRow, BodyStartColumn = dataTable.BodyStartColumn, BodyEndRow = dataTable.BodyEndRow };
-		var lastLine = dataTable.Lines[dataTable.Lines.Count-1];
-		foreach (var line in dataTable.Lines)
-		{
-			List&lt;ResultCell&gt; newLine = new List&lt;ResultCell&gt;();
-			for (int col = 0; col &lt; line.Length; col++)
-			{
-                if (lastLine[col].Element != null &amp;&amp; !lastLine[col].IsTotalTotal &amp;&amp; lastLine[col].Element.DisplayName == "Min.") {
-                    continue;
-                }				
-/*				if (/*col == 2* line[col].) {
-					continue;
-				}*/
-				newLine.Add(line[col]);
-			}
-			newTable.Lines.Add(newLine.ToArray());
-		}
-		page.DataTable = newTable;
-    }
-
-}
-</FinalScript>
+      <FinalScript />
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
@@ -412,104 +287,43 @@
         <ReportElement>
           <GUID>1ad86583-eea2-452a-821d-7f60b100b4a2</GUID>
           <Name>Products.CategoryID</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Column</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>eedf46fd-333d-414d-91f8-7e12efc1ae90</GUID>
           <Name>Suppliers.CompanyName</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>2f2d7f6e-981f-4325-945d-4407e6d7decc</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Data</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[647ee3e7-94b6-4c3b-a063-0757fdb7b5b9]
@@ -519,43 +333,18 @@ AND [f0efb2d0-7f45-42cd-936e-aae3be6b91c8]</Restriction>
         <ReportRestriction>
           <GUID>647ee3e7-94b6-4c3b-a063-0757fdb7b5b9</GUID>
           <Name>Products.CategoryID</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
-          <Required>false</Required>
-          <TypeRe>Default</TypeRe>
-          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
-          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>N0</FormatRe>
-          <UseAsParameter>false</UseAsParameter>
-          <Operator>Equal</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
@@ -565,42 +354,18 @@ AND [f0efb2d0-7f45-42cd-936e-aae3be6b91c8]</Restriction>
         <ReportRestriction>
           <GUID>7338e068-f861-4c04-b97b-ab1427746638</GUID>
           <Name>Orders.OrderDate</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>d</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
-          <Required>false</Required>
-          <TypeRe>Default</TypeRe>
-          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
-          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>d</FormatRe>
-          <UseAsParameter>false</UseAsParameter>
           <Operator>NotEqual</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -611,42 +376,18 @@ AND [f0efb2d0-7f45-42cd-936e-aae3be6b91c8]</Restriction>
         <ReportRestriction>
           <GUID>f0efb2d0-7f45-42cd-936e-aae3be6b91c8</GUID>
           <Name>Suppliers.CompanyName</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
-          <Required>false</Required>
-          <TypeRe>Default</TypeRe>
-          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
-          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
-          <UseAsParameter>false</UseAsParameter>
           <Operator>Contains</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -670,40 +411,112 @@ AND [f0efb2d0-7f45-42cd-936e-aae3be6b91c8]</Restriction>
         <ReportView>
           <GUID>eb3f420a-4ab3-4427-b46f-ec35f793dc0d</GUID>
           <Name>Model HTML View</Name>
-          <Views />
+          <Views>
+            <ReportView>
+              <GUID>13007d01-50c2-4bc2-bfc6-f7cad2744735</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>2d0e2449-1ea7-4f3a-8aa2-da2f01e456f4</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>b4781d15-5a3f-4c58-b01f-9c97483d6004</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>2da1b8d8-a676-450b-a534-5adabd99b57f</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>60bef010-3957-4a94-bfb6-aeb2ce7de13f</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>ea9ca496-7644-43cc-be84-e231775da7ea</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
           <ModelGUID>ee8de4d1-1c22-42bf-8c6f-2afd971d4369</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
+          <TemplateName>Model</TemplateName>
           <UseCustomTemplate>true</UseCustomTemplate>
           <CustomTemplate />
+          <PartialTemplates />
           <Parameters />
           <CultureName />
-          <CSS />
           <SortOrder>1</SortOrder>
-          <ChartConfigurationXml />
+          <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
+      <PartialTemplates />
       <Parameters>
         <Parameter>
           <Name>report_description</Name>
           <Value>How to use of the Init Script defined in the Views tree node...</Value>
         </Parameter>
-        <Parameter>
-          <Name>information_button</Name>
-          <Value>True</Value>
-        </Parameter>
       </Parameters>
       <CultureName />
-      <CSS />
       <SortOrder>0</SortOrder>
+      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>

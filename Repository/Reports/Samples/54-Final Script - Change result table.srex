@@ -294,7 +294,7 @@
         ResultTable dataTable = page.DataTable;
 		ResultTable newTable = new ResultTable() { BodyStartRow = dataTable.BodyStartRow-1, BodyStartColumn = dataTable.BodyStartColumn, BodyEndRow = dataTable.BodyEndRow-1 };
 		var lastLine = dataTable.Lines[dataTable.Lines.Count-1];
-		for (int row = 0; row &lt; dataTable.Lines.Count; row++) 
+		for (int row = 0; row &lt; dataTable.RowCount; row++) 
 		{
 			//Make it nice: remove the useless row and re-arrange the title cells
 			if (row == 2) {
@@ -315,10 +315,10 @@
 				//for row 1: copy the headers from the skipped row 
 				if (row == 1) {
 					if (col == 0) {
-						newCell = dataTable.Lines[2][0];
+						newCell = dataTable[2,0];
 					}
 					else if (col &gt;= line.Length-2) {
-						newCell = dataTable.Lines[2][col];
+						newCell = dataTable[2,col];
 					}
 				}
 				
@@ -493,7 +493,7 @@
             </ReportView>
           </Views>
           <ModelGUID>ee8de4d1-1c22-42bf-8c6f-2afd971d4369</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
+          <TemplateName>Model</TemplateName>
           <UseCustomTemplate>true</UseCustomTemplate>
           <CustomTemplate />
           <PartialTemplates />
@@ -512,10 +512,6 @@
         <Parameter>
           <Name>report_description</Name>
           <Value>How to use of the Final Script of the model to remove rows and columns in the result table...</Value>
-        </Parameter>
-        <Parameter>
-          <Name>information_button</Name>
-          <Value>True</Value>
         </Parameter>
       </Parameters>
       <CultureName />

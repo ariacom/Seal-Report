@@ -5,28 +5,17 @@
     <ReportSource>
       <GUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</GUID>
       <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>false</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
           <MetaTable>
             <GUID>509563f6-f3fd-4dcf-9be8-8e53e5c92496</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
           </MetaTable>
         </Tables>
@@ -41,9 +30,7 @@
       <GUID>6c0f99ec-acaf-4e1c-ab7c-1c57af205a1a</GUID>
       <Name>model</Name>
       <SourceGUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
-      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements />
@@ -64,8 +51,6 @@
         <Length>0</Length>
       </DbInfoMessage>
       <SourceGUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
-      <Enabled>true</Enabled>
       <Script>@using Seal.Model
 @using Seal.Helpers
 @{
@@ -75,8 +60,6 @@
 	var helper = new TaskHelper(task);
 	helper.RefreshRepositoryEnums("Northwind"/* optional data source name*/);
 }</Script>
-      <IgnoreError>false</IgnoreError>
-      <ExecuteForEachConnection>false</ExecuteForEachConnection>
       <SortOrder>1</SortOrder>
     </ReportTask>
   </Tasks>
@@ -88,18 +71,16 @@
       <Views />
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
+      <PartialTemplates />
       <Parameters>
         <Parameter>
-          <Name>message_button</Name>
-          <Value>True</Value>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
         </Parameter>
       </Parameters>
       <CultureName />
-      <CSS />
       <SortOrder>0</SortOrder>
+      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
@@ -112,8 +93,6 @@
       <GUID>fc056480-31c1-41bc-afc0-2baefecc1024</GUID>
       <Name>schedule for Tasks</Name>
       <OutputGUID />
-      <ErrorNumberOfRetries>0</ErrorNumberOfRetries>
-      <ErrorMinutesBetweenRetries>10</ErrorMinutesBetweenRetries>
       <ErrorEmailSendMode>All</ErrorEmailSendMode>
     </ReportSchedule>
   </Schedules>

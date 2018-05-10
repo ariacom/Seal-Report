@@ -464,8 +464,6 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
                   <Name>Page Table</Name>
                   <Views />
                   <TemplateName>Page Table</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
@@ -479,8 +477,6 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
                   <Name>Chart JS</Name>
                   <Views />
                   <TemplateName>Chart JS</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
@@ -494,8 +490,6 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
                   <Name>Chart NVD3</Name>
                   <Views />
                   <TemplateName>Chart NVD3</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
@@ -509,8 +503,6 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
                   <Name>Chart Plotly</Name>
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
@@ -524,8 +516,6 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
                   <Name>Data Table</Name>
                   <Views />
                   <TemplateName>Data Table</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
@@ -536,8 +526,6 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
                 </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <PartialTemplates />
               <Parameters />
               <CultureName />
@@ -548,9 +536,7 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
             </ReportView>
           </Views>
           <ModelGUID>b9b267bb-eeb4-4bd3-ac5c-e7b4e4ae609d</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomTemplate>false</UseCustomTemplate>
+          <TemplateName>Model</TemplateName>
           <PartialTemplates />
           <Parameters />
           <CultureName />
@@ -562,10 +548,12 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomTemplate>false</UseCustomTemplate>
       <PartialTemplates />
       <Parameters>
+        <Parameter>
+          <Name>restrictions_per_row</Name>
+          <Value>6</Value>
+        </Parameter>
         <Parameter>
           <Name>force_execution</Name>
           <Value>True</Value>
@@ -573,39 +561,6 @@ AND [9c2bc890-2f8c-4ae0-9d98-7e8086c667d3]</AggregateRestriction>
       </Parameters>
       <CultureName />
       <SortOrder>0</SortOrder>
-      <WebExec>true</WebExec>
-      <PdfConfigurations />
-      <ExcelConfigurations />
-    </ReportView>
-    <ReportView>
-      <GUID>a03e4889-045c-470e-970a-7ea705d0046b</GUID>
-      <Name>Excel</Name>
-      <Views>
-        <ReportView>
-          <GUID>8ab33d0a-54d0-4c31-a5dd-08b6d930d773</GUID>
-          <Name>Model CSV Excel View</Name>
-          <Views />
-          <ModelGUID>b9b267bb-eeb4-4bd3-ac5c-e7b4e4ae609d</ModelGUID>
-          <TemplateName>Model CSV Excel</TemplateName>
-          <ThemeName />
-          <UseCustomTemplate>false</UseCustomTemplate>
-          <PartialTemplates />
-          <Parameters />
-          <CultureName />
-          <SortOrder>1</SortOrder>
-          <WebExec>true</WebExec>
-          <PdfConfigurations />
-          <ExcelConfigurations />
-        </ReportView>
-      </Views>
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomTemplate>false</UseCustomTemplate>
-      <PartialTemplates />
-      <Parameters />
-      <CultureName />
-      <SortOrder>1</SortOrder>
       <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />

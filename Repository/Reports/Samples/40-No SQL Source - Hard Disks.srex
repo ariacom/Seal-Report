@@ -5,27 +5,17 @@
     <ReportSource>
       <GUID>11f8a228-661f-41b7-ab03-c411e48dc078</GUID>
       <Name>Hard Drive Information</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections>
         <MetaConnection>
           <GUID>713ab353-556f-400e-8e20-2fb98a4cb32a</GUID>
           <Name>connection</Name>
-          <DatabaseType>Standard</DatabaseType>
           <ConnectionString>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%SEALREPOSITORY%\Databases\Northwind.mdb;Persist Security Info=False</ConnectionString>
-          <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
         </MetaConnection>
       </Connections>
       <ConnectionGUID>713ab353-556f-400e-8e20-2fb98a4cb32a</ConnectionGUID>
-      <IsDefault>false</IsDefault>
       <IsNoSQL>true</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
           <MetaTable>
@@ -75,15 +65,12 @@
 </LoadScript>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
             <Columns>
               <MetaColumn>
                 <GUID>ae67aa10-3593-487a-acac-b99fa71f8fca</GUID>
                 <Name>Name</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Name</DisplayName>
@@ -93,14 +80,12 @@
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>d7581976-386a-4e21-9b0d-6907b366fc0b</GUID>
                 <Name>RootDirectory</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Root Directory</DisplayName>
@@ -110,14 +95,12 @@
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>1b5e9f1c-3fc8-4aac-b48a-7e8c9c836ea4</GUID>
                 <Name>AvailableFreeSpace</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Available Free Space (MB)</DisplayName>
@@ -127,14 +110,12 @@
                 <Format>N0</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>e4949cfa-a408-491a-ae99-6396e6f82879</GUID>
                 <Name>DriveType</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Drive Type</DisplayName>
@@ -144,14 +125,12 @@
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>4e205f5c-b94e-4585-9672-0f905b87f12e</GUID>
                 <Name>TotalFreeSpace</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Total Free Space (MB)</DisplayName>
@@ -161,14 +140,12 @@
                 <Format>N0</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>4aff35d0-5ec1-4f86-90eb-74ba5a106479</GUID>
                 <Name>TotalSize</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Total Size (MB)</DisplayName>
@@ -178,14 +155,12 @@
                 <Format>N0</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>0ed52721-3156-4a92-bb8c-4b6bcdeda843</GUID>
                 <Name>VolumeLabel</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
                 <Tag />
                 <DisplayName>Volume Label</DisplayName>
@@ -195,7 +170,6 @@
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
             </Columns>
@@ -211,249 +185,104 @@
       <GUID>7abd10cb-556c-4cc1-8bea-2e44befc65ee</GUID>
       <Name>model</Name>
       <SourceGUID>11f8a228-661f-41b7-ab03-c411e48dc078</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
-      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>1aed226e-9c8e-446e-8e7a-e7ff57cf8264</GUID>
           <Name>Name</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>ae67aa10-3593-487a-acac-b99fa71f8fca</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>e489426f-ea22-44dc-886d-04b4b21dd3d1</GUID>
           <Name>RootDirectory</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>d7581976-386a-4e21-9b0d-6907b366fc0b</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>48cddc4d-2e67-4ff2-9bd7-3572afd4be64</GUID>
           <Name>AvailableFreeSpace</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>1b5e9f1c-3fc8-4aac-b48a-7e8c9c836ea4</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>20e84be9-f36f-4fbf-bb87-83036c3eb9fc</GUID>
           <Name>DriveType</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>e4949cfa-a408-491a-ae99-6396e6f82879</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>f5673d09-abb2-46dc-a12b-94717d5c7570</GUID>
           <Name>TotalFreeSpace</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4e205f5c-b94e-4585-9672-0f905b87f12e</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>4b7a435a-1f1f-4bd5-9d1f-8b11cb35aac5</GUID>
           <Name>TotalSize</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4aff35d0-5ec1-4f86-90eb-74ba5a106479</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>2f199ce2-6267-4464-a2a5-4be627ba0e52</GUID>
           <Name>VolumeLabel</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>0ed52721-3156-4a92-bb8c-4b6bcdeda843</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction />
@@ -473,63 +302,105 @@
         <ReportView>
           <GUID>67fe9058-1c79-4106-8a3b-54b607cb4e0a</GUID>
           <Name>Model HTML View</Name>
-          <Views />
+          <Views>
+            <ReportView>
+              <GUID>fe10afc8-3c47-4874-987e-5ab7358e5c57</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>1b8b032b-7189-43f5-a57d-9acf88a2ebc7</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>d05bd1d5-25f0-4251-9b5d-559954a74e3e</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>05434e0f-71e5-4997-b204-adcd44a5cd43</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>0440226f-3639-4142-9384-4d3a295d030b</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>31cccefa-a931-4fae-83b1-e761edb0c398</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
           <ModelGUID>7abd10cb-556c-4cc1-8bea-2e44befc65ee</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <UseCustomTemplate>false</UseCustomTemplate>
+          <TemplateName>Model</TemplateName>
+          <PartialTemplates />
           <Parameters />
           <CultureName />
-          <CSS />
           <SortOrder>1</SortOrder>
-          <ChartConfigurationXml />
+          <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
+      <PartialTemplates />
       <Parameters />
       <CultureName />
-      <CSS />
       <SortOrder>0</SortOrder>
-      <PdfConfigurations />
-      <ExcelConfigurations />
-    </ReportView>
-    <ReportView>
-      <GUID>d379bc49-3375-4f82-a3ab-461ed11820a0</GUID>
-      <Name>view Excel</Name>
-      <Views>
-        <ReportView>
-          <GUID>8933e827-71f9-4ce9-b1c2-70c5e0e701b6</GUID>
-          <Name>Model CSV Excel View</Name>
-          <Views />
-          <ModelGUID>7abd10cb-556c-4cc1-8bea-2e44befc65ee</ModelGUID>
-          <TemplateName>Model CSV Excel</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <UseCustomTemplate>false</UseCustomTemplate>
-          <Parameters />
-          <CultureName />
-          <CSS />
-          <SortOrder>1</SortOrder>
-          <PdfConfigurations />
-          <ExcelConfigurations />
-        </ReportView>
-      </Views>
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
-      <Parameters />
-      <CultureName />
-      <CSS />
-      <SortOrder>0</SortOrder>
+      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>

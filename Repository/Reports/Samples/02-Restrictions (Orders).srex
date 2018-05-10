@@ -5,15 +5,10 @@
     <ReportSource>
       <GUID>70370890-3da6-4c57-bad7-3729570efef5</GUID>
       <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IgnorePrePostError>false</IgnorePrePostError>
+      <InitScript />
+      <TasksScript />
       <MetaData>
         <Tables>
           <MetaTable>
@@ -21,14 +16,12 @@
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
             <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
           </MetaTable>
         </Tables>
         <Joins />
         <Enums />
       </MetaData>
-      <_metaSourceName>Northwind</_metaSourceName>
       <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
     </ReportSource>
   </Sources>
@@ -36,200 +29,105 @@
     <ReportModel>
       <GUID>031b29cc-df91-4adc-982a-dbbd8e662393</GUID>
       <Name>model</Name>
+      <SourceGUID>70370890-3da6-4c57-bad7-3729570efef5</SourceGUID>
+      <SqlSelect />
+      <SqlFrom />
+      <SqlGroupBy />
+      <SqlOrderBy />
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>b7340334-2028-4695-af70-08087b255be6</GUID>
           <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
-          <Format>0</Format>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
+          <Format>yyyy</Format>
           <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
-          <_pivotPosition>Page</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Page</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
         </ReportElement>
         <ReportElement>
           <GUID>21d659bb-f7d1-4e95-a2e6-42d8cdc3f65f</GUID>
           <Name>Orders.OrderID</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
-          <Format />
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
+          <Format>N0</Format>
           <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
-          <_pivotPosition>Row</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
         </ReportElement>
         <ReportElement>
           <GUID>c6f17712-4e06-47e8-a3a8-79f0c263c788</GUID>
           <Name>Orders.OrderDate</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
-          <Format />
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
+          <Format>d</Format>
           <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
-          <_pivotPosition>Row</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
         </ReportElement>
         <ReportElement>
           <GUID>91c9d310-6b24-45c5-be2d-ce735c5404bb</GUID>
           <Name>Customers.CompanyName</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Customer Name</DisplayName>
           <Format />
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
-          <_pivotPosition>Row</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
+          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
         </ReportElement>
         <ReportElement>
           <GUID>15ab56c1-923d-4114-8f1e-b09f58ace469</GUID>
           <Name>Employees.FirstName</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Employee</DisplayName>
           <Format />
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
-          <_pivotPosition>Row</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>54eca5b1-9b70-4bac-a0a0-a784d6e562cf</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Amount</DisplayName>
-          <Format />
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Format>N0</Format>
           <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
-          <_pivotPosition>Data</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
           <ShowTotal>Column</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
         </ReportElement>
       </Elements>
-      <IsDataPlaceHolderRow>true</IsDataPlaceHolderRow>
-      <_sql>SELECT
-  DatePart('yyyy',[Orders.OrderDate],1,0) AS C0,
-  Orders.OrderID AS C1,
-  Orders.OrderDate AS C2,
-  Sum((1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice) AS C3,
-  Customers.CompanyName AS C4
-FROM 
-(Customers INNER JOIN 
-(Orders INNER JOIN 
-([Order Details] INNER JOIN 
-(Products INNER JOIN Suppliers
- ON Suppliers.SupplierID = Products.SupplierID)
- ON Products.ProductID = [Order Details].ProductID)
- ON Orders.OrderID = [Order Details].OrderID)
- ON Customers.CustomerID = Orders.CustomerID)
-WHERE Orders.OrderDate Between 32874 AND 41614
-AND Customers.Country IN ('Argentina','Austria','Belgium')
-AND (1=1)
-AND (1=1)
-GROUP BY DatePart('yyyy',[Orders.OrderDate],1,0),Orders.OrderID,Orders.OrderDate,Customers.CompanyName
-HAVING (1=1)
-ORDER BY DatePart('yyyy',[Orders.OrderDate],1,0) ASC,Orders.OrderID ASC,Orders.OrderDate ASC,Customers.CompanyName ASC,Sum((1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice) ASC
-</_sql>
-      <SourceGUID>70370890-3da6-4c57-bad7-3729570efef5</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
-      <SqlSelect>&lt;Default Clause&gt;</SqlSelect>
-      <SqlFrom>&lt;Default Clause&gt;</SqlFrom>
-      <SqlGroupBy>&lt;Default Clause&gt;</SqlGroupBy>
-      <SqlOrderBy>&lt;Default Clause&gt;</SqlOrderBy>
-      <IgnorePrePostError>false</IgnorePrePostError>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
-      <ShowDuplicateRows>false</ShowDuplicateRows>
       <Restriction>[5dd998d4-d785-4e32-8873-41e5c4f8f365]
 AND [e00ed2e9-58b8-4cdb-80c1-e01a3eb5510f]
 AND [ef07a66a-b12b-4406-b974-319f37212a2f]
@@ -239,35 +137,26 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
         <ReportRestriction>
           <GUID>5dd998d4-d785-4e32-8873-41e5c4f8f365</GUID>
           <Name>Orders.OrderDate</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
-          <Format>d</Format>
+          <Tag />
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <Format>d</Format>
           <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
-          <_pivotPosition>Row</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
+          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>ShortDate</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Numeric0</NumericStandardFormatRe>
           <FormatRe>d</FormatRe>
+          <EnumGUIDRE>&lt;No Enumerated List&gt;</EnumGUIDRE>
           <Operator>Between</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>1990-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -277,40 +166,30 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
         <ReportRestriction>
           <GUID>e00ed2e9-58b8-4cdb-80c1-e01a3eb5510f</GUID>
           <Name>Customers.Country</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
+          <Tag />
           <DisplayName />
-          <Format />
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <Format />
           <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
-          <_pivotPosition>Row</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>ShortDate</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Numeric0</NumericStandardFormatRe>
           <FormatRe />
-          <Operator>Equal</Operator>
+          <EnumGUIDRE>&lt;No Enumerated List&gt;</EnumGUIDRE>
           <EnumValues>
             <string>Argentina</string>
             <string>Austria</string>
             <string>Belgium</string>
           </EnumValues>
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -319,35 +198,24 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
         <ReportRestriction>
           <GUID>ef07a66a-b12b-4406-b974-319f37212a2f</GUID>
           <Name>Orders.OrderID</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
-          <Format />
+          <Tag />
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <Format />
           <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
-          <_pivotPosition>Row</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
+          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>ShortDate</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Numeric0</NumericStandardFormatRe>
           <FormatRe />
-          <Operator>Equal</Operator>
+          <EnumGUIDRE>&lt;No Enumerated List&gt;</EnumGUIDRE>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -356,35 +224,23 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
         <ReportRestriction>
           <GUID>30032772-3b60-4784-807a-f97837dfcb94</GUID>
           <Name>Employees.FirstName</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Employee</DisplayName>
-          <Format />
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-          <_pivotPosition>Row</_pivotPosition>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>ShortDate</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Numeric0</NumericStandardFormatRe>
           <FormatRe />
-          <Operator>Equal</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -393,34 +249,23 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
         <ReportRestriction>
           <GUID>536242f2-9d36-486d-8712-1ecd3b76fabe</GUID>
           <Name>Products.ProductName</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
-          <Format />
+          <Tag />
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-          <_pivotPosition>Row</_pivotPosition>
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>ShortDate</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Numeric0</NumericStandardFormatRe>
           <FormatRe />
           <Operator>Contains</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -432,36 +277,26 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
         <ReportRestriction>
           <GUID>ee717be3-bd13-4d38-b0b4-c104b4910fcc</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
-          <Type>Default</Type>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Amount</DisplayName>
-          <Format />
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+          <Format />
           <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
-          <_pivotPosition>Data</_pivotPosition>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
           <PivotPosition>Data</PivotPosition>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
           <DateTimeStandardFormatRe>ShortDate</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Numeric0</NumericStandardFormatRe>
           <FormatRe />
+          <EnumGUIDRE>&lt;No Enumerated List&gt;</EnumGUIDRE>
           <Operator>Between</Operator>
           <EnumValues />
-          <EnumValue>&lt;Click to edit values&gt;</EnumValue>
           <Date1>0001-01-01T00:00:00</Date1>
           <Date2>0001-01-01T00:00:00</Date2>
           <Date3>0001-01-01T00:00:00</Date3>
@@ -471,6 +306,8 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
     </ReportModel>
   </Models>
   <Outputs />
+  <Tasks />
+  <TasksScript />
   <Views>
     <ReportView>
       <GUID>53b70185-5682-4d65-abad-089630729ca2</GUID>
@@ -479,14 +316,91 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
         <ReportView>
           <GUID>2fb686d5-851e-480f-b2aa-3408f092e483</GUID>
           <Name>Model HTML View</Name>
-          <Views />
+          <Views>
+            <ReportView>
+              <GUID>fa841106-cab2-4990-8096-303546cc4b93</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>746957bd-63f4-4d77-b9bb-48cf579e18d6</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>e376a263-a168-49b9-85ad-a22a66ddda07</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>ba3d8079-e5a5-4e97-8170-17c86679c3fa</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>e2653140-a878-4be3-8f97-ecc8646f4953</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>6bca793f-a690-467e-89d7-4d915e342e53</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
           <ModelGUID>031b29cc-df91-4adc-982a-dbbd8e662393</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <CustomConfiguration />
-          <UseCustomTemplate>false</UseCustomTemplate>
+          <TemplateName>Model</TemplateName>
           <CustomTemplate />
+          <PartialTemplates />
           <Parameters>
             <Parameter>
               <Name>invert_data_tables</Name>
@@ -529,15 +443,6 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
               <Value>True</Value>
             </Parameter>
             <Parameter>
-              <Name>summary_table_caption</Name>
-            </Parameter>
-            <Parameter>
-              <Name>page_table_caption</Name>
-            </Parameter>
-            <Parameter>
-              <Name>data_table_caption</Name>
-            </Parameter>
-            <Parameter>
               <Name>print_break_after_page</Name>
               <Value>False</Value>
             </Parameter>
@@ -554,49 +459,17 @@ AND [536242f2-9d36-486d-8712-1ecd3b76fabe]</Restriction>
               <Value>True</Value>
             </Parameter>
           </Parameters>
-          <CSS>
-            <Parameter>
-              <Name>page</Name>
-            </Parameter>
-            <Parameter>
-              <Name>summary</Name>
-            </Parameter>
-            <Parameter>
-              <Name>page_table</Name>
-            </Parameter>
-            <Parameter>
-              <Name>chart</Name>
-            </Parameter>
-            <Parameter>
-              <Name>data_table</Name>
-            </Parameter>
-          </CSS>
-          <SortOrder>1</SortOrder>
           <CultureName />
-          <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;Chart Palette="Excel" Size="600, 400"&gt;
-  &lt;Legends&gt;
-    &lt;Legend Name="Legend1"&gt;
-    &lt;/Legend&gt;
-  &lt;/Legends&gt;
-  &lt;Titles&gt;
-    &lt;Title Name="Title1" Visible="False"&gt;
-    &lt;/Title&gt;
-  &lt;/Titles&gt;
-  &lt;ChartAreas&gt;
-    &lt;ChartArea Name="ChartArea1"&gt;
-    &lt;/ChartArea&gt;
-  &lt;/ChartAreas&gt;
-&lt;/Chart&gt;</ChartConfigurationXml>
+          <SortOrder>1</SortOrder>
+          <WebExec>true</WebExec>
+          <PdfConfigurations />
+          <ExcelConfigurations />
         </ReportView>
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <CustomConfiguration />
-      <UseCustomTemplate>false</UseCustomTemplate>
       <CustomTemplate />
+      <PartialTemplates />
       <Parameters>
         <Parameter>
           <Name>report_description</Name>
@@ -605,137 +478,23 @@ The different tables used are dynamically joined.
 Note that restrictions can apply also to aggregat values.</Value>
         </Parameter>
         <Parameter>
-          <Name>restriction_button</Name>
-          <Value>True</Value>
-        </Parameter>
-        <Parameter>
-          <Name>information_button</Name>
-          <Value>False</Value>
-        </Parameter>
-        <Parameter>
-          <Name>message_button</Name>
-          <Value>False</Value>
-        </Parameter>
-        <Parameter>
-          <Name>result_button</Name>
-          <Value>False</Value>
-        </Parameter>
-        <Parameter>
-          <Name>display_messages</Name>
-          <Value>True</Value>
+          <Name>restrictions_per_row</Name>
+          <Value>3</Value>
         </Parameter>
         <Parameter>
           <Name>force_execution</Name>
           <Value>True</Value>
         </Parameter>
-        <Parameter>
-          <Name>print_layout</Name>
-          <Value>False</Value>
-        </Parameter>
-        <Parameter>
-          <Name>print_show_table_border</Name>
-          <Value>True</Value>
-        </Parameter>
       </Parameters>
-      <CSS />
-      <SortOrder>0</SortOrder>
       <CultureName />
-    </ReportView>
-    <ReportView>
-      <GUID>65a6caa8-228a-4f73-b54a-529547070a0f</GUID>
-      <Name>view Excel</Name>
-      <Views>
-        <ReportView>
-          <GUID>a2d32cd1-b3b1-4cda-84fc-95413f09e044</GUID>
-          <Name>Model CSV Excel View</Name>
-          <Views />
-          <ModelGUID>031b29cc-df91-4adc-982a-dbbd8e662393</ModelGUID>
-          <TemplateName>Model CSV Excel</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <CustomConfiguration />
-          <UseCustomTemplate>false</UseCustomTemplate>
-          <CustomTemplate />
-          <Parameters>
-            <Parameter>
-              <Name>csv_separator</Name>
-              <Value>;</Value>
-            </Parameter>
-            <Parameter>
-              <Name>use_display_format</Name>
-              <Value>True</Value>
-            </Parameter>
-          </Parameters>
-          <CSS />
-          <SortOrder>1</SortOrder>
-          <CultureName />
-          <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;Chart Size="600, 400"&gt;
-  &lt;Legends&gt;
-    &lt;Legend Name="Legend1"&gt;
-    &lt;/Legend&gt;
-  &lt;/Legends&gt;
-  &lt;Titles&gt;
-    &lt;Title Name="Title1" Visible="False"&gt;
-    &lt;/Title&gt;
-  &lt;/Titles&gt;
-  &lt;ChartAreas&gt;
-    &lt;ChartArea Name="ChartArea1"&gt;
-    &lt;/ChartArea&gt;
-  &lt;/ChartAreas&gt;
-&lt;/Chart&gt;</ChartConfigurationXml>
-        </ReportView>
-      </Views>
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <CustomConfiguration />
-      <UseCustomTemplate>false</UseCustomTemplate>
-      <CustomTemplate />
-      <Parameters>
-        <Parameter>
-          <Name>report_description</Name>
-        </Parameter>
-        <Parameter>
-          <Name>restriction_button</Name>
-          <Value>True</Value>
-        </Parameter>
-        <Parameter>
-          <Name>information_button</Name>
-          <Value>False</Value>
-        </Parameter>
-        <Parameter>
-          <Name>message_button</Name>
-          <Value>False</Value>
-        </Parameter>
-        <Parameter>
-          <Name>result_button</Name>
-          <Value>False</Value>
-        </Parameter>
-        <Parameter>
-          <Name>display_messages</Name>
-          <Value>True</Value>
-        </Parameter>
-        <Parameter>
-          <Name>force_execution</Name>
-          <Value>False</Value>
-        </Parameter>
-        <Parameter>
-          <Name>print_layout</Name>
-          <Value>False</Value>
-        </Parameter>
-        <Parameter>
-          <Name>print_show_table_border</Name>
-          <Value>True</Value>
-        </Parameter>
-      </Parameters>
-      <CSS />
       <SortOrder>0</SortOrder>
-      <CultureName />
+      <WebExec>true</WebExec>
+      <PdfConfigurations />
+      <ExcelConfigurations />
     </ReportView>
   </Views>
   <DisplayName />
+  <InitScript />
   <ViewGUID>53b70185-5682-4d65-abad-089630729ca2</ViewGUID>
   <Schedules />
 </Report>

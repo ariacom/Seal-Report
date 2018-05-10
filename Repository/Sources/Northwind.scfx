@@ -1386,87 +1386,66 @@ ORDER BY 1</Sql>
         <Values>
           <MetaEV>
             <Id>Argentina</Id>
-            <Val>Argentina</Val>
           </MetaEV>
           <MetaEV>
             <Id>Austria</Id>
-            <Val>Austria</Val>
           </MetaEV>
           <MetaEV>
             <Id>Belgium</Id>
-            <Val>Belgium</Val>
           </MetaEV>
           <MetaEV>
             <Id>Brazil</Id>
-            <Val>Brazil</Val>
           </MetaEV>
           <MetaEV>
             <Id>Canada</Id>
-            <Val>Canada</Val>
           </MetaEV>
           <MetaEV>
             <Id>Denmark</Id>
-            <Val>Denmark</Val>
           </MetaEV>
           <MetaEV>
             <Id>Finland</Id>
-            <Val>Finland</Val>
           </MetaEV>
           <MetaEV>
             <Id>France</Id>
-            <Val>France</Val>
           </MetaEV>
           <MetaEV>
             <Id>Germany</Id>
-            <Val>Germany</Val>
           </MetaEV>
           <MetaEV>
             <Id>Ireland</Id>
-            <Val>Ireland</Val>
           </MetaEV>
           <MetaEV>
             <Id>Italy</Id>
-            <Val>Italy</Val>
           </MetaEV>
           <MetaEV>
             <Id>Mexico</Id>
-            <Val>Mexico</Val>
           </MetaEV>
           <MetaEV>
             <Id>Norway</Id>
-            <Val>Norway</Val>
           </MetaEV>
           <MetaEV>
             <Id>Poland</Id>
-            <Val>Poland</Val>
           </MetaEV>
           <MetaEV>
             <Id>Portugal</Id>
-            <Val>Portugal</Val>
           </MetaEV>
           <MetaEV>
             <Id>Spain</Id>
-            <Val>Spain</Val>
           </MetaEV>
           <MetaEV>
             <Id>Sweden</Id>
-            <Val>Sweden</Val>
           </MetaEV>
           <MetaEV>
             <Id>Switzerland</Id>
-            <Val>Switzerland</Val>
           </MetaEV>
           <MetaEV>
             <Id>UK</Id>
-            <Val>UK</Val>
           </MetaEV>
           <MetaEV>
             <Id>USA</Id>
-            <Val>USA</Val>
           </MetaEV>
           <MetaEV>
             <Id>Venezuela</Id>
-            <Val>Venezuela</Val>
           </MetaEV>
         </Values>
       </MetaEnum>
@@ -1482,67 +1461,51 @@ ORDER BY 1</Sql>
         <Values>
           <MetaEV>
             <Id>Australia</Id>
-            <Val>Australia</Val>
           </MetaEV>
           <MetaEV>
             <Id>Brazil</Id>
-            <Val>Brazil</Val>
           </MetaEV>
           <MetaEV>
             <Id>Canada</Id>
-            <Val>Canada</Val>
           </MetaEV>
           <MetaEV>
             <Id>Denmark</Id>
-            <Val>Denmark</Val>
           </MetaEV>
           <MetaEV>
             <Id>Finland</Id>
-            <Val>Finland</Val>
           </MetaEV>
           <MetaEV>
             <Id>France</Id>
-            <Val>France</Val>
           </MetaEV>
           <MetaEV>
             <Id>Germany</Id>
-            <Val>Germany</Val>
           </MetaEV>
           <MetaEV>
             <Id>Italy</Id>
-            <Val>Italy</Val>
           </MetaEV>
           <MetaEV>
             <Id>Japan</Id>
-            <Val>Japan</Val>
           </MetaEV>
           <MetaEV>
             <Id>Netherlands</Id>
-            <Val>Netherlands</Val>
           </MetaEV>
           <MetaEV>
             <Id>Norway</Id>
-            <Val>Norway</Val>
           </MetaEV>
           <MetaEV>
             <Id>Singapore</Id>
-            <Val>Singapore</Val>
           </MetaEV>
           <MetaEV>
             <Id>Spain</Id>
-            <Val>Spain</Val>
           </MetaEV>
           <MetaEV>
             <Id>Sweden</Id>
-            <Val>Sweden</Val>
           </MetaEV>
           <MetaEV>
             <Id>UK</Id>
-            <Val>UK</Val>
           </MetaEV>
           <MetaEV>
             <Id>USA</Id>
-            <Val>USA</Val>
           </MetaEV>
         </Values>
       </MetaEnum>
@@ -1558,39 +1521,30 @@ ORDER BY 1</Sql>
         <Values>
           <MetaEV>
             <Id>Buchanan</Id>
-            <Val>Buchanan</Val>
           </MetaEV>
           <MetaEV>
             <Id>Callahan</Id>
-            <Val>Callahan</Val>
           </MetaEV>
           <MetaEV>
             <Id>Davolio</Id>
-            <Val>Davolio</Val>
           </MetaEV>
           <MetaEV>
             <Id>Dodsworth</Id>
-            <Val>Dodsworth</Val>
           </MetaEV>
           <MetaEV>
             <Id>Fuller</Id>
-            <Val>Fuller</Val>
           </MetaEV>
           <MetaEV>
             <Id>King</Id>
-            <Val>King</Val>
           </MetaEV>
           <MetaEV>
             <Id>Leverling</Id>
-            <Val>Leverling</Val>
           </MetaEV>
           <MetaEV>
             <Id>Peacock</Id>
-            <Val>Peacock</Val>
           </MetaEV>
           <MetaEV>
             <Id>Suyama</Id>
-            <Val>Suyama</Val>
           </MetaEV>
         </Values>
       </MetaEnum>
@@ -1606,87 +1560,66 @@ ORDER BY 1</Sql>
         <Values>
           <MetaEV>
             <Id>Argentina</Id>
-            <Val>Argentina</Val>
           </MetaEV>
           <MetaEV>
             <Id>Austria</Id>
-            <Val>Austria</Val>
           </MetaEV>
           <MetaEV>
             <Id>Belgium</Id>
-            <Val>Belgium</Val>
           </MetaEV>
           <MetaEV>
             <Id>Brazil</Id>
-            <Val>Brazil</Val>
           </MetaEV>
           <MetaEV>
             <Id>Canada</Id>
-            <Val>Canada</Val>
           </MetaEV>
           <MetaEV>
             <Id>Denmark</Id>
-            <Val>Denmark</Val>
           </MetaEV>
           <MetaEV>
             <Id>Finland</Id>
-            <Val>Finland</Val>
           </MetaEV>
           <MetaEV>
             <Id>France</Id>
-            <Val>France</Val>
           </MetaEV>
           <MetaEV>
             <Id>Germany</Id>
-            <Val>Germany</Val>
           </MetaEV>
           <MetaEV>
             <Id>Ireland</Id>
-            <Val>Ireland</Val>
           </MetaEV>
           <MetaEV>
             <Id>Italy</Id>
-            <Val>Italy</Val>
           </MetaEV>
           <MetaEV>
             <Id>Mexico</Id>
-            <Val>Mexico</Val>
           </MetaEV>
           <MetaEV>
             <Id>Norway</Id>
-            <Val>Norway</Val>
           </MetaEV>
           <MetaEV>
             <Id>Poland</Id>
-            <Val>Poland</Val>
           </MetaEV>
           <MetaEV>
             <Id>Portugal</Id>
-            <Val>Portugal</Val>
           </MetaEV>
           <MetaEV>
             <Id>Spain</Id>
-            <Val>Spain</Val>
           </MetaEV>
           <MetaEV>
             <Id>Sweden</Id>
-            <Val>Sweden</Val>
           </MetaEV>
           <MetaEV>
             <Id>Switzerland</Id>
-            <Val>Switzerland</Val>
           </MetaEV>
           <MetaEV>
             <Id>UK</Id>
-            <Val>UK</Val>
           </MetaEV>
           <MetaEV>
             <Id>USA</Id>
-            <Val>USA</Val>
           </MetaEV>
           <MetaEV>
             <Id>Venezuela</Id>
-            <Val>Venezuela</Val>
           </MetaEV>
         </Values>
       </MetaEnum>
@@ -1702,11 +1635,9 @@ ORDER BY 1</Sql>
         <Values>
           <MetaEV>
             <Id>UK</Id>
-            <Val>UK</Val>
           </MetaEV>
           <MetaEV>
             <Id>USA</Id>
-            <Val>USA</Val>
           </MetaEV>
         </Values>
       </MetaEnum>

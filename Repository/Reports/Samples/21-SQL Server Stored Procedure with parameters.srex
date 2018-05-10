@@ -5,28 +5,18 @@
     <ReportSource>
       <GUID>fe99f8b1-b350-45f0-ac22-81a692b3d1cb</GUID>
       <Name>Local SQL Server</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections>
         <MetaConnection>
           <GUID>dcf46694-a629-4e80-8389-e236cff363cd</GUID>
           <Name>connection</Name>
-          <DatabaseType>Standard</DatabaseType>
           <ConnectionString>Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Data Source=(local)</ConnectionString>
-          <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
           <UserName />
           <Password />
         </MetaConnection>
       </Connections>
       <ConnectionGUID>dcf46694-a629-4e80-8389-e236cff363cd</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>false</IsNoSQL>
       <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
           <MetaTable>
@@ -34,161 +24,132 @@
             <Name>OPENROWSET('SQLNCLI', 'Server=(local);Trusted_Connection=yes;', 'EXEC sp_who')</Name>
             <Alias>SpWhoTable</Alias>
             <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
             <Columns>
               <MetaColumn>
                 <GUID>4b6b822f-27f9-4e4a-98e5-770f69022fb0</GUID>
                 <Name>SpWhoTable.spid</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Who</Category>
                 <Tag />
                 <DisplayName>Spid</DisplayName>
-                <DisplayOrder>0</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format>N0</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>51d787cb-22c2-4f97-817c-995783ff8577</GUID>
                 <Name>SpWhoTable.ecid</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Who</Category>
                 <Tag />
                 <DisplayName>Ecid</DisplayName>
-                <DisplayOrder>0</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format>N0</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>b0189e4c-2e81-4a79-bdfd-ca63bc2cc975</GUID>
                 <Name>SpWhoTable.status</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Who</Category>
                 <Tag />
                 <DisplayName>Status</DisplayName>
-                <DisplayOrder>0</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>370bc8de-847c-4500-b1e6-df11309d95b7</GUID>
                 <Name>SpWhoTable.loginame</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Who</Category>
                 <Tag />
                 <DisplayName>Login Name</DisplayName>
-                <DisplayOrder>0</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>69fd28fb-927f-4ee2-928a-abe06e6e7ea6</GUID>
                 <Name>SpWhoTable.hostname</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Who</Category>
                 <Tag />
                 <DisplayName>Hostname</DisplayName>
-                <DisplayOrder>0</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>9254b370-4da5-459b-928a-617aa9de58c6</GUID>
                 <Name>SpWhoTable.blk</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Who</Category>
                 <Tag />
                 <DisplayName>Blk</DisplayName>
-                <DisplayOrder>0</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>9ad76134-d853-4cc4-a9a5-08fe6d35ac03</GUID>
                 <Name>SpWhoTable.dbname</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Who</Category>
                 <Tag />
                 <DisplayName>DatabaseName</DisplayName>
-                <DisplayOrder>0</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>0b4fe459-dea9-4620-bd09-4cf186ba287b</GUID>
                 <Name>SpWhoTable.cmd</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Who</Category>
                 <Tag />
                 <DisplayName>Cmd</DisplayName>
-                <DisplayOrder>0</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>117d346f-3969-4fdc-855d-d848d1083bb9</GUID>
                 <Name>SpWhoTable.request_id</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Who</Category>
                 <Tag />
                 <DisplayName>Request id</DisplayName>
-                <DisplayOrder>0</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format>N0</Format>
                 <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
             </Columns>
@@ -204,7 +165,6 @@
       <GUID>a0f6f556-099b-49b1-b0a0-cccfc8dfd259</GUID>
       <Name>model</Name>
       <SourceGUID>fe99f8b1-b350-45f0-ac22-81a692b3d1cb</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
       <PreLoadScript>@using Seal.Model
 @using System.Data
 @{
@@ -234,104 +194,49 @@
       <SqlGroupBy />
       <SqlOrderBy />
       <IgnorePrePostError>false</IgnorePrePostError>
-      <BuildTimeout>4000</BuildTimeout>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>62ddf826-b53b-4c40-a3f4-52e552efb4fa</GUID>
           <Name>SpWhoTable.dbname</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>9ad76134-d853-4cc4-a9a5-08fe6d35ac03</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>71d8f5c0-0250-4aff-8c04-4fd79eca0356</GUID>
           <Name>SpWhoTable.loginame</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>370bc8de-847c-4500-b1e6-df11309d95b7</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>1191875e-921f-4341-befe-204bba1b7fed</GUID>
           <Name>SpWhoTable.cmd</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>0b4fe459-dea9-4620-bd09-4cf186ba287b</MetaColumnGUID>
         </ReportElement>
       </Elements>
@@ -340,41 +245,18 @@
         <ReportRestriction>
           <GUID>bb65750e-7d9d-438e-98df-6e8fd5c169a6</GUID>
           <Name>SpWhoTable.loginame</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
           <Tag />
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>370bc8de-847c-4500-b1e6-df11309d95b7</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <Required>false</Required>
-          <TypeRe>Default</TypeRe>
-          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
-          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
-          <UseAsParameter>false</UseAsParameter>
-          <Operator>Equal</Operator>
           <Value1>sa</Value1>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -398,44 +280,94 @@
         <ReportView>
           <GUID>48f5d5cd-6bd0-4800-8bda-e3d12c851cce</GUID>
           <Name>Model HTML View</Name>
-          <Views />
+          <Views>
+            <ReportView>
+              <GUID>d23f05db-9de7-4f8c-b809-3e1c481eacb8</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>d91ffc8a-1573-48b0-a650-6b8489d67dd1</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>410c989f-7f1a-4d03-927f-49476d2263cb</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>fdd8233a-d0bf-40bd-b52e-29e83bbbd997</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>c8f3ceef-a948-4faa-a716-55a0c662f4fd</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>3c62502c-ffe2-4ae8-8ff6-c983e3c60287</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <WebExec>true</WebExec>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
           <ModelGUID>a0f6f556-099b-49b1-b0a0-cccfc8dfd259</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <CustomConfiguration />
-          <UseCustomTemplate>false</UseCustomTemplate>
+          <TemplateName>Model</TemplateName>
           <CustomTemplate />
+          <PartialTemplates />
           <Parameters />
           <CultureName />
-          <CSS>
-            <Parameter>
-              <Name>chart</Name>
-            </Parameter>
-          </CSS>
           <SortOrder>1</SortOrder>
-          <ChartConfigurationXml>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;Chart Size="600, 400"&gt;
-  &lt;Series&gt;
-    &lt;Series Name="1960(029ec6a2-8391-4a65-8cc4-17eaea2e259e)" ChartArea="ChartArea1" LabelFormat="N0" IsValueShownAsLabel="True" Legend="Legend1" ChartType="Bar" CustomProperties="CollectedThreshold=4"&gt;
-    &lt;/Series&gt;
-    &lt;Series Name="1961(cbbb9f77-da3f-4651-b836-845ceb62189f)" ChartArea="ChartArea1" LabelFormat="N0" IsValueShownAsLabel="True" Legend="Legend1" ChartType="Bar"&gt;
-    &lt;/Series&gt;
-  &lt;/Series&gt;
-  &lt;Legends&gt;
-    &lt;Legend Name="Legend1"&gt;
-    &lt;/Legend&gt;
-  &lt;/Legends&gt;
-  &lt;Titles&gt;
-    &lt;Title Name="Title1" Visible="False"&gt;
-    &lt;/Title&gt;
-  &lt;/Titles&gt;
-  &lt;ChartAreas&gt;
-    &lt;ChartArea Name="ChartArea1"&gt;
-      &lt;Area3DStyle Enable3D="True" /&gt;
-    &lt;/ChartArea&gt;
-  &lt;/ChartAreas&gt;
-&lt;/Chart&gt;</ChartConfigurationXml>
           <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
@@ -443,11 +375,8 @@
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <CustomConfiguration />
-      <UseCustomTemplate>false</UseCustomTemplate>
       <CustomTemplate />
+      <PartialTemplates />
       <Parameters>
         <Parameter>
           <Name>report_description</Name>
@@ -460,16 +389,11 @@ RECONFIGURE;
 </Value>
         </Parameter>
         <Parameter>
-          <Name>information_button</Name>
-          <Value>True</Value>
-        </Parameter>
-        <Parameter>
           <Name>force_execution</Name>
           <Value>True</Value>
         </Parameter>
       </Parameters>
       <CultureName />
-      <CSS />
       <SortOrder>0</SortOrder>
       <WebExec>true</WebExec>
       <PdfConfigurations />

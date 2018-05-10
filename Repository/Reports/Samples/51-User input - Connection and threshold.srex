@@ -139,6 +139,7 @@
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <Format>N0</Format>
           <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
@@ -154,12 +155,13 @@
     ReportModel reportModel = element.Model;
     Report report = reportModel.Report;
 	
-	ReportRestriction restriction = reportModel.GetRestrictionByName("Threshold:");
+	ReportRestriction restriction = reportModel.GetRestrictionByName("Threshold =");
 	if (restriction != null)
 	{
 		if (cell.DoubleValue &lt; restriction.DoubleValue) 
 		{
-			cell.FinalCssStyle = "font-weight:bold;background:red;text-align:right;";
+			cell.FinalCssStyle = "font-weight:bold;text-align:right;";
+			cell.FinalCssClass = "danger";
 		}
 	}
 }
@@ -409,7 +411,7 @@ AND [4650d6dc-a54f-4156-b0e2-e6fa4641f1e5]
             </ReportView>
           </Views>
           <ModelGUID>f4e4c0e9-3ca9-400e-9ee8-4117004cf148</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
+          <TemplateName>Model</TemplateName>
           <PartialTemplates />
           <Parameters />
           <CultureName />

@@ -3,73 +3,27 @@
   <GUID>e6669b8d-397b-473f-b765-f1b3803eca78</GUID>
   <Sources>
     <ReportSource>
-      <GUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</GUID>
-      <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
-      <Connections />
-      <ConnectionGUID>1</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>false</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
-      <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
-      <MetaData>
-        <Tables>
-          <MetaTable>
-            <GUID>509563f6-f3fd-4dcf-9be8-8e53e5c92496</GUID>
-            <Alias>SealMasterTable</Alias>
-            <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
-            <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
-            <Columns />
-          </MetaTable>
-        </Tables>
-        <Joins />
-        <Enums />
-      </MetaData>
-      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
-    </ReportSource>
-    <ReportSource>
       <GUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</GUID>
       <Name>Local SQLServer</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections>
         <MetaConnection>
           <GUID>d28d79a7-bc64-40ac-b205-4c0d5fd381cf</GUID>
           <Name>connection</Name>
-          <DatabaseType>Standard</DatabaseType>
-          <ConnectionString>Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost</ConnectionString>
-          <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
+          <ConnectionString>Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Data Source=(local)</ConnectionString>
           <UserName />
           <Password />
         </MetaConnection>
       </Connections>
       <ConnectionGUID>d28d79a7-bc64-40ac-b205-4c0d5fd381cf</ConnectionGUID>
-      <IsDefault>false</IsDefault>
-      <IsNoSQL>false</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
           <MetaTable>
             <GUID>ab9fab1f-1c50-4154-804e-c04a2fcf7350</GUID>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
             <Columns />
           </MetaTable>
         </Tables>
@@ -83,7 +37,6 @@
       <GUID>358d7529-640e-4626-b40a-957e52e9a646</GUID>
       <Name>model</Name>
       <SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
       <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
@@ -105,8 +58,6 @@
         <Length>0</Length>
       </DbInfoMessage>
       <SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
-      <Enabled>true</Enabled>
       <SQL>@using Seal.Model
 @{
 //--Simply backup msdb SQLServer database to a file...
@@ -115,8 +66,6 @@ string result = @"BACKUP DATABASE msdb TO DISK='C:\temp\backup_msdb_" + DateTime
 }
 @Raw(result)</SQL>
       <Script />
-      <IgnoreError>false</IgnoreError>
-      <ExecuteForEachConnection>false</ExecuteForEachConnection>
       <SortOrder>1</SortOrder>
     </ReportTask>
   </Tasks>
@@ -128,18 +77,16 @@ string result = @"BACKUP DATABASE msdb TO DISK='C:\temp\backup_msdb_" + DateTime
       <Views />
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
+      <PartialTemplates />
       <Parameters>
         <Parameter>
-          <Name>message_button</Name>
-          <Value>True</Value>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
         </Parameter>
       </Parameters>
       <CultureName />
-      <CSS />
       <SortOrder>0</SortOrder>
+      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
