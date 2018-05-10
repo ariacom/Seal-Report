@@ -7,7 +7,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 ## Main Features
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
 * **Native Pivot Tables**: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
-* **HTML 5 Charts** and **Microsoft Charts**: Define and display Chart Series in two mouse clicks.
+* **HTML 5 Charts**: Define and display Chart Series in two mouse clicks. Support of ChartJS, NVD3 and Plotly libraries.
 * **Drill Down navigation and Sub Reports:** Navigate in your report result to drill to a detail or to execute another report.
 * **Report Tasks:** Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
 * **No SQL Data Sources:**
@@ -39,11 +39,11 @@ In addition to the Open Source version, **<a href="http://www.ariacom.com" targe
 
 ## System Requirements
 **For use:**
-* Windows XP, Vista, 2003, Windows 7, 2008, Windows 8, 2012, Windows 10
+* 2003, Windows 7, 2008, Windows 8, 2012, Windows 10
 * .Net Framework 4.5
 * Database OLE DB or ODBC Drivers
 * For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater
-* For the Task Scheduler: Windows Vista, 7, 2008, 8, 10 or 2012
+* For the Task Scheduler: 7, 2008, 8, 10 or 2012
 
 **For development:**
 * Visual Studio 2017
