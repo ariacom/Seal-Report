@@ -7,7 +7,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 ## Main Features
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
 * **Native Pivot Tables**: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
-* **HTML 5 Charts**: Define and display Chart Series in two mouse clicks. Support of ChartJS, NVD3 and Plotly libraries.
+* **HTML 5 Charts**: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3 and Plotly libraries).
 * **Drill Down navigation and Sub Reports:** Navigate in your report result to drill to a detail or to execute another report.
 * **Report Tasks:** Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
 * **No SQL Data Sources:**
