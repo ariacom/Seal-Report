@@ -22,6 +22,7 @@
             if (dt != null && @Helper.ToJS(view.GetBoolValue("data_tables_enabled")) && !@Helper.ToJS(report.PrintLayout))
             {
                 var dto = dt.dataTable({
+                responsive: @Helper.ToJS(view.GetBoolValue("data_tables_responsive")),
                 ordering: @Helper.ToJS(view.GetBoolValue("data_tables_sort_enabled")),
                 paging: @Helper.ToJS(view.GetBoolValue("data_tables_pagination_enabled")),
                 lengthMenu: [[10, 25, 50, 100, 500], [10, 25, 50, 100, 500]],
@@ -41,15 +42,15 @@
 
                 @if (table.BodyStartRow > 1)
                 {<text>
-                        //issue github 71: multi header cols are not hidden in responsive mode
-                        dto.on('responsive-resize.dt', function(e, datatable, columns) {
+                 // workaround for https://github.com/DataTables/Responsive/issues/71
+                dto.on('responsive-resize.dt', function (e, datatable, columns) {
                             columns.forEach(function(is_visible, index) {
-                        $.each($('tr', datatable.table().header()), function() {
+                            $.each($('tr', datatable.table().header()), function() {
                                     var col = $($(this).children()[index]);
                                     is_visible == true ? col.show() : col.hide();
                                 });
                             });
-                        });
+                });
                 </text>}
                 }
 

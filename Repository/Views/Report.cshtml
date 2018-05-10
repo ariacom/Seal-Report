@@ -21,7 +21,7 @@
     @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"))
     @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css"))
     @Raw(report.AttachCSSFile("dataTables.bootstrap.min.css", "https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"))
-    @Raw(report.AttachCSSFile("responsive.bootstrap.css", "https://cdn.datatables.net/responsive/2.2.1/css/responsive.bootstrap.min.css"))
+    @Raw(report.AttachCSSFile("responsive.bootstrap.min.css", "https://cdn.datatables.net/responsive/2.2.1/css/responsive.bootstrap.min.css"))
     @Raw(report.AttachCSSFile("seal.css"))
     @Raw(report.AttachCSSFile("custom.css"))
 
@@ -38,7 +38,7 @@
     @Raw(report.AttachScriptFile("bootstrap-datetimepicker.min.js"))
     @Raw(report.AttachScriptFile("jquery.dataTables.min.js", "https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"))
     @Raw(report.AttachScriptFile("dataTables.bootstrap.min.js", "https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"))
-    @Raw(report.AttachScriptFile("dataTables.responsive.min.js", "https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"))
+    @Raw(report.AttachScriptFile("dataTables.responsive.fix71.min.js"))
     @Raw(report.AttachScriptFile("datetime-moment.js"))
     @Raw(report.AttachScriptFile("responsive.bootstrap.min.js", "https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap.min.js"))
     
@@ -108,7 +108,6 @@
         $.fn.dataTable.moment(shortDateFormat);
         $.fn.dataTable.moment(shortDateTimeFormat);
         $.extend( true, $.fn.dataTable.defaults, {
-            responsive: true,
             responsive: {
                 details: {
                     renderer: function (api, rowIdx, columns) {

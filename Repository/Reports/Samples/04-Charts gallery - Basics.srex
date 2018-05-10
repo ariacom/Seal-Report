@@ -2108,40 +2108,6 @@ AND [1d754267-0c1a-4628-afcb-fa67844a24d8]</Restriction>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
-    <ReportView>
-      <GUID>ca0f8a2d-9935-4690-86eb-bb1f7ad622b8</GUID>
-      <Name>CSV</Name>
-      <Views>
-        <ReportView>
-          <GUID>82ec1246-4d6f-4dcc-af40-ebb1a44aff80</GUID>
-          <Name>Model CSV Excel</Name>
-          <Views />
-          <ModelGUID>bff6defa-3e89-4bfa-b2d0-08f01a0282af</ModelGUID>
-          <TemplateName>Model CSV Excel</TemplateName>
-          <PartialTemplates />
-          <Parameters />
-          <CultureName />
-          <SortOrder>1</SortOrder>
-          <WebExec>true</WebExec>
-          <PdfConfigurations />
-          <ExcelConfigurations />
-        </ReportView>
-      </Views>
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <PartialTemplates />
-      <Parameters>
-        <Parameter>
-          <Name>report_format</Name>
-          <Value>csv</Value>
-        </Parameter>
-      </Parameters>
-      <CultureName />
-      <SortOrder>2</SortOrder>
-      <WebExec>true</WebExec>
-      <PdfConfigurations />
-      <ExcelConfigurations />
-    </ReportView>
   </Views>
   <DisplayName />
   <InitScript />

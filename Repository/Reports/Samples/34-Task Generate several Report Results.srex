@@ -212,7 +212,7 @@
             </ReportView>
           </Views>
           <ModelGUID>e0c0f746-6183-4855-8943-3813509121e6</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
+          <TemplateName>Model</TemplateName>
           <UseCustomTemplate>true</UseCustomTemplate>
           <PartialTemplates />
           <Parameters />
@@ -226,7 +226,12 @@
       <ModelGUID />
       <TemplateName>Report</TemplateName>
       <PartialTemplates />
-      <Parameters />
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
       <CultureName>English</CultureName>
       <SortOrder>1</SortOrder>
       <WebExec>true</WebExec>

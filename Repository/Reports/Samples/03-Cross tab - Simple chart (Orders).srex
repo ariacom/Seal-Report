@@ -139,12 +139,7 @@
                   <Views />
                   <TemplateName>Chart JS</TemplateName>
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>chartjs_contwidth</Name>
-                      <Value>50vw</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
                   <SortOrder>2</SortOrder>
                   <WebExec>true</WebExec>
@@ -226,46 +221,6 @@
         <Parameter>
           <Name>force_execution</Name>
           <Value>True</Value>
-        </Parameter>
-      </Parameters>
-      <CultureName />
-      <SortOrder>0</SortOrder>
-      <WebExec>true</WebExec>
-      <PdfConfigurations />
-      <ExcelConfigurations />
-    </ReportView>
-    <ReportView>
-      <GUID>c496f22b-fc4d-45da-a2fc-23f9ecbf878b</GUID>
-      <Name>view Excel</Name>
-      <Views>
-        <ReportView>
-          <GUID>af8d6735-32c8-40a7-86fe-b41a3ecb9397</GUID>
-          <Name>Model CSV Excel View</Name>
-          <Views />
-          <ModelGUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</ModelGUID>
-          <TemplateName>Model CSV Excel</TemplateName>
-          <CustomTemplate />
-          <PartialTemplates />
-          <Parameters />
-          <CultureName />
-          <SortOrder>1</SortOrder>
-          <WebExec>true</WebExec>
-          <PdfConfigurations />
-          <ExcelConfigurations />
-        </ReportView>
-      </Views>
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <CustomTemplate />
-      <PartialTemplates />
-      <Parameters>
-        <Parameter>
-          <Name>report_format</Name>
-          <Value>csv</Value>
-        </Parameter>
-        <Parameter>
-          <Name>report_description</Name>
-          <Value>A simple cross tab with a chart</Value>
         </Parameter>
       </Parameters>
       <CultureName />

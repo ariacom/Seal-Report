@@ -5,11 +5,6 @@
     <ReportSource>
       <GUID>6b5d05e5-a4b7-4cea-a30c-dbe48c670ecb</GUID>
       <Name>Northwind (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
       <ConnectionGUID>1</ConnectionGUID>
       <InitScript />
@@ -85,7 +80,7 @@
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
+          <ChartJSSerie>Bar</ChartJSSerie>
           <SerieSortType>None</SerieSortType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
         </ReportElement>
@@ -95,14 +90,15 @@
           <Category>Master</Category>
           <Tag />
           <DisplayName>Progression</DisplayName>
-          <Format>N0</Format>
+          <NumericStandardFormat>Percentage0</NumericStandardFormat>
+          <Format>P0</Format>
           <HasHTMLTags>true</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Row</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
-          <Nvd3Serie>Line</Nvd3Serie>
+          <ChartJSSerie>Line</ChartJSSerie>
           <SerieSortType>None</SerieSortType>
           <YAxisType>Secondary</YAxisType>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
@@ -278,12 +274,10 @@
                   <Name>Page Table</Name>
                   <Views />
                   <TemplateName>Page Table</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
-                  <SortOrder>1</SortOrder>
+                  <SortOrder>0</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -293,12 +287,10 @@
                   <Name>Chart NVD3</Name>
                   <Views />
                   <TemplateName>Chart NVD3</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
-                  <SortOrder>2</SortOrder>
+                  <SortOrder>4</SortOrder>
                   <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
@@ -308,8 +300,6 @@
                   <Name>Data Table</Name>
                   <Views />
                   <TemplateName>Data Table</TemplateName>
-                  <ThemeName />
-                  <UseCustomTemplate>false</UseCustomTemplate>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
@@ -318,10 +308,21 @@
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
+                <ReportView>
+                  <GUID>90224653-aed3-4114-8c2a-b883f53333c4</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <WebExec>true</WebExec>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
               </Views>
               <TemplateName>Model Container</TemplateName>
-              <ThemeName />
-              <UseCustomTemplate>false</UseCustomTemplate>
               <PartialTemplates />
               <Parameters>
                 <Parameter>
@@ -338,9 +339,7 @@ col-sm-12;</Value>
             </ReportView>
           </Views>
           <ModelGUID>f2f99268-d508-4fbe-954d-a4859fb22cab</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomTemplate>false</UseCustomTemplate>
+          <TemplateName>Model</TemplateName>
           <PartialTemplates />
           <Parameters />
           <CultureName />
@@ -352,8 +351,6 @@ col-sm-12;</Value>
       </Views>
       <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomTemplate>false</UseCustomTemplate>
       <PartialTemplates />
       <Parameters />
       <CultureName />

@@ -63,8 +63,8 @@ namespace Test
         public async Task SWIConnectionTest()
         {
             //Test the basic methods of SWI. The Server must be running... 
-            var serverURL = "http://localhost:17178/";
-            serverURL = "http://localhost/Seal/";
+            var serverURL = "http://localhost:17178/Seal/";
+            // serverURL = "http://demo.sealreport.org/";
 
             var httpClient = new HttpClient();
 
