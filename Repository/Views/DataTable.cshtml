@@ -39,20 +39,7 @@
                         }
                 </text>}
                 });
-
-                @if (table.BodyStartRow > 1)
-                {<text>
-                 // workaround for https://github.com/DataTables/Responsive/issues/71
-                dto.on('responsive-resize.dt', function (e, datatable, columns) {
-                            columns.forEach(function(is_visible, index) {
-                            $.each($('tr', datatable.table().header()), function() {
-                                    var col = $($(this).children()[index]);
-                                    is_visible == true ? col.show() : col.hide();
-                                });
-                            });
-                });
-                </text>}
-                }
+            }
 
             $('.dataTables_filter input[type="search"]').css(
                 { 'width': '90px', 'display': 'inline-block' }
