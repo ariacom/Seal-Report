@@ -329,16 +329,17 @@ namespace Seal.Model
             get { return _calculationOption; }
             set
             {
-                _calculationOption = value;
-                if (Source != null)
+                if (Source != null && _calculationOption != value)
                 {
-                    if (_calculationOption != CalculationOption.No && (string.IsNullOrEmpty(Format) || NumericStandardFormat == NumericStandardFormat.Default)) NumericStandardFormat = NumericStandardFormat.Percentage0;
-                    else if (_calculationOption == CalculationOption.No && (NumericStandardFormat == NumericStandardFormat.Percentage0 || NumericStandardFormat == NumericStandardFormat.Percentage1 || NumericStandardFormat == NumericStandardFormat.Percentage2))
+                    if (value != CalculationOption.No && (string.IsNullOrEmpty(Format) || NumericStandardFormat == NumericStandardFormat.Default)) NumericStandardFormat = NumericStandardFormat.Percentage0;
+                    else if (value == CalculationOption.No && (NumericStandardFormat == NumericStandardFormat.Percentage0 || NumericStandardFormat == NumericStandardFormat.Percentage1 || NumericStandardFormat == NumericStandardFormat.Percentage2))
                     {
                         Format = "";
                         NumericStandardFormat = NumericStandardFormat.Default;
                     }
                 }
+                _calculationOption = value;
+                UpdateEditorAttributes();
             }
         }
 
