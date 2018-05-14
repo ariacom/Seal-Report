@@ -193,7 +193,7 @@ namespace Seal.Forms
                                     if (element.Id != null)
                                     {
                                         _report.InputRestrictions.Add(element.Id, element.TagName.ToLower() == "option" ? element.GetAttribute("selected") : element.GetAttribute("value"));
-                                        Debug.WriteLine("{0} {1} {2} {3}", element.Id, element.Name, element.GetAttribute("value"), element.GetAttribute("selected"));
+                                        //Debug.WriteLine("{0} {1} {2} {3}", element.Id, element.Name, element.GetAttribute("value"), element.GetAttribute("selected"));
                                     }
                                 }
                             }
