@@ -1372,6 +1372,7 @@ namespace Seal.Model
 
         private void initialSort(ReportModel model)
         {
+            model.UpdateFinalSortOrders();
             foreach (var page in model.Pages)
             {
                 //If we have rows and columns ...
