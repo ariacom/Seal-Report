@@ -263,7 +263,7 @@
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>0</SortOrder>
+                      <SortOrder>1</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
@@ -357,7 +357,7 @@
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
-                      <SortOrder>1</SortOrder>
+                      <SortOrder>2</SortOrder>
                       <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
@@ -393,7 +393,7 @@
               <Views>
                 <ReportView>
                   <GUID>0f9e2822-df6b-4a62-bca5-8aa42e59d544</GUID>
-                  <Name>Model HTML</Name>
+                  <Name>Model HTML3</Name>
                   <Views>
                     <ReportView>
                       <GUID>993c69b1-bbef-4d09-84bf-e0365b9ac3bf</GUID>

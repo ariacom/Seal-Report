@@ -50,7 +50,8 @@ namespace Seal.Model
             {
                 try
                 {
-                    if (Value == null || Element == null) return "";
+                    if (Value == null) return "";
+                    if (Element == null) return Value.ToString();
                     if (IsTitle) return Element.Model.Report.TranslateElement(Element, Value.ToString());
                     if (Value is IFormattable) return ((IFormattable)Value).ToString(Element.FormatEl, Element.Model.Report.ExecutionView.CultureInfo);
                 }
