@@ -255,6 +255,7 @@ WebJS;Contains;;Contient;;;Inneholder
 WebJS;Count;;Nombre;;;Tell
 WebJS;Count of;;Nombre de;;;Telling av
 WebJS;CSV;;CSV;;;CSV
+WebJS;Data tables responsive;;Data tables adaptable;;;
 WebJS;Daily;;Quotidien;;;Daglig
 WebJS;day;;jour;;;dag
 WebJS;days;;jours;;;dager
@@ -287,6 +288,7 @@ WebJS;For rows and columns;;Pour les lignes et colonnes;;;For rader og kolonner
 WebJS;For rows (total only);;Pour les lignes (Uniquement le total);;;For rader
 WebJS;For rows and columns (total only);;Pour les lignes et colonnes (Uniquement le total);;;For rader og kolonner
 WebJS;Force execution;;Forcer l'exécution;;;Tving utføring
+WebJS;Use full screen width;;Utiliser toute la largueur de l'écran;;;
 WebJS;General;;Général;;;Generell
 WebJS;General date long time;;Date générale avec le temps long;;;Generell dato lang tid
 WebJS;General date short time;;Date générale avec le temps court;;;Generell dato kort tid
@@ -362,6 +364,7 @@ WebJS;Short date;;Date courte;;;Kort dato
 WebJS;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports;Mostrar_MENU_ relatórios;Vis _MENU_ rapporter
 WebJS;Show execution message panel;;Afficher les messages d'exécutions;;;Vis utførte meldinger
 WebJS;Show information panel;;Afficher les informations;;;Vis informasjon
+WebJS;Show first header line;;Afficher la première ligne d'en-tête;;;Vis informasjon
 WebJS;Show report result panel;;Afficher le panneau des résultats;;;Vis resultater av rapporter
 WebJS;Show restrictions panel;;Afficher les restrictions;;;Vis begrensninger
 WebJS;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_;Mostrando _START_ até _END_ de _TOTAL_;Viser _START_ til _END_ av _TOTAL_

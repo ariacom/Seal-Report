@@ -95,6 +95,10 @@ namespace Seal.Model
             {
                 //use the children to render in a new extension file
                 result = Report.ExecutionView.ParseChildren();
+                if (Report.Format == ReportFormat.custom && !File.Exists(Report.ResultFilePath))
+                {
+                    File.WriteAllText(Report.ResultFilePath, "Error using Custom format: Report.ResultFilePath must be set in a custom view script.", Encoding.UTF8);
+                }
             }
             else
             {
@@ -104,7 +108,7 @@ namespace Seal.Model
 
             try
             {
-                File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                if (Report.Format != ReportFormat.custom) File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
             }
             catch (Exception ex)
             {
@@ -794,7 +798,7 @@ namespace Seal.Model
                 ResultCell[] line;
 
                 //First line, only if column values
-                if (headerColumnValues.Length > 0)
+                if (headerColumnValues.Length > 0 && model.ShowFirstLine)
                 {
                     line = new ResultCell[width];
                     if (headerDataValues.Length == 1) line[0] = headerDataValues[0]; //Case 1 Data, title in first cell

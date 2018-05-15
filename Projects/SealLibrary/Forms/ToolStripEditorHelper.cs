@@ -65,7 +65,7 @@ namespace Seal.Forms
             else if (SelectedEntity is MetaColumn)
             {
                 AddHelperButton("Show column values", "Show the first 1000 values of the column", Keys.F8);
-                if (((MetaColumn) SelectedEntity).IsSQL) AddHelperButton("Check column SQL syntax", "Check the column SQL statement in the database", Keys.F7);
+                if (((MetaColumn)SelectedEntity).IsSQL) AddHelperButton("Check column SQL syntax", "Check the column SQL statement in the database", Keys.F7);
             }
             else if (SelectedEntity is MetaEnum)
             {
@@ -180,7 +180,11 @@ namespace Seal.Forms
                     else if (SelectedEntity is MetaEnum)
                     {
                         if (key == Keys.F8) EditProperty("Select SQL Statement");
-                        if (key == Keys.F9) ((MetaEnum)SelectedEntity).RefreshEnum();
+                        if (key == Keys.F9)
+                        {
+                            if (EntityHandler != null) EntityHandler.SetModified();
+                            ((MetaEnum)SelectedEntity).RefreshEnum();
+                        }
                     }
                     else if (SelectedEntity is MetaJoin)
                     {

@@ -9,7 +9,7 @@
     Template.ForReportModel = false;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = Parameter.ReportFormatParameter, Value = "html", Enums = new string[] { "html|HTML", "print|HTML Print", "csv|CSV Excel", "pdf|PDF", "excel|Excel" }, DisplayName = "Report format", Description = "Format of the report result." });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.ReportFormatParameter, Value = "html", Enums = new string[] { "html|HTML", "print|HTML Print", "csv|CSV Excel", "pdf|PDF", "excel|Excel", "custom|Custom" }, DisplayName = "Report format", Description = "Format of the report result. If format is Custom, Report.ResultFilePath must be specified in a child script template." });
     Template.Parameters.Add(new Parameter() { Name = "report_description", Type = ViewParameterType.Text, DisplayName = "Report description", Description = "Optional report description displayed in the information panel." });
     Template.Parameters.Add(new Parameter() { Name = "restriction_button", DisplayName = "Display: Show restrictions", BoolValue = true, Description = "If true, the restrictions are displayed when the report is initialized (if the report has prompted restrictions)." });
     Template.Parameters.Add(new Parameter() { Name = "information_button", DisplayName = "Display: Show information", BoolValue = false, Description = "If true, the report shows the information first when the report is initialized." });
@@ -23,7 +23,7 @@
     Template.Parameters.Add(new Parameter() { Name = "refresh_rate", DisplayName = "Options: Auto-Refresh (seconds)", Type = ViewParameterType.Numeric, NumericValue = 0, Description = "Value in seconds to re-execute and refresh automatically the report. 0 means no refresh." });
     Template.Parameters.Add(new Parameter() { Name = "force_models_load", DisplayName = "Options: Load all Models", Type = ViewParameterType.Boolean, BoolValue = false, Description = "If true, all models defined in the report will be loaded and processed during execution. By default, false means to load only models belonging to the Views being parsed." });
     Template.Parameters.Add(new Parameter() { Name = "additional_js", DisplayName = "Additional JavaScript", Type = ViewParameterType.Text, Description = "Additional JavaScript inserted at the top of the report result file." });
-    Template.Parameters.Add(new Parameter() { Name = "container_fluid", BoolValue = false, DisplayName = "Bootstrap: Main container is fluid", Description = "If true, the main container has a full width , spanning the entire width of the viewport, otherwise the container has a responsive fixed width." });
+    Template.Parameters.Add(new Parameter() { Name = "container_fluid", BoolValue = true, DisplayName = "Bootstrap: Main container is fluid", Description = "If true, the main container has a full width , spanning the entire width of the viewport, otherwise the container has a responsive fixed width." });
     Template.Parameters.Add(new Parameter() { Name = Parameter.CSVUtf8Parameter, BoolValue = false, DisplayName = "CSV: Encode file in UTF8", Description = "If true, the file generated for a CSV export is encoded in UTF8, otherwise the file encoding is the Default of the machine executing the report." });
 
     //Allowed template parent names

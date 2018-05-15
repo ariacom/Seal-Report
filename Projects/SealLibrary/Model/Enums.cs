@@ -69,7 +69,8 @@ namespace Seal.Model
         print,
         csv,
         pdf,
-        excel
+        excel,
+        custom
     }
 
     public enum NumericStandardFormat

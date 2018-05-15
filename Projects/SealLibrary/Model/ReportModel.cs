@@ -55,6 +55,7 @@ namespace Seal.Model
                     GetProperty("LoadScript").SetDisplayName("Post Load Script");
                     GetProperty("LoadScript").SetDescription("Optional Razor Script to modify the result table of the model just after the database load.");
                 }
+                GetProperty("ShowFirstLine").SetIsBrowsable(true);
 
                 GetProperty("SqlSelect").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlFrom").SetIsBrowsable(!Source.IsNoSQL);
@@ -129,6 +130,7 @@ namespace Seal.Model
         string _preLoadScript;
         [Category("Model Definition"), DisplayName("Pre Load Script"), Description("Optional Razor Script to modify the result table of the model just before the database load."), Id(3, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
         public string PreLoadScript
         {
             get { return _preLoadScript; }
@@ -138,6 +140,7 @@ namespace Seal.Model
         string _loadScript;
         [Category("Model Definition"), DisplayName("Load Script"), Description("The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
         public string LoadScript
         {
             get { return _loadScript; }
@@ -147,10 +150,20 @@ namespace Seal.Model
         string _finalScript;
         [Category("Model Definition"), DisplayName("Final Script"), Description("Optional Razor Script to modify the model after its generation."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
         public string FinalScript
         {
             get { return _finalScript; }
             set { _finalScript = value; }
+        }
+
+        bool _showFirstLine = true;
+        [Category("Model Definition"), DisplayName("Show First Header Line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(6, 1)]
+        [DefaultValue(true)]
+        public bool ShowFirstLine
+        {
+            get { return _showFirstLine; }
+            set { _showFirstLine = value; }
         }
 
         [XmlIgnore]
@@ -165,6 +178,7 @@ namespace Seal.Model
         string _sqlSelect;
         [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement."), Id(3, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
         public string SqlSelect
         {
             get { return (_sqlSelect == DefaultClause) ? "" : _sqlSelect; }
@@ -174,6 +188,7 @@ namespace Seal.Model
         string _sqlFrom;
         [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrite the FROM clause in the generated SQL statement."), Id(4, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
         public string SqlFrom
         {
             get { return (_sqlFrom == DefaultClause) ? "" : _sqlFrom; }
@@ -183,6 +198,7 @@ namespace Seal.Model
         string _sqlGroupBy;
         [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrite the GROUP BY clause in the generated SQL statement."), Id(5, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
         public string SqlGroupBy
         {
             get { return (_sqlGroupBy == DefaultClause) ? "" : _sqlGroupBy; }
@@ -192,6 +208,7 @@ namespace Seal.Model
         string _sqlOrderBy;
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrite the ORDER BY clause in the generated SQL statement."), Id(6, 2)]
+        [DefaultValue("")]
         public string SqlOrderBy
         {
             get { return (_sqlOrderBy == DefaultClause) ? "" : _sqlOrderBy; }
@@ -201,6 +218,7 @@ namespace Seal.Model
         string _preSQL;
         [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(7, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
         public string PreSQL
         {
             get { return _preSQL; }
@@ -210,14 +228,16 @@ namespace Seal.Model
         string _postSQL;
         [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(8, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
         public string PostSQL
         {
             get { return _postSQL; }
             set { _postSQL = value; }
         }
 
-        bool _ignorePrePostError;
+        bool _ignorePrePostError = false;
         [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(9, 2)]
+        [DefaultValue(false)]
         public bool IgnorePrePostError
         {
             get { return _ignorePrePostError; }
