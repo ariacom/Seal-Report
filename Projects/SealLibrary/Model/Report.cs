@@ -1330,7 +1330,7 @@ namespace Seal.Model
         {
             get
             {
-                return Format == ReportFormat.pdf || Format == ReportFormat.excel || Format == ReportFormat.csv;
+                return Format == ReportFormat.pdf || Format == ReportFormat.excel || Format == ReportFormat.csv || Format == ReportFormat.custom;
             }
         }
 

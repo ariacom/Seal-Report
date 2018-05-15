@@ -50,7 +50,7 @@ namespace Seal.Model
                 GetProperty("ExcelConverter").SetIsBrowsable(true);
                 ExcelConverter.InitEditor(); 
 
-                GetProperty("WebExec").SetIsBrowsable(true);
+                GetProperty("WebExec").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
 
                 //Read only
                 GetProperty("TemplateName").SetIsReadOnly(true);
@@ -338,8 +338,20 @@ namespace Seal.Model
             }
         }
 
+        string _templateName;
+        [DisplayName("Template name"), Description("The name of the view template. View templates are defined in the repository Views folder."), Category("Definition"), Id(1, 1)]
+        public string TemplateName
+        {
+            get
+            {
+                if (_templateName.EndsWith(" HTML")) return _templateName.Replace(" HTML", ""); //backward compatibility
+                return _templateName;
+            }
+            set { _templateName = value; }
+        }
+
         string _modelGUID;
-        [DisplayName("Model"), Description("The data model used for the view."), Category("Definition"), Id(1, 1)]
+        [DisplayName("Model"), Description("The data model used for the view."), Category("Definition"), Id(2, 1)]
         [TypeConverter(typeof(ReportModelConverter))]
         public string ModelGUID
         {
@@ -351,17 +363,6 @@ namespace Seal.Model
             }
         }
 
-        string _templateName;
-        [DisplayName("Template name"), Description("The name of the view template. View templates are defined in the repository Views folder."), Category("Definition"), Id(2, 1)]
-        public string TemplateName
-        {
-            get
-            {
-                if (_templateName.EndsWith(" HTML")) return _templateName.Replace(" HTML", ""); //backward compatibility
-                return _templateName;
-            }
-            set { _templateName = value; }
-        }
 
         public void InitPartialTemplates()
         {
@@ -526,7 +527,8 @@ namespace Seal.Model
 
 
         private bool _webExec = true;
-        [Category("Web Report Server"), DisplayName("Web Execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(1, 7)]
+        [Category("Web Report Server"), DisplayName("Web Execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(2, 6)]
+        [DefaultValue(true)]
         public bool WebExec
         {
             get { return _webExec; }
