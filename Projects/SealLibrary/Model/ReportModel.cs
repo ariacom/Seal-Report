@@ -1063,9 +1063,9 @@ namespace Seal.Model
                     _sql += string.Format("{0}\r\n", execSelectClause);
                     _sql += !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("FROM {0}", execFromClause);
                     if (execWhereClause.Length > 0) _sql += string.Format("WHERE {0}\r\n", execWhereClause);
-                    if (execGroupByClause.Length > 0) _sql += (!string.IsNullOrEmpty(SqlGroupBy) ? SqlGroupBy : string.Format("GROUP BY {0}", execGroupByClause)) + "\r\n";
+                    if (execGroupByClause.Length > 0 || !string.IsNullOrEmpty(SqlGroupBy)) _sql += (!string.IsNullOrEmpty(SqlGroupBy) ? SqlGroupBy : string.Format("GROUP BY {0}", execGroupByClause)) + "\r\n";
                     if (execHavingClause.Length > 0) _sql += string.Format("HAVING {0}\r\n", execHavingClause);
-                    if (execOrderByClause.Length > 0) _sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
+                    if (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy)) _sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
                 }
             }
             catch (TemplateCompilationException ex)

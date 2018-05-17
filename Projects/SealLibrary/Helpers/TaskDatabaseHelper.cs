@@ -208,7 +208,7 @@ namespace Seal.Helpers
                 FileHelper.PurgeTempApplicationDirectory();
             }
             if (separator == null) separator = ',';
-            csvParser.CommentTokens = new string[] { "#" };
+            //csvParser.CommentTokens = new string[] { "#" };
             csvParser.SetDelimiters(new string[] { separator.ToString() });
             csvParser.HasFieldsEnclosedInQuotes = true;
 
