@@ -342,6 +342,7 @@ namespace SealWebServer.Controllers
                     if (format.ToLower() == "print") fileResult = execution.GeneratePrintResult();
                     else if (format.ToLower() == "pdf") fileResult = execution.GeneratePDFResult();
                     else if (format.ToLower() == "excel") fileResult = execution.GenerateExcelResult();
+                    else if (format.ToLower() == "csv") fileResult = execution.GenerateCSVResult();
                     else fileResult = execution.GenerateHTMLResult();
                     result = getFileResult(fileResult, report);
                 }
