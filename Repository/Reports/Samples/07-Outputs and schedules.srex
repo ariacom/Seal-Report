@@ -30,11 +30,6 @@
       <GUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</GUID>
       <Name>model</Name>
       <SourceGUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</SourceGUID>
-      <SqlSelect />
-      <SqlFrom />
-      <SqlGroupBy />
-      <SqlOrderBy />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -176,7 +171,7 @@
       <ViewParameters />
       <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
       <FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath>
-      <FileName>07-Outputs and schedules_{0:yyyy_MM_dd}</FileName>
+      <FileName>%SEALREPORTDISPLAYNAME%</FileName>
       <EmailZipPassword />
       <UserName />
       <UserGroups />
@@ -214,7 +209,7 @@
       </ViewParameters>
       <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
       <FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath>
-      <FileName>07-Outputs and schedules_{0:yyyy_MM_dd}</FileName>
+      <FileName>%SEALREPORTDISPLAYNAME%</FileName>
       <EmailZipPassword />
       <UserName />
       <UserGroups />
@@ -246,7 +241,6 @@
                   <Parameters />
                   <CultureName />
                   <SortOrder>1</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -264,7 +258,6 @@
                   </Parameters>
                   <CultureName />
                   <SortOrder>2</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -277,7 +270,6 @@
                   <Parameters />
                   <CultureName />
                   <SortOrder>3</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -290,7 +282,6 @@
                   <Parameters />
                   <CultureName />
                   <SortOrder>4</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -309,7 +300,6 @@
                   </Parameters>
                   <CultureName />
                   <SortOrder>5</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -319,25 +309,23 @@
               <Parameters />
               <CultureName />
               <SortOrder>1</SortOrder>
-              <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations />
             </ReportView>
           </Views>
-          <ModelGUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</ModelGUID>
           <TemplateName>Model</TemplateName>
+          <ModelGUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</ModelGUID>
           <CustomTemplate />
           <PartialTemplates />
           <Parameters />
           <CultureName />
           <SortOrder>1</SortOrder>
-          <WebExec>true</WebExec>
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
       </Views>
-      <ModelGUID />
       <TemplateName>Report</TemplateName>
+      <ModelGUID />
       <CustomTemplate />
       <PartialTemplates />
       <Parameters>
@@ -349,14 +337,9 @@
           <Name>force_execution</Name>
           <Value>True</Value>
         </Parameter>
-        <Parameter>
-          <Name>container_fluid</Name>
-          <Value>True</Value>
-        </Parameter>
       </Parameters>
       <CultureName />
       <SortOrder>0</SortOrder>
-      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>

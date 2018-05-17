@@ -453,7 +453,7 @@ $.post("http://demo.sealreport.org/SWISaveReportDefinition", {
     f.append($('&lt;input />').attr('name', 'render').attr('value', JSON.stringify(render))); //true if the report can be rendered (this option is used only if report definition is specified)
     f.append($('&lt;input />').attr('name', 'viewGUID').attr('value', viewGUID)); //optional, the view GUID to execute in the report
     f.append($('&lt;input />').attr('name', 'outputGUID').attr('value', outputGUID)); //optional, the output GUID to execute in the report
-    f.append($('&lt;input />').attr('name', 'format').attr('value', "html"));  // optional, html by default, print, pdf or excel with the converter 
+    f.append($('&lt;input />').attr('name', 'format').attr('value', "html"));  // optional, html by default, print, csv, pdf or excel with the converter 
 
     //optional restriction values if defined as prompted in the report
     f.append($('&lt;input />').attr('name', 'r0_name').attr('value', "Quantity"));

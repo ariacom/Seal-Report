@@ -177,11 +177,11 @@
 
             $("#execute3_button")
                 .click(function () {
-                    $("#execute3_label").text("Executing '07-Outputs and schedules' with the Excel view");
+                    $("#execute3_label").text("Executing '07-Outputs and schedules' with a specified view");
                     var form = $('<form method="post" target="_blank"/>').appendTo('body');
                     form.attr('action', sealServer + "SWExecuteReport");
                     form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
-                    form.append($('<input />').attr('name', 'viewGUID').attr('value', "c496f22b-fc4d-45da-a2fc-23f9ecbf878b"));
+                    form.append($('<input />').attr('name', 'viewGUID').attr('value', "2194db7c-bdea-459c-b055-d2e630d7f829"));
                     form.children('input').attr('type', 'hidden');
                     form.submit();
                 });
@@ -242,7 +242,7 @@
                     var form = $('<form method="post" target="_blank"/>').appendTo('body');
                     form.attr('action', sealServer + "SWExecuteReportToResult");
                     form.append($('<input />').attr('name', 'path').attr('value', "\\Samples\\07-Outputs and schedules.srex"));
-                    form.append($('<input />').attr('name', 'format').attr('value', "print"));/* print, pdf or excel with the converter */
+                    form.append($('<input />').attr('name', 'format').attr('value', "csv"));/* print, csv, pdf or excel with the converter */
                     form.children('input').attr('type', 'hidden');
                     form.submit();
                 });
@@ -411,7 +411,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <button id="execute3_button">Execute '07-Outputs and schedules' with Excel view</button>
+                                <button id="execute3_button">Execute '07-Outputs and schedules' with a specific view</button>
                             </td>
                             <td width="50%"><label id="execute3_label"></label></td>
                         </tr>
@@ -436,7 +436,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <button id="generate3_button">Generate '07-Outputs and schedules' in Print HTML</button>
+                                <button id="generate3_button">Generate '07-Outputs and schedules' in CSV</button>
                             </td>
                             <td width="50%"><label id="generate3_label"></label></td>
                         </tr>
