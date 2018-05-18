@@ -28,9 +28,11 @@ In addition to the Open Source version, **<a href="http://www.ariacom.com" targe
 * The <a href="http://www.ariacom.com/sealreportlicense.cshtml" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
 
 # Screen shots
+## HTML Report Result
+![HTML Report Result](http://sealreport.org/Images/reportResult3.png) 
+
 ## Report Designer
 ![Report Designer](http://sealreport.org/Images/reportDesignerShot.png)
-
 
 ## Web Report Server
 ![Web Report Server](http://sealreport.org/Images/webServer4.png)
