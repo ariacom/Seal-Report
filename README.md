@@ -37,8 +37,11 @@ In addition to the Open Source version, **<a href="http://www.ariacom.com" targe
 ## Web Report Server
 ![Web Report Server](http://sealreport.org/Images/webServer4.png)
 
-## Responsive Layout
-![HTML Report Result](http://sealreport.org/Images/reportResultResp1.png) ![Web Report Server](http://sealreport.org/Images/webServerResp1.png)
+## Report Result with Responsive Layout
+![HTML Report Result](http://sealreport.org/Images/reportResultResp1.png) 
+
+## Web Report Server with Responsive Layout
+![Web Report Server](http://sealreport.org/Images/webServerResp1.png)
 
 ## System Requirements
 **For use:**
