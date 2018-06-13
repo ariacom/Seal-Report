@@ -26,7 +26,7 @@ namespace SealWebServer.Controllers
             WriteDebug("SWILogin");
             try
             {
-                if (WebUser == null || !WebUser.IsAuthenticated || WebUser.WebUserName != user)
+                if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user))
                 {
                     CreateRepository();
                     CreateWebUser();
