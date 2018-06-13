@@ -292,12 +292,7 @@
                   <TemplateName>Data Table</TemplateName>
                   <CustomTemplate />
                   <PartialTemplates />
-                  <Parameters>
-                    <Parameter>
-                      <Name>data_tables_responsive</Name>
-                      <Value>False</Value>
-                    </Parameter>
-                  </Parameters>
+                  <Parameters />
                   <CultureName />
                   <SortOrder>5</SortOrder>
                   <PdfConfigurations />

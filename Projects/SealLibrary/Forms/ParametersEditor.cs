@@ -250,6 +250,31 @@ namespace Seal.Model
             get { return _enums[11].Value; }
             set { _enums[11].Value = value; }
         }
+        [TypeConverter(typeof(ViewParameterEnumConverter))]
+        public string e12
+        {
+            get { return _enums[12].Value; }
+            set { _enums[12].Value = value; }
+        }
+        [TypeConverter(typeof(ViewParameterEnumConverter))]
+        public string e13
+        {
+            get { return _enums[13].Value; }
+            set { _enums[13].Value = value; }
+        }
+        [TypeConverter(typeof(ViewParameterEnumConverter))]
+        public string e14
+        {
+            get { return _enums[14].Value; }
+            set { _enums[14].Value = value; }
+        }
+        [TypeConverter(typeof(ViewParameterEnumConverter))]
+        public string e15
+        {
+            get { return _enums[15].Value; }
+            set { _enums[15].Value = value; }
+        }
+
 
         public int n0
         {
@@ -310,6 +335,26 @@ namespace Seal.Model
         {
             get { return _numerics[11].NumericValue; }
             set { _numerics[11].NumericValue = value; }
+        }
+        public int n12
+        {
+            get { return _numerics[12].NumericValue; }
+            set { _numerics[12].NumericValue = value; }
+        }
+        public int n13
+        {
+            get { return _numerics[13].NumericValue; }
+            set { _numerics[13].NumericValue = value; }
+        }
+        public int n14
+        {
+            get { return _numerics[14].NumericValue; }
+            set { _numerics[14].NumericValue = value; }
+        }
+        public int n15
+        {
+            get { return _numerics[15].NumericValue; }
+            set { _numerics[15].NumericValue = value; }
         }
 
         public bool b0
@@ -452,6 +497,26 @@ namespace Seal.Model
         {
             get { return _strings[11].Value; }
             set { _strings[11].Value = value; }
+        }
+        public string s12
+        {
+            get { return _strings[12].Value; }
+            set { _strings[12].Value = value; }
+        }
+        public string s13
+        {
+            get { return _strings[13].Value; }
+            set { _strings[13].Value = value; }
+        }
+        public string s14
+        {
+            get { return _strings[14].Value; }
+            set { _strings[14].Value = value; }
+        }
+        public string s15
+        {
+            get { return _strings[15].Value; }
+            set { _strings[15].Value = value; }
         }
     }
 }
