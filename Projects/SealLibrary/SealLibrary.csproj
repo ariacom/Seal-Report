@@ -198,6 +198,7 @@
     <Compile Include="Model\SealExcelConverter.cs" />
     <Compile Include="Model\SealPdfConverter.cs" />
     <Compile Include="Model\SealSecurity.cs" />
+    <Compile Include="Model\CommonScript.cs" />
     <Compile Include="Model\SecuritySource.cs" />
     <Compile Include="Model\SecurityDevice.cs" />
     <Compile Include="Model\SecurityConnection.cs" />

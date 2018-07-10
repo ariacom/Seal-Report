@@ -40,8 +40,6 @@ namespace Seal.Model
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!IsNoSQL);
                 GetProperty("IsNoSQL").SetIsBrowsable(true);
 
-                GetProperty("TasksScript").SetIsBrowsable(true);
-                GetProperty("TasksScript").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
                 GetProperty("InitScript").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsReadOnly(!string.IsNullOrEmpty(MetaSourceGUID));
 
@@ -143,7 +141,6 @@ namespace Seal.Model
                     IsDefault = source.IsDefault;
                     IsNoSQL = source.IsNoSQL;
                     InitScript = source.InitScript;
-                    TasksScript = source.TasksScript;
                     _metaSourceName = source.Name;
                     foreach (var item in source.Connections)
                     {

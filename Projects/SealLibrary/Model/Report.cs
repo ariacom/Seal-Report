@@ -58,6 +58,31 @@ namespace Seal.Model
             set { _taks = value; }
         }
 
+        List<CommonScript> _commonScripts = new List<CommonScript>();
+        public List<CommonScript> CommonScripts
+        {
+            get { return _commonScripts; }
+            set { _commonScripts = value; }
+        }
+
+        [XmlIgnore]
+        public string CommonScriptsHeader
+        {
+            get
+            {
+                var result = "";
+                foreach (var script in CommonScripts) result += script.Script + "\r\n";                
+                return result;
+            }
+        }
+
+        public string GetCommonScriptsHeader(CommonScript scriptBeingEdited)
+        {
+            var result = "";
+            foreach (var script in CommonScripts.Where(i => i != scriptBeingEdited)) result += script.Script + "\r\n";
+            return result;
+        }
+
         private string _tasksScript = "";
         public string TasksScript
         {

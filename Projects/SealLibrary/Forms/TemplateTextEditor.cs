@@ -12,11 +12,14 @@ using System.Windows.Forms.Design;
 using System.Windows.Forms;
 using Seal.Model;
 using System.IO;
+using Seal.Helpers;
 
 namespace Seal.Forms
 {
     public class TemplateTextEditor : UITypeEditor
     {
+        public static object CurrentEntity = null; //Hack to get the current entity
+
         const string razorPreOutputTemplate = "@using Seal.Model\r\n@{\r\nReportOutput output = Model;\r\nstring result = \"1\"; //Set result to 0 to cancel the report.\r\n}\r\n@Raw(result)";
         const string razorPostOutputTemplate = "@using Seal.Model\r\n@{\r\nReportOutput output = Model;\r\n}";
         const string displayNameTemplate = "@using Seal.Model\r\n@{\r\nReport report = Model;\r\nstring result = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + \" \" + DateTime.Now.ToShortDateString();\r\n}\r\n@Raw(result)";
@@ -293,7 +296,7 @@ namespace Seal.Forms
 
         const string razorTasksTemplate = @"@using System.Text
 @functions {
-    //During execution, this script will be copied at the end of all task scripts...
+    //Before execution, this script will be added at the end of all task scripts...
     public string MyConvertString(string input) {
         return input.Replace(""__"",""_"");
     }
@@ -349,7 +352,7 @@ namespace Seal.Forms
 @{
     MetaSource source = Model;
 	ReportExecutionLog log = null;
-    Report = null;
+    Report report = null;
     if (source is ReportSource) {
         log = ((ReportSource) source).Report;
         report = ((ReportSource) source).Report;
@@ -617,42 +620,40 @@ namespace Seal.Forms
                 string valueToEdit = (value == null ? "" : value.ToString());
                 if (context.Instance is ReportView)
                 {
-                    frm.View = context.Instance as ReportView;
+                    var view = context.Instance as ReportView;
                     if (context.PropertyDescriptor.Name == "CustomTemplate")
                     {
-                        if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = frm.View.ViewTemplateText;
-                        template = frm.View.Template.Text.Trim();
+                        if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = view.ViewTemplateText;
+                        template = view.Template.Text.Trim();
                         frm.Text = "Edit custom template";
-                        frm.TypeForCheckSyntax = typeof(Report);
+                        frm.ObjectForCheckSyntax = view.Report;
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                     else if (context.PropertyDescriptor.Name == "CustomConfiguration")
                     {
-                        if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = frm.View.Template.Configuration;
-                        template = frm.View.Template.Configuration.Trim();
+                        if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = view.Template.Configuration;
+                        template = view.Template.Configuration.Trim();
                         frm.Text = "Edit template configuration";
-                        frm.TypeForCheckSyntax = typeof(ReportViewTemplate);
+                        frm.ObjectForCheckSyntax = view.Template;
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                 }
                 else if (context.Instance is ReportViewPartialTemplate)
                 {
                     var pt = context.Instance as ReportViewPartialTemplate;
-                    frm.View = pt.View;
-                    var templateText = frm.View.Template.GetPartialTemplateText(pt.Name);
+                    var templateText = pt.View.Template.GetPartialTemplateText(pt.Name);
                     if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = templateText;
                     template = templateText;
                     frm.Text = "Edit custom partial template";
-                    frm.TypeForCheckSyntax = frm.View.Template.ForReportModel ? typeof(ReportModel) : typeof(ReportView);
+                    frm.ObjectForCheckSyntax = pt.View.Template.ForReportModel ? (object)pt.View.Model : (object)pt.View;
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
                 else if (context.Instance is ReportTask)
                 {
                     template = razorTaskTemplate;
-                    frm.TypeForCheckSyntax = typeof(ReportTask);
+                    frm.ObjectForCheckSyntax = context.Instance;
                     frm.Text = "Edit task script";
                     frm.textBox.ConfigurationManager.Language = "cs";
-                    frm.TextToAddForCheck = ((ReportTask)context.Instance).ScriptHeader;
                     List<string> samples = new List<string>();
                     foreach (var sample in tasksSamples)
                     {
@@ -664,7 +665,7 @@ namespace Seal.Forms
                 {
                     if (context.PropertyDescriptor.Name == "PreScript") template = razorPreOutputTemplate;
                     else if (context.PropertyDescriptor.Name == "PostScript") template = razorPostOutputTemplate;
-                    frm.TypeForCheckSyntax = typeof(ReportOutput);
+                    frm.ObjectForCheckSyntax = context.Instance;
                     frm.Text = "Edit output script";
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
@@ -698,14 +699,14 @@ namespace Seal.Forms
                     if (context.PropertyDescriptor.Name == "DisplayName")
                     {
                         template = displayNameTemplate;
-                        frm.TypeForCheckSyntax = typeof(Report);
+                        frm.ObjectForCheckSyntax = ((ReportComponent)context.Instance).Report;
                         frm.Text = "Edit display name script";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                     else if (context.PropertyDescriptor.Name == "InitScript")
                     {
                         template = razorInitScriptTemplate;
-                        frm.TypeForCheckSyntax = typeof(Report);
+                        frm.ObjectForCheckSyntax = ((ReportComponent)context.Instance).Report;
                         frm.Text = "Edit the script executed when the report is initialized";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
@@ -724,7 +725,7 @@ namespace Seal.Forms
                         }
                         frm.SetSamples(samples);
 
-                        frm.TypeForCheckSyntax = typeof(ResultCell);
+                        frm.ObjectForCheckSyntax = new ResultCell();
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                     else if (context.PropertyDescriptor.Name == "SQL")
@@ -768,7 +769,7 @@ namespace Seal.Forms
                     if (context.PropertyDescriptor.Name == "Script" || context.PropertyDescriptor.Name == "ProviderScript")
                     {
                         template = ((SealSecurity)context.Instance).ProviderScript;
-                        frm.TypeForCheckSyntax = typeof(SecurityUser);
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
                         frm.Text = "Edit security script";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
@@ -778,14 +779,14 @@ namespace Seal.Forms
                     if (context.PropertyDescriptor.Name == "DefinitionScript")
                     {
                         template = razorTableDefinitionScriptTemplate;
-                        frm.TypeForCheckSyntax = typeof(MetaTable);
+                        frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script to define the table";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                     else if (context.PropertyDescriptor.Name == "LoadScript")
                     {
                         template = razorTableLoadScriptTemplate;
-                        frm.TypeForCheckSyntax = typeof(MetaTable);
+                        frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the default script to load the table";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
@@ -795,14 +796,14 @@ namespace Seal.Forms
                     if (context.PropertyDescriptor.Name == "PreLoadScript")
                     {
                         template = razorModelPreLoadScriptTemplateNoSQL;
-                        frm.TypeForCheckSyntax = typeof(ReportModel);
+                        frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script executed before table load";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                     else if (context.PropertyDescriptor.Name == "FinalScript")
                     {
                         template = razorTableFinalScriptTemplate;
-                        frm.TypeForCheckSyntax = typeof(ReportModel);
+                        frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the final script executed for the model";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
@@ -818,45 +819,76 @@ namespace Seal.Forms
                             frm.Text = "Edit the script to load the table";
                             template = razorModelLoadScriptTemplate;
                         }
-                        frm.TypeForCheckSyntax = typeof(ReportModel);
+                        frm.ObjectForCheckSyntax = context.Instance;
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                 }
                 else if (context.Instance is MetaSource && context.PropertyDescriptor.Name == "InitScript")
                 {
                     template = razorSourceInitScriptTemplate;
-                    frm.TypeForCheckSyntax = typeof(MetaSource);
+                    frm.ObjectForCheckSyntax = context.Instance;
                     frm.Text = "Edit the init script of the source";
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
-                else if ((context.Instance is TasksFolder || context.Instance is MetaSource) && context.PropertyDescriptor.Name == "TasksScript")
+                else if (context.Instance is TasksFolder)
                 {
-                    template = razorTasksTemplate;
-                    frm.TextToAddForCheck = ((ReportComponent)context.Instance).Report.Repository.Configuration.TasksScript + "\r\n";
-                    frm.TypeForCheckSyntax = typeof(ReportTask);
-                    frm.Text = "Edit the script that will be added to all task scripts";
+                    if (context.PropertyDescriptor.Name == "TasksScript")
+                    {
+                        template = razorTasksTemplate;
+                        frm.ObjectForCheckSyntax = new ReportTask();
+                        if (CurrentEntity is Report)
+                        {
+                            frm.ScriptHeader = ((Report)CurrentEntity).Repository.Configuration.CommonScriptsHeader;
+                            frm.ScriptHeader += ((Report)CurrentEntity).Repository.Configuration.TasksScript;
+                            frm.ScriptHeader += ((Report)CurrentEntity).CommonScriptsHeader;
+                        }
+                        frm.Text = "Edit the script that will be added to all task scripts";
+                        frm.textBox.ConfigurationManager.Language = "cs";
+                    }
+                }
+                else if (context.Instance is CommonScript)
+                {
+                    template = CommonScript.RazorTemplate;
+                    frm.Text = "Edit the script that will be added to all scripts executed for the report.";
+                    if (CurrentEntity is SealServerConfiguration)
+                    {
+                        //common script from configuration
+                        frm.ScriptHeader = ((SealServerConfiguration)CurrentEntity).GetCommonScriptsHeader((CommonScript)context.Instance);
+                    }
+                    if (CurrentEntity is Report)
+                    {
+                        //common script from report
+                        frm.ScriptHeader = ((Report)CurrentEntity).Repository.Configuration.CommonScriptsHeader;
+                        frm.ScriptHeader += ((Report)CurrentEntity).GetCommonScriptsHeader((CommonScript)context.Instance);
+
+                    }
+                    frm.ObjectForCheckSyntax = CurrentEntity;
                     frm.textBox.ConfigurationManager.Language = "cs";
                 }
                 else if (context.Instance is SealServerConfiguration)
                 {
+                    //use report tag to store current config
+                    var report = new Report();
+                    report.Tag = context.Instance;
                     if (context.PropertyDescriptor.Name == "InitScript")
                     {
                         template = razorConfigurationInitScriptTemplate;
-                        frm.TypeForCheckSyntax = typeof(Report);
+                        frm.ObjectForCheckSyntax = report;
                         frm.Text = "Edit the root init script";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                     else if (context.PropertyDescriptor.Name == "TasksScript")
                     {
                         template = razorTasksTemplate;
-                        frm.TypeForCheckSyntax = typeof(ReportTask);
+                        frm.ScriptHeader = ((SealServerConfiguration)context.Instance).CommonScriptsHeader;
+                        frm.ObjectForCheckSyntax = new ReportTask();
                         frm.Text = "Edit the script that will be added to all task scripts";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
                     else if (context.PropertyDescriptor.Name == "ReportCreationScript")
                     {
                         template = razorConfigurationReportCreationScriptTemplate;
-                        frm.TypeForCheckSyntax = typeof(Report);
+                        frm.ObjectForCheckSyntax = report;
                         frm.Text = "Edit the script executed when a new report is created";
                         frm.textBox.ConfigurationManager.Language = "cs";
                     }
@@ -878,7 +910,7 @@ namespace Seal.Forms
                     frm.okToolStripButton.Visible = false;
                     frm.cancelToolStripButton.Text = "Close";
                 }
-                frm.checkSyntaxToolStripButton.Visible = (frm.TypeForCheckSyntax != null);
+                frm.checkSyntaxToolStripButton.Visible = (frm.ObjectForCheckSyntax != null);
 
                 if (svc.ShowDialog(frm) == DialogResult.OK)
                 {

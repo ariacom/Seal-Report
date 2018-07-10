@@ -8,6 +8,7 @@ using System.DirectoryServices.Protocols;
 using System.Xml.Linq;
 using System.ServiceModel.Syndication;
 using System.Windows.Forms;
+using Seal.Model;
 
 namespace Seal.Helpers
 {
@@ -40,6 +41,64 @@ namespace Seal.Helpers
         }
 
 
+        static public string GetScriptHeader(object model)
+        {
+            var result = "";
+            Report report = null;
+            SealServerConfiguration configuration = null;
+            if (model is SealServerConfiguration)
+            {
+                configuration = (SealServerConfiguration)model;
+            }
+            else if (model is Report)
+            {
+                var ob = (Report)model;
+                report = ob;
+                if (ob.Repository != null) configuration = ob.Repository.Configuration;
+                else if (ob.Tag != null && ob.Tag is SealServerConfiguration) configuration = (SealServerConfiguration) ob.Tag;
+            }
+            else if (model is ReportComponent)
+            {
+                var ob = (ReportComponent)model;
+                if (ob.Report != null)
+                {
+                    report = ob.Report;
+                    if (ob.Report.Repository != null) configuration = ob.Report.Repository.Configuration;
+                    else if (ob.Report.Tag != null && ob.Report.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Report.Tag;
+                }
+            }
+            else if (model is MetaEnum)
+            {
+                var ob = (MetaEnum)model;
+                report = ob.Source.Report;
+                configuration = ob.Source.Repository.Configuration;
+            }
+            else if (model is MetaTable)
+            {
+                var ob = (MetaTable)model;
+                report = ob.Source.Report;
+                configuration = ob.Source.Repository.Configuration;
+            }
+            else if (model is MetaConnection)
+            {
+                var ob = (MetaConnection)model;
+                report = ob.Source.Report;
+                configuration = ob.Source.Repository.Configuration;
+            }
+
+            if (configuration == null) configuration = Repository.Instance.Configuration;
+
+            if (!string.IsNullOrEmpty(configuration.CommonScriptsHeader)) result += configuration.CommonScriptsHeader + "\r\n";
+            if (model is ReportTask && !string.IsNullOrEmpty(configuration.TasksScript)) result += configuration.TasksScript + "\r\n";
+
+            if (report != null)
+            {
+                if (!string.IsNullOrEmpty(report.CommonScriptsHeader)) result += report.CommonScriptsHeader + "\r\n";
+                if (model is ReportTask && !string.IsNullOrEmpty(report.TasksScript)) result += report.TasksScript + "\r\n";
+            }
+            return result;
+        }
+
         static public string CompileExecute(string script, object model, string key = null)
         {
             if (model != null && script != null && script.StartsWith("@"))
@@ -56,8 +115,7 @@ namespace Seal.Helpers
                 }
                 else
                 {
-                    result = Engine.Razor.RunCompile(script, key, model.GetType(), model);
-
+                    result = Engine.Razor.RunCompile(GetScriptHeader(model) + script, key, model.GetType(), model);
                 }
                 return string.IsNullOrEmpty(result) ? "" : result.Trim();
             }

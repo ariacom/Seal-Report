@@ -49,7 +49,7 @@ namespace Seal.Forms
 
         private void ConfigurationEditorForm_Load(object sender, EventArgs e)
         {
-
+            TemplateTextEditor.CurrentEntity = _configuration;
             if (_configuration.ForPublication)
             {
                 okToolStripButton.Text = "Close";
