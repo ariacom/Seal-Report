@@ -24,6 +24,7 @@ namespace Seal.Forms
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
+                GetProperty("CommonScripts").SetIsBrowsable(true);
                 GetProperty("TasksScript").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
@@ -32,6 +33,14 @@ namespace Seal.Forms
         #endregion
 
         public int GetSort() { return 1; }
+
+        [Category("Scripts"), DisplayName("Common Scripts"), Description("List of scripts added to all scripts executed for the report (not only for tasks). This may be useful to defined common functions for the report.")]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<CommonScript> CommonScripts
+        {
+            get { return Report.CommonScripts; }
+            set { Report.CommonScripts = value; }
+        }
 
         [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed. This may be useful to defined common functions for the report.")]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]

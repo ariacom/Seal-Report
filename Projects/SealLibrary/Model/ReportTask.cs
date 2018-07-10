@@ -158,25 +158,6 @@ namespace Seal.Model
             set { _script = value; }
         }
 
-        public string ScriptHeader
-        {
-            get
-            {
-                var result = "";
-                if (!string.IsNullOrEmpty(Report.Repository.Configuration.TasksScript)) result += Report.Repository.Configuration.TasksScript + "\r\n";
-                if (!string.IsNullOrEmpty(Source.TasksScript)) result += Source.TasksScript + "\r\n";
-                if (!string.IsNullOrEmpty(Report.TasksScript)) result += Report.TasksScript + "\r\n";
-                return result;
-            }
-        }
-
-
-        public string FullScript
-        {
-            get {
-                return ScriptHeader + _script;
-            }
-        }
 
         bool _ignoreError = false;
         [DefaultValue(false)]
@@ -333,7 +314,7 @@ namespace Seal.Model
             if (!Report.Cancel && !string.IsNullOrEmpty(Script))
             {
                 LogMessage("Executing Script...");
-                string result = RazorHelper.CompileExecute(FullScript, this);
+                string result = RazorHelper.CompileExecute(Script, this);
                 if (result == "0")
                 {
                     LogMessage("Script returns 0, the report is cancelled.");

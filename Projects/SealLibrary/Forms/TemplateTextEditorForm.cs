@@ -4,14 +4,9 @@
 //
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Seal.Model;
-using RazorEngine;
 using RazorEngine.Templating;
 using Seal.Helpers;
 
@@ -19,9 +14,8 @@ namespace Seal.Forms
 {
     public partial class TemplateTextEditorForm : Form
     {
-        public ReportView View;
-        public Type TypeForCheckSyntax = null;
-        public string TextToAddForCheck = "";
+        public object ObjectForCheckSyntax = null;
+        public string ScriptHeader = null;
 
         ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...");
 
@@ -104,8 +98,10 @@ namespace Seal.Forms
             try
             {
                 string script = textBox.Text;
-                if (!string.IsNullOrEmpty(TextToAddForCheck)) script += "\r\n" + TextToAddForCheck;
-                RazorHelper.Compile(script, TypeForCheckSyntax, Guid.NewGuid().ToString());
+                string scriptHeader = ScriptHeader;
+                if (scriptHeader == null) scriptHeader = RazorHelper.GetScriptHeader(ObjectForCheckSyntax);
+                if (!string.IsNullOrEmpty(scriptHeader)) script += "\r\n" + scriptHeader;
+                RazorHelper.Compile(script, ObjectForCheckSyntax.GetType(), Guid.NewGuid().ToString());
             }
             catch (TemplateCompilationException ex)
             {

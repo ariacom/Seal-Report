@@ -126,7 +126,13 @@ namespace Seal.Forms
                 frmCollectionEditorForm.Text = "Partial Templates Collection Editor";
                 _useHandlerInterface = false;
             }
-
+            else if (CollectionItemType == typeof(CommonScript))
+            {
+                frmCollectionEditorForm.Text = "Common Script Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
 
             TableLayoutPanel tlpLayout = frmCollectionEditorForm.Controls[0] as TableLayoutPanel;
 
@@ -141,6 +147,7 @@ namespace Seal.Forms
                     propertyGrid.ToolbarVisible = false;
                     propertyGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(propertyGrid_PropertyValueChanged);
                     propertyGrid.LineColor = SystemColors.ControlLight;
+                    propertyGrid.Tag = _component;
                 }
             }
 
@@ -212,6 +219,7 @@ namespace Seal.Forms
             else if (value is SecurityConnection) result = ((SecurityConnection)value).DisplayName;
             else if (value is SubReport) result = ((SubReport)value).Name;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;
+            else if (value is CommonScript) result = ((CommonScript)value).Name;
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
     }

@@ -458,6 +458,7 @@ namespace Seal
             }
             if (_reportViewer != null && _reportViewer.Visible) _reportViewer.Close();
             toolsHelper.Report = _report;
+            TemplateTextEditor.CurrentEntity = _report;
             _report.SchedulesWithCurrentUser = Properties.Settings.Default.SchedulesWithCurrentUser;
         }
 
@@ -477,6 +478,7 @@ namespace Seal
                 selectAfterLoad();
 
                 toolsHelper.Report = _report;
+                TemplateTextEditor.CurrentEntity = _report;
                 _report.SchedulesWithCurrentUser = Properties.Settings.Default.SchedulesWithCurrentUser;
 
                 if (!string.IsNullOrEmpty(_report.ExecutionErrors)) MessageBox.Show(_report.ExecutionErrors, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -532,6 +534,7 @@ namespace Seal
             IsModified = false;
             init();
             toolsHelper.Report = _report;
+            TemplateTextEditor.CurrentEntity = _report;
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -992,7 +995,6 @@ namespace Seal
                 MetaSource metaSource = MetaSource.Create(_repository);
                 metaSource.IsNoSQL = source.IsNoSQL;
                 metaSource.InitScript = source.InitScript;
-                metaSource.TasksScript = source.TasksScript;
                 metaSource.Connections.Clear();
                 metaSource.Connections.AddRange(source.Connections);
                 metaSource.MetaData.Joins.AddRange(source.MetaData.Joins);
