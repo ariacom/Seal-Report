@@ -435,4 +435,22 @@ namespace Seal.Model
         OneFilePerExecution,
     }
 
+    public enum ExcelLibrary
+    {
+        [Description("Default")]
+        Default,
+        [Description("EPPlus Open XML")]
+        EPPlus,
+    }
+
+    public enum ExcelLibrary2
+    {
+        [Description("Default from configuration")]
+        Default,
+        [Description("Winnovative")]
+        Winnovative,
+        [Description("EPPlus Open XML")]
+        EPPlus,
+    }
+
 }

@@ -3,6 +3,7 @@
     ReportView view = Model;
     Report report = view.Report;
     Repository repository = report.Repository;
+    var configuration = repository.Configuration;
 
     var showMessageClass = (report.ShowExecutionMessages ? "class='active'" : "");
     var showInfoClass = (string.IsNullOrEmpty(showMessageClass) && view.GetBoolValue("information_button") ? "class='active'" : "");
@@ -20,10 +21,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="#" class="navbar-left hidden-xs">
-                    <img src="@report.AttachImageFile(report.Repository.Configuration.LogoName)" class="img-responsive" alt="@report.ExecutionName">
-                </a>
-                <a id="nav_button" href="#" class="navbar-brand">@report.ExecutionName</a><span id="nav_badge" class="badge hidden">@report.Translate("Nav")</span>
+                @if (configuration.HasLogo)
+                {
+                    <a href="#" class="navbar-left hidden-xs">
+                        <img src="@report.AttachImageFile(configuration.LogoName)" class="img-responsive" alt="@report.ExecutionName">
+                    </a>
+                }
+                <a id="nav_button" href="#" class="navbar-brand">@(!configuration.HasLogo ? configuration.WebProductName + " - " : "")@report.ExecutionName</a><span id="nav_badge" class="badge hidden">@report.Translate("Nav")</span>
             </div>
             <div id="navbarCollapse" class="collapse navbar-collapse">
                 @if (report.GenerateHTMLDisplay)

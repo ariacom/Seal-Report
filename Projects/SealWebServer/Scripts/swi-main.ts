@@ -30,6 +30,7 @@ $(document).ready(function () {
 class SWIMain {
     private _connected: boolean = false;
     private _profile: any = null;
+    private _canEdit: boolean = false;
     public _folder: any = null;
     private _searchMode: boolean = false;
     private _clipboard: string[];
@@ -375,6 +376,7 @@ class SWIMain {
         SWIUtil.EnableButton($("#report-paste-lightbutton"), (this._clipboard != null && this._clipboard.length > 0) && right >= folderRightEdit);
 
         SWIUtil.ShowHideControl($("#folders-nav-item"), _main._folder ? _main._folder.manage > 0 : false);
+        SWIUtil.ShowHideControl($("#file-menu"), _main._canEdit);
 
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");
     }
@@ -385,13 +387,14 @@ class SWIMain {
             var folder = data[i];
             result[result.length] = { "id": folder.path, "parent": parent, "text": (folder.name == "" ? "Reports" : folder.name), "state": { "opened": folder.expand, "selected": (folder.name == "") } }
             if (folder.folders && folder.folders.length > 0) _main.toJSTreeFolderData(folder.folders, result, folder.path);
+            if (folder.right == 4) _main._canEdit = true;
         }
         return result;
     }
 
-
     private loadFolderTree() {
         _gateway.GetRootFolders(function (data) {
+            _main._canEdit = false;
             var result = [];
             $folderTree.jstree("destroy").empty();
             $folderTree.jstree({

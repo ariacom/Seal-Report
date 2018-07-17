@@ -48,7 +48,8 @@ namespace Seal.Model
                 GetProperty("CommonScripts").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
-
+                GetProperty("ExcelLibrary").SetIsBrowsable(!ForPublication);
+                
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
                 GetProperty("WebPublicationDirectory").SetIsBrowsable(ForPublication);
@@ -80,12 +81,21 @@ namespace Seal.Model
         }
 
         string _logoName = "logo.png";
-        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images'."), Id(5, 1)]
+        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images'. If empty, the Web Product Name is used as prefix."), Id(5, 1)]
         [DefaultValue("logo.png")]
         public string LogoName
         {
             get { return _logoName; }
             set { _logoName = value; }
+        }
+
+        [XmlIgnore]
+        public bool HasLogo
+        {
+            get {
+                if (string.IsNullOrEmpty(LogoName)) return false;
+                return File.Exists(Path.Combine(Repository.ViewImagesFolder, LogoName));
+            }
         }
 
         int _logDays = 30;
@@ -114,6 +124,16 @@ namespace Seal.Model
             set { _isLocal = value; }
         }
 
+        ExcelLibrary _excelLibrary = ExcelLibrary.Default;
+        [Category("Server Settings"), DisplayName("Default Excel Library"), Description("Defines the default excel library for the Seal Converter Excel Library."), Id(9, 1)]
+        [DefaultValue(ExcelLibrary.Default)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        public ExcelLibrary ExcelLibrary
+        {
+            get { return _excelLibrary; }
+            set { _excelLibrary = value; }
+        }
+        
 
         string _initScript = "";
         [Category("Scripts"), DisplayName("Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 3)]
