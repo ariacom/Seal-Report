@@ -190,5 +190,9 @@ namespace Seal.Forms
             enableControls();
         }
 
+        private void checkedListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            enableControls();
+        }
     }
 }

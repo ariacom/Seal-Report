@@ -168,6 +168,7 @@
             this.checkedListBox.Name = "checkedListBox";
             this.checkedListBox.Size = new System.Drawing.Size(401, 475);
             this.checkedListBox.TabIndex = 1;
+            this.checkedListBox.SelectedIndexChanged += new System.EventHandler(this.checkedListBox_SelectedIndexChanged);
             // 
             // MultipleSelectForm
             // 

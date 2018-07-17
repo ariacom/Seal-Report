@@ -413,6 +413,16 @@ namespace Seal.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap task2 {
+            get {
+                object obj = ResourceManager.GetObject("task2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap template {
             get {
                 object obj = ResourceManager.GetObject("template", resourceCulture);

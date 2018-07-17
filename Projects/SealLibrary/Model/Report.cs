@@ -528,6 +528,10 @@ namespace Seal.Model
             get { return OutputToExecute != null; }
         }
 
+        //One task only
+        [XmlIgnore]
+        public ReportTask TaskToExecute = null;
+
         [XmlIgnore]
         public bool GenerateHTMLDisplay
         {

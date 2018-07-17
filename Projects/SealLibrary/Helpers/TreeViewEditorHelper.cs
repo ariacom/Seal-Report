@@ -907,117 +907,127 @@ namespace Seal.Forms
 
             bool mustInit = false;
             object selectedEntity = mainTreeView.SelectedNode.Tag;
-            TreeViewEditorHelper.CheckPropertyValue(selectedEntity, e);
-            MetaSource source = GetSource(mainTreeView.SelectedNode);
-            if (source == null) return mustInit;
+            CheckPropertyValue(selectedEntity, e);
             string propertyName = e.ChangedItem.PropertyDescriptor.Name;
 
-            if (selectedEntity is ReportSource && propertyName == "ConnectionGUID")
+            if (selectedEntity is ReportTask && propertyName == "Enabled")
             {
-                ((ReportSource)selectedEntity).RefreshEnumsOnDbConnection();
+                ReportTask entity = (ReportTask)selectedEntity;
+                mainTreeView.SelectedNode.ImageIndex = entity.Enabled ? 12 : 14;
+                mainTreeView.SelectedNode.SelectedImageIndex = mainTreeView.SelectedNode.ImageIndex;
             }
-            else if (selectedEntity is MetaConnection && propertyName == "Name")
+            else
             {
-                MetaConnection entity = (MetaConnection)selectedEntity;
-                entity.Name = Helper.GetUniqueName(entity.Name, (from i in source.Connections where i != entity select i.Name).ToList());
-                mainTreeView.SelectedNode.Text = entity.Name;
-            }
-            else if (selectedEntity is MetaTable)
-            {
-                MetaTable table = (MetaTable)selectedEntity;
-                if (propertyName == "Name" && string.IsNullOrEmpty(table.Alias)) table.Name = Helper.GetUniqueName(table.Name, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
-                if (propertyName == "Alias") table.Alias = Helper.GetUniqueName(table.Alias, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
-                mainTreeView.SelectedNode.Text = table.AliasName;
-                if (table.DynamicColumns && (propertyName == "Name" || propertyName == "Sql" || propertyName == "DefinitionScript"))
+                MetaSource source = GetSource(mainTreeView.SelectedNode);
+                if (source == null) return mustInit;
+                if (selectedEntity is ReportSource && propertyName == "ConnectionGUID")
                 {
-                    table.Refresh();
-                    mustInit = true;
+                    ((ReportSource)selectedEntity).RefreshEnumsOnDbConnection();
                 }
-
-                string newValue = null;
-                string oldValue = null;
-                if (e.OldValue != null)
+                else if (selectedEntity is MetaConnection && propertyName == "Name")
                 {
-                    oldValue = e.OldValue.ToString();
-                    if (propertyName == "Name") newValue = table.Name;
-                    else if (propertyName == "Alias") newValue = table.Alias;
-                    if (!string.IsNullOrEmpty(newValue) && newValue != oldValue)
+                    MetaConnection entity = (MetaConnection)selectedEntity;
+                    entity.Name = Helper.GetUniqueName(entity.Name, (from i in source.Connections where i != entity select i.Name).ToList());
+                    mainTreeView.SelectedNode.Text = entity.Name;
+                }
+                else if (selectedEntity is MetaTable)
+                {
+                    MetaTable table = (MetaTable)selectedEntity;
+                    if (propertyName == "Name" && string.IsNullOrEmpty(table.Alias)) table.Name = Helper.GetUniqueName(table.Name, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
+                    if (propertyName == "Alias") table.Alias = Helper.GetUniqueName(table.Alias, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
+                    mainTreeView.SelectedNode.Text = table.AliasName;
+                    if (table.DynamicColumns && (propertyName == "Name" || propertyName == "Sql" || propertyName == "DefinitionScript"))
                     {
-                        //Change the table name in the columns and the joins...
-                        changeTableColumnNames(table, oldValue, newValue);
-                        foreach (var join in source.MetaData.Joins.Where(i => i.LeftTableGUID == table.GUID || i.RightTableGUID == table.GUID))
-                        {
-                            join.Clause = join.Clause.Replace(oldValue + ".", newValue + ".");
-                            join.Clause = join.Clause.Replace(oldValue.ToLower() + ".", newValue + ".");
-                        }
+                        table.Refresh();
+                        mustInit = true;
                     }
-                }
 
-            }
-            else if (selectedEntity is MetaJoin && propertyName == "Name")
-            {
-                MetaJoin entity = (MetaJoin)selectedEntity;
-                entity.Name = Helper.GetUniqueName(entity.Name, (from i in source.MetaData.Joins where i != entity select i.Name).ToList());
-                mainTreeView.SelectedNode.Text = entity.Name;
-            }
-            else if (selectedEntity is MetaColumn)
-            {
-                MetaColumn entity = (MetaColumn)selectedEntity;
-                if (propertyName == "DisplayName")
-                {
-                    //MetaColumn can be edited in several nodes...
-                    List<TreeNode> nodes = new List<TreeNode>();
-                    TreeViewHelper.NodesFromEntity(mainTreeView.Nodes, selectedEntity, nodes);
-                    foreach (var node in nodes) node.Text = entity.DisplayName;
-                }
-                else if (propertyName == "Category")
-                {
-                    //Rebuild category nodes...
-                    TreeNode rootNode = TreeViewHelper.GetRootCategoryNode(mainTreeView.SelectedNode);
-                    TreeViewHelper.InitCategoryTreeNode(rootNode.Nodes, source.MetaData.Tables);
-                    TreeViewHelper.SelectNode(mainTreeView, rootNode.Nodes, selectedEntity);
-                }
-                else if (propertyName == "DisplayOrder")
-                {
-                    mainTreeView.Sort();
-                }
-            }
-            else if (selectedEntity is CategoryFolder)
-            {
-                CategoryFolder entity = (CategoryFolder)selectedEntity;
-                if (propertyName == "Path")
-                {
-                    int cnt = 0;
-                    //Change all categories having this name
-                    foreach (MetaTable table in source.MetaData.Tables.Where(i => i.IsEditable))
+                    string newValue = null;
+                    string oldValue = null;
+                    if (e.OldValue != null)
                     {
-                        foreach (MetaColumn column in table.Columns)
+                        oldValue = e.OldValue.ToString();
+                        if (propertyName == "Name") newValue = table.Name;
+                        else if (propertyName == "Alias") newValue = table.Alias;
+                        if (!string.IsNullOrEmpty(newValue) && newValue != oldValue)
                         {
-                            if (column.Category.StartsWith(e.OldValue.ToString()))
+                            //Change the table name in the columns and the joins...
+                            changeTableColumnNames(table, oldValue, newValue);
+                            foreach (var join in source.MetaData.Joins.Where(i => i.LeftTableGUID == table.GUID || i.RightTableGUID == table.GUID))
                             {
-                                cnt++;
-                                column.Category = entity.Path + column.Category.Substring(e.OldValue.ToString().Length);
+                                join.Clause = join.Clause.Replace(oldValue + ".", newValue + ".");
+                                join.Clause = join.Clause.Replace(oldValue.ToLower() + ".", newValue + ".");
                             }
                         }
                     }
-                    //Rebuild category nodes...
-                    TreeNode rootNode = TreeViewHelper.GetRootCategoryNode(mainTreeView.SelectedNode);
-                    TreeViewHelper.InitCategoryTreeNode(rootNode.Nodes, source.MetaData.Tables);
-                    TreeNode newFolderNode = TreeViewHelper.SelectCategoryNode(mainTreeView, rootNode.Nodes, entity.Path);
-                    if (newFolderNode == null) newFolderNode = rootNode;
-                    CategoryFolder newFolder = (CategoryFolder)newFolderNode.Tag;
-                    newFolder.Information = string.Format("{0} column categories have been updated.", cnt);
-                    if (ForReport) newFolder.Information += " Note that columns defined in Repository Sources cannot be updated from the Report Designer.";
-                    mainTreeView.SelectedNode = null;
-                    mainTreeView.SelectedNode = newFolderNode;
+
+                }
+                else if (selectedEntity is MetaJoin && propertyName == "Name")
+                {
+                    MetaJoin entity = (MetaJoin)selectedEntity;
+                    entity.Name = Helper.GetUniqueName(entity.Name, (from i in source.MetaData.Joins where i != entity select i.Name).ToList());
+                    mainTreeView.SelectedNode.Text = entity.Name;
+                }
+                else if (selectedEntity is MetaColumn)
+                {
+                    MetaColumn entity = (MetaColumn)selectedEntity;
+                    if (propertyName == "DisplayName")
+                    {
+                        //MetaColumn can be edited in several nodes...
+                        List<TreeNode> nodes = new List<TreeNode>();
+                        TreeViewHelper.NodesFromEntity(mainTreeView.Nodes, selectedEntity, nodes);
+                        foreach (var node in nodes) node.Text = entity.DisplayName;
+                    }
+                    else if (propertyName == "Category")
+                    {
+                        //Rebuild category nodes...
+                        TreeNode rootNode = TreeViewHelper.GetRootCategoryNode(mainTreeView.SelectedNode);
+                        TreeViewHelper.InitCategoryTreeNode(rootNode.Nodes, source.MetaData.Tables);
+                        TreeViewHelper.SelectNode(mainTreeView, rootNode.Nodes, selectedEntity);
+                    }
+                    else if (propertyName == "DisplayOrder")
+                    {
+                        mainTreeView.Sort();
+                    }
+                }
+                else if (selectedEntity is CategoryFolder)
+                {
+                    CategoryFolder entity = (CategoryFolder)selectedEntity;
+                    if (propertyName == "Path")
+                    {
+                        int cnt = 0;
+                        //Change all categories having this name
+                        foreach (MetaTable table in source.MetaData.Tables.Where(i => i.IsEditable))
+                        {
+                            foreach (MetaColumn column in table.Columns)
+                            {
+                                if (column.Category.StartsWith(e.OldValue.ToString()))
+                                {
+                                    cnt++;
+                                    column.Category = entity.Path + column.Category.Substring(e.OldValue.ToString().Length);
+                                }
+                            }
+                        }
+                        //Rebuild category nodes...
+                        TreeNode rootNode = TreeViewHelper.GetRootCategoryNode(mainTreeView.SelectedNode);
+                        TreeViewHelper.InitCategoryTreeNode(rootNode.Nodes, source.MetaData.Tables);
+                        TreeNode newFolderNode = TreeViewHelper.SelectCategoryNode(mainTreeView, rootNode.Nodes, entity.Path);
+                        if (newFolderNode == null) newFolderNode = rootNode;
+                        CategoryFolder newFolder = (CategoryFolder)newFolderNode.Tag;
+                        newFolder.Information = string.Format("{0} column categories have been updated.", cnt);
+                        if (ForReport) newFolder.Information += " Note that columns defined in Repository Sources cannot be updated from the Report Designer.";
+                        mainTreeView.SelectedNode = null;
+                        mainTreeView.SelectedNode = newFolderNode;
+                    }
+                }
+                else if (selectedEntity is MetaEnum && propertyName == "Name")
+                {
+                    MetaEnum entity = (MetaEnum)selectedEntity;
+                    entity.Name = Helper.GetUniqueName(entity.Name, (from i in source.MetaData.Enums where i != entity select i.Name).ToList());
+                    mainTreeView.SelectedNode.Text = entity.Name;
                 }
             }
-            else if (selectedEntity is MetaEnum && propertyName == "Name")
-            {
-                MetaEnum entity = (MetaEnum)selectedEntity;
-                entity.Name = Helper.GetUniqueName(entity.Name, (from i in source.MetaData.Enums where i != entity select i.Name).ToList());
-                mainTreeView.SelectedNode.Text = entity.Name;
-            }
+
             TreeNode previous = mainTreeView.SelectedNode;
             mainTreeView.Sort();
             mainTreeView.SelectedNode = previous;

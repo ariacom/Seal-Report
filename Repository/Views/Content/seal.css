@@ -4,7 +4,6 @@ body {
 
 @media screen {
     #execution_messages {
-        max-height: 400px;
         overflow-y: auto;
     }
 }
@@ -41,7 +40,7 @@ body {
         border-width: 0 !important;
     }
 
-    .navbar-toggle, .navbar-nav {
+    .navbar-toggle, .navbar-nav, #back-to-top {
         display: none;
     }
 }

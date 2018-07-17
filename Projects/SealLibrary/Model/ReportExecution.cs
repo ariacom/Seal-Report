@@ -568,6 +568,8 @@ namespace Seal.Model
             {
                 try
                 {
+                    if (Report.TaskToExecute != null && task != Report.TaskToExecute) continue; //Exec only one task
+
                     Report.LogMessage("Starting task '{0}'", task.Name);
                     Thread thread = new Thread(TaskExecuteThread);
                     thread.Start(task);

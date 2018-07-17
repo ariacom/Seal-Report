@@ -123,12 +123,12 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="filterToolStripLabel.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAD3SURBVDhPpZCxi8IwGMU7OvondXTM6Ng/oX9CxhszOnZ0koweOGTULRRBoVQ6SL0xU+v2rl/u
-        rlzJhxj94JeQB++9JAk2h7dgxRhYMQa/mK2BMQZ2b/2utxpa/1AUBaSUyLIM6SIFG9BcGuR5DrM3oHF3
-        B+cc7NlCr/VoLsuSDyDaa+tD3JcD7kAz7NZar5G5ruvATEwOVVVBfsjf9gZqpSbNwyDgfwBxPB2hlBqe
-        YyGWArvP3dgcmLkAgq5N7WIh0N7aMaDve3Rd5//pbwIzQQH+7en014P2RzcQQmA+m78eQO3JLJkEcLBi
-        DKwYAyvGwIrPc0i+ARHJdL6WYVvVAAAAAElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAPdJREFUOE+l
+        kLGLwjAYxTs6+id1dMzo2D+hf0LGGzM6dnSSjB44ZNQtFEGhVDpIvTFT6/auX+6uXMmHGP3gl5AH770k
+        CTaHt2DFGFgxBr+YrYExBnZv/a63Glr/UBQFpJTIsgzpIgUb0Fwa5HkOszegcXcH5xzs2UKv9Wguy5IP
+        INpr60PclwPuQDPs1lqvkbmu68BMTA5VVUF+yN/2BmqlJs3DIOB/AHE8HaGUGp5jIZYCu8/d2ByYuQCC
+        rk3tYiHQ3toxoO97dF3n/+lvAjNBAf7t6fTXg/ZHNxBCYD6bvx5A7cksmQRwsGIMrBgDK8bAis9zSL4B
+        Ecl0vpZhW9UAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="selectAllToolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

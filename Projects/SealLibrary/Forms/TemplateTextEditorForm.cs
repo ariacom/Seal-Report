@@ -80,7 +80,16 @@ namespace Seal.Forms
 
         private void okToolStripButton_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
+            if (textBox.Modified && ObjectForCheckSyntax != null)
+            {
+                var error = checkSyntax();
+                if (!string.IsNullOrEmpty(error))
+                {
+                    if (MessageBox.Show("The Razor syntax is incorrect. Do you really want to save this script and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
+                }
+            } 
+
+            DialogResult = textBox.Modified ? DialogResult.OK : DialogResult.Cancel;
             Close();
         }
 
@@ -92,7 +101,7 @@ namespace Seal.Forms
             toolStripStatusLabel.Image = null;
         }
 
-        private void checkSyntaxToolStripButton_Click(object sender, EventArgs e)
+        private string checkSyntax()
         {
             string error = "";
             try
@@ -119,13 +128,22 @@ namespace Seal.Forms
             {
                 toolStripStatusLabel.Text = "Compilation error";
                 toolStripStatusLabel.Image = global::Seal.Properties.Resources.error2;
-
-                MessageBox.Show(error, "Check syntax", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
                 toolStripStatusLabel.Text = "Razor Syntax is OK";
                 toolStripStatusLabel.Image = global::Seal.Properties.Resources.checkedGreen;
+            }
+
+            return error;
+        }
+
+        private void checkSyntaxToolStripButton_Click(object sender, EventArgs e)
+        {
+            string error = checkSyntax();
+            if (!string.IsNullOrEmpty(error))
+            {
+                MessageBox.Show(error, "Check syntax", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -763,6 +763,11 @@ namespace Seal.Model
                 }
                 phase = "executing";
                 result = RazorHelper.CompileExecute(ViewTemplateText, Report, key);
+
+                //For CSV, add just one new line
+                if (Report.Format == ReportFormat.csv) {
+                    result = result.Trim() + "\r\n" + (result.EndsWith("\r\n") ? "\r\n" : "");
+                }
             }
             catch (Exception ex)
             {

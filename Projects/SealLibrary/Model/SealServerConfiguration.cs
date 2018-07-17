@@ -13,6 +13,7 @@ using Seal.Forms;
 using DynamicTypeDescriptor;
 using System.Windows.Forms.Design;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Seal.Model
 {
