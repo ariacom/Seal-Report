@@ -246,7 +246,7 @@ namespace Seal.Helpers
 
         static public ColumnType NetTypeConverter(Type netType)
         {
-            if (netType == typeof(string)) return ColumnType.Text;
+            if (netType == typeof(string) || netType== typeof(Guid)) return ColumnType.Text;
             if (netType == typeof(DateTime)) return ColumnType.DateTime;
             return ColumnType.Numeric;
         }

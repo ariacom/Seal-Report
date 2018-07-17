@@ -478,7 +478,8 @@ namespace Seal.Forms
     var helper = new TaskHelper(task);
 	helper.ExecuteMSSQLScripts(
         @""scriptsDirectory"",
-        false //if true, the scripts are executed for all connections defined in the Source
+        false, //if true, the scripts are executed for all connections defined in the Source
+        true //if false, the execution continues even if an error occurs
     );
 "
                 ),

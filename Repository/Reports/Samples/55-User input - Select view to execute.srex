@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>0e0bd040-9c2f-4dba-befb-bc5450d5a892</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>059cd602-f13d-452e-9f57-e45db2e29458</GUID>
+      <Name>Northwind (Repository)</Name>
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <InitScript />
+      <TasksScript />
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>2fcb3258-0549-4225-809b-215d8ff5e593</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums>
+          <MetaEnum>
+            <GUID>a9433ea1-6d95-4701-b7a0-8d8d1b6a8713</GUID>
+            <Name>View Name</Name>
+            <DefaultSQL>select col1,col2 from table order by col2</DefaultSQL>
+            <Values>
+              <MetaEV>
+                <Id>HTML</Id>
+                <Val>View HTML</Val>
+              </MetaEV>
+              <MetaEV>
+                <Id>CSV</Id>
+                <Val>View CSV</Val>
+              </MetaEV>
+            </Values>
+          </MetaEnum>
+        </Enums>
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>76e74a19-9483-4f79-97e5-712911a18043</GUID>
+      <Name>RSS No SQL Source (Repository)</Name>
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <InitScript />
+      <TasksScript />
+      <MetaData>
+        <Tables />
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>19c36839-3270-4664-a55c-70f87125e606</GUID>
+      <Name>model</Name>
+      <SourceGUID>059cd602-f13d-452e-9f57-e45db2e29458</SourceGUID>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>75e32d2c-5633-4069-b7fc-a699dff97680</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1483e5d0-35ae-4063-8561-46a7f99face6</GUID>
+          <Name>Employees.FirstName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>adf4d26e-1dc0-4fdd-9de7-c7469cbc9d1a</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[c0656e3b-27d4-474b-83a8-e73a0e1aa7f9]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>c0656e3b-27d4-474b-83a8-e73a0e1aa7f9</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName>Choose a View Name</DisplayName>
+          <Format />
+          <EnumGUID>a9433ea1-6d95-4701-b7a0-8d8d1b6a8713</EnumGUID>
+          <HasHTMLTags xsi:nil="true" />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumGUIDEL>a9433ea1-6d95-4701-b7a0-8d8d1b6a8713</EnumGUIDEL>
+          <Prompt>PromptOneValue</Prompt>
+          <FormatRe />
+          <EnumGUIDRE>a9433ea1-6d95-4701-b7a0-8d8d1b6a8713</EnumGUIDRE>
+          <UseAsParameter>true</UseAsParameter>
+          <Operator>ValueOnly</Operator>
+          <EnumValues>
+            <string>v1</string>
+          </EnumValues>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks>
+    <ReportTask>
+      <GUID>c5bce512-7e65-459e-a47c-c23adc6b8f56</GUID>
+      <Name>Task</Name>
+      <CancelReport>false</CancelReport>
+      <DbInfoMessage>
+        <Capacity>16</Capacity>
+        <Length>0</Length>
+      </DbInfoMessage>
+      <SourceGUID>059cd602-f13d-452e-9f57-e45db2e29458</SourceGUID>
+      <Script>@using Seal.Model
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+	ReportRestriction restriction = report.Models[0].GetRestrictionByName("Choose a View Name");
+	if (restriction != null &amp;&amp; restriction.EnumValues.Count &gt; 0) 
+	{
+		var viewToExecute = report.Views.FirstOrDefault(i =&gt; i.Name == restriction.EnumValues[0]);
+		if (viewToExecute != null) {
+			report.LogMessage("Changing view to " + restriction.EnumValues[0]);
+			report.CurrentViewGUID = viewToExecute.GUID;
+			if (restriction.EnumValues[0] == "CSV") { //For CSV, update the result file extension
+				report.ResultFilePath = report.ResultFilePath.Replace(".htm",".csv");
+			}
+		}
+	}		
+}
+
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <CommonScripts />
+  <TasksScript />
+  <Views>
+    <ReportView>
+      <GUID>6b74ed34-a051-4501-982e-9dfe887192a8</GUID>
+      <Name>HTML</Name>
+      <Views>
+        <ReportView>
+          <GUID>2ad76694-20ab-4f47-ab4a-c69eb4a2cf75</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>8c13a511-65ce-4f8a-ad9b-889387a53731</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>a5944ec2-441f-46ba-8483-965ca317b6f1</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>c10e06f1-8688-435d-a01c-f457893f1765</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>07157501-eef6-43e1-95bc-1da0563d0500</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>a9f2c3f5-99cc-460e-b86f-fbd2a20ee985</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>13e7fced-f184-44ba-8b6b-abc69244654e</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>19c36839-3270-4664-a55c-70f87125e606</ModelGUID>
+          <PartialTemplates />
+          <Parameters />
+          <CultureName />
+          <SortOrder>1</SortOrder>
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <ModelGUID />
+      <UseCustomTemplate>true</UseCustomTemplate>
+      <PartialTemplates />
+      <Parameters />
+      <CultureName />
+      <SortOrder>1</SortOrder>
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+    <ReportView>
+      <GUID>0f7e74ed-8acd-45c6-b52d-3a2236dd4e5e</GUID>
+      <Name>CSV</Name>
+      <Views>
+        <ReportView>
+          <GUID>42b497e3-1e61-4091-9c17-c23acf4d0518</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>3a51f69d-5452-4d01-8c89-8b6d1f000537</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>78368a86-d89e-4487-a971-e1e56bad4ea7</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>4a285992-5726-413a-9899-81c391fd4773</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>b69a8aa1-00d3-4fb3-9c3a-ab8329020e63</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>cff8346b-fced-4e6a-a6c6-7693adc31623</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>650f0803-1f23-4d5e-a443-cddd3329db10</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>19c36839-3270-4664-a55c-70f87125e606</ModelGUID>
+          <PartialTemplates />
+          <Parameters />
+          <CultureName />
+          <SortOrder>1</SortOrder>
+          <PdfConfigurations />
+          <ExcelConfigurations />
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <ModelGUID />
+      <PartialTemplates />
+      <Parameters>
+        <Parameter>
+          <Name>report_format</Name>
+          <Value>csv</Value>
+        </Parameter>
+      </Parameters>
+      <CultureName />
+      <SortOrder>2</SortOrder>
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <InitScript />
+  <ViewGUID>6b74ed34-a051-4501-982e-9dfe887192a8</ViewGUID>
+  <Schedules />
+</Report>

@@ -117,7 +117,7 @@ namespace Seal.Helpers
                 {
                     result = Engine.Razor.RunCompile(GetScriptHeader(model) + script, key, model.GetType(), model);
                 }
-                return string.IsNullOrEmpty(result) ? "" : result.Trim();
+                return string.IsNullOrEmpty(result) ? "" : result;
             }
             return script;
         }

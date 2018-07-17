@@ -515,6 +515,7 @@
             this.mainImageList.Images.SetKeyName(11, "schedule.png");
             this.mainImageList.Images.SetKeyName(12, "task.png");
             this.mainImageList.Images.SetKeyName(13, "nosql.png");
+            this.mainImageList.Images.SetKeyName(14, "task2.png");
             // 
             // mainPropertyGrid
             // 

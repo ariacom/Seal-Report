@@ -208,6 +208,7 @@
     <Content Include="Resources\table.png" />
     <Content Include="Resources\tableError.png" />
     <None Include="Resources\task.png" />
+    <None Include="Resources\task2.png" />
     <Content Include="Resources\template.png" />
     <Content Include="Resources\view.png" />
     <Content Include="Resources\wait.gif" />

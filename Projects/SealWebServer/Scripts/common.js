@@ -65,12 +65,31 @@ function initNavMenu() {
     }
 }
 
+
+function setMessageHeight() {
+    if (!printLayout) {
+        setTimeout(function () {
+            var offset = $("#progress_panel").height() + $("#alert_status").height() + 110;
+            $("#execution_messages").css("height", (Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - offset) + "px");
+        }, 100);
+    }
+}
+
 function scrollMessages() {
     var $messages = $("#execution_messages");
+    setMessageHeight();
     if ($messages && $messages[0] && $messages[0].scrollHeight) {
         setTimeout(function () { $messages.scrollTop($messages[0].scrollHeight); }, 200);
     }
 }
+
+
+function resize() {
+    if (!printLayout) $("body").css("padding-top", $("#bar_top").height() + 15);
+    setMessageHeight();
+}
+
+
 
 function showNavMenu() {
     $("#nav_menu")
@@ -285,11 +304,6 @@ function getTableData(datatable, guid, viewid, pageid, data, callback, settings)
     }
 }
 
-function resize() {
-    if (!printLayout) $("body").css("padding-top", $("#bar_top").height() + 15);
-}
-
-
 function mainInit() {
     //force execute
     $("input").keydown(function (event) {
@@ -439,7 +453,7 @@ $(document).ready(function () {
         }, 800);
         return false;
     });
-    $('#back-to-top').tooltip('show');
+    if (!printLayout) $('#back-to-top').tooltip('show');
     scrollMessages();
 
     $("#main_container").css("display", "block");
