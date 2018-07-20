@@ -46,6 +46,7 @@ namespace Seal.Model
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("TasksScript").SetIsBrowsable(!ForPublication);
                 GetProperty("CommonScripts").SetIsBrowsable(!ForPublication);
+                //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
                 GetProperty("ExcelLibrary").SetIsBrowsable(!ForPublication);

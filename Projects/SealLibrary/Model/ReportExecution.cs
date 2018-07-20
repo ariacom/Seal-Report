@@ -564,7 +564,9 @@ namespace Seal.Model
 
             Report.LogMessage("Executing report tasks...");
 
-            foreach (var task in Report.Tasks.Where(i => i.Enabled).OrderBy(i => i.SortOrder))
+            var tasks = Report.Tasks.Where(i => i.Enabled).ToList();
+            //Temp list to avoid dynamic changes during the task
+            foreach (var task in tasks.OrderBy(i => i.SortOrder))
             {
                 try
                 {

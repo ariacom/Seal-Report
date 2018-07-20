@@ -479,7 +479,8 @@ namespace Seal.Forms
 	helper.ExecuteMSSQLScripts(
         @""scriptsDirectory"",
         false, //if true, the scripts are executed for all connections defined in the Source
-        true //if false, the execution continues even if an error occurs
+        true, //if false, the execution continues even if an error occurs
+        11 //error class level to consider an error versus information/warning
     );
 "
                 ),
@@ -684,14 +685,14 @@ namespace Seal.Forms
                 else if (context.Instance.GetType().ToString() == "SealPdfConverter.PdfConverter")
                 {
                     string language = "cs";
-                    SealPdfConverter converter = SealPdfConverter.Create("");
+                    SealPdfConverter converter = (SealPdfConverter)context.Instance;
                     converter.ConfigureTemplateEditor(frm, context.PropertyDescriptor.Name, ref template, ref language);
                     frm.textBox.ConfigurationManager.Language = language;
                 }
                 else if (context.Instance.GetType().ToString() == "SealExcelConverter.ExcelConverter")
                 {
                     string language = "cs";
-                    SealExcelConverter converter = SealExcelConverter.Create("");
+                    SealExcelConverter converter = (SealExcelConverter)context.Instance;
                     converter.ConfigureTemplateEditor(frm, context.PropertyDescriptor.Name, ref template, ref language);
                     frm.textBox.ConfigurationManager.Language = language;
                 }

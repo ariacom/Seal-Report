@@ -350,9 +350,12 @@ namespace Seal.Helpers
         }
 
         string _mssqlError = "";
-        public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false, bool stopOnError = true)
+        int _mssqlErrorClassLevel = 11;
+        public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11)
         {
             _mssqlError = "";
+            _mssqlErrorClassLevel = errorClassLevel;
+
             var files = Directory.GetFiles(scriptsDirectory, "*.sql");
             foreach (var file in files.OrderBy(i => i))
             {
@@ -400,9 +403,13 @@ namespace Seal.Helpers
 
         void MSSQLConnection_InfoMessage(object sender, SqlInfoMessageEventArgs e)
         {
-            if (e.Errors.Count > 0)
+            foreach(SqlError err in e.Errors)
             {
-                _mssqlError = e.Message;
+                if (err.Class >= _mssqlErrorClassLevel)
+                {
+                    _mssqlError = e.Message;
+                    break;
+                }
             }
             LogMessage(e.Message);
             Thread.Sleep(20);

@@ -5,6 +5,12 @@ body {
 @media screen {
     #execution_messages {
         overflow-y: auto;
+        min-height: 180px;
+    }
+
+    #alert_status .alert {
+        overflow-y: auto;
+        max-height: 600px;
     }
 }
 

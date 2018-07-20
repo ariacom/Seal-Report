@@ -282,7 +282,9 @@ namespace Seal.Model
         {
             CancelReport = false;
             DbInfoMessage = new StringBuilder();
-            foreach (var connection in Source.Connections.Where(i => ExecuteForEachConnection || i.GUID == Connection.GUID))
+            //Temp list to avoid change of connections during a task...
+            var connections = Source.Connections.Where(i => ExecuteForEachConnection || i.GUID == Connection.GUID).ToList();
+            foreach (var connection in connections)
             {
                 Execute(connection);
             }
