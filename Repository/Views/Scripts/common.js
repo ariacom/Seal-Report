@@ -69,8 +69,9 @@ function initNavMenu() {
 function setMessageHeight() {
     if (!printLayout) {
         setTimeout(function () {
-            var offset = $("#progress_panel").height() + $("#alert_status").height() + 110;
-            $("#execution_messages").css("height", (Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - offset) + "px");
+            var offset = $("#progress_panel").height() + $("#alert_status").height() + $("#restrictions_div").height() + 110;
+            var height = (Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - offset);
+            $("#execution_messages").css("height", height + "px");
         }, 100);
     }
 }
@@ -253,6 +254,8 @@ function executeReport(nav) {
     $('#restrictions_div select').selectpicker('refresh');
     $('.view').css("display", "none");
     $("#nav_button").attr("disabled", "disabled");
+
+    setMessageHeight();
 }
 
 function submitViewParameter(viewId, parameterName, parameterValue) {
@@ -273,7 +276,7 @@ function submitViewParameter(viewId, parameterName, parameterValue) {
 
 function getTableData(datatable, guid, viewid, pageid, data, callback, settings) {
     try {
-        var params = data.draw + "§" + settings.aaSorting + "§" + settings.oPreviousSearch.sSearch + "§" + settings._iDisplayLength + "§" + settings._iDisplayStart
+        var params = data.draw + "§" + settings.aaSorting + "§" + settings.oPreviousSearch.sSearch.replace("<", "&lt;").replace(">", "&gt;") + "§" + settings._iDisplayLength + "§" + settings._iDisplayStart
         if (urlPrefix != "") {
             $.post(urlPrefix + "ActionGetTableData", { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
                 .done(function (data) {

@@ -131,7 +131,7 @@ namespace Seal.Forms
                 frmCollectionEditorForm.Text = "Common Script Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
-                _useHandlerInterface = false;
+                _useHandlerInterface = (TemplateTextEditor.CurrentEntity is Report);
             }
 
             TableLayoutPanel tlpLayout = frmCollectionEditorForm.Controls[0] as TableLayoutPanel;

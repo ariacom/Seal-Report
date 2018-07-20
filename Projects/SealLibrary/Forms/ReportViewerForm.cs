@@ -306,7 +306,7 @@ namespace Seal.Forms
                             string viewid = webBrowser.Document.All[ReportExecution.HtmlId_viewid_tableload].GetAttribute("value");
                             string pageid = webBrowser.Document.All[ReportExecution.HtmlId_pageid_tableload].GetAttribute("value");
                             HtmlElement dataload = webBrowser.Document.All[ReportExecution.HtmlId_parameter_tableload];
-                            var view = report.ExecutionView.GetView(viewid);
+                           var view = report.ExecutionView.GetView(viewid);
                             if (view != null && view.Model != null)
                             {
                                 var page = view.Model.Pages.FirstOrDefault(i => i.PageId == pageid);

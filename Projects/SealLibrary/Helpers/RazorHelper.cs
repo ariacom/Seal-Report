@@ -86,10 +86,11 @@ namespace Seal.Helpers
                 configuration = ob.Source.Repository.Configuration;
             }
 
-            if (configuration == null) configuration = Repository.Instance.Configuration;
-
-            if (!string.IsNullOrEmpty(configuration.CommonScriptsHeader)) result += configuration.CommonScriptsHeader + "\r\n";
-            if (model is ReportTask && !string.IsNullOrEmpty(configuration.TasksScript)) result += configuration.TasksScript + "\r\n";
+            if (configuration != null)
+            {
+                if (!string.IsNullOrEmpty(configuration.CommonScriptsHeader)) result += configuration.CommonScriptsHeader + "\r\n";
+                if (model is ReportTask && !string.IsNullOrEmpty(configuration.TasksScript)) result += configuration.TasksScript + "\r\n";
+            }
 
             if (report != null)
             {
@@ -107,7 +108,13 @@ namespace Seal.Helpers
                 LoadRazorAssemblies();
                 if (string.IsNullOrEmpty(key))
                 {
-                    key = (model != null ? model.GetType().ToString() : "_") + "_" + script;
+                    if (model != null) {
+                        key = model.GetType().ToString() + "_" + GetScriptHeader(model) +"_" + script;
+                    }
+                    else
+                    {
+                        key = script;
+                    }
                 }
                 if (Engine.Razor.IsTemplateCached(key, model.GetType()))
                 {

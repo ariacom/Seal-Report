@@ -31,7 +31,7 @@ namespace Seal.Model
         public string GetLoadTableData(ReportView view, string parameter)
         {
             var model = view.Model;
-            var parameters = parameter.Split('§');
+            var parameters = parameter.Replace("&lt;", "<").Replace("&gt;",">").Split('§');
 
             int echo = 1, len = 50, start = 0;
             string sort = "", search = "";

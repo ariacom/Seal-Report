@@ -25,6 +25,7 @@ namespace Seal.Forms
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("CommonScripts").SetIsBrowsable(true);
+                //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (Report.CommonScripts.Count == 0 ? "None" : Report.CommonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("TasksScript").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
