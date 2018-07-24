@@ -20,7 +20,7 @@ namespace Test
             Report report = Report.LoadFromFile(@"C:\ProgramData\Seal Report Repository\Reports\Search - Orders.srex", repository);
             ReportExecution execution = new ReportExecution() { Report = report };
             execution.Execute();
-            while (report.Status != ReportStatus.Executed) System.Threading.Thread.Sleep(100);
+            while (report.IsExecuting) System.Threading.Thread.Sleep(100);
             string result = execution.GenerateHTMLResult();
             Process.Start(result);
         }
@@ -70,7 +70,7 @@ namespace Test
             //Then execute it
             ReportExecution execution = new ReportExecution() { Report = report };
             execution.Execute();
-            while (report.Status != ReportStatus.Executed) System.Threading.Thread.Sleep(100);
+            while (report.IsExecuting) System.Threading.Thread.Sleep(100);
             string result = execution.GenerateHTMLResult();
             Process.Start(result);
         }
