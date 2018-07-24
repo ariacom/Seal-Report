@@ -30,7 +30,6 @@
       <GUID>f17fdf11-8666-4349-9822-814c7f78c133</GUID>
       <Name>country category</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -182,7 +181,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
       <GUID>5d49225d-cb74-4cd2-a30d-694061b98efe</GUID>
       <Name>general country employee</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -333,7 +331,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
       <GUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</GUID>
       <Name>employee category</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -486,7 +483,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
       <GUID>0ecae0c4-46e1-43df-994b-bdd16f629c7a</GUID>
       <Name>general employee</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -625,7 +621,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
       <GUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</GUID>
       <Name>category month</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -777,7 +772,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
       <GUID>04aef73f-dc3c-478f-875b-d78af6f53f5d</GUID>
       <Name>category month1</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -928,7 +922,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
       <GUID>c19fa517-6db1-4436-a2e7-219168eee98c</GUID>
       <Name>category month2</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -1080,7 +1073,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
       <GUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</GUID>
       <Name>employee month</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -1232,7 +1224,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
       <GUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</GUID>
       <Name>general month</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -1482,7 +1473,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
       <GUID>28577963-bd93-49f5-b117-8a983b7ec93c</GUID>
       <Name>general category</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -1632,7 +1622,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
       <GUID>57b96369-ed1b-4b96-9f91-47e501d794c7</GUID>
       <Name>country month</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -1783,7 +1772,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
       <GUID>b9b267bb-eeb4-4bd3-ac5c-e7b4e4ae609d</GUID>
       <Name>orders</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -2031,6 +2019,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
     </ReportOutput>
   </Outputs>
   <Tasks />
+  <CommonScripts />
   <TasksScript />
   <Views>
     <ReportView>
@@ -2067,13 +2056,12 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2083,7 +2071,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       </Parameters>
                       <CultureName />
                       <SortOrder>1</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2105,13 +2092,12 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>57b96369-ed1b-4b96-9f91-47e501d794c7</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>57b96369-ed1b-4b96-9f91-47e501d794c7</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2121,7 +2107,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       </Parameters>
                       <CultureName />
                       <SortOrder>2</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2138,18 +2123,16 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                           <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
                       <SortOrder>3</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2165,7 +2148,6 @@ col-sm-12</Value>
                   </Parameters>
                   <CultureName />
                   <SortOrder>1</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -2175,19 +2157,27 @@ col-sm-12</Value>
               <Parameters />
               <CultureName />
               <SortOrder>3</SortOrder>
-              <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
   &lt;ConfigurationScript /&gt;
-  &lt;MainScript&gt;@using Winnovative.ExcelLib
-@using SealExcelConverter
-@{
-}&lt;/MainScript&gt;
+  &lt;MainScript /&gt;
   &lt;HeaderScript /&gt;
   &lt;SummaryScript /&gt;
   &lt;PageScript /&gt;
@@ -2223,18 +2213,16 @@ col-sm-12</Value>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
                       <SortOrder>1</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2251,18 +2239,16 @@ col-sm-12</Value>
                           <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
                       <SortOrder>3</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2285,18 +2271,16 @@ col-sm-12</Value>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</ModelGUID>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
                       <SortOrder>2</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2312,7 +2296,6 @@ col-sm-12</Value>
                   </Parameters>
                   <CultureName />
                   <SortOrder>1</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -2322,19 +2305,27 @@ col-sm-12</Value>
               <Parameters />
               <CultureName />
               <SortOrder>4</SortOrder>
-              <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
   &lt;ConfigurationScript /&gt;
-  &lt;MainScript&gt;@using Winnovative.ExcelLib
-@using SealExcelConverter
-@{
-}&lt;/MainScript&gt;
+  &lt;MainScript /&gt;
   &lt;HeaderScript /&gt;
   &lt;SummaryScript /&gt;
   &lt;PageScript /&gt;
@@ -2369,13 +2360,12 @@ col-sm-12</Value>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2385,7 +2375,6 @@ col-sm-12</Value>
                       </Parameters>
                       <CultureName />
                       <SortOrder>1</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2407,13 +2396,12 @@ col-sm-12</Value>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>c19fa517-6db1-4436-a2e7-219168eee98c</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>c19fa517-6db1-4436-a2e7-219168eee98c</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2423,7 +2411,6 @@ col-sm-12</Value>
                       </Parameters>
                       <CultureName />
                       <SortOrder>2</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2440,18 +2427,16 @@ col-sm-12</Value>
                           <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>04aef73f-dc3c-478f-875b-d78af6f53f5d</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>04aef73f-dc3c-478f-875b-d78af6f53f5d</ModelGUID>
                       <PartialTemplates />
                       <Parameters />
                       <CultureName />
                       <SortOrder>3</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2467,9 +2452,34 @@ col-sm-12</Value>
                   </Parameters>
                   <CultureName />
                   <SortOrder>1</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -2477,19 +2487,27 @@ col-sm-12</Value>
               <Parameters />
               <CultureName />
               <SortOrder>2</SortOrder>
-              <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
   &lt;ConfigurationScript /&gt;
-  &lt;MainScript&gt;@using Winnovative.ExcelLib
-@using SealExcelConverter
-@{
-}&lt;/MainScript&gt;
+  &lt;MainScript /&gt;
   &lt;HeaderScript /&gt;
   &lt;SummaryScript /&gt;
   &lt;PageScript /&gt;
@@ -2524,13 +2542,12 @@ col-sm-12</Value>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2540,7 +2557,6 @@ col-sm-12</Value>
                       </Parameters>
                       <CultureName />
                       <SortOrder>1</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2562,13 +2578,12 @@ col-sm-12</Value>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>28577963-bd93-49f5-b117-8a983b7ec93c</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>28577963-bd93-49f5-b117-8a983b7ec93c</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2578,7 +2593,6 @@ col-sm-12</Value>
                       </Parameters>
                       <CultureName />
                       <SortOrder>2</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2600,13 +2614,12 @@ col-sm-12</Value>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>0ecae0c4-46e1-43df-994b-bdd16f629c7a</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>0ecae0c4-46e1-43df-994b-bdd16f629c7a</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2616,7 +2629,6 @@ col-sm-12</Value>
                       </Parameters>
                       <CultureName />
                       <SortOrder>3</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2633,13 +2645,12 @@ col-sm-12</Value>
                           <Parameters />
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2649,7 +2660,6 @@ col-sm-12</Value>
                       </Parameters>
                       <CultureName />
                       <SortOrder>4</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2675,27 +2685,21 @@ col-sm-12</Value>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
-                          <WebExec>true</WebExec>
                           <PdfConfigurations />
                           <ExcelConfigurations />
                         </ReportView>
                       </Views>
-                      <ModelGUID>5d49225d-cb74-4cd2-a30d-694061b98efe</ModelGUID>
                       <TemplateName>Model</TemplateName>
+                      <ModelGUID>5d49225d-cb74-4cd2-a30d-694061b98efe</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
-                        <Parameter>
-                          <Name>show_page_separator</Name>
-                          <Value>False</Value>
-                        </Parameter>
                       </Parameters>
                       <CultureName />
                       <SortOrder>5</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2712,9 +2716,34 @@ col-sm-7;col-sm-5;
                   </Parameters>
                   <CultureName />
                   <SortOrder>1</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
@@ -2722,9 +2751,34 @@ col-sm-7;col-sm-5;
               <Parameters />
               <CultureName />
               <SortOrder>1</SortOrder>
-              <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
             </ReportView>
             <ReportView>
               <GUID>c2cdacb7-7df3-4b43-bd8f-d8304a187bc2</GUID>
@@ -2743,7 +2797,6 @@ col-sm-7;col-sm-5;
                       <Parameters />
                       <CultureName />
                       <SortOrder>1</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
@@ -2756,18 +2809,16 @@ col-sm-7;col-sm-5;
                       <Parameters />
                       <CultureName />
                       <SortOrder>2</SortOrder>
-                      <WebExec>true</WebExec>
                       <PdfConfigurations />
                       <ExcelConfigurations />
                     </ReportView>
                   </Views>
-                  <ModelGUID>b9b267bb-eeb4-4bd3-ac5c-e7b4e4ae609d</ModelGUID>
                   <TemplateName>Model</TemplateName>
+                  <ModelGUID>b9b267bb-eeb4-4bd3-ac5c-e7b4e4ae609d</ModelGUID>
                   <PartialTemplates />
                   <Parameters />
                   <CultureName />
                   <SortOrder>1</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -2777,19 +2828,27 @@ col-sm-7;col-sm-5;
               <Parameters />
               <CultureName />
               <SortOrder>5</SortOrder>
-              <WebExec>true</WebExec>
               <PdfConfigurations />
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
   &lt;ConfigurationScript /&gt;
-  &lt;MainScript&gt;@using Winnovative.ExcelLib
-@using SealExcelConverter
-@{	
-}&lt;/MainScript&gt;
+  &lt;MainScript /&gt;
   &lt;HeaderScript /&gt;
   &lt;SummaryScript /&gt;
   &lt;PageScript /&gt;
@@ -2805,13 +2864,38 @@ col-sm-7;col-sm-5;
           <Parameters />
           <CultureName />
           <SortOrder>1</SortOrder>
-          <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations />
+          <ExcelConfigurations>
+            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+          </ExcelConfigurations>
         </ReportView>
       </Views>
-      <ModelGUID />
       <TemplateName>Report</TemplateName>
+      <ModelGUID />
       <PartialTemplates />
       <Parameters>
         <Parameter>
@@ -2825,7 +2909,6 @@ col-sm-7;col-sm-5;
       </Parameters>
       <CultureName />
       <SortOrder>0</SortOrder>
-      <WebExec>true</WebExec>
       <PdfConfigurations>
         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;PdfConverterCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2971,6 +3054,18 @@ col-sm-7;col-sm-5;
       <ExcelConfigurations>
         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
@@ -2979,74 +3074,7 @@ col-sm-7;col-sm-5;
   &lt;HeaderScript /&gt;
   &lt;SummaryScript /&gt;
   &lt;PageScript /&gt;
-  &lt;ChartScript&gt;@using Winnovative.ExcelLib
-@using SealExcelConverter
-@{	
-	//Full documentation of the converter at http://www.winnovative-software.com/excel-library.aspx
-    ExcelConverter converter = Model;
-    var page = converter.Page;
-    var view = converter.View;
-
-    //Chart: rowStart and colStart can be modified here to set an absolute or relative position of the items displayed...
-    int rowStart = converter.CurrentRow;
-    int colStart = converter.CurrentCol;
-    //Target sheet can be changed here
-    var currentSheet = converter.Sheet;
-	converter.Sheet = converter.SetAdditionalSheet(converter.Sheet.Name + " " + view.Report.Repository.TranslateReport("Charts"), ref rowStart, ref colStart);
-
-    if (view.Model.HasSerie &amp;amp;&amp;amp; view.GetBoolValue("show_charts", true))
-    {
-        if (view.InitPageChart(page)) {
-            var firstSerie = page.Series[0];
-            ExcelChartType chartType = ExcelConverter.ConvertChartType(firstSerie.Element);
-            ExcelChart chart = converter.Sheet.Charts.AddChart(chartType, colStart, rowStart, colStart + converter.ChartWidth, rowStart + converter.ChartHeight);
-            chart.Title.Text = view.GetTranslatedMappedLabel(view.ChartTitle);
-            rowStart += converter.ChartHeight;
-
-            //Series Y values, support only of the Primary Axis...
-            int serieIndex = 1;
-            int colIndex = 0;
-            foreach (var serie in page.Series)
-            {
-                colIndex = 0;
-			    foreach (var xDimensionKey in page.PrimaryXValues.Keys)
-			    {
-				    //Find the corresponding serie value...
-				    var value = serie.Values.FirstOrDefault(i =&amp;gt; i.XDimensionValues == xDimensionKey);
-				    if (value != null) {
-					    converter.SetValue(rowStart + serieIndex, colStart + colIndex, value.Yvalue);
-				    }
-                    colIndex++;
-			    }
-
-                ExcelChartSeries chartSerie = chart.Series.AddSeries(serie.SerieDisplayName);
-                chartSerie.ChartType = chartType;
-                chartSerie.CategoryNamesRange = converter.Sheet[rowStart, colStart, rowStart, colStart + page.PrimaryXValues.Keys.Count - 1];
-                chartSerie.ValuesRange = converter.Sheet[rowStart + serieIndex, colStart, rowStart + serieIndex, colStart + page.PrimaryXValues.Keys.Count - 1];
-                serieIndex++;
-            }
-
-            //Series X Values must be set after...
-            colIndex = 0;
-            foreach (var xValue in page.PrimaryXValues.Keys)
-            {
-                converter.Sheet[rowStart, colStart + colIndex].Value = page.PrimaryXValues[xValue];
-                var xCells = xValue as Seal.Model.ResultCell[];
-                if (xCells != null &amp;amp;&amp;amp; converter.UseElementFormat)
-                {
-                    converter.Sheet[rowStart, colStart + colIndex].Style.Number.NumberFormatString = xCells[0].Element.GetExcelFormat(view.CultureInfo);
-                }
-                colIndex++;
-            }
-
-            if (converter.Sheet == currentSheet) 
-            {
-                converter.CurrentRow += converter.ChartHeight + serieIndex + 1;
-            }
-        }
-    }
-    converter.Sheet = currentSheet;
-}&lt;/ChartScript&gt;
+  &lt;ChartScript /&gt;
   &lt;DataScript /&gt;
 &lt;/SealExcelCfg&gt;</string>
       </ExcelConfigurations>

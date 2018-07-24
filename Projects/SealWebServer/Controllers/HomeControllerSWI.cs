@@ -328,7 +328,7 @@ namespace SealWebServer.Controllers
 
                 var execution = initReportExecution(report, viewGUID, outputGUID, true);
                 execution.Execute();
-                while (report.Status != ReportStatus.Executed) System.Threading.Thread.Sleep(100);
+                while (report.Status != ReportStatus.Executed && !report.HasErrors) Thread.Sleep(100);
 
                 ActionResult result = null;
                 if (!string.IsNullOrEmpty(outputGUID))

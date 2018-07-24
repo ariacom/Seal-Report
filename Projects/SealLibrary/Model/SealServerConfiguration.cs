@@ -49,7 +49,6 @@ namespace Seal.Model
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
-                GetProperty("ExcelLibrary").SetIsBrowsable(!ForPublication);
                 
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
@@ -125,16 +124,6 @@ namespace Seal.Model
             set { _isLocal = value; }
         }
 
-        ExcelLibrary _excelLibrary = ExcelLibrary.Default;
-        [Category("Server Settings"), DisplayName("Default Excel Library"), Description("Defines the default excel library for the Seal Converter Excel Library."), Id(9, 1)]
-        [DefaultValue(ExcelLibrary.Default)]
-        [TypeConverter(typeof(NamedEnumConverter))]
-        public ExcelLibrary ExcelLibrary
-        {
-            get { return _excelLibrary; }
-            set { _excelLibrary = value; }
-        }
-        
 
         string _initScript = "";
         [Category("Scripts"), DisplayName("Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 3)]

@@ -349,6 +349,28 @@ namespace Seal.Helpers
             return null;
         }
 
+        #region MSSQL
+
+        bool hasStartCommentAtTheEnd(string text)
+        {
+            int open = text.LastIndexOf("/*");
+            int close = text.LastIndexOf("*/");
+            if (open >= 0) return (open > close);
+            return false;
+        }
+
+        bool hasEndCommentAtTheBeginning(string text)
+        {
+            int open = text.IndexOf("/*");
+            int close = text.IndexOf("*/");
+            if (close >= 0)
+            {
+                if (open > 0) return (close < open);
+                else return true;
+            }
+            return false;
+        }
+
         string _mssqlError = "";
         int _mssqlErrorClassLevel = 11;
         public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11)
@@ -373,7 +395,55 @@ namespace Seal.Helpers
                         string script = File.ReadAllText(file);
                         // split script on GO command
                         IEnumerable<string> commandStrings = Regex.Split(script, @"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                        List<string> commands = new List<string>();
+                        string startCmd = "";
+                        bool inComment = false;
                         foreach (string commandString in commandStrings)
+                        {
+                            if (!string.IsNullOrEmpty(commandString.Trim()))
+                            {
+                                if (!inComment)
+                                {
+                                    if (hasStartCommentAtTheEnd(commandString))
+                                    {
+                                        //start of comment
+                                        inComment = true;
+                                        startCmd = commandString + "GO";
+                                    }
+                                    else
+                                    {
+                                        //normal case
+                                        commands.Add(startCmd + commandString);
+                                        inComment = false;
+                                        startCmd = "";
+                                    }
+
+                                }
+                                else
+                                {
+                                    //in comment
+                                    if (!hasEndCommentAtTheBeginning(commandString))
+                                    {
+                                        //no end of comment
+                                        startCmd += commandString + "GO";
+                                    }
+                                    else if (hasEndCommentAtTheBeginning(commandString) && hasStartCommentAtTheEnd(commandString))
+                                    {
+                                        //end of comment, but start again
+                                        startCmd += commandString + "GO";
+                                    }
+                                    else
+                                    {
+                                        //end of comment
+                                        commands.Add(startCmd + commandString);
+                                        inComment = false;
+                                        startCmd = "";
+                                    }
+                                }
+                            }
+                        }
+                    
+                        foreach (string commandString in commands)
                         {
                             if (!string.IsNullOrEmpty(commandString.Trim()))
                             {
@@ -414,6 +484,9 @@ namespace Seal.Helpers
             LogMessage(e.Message);
             Thread.Sleep(20);
         }
+
+#endregion
+
 
         //SANDBOX !
         //Just use this to code, compile and debug your Razor Script within Visual Studio...

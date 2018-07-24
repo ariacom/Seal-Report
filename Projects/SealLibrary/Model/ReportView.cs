@@ -47,8 +47,11 @@ namespace Seal.Model
                 GetProperty("PdfConverter").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
                 PdfConverter.InitEditor();
 
-                GetProperty("ExcelConverter").SetIsBrowsable(true);
-                ExcelConverter.InitEditor(); 
+                if (IsRootView || Model != null)
+                {
+                    GetProperty("ExcelConverter").SetIsBrowsable(true);
+                    ExcelConverter.InitEditor();
+                }
 
                 GetProperty("WebExec").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
 
