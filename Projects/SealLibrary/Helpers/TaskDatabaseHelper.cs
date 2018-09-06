@@ -35,6 +35,7 @@ namespace Seal.Helpers
         public string InsertStartCommand = "";
         public string InsertEndCommand = "";
         public int ColumnCharLength = 0; //0= means auto size
+        public int NoRowsCharLength = 50; //Char length taken if the table loaded as no row
         public int LoadBurstSize = 0; //0 = Load all records in one
         public string LoadSortColumn = ""; //Sort column used if LoadBurstSize is specified
         public int InsertBurstSize = 500;
@@ -465,6 +466,8 @@ namespace Seal.Helpers
                     {
                         if (row[col].ToString().Length > len) len = row[col].ToString().Length + 1;
                     }
+
+                    if (col.Table.Rows.Count == 0) len = NoRowsCharLength;
                 }
                 if (ColumnCharLength <= 0 && DatabaseType == DatabaseType.MSSQLServer && len > 8000)
                     result.AppendFormat("{0}(max)", Helper.IfNullOrEmpty(ColumnCharType, _defaultColumnCharType));

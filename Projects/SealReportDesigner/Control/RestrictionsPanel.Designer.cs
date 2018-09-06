@@ -29,22 +29,22 @@
         private void InitializeComponent()
         {
             this.restrictionsTextBox = new ScintillaNET.Scintilla();
-            ((System.ComponentModel.ISupportInitialize)(this.restrictionsTextBox)).BeginInit();
             this.SuspendLayout();
             // 
             // restrictionsTextBox
             // 
             this.restrictionsTextBox.AllowDrop = true;
             this.restrictionsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.restrictionsTextBox.Lexer = ScintillaNET.Lexer.Sql;
             this.restrictionsTextBox.Location = new System.Drawing.Point(0, 0);
             this.restrictionsTextBox.Name = "restrictionsTextBox";
             this.restrictionsTextBox.Size = new System.Drawing.Size(451, 300);
             this.restrictionsTextBox.TabIndex = 3;
+            this.restrictionsTextBox.Paint += new System.Windows.Forms.PaintEventHandler(this.restrictionsTextBox_Paint);
             this.restrictionsTextBox.TextChanged += new System.EventHandler(this.restrictionsTextBox_TextChanged);
             this.restrictionsTextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.restrictionsTextBox_DragDrop);
             this.restrictionsTextBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.restrictionsTextBox_DragEnter);
             this.restrictionsTextBox.DragOver += new System.Windows.Forms.DragEventHandler(this.restrictionsTextBox_DragOver);
-            this.restrictionsTextBox.Paint += new System.Windows.Forms.PaintEventHandler(this.restrictionsTextBox_Paint);
             this.restrictionsTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.scintilla_KeyUp);
             this.restrictionsTextBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.scintilla_MouseUp);
             // 
@@ -53,7 +53,6 @@
             this.Controls.Add(this.restrictionsTextBox);
             this.Name = "RestrictionsPanel";
             this.Size = new System.Drawing.Size(451, 300);
-            ((System.ComponentModel.ISupportInitialize)(this.restrictionsTextBox)).EndInit();
             this.ResumeLayout(false);
 
         }

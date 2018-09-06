@@ -72,7 +72,7 @@ namespace Seal.Forms
                     {
                         frm.clearToolStripButton.Visible = false;
                         frm.sqlTextBox.Text = model.Sql;
-                        frm.sqlTextBox.IsReadOnly = true;
+                        frm.sqlTextBox.ReadOnly = true;
                     }
                     else if (context.PropertyDescriptor.Name == "PreSQL" || context.PropertyDescriptor.Name == "PostSQL")
                     {

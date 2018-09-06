@@ -3,9 +3,6 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing.Design;
 using System.ComponentModel;
 using Seal.Model;
@@ -30,13 +27,11 @@ namespace Seal.Forms
 
         private string PromptForConnectionString(MetaConnection connection, string currentConnectionString, string initialConnectionString)
         {
-            /* Try with DataConnectionDialog, but unable to select OleDbSource first... we keep MSDASC :-(
-             * 
-                DataConnectionDialog dcd = new DataConnectionDialog();
+            // Try with DataConnectionDialog, but unable to select OleDbSource first... we keep MSDASC :-(
+            //Update with VS 2017, still no easy/standard way to do it... we keep MSDASC :-(
+            /*    DataConnectionDialog dcd = new DataConnectionDialog();
 
             DataSource.AddStandardDataSources(dcd);
-
-
             dcd.SelectedDataSource = DataSource.OdbcDataSource;
 
             //            dcd.DataSources.Add(DataSource.OdbcDataSource);
@@ -44,56 +39,56 @@ namespace Seal.Forms
 
             if (DataConnectionDialog.Show(dcd) == DialogResult.OK)
             {
-
-             */
-
+            }
+             
+            */
             MSDASC.DataLinks dataLinks = new MSDASC.DataLinks();
 
-            string generatedConnectionString = currentConnectionString;
-            string resultConnectionString = "";
+           string generatedConnectionString = currentConnectionString;
+           string resultConnectionString = "";
 
-            ADODB.Connection dialogConnection = (ADODB.Connection)dataLinks.PromptNew();
-            if (dialogConnection != null)
-            {
-                connection.UserName = "";
-                connection.ClearPassword = "";
-                generatedConnectionString = dialogConnection.ConnectionString.ToString();
+           ADODB.Connection dialogConnection = (ADODB.Connection)dataLinks.PromptNew();
+           if (dialogConnection != null)
+           {
+               connection.UserName = "";
+               connection.ClearPassword = "";
+               generatedConnectionString = dialogConnection.ConnectionString.ToString();
 
-                if (dialogConnection.Properties["Password"] != null && dialogConnection.Properties["Password"].Value != null && !generatedConnectionString.Contains("Password="))
-                {
-                    generatedConnectionString += string.Format(";Password={0}", dialogConnection.Properties["Password"].Value);
-                }
+               if (dialogConnection.Properties["Password"] != null && dialogConnection.Properties["Password"].Value != null && !generatedConnectionString.Contains("Password="))
+               {
+                   generatedConnectionString += string.Format(";Password={0}", dialogConnection.Properties["Password"].Value);
+               }
 
-                foreach (string config in generatedConnectionString.Split(';'))
-                {
-                    if (config.StartsWith("User ID="))
-                    {
-                        connection.UserName = config.Replace("User ID=", "").Replace("\"", "");
-                        continue;
-                    }
-                    if (config.StartsWith("Password="))
-                    {
-                        connection.ClearPassword = config.Replace("Password=", "");
-                        continue;
-                    }
-                    if (resultConnectionString != "") resultConnectionString += ";";
-                    resultConnectionString += config;
-                }
+               foreach (string config in generatedConnectionString.Split(';'))
+               {
+                   if (config.StartsWith("User ID="))
+                   {
+                       connection.UserName = config.Replace("User ID=", "").Replace("\"", "");
+                       continue;
+                   }
+                   if (config.StartsWith("Password="))
+                   {
+                       connection.ClearPassword = config.Replace("Password=", "");
+                       continue;
+                   }
+                   if (resultConnectionString != "") resultConnectionString += ";";
+                   resultConnectionString += config;
+               }
 
-                if (!string.IsNullOrEmpty(connection.UserName) && string.IsNullOrEmpty(connection.ClearPassword)) MessageBox.Show("Note that the Password is empty (Perhaps did you not check the option 'Allow Saving Password')", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               if (!string.IsNullOrEmpty(connection.UserName) && string.IsNullOrEmpty(connection.ClearPassword)) MessageBox.Show("Note that the Password is empty (Perhaps did you not check the option 'Allow Saving Password')", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                DatabaseType newType = GetDatabaseType(resultConnectionString);
-                if (newType != connection.DatabaseType)
-                {
-                    connection.DatabaseType = newType;
-                    MessageBox.Show(string.Format("The database type has been set to {0}", newType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            else
-            {
-                resultConnectionString = initialConnectionString;
-            }
-            return resultConnectionString;
+               DatabaseType newType = GetDatabaseType(resultConnectionString);
+               if (newType != connection.DatabaseType)
+               {
+                   connection.DatabaseType = newType;
+                   MessageBox.Show(string.Format("The database type has been set to {0}", newType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               }
+           }
+           else
+           {
+               resultConnectionString = initialConnectionString;
+           }
+           return resultConnectionString;
         }
 
         public static DatabaseType GetDatabaseType(string connectionString)
