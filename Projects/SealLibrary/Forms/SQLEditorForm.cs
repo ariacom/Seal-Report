@@ -29,8 +29,8 @@ namespace Seal.Forms
         public SQLEditorForm()
         {
             InitializeComponent();
-            sqlTextBox.ConfigurationManager.Language = "mssql";
-            sqlTextBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
+            sqlTextBox.Lexer = ScintillaNET.Lexer.Sql;
+//TODO            sqlTextBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
             toolStripStatusLabel.Image = null;
 
             ShowIcon = true;
@@ -46,7 +46,7 @@ namespace Seal.Forms
         {
             if (LastSize != null) Size = LastSize.Value;
             if (LastLocation != null) Location = LastLocation.Value;
-            sqlTextBox.Modified = false;
+//TODO            sqlTextBox.Modified = false;
         }
 
         bool CheckClose()
@@ -71,7 +71,7 @@ namespace Seal.Forms
 
         public void SetReadOnly()
         {
-            sqlTextBox.IsReadOnly = true;
+            sqlTextBox.ReadOnly = true;
             okToolStripButton.Visible = false;
             cancelToolStripButton.Text = "Close";
             clearToolStripButton.Visible = false;
@@ -152,7 +152,7 @@ namespace Seal.Forms
                         try
                         {
                             table.CheckTable(null);
-                            if (sqlTextBox.IsReadOnly) table.SetReadOnly();
+                            if (sqlTextBox.ReadOnly) table.SetReadOnly();
                             error = table.Error;
                         }
                         finally
@@ -176,7 +176,7 @@ namespace Seal.Forms
                     {
                         join.Clause = sqlTextBox.Text;
                         join.CheckJoin();
-                        if (sqlTextBox.IsReadOnly) join.SetReadOnly();
+                        if (sqlTextBox.ReadOnly) join.SetReadOnly();
                         error = join.Error;
                     }
                     finally

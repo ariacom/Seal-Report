@@ -25,8 +25,8 @@ namespace Seal.Forms
         public TemplateTextEditorForm()
         {
             InitializeComponent();
-            textBox.ConfigurationManager.Language = "html";
-            textBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
+            textBox.Lexer = ScintillaNET.Lexer.Html;
+//TODO            textBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
             toolStripStatusLabel.Image = null;
             ShowIcon = true;
             Icon = Repository.ProductIcon;
@@ -55,7 +55,7 @@ namespace Seal.Forms
         {
             if (LastSize != null) Size = LastSize.Value;
             if (LastLocation != null) Location = LastLocation.Value;
-            textBox.Modified = false;
+//TODO            textBox.Modified = false;
         }
 
         void TemplateTextEditorForm_FormClosed(object sender, FormClosedEventArgs e)

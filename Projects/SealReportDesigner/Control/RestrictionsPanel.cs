@@ -18,6 +18,7 @@ using DynamicTypeDescriptor;
 using Seal.Helpers;
 using System.Diagnostics;
 using Seal.Forms;
+using ScintillaNET;
 
 namespace Seal.Controls
 {
@@ -47,8 +48,8 @@ namespace Seal.Controls
         public RestrictionsPanel()
         {
             InitializeComponent();
-            restrictionsTextBox.ConfigurationManager.Language = "mssql";
-            restrictionsTextBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
+            restrictionsTextBox.Lexer = ScintillaNET.Lexer.Sql;
+    //TODO        restrictionsTextBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
         }
 
         public void Init(ModelPanel modelPanel)
@@ -60,7 +61,8 @@ namespace Seal.Controls
 
         public void ClearSelection()
         {
-            restrictionsTextBox.Selection.Length = 0;
+            restrictionsTextBox.SelectionStart = 0;
+            restrictionsTextBox.SelectionEnd = 0;
         }
 
         public void Commit()
@@ -120,8 +122,8 @@ namespace Seal.Controls
             }
             restrictionsTextBox.Text = text;
             ModelPanel.MainForm.IsModified = isModified;
-            restrictionsTextBox.Caret.Position = 0;
-            restrictionsTextBox.Scrolling.ScrollToCaret();
+            restrictionsTextBox.CurrentPosition = 0;
+            restrictionsTextBox.ScrollCaret();
         }
 
         public void UpdateRestrictionText()
@@ -129,8 +131,8 @@ namespace Seal.Controls
             if (ModelPanel.RestrictionGrid.SelectedObject != null)
             {
                 ReportRestriction restriction = (ReportRestriction)ModelPanel.RestrictionGrid.SelectedObject;
-                restrictionsTextBox.Selection.Text = ReportRestriction.kStartRestrictionChar + restriction.DisplayRestrictionForEditor + ReportRestriction.kStopRestrictionChar;
-                restrictionsTextBox.Caret.Position -= 1;
+     //TODO           restrictionsTextBox.Se.Selection.Text = ReportRestriction.kStartRestrictionChar + restriction.DisplayRestrictionForEditor + ReportRestriction.kStopRestrictionChar;
+                restrictionsTextBox.CurrentPosition -= 1;
                 highlightRestriction(false);
             }
         }
@@ -220,7 +222,7 @@ namespace Seal.Controls
         void highlightRestriction(bool isDragging)
         {
             //!! behaviour scintillina -> we have to convert the positions for UTF char...  :-(, waiting for a Scintillina expert !
-            int startPos = convertToRealPosition(restrictionsTextBox.Caret.Position, restrictionsTextBox.RawText);
+            int startPos = restrictionsTextBox.CurrentPosition; // convertToRealPosition(restrictionsTextBox.CurrentPosition, restrictionsTextBox.Text /*.RawText*/);
            //Debug.WriteLine("calc={0} caret={1} selstart={2} indentpos={3} linestart={4}", startPos, restrictionsTextBox.Caret.Position, restrictionsTextBox.Selection.Start, restrictionsTextBox.Lines.Current.IndentPosition, restrictionsTextBox.Lines.Current.StartPosition);
             int endPos = 0;
             var restriction = getRestriction(ref startPos, ref endPos, restrictionsTextBox.Text);
@@ -243,8 +245,8 @@ namespace Seal.Controls
             }
             if (restriction != null)
             {
-                restrictionsTextBox.Selection.Start = convertToScintillaPosition(startPos, restrictionsTextBox.Text);
-                restrictionsTextBox.Selection.End = convertToScintillaPosition(endPos, restrictionsTextBox.Text) + 1;
+                restrictionsTextBox.SelectionStart = convertToScintillaPosition(startPos, restrictionsTextBox.Text);
+                restrictionsTextBox.SelectionEnd = convertToScintillaPosition(endPos, restrictionsTextBox.Text) + 1;
                 restrictionsTextBox.Focus();
 
                 MenuItem item = new MenuItem("Smart copy...");
@@ -312,8 +314,8 @@ namespace Seal.Controls
         {
             if (Helper.CanDragAndDrop(e))
             {
-                restrictionsTextBox.Selection.Start = getCaretIndexFromPoint(e.X, e.Y);
-                restrictionsTextBox.Selection.Length = 0;
+                restrictionsTextBox.SelectionStart = getCaretIndexFromPoint(e.X, e.Y);
+                restrictionsTextBox.SelectionEnd = restrictionsTextBox.SelectionStart;
                 restrictionsTextBox.Focus();
                 highlightRestriction(true);
                 e.Effect = DragDropEffects.Move;
@@ -323,7 +325,7 @@ namespace Seal.Controls
         private int getCaretIndexFromPoint(int x, int y)
         {
             Point realPoint = restrictionsTextBox.PointToClient(new Point(x, y));
-            int index = restrictionsTextBox.PositionFromPoint(realPoint.X, realPoint.Y);
+            int index = restrictionsTextBox.CharPositionFromPoint(realPoint.X, realPoint.Y);
             if (index == restrictionsTextBox.Text.Length - 1)
             {
                 Point caretPoint = new Point();
@@ -382,19 +384,23 @@ namespace Seal.Controls
                 if (forPrompt)
                 {
                     restriction.Prompt = PromptType.Prompt;
-                    restrictionsTextBox.Selection.Length = 0;
-                    if (restrictionsTextBox.TextLength > 0) restrictionsTextBox.Selection.Start = restrictionsTextBox.TextLength;
+ //TODO                   restrictionsTextBox.Selection.Length = 0;
+                    if (restrictionsTextBox.TextLength > 0) restrictionsTextBox.SelectionStart = restrictionsTextBox.TextLength;
                 }
 
                 string insertedText = "";
-                if (restrictionsTextBox.TextLength > 0 && restrictionsTextBox.Caret.Position >= restrictionsTextBox.TextLength)
+                if (restrictionsTextBox.TextLength > 0 && restrictionsTextBox.CurrentPosition >= restrictionsTextBox.TextLength)
                 {
                     if (restrictionsTextBox.Text.Last() != '\n') insertedText = "\r\n";
                     insertedText += "AND ";
                 }
                 insertedText += ReportRestriction.kStartRestrictionChar + restriction.DisplayRestrictionForEditor + ReportRestriction.kStopRestrictionChar;
-                restrictionsTextBox.Selection.Text = insertedText;
-                restrictionsTextBox.Caret.Position -= 1;
+
+                Selection sel = null;
+                if (!restrictionsTextBox.Selections.IsEmpty)
+                    sel = restrictionsTextBox.Selections[restrictionsTextBox.MainSelection];
+                //sel..SelectedText = insertedText;
+                //restrictionsTextBox.Caret.Position -= 1;
                 highlightRestriction(false);
             }
             Commit();
