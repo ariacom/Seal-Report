@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Seal.Model;
 using RazorEngine.Templating;
 using Seal.Helpers;
+using ScintillaNET;
 
 namespace Seal.Forms
 {
@@ -25,8 +26,7 @@ namespace Seal.Forms
         public TemplateTextEditorForm()
         {
             InitializeComponent();
-            textBox.Lexer = ScintillaNET.Lexer.Html;
-//TODO            textBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
+            ScintillaHelper.Init(textBox, Lexer.Html);
             toolStripStatusLabel.Image = null;
             ShowIcon = true;
             Icon = Repository.ProductIcon;
@@ -55,7 +55,7 @@ namespace Seal.Forms
         {
             if (LastSize != null) Size = LastSize.Value;
             if (LastLocation != null) Location = LastLocation.Value;
-//TODO            textBox.Modified = false;
+            textBox.SetSavePoint();
         }
 
         void TemplateTextEditorForm_FormClosed(object sender, FormClosedEventArgs e)

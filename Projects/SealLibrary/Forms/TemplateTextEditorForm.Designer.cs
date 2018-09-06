@@ -41,7 +41,6 @@
             this.mainPanel.SuspendLayout();
             this.textBox = new ScintillaNET.Scintilla();
             this.mainStatusStrip.SuspendLayout();
-    //        ((System.ComponentModel.ISupportInitialize)(this.textBox)).BeginInit();
             this.SuspendLayout();
             // 
             // mainToolStrip
@@ -152,7 +151,6 @@
             this.mainPanel.PerformLayout();
             this.mainStatusStrip.ResumeLayout(false);
             this.mainStatusStrip.PerformLayout();
-           // ((System.ComponentModel.ISupportInitialize)(this.textBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

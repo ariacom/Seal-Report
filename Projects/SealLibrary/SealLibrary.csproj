@@ -160,6 +160,7 @@
     <Compile Include="Forms\WebBrowserHelper.cs" />
     <Compile Include="Helpers\PropertyGridHelper.cs" />
     <Compile Include="Helpers\RazorHelper.cs" />
+    <Compile Include="Helpers\ScintillaHelper.cs" />
     <Compile Include="Helpers\TreeViewEditorHelper.cs" />
     <Compile Include="Forms\SQLEditorForm.cs">
       <SubType>Form</SubType>
@@ -464,11 +465,9 @@
     <Content Include="Resources\information.png" />
     <None Include="Resources\reportDesigner.ico" />
     <None Include="Resources\serverManager.ico" />
-    <Content Include="SharedLibraries\Ionic.Zip.dll" />
     <Content Include="SciLexer.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SharedLibraries\ScintillaNET.dll" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

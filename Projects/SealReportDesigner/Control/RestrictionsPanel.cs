@@ -4,19 +4,11 @@
 //
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using RazorEngine;
-using RazorEngine.Templating;
-using System.Web.Razor;
 using Seal.Model;
-using DynamicTypeDescriptor;
 using Seal.Helpers;
-using System.Diagnostics;
 using Seal.Forms;
 using ScintillaNET;
 
@@ -48,8 +40,7 @@ namespace Seal.Controls
         public RestrictionsPanel()
         {
             InitializeComponent();
-            restrictionsTextBox.Lexer = ScintillaNET.Lexer.Sql;
-    //TODO        restrictionsTextBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
+            ScintillaHelper.Init(restrictionsTextBox, Lexer.Sql, false);
         }
 
         public void Init(ModelPanel modelPanel)
@@ -131,7 +122,7 @@ namespace Seal.Controls
             if (ModelPanel.RestrictionGrid.SelectedObject != null)
             {
                 ReportRestriction restriction = (ReportRestriction)ModelPanel.RestrictionGrid.SelectedObject;
-     //TODO           restrictionsTextBox.Se.Selection.Text = ReportRestriction.kStartRestrictionChar + restriction.DisplayRestrictionForEditor + ReportRestriction.kStopRestrictionChar;
+                restrictionsTextBox.ReplaceSelection(ReportRestriction.kStartRestrictionChar + restriction.DisplayRestrictionForEditor + ReportRestriction.kStopRestrictionChar);
                 restrictionsTextBox.CurrentPosition -= 1;
                 highlightRestriction(false);
             }
@@ -191,39 +182,10 @@ namespace Seal.Controls
             return result;
         }
 
-        int getUtfCharLen(byte c)
-        {
-            if (c >= 194 && c <= 223) return 2;
-            if (c >= 224 && c <= 239) return 3;
-            if (c >= 240 && c <= 244) return 4;
-            return 1;
-        }
-
-        int convertToRealPosition(int scintillaPos, byte[] rawText)
-        {
-            int pos = 0;
-            for (int i = 0; i < scintillaPos; i++)
-            {
-                pos++;
-                if (rawText[i] > 127) 
-                {
-                    int len = getUtfCharLen(rawText[i]) - 1;
-                    i += len;
-                }
-            }
-            return pos;
-        }
-
-        int convertToScintillaPosition(int realPos, string text)
-        {
-            return System.Text.Encoding.UTF8.GetBytes(text.Substring(0, realPos)).Length;
-        }
 
         void highlightRestriction(bool isDragging)
         {
-            //!! behaviour scintillina -> we have to convert the positions for UTF char...  :-(, waiting for a Scintillina expert !
-            int startPos = restrictionsTextBox.CurrentPosition; // convertToRealPosition(restrictionsTextBox.CurrentPosition, restrictionsTextBox.Text /*.RawText*/);
-           //Debug.WriteLine("calc={0} caret={1} selstart={2} indentpos={3} linestart={4}", startPos, restrictionsTextBox.Caret.Position, restrictionsTextBox.Selection.Start, restrictionsTextBox.Lines.Current.IndentPosition, restrictionsTextBox.Lines.Current.StartPosition);
+            int startPos = restrictionsTextBox.CurrentPosition;
             int endPos = 0;
             var restriction = getRestriction(ref startPos, ref endPos, restrictionsTextBox.Text);
             if (!isDragging)
@@ -245,8 +207,8 @@ namespace Seal.Controls
             }
             if (restriction != null)
             {
-                restrictionsTextBox.SelectionStart = convertToScintillaPosition(startPos, restrictionsTextBox.Text);
-                restrictionsTextBox.SelectionEnd = convertToScintillaPosition(endPos, restrictionsTextBox.Text) + 1;
+                restrictionsTextBox.SelectionStart = startPos; 
+                restrictionsTextBox.SelectionEnd = endPos+1; 
                 restrictionsTextBox.Focus();
 
                 MenuItem item = new MenuItem("Smart copy...");
@@ -262,7 +224,7 @@ namespace Seal.Controls
                      }
                 });
 
-                restrictionsTextBox.ContextMenu = new System.Windows.Forms.ContextMenu();
+                restrictionsTextBox.ContextMenu = new ContextMenu();
                 restrictionsTextBox.ContextMenu.MenuItems.Add(item);
 
 
@@ -384,7 +346,7 @@ namespace Seal.Controls
                 if (forPrompt)
                 {
                     restriction.Prompt = PromptType.Prompt;
- //TODO                   restrictionsTextBox.Selection.Length = 0;
+                    restrictionsTextBox.SelectionEnd = restrictionsTextBox.SelectionStart;
                     if (restrictionsTextBox.TextLength > 0) restrictionsTextBox.SelectionStart = restrictionsTextBox.TextLength;
                 }
 
@@ -396,11 +358,8 @@ namespace Seal.Controls
                 }
                 insertedText += ReportRestriction.kStartRestrictionChar + restriction.DisplayRestrictionForEditor + ReportRestriction.kStopRestrictionChar;
 
-                Selection sel = null;
-                if (!restrictionsTextBox.Selections.IsEmpty)
-                    sel = restrictionsTextBox.Selections[restrictionsTextBox.MainSelection];
-                //sel..SelectedText = insertedText;
-                //restrictionsTextBox.Caret.Position -= 1;
+                restrictionsTextBox.ReplaceSelection(insertedText);
+                restrictionsTextBox.CurrentPosition -= 1;
                 highlightRestriction(false);
             }
             Commit();

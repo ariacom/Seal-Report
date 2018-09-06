@@ -12,6 +12,7 @@ using System.Text;
 using System.Windows.Forms;
 using Seal.Helpers;
 using Seal.Model;
+using ScintillaNET;
 
 namespace Seal.Forms
 {
@@ -29,8 +30,7 @@ namespace Seal.Forms
         public SQLEditorForm()
         {
             InitializeComponent();
-            sqlTextBox.Lexer = ScintillaNET.Lexer.Sql;
-//TODO            sqlTextBox.EndOfLine.Mode = ScintillaNET.EndOfLineMode.Crlf;
+            ScintillaHelper.Init(sqlTextBox, Lexer.Sql);
             toolStripStatusLabel.Image = null;
 
             ShowIcon = true;
@@ -46,7 +46,7 @@ namespace Seal.Forms
         {
             if (LastSize != null) Size = LastSize.Value;
             if (LastLocation != null) Location = LastLocation.Value;
-//TODO            sqlTextBox.Modified = false;
+            sqlTextBox.SetSavePoint();
         }
 
         bool CheckClose()
