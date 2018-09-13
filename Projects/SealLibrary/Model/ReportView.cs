@@ -869,7 +869,7 @@ namespace Seal.Model
                     }
                     else
                     {
-                        result.Add(dimensions, dimensions[0].ValueNoHTML);
+                        result.Add(dimensions, dimensions[0].DisplayValue);
                     }
                 }
                 else result.Add(dimensions, Helper.ConcatCellValues(dimensions, ","));

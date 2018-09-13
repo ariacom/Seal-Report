@@ -31,7 +31,6 @@ namespace Seal.Model
 
                 GetProperty("DisplayNameEl").SetIsBrowsable(true);
                 GetProperty("SQL").SetIsBrowsable(!Source.IsNoSQL);
-                GetProperty("HasHTMLTags").SetIsBrowsable(true);
                 GetProperty("SortOrder").SetIsBrowsable(true);
                 GetProperty("TypeEd").SetIsBrowsable(!IsEnum && !Source.IsNoSQL);
                 GetProperty("ShowSubTotals").SetIsBrowsable(PivotPosition == PivotPosition.Row);
@@ -239,13 +238,6 @@ namespace Seal.Model
                 return result;
             }
         }
-
-        [XmlIgnore]
-        public bool HasHTMLTagsEl
-        {
-            get { return HasHTMLTags != null ? HasHTMLTags.Value : (MetaColumn.HasHTMLTags != null ? MetaColumn.HasHTMLTags.Value : false); }
-        }
-
 
         [XmlIgnore]
         public bool HasTimeEl

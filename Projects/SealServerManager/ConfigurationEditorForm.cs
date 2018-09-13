@@ -15,6 +15,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Seal.Helpers;
 using Seal.Model;
+using System.Runtime.InteropServices;
 
 namespace Seal.Forms
 {
@@ -174,7 +175,8 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                         pool = serverMgr.ApplicationPools.Add(_configuration.WebApplicationPoolName);
                     }
                     pool.ManagedRuntimeVersion = "v4.0";
-                    pool.Enable32BitAppOnWin64 = true;
+                    if (Marshal.SizeOf(typeof(IntPtr)) != 8) pool.Enable32BitAppOnWin64 = true; //Test if 32bit
+
                     pool.ProcessModel.IdentityType = Microsoft.Web.Administration.ProcessModelIdentityType.LocalSystem;
 
                     if (string.IsNullOrEmpty(_configuration.WebApplicationName)) _configuration.WebApplicationName = "/";

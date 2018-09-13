@@ -103,7 +103,7 @@ namespace Seal.Helpers
         static public string ConcatCellValues(ResultCell[] cells, string separator)
         {
             string result = "";
-            foreach (var cell in cells) Helper.AddValue(ref result, separator, cell.ValueNoHTML);
+            foreach (var cell in cells) Helper.AddValue(ref result, separator, cell.DisplayValue);
             return result;
         }
 
