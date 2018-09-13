@@ -33,14 +33,13 @@ namespace Seal.Model
             get
             {
                 if (!string.IsNullOrEmpty(FinalValue)) return FinalValue;
-                return (Element != null && Element.HasHTMLTagsEl) ? DisplayValue : Helper.ToHtml(DisplayValue);
+                return DisplayValue;
             }
         }
 
         public string CSVValue(bool useFormat, string separator)
         {
-            string result = ExcelHelper.ToCsv(useFormat ? ValueNoHTML : RawDisplayValue, separator);
-            if (Element != null && Element.HasHTMLTagsEl) result = Helper.RemoveHTMLTags(result);
+            string result = ExcelHelper.ToCsv(useFormat ? DisplayValue : RawDisplayValue, separator);
             return result;
         }
 
@@ -60,13 +59,6 @@ namespace Seal.Model
             }
         }
 
-        public string ValueNoHTML
-        {
-            get
-            {
-                return (Element != null && Element.HasHTMLTagsEl) ? Helper.RemoveHTMLTags(DisplayValue) : DisplayValue;
-            }
-        }
 
         public string RawDisplayValue
         {

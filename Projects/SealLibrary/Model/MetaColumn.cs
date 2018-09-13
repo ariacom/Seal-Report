@@ -36,7 +36,6 @@ namespace Seal.Model
                 GetProperty("DisplayOrder").SetIsBrowsable(true);
                 GetProperty("Format").SetIsBrowsable(true);
                 GetProperty("EnumGUID").SetIsBrowsable(true);
-                GetProperty("HasHTMLTags").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetDisplayName("Drill Children: " + (_drillChildren.Count == 0 ? "None" : _drillChildren.Count.ToString() + " Items(s)"));
                 GetProperty("DrillUpOnlyIfDD").SetIsBrowsable(true);
@@ -298,15 +297,6 @@ namespace Seal.Model
         {
             get { return _enumGUID; }
             set { _enumGUID = value; }
-        }
-
-        private bool? _hasHTMLTags = null;
-        [DefaultValue(null)]
-        [Category("Options"), DisplayName("Contains HTML"), Description("If true, the result of the column contains HTML tags that will be displayed in the report result."), Id(5, 3)]
-        public bool? HasHTMLTags
-        {
-            get { return _hasHTMLTags; }
-            set { _hasHTMLTags = value; }
         }
 
         [XmlIgnore]

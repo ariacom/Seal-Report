@@ -5,7 +5,7 @@
     ReportModel reportModel = view.Model;
 }
 
-@if (dasdreport.Format == ReportFormat.csv)
+@if (report.Format == ReportFormat.csv)
 {
     @Include(view.GetPartialTemplateKey("ModelDetail.iCSV", view), view)
 }
