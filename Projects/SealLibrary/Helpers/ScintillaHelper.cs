@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ScintillaNET_FindReplaceDialog;
+using System.Windows.Forms;
 
 namespace Seal.Helpers
 {
@@ -16,6 +18,47 @@ namespace Seal.Helpers
             else if (lang == "css") Init(scintilla, Lexer.Css);
             else if (lang == "mssql") Init(scintilla, Lexer.Sql);
             else if (lang == "html") Init(scintilla, Lexer.Html);
+        }
+
+        private static void Scintilla_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (sender is Scintilla)
+            {
+                var replaceDlg = (FindReplace)((Scintilla)sender).Tag;
+
+                if (e.Control && e.KeyCode == Keys.F)
+                {
+                    replaceDlg.ShowFind();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Shift && e.KeyCode == Keys.F3)
+                {
+                    replaceDlg.Window.FindPrevious();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyCode == Keys.F3)
+                {
+                    replaceDlg.Window.FindNext();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Control && e.KeyCode == Keys.H)
+                {
+                    replaceDlg.ShowReplace();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Control && e.KeyCode == Keys.I)
+                {
+                    replaceDlg.ShowIncrementalSearch();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Control && e.KeyCode == Keys.G)
+                {
+                    //Seems buggy
+                    //GoTo MyGoTo = new GoTo((Scintilla)sender);
+                    //MyGoTo.ShowGoToDialog();
+                    //e.SuppressKeyPress = true;
+                }
+            }
         }
 
         public static void Init(Scintilla scintilla, Lexer lex, bool showLineNumber = true)
@@ -124,12 +167,19 @@ namespace Seal.Helpers
                 // User2 = 5
                 scintilla.SetKeywords(5, @"sys objects sysobjects ");
             }
-         }
+
+            //Find replace dialog
+            FindReplace replaceDlg = new FindReplace();
+            replaceDlg.Scintilla = scintilla;
+            scintilla.Tag = replaceDlg;
+
+            scintilla.KeyDown += Scintilla_KeyDown;
+        }
 
         static int MaxLineNumberCharLength = 0;
         private static void Scintilla_TextChanged(object sender, EventArgs e)
         {
-            Scintilla scintilla = (Scintilla) sender;
+            Scintilla scintilla = (Scintilla)sender;
             // Did the number of characters in the line number display change?
             // i.e. nnn VS nn, or nnnn VS nn, etc...
             var maxLineNumberCharLength = scintilla.Lines.Count.ToString().Length;

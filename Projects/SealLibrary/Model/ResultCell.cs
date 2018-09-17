@@ -70,6 +70,13 @@ namespace Seal.Model
             }
         }
 
+        public string ValueNoHTML //Kept for compatibility
+        {
+            get
+            {
+                return DisplayValue;
+            }
+        }
         public double? DoubleValue
         {
             get
