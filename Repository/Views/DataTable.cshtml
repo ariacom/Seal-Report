@@ -30,7 +30,7 @@
                 info: @Helper.ToJS(view.GetBoolValue("data_tables_show_information")),
                 searching: @Helper.ToJS(view.GetBoolValue("data_tables_filter_enabled")),
                 processing: @Helper.ToJS(view.GetBoolValue("data_tables_show_processing")),
-                order: [],
+                order: [@Raw(view.GetValue("data_tables_sort_configuration"))],
                 serverSide: @Helper.ToJS(report.IsServerPaginationEnabled && view.GetBoolValue("data_tables_enabled")),
                 @if (report.IsServerPaginationEnabled && view.GetBoolValue("data_tables_enabled"))
                 {<text>
