@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <GUID>cc309908-6797-4ba4-8833-a7c850af2233</GUID>
   <Sources>
     <ReportSource>
@@ -59,7 +59,6 @@
       <GUID>358d7529-640e-4626-b40a-957e52e9a646</GUID>
       <Name>model</Name>
       <SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements />
@@ -87,6 +86,7 @@
 @using System.IO
 @{
 	//Load a table from an Excel file, needs ODBC Drivers for Office 2007 installed
+    //Warning: this works only for 32bit version
 	//When executed, the task loads the Excel sheet in a table if the file is newer that the one in load folder
 	//The table will be created in the default database of your SQLServer connection (may be master...)
 	ReportTask task = Model;
@@ -147,14 +147,15 @@
       <SortOrder>1</SortOrder>
     </ReportTask>
   </Tasks>
+  <CommonScripts />
   <TasksScript />
   <Views>
     <ReportView>
       <GUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</GUID>
       <Name>view</Name>
       <Views />
-      <ModelGUID />
       <TemplateName>Report</TemplateName>
+      <ModelGUID />
       <PartialTemplates />
       <Parameters>
         <Parameter>
@@ -164,7 +165,6 @@
       </Parameters>
       <CultureName />
       <SortOrder>0</SortOrder>
-      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
