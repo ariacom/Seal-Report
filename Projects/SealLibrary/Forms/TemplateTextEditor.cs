@@ -420,7 +420,7 @@ namespace Seal.Forms
         ""DestinationTableName"", //destination table name
         null, //optional CSV separator (e.g. ',') 
         false, //optional, if true, the table is loaded for all connections defined in the Source
-        false //optional, if true, the MS Visual Basic Parser is used (can be used if values contain new line characters) 
+        true //optional, if true, the MS Visual Basic Parser is used (to be used if values contain new line characters) otherwise the standard parser is used
     );
 "
                 ),

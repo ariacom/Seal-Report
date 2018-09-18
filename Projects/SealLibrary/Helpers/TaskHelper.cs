@@ -165,7 +165,7 @@ namespace Seal.Helpers
             }
         }
 
-        public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = false)
+        public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = true)
         {
             bool result = false;
             try
