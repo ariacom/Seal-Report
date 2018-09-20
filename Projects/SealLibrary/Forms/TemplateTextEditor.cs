@@ -499,6 +499,7 @@ namespace Seal.Forms
 	dbHelper.InsertBurstSize = 500; //number of insert per SQL command when inserting records in the destination table
 	dbHelper.LoadBurstSize = 0; //number of records to load from the table (to be used with LoadSortColumn), 0 means to load all records in one query, otherwise several queries are performed
 	dbHelper.LoadSortColumn = """"; //name of the column used to sort if LoadBurstSize is specified, 
+    dbHelper.UseDbDataAdapter = false; //If true, the DbDataAdapter.Fill() is used instead of the DataReader
 	dbHelper.ExcelOdbcDriver = ""Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}}; DBQ={0}""; //Excel ODBC Driver used to load table from Excel
 	dbHelper.DefaultEncoding = Encoding.Default; //encoding used to read the CSV file 
 	dbHelper.TrimText = true; //if true, all texts are trimmed when inserted in the destination table
@@ -519,22 +520,15 @@ namespace Seal.Forms
     dbHelper.MyGetTableCreateCommand = new CustomGetTableCreateCommand(delegate(DataTable table) {
         //return RootGetTableCreateCommand(table);
         //Root implementation may be the following...
-        if (dbHelper.DatabaseType == DatabaseType.MSSQLServer)
+        StringBuilder result = new StringBuilder();
+        foreach (DataColumn col in table.Columns)
         {
-            return dbHelper.MSSQLCreateTABLECommand(dbHelper.CleanName(table.TableName), table);
+            if (result.Length > 0) result.Append(',');
+            result.AppendFormat(""{0} "", dbHelper.GetTableColumnName(col));
+            result.Append(dbHelper.GetTableColumnType(col));
+            result.Append("" NULL"");
         }
-        else
-        {
-            StringBuilder result = new StringBuilder();
-            foreach (DataColumn col in table.Columns)
-            {
-                if (result.Length > 0) result.Append(',');
-                result.AppendFormat(""{0} "", dbHelper.GetTableColumnName(col));
-                result.Append(dbHelper.GetTableColumnType(col));
-                result.Append("" NULL"");
-            }
-            return string.Format(""CREATE TABLE {0} ({1})"", dbHelper.CleanName(table.TableName), result);
-        }
+        return string.Format(""CREATE TABLE {0} ({1})"", dbHelper.CleanName(table.TableName), result);
     });
 
     dbHelper.MyGetTableColumnNames = new CustomGetTableColumnNames(delegate(DataTable table) {
@@ -557,6 +551,7 @@ namespace Seal.Forms
     });
 
     dbHelper.MyGetTableColumnType = new CustomGetTableColumnType(delegate(DataColumn col) {
+        //if (col.ColumnName==""aColName"") return ""bigint""; 
         return dbHelper.RootGetTableColumnType(col);
     });
 
