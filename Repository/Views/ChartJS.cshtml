@@ -7,6 +7,7 @@
     ReportView modelView = report.CurrentModelView;
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
+    int serieIndex = 0;
 }
 
 @if (reportModel.HasChartJSSerie && page.Series.Count > 0 && modelView.GetBoolValue("show_charts"))
@@ -45,8 +46,8 @@
                         labels: [@Raw(page.ChartXLabels)],
                         label: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
                         data: [@Raw(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" || reportModel.ExecChartJSType == "radar" ? serie.ChartYSerieValues : (chartType != "horizontalBar" ? serie.ChartXYSerieValues: serie.ChartYXSerieValues))],
-                        borderColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
-                        backgroundColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + page.Series.IndexOf(serie) + "]"),
+                        borderColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + serieIndex + "]"),
+                        backgroundColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + serieIndex++ + "]"),
                         borderWidth: 1,
                         steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
                         fill: @Raw(view.GetValue("chartjs_fill")),

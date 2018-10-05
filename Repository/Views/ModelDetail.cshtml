@@ -16,7 +16,6 @@ else
     @foreach (ResultPage page in reportModel.Pages)
     {
         <div>
-
             <a name="@(view.ViewId + page.PageId)"></a>
             @if (page.PageTable != null && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0)
             {
@@ -26,7 +25,7 @@ else
                         {
                             ResultCell header = page.PageTable[0, i];
                             ResultCell value = page.PageTable[1, i];
-                            <td style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
+                            <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) >@Raw(value.HTMLValue)</td>
                         }
                     </tr>
                 </table>
@@ -43,8 +42,8 @@ else
                         ResultCell title = page.DataTable[0, i];
                         ResultCell value = page.DataTable[1, i];
                         <tr>
-                            <th style='@title.FinalCssStyle'>@Raw(title.HTMLValue):</th>
-                            <td style='@value.FinalCssStyle'>@Raw(value.HTMLValue)</td>
+                            <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle))>@Raw(title.HTMLValue):</th>
+                            <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) >@Raw(value.HTMLValue)</td>
                         </tr>
                     }
                 </table>

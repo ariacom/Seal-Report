@@ -1030,7 +1030,7 @@ namespace Seal.Model
             get
             {
                 BuildTexts();
-                return DisplayRestriction.Replace("[", "{").Replace("]", "}").Replace("'"," "); //Avoid this perturbing chars for editor....
+                return DisplayRestriction.Replace("[", "{").Replace("]", "}").Replace("'","\""); //Avoid this perturbing chars for editor....
             }
         }
 
