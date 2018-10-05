@@ -1132,6 +1132,14 @@ namespace Seal.Model
                     {
                         //Check that the new table has not already been reached
                         if (path.joins.Exists(i => i.RightTableGUID == (join.RightTableGUID == path.currentTable.GUID && join.IsBiDirectional ? join.LeftTableGUID : join.RightTableGUID))) continue;
+                        foreach (var join2 in path.joins)
+                        {
+                            if (join2.RightTableGUID == join.LeftTableGUID || join2.LeftTableGUID == join.LeftTableGUID)
+                            {
+                                continue;
+                            }
+                        }
+
 
                         MetaTable newTable = join.RightTable;
                         //if (_level == 1) Debug.WriteLine("{0} {1}", resultPath.Count, newTable.Name);

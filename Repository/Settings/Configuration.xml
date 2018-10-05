@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SealServerConfiguration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString>
   <TaskFolderName>Seal Report</TaskFolderName>
   <WebProductName>Seal Report</WebProductName>

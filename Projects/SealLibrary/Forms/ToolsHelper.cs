@@ -47,7 +47,7 @@ namespace Seal.Forms
         ToolStripMenuItem _synchronizeSchedulesCurrentUser = new ToolStripMenuItem() { Text = "Synchronize Report Schedules with the logged user...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler using the current logged user", AutoToolTip = true };
         ToolStripMenuItem _executeDesigner = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Report Designer", ToolTipText = "run the Report Designer application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D))), ShowShortcutKeys = true };
         ToolStripMenuItem _executeManager = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Server Manager", ToolTipText = "run the Server Manager application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M))), ShowShortcutKeys = true };
-        ToolStripMenuItem _openReportFolder = new ToolStripMenuItem() { Text = "Open Repository Report Folder", ToolTipText = "open the Report repository folder in Windows Explorer", AutoToolTip = true };
+        ToolStripMenuItem _openReportFolder = new ToolStripMenuItem() { Text = "Open Repository Reports Folder", ToolTipText = "open the Reports repository folder in Windows Explorer", AutoToolTip = true };
 
         public void InitHelpers(ToolStripMenuItem toolsMenuItem, bool forDesigner)
         {
