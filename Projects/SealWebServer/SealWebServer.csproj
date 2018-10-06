@@ -23,7 +23,8 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
-    <TypeScriptToolsVersion>2.2</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
