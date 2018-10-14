@@ -53,10 +53,9 @@ namespace Seal.Helpers
                 }
                 else if (e.Control && e.KeyCode == Keys.G)
                 {
-                    //Seems buggy
-                    //GoTo MyGoTo = new GoTo((Scintilla)sender);
-                    //MyGoTo.ShowGoToDialog();
-                    //e.SuppressKeyPress = true;
+                    GoTo MyGoTo = new GoTo((Scintilla)sender);
+                    MyGoTo.ShowGoToDialog();
+                    e.SuppressKeyPress = true;
                 }
             }
         }
@@ -76,8 +75,6 @@ namespace Seal.Helpers
                 scintilla.Margins[0].Width = 20;
                 scintilla.Styles[Style.LineNumber].ForeColor = Color.FromArgb(255, 128, 128, 128);  //Dark Gray
                 scintilla.Styles[Style.LineNumber].BackColor = Color.FromArgb(255, 228, 228, 228);  //Light Gray
-
-                scintilla.TextChanged += Scintilla_TextChanged;
             }
 
             if (lex == Lexer.Cpp)
@@ -168,12 +165,17 @@ namespace Seal.Helpers
                 scintilla.SetKeywords(5, @"sys objects sysobjects ");
             }
 
-            //Find replace dialog
-            FindReplace replaceDlg = new FindReplace();
-            replaceDlg.Scintilla = scintilla;
-            scintilla.Tag = replaceDlg;
+            //First initialization
+            if (scintilla.Tag == null)
+            {
+                //Find replace dialog
+                FindReplace replaceDlg = new FindReplace();
+                replaceDlg.Scintilla = scintilla;
+                scintilla.Tag = replaceDlg;
 
-            scintilla.KeyDown += Scintilla_KeyDown;
+                scintilla.KeyDown += Scintilla_KeyDown;
+                if (showLineNumber) scintilla.TextChanged += Scintilla_TextChanged;
+            }
         }
 
         static int MaxLineNumberCharLength = 0;

@@ -84,13 +84,10 @@ function scrollMessages() {
     }
 }
 
-
 function resize() {
     if (!printLayout) $("body").css("padding-top", $("#bar_top").height() + 15);
     setMessageHeight();
 }
-
-
 
 function showNavMenu() {
     $("#nav_menu")
@@ -147,6 +144,8 @@ function showPopupNavMenu(source, content, forChart) {
             left: (forChart ? source.clientX + document.body.scrollLeft + document.documentElement.scrollLeft: source.offset().left),
             top: (forChart ? source.clientY + document.body.scrollTop + document.documentElement.scrollTop: source.offset().top + source.height() + 3)
         });
+
+    setTimeout(function () { $popup.hide(); }, 3000);
 }
 
 

@@ -3,77 +3,11 @@
   <DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString>
   <TaskFolderName>Seal Report</TaskFolderName>
   <WebProductName>Seal Report</WebProductName>
-  <InitScript>@using Seal.Model
-@using System.Data
-@{
-    Report report = Model;
-	ReportExecutionLog log = Model;
-
-    //Script executed when the report is initialized at execution
-    if (log != null) {
-        log.LogMessage("Executing configuration 'Init Script'");
-ServerCommon1("");
-        //...
-    }
-
-    // e.g. to change the Thousand Separator or the Decimal Separator
-    	//report.ExecutionView.CultureInfo.NumberFormat.NumberGroupSeparator = "'";
-        //report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ".";	    
-}
-</InitScript>
-  <ReportCreationScript>@using Seal.Model
-@{
-    Report report = Model;
-ServerCommon1("");
-    //Script executed when the report is created
-    
-    //Remove the default CSV view
-    //if (report.Views.Count &gt; 1) {
-	//   report.Views.Remove(report.Views[1]);
-    //}
-   
-    //Change view parameter to display the information Tab
-	//report.ExecutionView.InitParameters(false);
-    //var parameter = report.ExecutionView.GetParameter("information_button");
-	//if (parameter != null) {
-	//	parameter.BoolValue = true;	
-	//}	
-}
-</ReportCreationScript>
-  <TasksScript>@using System.Text
-@functions {
-    //Before execution, this script will be added at the end of all task scripts...
-    public string ServerTask(string input) {
-		ServerCommon1("");
-        return input.Replace("__","_");
-    }
-}
-</TasksScript>
-  <CommonScripts>
-    <CommonScript>
-      <Name>name</Name>
-      <Script>@using System.Text
-@functions {
-    //Before execution, this script will be added at the end of all scripts executed...
-    public string ServerCommon1(string input) {
-        return input.Replace("__","_");  
-    }
-}
-</Script>
-    </CommonScript>
-    <CommonScript>
-      <Name>name2</Name>
-      <Script>@using System.Text
-@functions {
-    //Before execution, this script will be added at the end of all scripts executed...
-    public string ServerCommon2(string input) {
-		ServerCommon1("");
-        return input.Replace("__","_");
-    }
-}
-</Script>
-    </CommonScript>
-  </CommonScripts>
+  <IsLocal>true</IsLocal>
+  <InitScript />
+  <ReportCreationScript />
+  <TasksScript />
+  <CommonScripts />
   <DefaultCulture />
   <CsvSeparator />
   <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>

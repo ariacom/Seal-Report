@@ -883,7 +883,7 @@ namespace Seal.Model
                         {
                             JoinPath rootPath = new JoinPath() { currentTable = leftTable, joinsToUse = new SortedList<string, List<MetaJoin>>() };
                             //Build the list of joins to use
-                            foreach (var join in Source.MetaData.Joins)
+                            foreach (var join in Source.MetaData.Joins.Where(i => i.LeftTableGUID != null))
                             {
                                 if (!rootPath.joinsToUse.Keys.Contains(join.LeftTableGUID)) rootPath.joinsToUse.Add(join.LeftTableGUID, new List<MetaJoin>() { join });
                                 else
@@ -896,6 +896,7 @@ namespace Seal.Model
                                 {
                                     //Create a new join having the other left-right
                                     var newJoin = MetaJoin.Create();
+                                    newJoin.IsBiDirectional = false;
                                     newJoin.GUID = join.GUID;
                                     newJoin.Source = join.Source;
                                     newJoin.LeftTableGUID = join.RightTableGUID;
@@ -1130,16 +1131,11 @@ namespace Seal.Model
                     var joins = path.joinsToUse[path.currentTable.GUID].ToList();
                     foreach (var join in joins)
                     {
-                        //Check that the new table has not already been reached
-                        if (path.joins.Exists(i => i.RightTableGUID == (join.RightTableGUID == path.currentTable.GUID && join.IsBiDirectional ? join.LeftTableGUID : join.RightTableGUID))) continue;
-                        foreach (var join2 in path.joins)
+                        //Check that the new table reached for this join has not already been reached
+                        if (path.joins.Exists(i => i.RightTableGUID == join.RightTableGUID || i.LeftTableGUID == join.RightTableGUID))
                         {
-                            if (join2.RightTableGUID == join.LeftTableGUID || join2.LeftTableGUID == join.LeftTableGUID)
-                            {
-                                continue;
-                            }
+                            continue;
                         }
-
 
                         MetaTable newTable = join.RightTable;
                         //if (_level == 1) Debug.WriteLine("{0} {1}", resultPath.Count, newTable.Name);
