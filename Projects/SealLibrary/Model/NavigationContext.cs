@@ -91,6 +91,8 @@ namespace Seal.Model
                             restriction.MetaColumnGUID = src;
                             restriction.SetDefaults();
                             restriction.Operator = Operator.Equal;
+                            if (val == "") restriction.Operator = Operator.IsEmpty;
+                            else if (val == null) restriction.Operator = Operator.IsNull;
                             restriction.SetNavigationValue(val);
                             model.Restrictions.Add(restriction);
                             if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) AND ", model.Restriction);

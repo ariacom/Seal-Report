@@ -59,6 +59,8 @@ namespace Seal.Forms
                 frm.PropertyName = context.PropertyDescriptor.Name;
                 string template = "";
                 string valueToEdit = (value == null ? "" : value.ToString());
+                bool forceValueToEdit = false;
+
                 if (context.Instance is ReportModel)
                 {
                     ReportModel model = context.Instance as ReportModel;
@@ -82,11 +84,13 @@ namespace Seal.Forms
                     else
                     {
                         frm.checkSQLToolStripButton.Visible = false;
-                        if (value == null) value = "";
-                        if (context.PropertyDescriptor.Name == "SqlSelect" && string.IsNullOrEmpty(value.ToString())) valueToEdit = model.execSelect;
-                        if (context.PropertyDescriptor.Name == "SqlFrom" && string.IsNullOrEmpty(value.ToString())) valueToEdit = "FROM " + model.execFromClause.ToString();
-                        if (context.PropertyDescriptor.Name == "SqlGroupBy" && string.IsNullOrEmpty(value.ToString())) valueToEdit = "GROUP BY " + model.execGroupByClause.ToString();
-                        if (context.PropertyDescriptor.Name == "SqlOrderBy" && string.IsNullOrEmpty(value.ToString())) valueToEdit = "ORDER BY " + model.execOrderByClause.ToString();
+                        forceValueToEdit = true;
+                        var value2 = value;
+                        if (value2 == null) value2 = "";
+                        if (context.PropertyDescriptor.Name == "SqlSelect" && string.IsNullOrEmpty(value2.ToString())) valueToEdit = model.execSelect;
+                        if (context.PropertyDescriptor.Name == "SqlFrom" && string.IsNullOrEmpty(value2.ToString())) valueToEdit = "FROM " + model.execFromClause.ToString();
+                        if (context.PropertyDescriptor.Name == "SqlGroupBy" && string.IsNullOrEmpty(value2.ToString())) valueToEdit = "GROUP BY " + model.execGroupByClause.ToString();
+                        if (context.PropertyDescriptor.Name == "SqlOrderBy" && string.IsNullOrEmpty(value2.ToString())) valueToEdit = "ORDER BY " + model.execOrderByClause.ToString();
                     }
                 }
                 else if (context.Instance is MetaJoin)
@@ -100,7 +104,7 @@ namespace Seal.Forms
                     MetaEnum anEnum = context.Instance as MetaEnum;
                     if (value == null || string.IsNullOrEmpty(value.ToString()))
                     {
-                        value = "";
+                        forceValueToEdit = true;
                         valueToEdit = anEnum.DefaultSQL;
                     }
                 }
@@ -127,7 +131,7 @@ namespace Seal.Forms
                     frm.clearToolStripButton.Visible = false;
                 }
 
-                if (value != null) frm.sqlTextBox.Text = valueToEdit.ToString();
+                if (value != null || forceValueToEdit) frm.sqlTextBox.Text = valueToEdit.ToString();
 
                 if (context.PropertyDescriptor.IsReadOnly) frm.SetReadOnly();
                 else if (!string.IsNullOrEmpty(template))

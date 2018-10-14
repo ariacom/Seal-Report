@@ -952,8 +952,8 @@ namespace Seal.Model
                     _displayText += " " + GetDisplayValue(Value1, FinalDate1);
                     _displayRestriction += " " + GetDisplayRestriction(Value1, Date1Keyword, Date1);
 
-                    _displayText += " " + Model.Report.Translate("AND") + " " + GetDisplayValue(Value2, FinalDate2);
-                    _displayRestriction += " " + Model.Report.Translate("AND") + " " + GetDisplayRestriction(Value2, Date2Keyword, Date2);
+                    _displayText += " " + Model.Report.Translate("and") + " " + GetDisplayValue(Value2, FinalDate2);
+                    _displayRestriction += " " + Model.Report.Translate("and") + " " + GetDisplayRestriction(Value2, Date2Keyword, Date2);
                     if (Model.Source.IsNoSQL)
                     {
                         //Between is not supported for NoSQL
@@ -1030,7 +1030,7 @@ namespace Seal.Model
             get
             {
                 BuildTexts();
-                return DisplayRestriction.Replace("[", "{").Replace("]", "}").Replace("'","\""); //Avoid this perturbing chars for editor....
+                return DisplayRestriction.Replace("[", "{").Replace("]", "}"); //Avoid this perturbing chars for editor....
             }
         }
 
