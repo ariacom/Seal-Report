@@ -32,6 +32,7 @@ namespace Seal.Forms
             Icon = Repository.ProductIcon;
 
             this.Load += TemplateTextEditorForm_Load;
+            this.FormClosing += TemplateTextEditorForm_FormClosing;
             this.FormClosed += TemplateTextEditorForm_FormClosed;
             this.textBox.KeyDown += TextBox_KeyDown;
             this.KeyDown += TextBox_KeyDown;
@@ -64,10 +65,20 @@ namespace Seal.Forms
             LastLocation = Location;
         }
 
+        private void TemplateTextEditorForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!CheckClose())
+            {
+                e.Cancel = true;
+            }
+        }
+
+
         private void cancelToolStripButton_Click(object sender, EventArgs e)
         {
             if (CheckClose())
             {
+                textBox.SetSavePoint();
                 DialogResult = DialogResult.Cancel;
                 Close();
             }
@@ -90,6 +101,7 @@ namespace Seal.Forms
             } 
 
             DialogResult = textBox.Modified ? DialogResult.OK : DialogResult.Cancel;
+            textBox.SetSavePoint();
             Close();
         }
 
