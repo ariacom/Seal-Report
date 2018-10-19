@@ -38,6 +38,7 @@ namespace Seal.Forms
 
             this.Load += SQLEditorForm_Load;
             this.FormClosed += SQLEditorForm_FormClosed;
+            this.FormClosing += SQLEditorForm_FormClosing;
             this.sqlTextBox.KeyDown += TextBox_KeyDown;
             this.KeyDown += TextBox_KeyDown;
         }
@@ -69,6 +70,14 @@ namespace Seal.Forms
             LastLocation = Location;
         }
 
+        private void SQLEditorForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!CheckClose())
+            {
+                e.Cancel = true;
+            }
+        }
+
         public void SetReadOnly()
         {
             sqlTextBox.ReadOnly = true;
@@ -84,6 +93,7 @@ namespace Seal.Forms
         {
             if (CheckClose())
             {
+                sqlTextBox.SetSavePoint();
                 DialogResult = DialogResult.Cancel;
                 Close();
             }
@@ -91,6 +101,7 @@ namespace Seal.Forms
 
         private void okToolStripButton_Click(object sender, EventArgs e)
         {
+            sqlTextBox.SetSavePoint();
             DialogResult = DialogResult.OK;
             Close();
         }
