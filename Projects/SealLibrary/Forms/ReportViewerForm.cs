@@ -77,7 +77,7 @@ namespace Seal.Forms
 
         public ReportViewerForm(bool exitOnClose, bool showScriptErrors)
         {
-            //WebBrowserHelper.FixBrowserVersion();
+            WebBrowserHelper.FixBrowserVersion();
 
             InitializeComponent();
 
