@@ -145,6 +145,7 @@
     <Compile Include="Helpers\PropertyGridHelper.cs" />
     <Compile Include="Helpers\RazorHelper.cs" />
     <Compile Include="Helpers\ScintillaHelper.cs" />
+    <Compile Include="Helpers\ScintillaRestrictionLexer.cs" />
     <Compile Include="Helpers\TreeViewEditorHelper.cs" />
     <Compile Include="Forms\SQLEditorForm.cs">
       <SubType>Form</SubType>
