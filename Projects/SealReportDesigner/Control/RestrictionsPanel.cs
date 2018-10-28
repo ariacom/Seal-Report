@@ -40,7 +40,7 @@ namespace Seal.Controls
         public RestrictionsPanel()
         {
             InitializeComponent();
-            ScintillaHelper.Init(restrictionsTextBox, Lexer.Sql, false);
+            ScintillaHelper.Init(restrictionsTextBox, Lexer.Container, false);
         }
 
         public void Init(ModelPanel modelPanel)
