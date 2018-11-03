@@ -122,7 +122,7 @@ namespace Seal.Forms
             if (previousReport != null && render)
             {
                 //force execution
-                var parameter = _report.ExecutionView.Parameters.FirstOrDefault(i => i.Name ==Parameter.ForceExecutionParameter);
+                var parameter = _report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ForceExecutionParameter);
                 if (parameter != null) parameter.BoolValue = true;
 
                 //set previous data tables and restrictions
@@ -217,7 +217,7 @@ namespace Seal.Forms
                             if (_report.ExecutionView.GetValue("messages_mode") != "disabled" && messages != null)
                             {
                                 messages.SetAttribute("innerHTML", Helper.ToHtml(_report.ExecutionMessages));
-                                messages.ScrollTop = messages.ScrollRectangle.Height;
+                                if (_report.ExecutionView.GetBoolValue(Parameter.AutoScrollParameter)) messages.ScrollTop = messages.ScrollRectangle.Height;
                             }
                             setProgressBarInformation(ReportExecution.HtmlId_progress_bar, _report.ExecutionProgression, _report.ExecutionProgressionMessage);
                             setProgressBarInformation(ReportExecution.HtmlId_progress_bar_tasks, _report.ExecutionProgressionTasks, _report.ExecutionProgressionTasksMessage);
@@ -306,7 +306,7 @@ namespace Seal.Forms
                             string viewid = webBrowser.Document.All[ReportExecution.HtmlId_viewid_tableload].GetAttribute("value");
                             string pageid = webBrowser.Document.All[ReportExecution.HtmlId_pageid_tableload].GetAttribute("value");
                             HtmlElement dataload = webBrowser.Document.All[ReportExecution.HtmlId_parameter_tableload];
-                           var view = report.ExecutionView.GetView(viewid);
+                            var view = report.ExecutionView.GetView(viewid);
                             if (view != null && view.Model != null)
                             {
                                 var page = view.Model.Pages.FirstOrDefault(i => i.PageId == pageid);

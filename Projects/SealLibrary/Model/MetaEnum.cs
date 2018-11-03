@@ -39,7 +39,6 @@ namespace Seal.Model
                 GetProperty("Sql").SetIsBrowsable(IsSQL);
                 GetProperty("Values").SetIsBrowsable(IsEditable);
                 GetProperty("NumberOfValues").SetIsBrowsable(true);
-                GetProperty("Width").SetIsBrowsable(true);
 
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
@@ -141,15 +140,6 @@ namespace Seal.Model
         public int NumberOfValues
         {
             get { return Values.Count; }
-        }
-
-        private int _width = 160;
-        [DefaultValue(160)]
-        [Category("Display"), DisplayName("Width in pixels"), Description("The width of the list when displayed in the restrictions panel."), Id(1, 3)]
-        public int Width
-        {
-            get { return _width; }
-            set { _width = value; }
         }
 
         [XmlIgnore]

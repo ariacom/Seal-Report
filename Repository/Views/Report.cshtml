@@ -90,10 +90,12 @@
         var isExecuting = @Helper.ToJS(report.IsExecuting);
         var isCancel = @Helper.ToJS(report.Cancel);
         var printLayout = @Helper.ToJS(report.PrintLayout);
+        var autoscroll = false;
 
         var rootViewId = '@view.ViewId';
 
         //text
+        var messagesText = '@report.Translate("Messages")';
         var startingExecText = '@report.Translate("Starting execution...")';
         var cancelText = '@report.Translate("Cancel")';
 
