@@ -77,10 +77,12 @@ function setMessageHeight() {
 }
 
 function scrollMessages() {
-    var $messages = $("#execution_messages");
-    setMessageHeight();
-    if ($messages && $messages[0] && $messages[0].scrollHeight) {
-        setTimeout(function () { $messages.scrollTop($messages[0].scrollHeight); }, 200);
+    if ($('#message_autoscroll').is(":checked")) {
+        var messages = $("#execution_messages");
+        setMessageHeight();
+        if (messages && messages[0] && messages[0].scrollHeight) {
+            setTimeout(function () { messages.scrollTop(messages[0].scrollHeight); }, 200);
+        }
     }
 }
 
@@ -161,6 +163,44 @@ function initNavCells() {
         });
 }
 
+function initMessageMenu() {
+    var messages = $("#execution_messages");
+    messages.mouseenter(function (e) {
+        var $menu = $("#message_popupmenu")
+        $menu
+            .mouseenter(function () {
+                $menu.show();
+            })
+            .mouseleave(function () {
+                $menu.hide();
+            });
+
+        $menu
+            .show()
+            .css({
+                position: "absolute",
+                "z-index": "140",
+                left: $("#message_div").width() - $menu.width() - 80,
+                top: $("#message_div").offset().top
+            });
+        ;
+    });
+    messages.mouseleave(function () {
+        $("#message_popupmenu").hide();
+    });
+
+    //autoscroll
+    $("#message_autoscroll").click(function () {
+        submitViewParameter(rootViewId, "messages_autoscroll", $('#message_autoscroll').is(":checked"));
+     });
+
+    //message options
+    $("#message_export").click(function () {
+        var myWindow = window.open('');
+        myWindow.document.write("<head><title>" + messagesText + "</title></head><div id='messages'>" + $("#execution_messages").html() + "<div>");
+    });
+}
+
 function executeTimer() {
     if (executionTimer != null) {
         var $messages = $("#execution_messages");
@@ -180,7 +220,7 @@ function executeTimer() {
                         setProgressBarMessage("#progress_bar", data.progression, data.progression_message, "progress-bar-success");
                         setProgressBarMessage("#progress_bar_tasks", data.progression_tasks, data.progression_tasks_message, "progress-bar-primary");
                         setProgressBarMessage("#progress_bar_models", data.progression_models, data.progression_models_message, "progress-bar-info");
-                        if (data.execution_messages != null && $("#execution_messages").length) {
+                        if (data.execution_messages != null && $messages.length) {
                             $messages.removeClass('hidden');
                             $messages.html(data.execution_messages);
                             scrollMessages();
@@ -215,8 +255,11 @@ function executeReport(nav) {
     if (executionTimer == null) {
         $("#information_div").html("");
 
-        $("#execution_messages").addClass('hidden');
-        $("#execution_messages").html("");
+        var messages = $("#execution_messages");
+        if (messages.length) {
+            messages.addClass('hidden');
+            messages.html("");
+        }
 
         $(".alert-danger").addClass('hidden');
         $(".alert-danger").html("");
@@ -456,6 +499,7 @@ $(document).ready(function () {
         return false;
     });
     if (!printLayout) $('#back-to-top').tooltip('show');
+    initMessageMenu();
     scrollMessages();
 
     $("#main_container").css("display", "block");

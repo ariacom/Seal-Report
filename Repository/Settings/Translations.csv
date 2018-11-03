@@ -110,6 +110,8 @@ Report;Is not Null;;N'est pas Null;;;Er ikke Null
 Report;Is Null;;Est Null;;;Er Null
 Report;Is smaller or equal than;;Est plus petit ou égal à;;;Er mindre eller lik enn
 Report;Is smaller than;;Est plus petit que;;;Er mindre enn
+Report;Auto Scroll enabled;;Défilement automatique;;;
+Report;Export messages...;;Exporter les messages...;;;
 Web;Actions;;Actions;;;Handling
 Web;Aggregate;;Agrégat;;;Summér
 Web;BCC;;BCC;;;BCC

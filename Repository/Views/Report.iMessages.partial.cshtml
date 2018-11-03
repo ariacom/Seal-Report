@@ -9,6 +9,11 @@
 <!--message_div-->
 @if (view.GetValue("messages_mode") != "disabled")
 {
+    <ul id='message_popupmenu' class='dropdown-menu' role='menu'>
+        <li><label class="checkbox-inline" style="margin-left:5px"><input id="message_autoscroll" type="checkbox" @(report.ExecutionView.GetBoolValue(Parameter.AutoScrollParameter) ? "checked" : "")>@Raw(Helper.ToHtml(report.Translate("Auto Scroll enabled")))</label></li>
+        <li><a id="message_export" class="message_options" style="margin-left:5px" href='#'>@Raw(Helper.ToHtml(report.Translate("Export messages...")))</a></li>
+    </ul>
+
     <div id="message_div" class="tab-pane fade @(report.ShowExecutionMessages ? "in active" : "")">
         <div id="execution_messages" class="alert alert-info" role="alert">@Raw(Helper.ToHtml(report.ExecutionMessages))</div>
     </div>
