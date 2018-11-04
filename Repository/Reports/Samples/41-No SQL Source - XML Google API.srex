@@ -5,29 +5,19 @@
     <ReportSource>
       <GUID>db9367b9-fc0d-476a-b2bb-7343528a5cb8</GUID>
       <Name>Google API Source</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections>
         <MetaConnection>
           <GUID>e90c1623-d406-462f-9ec7-e95e42144eeb</GUID>
           <Name>XML URL</Name>
-          <DatabaseType>Standard</DatabaseType>
           <ConnectionString>https://maps.googleapis.com/maps/api/directions/xml?origin=Toronto&amp;destination=Montreal</ConnectionString>
-          <DateTimeFormat>yyyy-MM-dd HH:mm:ss</DateTimeFormat>
           <UserName />
           <Password />
         </MetaConnection>
       </Connections>
       <ConnectionGUID>e90c1623-d406-462f-9ec7-e95e42144eeb</ConnectionGUID>
-      <IsDefault>false</IsDefault>
       <IsNoSQL>true</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables>
           <MetaTable>
@@ -52,136 +42,118 @@
             <LoadScript>//Load script is in the model as we are using Restrictions...</LoadScript>
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
-            <KeepColumnNames>false</KeepColumnNames>
             <MustRefresh>false</MustRefresh>
-            <IgnorePrePostError>false</IgnorePrePostError>
             <Columns>
               <MetaColumn>
                 <GUID>fe7d41a0-f5db-4fc0-9be8-79c1967c81d6</GUID>
                 <Name>travel_mode</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
+                <Tag />
                 <DisplayName>Travel mode</DisplayName>
                 <DisplayOrder>7</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
-                <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>ac8140a2-599c-458d-a3a2-46f271f43681</GUID>
                 <Name>duration</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
+                <Tag />
                 <DisplayName>Duration</DisplayName>
                 <DisplayOrder>8</DisplayOrder>
                 <NumericStandardFormat>Custom</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format>0.0 min</Format>
-                <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>6c4535db-2fab-4861-84b6-43fa0611558e</GUID>
                 <Name>duration_text</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
+                <Tag />
                 <DisplayName>Duration text</DisplayName>
                 <DisplayOrder>9</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format>d</Format>
-                <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>69a1c569-f41d-4dde-93ad-160e0286508b</GUID>
                 <Name>html_instructions</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
+                <Tag />
                 <DisplayName>Html instructions</DisplayName>
                 <DisplayOrder>10</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
-                <HasHTMLTags>true</HasHTMLTags>
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>b2696c8a-c63b-4a8b-b1bd-c55aceb7ba8f</GUID>
                 <Name>distance</Name>
                 <Type>Numeric</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
+                <Tag />
                 <DisplayName>Distance</DisplayName>
                 <DisplayOrder>11</DisplayOrder>
                 <NumericStandardFormat>Custom</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format>0.000 km</Format>
-                <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>90fb42ea-fa69-4ca6-972a-22197341ee9a</GUID>
                 <Name>distance_text</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
+                <Tag />
                 <DisplayName>Distance text</DisplayName>
                 <DisplayOrder>12</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
-                <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>d4a9b5a9-8749-4187-98ab-b9e3be4c15c9</GUID>
                 <Name>from</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
+                <Tag />
                 <DisplayName>From</DisplayName>
                 <DisplayOrder>13</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
-                <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
               <MetaColumn>
                 <GUID>4afa11e7-49b0-46e4-8004-c60859ad8a27</GUID>
                 <Name>to</Name>
                 <Type>Text</Type>
-                <IsAggregate>false</IsAggregate>
                 <Category>Master</Category>
+                <Tag />
                 <DisplayName>To</DisplayName>
                 <DisplayOrder>14</DisplayOrder>
                 <NumericStandardFormat>Numeric0</NumericStandardFormat>
                 <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
                 <Format />
-                <HasHTMLTags xsi:nil="true" />
                 <DrillChildren />
-                <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
                 <SubReports />
               </MetaColumn>
             </Columns>
@@ -193,10 +165,6 @@
             <GUID>654c209a-4747-496f-8332-3a8850ca0e17</GUID>
             <Name>String Col</Name>
             <DefaultSQL>select col1,col2 from table order by col2</DefaultSQL>
-            <IsDynamic>false</IsDynamic>
-            <IsDbRefresh>false</IsDbRefresh>
-            <UsePosition>false</UsePosition>
-            <Translate>false</Translate>
             <Values>
               <MetaEV>
                 <Id>a string value</Id>
@@ -207,7 +175,6 @@
                 <Val>another string value</Val>
               </MetaEV>
             </Values>
-            <Width>160</Width>
           </MetaEnum>
         </Enums>
       </MetaData>
@@ -218,7 +185,6 @@
       <GUID>d826ff6e-821a-4834-aab8-d50ec18a6024</GUID>
       <Name>model</Name>
       <SourceGUID>db9367b9-fc0d-476a-b2bb-7343528a5cb8</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
       <LoadScript>@using Seal.Model
 @using Seal.Helpers
 @using System.Data
@@ -266,207 +232,86 @@
 	log.LogMessage("{0} step(s) loaded", table.Rows.Count);
 }
 </LoadScript>
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>9d9ac495-6d01-4bca-8aa8-6f7fcba48246</GUID>
           <Name>travel_mode</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format />
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Page</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>fe7d41a0-f5db-4fc0-9be8-79c1967c81d6</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>2e069338-23d8-415f-a2a4-243cba76ea29</GUID>
           <Name>duration_text</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format />
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>6c4535db-2fab-4861-84b6-43fa0611558e</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>5da5f72c-649d-4c22-b60b-304e4a8ae771</GUID>
           <Name>distance_text</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format />
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>90fb42ea-fa69-4ca6-972a-22197341ee9a</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>ef01030b-bb45-49d0-855a-d09b1cddf519</GUID>
           <Name>html_instructions</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format />
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>69a1c569-f41d-4dde-93ad-160e0286508b</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>5ae6cec1-ebf5-4681-af96-f2414f29a36d</GUID>
           <Name>duration</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format>0.0 min</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Data</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <ShowTotal>Column</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>ac8140a2-599c-458d-a3a2-46f271f43681</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>d8a3e518-7c3a-4161-84a8-2b32037560c0</GUID>
           <Name>distance</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format>0.000 km</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Data</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
-          <AggregateFunction>Sum</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
           <ShowTotal>Column</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>b2696c8a-c63b-4a8b-b1bd-c55aceb7ba8f</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[78fadace-8c6f-4ab7-8b68-3854a4a96416]
@@ -475,41 +320,17 @@ AND [57ec3163-472e-4a07-ad51-be0e924eca38]</Restriction>
         <ReportRestriction>
           <GUID>78fadace-8c6f-4ab7-8b68-3854a4a96416</GUID>
           <Name>from</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format />
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>d4a9b5a9-8749-4187-98ab-b9e3be4c15c9</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
-          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
-          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
-          <UseAsParameter>false</UseAsParameter>
-          <Operator>Equal</Operator>
           <Value1>Toronto</Value1>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -520,41 +341,17 @@ AND [57ec3163-472e-4a07-ad51-be0e924eca38]</Restriction>
         <ReportRestriction>
           <GUID>57ec3163-472e-4a07-ad51-be0e924eca38</GUID>
           <Name>to</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format />
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>4afa11e7-49b0-46e4-8004-c60859ad8a27</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
-          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
-          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
-          <UseAsParameter>false</UseAsParameter>
-          <Operator>Equal</Operator>
           <Value1>Montreal</Value1>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -569,6 +366,7 @@ AND [57ec3163-472e-4a07-ad51-be0e924eca38]</Restriction>
   </Models>
   <Outputs />
   <Tasks />
+  <CommonScripts />
   <TasksScript />
   <Views>
     <ReportView>
@@ -578,26 +376,169 @@ AND [57ec3163-472e-4a07-ad51-be0e924eca38]</Restriction>
         <ReportView>
           <GUID>a029c212-4cb4-4f98-a029-9ec8a53ac76b</GUID>
           <Name>Model HTML View</Name>
-          <Views />
+          <Views>
+            <ReportView>
+              <GUID>95b53059-f5d6-4385-ab1d-c754d0257f27</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>8251da9c-7eea-46fe-8b47-982a4c367c5d</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>f3d4f7e3-f05d-4579-935c-b72ae53b3460</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>7fa185f4-a1c3-4cde-9471-608293aca10d</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>2abedab1-5782-4f02-a162-f1f98b87925c</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>1cd82b02-6ec7-4e07-ba77-3e06d35c7737</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
           <ModelGUID>d826ff6e-821a-4834-aab8-d50ec18a6024</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <UseCustomTemplate>false</UseCustomTemplate>
+          <PartialTemplates />
           <Parameters />
           <CultureName />
-          <CSS />
-          <SortOrder>1</SortOrder>
-          <ChartConfigurationXml />
+          <SortOrder>2</SortOrder>
           <PdfConfigurations />
-          <ExcelConfigurations />
+          <ExcelConfigurations>
+            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+          </ExcelConfigurations>
+        </ReportView>
+        <ReportView>
+          <GUID>4e19a50e-d240-46d4-93ad-3f20acefa54f</GUID>
+          <Name>Free</Name>
+          <Views />
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>The 'Load Script' of the model contains the code that modifies the result table.
+&lt;br&gt;
+This sample works not longer as Google requires new a key API to call https://maps.googleapis.com/maps/api/directions/xml
+</CustomTemplate>
+          <PartialTemplates />
+          <Parameters />
+          <CultureName />
+          <SortOrder>1</SortOrder>
+          <PdfConfigurations />
+          <ExcelConfigurations>
+            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+          </ExcelConfigurations>
         </ReportView>
       </Views>
-      <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
+      <ModelGUID />
+      <PartialTemplates />
       <Parameters>
         <Parameter>
           <Name>force_execution</Name>
@@ -605,13 +546,42 @@ AND [57ec3163-472e-4a07-ad51-be0e924eca38]</Restriction>
         </Parameter>
       </Parameters>
       <CultureName />
-      <CSS />
       <SortOrder>0</SortOrder>
       <PdfConfigurations />
-      <ExcelConfigurations />
+      <ExcelConfigurations>
+        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+      </ExcelConfigurations>
     </ReportView>
   </Views>
   <DisplayName />
+  <InitScript />
   <ViewGUID>0d299984-b48d-4256-afef-eb8d8d03527d</ViewGUID>
   <Schedules />
 </Report>

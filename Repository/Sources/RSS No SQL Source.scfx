@@ -5,20 +5,20 @@
   <Connections>
     <MetaConnection>
       <GUID>e90c1623-d406-462f-9ec7-e95e42144eeb</GUID>
-      <Name>RSS le monde</Name>
-      <ConnectionString>http://www.lemonde.fr/rss/une.xml</ConnectionString>
+      <Name>RSS BBC Education</Name>
+      <ConnectionString>http://feeds.bbci.co.uk/news/education/rss.xml</ConnectionString>
       <UserName />
       <Password />
     </MetaConnection>
     <MetaConnection>
       <GUID>74f3e241-10fd-4c63-8721-00073801fd48</GUID>
-      <Name>RSS libération</Name>
-      <ConnectionString>http://liberation.fr.feedsportal.com/c/32268/fe.ed/rss.liberation.fr/rss/latest/</ConnectionString>
+      <Name>RSS BBC World</Name>
+      <ConnectionString>http://feeds.bbci.co.uk/news/world/rss.xml</ConnectionString>
       <UserName />
       <Password />
     </MetaConnection>
   </Connections>
-  <ConnectionGUID>e90c1623-d406-462f-9ec7-e95e42144eeb</ConnectionGUID>
+  <ConnectionGUID>74f3e241-10fd-4c63-8721-00073801fd48</ConnectionGUID>
   <IsNoSQL>true</IsNoSQL>
   <InitScript />
   <TasksScript />
@@ -88,7 +88,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
-            <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -103,7 +102,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDateTime</DateTimeStandardFormat>
             <Format>g</Format>
-            <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -118,7 +116,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
-            <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -133,7 +130,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
-            <HasHTMLTags>true</HasHTMLTags>
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -148,7 +144,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
-            <HasHTMLTags>true</HasHTMLTags>
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -163,7 +158,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
-            <HasHTMLTags>false</HasHTMLTags>
             <DrillChildren />
             <SubReports />
           </MetaColumn>
@@ -178,7 +172,6 @@
             <NumericStandardFormat>Numeric0</NumericStandardFormat>
             <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
             <Format />
-            <HasHTMLTags>true</HasHTMLTags>
             <DrillChildren />
             <SubReports />
           </MetaColumn>

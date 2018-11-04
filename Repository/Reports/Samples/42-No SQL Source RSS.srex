@@ -5,19 +5,11 @@
     <ReportSource>
       <GUID>db9367b9-fc0d-476a-b2bb-7343528a5cb8</GUID>
       <Name>RSS Source (Repository)</Name>
-      <ConnectionFolder />
-      <TableFolder />
-      <CategoryFolder />
-      <JoinFolder />
-      <EnumFolder />
       <Connections />
-      <ConnectionGUID>e90c1623-d406-462f-9ec7-e95e42144eeb</ConnectionGUID>
-      <IsDefault>false</IsDefault>
+      <ConnectionGUID>74f3e241-10fd-4c63-8721-00073801fd48</ConnectionGUID>
       <IsNoSQL>true</IsNoSQL>
-      <NumericFormat>N0</NumericFormat>
-      <DateTimeFormat>d</DateTimeFormat>
+      <InitScript />
       <TasksScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <MetaData>
         <Tables />
         <Joins />
@@ -31,111 +23,48 @@
       <GUID>d826ff6e-821a-4834-aab8-d50ec18a6024</GUID>
       <Name>model</Name>
       <SourceGUID>db9367b9-fc0d-476a-b2bb-7343528a5cb8</SourceGUID>
-      <ConnectionGUID>2</ConnectionGUID>
-      <LoadScript />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>10385058-cfcf-4ebe-a353-06031307622e</GUID>
           <Name>Date</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format>g</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>64825607-9931-481c-ad2e-ce9dcfd9472f</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>367fb26d-b9f7-486a-ae38-97c34df389a0</GUID>
           <Name>TitleWithLink</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
+          <Tag />
           <DisplayName>Title</DisplayName>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
           <Format />
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>edfc91bc-276c-4383-be8b-9efb53d3c640</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
         <ReportElement>
           <GUID>b5d58ee9-3c38-4ebc-8115-1c8c8044ce6c</GUID>
           <Name>Summary</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format />
-          <HasHTMLTags>true</HasHTMLTags>
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <SortOrder>Automatic Ascendant</SortOrder>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>0d1a7442-53c0-490f-b132-dcfe575b8e03</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
         </ReportElement>
       </Elements>
       <Restriction>[cd33e185-0945-4130-a716-fe69dfdac5ec]
@@ -145,40 +74,17 @@ AND [c532243a-6225-4d94-a94a-dbce108ea840]</Restriction>
         <ReportRestriction>
           <GUID>cd33e185-0945-4130-a716-fe69dfdac5ec</GUID>
           <Name>Title</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format />
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>1fb35472-7ac6-4117-b22a-45b243bbced3</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
-          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
-          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
-          <UseAsParameter>false</UseAsParameter>
           <Operator>Contains</Operator>
           <Value1 />
           <EnumValues />
@@ -190,40 +96,17 @@ AND [c532243a-6225-4d94-a94a-dbce108ea840]</Restriction>
         <ReportRestriction>
           <GUID>da2ea9c5-a7fe-4614-8b67-8e822c8c9b1d</GUID>
           <Name>Summary</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format />
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Count</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>0d1a7442-53c0-490f-b132-dcfe575b8e03</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
-          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
-          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe />
-          <UseAsParameter>false</UseAsParameter>
           <Operator>Contains</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -234,40 +117,17 @@ AND [c532243a-6225-4d94-a94a-dbce108ea840]</Restriction>
         <ReportRestriction>
           <GUID>c532243a-6225-4d94-a94a-dbce108ea840</GUID>
           <Name>Date</Name>
-          <Type>Default</Type>
-          <IsAggregate>false</IsAggregate>
           <Category>Master</Category>
-          <DisplayOrder>0</DisplayOrder>
-          <NumericStandardFormat>Default</NumericStandardFormat>
-          <DateTimeStandardFormat>Default</DateTimeStandardFormat>
+          <Tag />
           <Format>g</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
-          <DrillUpOnlyIfDD>false</DrillUpOnlyIfDD>
           <SubReports />
           <PivotPosition>Row</PivotPosition>
-          <TypeEd>Default</TypeEd>
           <AggregateFunction>Max</AggregateFunction>
-          <CalculationOption>No</CalculationOption>
-          <ShowTotal>No</ShowTotal>
-          <TotalAggregateFunction>Sum</TotalAggregateFunction>
-          <SerieDefinition>None</SerieDefinition>
-          <AxisUseValues>true</AxisUseValues>
-          <SerieType>Point</SerieType>
           <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <XAxisType>Primary</XAxisType>
-          <YAxisType>Primary</YAxisType>
-          <SerieSortOrder>Ascending</SerieSortOrder>
-          <SerieSortType>Y</SerieSortType>
           <MetaColumnGUID>64825607-9931-481c-ad2e-ce9dcfd9472f</MetaColumnGUID>
-          <DrillEnabled>true</DrillEnabled>
-          <SubReportsEnabled>true</SubReportsEnabled>
           <Prompt>Prompt</Prompt>
-          <TypeRe>Default</TypeRe>
-          <DateTimeStandardFormatRe>Default</DateTimeStandardFormatRe>
-          <NumericStandardFormatRe>Default</NumericStandardFormatRe>
           <FormatRe>g</FormatRe>
-          <UseAsParameter>false</UseAsParameter>
           <Operator>Between</Operator>
           <EnumValues />
           <Date1>0001-01-01T00:00:00</Date1>
@@ -282,6 +142,7 @@ AND [c532243a-6225-4d94-a94a-dbce108ea840]</Restriction>
   </Models>
   <Outputs />
   <Tasks />
+  <CommonScripts />
   <TasksScript />
   <Views>
     <ReportView>
@@ -291,26 +152,94 @@ AND [c532243a-6225-4d94-a94a-dbce108ea840]</Restriction>
         <ReportView>
           <GUID>a029c212-4cb4-4f98-a029-9ec8a53ac76b</GUID>
           <Name>Model HTML View</Name>
-          <Views />
+          <Views>
+            <ReportView>
+              <GUID>9fee4192-eee9-4549-89eb-b36178246c62</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>7df6dc23-3515-49f6-a273-03cdb0ed450f</GUID>
+                  <Name>Page Table</Name>
+                  <Views />
+                  <TemplateName>Page Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>8e81cdf1-f43f-4268-9ab0-97b6ac86c423</GUID>
+                  <Name>Chart JS</Name>
+                  <Views />
+                  <TemplateName>Chart JS</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>2</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>c502615e-a109-46b9-a299-04e2bd4952fd</GUID>
+                  <Name>Chart NVD3</Name>
+                  <Views />
+                  <TemplateName>Chart NVD3</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>3</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>7eca308e-b6b4-4aca-b027-1c01cf737e30</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>4</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+                <ReportView>
+                  <GUID>38120df1-f8ec-49f6-bac4-72e61b478a8c</GUID>
+                  <Name>Data Table</Name>
+                  <Views />
+                  <TemplateName>Data Table</TemplateName>
+                  <PartialTemplates />
+                  <Parameters />
+                  <CultureName />
+                  <SortOrder>5</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations />
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <PdfConfigurations />
+              <ExcelConfigurations />
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
           <ModelGUID>d826ff6e-821a-4834-aab8-d50ec18a6024</ModelGUID>
-          <TemplateName>Model HTML</TemplateName>
-          <ThemeName />
-          <UseCustomConfiguration>false</UseCustomConfiguration>
-          <UseCustomTemplate>false</UseCustomTemplate>
+          <PartialTemplates />
           <Parameters />
           <CultureName />
-          <CSS />
           <SortOrder>1</SortOrder>
-          <ChartConfigurationXml />
           <PdfConfigurations />
           <ExcelConfigurations />
         </ReportView>
       </Views>
-      <ModelGUID />
       <TemplateName>Report</TemplateName>
-      <ThemeName />
-      <UseCustomConfiguration>false</UseCustomConfiguration>
-      <UseCustomTemplate>false</UseCustomTemplate>
+      <ModelGUID />
+      <PartialTemplates />
       <Parameters>
         <Parameter>
           <Name>force_execution</Name>
@@ -318,13 +247,13 @@ AND [c532243a-6225-4d94-a94a-dbce108ea840]</Restriction>
         </Parameter>
       </Parameters>
       <CultureName />
-      <CSS />
       <SortOrder>0</SortOrder>
       <PdfConfigurations />
       <ExcelConfigurations />
     </ReportView>
   </Views>
   <DisplayName />
+  <InitScript />
   <ViewGUID>0d299984-b48d-4256-afef-eb8d8d03527d</ViewGUID>
   <Schedules />
 </Report>

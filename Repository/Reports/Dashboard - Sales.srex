@@ -2995,9 +2995,9 @@ col-sm-12</Value>
                                 }
                             },
                             colorbar: {
-                               // autotic: false,
                                 tickprefix: '$ ',
-                                title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel("Sales per %Customer Country%")))',
+                                //title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel("Sales per %Customer Country%")))',
+                                //titleside: 'bottom',
                                 tickformat: '@(reportModel.ExecPlotlyChartType == "bar" &amp;&amp; @view.GetValue("plotly_bar_orientation") == "h" ? reportModel.ExecD3XAxisFormat : reportModel.ExecD3PrimaryYAxisFormat)',
                                 thickness: 6,
                             }
@@ -3046,11 +3046,11 @@ col-sm-12</Value>
                           <Parameters>
                             <Parameter>
                               <Name>plotly_width</Name>
-                              <Value>550px</Value>
+                              <Value>520px</Value>
                             </Parameter>
                             <Parameter>
                               <Name>plotly_height</Name>
-                              <Value>550px</Value>
+                              <Value>520px</Value>
                             </Parameter>
                             <Parameter>
                               <Name>plotly_title</Name>
