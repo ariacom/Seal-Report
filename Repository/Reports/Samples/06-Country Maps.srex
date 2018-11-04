@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>3e2023be-3b43-4b03-ab39-ff3df2bef93e</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>1b4c143a-b8f6-4106-a372-f5efdbadf409</GUID>
+      <Name>Northwind (Repository)</Name>
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <InitScript />
+      <TasksScript />
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>0bedf141-2990-48d0-8cd5-571a3b381599</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>4440de08-bb58-4a11-a0c9-70d20977a0dd</GUID>
+      <Name>RSS No SQL Source (Repository)</Name>
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <InitScript />
+      <TasksScript />
+      <MetaData>
+        <Tables />
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>408cb29c-1bcd-44b6-99f8-51337c941995</GUID>
+      <Name>maps model</Name>
+      <SourceGUID>1b4c143a-b8f6-4106-a372-f5efdbadf409</SourceGUID>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>0fef5bd4-0bb0-4f07-a204-4d6133da799b</GUID>
+          <Name>Customers.Country</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a222bd13-e6ee-40aa-8195-3a5368f6e060</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <PlotlySerie>Bar</PlotlySerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <SQL>1000 * Round((Sum((1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice))/1000, 0)</SQL>
+        </ReportElement>
+      </Elements>
+      <Restriction>[fdae2cac-5c4e-451c-a2a3-41c6d110f6d3]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>fdae2cac-5c4e-451c-a2a3-41c6d110f6d3</GUID>
+          <Name>Customers.Country</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <FormatRe />
+          <EnumValues>
+            <string>Austria</string>
+            <string>Belgium</string>
+            <string>Denmark</string>
+            <string>Finland</string>
+            <string>France</string>
+            <string>Germany</string>
+            <string>Ireland</string>
+            <string>Poland</string>
+            <string>Portugal</string>
+            <string>Spain</string>
+            <string>Sweden</string>
+            <string>Switzerland</string>
+            <string>UK</string>
+          </EnumValues>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks />
+  <CommonScripts />
+  <TasksScript />
+  <Views>
+    <ReportView>
+      <GUID>2212d0b7-3c93-4ea0-bcfb-029bfb47b61d</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>c569671c-205c-4f1d-9504-48cfa6761c03</GUID>
+          <Name>Model</Name>
+          <Views>
+            <ReportView>
+              <GUID>d1af05c0-762d-49ca-a1ad-869e5b7cca70</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>053250b4-a361-461d-ba6c-a2b5791bab25</GUID>
+                  <Name>Chart Plotly</Name>
+                  <Views />
+                  <TemplateName>Chart Plotly</TemplateName>
+                  <UseCustomTemplate>true</UseCustomTemplate>
+                  <CustomTemplate>@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = report.CurrentModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+}
+
+@if (reportModel.HasPlotlySerie &amp;&amp; page.Series.Count &gt; 0 &amp;&amp; modelView.GetBoolValue("show_charts"))
+{
+    &lt;!--Chart Plotly--&gt;
+    bool chartOk = false;
+    string chartId = "cpl" + Guid.NewGuid().ToString().Replace("-", "");
+    if (modelView.InitPageChart(page))
+    {
+        &lt;div id="@chartId" style="@Helper.AddIfNotEmpty("width:", view.GetValue("plotly_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("plotly_height"), ";")"&gt;&lt;/div&gt;
+
+        &lt;script&gt;
+            $(document).ready(function () {
+                var colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) &lt;= 10 ? "1" : "2")0().range();
+                colors = @Raw(view.GetValue("plotly_colors") != "d3" ? view.GetValue("plotly_colors") : "colors");
+
+                var @chartId = $("#@chartId")[0];
+                var data = [
+                    @foreach (ResultSerie serie in page.Series.Where(i =&gt; i.Element.PlotlySerie != PlotlySerieDefinition.None))
+                    {
+                        &lt;text&gt;
+                        {
+                            //Change the data here to handle the MAP, x are countries and y values are z
+                            type: 'choropleth',
+                            locationmode: 'country names',
+                            name: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
+                            separators: decimalSeparator + thousandSeparator,
+                            locations: [@Raw(reportModel.ExecChartIsDateTimeAxis ? serie.ChartXDateTimeSerieValues : page.ChartXLabels)],
+                            z: [@Raw(Helper.FirstNotEmpty(serie.ChartYDateSerieValues, serie.ChartYSerieValues))],          
+                            colorscale: [
+                                [0,'rgb(5, 10, 172)'],[0.35,'rgb(40, 60, 190)'],
+                                [0.5,'rgb(70, 100, 245)'], [0.6,'rgb(90, 120, 245)'],
+                                [0.7,'rgb(106, 137, 247)'],[1,'rgb(220, 220, 220)']],
+                            autocolorscale: false,
+                            reversescale: true,
+                            marker: {
+                                line: {
+                                    color: 'rgb(180,180,180)',
+                                    width: 0.5
+                                }
+                            },
+                            tick0: 0,
+                            zmin: 0,
+                            dtick: 1000,
+                            colorbar: {
+                                autotic: false,
+                                tickprefix: '$',
+                                title: 'Amount',
+                                thickness: 10,
+                            }
+                        },
+                        &lt;/text&gt;
+                    }
+                ];
+
+                var layout =
+                    {
+                    autosize: true,
+                    separators: decimalSeparator + thousandSeparator,
+                    title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("plotly_title"))))',
+                    navigations: [@Raw(page.ChartNavigations)],
+                    geo: {
+                        scope: 'europe' //Focus on Europe
+                    }
+                }
+
+                //Margins
+                var margins = { l:10, r:10, b:10, t:20, pad:2 };
+                margins = @Raw(view.GetValue("plotly_margins") != "auto" ? view.GetValue("plotly_margins") : "margins");
+                if (margins) layout.margin = margins;
+
+                Plotly.plot(@chartId,
+                    data,
+                    layout
+                    );
+                $(window).on('resize', function () {
+                    Plotly.Plots.resize(@chartId);
+                });
+            });//document.ready
+
+        &lt;/script&gt;
+        chartOk = true;
+    }
+    if (!chartOk)
+    {
+        &lt;div class="alert alert-danger" role="alert"&gt;
+            @Raw(Helper.ToHtml(view.Error))
+        &lt;/div&gt;
+        view.Error = "";
+    }
+}</CustomTemplate>
+                  <PartialTemplates />
+                  <Parameters>
+                    <Parameter>
+                      <Name>plotly_width</Name>
+                      <Value>600px</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>plotly_height</Name>
+                      <Value>600px</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>plotly_title</Name>
+                      <Value>Sales per country</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>plotly_margins</Name>
+                      <Value>{t:50, l:20, b:20, r:20, pad:2}</Value>
+                    </Parameter>
+                  </Parameters>
+                  <CultureName />
+                  <SortOrder>1</SortOrder>
+                  <PdfConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
+                </ReportView>
+              </Views>
+              <TemplateName>Model Container</TemplateName>
+              <PartialTemplates />
+              <Parameters />
+              <CultureName />
+              <SortOrder>1</SortOrder>
+              <PdfConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>408cb29c-1bcd-44b6-99f8-51337c941995</ModelGUID>
+          <PartialTemplates />
+          <Parameters>
+            <Parameter>
+              <Name>show_data_tables</Name>
+              <Value>False</Value>
+            </Parameter>
+          </Parameters>
+          <CultureName />
+          <SortOrder>2</SortOrder>
+          <PdfConfigurations />
+          <ExcelConfigurations>
+            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+          </ExcelConfigurations>
+        </ReportView>
+        <ReportView>
+          <GUID>ca12d754-13ad-4955-b200-9ede79cf118d</GUID>
+          <Name>Free</Name>
+          <Views />
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>Note: The Plotly Map is mainly built in the custom template of the 'Chart Plotly' view.</CustomTemplate>
+          <PartialTemplates />
+          <Parameters />
+          <CultureName />
+          <SortOrder>1</SortOrder>
+          <PdfConfigurations />
+          <ExcelConfigurations>
+            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+          </ExcelConfigurations>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <ModelGUID />
+      <PartialTemplates />
+      <Parameters />
+      <CultureName />
+      <SortOrder>1</SortOrder>
+      <PdfConfigurations />
+      <ExcelConfigurations>
+        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+      </ExcelConfigurations>
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <InitScript />
+  <ViewGUID>2212d0b7-3c93-4ea0-bcfb-029bfb47b61d</ViewGUID>
+  <Schedules />
+</Report>

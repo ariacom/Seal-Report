@@ -39,7 +39,6 @@
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Column</PivotPosition>
@@ -53,7 +52,6 @@
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -68,7 +66,6 @@
           <Tag />
           <DisplayName />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -90,7 +87,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -111,7 +107,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -131,7 +126,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -159,7 +153,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -190,7 +183,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -204,7 +196,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -220,7 +211,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Column</PivotPosition>
@@ -240,7 +230,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -261,7 +250,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -281,7 +269,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -309,7 +296,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -340,7 +326,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Column</PivotPosition>
@@ -355,7 +340,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Tag />
           <NumericStandardFormat>Custom</NumericStandardFormat>
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -370,7 +354,6 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <Tag />
           <DisplayName />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -392,7 +375,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -413,7 +395,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -433,7 +414,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -461,145 +441,6 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
-        </ReportRestriction>
-      </Restrictions>
-      <AggregateRestriction />
-      <AggregateRestrictions />
-    </ReportModel>
-    <ReportModel>
-      <GUID>0ecae0c4-46e1-43df-994b-bdd16f629c7a</GUID>
-      <Name>general employee</Name>
-      <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
-      <Elements>
-        <ReportElement>
-          <GUID>72f2ed3b-757a-42a7-8c6b-8c8a4afd6049</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <Tag />
-          <DisplayName />
-          <NumericStandardFormat>Custom</NumericStandardFormat>
-          <Format />
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <SerieDefinition>Axis</SerieDefinition>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>a5a3e339-bffb-4316-a3a1-d99c58da5ca7</GUID>
-          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
-          <Category>Master</Category>
-          <Tag />
-          <DisplayName />
-          <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Data</PivotPosition>
-          <ShowTotal>RowColumn</ShowTotal>
-          <SerieDefinition>NVD3Serie</SerieDefinition>
-          <Nvd3Serie>PieChart</Nvd3Serie>
-          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-        </ReportElement>
-      </Elements>
-      <Restriction>[d8a9cb66-9ed6-46be-b34c-d2083fba516b]
-AND [05a39809-afd2-400a-858d-0dce6cb0ccb5]
-AND [4efcbeaa-e51d-46b2-b487-3359585dfafe]
-AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>d8a9cb66-9ed6-46be-b34c-d2083fba516b</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <FormatRe>MM/yyyy</FormatRe>
-          <Operator>Between</Operator>
-          <EnumValues />
-          <Date1>1995-01-01T00:00:00</Date1>
-          <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>05a39809-afd2-400a-858d-0dce6cb0ccb5</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>4efcbeaa-e51d-46b2-b487-3359585dfafe</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format />
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues>
-            <string>Belgium</string>
-            <string>France</string>
-            <string>Ireland</string>
-            <string>Italy</string>
-            <string>Spain</string>
-            <string>Switzerland</string>
-            <string>UK</string>
-          </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>e41994ed-0abb-43c8-9edd-1dfde318311c</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -630,7 +471,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Column</PivotPosition>
@@ -644,7 +484,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -659,7 +498,6 @@ AND [e41994ed-0abb-43c8-9edd-1dfde318311c]</Restriction>
           <Tag />
           <DisplayName />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -681,7 +519,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -702,7 +539,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -722,7 +558,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -750,157 +585,6 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
-        </ReportRestriction>
-      </Restrictions>
-      <AggregateRestriction />
-      <AggregateRestrictions />
-    </ReportModel>
-    <ReportModel>
-      <GUID>04aef73f-dc3c-478f-875b-d78af6f53f5d</GUID>
-      <Name>category month1</Name>
-      <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
-      <Elements>
-        <ReportElement>
-          <GUID>1a31b1a5-4ed1-429f-9c6a-53f476493fa7</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Column</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <SerieDefinition>Splitter</SerieDefinition>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>3a8403a6-82ff-4793-ba50-3234956685dd</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format>MM/yyyy</Format>
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <SerieDefinition>Axis</SerieDefinition>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>5e20baa3-7f58-40c4-a95c-6f7734e7d82f</GUID>
-          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
-          <Category>Master</Category>
-          <Tag />
-          <DisplayName />
-          <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Data</PivotPosition>
-          <ShowTotal>RowColumn</ShowTotal>
-          <Nvd3Serie>MultiBarChart</Nvd3Serie>
-          <SerieSortType>None</SerieSortType>
-          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-        </ReportElement>
-      </Elements>
-      <Restriction>[f63aeede-92a3-437c-acdd-3151e9ea2ea3]
-AND [83937d59-679b-4c88-bdce-75d0c139ad94]
-AND [00ac935c-2a25-46c6-b392-a985ac5e6a80]
-AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
-      <Restrictions>
-        <ReportRestriction>
-          <GUID>f63aeede-92a3-437c-acdd-3151e9ea2ea3</GUID>
-          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <FormatRe>MM/yyyy</FormatRe>
-          <Operator>Between</Operator>
-          <EnumValues />
-          <Date1>1995-01-01T00:00:00</Date1>
-          <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>83937d59-679b-4c88-bdce-75d0c139ad94</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>00ac935c-2a25-46c6-b392-a985ac5e6a80</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format />
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues>
-            <string>Belgium</string>
-            <string>France</string>
-            <string>Ireland</string>
-            <string>Italy</string>
-            <string>Spain</string>
-            <string>Switzerland</string>
-            <string>UK</string>
-          </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
-        </ReportRestriction>
-        <ReportRestriction>
-          <GUID>1574908b-1483-4cc4-b8fe-66f379eb901b</GUID>
-          <Name>Employees.LastName</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -931,7 +615,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Column</PivotPosition>
@@ -945,7 +628,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -960,7 +642,6 @@ AND [1574908b-1483-4cc4-b8fe-66f379eb901b]</Restriction>
           <Tag />
           <DisplayName />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -982,7 +663,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1003,7 +683,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1023,7 +702,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1051,7 +729,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1083,7 +760,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Tag />
           <NumericStandardFormat>Custom</NumericStandardFormat>
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1098,7 +774,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Tag />
           <DisplayName />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1113,7 +788,6 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Column</PivotPosition>
@@ -1133,7 +807,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1154,7 +827,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1174,7 +846,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1202,7 +873,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1233,7 +903,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1248,7 +917,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Tag />
           <DisplayName />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1266,7 +934,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DisplayName>%</DisplayName>
           <NumericStandardFormat>Percentage0</NumericStandardFormat>
           <Format>P0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1281,7 +948,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1298,7 +964,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <DisplayName>%</DisplayName>
           <NumericStandardFormat>Percentage0</NumericStandardFormat>
           <Format>P0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1315,7 +980,6 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <NumericStandardFormat>Percentage0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <Format>P0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1382,7 +1046,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1403,7 +1066,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1423,7 +1085,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1451,7 +1112,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1483,7 +1143,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Tag />
           <NumericStandardFormat>Custom</NumericStandardFormat>
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1497,7 +1156,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1510,7 +1168,6 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1530,8 +1187,8 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
           <Tag />
+          <DisplayName />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1552,7 +1209,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1572,7 +1228,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1600,7 +1255,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1631,7 +1285,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Column</PivotPosition>
@@ -1645,7 +1298,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1660,7 +1312,6 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <Tag />
           <DisplayName />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1681,7 +1332,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1702,7 +1352,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1722,7 +1371,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1750,7 +1398,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1781,7 +1428,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1793,7 +1439,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>d</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1807,7 +1452,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1822,7 +1466,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1837,7 +1480,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Data</PivotPosition>
@@ -1852,7 +1494,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1865,7 +1506,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1879,7 +1519,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Tag />
           <DisplayName />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1893,7 +1532,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <Tag />
           <DisplayName />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1912,7 +1550,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>MM/yyyy</Format>
-          <HasHTMLTags xsi:nil="true" />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1933,7 +1570,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1953,7 +1589,6 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -1981,7 +1616,147 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <FormatRe />
+          <EnumValues />
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+      </Restrictions>
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+    <ReportModel>
+      <GUID>8534d52d-19ae-4904-95f6-ff23e82e7863</GUID>
+      <Name>maps</Name>
+      <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements>
+        <ReportElement>
+          <GUID>8f4bf879-0867-411a-a7a4-dddc825a389e</GUID>
+          <Name>Customers.Country</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Not sorted</SortOrder>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6db9a809-1478-4e75-8fba-1db0ede857ab</GUID>
+          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>N0</Format>
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Data</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <PlotlySerie>Bar</PlotlySerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+          <SQL>Round(Sum((1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice),0)</SQL>
+        </ReportElement>
+      </Elements>
+      <Restriction>[b790f1b0-32a0-47f5-9ac8-7249026e1ea6]
+AND [2d37a01c-8c34-4a05-a25e-15dbfd50f45c]
+AND [34e97dce-dc58-4228-8bf5-14113c89a1d6]
+AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>b790f1b0-32a0-47f5-9ac8-7249026e1ea6</GUID>
+          <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <FormatRe>MM/yyyy</FormatRe>
+          <Operator>Between</Operator>
+          <EnumValues />
+          <Date1>1995-01-01T00:00:00</Date1>
+          <Date2>1995-12-31T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>2d37a01c-8c34-4a05-a25e-15dbfd50f45c</GUID>
+          <Name>Products.CategoryID</Name>
+          <Category>Master</Category>
+          <Tag />
+          <Format>N0</Format>
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <FormatRe>N0</FormatRe>
+          <EnumValues />
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>34e97dce-dc58-4228-8bf5-14113c89a1d6</GUID>
+          <Name>Customers.Country</Name>
+          <Category>Master</Category>
+          <Tag />
+          <DisplayName />
+          <Format />
+          <DrillChildren />
+          <SubReports />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <FormatRe />
+          <EnumValues>
+            <string>Austria</string>
+            <string>Belgium</string>
+            <string>Denmark</string>
+            <string>Finland</string>
+            <string>France</string>
+            <string>Germany</string>
+            <string>Ireland</string>
+            <string>Italy</string>
+            <string>Norway</string>
+            <string>Poland</string>
+            <string>Portugal</string>
+            <string>Spain</string>
+            <string>Switzerland</string>
+            <string>UK</string>
+          </EnumValues>
+          <Date1>0001-01-01T00:00:00</Date1>
+          <Date2>0001-01-01T00:00:00</Date2>
+          <Date3>0001-01-01T00:00:00</Date3>
+          <Date4>0001-01-01T00:00:00</Date4>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>810c8704-4d7e-4b9a-aa3a-9ed67406e111</GUID>
+          <Name>Employees.LastName</Name>
+          <Category>Master</Category>
+          <Tag />
+          <Format />
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -2053,11 +1828,44 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                               <Name>nvd3_chart_title</Name>
                               <Value>Sales per %Category% and %Customer Country%</Value>
                             </Parameter>
+                            <Parameter>
+                              <Name>nvd3_bar_stacked</Name>
+                              <Value>True</Value>
+                            </Parameter>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
@@ -2072,7 +1880,36 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <CultureName />
                       <SortOrder>1</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;true&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>741b8c6c-d550-4889-b06f-be24b3308810</GUID>
@@ -2108,7 +1945,36 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <CultureName />
                       <SortOrder>2</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>ace413bf-dc0a-4988-8828-8ae3553397a1</GUID>
@@ -2130,11 +1996,45 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
                       <PartialTemplates />
-                      <Parameters />
+                      <Parameters>
+                        <Parameter>
+                          <Name>show_charts</Name>
+                          <Value>False</Value>
+                        </Parameter>
+                      </Parameters>
                       <CultureName />
                       <SortOrder>3</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
@@ -2161,18 +2061,21 @@ col-sm-12</Value>
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
   &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
   &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
   &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
   &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
   &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
@@ -2210,21 +2113,88 @@ col-sm-12</Value>
                               <Name>nvd3_chart_title</Name>
                               <Value>Sales per %Category% and %Employee Name%</Value>
                             </Parameter>
+                            <Parameter>
+                              <Name>nvd3_bar_stacked</Name>
+                              <Value>True</Value>
+                            </Parameter>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
                       <PartialTemplates />
-                      <Parameters />
+                      <Parameters>
+                        <Parameter>
+                          <Name>show_data_tables</Name>
+                          <Value>False</Value>
+                        </Parameter>
+                      </Parameters>
                       <CultureName />
                       <SortOrder>1</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;true&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>be6792ac-8a2c-4db7-ab5e-7cdd1f3cd920</GUID>
@@ -2246,11 +2216,45 @@ col-sm-12</Value>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
                       <PartialTemplates />
-                      <Parameters />
+                      <Parameters>
+                        <Parameter>
+                          <Name>show_charts</Name>
+                          <Value>False</Value>
+                        </Parameter>
+                      </Parameters>
                       <CultureName />
                       <SortOrder>3</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>8a32abe7-116f-4188-8799-d4af3645a611</GUID>
@@ -2278,11 +2282,45 @@ col-sm-12</Value>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</ModelGUID>
                       <PartialTemplates />
-                      <Parameters />
+                      <Parameters>
+                        <Parameter>
+                          <Name>show_data_tables</Name>
+                          <Value>False</Value>
+                        </Parameter>
+                      </Parameters>
                       <CultureName />
                       <SortOrder>2</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
@@ -2357,11 +2395,44 @@ col-sm-12</Value>
                               <Name>nvd3_chart_title</Name>
                               <Value>Sales per %Category% and %Order Month%</Value>
                             </Parameter>
+                            <Parameter>
+                              <Name>nvd3_bar_stacked</Name>
+                              <Value>True</Value>
+                            </Parameter>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
@@ -2376,7 +2447,36 @@ col-sm-12</Value>
                       <CultureName />
                       <SortOrder>1</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;true&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>d19e1403-04c3-459c-997d-befbd3a29ddd</GUID>
@@ -2397,7 +2497,36 @@ col-sm-12</Value>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
@@ -2412,7 +2541,36 @@ col-sm-12</Value>
                       <CultureName />
                       <SortOrder>2</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>d0da65ae-c117-4825-a593-619570705f2f</GUID>
@@ -2428,17 +2586,80 @@ col-sm-12</Value>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
-                      <ModelGUID>04aef73f-dc3c-478f-875b-d78af6f53f5d</ModelGUID>
+                      <ModelGUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</ModelGUID>
                       <PartialTemplates />
-                      <Parameters />
+                      <Parameters>
+                        <Parameter>
+                          <Name>show_charts</Name>
+                          <Value>False</Value>
+                        </Parameter>
+                      </Parameters>
                       <CultureName />
                       <SortOrder>3</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
@@ -2456,18 +2677,21 @@ col-sm-12</Value>
                   <ExcelConfigurations>
                     <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
   &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
   &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
   &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
   &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
   &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
@@ -2491,18 +2715,21 @@ col-sm-12</Value>
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
   &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
   &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
   &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
   &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
   &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
@@ -2543,7 +2770,36 @@ col-sm-12</Value>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
@@ -2558,7 +2814,36 @@ col-sm-12</Value>
                       <CultureName />
                       <SortOrder>1</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>dadfc942-0bf2-4421-8915-a541d48fc8ba</GUID>
@@ -2579,7 +2864,36 @@ col-sm-12</Value>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
@@ -2594,32 +2908,196 @@ col-sm-12</Value>
                       <CultureName />
                       <SortOrder>2</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>7a228c9b-4126-4fd9-bfab-1634a19e315d</GUID>
-                      <Name>chart employee</Name>
+                      <Name>maps</Name>
                       <Views>
                         <ReportView>
-                          <GUID>4a2fd68e-6b40-4ea4-8565-3e4397b2230a</GUID>
-                          <Name>Chart NVD3</Name>
+                          <GUID>c528a8f5-a8ea-44b4-95b8-e3b3ba58e285</GUID>
+                          <Name>Chart Plotly</Name>
                           <Views />
-                          <TemplateName>Chart NVD3</TemplateName>
+                          <TemplateName>Chart Plotly</TemplateName>
+                          <UseCustomTemplate>true</UseCustomTemplate>
+                          <CustomTemplate>@using Seal.Model
+@using Seal.Helpers
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = report.CurrentModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+}
+
+@if (reportModel.HasPlotlySerie &amp;&amp; page.Series.Count &gt; 0 &amp;&amp; modelView.GetBoolValue("show_charts"))
+{
+    &lt;!--Chart Plotly--&gt;
+    bool chartOk = false;
+    string chartId = "cpl" + Guid.NewGuid().ToString().Replace("-", "");
+    if (modelView.InitPageChart(page))
+    {
+        &lt;div id="@chartId" style="@Helper.AddIfNotEmpty("width:", view.GetValue("plotly_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("plotly_height"), ";")"&gt;&lt;/div&gt;
+
+        &lt;script&gt;
+            $(document).ready(function () {
+                var colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) &lt;= 10 ? "1" : "2")0().range();
+                colors = @Raw(view.GetValue("plotly_colors") != "d3" ? view.GetValue("plotly_colors") : "colors");
+
+                var @chartId = $("#@chartId")[0];
+                var data = [
+                    @foreach (ResultSerie serie in page.Series.Where(i =&gt; i.Element.PlotlySerie != PlotlySerieDefinition.None))
+                    {
+                        &lt;text&gt;
+                        {
+                            //Change the data here to handle the MAP, x are countries and y values are z
+                            type: 'choropleth',
+                            locationmode: 'country names',
+                            name: '@Raw(Helper.ToJS(serie.SerieDisplayName))',
+                            separators: decimalSeparator + thousandSeparator,
+                            locations: [@Raw(reportModel.ExecChartIsDateTimeAxis ? serie.ChartXDateTimeSerieValues : page.ChartXLabels)],
+                            z: [@Raw(Helper.FirstNotEmpty(serie.ChartYDateSerieValues, serie.ChartYSerieValues))],          
+                            colorscale: 'Greys',
+                            reversescale: true,
+                            marker: {
+                                line: {
+                                    color: 'rgb(180,180,180)',
+                                    width: 0.5
+                                }
+                            },
+                            colorbar: {
+                               // autotic: false,
+                                tickprefix: '$ ',
+                                title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel("Sales per %Customer Country%")))',
+                                tickformat: '@(reportModel.ExecPlotlyChartType == "bar" &amp;&amp; @view.GetValue("plotly_bar_orientation") == "h" ? reportModel.ExecD3XAxisFormat : reportModel.ExecD3PrimaryYAxisFormat)',
+                                thickness: 6,
+                            }
+                        },
+                        &lt;/text&gt;
+                    }
+                ];
+
+                var layout =
+                    {
+                    autosize: true,
+                    separators: decimalSeparator + thousandSeparator,
+                    title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("plotly_title"))))',
+                    navigations: [@Raw(page.ChartNavigations)],
+                    geo: {
+                        scope: 'europe' //Focus on Europe
+                    }
+                }
+
+                //Margins
+                var margins = { l:10, r:10, b:10, t:20, pad:2 };
+                margins = @Raw(view.GetValue("plotly_margins") != "auto" ? view.GetValue("plotly_margins") : "margins");
+                if (margins) layout.margin = margins;
+
+                Plotly.plot(@chartId,
+                    data,
+                    layout
+                    );
+                $(window).on('resize', function () {
+                    Plotly.Plots.resize(@chartId);
+                });
+            });//document.ready
+
+        &lt;/script&gt;
+        chartOk = true;
+    }
+    if (!chartOk)
+    {
+        &lt;div class="alert alert-danger" role="alert"&gt;
+            @Raw(Helper.ToHtml(view.Error))
+        &lt;/div&gt;
+        view.Error = "";
+    }
+}</CustomTemplate>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>nvd3_chart_title</Name>
-                              <Value>Sales per %Employee Name%</Value>
+                              <Name>plotly_width</Name>
+                              <Value>550px</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>plotly_height</Name>
+                              <Value>550px</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>plotly_title</Name>
+                              <Value />
+                            </Parameter>
+                            <Parameter>
+                              <Name>plotly_margins</Name>
+                              <Value>{t:0, l:0, b:20, r:20, pad:2}</Value>
                             </Parameter>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
-                      <ModelGUID>0ecae0c4-46e1-43df-994b-bdd16f629c7a</ModelGUID>
+                      <ModelGUID>8534d52d-19ae-4904-95f6-ff23e82e7863</ModelGUID>
                       <PartialTemplates />
                       <Parameters>
                         <Parameter>
@@ -2628,9 +3106,38 @@ col-sm-12</Value>
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>3</SortOrder>
+                      <SortOrder>6</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>2f7603fc-381e-4f65-ab71-97191d1e4779</GUID>
@@ -2646,7 +3153,36 @@ col-sm-12</Value>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
@@ -2659,9 +3195,38 @@ col-sm-12</Value>
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>4</SortOrder>
+                      <SortOrder>5</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                     <ReportView>
                       <GUID>a741e750-737e-4f1f-a0cd-2d5dec2aed6c</GUID>
@@ -2675,18 +3240,51 @@ col-sm-12</Value>
                           <PartialTemplates />
                           <Parameters>
                             <Parameter>
-                              <Name>nvd3_chart_height</Name>
-                              <Value>500px</Value>
-                            </Parameter>
-                            <Parameter>
                               <Name>nvd3_chart_title</Name>
                               <Value>Sales per %Customer Country% and %Employee Name%</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>nvd3_hide_controls</Name>
+                              <Value>True</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>nvd3_bar_stacked</Name>
+                              <Value>True</Value>
                             </Parameter>
                           </Parameters>
                           <CultureName />
                           <SortOrder>1</SortOrder>
                           <PdfConfigurations />
-                          <ExcelConfigurations />
+                          <ExcelConfigurations>
+                            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                          </ExcelConfigurations>
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
@@ -2699,9 +3297,91 @@ col-sm-12</Value>
                         </Parameter>
                       </Parameters>
                       <CultureName />
-                      <SortOrder>5</SortOrder>
+                      <SortOrder>3</SortOrder>
                       <PdfConfigurations />
-                      <ExcelConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;true&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;true&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>f5aacdc0-2928-4de7-83b2-93b0573408e1</GUID>
+                      <Name>print break</Name>
+                      <Views />
+                      <TemplateName>Free</TemplateName>
+                      <UseCustomTemplate>true</UseCustomTemplate>
+                      <CustomTemplate>@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+
+    if (report.PrintLayout) //This force a page break for Print/PDF Layout
+    {
+        &lt;div style="page-break-after:always;"&gt;
+        &lt;/div&gt;
+    }
+}</CustomTemplate>
+                      <PartialTemplates />
+                      <Parameters />
+                      <CultureName />
+                      <SortOrder>4</SortOrder>
+                      <PdfConfigurations />
+                      <ExcelConfigurations>
+                        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                      </ExcelConfigurations>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
@@ -2710,7 +3390,8 @@ col-sm-12</Value>
                     <Parameter>
                       <Name>grid_layout</Name>
                       <Value>col-sm-4;col-sm-4;col-sm-4;
-col-sm-7;col-sm-5;
+col-sm-12;
+col-sm-6;col-sm-6;
 </Value>
                     </Parameter>
                   </Parameters>
@@ -2720,18 +3401,21 @@ col-sm-7;col-sm-5;
                   <ExcelConfigurations>
                     <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
   &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
   &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
   &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
   &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
   &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
@@ -2755,18 +3439,21 @@ col-sm-7;col-sm-5;
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
   &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
   &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
   &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
   &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
   &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
@@ -2832,18 +3519,21 @@ col-sm-7;col-sm-5;
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
   &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
   &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
   &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
   &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
   &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
@@ -2868,18 +3558,21 @@ col-sm-7;col-sm-5;
           <ExcelConfigurations>
             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
   &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
   &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
   &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
   &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
   &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
@@ -3054,18 +3747,21 @@ col-sm-7;col-sm-5;
       <ExcelConfigurations>
         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheet&gt;Automatic&lt;/NewSheet&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
   &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
   &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
   &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
   &lt;ChartWidth&gt;16&lt;/ChartWidth&gt;
   &lt;ChartHeight&gt;10&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;

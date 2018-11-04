@@ -587,12 +587,10 @@ namespace Seal.Model
             }
             else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.PlotlySerie == PlotlySerieDefinition.Scatter))
             {
-                //if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Scatter)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Scatter Serie with another type.");
                 ExecPlotlyChartType = "scatter";
             }
             else if (Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.PlotlySerie == PlotlySerieDefinition.Bar))
             {
-                //if (Elements.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None && i.PlotlySerie != PlotlySerieDefinition.Bar)) throw new Exception("Invalid chart configuration: Cannot mix Plotly Bar Serie with another type.");
                 ExecPlotlyChartType = "bar";
             }
         }
