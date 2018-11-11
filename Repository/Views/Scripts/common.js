@@ -144,8 +144,9 @@ function showPopupNavMenu(source, content, forChart) {
 
     var posLeft = forChart ? source.clientX + document.body.scrollLeft + document.documentElement.scrollLeft : source.offset().left;
     var posTop = forChart ? source.clientY + document.body.scrollTop + document.documentElement.scrollTop : source.offset().top + source.height() + 3;
-    posLeft += Math.min(0, window.innerWidth - $popup.width() - posLeft);
-    posTop += Math.min(0, window.innerHeight - $popup.height() - posTop - 50);
+    posLeft += Math.min(0, window.innerWidth + (document.body.scrollLeft + document.documentElement.scrollLeft) - $popup.width() - posLeft);
+    posTop += Math.min(0, window.innerHeight + (document.body.scrollTop + document.documentElement.scrollTop) - $popup.height() - posTop - 50);
+
     $popup
         .show()
         .css({
