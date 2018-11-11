@@ -404,10 +404,19 @@ namespace Seal.Forms
 	helper.LoadTableFromExcel(
         @""c:\temp\loadFolder"", //Folder used to store the files processed 
         @""c:\temp\excelFile.xlsx"", //source Excel file path
-        ""ExcelTabName"", //source Excel Tab Name
+        ""ExcelTabName"", //source Excel Tab name
         ""DestinationTableName"", //destination table name
         false //if true, the table is loaded for all connections defined in the Source
     );
+
+    //Several Tabs can be loaded using array of strings and LoadTablesFromExcel()
+	helper.LoadTablesFromExcel(
+        @""c:\temp\loadFolder"", //Folder used to store the files processed 
+        @""c:\temp\excelFile.xlsx"", //source Excel file path
+        new string[] {""ExcelTabName1"", ""ExcelTabName2"", ""ExcelTabName3""}, //array of source Excel Tab Name
+        new string[] {""DestinationTableName1"", ""DestinationTableName2"", ""DestinationTableName3""}, //array of destination table name
+        false /* true to load in all connections */);
+    }
 "
                 ),
             new Tuple<string, string>(

@@ -120,6 +120,8 @@ function realMouseCoords(event) {
     return { x: canvasX, y: canvasY }
 }
 
+//navigation menu
+var popupNavMenuTimeout = -1;
 function showPopupNavMenu(source, content, forChart) {
     var $popup = $('#nav_popupmenu');
     if (!$popup.length) {
@@ -139,15 +141,21 @@ function showPopupNavMenu(source, content, forChart) {
         $popup.hide();
     });
 
+
+    var posLeft = forChart ? source.clientX + document.body.scrollLeft + document.documentElement.scrollLeft : source.offset().left;
+    var posTop = forChart ? source.clientY + document.body.scrollTop + document.documentElement.scrollTop : source.offset().top + source.height() + 3;
+    posLeft += Math.min(0, window.innerWidth - $popup.width() - posLeft);
+    posTop += Math.min(0, window.innerHeight - $popup.height() - posTop - 50);
     $popup
         .show()
         .css({
             position: "absolute",
-            left: (forChart ? source.clientX + document.body.scrollLeft + document.documentElement.scrollLeft: source.offset().left),
-            top: (forChart ? source.clientY + document.body.scrollTop + document.documentElement.scrollTop: source.offset().top + source.height() + 3)
+            left: posLeft,
+            top: posTop
         });
 
-    setTimeout(function () { $popup.hide(); }, 3000);
+    if (popupNavMenuTimeout != -1) clearTimeout(popupNavMenuTimeout);
+    popupNavMenuTimeout = setTimeout(function () { $popup.hide(); }, 3000);
 }
 
 
@@ -163,6 +171,7 @@ function initNavCells() {
         });
 }
 
+//message menu
 function initMessageMenu() {
     var messages = $("#execution_messages");
     messages.mouseenter(function (e) {
