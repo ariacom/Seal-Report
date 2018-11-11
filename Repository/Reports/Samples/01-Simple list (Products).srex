@@ -30,11 +30,6 @@
       <GUID>031b29cc-df91-4adc-982a-dbbd8e662393</GUID>
       <Name>model</Name>
       <SourceGUID>70370890-3da6-4c57-bad7-3729570efef5</SourceGUID>
-      <SqlSelect />
-      <SqlFrom />
-      <SqlGroupBy />
-      <SqlOrderBy />
-      <IgnorePrePostError>false</IgnorePrePostError>
       <ForceJoinTableGUID />
       <AvoidJoinTableGUID />
       <Elements>
@@ -47,7 +42,6 @@
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <Format />
           <EnumGUID />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Page</PivotPosition>
@@ -62,7 +56,6 @@
           <Category>Master</Category>
           <Tag />
           <Format />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -79,7 +72,6 @@
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <Format />
           <EnumGUID />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -97,7 +89,6 @@
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <Format />
           <EnumGUID />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -114,7 +105,6 @@
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <Format />
           <EnumGUID />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -131,7 +121,6 @@
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <Format />
           <EnumGUID />
-          <HasHTMLTags>false</HasHTMLTags>
           <DrillChildren />
           <SubReports />
           <PivotPosition>Row</PivotPosition>
@@ -148,6 +137,7 @@
   </Models>
   <Outputs />
   <Tasks />
+  <CommonScripts />
   <TasksScript />
   <Views>
     <ReportView>
@@ -171,9 +161,37 @@
                   <Parameters />
                   <CultureName />
                   <SortOrder>1</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
                 </ReportView>
                 <ReportView>
                   <GUID>665dbab2-221e-46d3-981c-37ea45d9d7b8</GUID>
@@ -184,9 +202,37 @@
                   <Parameters />
                   <CultureName />
                   <SortOrder>2</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
-                  <ExcelConfigurations />
+                  <ExcelConfigurations>
+                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+                  </ExcelConfigurations>
                 </ReportView>
                 <ReportView>
                   <GUID>857c2879-a06a-4542-9de9-a43e06c25572</GUID>
@@ -197,7 +243,6 @@
                   <Parameters />
                   <CultureName />
                   <SortOrder>3</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -210,7 +255,6 @@
                   <Parameters />
                   <CultureName />
                   <SortOrder>4</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -223,7 +267,6 @@
                   <Parameters />
                   <CultureName />
                   <SortOrder>5</SortOrder>
-                  <WebExec>true</WebExec>
                   <PdfConfigurations />
                   <ExcelConfigurations />
                 </ReportView>
@@ -233,13 +276,41 @@
               <Parameters />
               <CultureName />
               <SortOrder>1</SortOrder>
-              <WebExec>true</WebExec>
               <PdfConfigurations />
-              <ExcelConfigurations />
+              <ExcelConfigurations>
+                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+              </ExcelConfigurations>
             </ReportView>
           </Views>
-          <ModelGUID>031b29cc-df91-4adc-982a-dbbd8e662393</ModelGUID>
           <TemplateName>Model</TemplateName>
+          <ModelGUID>031b29cc-df91-4adc-982a-dbbd8e662393</ModelGUID>
           <CustomTemplate />
           <PartialTemplates />
           <Parameters>
@@ -250,13 +321,41 @@
           </Parameters>
           <CultureName />
           <SortOrder>1</SortOrder>
-          <WebExec>true</WebExec>
           <PdfConfigurations />
-          <ExcelConfigurations />
+          <ExcelConfigurations>
+            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
+  &lt;RootConfigurationScript /&gt;
+  &lt;RootMainScript /&gt;
+  &lt;RootHeaderScript /&gt;
+  &lt;ConfigurationScript /&gt;
+  &lt;MainScript /&gt;
+  &lt;HeaderScript /&gt;
+  &lt;SummaryScript /&gt;
+  &lt;PageScript /&gt;
+  &lt;ChartScript /&gt;
+  &lt;DataScript /&gt;
+&lt;/SealExcelCfg&gt;</string>
+          </ExcelConfigurations>
         </ReportView>
       </Views>
-      <ModelGUID />
       <TemplateName>Report</TemplateName>
+      <ModelGUID />
       <CustomTemplate />
       <PartialTemplates />
       <Parameters>
@@ -267,32 +366,29 @@
       </Parameters>
       <CultureName />
       <SortOrder>0</SortOrder>
-      <WebExec>true</WebExec>
       <PdfConfigurations />
       <ExcelConfigurations>
         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
+  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
+  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
+  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
+  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
+  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
+  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
+  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
+  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
+  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
+  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
+  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
+  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
+  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
   &lt;RootConfigurationScript /&gt;
   &lt;RootMainScript /&gt;
   &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript&gt;@using Winnovative.ExcelLib
-@using SealExcelConverter
-@{	
-	//Full documentation of the converter at http://www.winnovative-software.com/excel-library.aspx
-    ExcelConverter converter = Model;
-
-    converter.UseCellStyle = true; //If true, the styles are applied on the cells.
-    converter.ShowTitle = false; //If true, the title is inserted in the Sheet.
-    converter.ShowMessage = false; //If true, the execution messages are inserted in the Sheet.
-    converter.ShowInformation = false; //If true, the information message is inserted in the Sheet.
-
-    converter.NewSheet = NewSheetType.Automatic; //Specify if a new Excel Sheet is created for this view, starting at the first cell.Can be NewSheetType.Automatic, NewSheetType.NewSheet, NewSheetType.KeepSheet
-    converter.ChartWidth = 15; //Specify the number of cells in widthused for the chart.
-    converter.ChartHeight = 20; //Specify the number of cells in height used for the chart.
-    converter.NewSheetPerPage = true; //If true, a new Sheet is created for each new page values.
-    converter.UseElementFormat = true; //If true, the format of the element is kept in the Sheet.
-
-}&lt;/ConfigurationScript&gt;
+  &lt;ConfigurationScript /&gt;
   &lt;MainScript /&gt;
   &lt;HeaderScript /&gt;
   &lt;SummaryScript /&gt;

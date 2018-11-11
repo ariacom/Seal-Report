@@ -19,47 +19,7 @@ namespace Seal.Helpers
             else if (lang == "mssql") Init(scintilla, Lexer.Sql);
             else if (lang == "html") Init(scintilla, Lexer.Html);
         }
-
-        private static void Scintilla_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-        {
-            if (sender is Scintilla)
-            {
-                var replaceDlg = (FindReplace)((Scintilla)sender).Tag;
-
-                if (e.Control && e.KeyCode == Keys.F)
-                {
-                    replaceDlg.ShowFind();
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.Shift && e.KeyCode == Keys.F3)
-                {
-                    replaceDlg.Window.FindPrevious();
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.KeyCode == Keys.F3)
-                {
-                    replaceDlg.Window.FindNext();
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.Control && e.KeyCode == Keys.H)
-                {
-                    replaceDlg.ShowReplace();
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.Control && e.KeyCode == Keys.I)
-                {
-                    replaceDlg.ShowIncrementalSearch();
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.Control && e.KeyCode == Keys.G)
-                {
-                    GoTo MyGoTo = new GoTo((Scintilla)sender);
-                    MyGoTo.ShowGoToDialog();
-                    e.SuppressKeyPress = true;
-                }
-            }
-        }
-
+ 
         public static void Init(Scintilla scintilla, Lexer lex, bool showLineNumber = true)
         {
             scintilla.Lexer = lex;
@@ -203,6 +163,65 @@ namespace Seal.Helpers
 
                 scintilla.KeyDown += Scintilla_KeyDown;
                 if (showLineNumber) scintilla.TextChanged += Scintilla_TextChanged;
+                scintilla.CharAdded += Scintilla_CharAdded;
+            }
+        }
+
+        private static void Scintilla_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (sender is Scintilla)
+            {
+                var replaceDlg = (FindReplace)((Scintilla)sender).Tag;
+
+                if (e.Control && e.KeyCode == Keys.F)
+                {
+                    replaceDlg.ShowFind();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Shift && e.KeyCode == Keys.F3)
+                {
+                    replaceDlg.Window.FindPrevious();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyCode == Keys.F3)
+                {
+                    replaceDlg.Window.FindNext();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Control && e.KeyCode == Keys.H)
+                {
+                    replaceDlg.ShowReplace();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Control && e.KeyCode == Keys.I)
+                {
+                    replaceDlg.ShowIncrementalSearch();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Control && e.KeyCode == Keys.G)
+                {
+                    GoTo MyGoTo = new GoTo((Scintilla)sender);
+                    MyGoTo.ShowGoToDialog();
+                    e.SuppressKeyPress = true;
+                }
+            }
+        }
+
+        private static void Scintilla_CharAdded(object sender, CharAddedEventArgs e)
+        {
+            if (sender is Scintilla)
+            {
+                var scintilla = (Scintilla)sender;
+                if (e.Char == '\n')
+                {
+                    var currentPos = scintilla.CurrentPosition;
+                    if (scintilla.CurrentLine > 0)
+                    {
+                        scintilla.Lines[scintilla.CurrentLine].Indentation = scintilla.Lines[scintilla.CurrentLine - 1].Indentation;
+                        scintilla.CurrentPosition += scintilla.Lines[scintilla.CurrentLine].Indentation;
+                        scintilla.SelectionStart = scintilla.CurrentPosition;
+                    }
+                }
             }
         }
 
