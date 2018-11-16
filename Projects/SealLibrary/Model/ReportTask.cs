@@ -218,6 +218,7 @@ namespace Seal.Model
 
         DbCommand _command = null;
         Mutex _commandMutex = new Mutex();
+        [XmlIgnore]
         public StringBuilder DbInfoMessage = new StringBuilder();
 
         //Log Interface implementation

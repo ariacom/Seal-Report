@@ -141,11 +141,12 @@ function showPopupNavMenu(source, content, forChart) {
         $popup.hide();
     });
 
-
-    var posLeft = forChart ? source.clientX + document.body.scrollLeft + document.documentElement.scrollLeft : source.offset().left;
-    var posTop = forChart ? source.clientY + document.body.scrollTop + document.documentElement.scrollTop : source.offset().top + source.height() + 3;
-    posLeft += Math.min(0, window.innerWidth + (document.body.scrollLeft + document.documentElement.scrollLeft) - $popup.width() - posLeft);
-    posTop += Math.min(0, window.innerHeight + (document.body.scrollTop + document.documentElement.scrollTop) - $popup.height() - posTop - 50);
+    var scrollLeft = document.body.scrollLeft + document.documentElement.scrollLeft;
+    var scrollTop = document.body.scrollTop + document.documentElement.scrollTop;
+    var posLeft = forChart ? source.clientX + scrollLeft : source.offset().left;
+    var posTop = forChart ? source.clientY + scrollTop : source.offset().top + source.height() + 3;
+    posLeft += Math.min(0, window.innerWidth + scrollLeft - $popup.width() - posLeft);
+    posTop += Math.min(0, window.innerHeight + scrollTop - $popup.height() - posTop - 50);
 
     $popup
         .show()
