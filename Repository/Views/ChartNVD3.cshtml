@@ -22,7 +22,8 @@
             $(document).ready(function () {
                 nv.addGraph(function () {
                     var series = new Array();
-                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.Nvd3Serie != NVD3SerieDefinition.None))
+                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.Nvd3Serie != NVD3SerieDefinition.None)
+                              .OrderBy(s => s.Element.SortOrder).ThenByDescending(i => i.SerieDisplayName))
                     {
                         string multiChartOption = (reportModel.ExecNVD3ChartType == "multiChart" ? string.Format(",type:'{0}',yAxis:{1}", serie.NVD3MultiChartType, ((int)serie.Element.YAxisType + 1)) : "");
                         <text>
