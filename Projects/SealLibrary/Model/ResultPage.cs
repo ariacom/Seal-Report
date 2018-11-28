@@ -4,12 +4,14 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Seal.Model
 {
     public class ResultPage
     {
         public Report Report;
+        public ReportModel Model;
 
         private string _pageId = null;
         public string PageId {
@@ -26,6 +28,7 @@ namespace Seal.Model
 
         //Series
         public List<ResultSerie> Series = new List<ResultSerie>();
+
         public List<ResultCell[]> PrimaryXDimensions = new List<ResultCell[]>();
         public List<ResultCell[]> SecondaryXDimensions = new List<ResultCell[]>();
         public Dictionary<object, object> PrimaryXValues = new Dictionary<object, object>();

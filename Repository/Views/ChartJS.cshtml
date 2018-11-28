@@ -38,8 +38,7 @@
                 labels: [@Raw(page.ChartXLabels)],
                 navigations: [@Raw(page.ChartNavigations)],
                 datasets: [
-                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.ChartJSSerie != ChartJSSerieDefinition.None)
-                              .OrderBy(s => s.Element.SortOrder).ThenByDescending(i => i.SerieDisplayName))
+                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.ChartJSSerie != ChartJSSerieDefinition.None).OrderBy(i => i, new ResultSerieComparer()))
                     {
                         <text>
                     {

@@ -709,7 +709,7 @@ namespace Seal.Model
                 if (createPage)
                 {
                     //Build new page
-                    currentPage = new ResultPage() { Report = Report };
+                    currentPage = new ResultPage() { Report = Report, Model = model };
                     //Create Page table
                     currentPage.Pages = pageValues;
                     model.Pages.Add(currentPage);
@@ -758,7 +758,7 @@ namespace Seal.Model
 
             if (model.Pages.Count == 0)
             {
-                model.Pages.Add(new ResultPage() { Report = Report });
+                model.Pages.Add(new ResultPage() { Report = Report, Model = model });
 
             }
         }

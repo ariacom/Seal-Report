@@ -2,10 +2,35 @@
 // Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using Seal.Converter;
+using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace Seal.Model
 {
+    public class ResultSerieComparer : IComparer<ResultSerie>
+    {
+        int IComparer<ResultSerie>.Compare(ResultSerie x, ResultSerie y)
+        {
+            ResultSerie sx = x as ResultSerie;
+            ResultSerie sy = y as ResultSerie;
+
+            //Priority to element sort order
+            if (sx.Element != sy.Element) return string.Compare(sx.Element.FinalSortOrder, sy.Element.FinalSortOrder);
+            else
+            {
+                //Then by splitter values descending or ascending
+                var result = string.Compare(sx.SplitterValues, sy.SplitterValues);
+                if (sx.SplitterCells.Length > 0 && sx.SplitterCells[0].Element != null && !sx.SplitterCells[0].Element.SortOrder.Contains(SortOrderConverter.kAscendantSortKeyword))
+                {
+                    return -1 * result;
+                }
+                return result;
+            }
+        }
+    }
+
     public class ResultSerie
     {
         public string SplitterValues;
@@ -20,6 +45,21 @@ namespace Seal.Model
                 bool hasMultipleSerieDef = Element.Model.Elements.Exists(i => i != Element && i.SerieDefinition == Element.SerieDefinition);
                 if (!hasMultipleSerieDef) return string.IsNullOrEmpty(SplitterValues) ? Element.DisplayNameElTranslated : SplitterValues;
                 return Element.DisplayNameElTranslated + (string.IsNullOrEmpty(SplitterValues) ? "" : ": " + SplitterValues);
+            }
+        }
+
+
+        //True is the splitted element is sort ASC, false for DESC
+        public bool SortAscending
+        {
+            get
+            {
+                bool result = true;
+                if (SplitterCells.Length > 0 && SplitterCells[0].Element != null && !SplitterCells[0].Element.SortOrder.Contains(SortOrderConverter.kAscendantSortKeyword))
+                {
+                    result = false;
+                }
+                return result;
             }
         }
 
