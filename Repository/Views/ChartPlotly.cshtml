@@ -24,8 +24,7 @@
 
                 var @chartId = $("#@chartId")[0];
                 var data = [
-                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.PlotlySerie != PlotlySerieDefinition.None)
-                              .OrderBy(s => s.Element.SortOrder).ThenByDescending(i => i.SerieDisplayName))
+                    @foreach (ResultSerie serie in page.Series.Where(i => i.Element.PlotlySerie != PlotlySerieDefinition.None).OrderBy(i => i, new ResultSerieComparer()))
                     {
                         <text>
                         {
