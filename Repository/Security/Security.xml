@@ -16,6 +16,11 @@
 	{
 		user.AddSecurityGroup("Group (Execute)");
 	}
+	else if (user.WebUserName == "ex2" &amp;&amp; user.WebPassword == "")
+	{
+        //pwd empty
+		user.AddSecurityGroup("Group (Execute)");
+	}
 	else if (user.WebUserName == "exo" &amp;&amp; user.WebPassword == "exo")
 	{
 		user.AddSecurityGroup("Group (Execute Output)");
@@ -37,23 +42,7 @@
 		user.AddDefaultSecurityGroup();
 	}
 }</Script>
-  <Parameters>
-    <SecurityParameter>
-      <Name>add_windows_groups</Name>
-      <Value>True</Value>
-    </SecurityParameter>
-    <SecurityParameter>
-      <Name>windows_groups_skip_domain</Name>
-      <Value>True</Value>
-    </SecurityParameter>
-    <SecurityParameter>
-      <Name>windows_groups_ad_context</Name>
-      <Value>Machine</Value>
-    </SecurityParameter>
-    <SecurityParameter>
-      <Name>default_domain_name</Name>
-    </SecurityParameter>
-  </Parameters>
+  <Parameters />
   <Groups>
     <SecurityGroup>
       <Name>Default Group</Name>
