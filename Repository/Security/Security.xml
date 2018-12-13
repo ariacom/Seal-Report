@@ -16,11 +16,6 @@
 	{
 		user.AddSecurityGroup("Group (Execute)");
 	}
-	else if (user.WebUserName == "ex2" &amp;&amp; user.WebPassword == "")
-	{
-        //pwd empty
-		user.AddSecurityGroup("Group (Execute)");
-	}
 	else if (user.WebUserName == "exo" &amp;&amp; user.WebPassword == "exo")
 	{
 		user.AddSecurityGroup("Group (Execute Output)");
