@@ -88,6 +88,10 @@ namespace Seal.Forms
                     AddHelperButton("View SQL", "View the SQL generated for the model", Keys.F7);
                 }
             }
+            else if (SelectedEntity is ReportView)
+            {
+                if (((ReportView)SelectedEntity).UseCustomTemplate) AddHelperButton("Edit Custom Template", "Edit the custom template texts", Keys.F8);
+            }
             else if (SelectedEntity is TasksFolder)
             {
                 AddHelperButton("Edit Tasks Script", "Edit the Tasks Script", Keys.F8);
@@ -235,10 +239,7 @@ namespace Seal.Forms
                     }
                     else if (SelectedEntity is ReportView)
                     {
-                        if (key == Keys.F7) EditProperty("General Parameters");
-                        else if (key == Keys.F8) EditProperty("CSS");
-                        else if (key == Keys.F9) EditProperty("Data Table Configuration");
-                        else if (key == Keys.F12) EditProperty("NVD3 Chart Configuration");
+                        if (key == Keys.F8) EditProperty("Custom template");
                     }
                     else if (SelectedEntity is ReportSchedule)
                     {

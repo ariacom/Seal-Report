@@ -11,6 +11,7 @@ using Microsoft.Win32.TaskScheduler;
 using Seal.Model;
 using System.IO;
 using Seal.Forms;
+using Seal.Helpers;
 
 namespace Seal
 {
@@ -72,7 +73,8 @@ namespace Seal
             DialogResult result = DialogResult.Cancel;
             try
             {
-                result = MessageBox.Show(t.Exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                result = MessageBox.Show(t.Exception.Message + "\r\n" + t.Exception.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Helper.WriteLogEntry("Report Designer", System.Diagnostics.EventLogEntryType.Error, t.Exception.Message + "\r\n" + t.Exception.StackTrace);
             }
             catch
             {

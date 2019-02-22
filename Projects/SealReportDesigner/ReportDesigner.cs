@@ -1449,6 +1449,11 @@ namespace Seal
             {
                 if (((ReportModel)selectedEntity).Elements.Count >0) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
             }
+            else if (selectedEntity is ReportView)
+            {
+                ReportView view = (ReportView)selectedEntity; 
+                if (view.UseCustomTemplate) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
+            }
             else if (selectedEntity is ReportSchedule)
             {
                 toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));

@@ -19,6 +19,7 @@ namespace Seal.Model
         public const string SubReportsEnabledParameter = "subreports_enabled";
         public const string ServerPaginationParameter = "serverpagination_enabled";
         public const string ForceExecutionParameter = "force_execution";
+        public const string ForceModelsLoad = "force_models_load";
         public const string NVD3AddNullPointParameter = "nvd3_add_null_point";
         public const string ColumnsHiddenParameter = "columns_hidden";
         public const string CSVUtf8Parameter = "csv_utf8";
