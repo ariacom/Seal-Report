@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Data.Common;
 
 namespace Seal.Helpers
 {
@@ -30,7 +31,33 @@ namespace Seal.Helpers
             get { return _task.Report; }
         }
 
-        public TaskDatabaseHelper DatabaseHelper = new TaskDatabaseHelper();
+
+        public MetaConnection TaskConnection
+        {
+            get
+            {
+                return _task.Connection;
+            }
+        }
+
+        public DbCommand GetDbCommand()
+        {
+            return _task.GetDbCommand(_task.Connection);
+        }
+
+        TaskDatabaseHelper _databaseHelper = null;
+        public TaskDatabaseHelper DatabaseHelper
+        {
+            get
+            {
+                if (_databaseHelper == null)
+                {
+                    _databaseHelper = new TaskDatabaseHelper(); ;
+                    _databaseHelper.SetDatabaseDefaultConfiguration(_task.Connection.DatabaseType);
+                }
+                return _databaseHelper;
+            }
+        }
 
         public void RefreshRepositoryEnums(string sourceName = "")
         {
@@ -349,6 +376,17 @@ namespace Seal.Helpers
             return null;
         }
 
+        public DataTable LoadDataTable(string sql)
+        {
+            var connection = _task.Source.Connections.FirstOrDefault(i => i.GUID == _task.Connection.GUID);
+            if (connection != null)
+            {
+                return DatabaseHelper.LoadDataTable(connection.FullConnectionString, sql);
+            }
+            return null;
+        }
+
+
         #region MSSQL
 
         bool hasStartCommentAtTheEnd(string text)
@@ -442,7 +480,7 @@ namespace Seal.Helpers
                                 }
                             }
                         }
-                    
+
                         foreach (string commandString in commands)
                         {
                             if (!string.IsNullOrEmpty(commandString.Trim()))
@@ -473,7 +511,7 @@ namespace Seal.Helpers
 
         void MSSQLConnection_InfoMessage(object sender, SqlInfoMessageEventArgs e)
         {
-            foreach(SqlError err in e.Errors)
+            foreach (SqlError err in e.Errors)
             {
                 if (err.Class >= _mssqlErrorClassLevel)
                 {
@@ -485,7 +523,7 @@ namespace Seal.Helpers
             Thread.Sleep(20);
         }
 
-#endregion
+        #endregion
 
 
         //SANDBOX !

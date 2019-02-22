@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
+using Seal.Helpers;
 
 namespace Seal
 {
@@ -36,6 +37,7 @@ namespace Seal
             try
             {
                 result = MessageBox.Show(t.Exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Helper.WriteLogEntry("Server Manager", System.Diagnostics.EventLogEntryType.Error, t.Exception.Message + "\r\n" + t.Exception.StackTrace);
             }
             catch
             {

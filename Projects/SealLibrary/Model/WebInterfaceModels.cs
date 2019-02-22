@@ -1,13 +1,4 @@
-﻿using Microsoft.Win32.TaskScheduler;
-using Seal.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Web;
-
-namespace Seal.Model
+﻿namespace Seal.Model
 {
     public class SWIUserProfile
     {
@@ -34,7 +25,7 @@ namespace Seal.Model
         public void SetManageFlag(bool useSubFolders, bool manageFolder, bool isDefined)
         {
             if (!useSubFolders) manage = 0;
-            //the folder in defined in the security = no rename or delete
+            //the folder is defined in the security = no rename or delete
             else manage = !manageFolder ? 0 : (isDefined ? 1 : 2);
         }
 

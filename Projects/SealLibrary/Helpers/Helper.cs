@@ -414,7 +414,7 @@ namespace Seal.Helpers
             return s;
         }
 
-        private static void WriteLogEntry(string source, EventLogEntryType type, string message, params object[] args)
+        public static void WriteLogEntry(string source, EventLogEntryType type, string message, params object[] args)
         {
             string msg = message;
             try

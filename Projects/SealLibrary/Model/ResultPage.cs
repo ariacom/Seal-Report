@@ -20,6 +20,10 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(_pageId)) _pageId = Guid.NewGuid().ToString();
                 return _pageId;
             }
+            set
+            {
+                _pageId = value;
+            }
         }
         public ResultCell[] Pages;
         public List<ResultCell[]> Rows = new List<ResultCell[]>();

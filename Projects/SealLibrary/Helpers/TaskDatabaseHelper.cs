@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic.FileIO;
+using System.Diagnostics;
 
 namespace Seal.Helpers
 {
@@ -579,6 +580,20 @@ namespace Seal.Helpers
             return RootGetTableColumnValue(row, col, dateTimeFormat);
         }
 
+        public bool AreRowsIdentical(DataRow row1, DataRow row2)
+        {
+            bool result = true;
+            if (row1.ItemArray.Length != row2.ItemArray.Length) result = false;
+            else
+            {
+                for (int j = 0; j < row1.ItemArray.Length && result; j++)
+                {
+                    if (row1[j].ToString() != row2[j].ToString()) result = false;
+                }
+            }
+            return result;
+        }
+
         public bool AreTablesIdentical(DataTable checkTable1, DataTable checkTable2)
         {
             bool result = true;
@@ -588,10 +603,7 @@ namespace Seal.Helpers
             {
                 for (int i = 0; i < checkTable1.Rows.Count && result; i++)
                 {
-                    for (int j = 0; j < checkTable1.Columns.Count && result; j++)
-                    {
-                        if (checkTable1.Rows[i][j].ToString() != checkTable2.Rows[i][j].ToString()) result = false;
-                    }
+                    if (!AreRowsIdentical(checkTable1.Rows[i], checkTable2.Rows[i])) result = false;
                 }
             }
             return result;

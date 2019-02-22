@@ -216,7 +216,7 @@ namespace Seal.Model
             {
                 try
                 {
-                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution && !Report.IsNavigating)
+                    if (Report.InputRestrictions.Count > 0 && Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution && !Report.IsNavigating)
                     {
                         //check input restrictions
                         CheckInputRestrictions();

@@ -13,6 +13,7 @@ using System.Globalization;
 using Microsoft.Win32.TaskScheduler;
 using System.Threading;
 using System.Text;
+using System.Diagnostics;
 
 namespace Seal.Model
 {
@@ -71,7 +72,7 @@ namespace Seal.Model
             get
             {
                 var result = "";
-                foreach (var script in CommonScripts) result += script.Script + "\r\n";                
+                foreach (var script in CommonScripts) result += script.Script + "\r\n";
                 return result;
             }
         }
@@ -285,7 +286,7 @@ namespace Seal.Model
                 var template = ExecutionView.Template; //This force to init parameters
                 fileName = ResultFileName;
                 fileFolder = FileHelper.TempApplicationDirectory;
-        
+
                 if (ForOutput && OutputToExecute.Device is OutputFolderDevice)
                 {
                     if (Format != ReportFormat.pdf && Format != ReportFormat.excel) fileFolder = OutputFolderDeviceResultFolder;
@@ -414,7 +415,7 @@ namespace Seal.Model
             get
             {
                 List<ReportModel> result = new List<ReportModel>();
-                if (ExecutionView.GetBoolValue("force_models_load")) result = Models.ToList();
+                if (ExecutionView.GetBoolValue(Parameter.ForceModelsLoad)) result = Models.ToList();
                 else GetModelsToExecute(ExecutionView, result);
                 return result;
             }
@@ -441,7 +442,7 @@ namespace Seal.Model
             {
                 TimeSpan duration = DateTime.Now - ExecutionStartDate;
                 StringBuilder message = new StringBuilder("");
-                if (duration.Hours > 0) message.AppendFormat("{0:00}:", Convert.ToInt32(duration.TotalHours));
+                if (duration.Hours > 0) message.AppendFormat("{0:00}:", Convert.ToInt32(duration.Hours));
                 message.Append(string.Format("{0:00}:{1:00} {2}", duration.Minutes, duration.Seconds, Cancel ? Translate("Cancelling report...") : Translate("Executing report...")));
                 return message.ToString();
             }
@@ -838,7 +839,8 @@ namespace Seal.Model
             {
                 Serialize(path);
             }
-            finally {
+            finally
+            {
                 FilePath = path;
                 LastModification = File.GetLastWriteTime(path);
             }
@@ -1275,7 +1277,7 @@ namespace Seal.Model
         }
 
 
-        void GetModelsToExecute(ReportView view, List<ReportModel> result)
+        public void GetModelsToExecute(ReportView view, List<ReportModel> result)
         {
             if (view.Model != null && view.Model.Elements.Count > 0 && !result.Contains(view.Model)) result.Add(view.Model);
             foreach (var child in view.Views) GetModelsToExecute(child, result);
@@ -1397,14 +1399,15 @@ namespace Seal.Model
         [XmlIgnore]
         public ReportFormat Format
         {
-            get { return (ReportFormat) Enum.Parse(typeof(ReportFormat), ExecutionView.GetValue(Parameter.ReportFormatParameter)); }
+            get { return (ReportFormat)Enum.Parse(typeof(ReportFormat), ExecutionView.GetValue(Parameter.ReportFormatParameter)); }
             set { ExecutionView.SetParameter(Parameter.ReportFormatParameter, value.ToString()); }
         }
 
         [XmlIgnore]
         public string ResultExtension
         {
-            get {
+            get
+            {
                 var format = Format;
                 if (format == ReportFormat.csv) return "csv";
                 if (format == ReportFormat.excel) return "xlsx";
@@ -1458,6 +1461,42 @@ namespace Seal.Model
             return result;
         }
 
+        public ReportView GetRootView(ReportView child)
+        {
+            ReportView result = null;
+            foreach (var view in Views)
+            {
+                if (FindView(view.Views, child.GUID) == child)
+                {
+                    result = view;
+                    break;
+                }
+            }
+            return result;
+        }
+
+            public ReportView PrepareViewToParse(List<ReportView> views, string name)
+        {
+            ReportView result = null;
+            foreach (var view in views)
+            {
+                if (view.Name == name)
+                {
+                    result = view;
+                    break;
+                }
+                if (view.Model != null)
+                {
+                    CurrentModelView = view;
+                }
+
+                result = PrepareViewToParse(view.Views, name);
+
+                if (result != null) break;
+            }
+            return result;
+        }
+
         public ReportView FindViewFromTemplate(List<ReportView> views, string templateName)
         {
             ReportView result = null;
@@ -1492,6 +1531,7 @@ namespace Seal.Model
             try
             {
                 //string are supposed to be thread-safe...
+                Debug.WriteLine(string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args)));
                 ExecutionMessages += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args));
             }
             catch (Exception ex)
