@@ -22,8 +22,57 @@
     <link rel="stylesheet" href="~/Content/dataTables.bootstrap.min.css" />
     <link rel="stylesheet" href="~/Content/responsive.bootstrap.min.css" />
     <link rel="stylesheet" href="~/Content/SealWeb.css" />
+    <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
+
+    <link rel="stylesheet" href="~/Content/seal.css" />
+    <style class="cp-pen-styles">
+        .grid {
+            position: relative;
+        }
+
+        .item {
+            position: absolute;
+            width: 200px;
+            height: 140px;
+            /*line-height: 200px;*/
+            margin: 5px;
+            z-index: 1;
+            border-width: 2px;
+        }
+
+            .item.muuri-item-hidden {
+                z-index: 0;
+            }
+
+            .item.muuri-item-positioning {
+                z-index: 2;
+            }
+
+            .item.muuri-item-releasing {
+                z-index: 3;
+            }
+
+            .item.muuri-item-dragging {
+                z-index: 4;
+            }
+
+        .item-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            background: grey;
+            font-size: 50px;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+    <!--disable autofill for Chrome-->
+    <input type="text" style="display:none"> 
+    <input type="password" style="display:none">
+
     <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -33,30 +82,39 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a id="brand-id" class="navbar-brand" href="#">@repository.Configuration.WebProductName</a>
+                <div>
+                    <a id="brand-id" class="navbar-brand" href="#">@repository.Configuration.WebProductName</a>
+                    <button id="dashboard-toggle" type="button" class="btn btn-sm btn-primary" style="margin-top:10px;"><span class="glyphicon glyphicon-th-list"></span></button>
+                </div>            
             </div>
             <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">
                 <ul class="nav navbar-nav pull-xs-right navbar-right">
                     <li class="nav-item"><a id="profile-nav-item">@repository.TranslateWeb("Profile")</a></li>
                     <li class="nav-item"><a id="disconnect-nav-item">@repository.TranslateWeb("Disconnect")</a></li>
                 </ul>
-                <form class="navbar-form navbar-right">
+                <form class="navbar-form navbar-right folderview" style="display:none;">
                     <div class="input-group">
                         <input id="search-pattern" type="text" class="form-control input-sm col-sm-1" placeholder="@repository.TranslateWeb("Search")" />
                         <span class="input-group-btn">
-                            <button id="search-nav-item" type="button" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-search"></span></button>
+                            <button id="search-nav-item" type="button" class="btn btn-sm btn-success" title="Poplo"><span class="glyphicon glyphicon-search"></span></button>
                         </span>
                     </div>
                 </form>
+                <form class="navbar-form navbar-right hidden-xs dashboardview" style="display:none;margin-left:-20px;">
+                    <div class="input-group">
+                        <button id="dashboard-add-widget" type="button" class="btn btn-sm btn-primary" title="@repository.TranslateWeb("Add widgets to the dashboard")"><span class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                </form>
                 <ul class="nav navbar-nav pull-xs-right navbar-right">
-                    <li class="nav-item hidden-xs"><a id="folders-nav-item" title="Manage folders">@repository.TranslateWeb("Folders")</a></li>
                     <li class="nav-item"><a id="refresh-nav-item">@repository.TranslateWeb("Refresh")</a></li>
+                    <li class="nav-item hidden-xs folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item">@repository.TranslateWeb("Folders")</a></li>
+                    <li class="nav-item hidden-xs dashboardview" style="display:none;" title="@repository.TranslateWeb("Manage Dashboards")"><a id="dashboards-nav-item">@repository.TranslateWeb("Dashboards")</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
     </nav>
 
-    <div id="main-container" class="container-fluid" style="padding-top:62px; display:none;">
+    <div id="main-container" class="container-fluid folderview" style="padding-top:62px; display:none;">
         <div class="row">
             <div id="folder-view" class="col-sm-4" style="padding-right:0px">
                 <div class="jstree jstree-default" id="folder-tree" role="tree" style="overflow:auto;"></div>
@@ -72,23 +130,89 @@
                     <div id="report-delete-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-remove"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Delete")</span></div>
                     <div id="report-rename-lightbutton" class="lightbutton"><span class="lightbutton-icon fa fa-file-text"></span><br /><span class="lightbutton-text">@repository.TranslateWeb("Rename")</span></div>
                 </div>
-
-                <div id="file-table-view" style="overflow:auto;">
-                    <table id="file-table" class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th style="width:22px;" class="hidden-xs"><input id="selectall-checkbox" type="checkbox" /></th>
-                                <th>@repository.TranslateWeb("Report")</th>
-                                <th id="action-tableheader">@repository.TranslateWeb("Actions")</th>
-                                <th style="width: 170px; min-width:170px;" class="hidden-xs">@repository.TranslateWeb("Last modification")</th>
-                            </tr>
-                        </thead>
-                        <tbody id="file-table-body"></tbody>
-                    </table>
-                </div>
+                    <div id="file-table-view" style="overflow:auto;">
+                        <table id="file-table" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width:22px;" class="hidden-xs"><input id="selectall-checkbox" type="checkbox" /></th>
+                                    <th>@repository.TranslateWeb("Report")</th>
+                                    <th id="action-tableheader">@repository.TranslateWeb("Actions")</th>
+                                    <th style="width: 170px; min-width:170px;" class="hidden-xs">@repository.TranslateWeb("Last modification")</th>
+                                </tr>
+                            </thead>
+                            <tbody id="file-table-body"></tbody>
+                        </table>
+                    </div>
             </div>
         </div>
     </div>
+
+    <div id="main-dashboard" class="container-fluid dashboardview" style="padding-top:62px; display:none;">
+        <ul id="menu-dashboard" class="nav nav-pills"></ul>
+
+        <div id="content-dashboard" class="tab-content">
+            <!--
+                <div id="home" class="tab-pane fade in active">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>Category 1</h4>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="item panel panel-primary text-center">
+                        <div class="item-content2 panel-body">
+                            <div class="row">
+                                <h3>Report title 1</h3>
+                            </div>
+                            <div class="row">
+                                <a href="#" class="btn btn-danger btn-lg">
+                                    <span class="glyphicon glyphicon-exclamation-sign"></span> 456
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item panel panel-primary text-center">
+                        <div class="item-content2 panel-body">
+                            <div class="row">
+                                <h3>Report title 2</h3>
+                            </div>
+                            <div class="row">
+                                <a href="#" class="btn btn-success btn-lg">
+                                    <span class="glyphicon glyphicon-list-alt"></span> 234
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item panel panel-primary text-center">
+                        <div class="item-content2 panel-body">
+                            <div class="row">
+                                <h3>Report info.</h3>
+                            </div>
+                            <div class="row">
+                                <a href="#" class="btn btn-info btn-lg">
+                                    <span class="glyphicon glyphicon-exclamation-sign"></span> 1'456
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item panel panel-primary text-center">
+                        <div class="item-content2 panel-body">
+                            <div class="row">
+                                <h3>Report warning</h3>
+                            </div>
+                            <div class="row">
+                                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                <button class="btn btn-info" type="button">
+                                    Messages <span class="badge">4</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+        </div>
+    </div>
+
 
 
     <!--Wait Dialog-->
@@ -711,7 +835,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="username"><span class="glyphicon glyphicon-user"></span> @repository.TranslateWeb("User name")</label>
-                        <input type="text" class="form-control" id="username" placeholder="@repository.TranslateWeb("Enter user name")" />
+                        <input type="text" class="form-control" id="username" name="username" placeholder="@repository.TranslateWeb("Enter user name")" />
                     </div>
                     <div class="form-group">
                         <label for="password"><span class="glyphicon glyphicon-eye-open"></span> @repository.TranslateWeb("Password")</label>
@@ -786,6 +910,137 @@
         </div>
     </div>
 
+    <!-- Dashboard Modal -->
+    <div id="dashboard-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" style="top:60px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@repository.TranslateWeb("Manage dashboards")</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input class="form-control" style="display:inline;width:60%;" id="create-dashboard-name" placeholder="@repository.TranslateWeb("New dashboard")" />
+                        <button id="dashboard-create" type="button" class="btn btn-primary">@repository.TranslateWeb("Create a new dashboard")</button>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" style="display:inline;width:60%;" id="rename-dashboard-name" placeholder="@repository.TranslateWeb("New dashboard name")" />
+                        <button id="dashboard-rename" type="button" class="btn btn-primary">@repository.TranslateWeb("Rename dashboard")</button>
+                    </div>
+                    <div class="form-group">
+                        <button id="dashboard-delete" type="button" class="btn btn-primary">@repository.TranslateWeb("Delete dashboard")</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Close")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Widget Modal -->
+    <div id="widget-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content" style="top:60px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@repository.TranslateWeb("Select the widgets to add to the dashboard")</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="widget-table" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width:22px;"><input id="selectall-widget-checkbox" type="checkbox" /></th>
+                                <th style="width:25px;">@repository.TranslateWeb("Icon")</th>
+                                <th>@repository.TranslateWeb("Widget name")</th>
+                                <th>@repository.TranslateWeb("Type")</th>
+                                <th>@repository.TranslateWeb("Description")</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer form-inline">
+                    <div class="form-group">
+                        <label for="add-widget-title">Default title</label>
+                        <input class="form-control" id="add-widget-title">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-widget-order">Order</label>
+                        <input class="form-control numeric" id="add-widget-order" style="width:80px;margin-right:80px">
+                    </div>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                    <button id="widget-add" type="button" class="btn btn-primary" data-dismiss="modal">@repository.TranslateWeb("Add")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Edit Widget Modal -->
+    <div id="edit-widget-dialog" role="dialog" class="modal fade in" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-primary" style="width:450px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@repository.TranslateWeb("Edit the widget properties")</h4>
+                </div>
+                <div id="body-widget-dialog" class="modal-body" style="padding-top: 5px; padding-bottom: 5px;">
+                    <div class="row" style='margin-top:10px'>
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-format">@repository.TranslateWeb("Name")</label>
+                                <div class="col-sm-7">
+                                    <input id="widget-name" placeholder='Widget name' class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-format">@repository.TranslateWeb("Title")</label>
+                                <div class="col-sm-7">
+                                    <input id="widget-title" placeholder='Widget title' class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-format">@repository.TranslateWeb("Title order")</label>
+                                <div class="col-sm-7">
+                                    <input id="widget-title-order" placeholder='Title order' class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-format">@repository.TranslateWeb("Color")</label>
+                                <div class="col-sm-7">
+                                    <select id="widget-color" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-format">@repository.TranslateWeb("Icon")</label>
+                                <div class="col-sm-7">
+                                    <select id="widget-icon" data-width="100%"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-chart-height">@repository.TranslateWeb("Width")</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control numeric" id="widget-width" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="option-chart-height">@repository.TranslateWeb("Height")</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control numeric" id="widget-height" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                    <button id="widget-edit" type="button" class="btn btn-primary" data-dismiss="modal">@repository.TranslateWeb("Save")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">
         <div>
             <p>Copyright &copy; @DateTime.Now.Year Seal Report. All Rights Reserved (version <span id="footer-version">@Repository.ProductVersion</span>)</p>
@@ -809,18 +1064,26 @@
     <script src="~/Scripts/datetime-moment.js"></script>
     <script src="~/Scripts/responsive.bootstrap.min.js"></script>
 
+    <script src="~/Scripts/d3.min.js"></script>
+    <script src="~/Scripts/nv.d3.min.js"></script>
+    <script src="~/Scripts/chartNVD3.js"></script>
+    <script src="~/Scripts/Chart.min.js"></script>
+    
     <script type="text/javascript">
         //server
         var WebApplicationName = '@HomeController.GetWebUrl(Request, Response)';
 
         //formats
-        var dateSeparator = '@repository.CultureInfo.DateTimeFormat.DateSeparator';
-        var decimalSeparator = '@repository.CultureInfo.NumberFormat.NumberDecimalSeparator';
+        var dateSeparator = '@Html.Raw(repository.CultureInfo.DateTimeFormat.DateSeparator)';
+        var decimalSeparator = '@Html.Raw(repository.CultureInfo.NumberFormat.NumberDecimalSeparator)';
+        var thousandSeparator = '@Html.Raw(Helper.ToJS(repository.CultureInfo.NumberFormat.NumberGroupSeparator))';
+        var currencySymbol = '@Html.Raw(Helper.ToJS(repository.CultureInfo.NumberFormat.CurrencySymbol))';
         //for datepicker
         var languageName = '@repository.CultureInfo.TwoLetterISOLanguageName';
         var shortDateFormat = '@repository.MomentJSShortDateFormat';
         var shortDateTimeFormat = '@repository.MomentJSShortDateTimeFormat';
         var isUSdate = shortDateFormat.match(/^m/i);
+        var printLayout = false;
 
         var folderRightSchedule = @((int) FolderRight.Schedule);
         var folderRightEdit = @((int) FolderRight.Edit);
@@ -855,17 +1118,46 @@
     {
         <script src="~/Scripts/swi-utils.js"></script>
         <script src="~/Scripts/swi-gateway.js"></script>
-        <script src="~/Scripts/swi-main.js"></script>
+            <script src="~/Scripts/swi-main.js"></script>
         if (ServerOptions.HasEditor())
         {
             <script src="~/Scripts/swi-button-group.js"></script>
             <script src="~/Scripts/swi-editor.js"></script>
-            <script src="~/Scripts/swi-properties.js"></script>
+                <script src="~/Scripts/swi-properties.js"></script>
+
+                            <script src="~/Scripts/swi-dashboard.js"></script>
         }
     }
     else
     {
         <script src="~/Scripts/swi.js"></script>
     }
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.3.1/web-animations.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js'></script>
+    <script src='https://unpkg.com/muuri@0.6.3/dist/muuri.min.js'></script>
+
+    <script>
+        function nvd3TranslateText(text) {
+              //TODO
+            return text;
+        }
+
+        function showPopupNavMenu(source, content, forChart) {
+        }
+
+        //d3 formatting TODO depuis common.js
+        String.prototype.replaceAll = function (find, replace) {
+            var str = this;
+            return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+        };
+        String.prototype.valueFormat = function (value) {
+            var str = this;
+            return str.replaceAll(',', thousandSeparator).replaceAll('$', currencySymbol).replace('.', decimalSeparator);
+        };
+        String.prototype.normalizeNumeric = function (valueStr) {
+            return parseFloat(this.replaceAll(',', '').replace(/\s+/g, ''));
+        };
+    </script>
+
 </body>
 </html>

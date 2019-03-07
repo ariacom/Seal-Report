@@ -11,7 +11,6 @@ String.prototype.normalizeNumeric = function (valueStr) {
     return parseFloat(this.replaceAll(',', '').replace(/\s+/g, ''));
 };
 
-
 function restrictionSelectChange(source) {
     var idSelect = "#" + $(source).attr('id');
     if ($(source).attr('opid') != null) {

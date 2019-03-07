@@ -25,6 +25,7 @@ namespace Seal.Model
             get { return _tables; }
             set { _tables = value; }
         }
+        public bool ShouldSerializeTables() { return _tables.Count > 0; }
 
         private List<MetaJoin> _joins = new List<MetaJoin>();
         [Browsable(false)]
@@ -33,6 +34,7 @@ namespace Seal.Model
             get { return _joins; }
             set { _joins = value; }
         }
+        public bool ShouldSerializeJoins() { return _joins.Count > 0; }
 
         private List<MetaEnum> _enums = new List<MetaEnum>();
         [Browsable(false)]
@@ -41,6 +43,7 @@ namespace Seal.Model
             get { return _enums; }
             set { _enums = value; }
         }
+        public bool ShouldSerializeEnums() { return _enums.Count > 0; }
 
         public MetaColumn GetColumnFromGUID(string guid)
         {

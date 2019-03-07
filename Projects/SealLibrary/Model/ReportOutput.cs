@@ -139,7 +139,7 @@ namespace Seal.Model
         }
 
 
-        string _preScript = "";
+        string _preScript;
         [Category("Definition"), DisplayName("Pre-generation script"), Description("Optional Razor script executed before the generation. If the script returns 0, the generation is aborted."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string PreScript
@@ -148,11 +148,9 @@ namespace Seal.Model
             set { _preScript = value; }
         }
 
-
-        string _postScript = "";
+        string _postScript;
         [Category("Definition"), DisplayName("Post-generation script"), Description("Optional Razor script executed after the generation."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-
         public string PostScript
         {
             get { return _postScript; }
@@ -171,6 +169,7 @@ namespace Seal.Model
                 _viewParameters = value;
             }
         }
+        public bool ShouldSerializeViewParameters() { return _viewParameters.Count > 0; }
 
         private string _viewGUID;
         [Category("Definition"), DisplayName("View name"), Description("The view used to execute the report output."), Id(2, 1)]
@@ -245,7 +244,6 @@ namespace Seal.Model
             set { _emailReplyTo = value; }
         }
 
-
         private string _emailSubject;
         [Category("Email Subject"), DisplayName("Subject"), Description("The subject of the email sent. If empty, the report name is used."), Id(2, 3)]
         public string EmailSubject
@@ -291,7 +289,7 @@ namespace Seal.Model
             set { _emailZipAttachments = value; UpdateEditorAttributes(); }
         }
 
-        private string _emailZipPassword = "";
+        private string _emailZipPassword;
         [Category("Email Attachments"), DisplayName("Zip password"), Description("If not empty, the Zip file attached will be protected with the password."), Id(3, 5)]
         public string EmailZipPassword
         {
@@ -308,8 +306,7 @@ namespace Seal.Model
             set { _emailSkipAttachments = value; UpdateEditorAttributes(); }
         }
 
-
-        private string _userName = "";
+        private string _userName;
         [Category("Security and Publication"), DisplayName("User name"), Description("If not empty, the output is generated with a security context having the name specified."), Id(1, 6)]
         public string UserName
         {
@@ -317,7 +314,7 @@ namespace Seal.Model
             set { _userName = value; }
         }
 
-        private string _userGroups = "";
+        private string _userGroups;
         [Category("Security and Publication"), DisplayName("User groups"), Description("If not empty, the output is generated with a security context having the groups specified. One group name per line or separated by semi-column."), Id(2, 6)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string UserGroups
@@ -326,7 +323,7 @@ namespace Seal.Model
             set { _userGroups = value; }
         }
 
-        string _userCulture = "";
+        string _userCulture;
         [Category("Security and Publication"), DisplayName("Culture"), Description("The culture used to generate the report. If empty, the culture from the groups is used, then the default culture."), Id(3, 6)]
         [TypeConverter(typeof(Seal.Converter.CultureInfoConverter))]
         public string UserCulture
@@ -448,6 +445,7 @@ namespace Seal.Model
             }
             set { _restrictions = value; }
         }
+        public bool ShouldSerializeRestrictions() { return _restrictions.Count > 0; }
 
         #region Helpers
         string _information;

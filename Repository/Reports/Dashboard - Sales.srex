@@ -2458,6 +2458,7 @@ col-sm-12</Value>
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
@@ -2552,6 +2553,7 @@ col-sm-12</Value>
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
@@ -2757,7 +2759,7 @@ col-sm-12</Value>
                       <Views>
                         <ReportView>
                           <GUID>d13b6936-b9d7-4468-922f-76fe540364f8</GUID>
-                          <Name>Chart NVD3</Name>
+                          <Name>Chart Amount NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
                           <PartialTemplates />
@@ -2781,6 +2783,7 @@ col-sm-12</Value>
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
@@ -2825,6 +2828,7 @@ col-sm-12</Value>
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
@@ -2851,7 +2855,7 @@ col-sm-12</Value>
                       <Views>
                         <ReportView>
                           <GUID>a3f9b8ad-20a1-4f1c-ab3e-63986be75c90</GUID>
-                          <Name>Chart NVD3</Name>
+                          <Name>Chart Category NVD3</Name>
                           <Views />
                           <TemplateName>Chart NVD3</TemplateName>
                           <PartialTemplates />
@@ -2875,6 +2879,7 @@ col-sm-12</Value>
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
@@ -2919,6 +2924,7 @@ col-sm-12</Value>
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
@@ -3145,7 +3151,7 @@ col-sm-12</Value>
                       <Views>
                         <ReportView>
                           <GUID>550ac4f8-dc87-48e9-b22e-4325bd444c11</GUID>
-                          <Name>Data Table</Name>
+                          <Name>Amount Data Table</Name>
                           <Views />
                           <TemplateName>Data Table</TemplateName>
                           <PartialTemplates />
@@ -3164,6 +3170,7 @@ col-sm-12</Value>
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
@@ -3208,6 +3215,7 @@ col-sm-12</Value>
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
@@ -3409,6 +3417,7 @@ col-sm-6;col-sm-6;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
@@ -3447,6 +3456,7 @@ col-sm-6;col-sm-6;
   &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
   &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
   &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
+  &lt;SkipModel&gt;false&lt;/SkipModel&gt;
   &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
   &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
   &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;

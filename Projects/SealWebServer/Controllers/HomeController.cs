@@ -23,6 +23,7 @@ namespace SealWebServer.Controllers
         public const string SessionLastFolder = "SessionLastFolder";
         public const string SessionUser = "SessionUser";
         public const string SessionNavigationContext = "SessionNavigationContext";
+        public const string SessionDashboardExecutions = "SessionDashboardExecutions";
 
         public const string SealCultureCookieName = "SR_Culture_Name";
         public const string SealLastFolderCookieName = "SR_Last_Folder";

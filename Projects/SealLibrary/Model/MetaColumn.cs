@@ -143,12 +143,13 @@ namespace Seal.Model
         }
 
         private string _tag;
-        [Category("Security"), DisplayName("Security Tag"), Description("Tag used to define the security of the Web Report Editor (Columns of the Security Groups defined in the Web Security)."), Id(2, 2)]
+        [Category("Security"), DisplayName("Security Tag"), Description("Tag used to define the security of the Web Report Designer (Columns of the Security Groups defined in the Web Security)."), Id(2, 2)]
         public string Tag
         {
             get { return string.IsNullOrEmpty(_tag) ? "" : _tag; }
             set { _tag = value; }
         }
+        public bool ShouldSerializeTag() { return !string.IsNullOrEmpty(_tag); }
 
         protected string _displayName;
         [Category("Display"), DisplayName("Display Name"), Description("Name used to display the column in the Report Designer tree view and in the report results."), Id(3, 2)]
@@ -157,6 +158,7 @@ namespace Seal.Model
             get { return _displayName; }
             set { _displayName = value; }
         }
+        public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(_displayName); }
 
         int _displayOrder = 0;
         [DefaultValue(0)]
@@ -224,6 +226,7 @@ namespace Seal.Model
                 _format = value;
             }
         }
+        public bool ShouldSerializeFormat() { return !string.IsNullOrEmpty(_format); }
 
         [XmlIgnore]
         public bool HasTime
@@ -365,6 +368,7 @@ namespace Seal.Model
             get { return _drillChildren; }
             set { _drillChildren = value; }
         }
+        public bool ShouldSerializeDrillChildren() { return _drillChildren.Count > 0; }
 
         bool _drillUpOnlyIfDD = false;
         [DefaultValue(false)]
@@ -391,6 +395,7 @@ namespace Seal.Model
             get { return _subReports; }
             set { _subReports = value; }
         }
+        public bool ShouldSerializeSubReports() { return _subReports.Count > 0; }
 
         [Category("Sub-Reports"), DisplayName("Create a Sub-Report"), Description("Create a Sub-Report to display the detail of this table."), Id(2, 5)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]

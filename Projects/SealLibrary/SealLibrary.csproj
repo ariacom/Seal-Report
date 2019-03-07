@@ -84,6 +84,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converter\WidgetIconClassConverter.cs" />
+    <Compile Include="Converter\WidgetColorClassConverter.cs" />
     <Compile Include="Converter\RestrictionDateConverter.cs" />
     <Compile Include="Converter\RepositoryFolderConverter.cs" />
     <Compile Include="Converter\CultureInfoConverter.cs" />
@@ -205,6 +207,8 @@
     <Compile Include="Model\SealPdfConverter.cs" />
     <Compile Include="Model\SealSecurity.cs" />
     <Compile Include="Model\CommonScript.cs" />
+    <Compile Include="Model\SecurityDashboard.cs" />
+    <Compile Include="Model\SecurityWidget.cs" />
     <Compile Include="Model\SecuritySource.cs" />
     <Compile Include="Model\SecurityDevice.cs" />
     <Compile Include="Model\SecurityConnection.cs" />
@@ -241,6 +245,7 @@
     <Compile Include="Model\ResultTotalCell.cs" />
     <Compile Include="Model\RootComponent.cs" />
     <Compile Include="Model\WebInterfaceModels.cs" />
+    <Compile Include="Model\DashboardWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

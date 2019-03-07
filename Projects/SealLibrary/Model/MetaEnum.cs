@@ -112,6 +112,7 @@ namespace Seal.Model
             set { _translate = value; }
         }
 
+        [XmlIgnore]
         public string DefaultSQL = "select col1,col2 from table order by col2";
 
         private string _sql;
@@ -135,6 +136,7 @@ namespace Seal.Model
             get { return _values; }
             set { _values = value; }
         }
+        public bool ShouldSerializeValues() { return _values.Count > 0; }
 
         [Category("Values"), DisplayName("Number of Values"), Description("The number of values in the collection"), Id(2, 2)]
         public int NumberOfValues

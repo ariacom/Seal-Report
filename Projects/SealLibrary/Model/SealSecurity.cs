@@ -74,14 +74,6 @@ namespace Seal.Model
             }
         }
 
-        /* Not used anymore
-        [Category("Security Provider Definition"), DisplayName("Prompt User Name and Password"), Description("If true, a login screen is displayed to request a user name and password from the user. The user and password provided must then be used in the script below."), Id(2, 1)]
-        [XmlIgnore]
-        public bool PromptUserPassword
-        {
-            get { return Provider.PromptUserPassword; }
-        }*/
-
         [Category("Security Provider Definition"), DisplayName("Provider Security Script"), Description("The script executed to login and find the security group used to published reports."), Id(3, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [XmlIgnore]
@@ -103,7 +95,7 @@ namespace Seal.Model
             }
         }
 
-        string _script = "";
+        string _script;
         [Category("Security Provider Configuration"), DisplayName("Custom Security Script"), Description("The script executed to login and find the security group used to published reports. If the script is empty, the publication is done using the first security group defined."), Id(2, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string Script
@@ -147,7 +139,7 @@ namespace Seal.Model
             get { return _parameters; }
             set { _parameters = value; }
         }
-
+        public bool ShouldSerializeParameters() { return _parameters.Count > 0; }
 
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         [Category("Security Provider Configuration"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(3, 2)]
@@ -179,6 +171,7 @@ namespace Seal.Model
             get { return _groups; }
             set { _groups = value; }
         }
+        public bool ShouldSerializeGroups() { return _groups.Count > 0; }
 
         public SecurityFolder FindSecurityFolder(List<SecurityGroup> groups, string folder)
         {
@@ -248,30 +241,42 @@ namespace Seal.Model
             foreach (var group in _groups)
             {
                 result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
+                result.AppendFormat("    View Type: {0}\r\n", Helper.GetEnumDescription(group.ViewType.GetType(), group.ViewType));
+                result.AppendLine();
+                result.AppendFormat("    Personal Folder: {0}\r\n", Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight));
+                result.AppendLine();
+                result.AppendFormat("    Dashboard Role:{0}\r\n", Helper.GetEnumDescription(group.DashboardRole.GetType(), group.DashboardRole));
+                result.AppendLine();
                 foreach (var item in group.Devices)
                 {
-                    result.AppendFormat("  Device:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                    result.AppendFormat("    Device:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 foreach (var item in group.Sources)
                 {
-                    result.AppendFormat("  Source:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                    result.AppendFormat("    Source:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 foreach (var item in group.Connections)
                 {
-                    result.AppendFormat("  Connection:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                    result.AppendFormat("    Connection:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 foreach (var item in group.Columns)
                 {
-                    result.AppendFormat("  Column:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                    result.AppendFormat("    Column:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
-                result.AppendLine();
-                result.AppendFormat("    {0}\r\n", Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight));
+                foreach (var item in group.Dashboards)
+                {
+                    result.AppendFormat("    Dashboard:'{0}'  => Is Published:{1}\r\n", item.DisplayName, item.Published ? "true" : "false");
+                }
+                foreach (var item in group.Widgets)
+                {
+                    result.AppendFormat("    Widget:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
+                }
                 result.AppendLine();
 
                 result.AppendLine(getSecuritySummary(group, Repository.ReportsFolder + "\\"));
             }
 
-            result.AppendLine("\r\nNote: If a user belongs to several groups, the weakest right is applied\r\n");
+            result.AppendLine("\r\nNote: If a user belongs to several groups, the weakest specified right is applied\r\n");
             return result.ToString();
         }
 

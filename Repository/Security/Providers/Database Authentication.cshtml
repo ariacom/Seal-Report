@@ -7,7 +7,7 @@
 
     provider.Script = @"@using Seal.Model
 @using System.Data
-@using System.Data.OleDb
+@using System.Data.Common
 @using Seal.Helpers
 @{
     SecurityUser user = Model;
@@ -18,7 +18,7 @@
 	user.Name = user.WebUserName; //Display name
 	//user.PersonalFolderName -> may be set to defined the personal folder name
 
-	OleDbConnection connection = new OleDbConnection(Helper.GetOleDbConnectionString(user.Security.GetValue(""oledb_connection_string""), user.WebUserName, user.WebPassword));
+	DbConnection connection = Helper.DbConnectionFromConnectionString(Helper.GetOleDbConnectionString(user.Security.GetValue(""oledb_connection_string""), user.WebUserName, user.WebPassword));
 	connection.Open();
     //Add default group but the security groups can be got from the database as shown below
     user.AddDefaultSecurityGroup();
@@ -32,9 +32,10 @@
     //Note that we can also use the user name and password to connect to the database
 	//User=Fuller,Password=Andrew will return group Tacoma 
 	string connectionString = ""Provider=Microsoft.Jet.OLEDB.4.0;Data Source="" + user.Security.Repository.RepositoryPath + ""\\Databases\\Northwind.mdb;Persist Security Info=False"";
-	OleDbConnection connection = new OleDbConnection(connectionString);
+	DbConnection connection =  Helper.DbConnectionFromConnectionString(connectionString);
 	connection.Open();
-	OleDbCommand command = new OleDbCommand(string.Format(""select city from Employees where lastname={0} and firstname={1}"", Helper.QuoteSingle(user.WebUserName), Helper.QuoteSingle(user.WebPassword)), connection);
+	DbCommand command = connection.CreateCommand();
+    command.CommandText = string.Format(""select city from Employees where lastname={0} and firstname={1}"", Helper.QuoteSingle(user.WebUserName), Helper.QuoteSingle(user.WebPassword));
 	object group = command.ExecuteScalar();
 	if (group != null && group != DBNull.Value)
 	{
@@ -45,5 +46,6 @@
 		user.Error = ""User unknown from the database."";
 	}
     */
+}
 }";    
 }
