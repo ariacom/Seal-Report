@@ -80,6 +80,7 @@ namespace Seal.Model
             get { return _connections; }
             set { _connections = value; }
         }
+        public bool ShouldSerializeConnections() { return _connections.Count > 0; }
 
 
         protected string _connectionGUID;
@@ -118,6 +119,7 @@ namespace Seal.Model
             get { return _initScript; }
             set { _initScript = value; }
         }
+        public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(_initScript); }
 
         string _tasksScript = "";
         [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed with this source. This may be useful to defined common functions for the source."), Id(5, 3)]
@@ -127,6 +129,7 @@ namespace Seal.Model
             get { return _tasksScript; }
             set { _tasksScript = value; }
         }
+        public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(_tasksScript); }
 
         string _preSQL;
         [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed after the connection is open and before the query is executed. The statement may contain Razor script if it starts with '@'."), Id(5, 4)]
@@ -136,6 +139,7 @@ namespace Seal.Model
             get { return _preSQL; }
             set { _preSQL = value; }
         }
+        public bool ShouldSerializePreSQL() { return !string.IsNullOrEmpty(_preSQL); }
 
         string _postSQL;
         [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed before the connection is closed and after the query is executed. The statement may contain Razor script if it starts with '@'."), Id(6, 4)]
@@ -145,6 +149,7 @@ namespace Seal.Model
             get { return _postSQL; }
             set { _postSQL = value; }
         }
+        public bool ShouldSerializePostSQL() { return !string.IsNullOrEmpty(_postSQL); }
 
         bool _ignorePrePostError = false;
         [DefaultValue(false)]

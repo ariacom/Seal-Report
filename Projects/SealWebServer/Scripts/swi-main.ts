@@ -15,6 +15,7 @@ var $elementDropDown: JQuery;
 var _gateway: SWIGateway;
 var _main: SWIMain;
 var _editor: ReportEditorInterface;
+var _dashboard: DashboardInterface;
 
 
 declare var folderRightSchedule: number;
@@ -25,6 +26,10 @@ $(document).ready(function () {
     _gateway = new SWIGateway();
     _main = new SWIMain();
     _main.Process();
+
+    $(window).scroll(function () {
+        SWIUtil.HideMessages();
+    });
 });
 
 class SWIMain {
@@ -112,11 +117,24 @@ class SWIMain {
 
         //Refresh
         $("#refresh-nav-item").unbind('click').on("click", function (e) {
-            _main.ReloadReportsTable();
-            if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
-            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been updated"), 5000);
+            if ($("#main-dashboard").css("display") != "block") {
+                _main.ReloadReportsTable();
+                if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
+                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been updated"), 5000);
+            }
+            else if (_dashboard) {
+                _dashboard = new SWIDashboard();
+                _dashboard.init();
+            }
         });
 
+        //TODO, default view
+        $(".folderview").show();
+        $(".dashboardview").hide();
+  /*      $(".folderview").hide();
+        $(".dashboardview").show();
+        $("#dashboard-toggle").attr("title", "View reports");
+        */
         //Folders
         $("#folders-nav-item").unbind('click').on("click", function (e) {
             $outputPanel.hide();
@@ -424,6 +442,10 @@ class SWIMain {
             }, 100);
 
             $waitDialog.modal('hide');
+
+            if (_dashboard) {
+                _dashboard.init();
+            }
         });
     }
 
@@ -465,7 +487,7 @@ class SWIMain {
 
         var $cb = $("#selectall-checkbox");
         $cb.prop("checked", false);
-        $("#selectall-checkbox").unbind("click").bind("click", function () {
+        $cb.unbind("click").bind("click", function () {
             $(".report-checkbox").each(function (key, value) {
                 var isChecked = $cb.is(':checked');
                 $(value).prop("checked", isChecked);

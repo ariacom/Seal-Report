@@ -19,6 +19,9 @@
     Template.Parameters.Add(new Parameter() { Name = "nvd3_bar_stacked", DisplayName = "Bar stacked", BoolValue = false, Description = "If true, the Bar in chart are stacked (only for Bar chart)." });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_colors", DisplayName = "Colors", Description = "The list of colors used for the series (list of strings). By default, d3.scale.category10 or 20 colors are used.", Value = "d3", Enums = new string[] { "d3|D3 (default)", "['#3366cc','#dc3912','#ff9900','#109618','#990099','#0099c6','#dd4477','#66aa00','#b82e2e','#316395','#994499','#22aa99','#aaaa11','#6633cc','#e67300','#8b0707','#651067','#329262','#5574a6','#3b3eac']|Google", "['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e']" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "nvd3_margins", DisplayName = "Margins", Description = "Margins (in pixels) used for the chart.", Value = "auto", Enums = new string[] { "auto|Auto (default)", "{top:30, left:70, bottom:40, right:60}" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_pie_labeltype", DisplayName = "Pie: Label type", Description = "The type of the label displayed in the slices.", Value = "percent", Enums = new string[] { "percent|Percentage", "value|Value", "key|Key", "none|No label" }, UseOnlyEnumValues = true});
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_pie_labelthreshold", DisplayName = "Pie: Label threshold", Description = "The minimum slice size for labels to show up (from 0 to 100).", NumericValue = 5 });
+    Template.Parameters.Add(new Parameter() { Name = "nvd3_pie_holeratio", DisplayName = "Pie: Hole ratio", Description = "Relative size of the donut hole (from 0 to 100).", NumericValue = 35 });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Model", "Model Container" };

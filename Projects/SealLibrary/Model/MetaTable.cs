@@ -206,6 +206,7 @@ namespace Seal.Model
             get { return _columns; }
             set { _columns = value; }
         }
+        public bool ShouldSerializeColumns() { return _columns.Count > 0; }
 
         [XmlIgnore]
         public string AliasName

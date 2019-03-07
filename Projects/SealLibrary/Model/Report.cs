@@ -37,6 +37,7 @@ namespace Seal.Model
             get { return _sources; }
             set { _sources = value; }
         }
+        public bool ShouldSerializeSources() { return _sources.Count > 0; }
 
         private List<ReportModel> _models = new List<ReportModel>();
         public List<ReportModel> Models
@@ -44,6 +45,7 @@ namespace Seal.Model
             get { return _models; }
             set { _models = value; }
         }
+        public bool ShouldSerializeModels() { return _models.Count > 0; }
 
         private List<ReportOutput> _outputs = new List<ReportOutput>();
         public List<ReportOutput> Outputs
@@ -51,6 +53,7 @@ namespace Seal.Model
             get { return _outputs; }
             set { _outputs = value; }
         }
+        public bool ShouldSerializeOutputs() { return _outputs.Count > 0; }
 
         private List<ReportTask> _taks = new List<ReportTask>();
         public List<ReportTask> Tasks
@@ -58,6 +61,7 @@ namespace Seal.Model
             get { return _taks; }
             set { _taks = value; }
         }
+        public bool ShouldSerializeTasks() { return _taks.Count > 0; }
 
         List<CommonScript> _commonScripts = new List<CommonScript>();
         public List<CommonScript> CommonScripts
@@ -65,6 +69,7 @@ namespace Seal.Model
             get { return _commonScripts; }
             set { _commonScripts = value; }
         }
+        public bool ShouldSerializeCommonScripts() { return _commonScripts.Count > 0; }
 
         [XmlIgnore]
         public string CommonScriptsHeader
@@ -90,6 +95,7 @@ namespace Seal.Model
             get { return _tasksScript; }
             set { _tasksScript = value; }
         }
+        public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(_tasksScript); }
 
         private List<ReportView> _views = new List<ReportView>();
         public List<ReportView> Views
@@ -104,6 +110,7 @@ namespace Seal.Model
             get { return _displayName; }
             set { _displayName = value; }
         }
+        public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(_displayName); }
 
         private string _displayNameEx = null;
         [XmlIgnore]
@@ -134,6 +141,7 @@ namespace Seal.Model
             get { return _initScript; }
             set { _initScript = value; }
         }
+        public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(_initScript); }
 
         private string _viewGUID;
         public string ViewGUID
@@ -150,6 +158,7 @@ namespace Seal.Model
             get { return _schedules; }
             set { _schedules = value; }
         }
+        public bool ShouldSerializeSchedules() { return _schedules.Count > 0; }
 
         [XmlIgnore]
         public Repository Repository = null;

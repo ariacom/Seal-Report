@@ -50,6 +50,7 @@ namespace Seal.Model
                 GetProperty("ExcelConverter").SetIsBrowsable(true);
                 ExcelConverter.InitEditor();
 
+                GetProperty("WidgetDefinition").SetIsBrowsable(true);
                 GetProperty("WebExec").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
 
                 //Read only
@@ -362,6 +363,7 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        public bool ShouldSerializeModelGUID() { return !string.IsNullOrEmpty(_modelGUID); }
 
 
         public void InitPartialTemplates()
@@ -407,6 +409,7 @@ namespace Seal.Model
         }
 
         public List<ReportView> Views = new List<ReportView>();
+        public bool ShouldSerializeViews() { return Views.Count > 0; }
 
 
         bool _useCustomTemplate = false;
@@ -444,6 +447,7 @@ namespace Seal.Model
             get { return _partialTemplates; }
             set { _partialTemplates = value; }
         }
+        public bool ShouldSerializePartialTemplates() { return _partialTemplates.Count > 0; }
 
 
         List<Parameter> _parameters = new List<Parameter>();
@@ -452,6 +456,7 @@ namespace Seal.Model
             get { return _parameters; }
             set { _parameters = value; }
         }
+        public bool ShouldSerializeParameters() { return _parameters.Count > 0; }
 
 
         string _cultureName = "";
@@ -466,6 +471,7 @@ namespace Seal.Model
                 _cultureName = value;
             }
         }
+        public bool ShouldSerializeCultureName() { return !string.IsNullOrEmpty(_cultureName); }
 
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [DisplayName("Template configuration"), Description("The view configuration values."), Category("View parameters"), Id(3, 4)]
@@ -525,15 +531,33 @@ namespace Seal.Model
             foreach (var view in Views) view.SetAdvancedConfigurations();
         }
 
+        #region Web Report Server and Dashboard Widgets
 
         private bool _webExec = true;
-        [Category("Web Report Server"), DisplayName("Web Execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(2, 6)]
+        [Category("Web Report Server and Dashboard"), DisplayName("Web Execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(2, 6)]
         [DefaultValue(true)]
         public bool WebExec
         {
             get { return _webExec; }
             set { _webExec = value; }
         }
+
+
+        public bool ShouldSerializeWidgetDefinition() {
+            return !string.IsNullOrEmpty(_widgetDefinition.Name);
+        }
+
+        private DashboardWidget _widgetDefinition = new DashboardWidget();
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Widget Defintion"), Description("The view configuration values."), Category("Web Report Server and Dashboard"), Id(3, 6)]
+        public DashboardWidget WidgetDefinition
+        {
+            get { return _widgetDefinition; }
+            set { _widgetDefinition = value; }
+        }
+
+
+        #endregion
 
 
         [XmlIgnore]
@@ -547,7 +571,6 @@ namespace Seal.Model
         }
 
 
-
         #region PDF and Excel Converters
 
         private List<string> _pdfConfigurations = new List<string>();
@@ -556,6 +579,7 @@ namespace Seal.Model
             get { return _pdfConfigurations; }
             set { _pdfConfigurations = value; }
         }
+        public bool ShouldSerializePdfConfigurations() { return _pdfConfigurations.Count > 0; }
 
         private SealPdfConverter _pdfConverter = null;
         [XmlIgnore]
@@ -588,6 +612,7 @@ namespace Seal.Model
             get { return _excelConfigurations; }
             set { _excelConfigurations = value; }
         }
+        public bool ShouldSerializeExcelConfigurations() { return _excelConfigurations.Count > 0; }
 
         private SealExcelConverter _excelConverter = null;
         [XmlIgnore]

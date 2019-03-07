@@ -27,16 +27,19 @@ var SWIUtil;
     }
     SWIUtil.GetDirectoryName = GetDirectoryName;
     function ShowMessage(alertClass, message, timeout) {
-        $waitDialog.modal('hide');
-        SWIUtil.HideMessages();
-        var $alert = $("<div class='alert' style='position:absolute; width:100%;z-index: 2000;margin-bottom:0;'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><p>" + message + "</p></div>");
-        $alert.css("top", ($(window).height() - 54).toString() + "px");
-        $alert.addClass(alertClass);
-        $("body").append($alert);
-        if (timeout == 0)
-            timeout = 15000;
-        if (timeout > 0)
-            setTimeout(function () { $alert.alert('close'); }, timeout);
+        setTimeout(function () {
+            $waitDialog.modal('hide');
+            SWIUtil.HideMessages();
+            var $alert = $("<div class='alert' style='position:absolute; width:80%;z-index: 2000;margin-bottom:0;'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><p>" + message + "</p></div>");
+            $alert.css("top", ($(window).height() - 54).toString() + "px");
+            $alert.css("left", ($(window).width() / 10).toString() + "px");
+            $alert.addClass(alertClass);
+            $("body").append($alert);
+            if (timeout == 0)
+                timeout = 15000;
+            if (timeout > 0)
+                setTimeout(function () { $alert.alert('close'); }, timeout);
+        }, 500);
     }
     SWIUtil.ShowMessage = ShowMessage;
     function HideMessages() {

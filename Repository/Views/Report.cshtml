@@ -100,10 +100,10 @@
         var cancelText = '@report.Translate("Cancel")';
 
         //formats
-        var decimalSeparator = '@view.CultureInfo.NumberFormat.NumberDecimalSeparator';
         var languageName = '@view.CultureInfo.TwoLetterISOLanguageName';
-        var shortDateFormat = '@repository.MomentJSShortDateFormat';
-        var shortDateTimeFormat = '@repository.MomentJSShortDateTimeFormat';
+        var decimalSeparator = '@Raw(view.CultureInfo.NumberFormat.NumberDecimalSeparator)';
+        var shortDateFormat = '@Raw(repository.MomentJSShortDateFormat)';
+        var shortDateTimeFormat = '@Raw(repository.MomentJSShortDateTimeFormat)';
         var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
         var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
 

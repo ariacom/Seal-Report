@@ -149,7 +149,7 @@ namespace Seal.Model
             set { _SQL = value; }
         }
 
-        string _script = "";
+        string _script;
         [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL if defined. If the script returns 0, the report is cancelled and the next tasks are not executed."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string Script

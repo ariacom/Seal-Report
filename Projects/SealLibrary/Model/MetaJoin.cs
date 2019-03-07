@@ -117,6 +117,7 @@ namespace Seal.Model
             get { return _clause == null ? "" : _clause; }
             set { _clause = value; }
         }
+        public bool ShouldSerializeClause() { return !string.IsNullOrEmpty(_clause); }
 
         private JoinType _joinType = JoinType.Inner;
         [DefaultValue(JoinType.Inner)]

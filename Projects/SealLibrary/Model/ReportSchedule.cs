@@ -73,7 +73,7 @@ namespace Seal.Model
         }
 
 
-        string _outputGUID = "";
+        string _outputGUID;
         public string OutputGUID
         {
             get { return _outputGUID; }
@@ -233,7 +233,8 @@ namespace Seal.Model
             get { return _errorEmailSendMode; }
             set { _errorEmailSendMode = value; }
         }
-
+        public bool ShouldSerializeErrorEmailSendMode() { return !string.IsNullOrEmpty(ErrorEmailTo); }
+       
         private string _errorEmailSubject;
         [Category("Failover: Email Notification in case of error"), DisplayName("Subject"), Description("The subject of the email sent in case of error. If empty, the report name is used."), Id(4, 7)]
         public string ErrorEmailSubject

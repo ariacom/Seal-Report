@@ -37,17 +37,13 @@
 		user.AddDefaultSecurityGroup();
 	}
 }</Script>
-  <Parameters />
   <Groups>
     <SecurityGroup>
       <Name>Default Group</Name>
       <Folders>
         <SecurityFolder />
       </Folders>
-      <Devices />
-      <Sources />
-      <Connections />
-      <Columns />
+      <Dashboards />
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
@@ -58,10 +54,7 @@
           <FolderRight>Execute</FolderRight>
         </SecurityFolder>
       </Folders>
-      <Devices />
-      <Sources />
-      <Connections />
-      <Columns />
+      <Dashboards />
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
@@ -72,10 +65,7 @@
           <FolderRight>ExecuteReportOuput</FolderRight>
         </SecurityFolder>
       </Folders>
-      <Devices />
-      <Sources />
-      <Connections />
-      <Columns />
+      <Dashboards />
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
@@ -87,10 +77,7 @@
         </SecurityFolder>
       </Folders>
       <PersFolderRight>Files</PersFolderRight>
-      <Devices />
-      <Sources />
-      <Connections />
-      <Columns />
+      <Dashboards />
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
@@ -126,6 +113,7 @@
           <Category>Customers</Category>
         </SecurityColumn>
       </Columns>
+      <Dashboards />
       <Culture />
     </SecurityGroup>
   </Groups>

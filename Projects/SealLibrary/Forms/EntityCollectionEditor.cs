@@ -115,6 +115,20 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
+            else if (CollectionItemType == typeof(SecurityWidget))
+            {
+                frmCollectionEditorForm.Text = "Security Widgets Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
+            else if (CollectionItemType == typeof(SecurityDashboard))
+            {
+                frmCollectionEditorForm.Text = "Dashboard Publications Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
             else if (CollectionItemType == typeof(SubReport))
             {
                 frmCollectionEditorForm.Text = "Sub-Reports Collection Editor";

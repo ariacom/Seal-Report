@@ -261,6 +261,8 @@ namespace Seal.Model
             get { return _forceJoinTableGUID; }
             set { _forceJoinTableGUID = value; }
         }
+        public bool ShouldSerializeForceJoinTableGUID() { return !string.IsNullOrEmpty(_forceJoinTableGUID); }
+
         public MetaTable ForceJoinTable
         {
             get { return Source.MetaData.Tables.FirstOrDefault(i => i.GUID == _forceJoinTableGUID); }
@@ -274,6 +276,8 @@ namespace Seal.Model
             get { return _avoidTableGUID; }
             set { _avoidTableGUID = value; }
         }
+        public bool ShouldSerializeAvoidJoinTableGUID() { return !string.IsNullOrEmpty(_avoidTableGUID); }
+
         public MetaTable AvoidJoinTable
         {
             get { return Source.MetaData.Tables.FirstOrDefault(i => i.GUID == _avoidTableGUID); }
@@ -382,6 +386,7 @@ namespace Seal.Model
             get { return _elements; }
             set { _elements = value; }
         }
+        public bool ShouldSerializeElements() { return _elements.Count > 0; }
 
         public IEnumerable<ReportElement> GetElements(PivotPosition position)
         {
@@ -422,6 +427,7 @@ namespace Seal.Model
             get { return _restrictions; }
             set { _restrictions = value; }
         }
+        public bool ShouldSerializeRestrictions() { return _restrictions.Count > 0; }
 
 
         //Aggregate Restrictions
@@ -438,6 +444,7 @@ namespace Seal.Model
             get { return _aggregateRestrictions; }
             set { _aggregateRestrictions = value; }
         }
+        public bool ShouldSerializeAggregateRestrictions() { return _aggregateRestrictions.Count > 0; }
 
 
         //Execution

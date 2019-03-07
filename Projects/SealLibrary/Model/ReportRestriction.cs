@@ -222,6 +222,7 @@ namespace Seal.Model
                 _format = value;
             }
         }
+        public bool ShouldSerializeFormatRe() { return !string.IsNullOrEmpty(_format); }
 
         private string _operatorLabel;
         [Category("Advanced"), DisplayName("Operator Label"), Description("If not empty, overwrite the operator display text."), Id(5, 3)]
@@ -464,6 +465,7 @@ namespace Seal.Model
             get { return _enumValues; }
             set { _enumValues = value; }
         }
+        public bool ShouldSerializeEnumValues() { return _enumValues.Count > 0; }
 
         [Category("Restriction Values"), DisplayName("Value"), Description("Value used for the restriction."), Id(1, 2)]
         [Editor(typeof(RestrictionEnumValuesEditor), typeof(UITypeEditor))]
@@ -475,21 +477,26 @@ namespace Seal.Model
         }
 
 
+
         [CategoryAttribute("Restriction Values"), DisplayName("Value 1"), Description("Value used for the restriction."), Id(1, 2)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date1 { get; set; }
+        public bool ShouldSerializeDate1() { return Date1 != DateTime.MinValue; }
 
         [CategoryAttribute("Restriction Values"), DisplayName("Value 2"), Description("Second value used for the restriction."), Id(3, 2)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date2 { get; set; }
+        public bool ShouldSerializeDate2() { return Date2 != DateTime.MinValue; }
 
         [CategoryAttribute("Restriction Values"), DisplayName("Value 3"), Description("Third value used for the restriction."), Id(5, 2)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date3 { get; set; }
+        public bool ShouldSerializeDate3() { return Date3 != DateTime.MinValue; }
 
         [CategoryAttribute("Restriction Values"), DisplayName("Value 4"), Description("Fourth value used for the restriction."), Id(7, 2)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date4 { get; set; }
+        public bool ShouldSerializeDate4() { return Date4 != DateTime.MinValue; }
 
         [Category("Restriction Values"), DisplayName("Value 1 Keyword"), Description("Date keyword can be used to specify relative date and time for the restriction value."), Id(2, 2)]
         [TypeConverter(typeof(DateKeywordConverter))]

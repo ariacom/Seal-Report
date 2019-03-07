@@ -113,17 +113,35 @@
 
                     //pie chart
                     if (chartType == 'pieChart') {
+                        var total = 0;
+                        series[0].values.forEach(function (d) {
+                            total = total + d.y;
+                        });
+                        var labelType = '@view.GetValue("nvd3_pie_labeltype")';
+
                         (@chartId)
                             .x(function (d) { return xLabels[d.x] })
                             .showLabels(true)
-                            .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
-                            .labelType('percent') //Configure what type of data to show in the label. Can be key, value or percent
+                            .labelThreshold(@view.GetValue("nvd3_pie_labelthreshold")/100)
                             .donut(true)
-                            .donutRatio(0.35)     //Configure how big you want the donut hole size to be
-                            ;
+                            .donutRatio(@view.GetValue("nvd3_pie_holeratio")/100)
+                            //.labelType('@view.GetValue("nvd3_pie_labeltype")')
+                                ;
+
+                        (@chartId).labelType(function (d) {
+                            if (labelType == 'key') return XValueFormatter(d.data.x);
+                            else if (labelType == 'percent') {
+                                var percent = (d.endAngle - d.startAngle) / (2 * Math.PI);
+                                return d3.format('.2%')(percent);
+                            }
+                            else if (labelType == 'value') return YPrimaryValueFormatter(d.value);
+                            return "";
+                        });
 
                         (@chartId).tooltip.valueFormatter(function (d) {
-                            return YPrimaryValueFormatter(d);
+                            if (labelType == 'key' || labelType == 'none') return YPrimaryValueFormatter(d) + ' ('+ d3.format('.2%')(d/total) + ')';
+                            else if (labelType == 'percent') return YPrimaryValueFormatter(d);
+                            return d3.format('.2%')(d / total);
                         });
                     }
                     //stacked area

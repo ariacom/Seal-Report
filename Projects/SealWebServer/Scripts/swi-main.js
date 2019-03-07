@@ -12,10 +12,14 @@ var $elementDropDown;
 var _gateway;
 var _main;
 var _editor;
+var _dashboard;
 $(document).ready(function () {
     _gateway = new SWIGateway();
     _main = new SWIMain();
     _main.Process();
+    $(window).scroll(function () {
+        SWIUtil.HideMessages();
+    });
 });
 var SWIMain = (function () {
     function SWIMain() {
@@ -86,11 +90,24 @@ var SWIMain = (function () {
         $("#main-container").css("display", "block");
         //Refresh
         $("#refresh-nav-item").unbind('click').on("click", function (e) {
-            _main.ReloadReportsTable();
-            if (SWIUtil.IsMobile())
-                $('.navbar-toggle').click();
-            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been updated"), 5000);
+            if ($("#main-dashboard").css("display") != "block") {
+                _main.ReloadReportsTable();
+                if (SWIUtil.IsMobile())
+                    $('.navbar-toggle').click();
+                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been updated"), 5000);
+            }
+            else if (_dashboard) {
+                _dashboard = new SWIDashboard();
+                _dashboard.init();
+            }
         });
+        //TODO, default view
+        $(".folderview").show();
+        $(".dashboardview").hide();
+        /*      $(".folderview").hide();
+              $(".dashboardview").show();
+              $("#dashboard-toggle").attr("title", "View reports");
+              */
         //Folders
         $("#folders-nav-item").unbind('click').on("click", function (e) {
             $outputPanel.hide();
@@ -370,6 +387,9 @@ var SWIMain = (function () {
                 $folderTree.jstree('select_node', _main._folderpath);
             }, 100);
             $waitDialog.modal('hide');
+            if (_dashboard) {
+                _dashboard.init();
+            }
         });
     };
     SWIMain.prototype.ReloadReportsTable = function () {
@@ -407,7 +427,7 @@ var SWIMain = (function () {
         }
         var $cb = $("#selectall-checkbox");
         $cb.prop("checked", false);
-        $("#selectall-checkbox").unbind("click").bind("click", function () {
+        $cb.unbind("click").bind("click", function () {
             $(".report-checkbox").each(function (key, value) {
                 var isChecked = $cb.is(':checked');
                 $(value).prop("checked", isChecked);

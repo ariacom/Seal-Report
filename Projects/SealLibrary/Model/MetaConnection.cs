@@ -147,7 +147,7 @@ namespace Seal.Model
             get { return _password; }
             set { _password = value; }
         }
-
+        public bool ShouldSerializePassword() { return !string.IsNullOrEmpty(_password); }
 
         [DisplayName("User password"), PasswordPropertyText(true), Description("Password used to connect to the database."), Category("Security"), Id(2, 2)]
         [XmlIgnore]
