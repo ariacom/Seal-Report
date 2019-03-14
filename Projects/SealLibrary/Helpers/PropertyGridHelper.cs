@@ -24,6 +24,7 @@ namespace Seal.Helpers
                 if (
                 item.PropertyDescriptor == null ||
                 item.PropertyDescriptor.IsReadOnly ||
+                (!(item.PropertyDescriptor is CustomPropertyDescriptor)) ||
                 (item.PropertyDescriptor is CustomPropertyDescriptor && ((CustomPropertyDescriptor)item.PropertyDescriptor).DefaultValue == null) ||
                 !item.PropertyDescriptor.CanResetValue(grid.SelectedObject)
                 )

@@ -1026,8 +1026,8 @@ namespace Seal.Model
                                 //For outer join, add the extra restriction in the ON clause -> hopefully they are not defined as bi-directional
                                 MetaTable extraWhereTable = null;
                                 if (join.JoinType == JoinType.LeftOuter && !string.IsNullOrEmpty(join.RightTable.WhereSQL)) extraWhereTable = join.RightTable;
-                                else if (join.JoinType == JoinType.RightOuter && !string.IsNullOrEmpty(join.LeftTable.WhereSQL)) extraWhereTable = join.LeftTable;
-                                else if (!string.IsNullOrEmpty(leftTable.WhereSQL) && !extraWhereTables.Contains(leftTable))
+                                else if (join.JoinType == JoinType.RightOuter && !string.IsNullOrWhiteSpace(join.LeftTable.WhereSQL)) extraWhereTable = join.LeftTable;
+                                else if (!string.IsNullOrWhiteSpace(leftTable.WhereSQL) && !extraWhereTables.Contains(leftTable))
                                 {
                                     extraWhereTables.Add(leftTable);
                                 }
@@ -1052,7 +1052,7 @@ namespace Seal.Model
                     //add extra where clause
                     foreach (var table in extraWhereTables)
                     {
-                        if (!string.IsNullOrEmpty(table.WhereSQL))
+                        if (!string.IsNullOrWhiteSpace(table.WhereSQL))
                         {
                             string where = RazorHelper.CompileExecute(table.WhereSQL, table);
                             if (!string.IsNullOrEmpty(where))

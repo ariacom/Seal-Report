@@ -39,11 +39,28 @@ namespace SealWebServer.Controllers
                 }
 
                 //Set culture from cookie
-                string culture = GetCookie(SealCultureCookieName);
-                if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
+                if (!string.IsNullOrEmpty(WebUser.Profile.Culture)) Repository.SetCultureInfo(WebUser.Profile.Culture);
 
+                //Set default view
+                string view = WebUser.Profile.View;
+                //Check rights
+                if (WebUser.ViewType == Seal.Model.ViewType.Reports && view == "dashboards") view = "reports";
+                else if (WebUser.ViewType == Seal.Model.ViewType.Dashboards && view == "reports") view = "dashboards";
 
-                return Json(new SWIUserProfile() { name = WebUser.Name, group = WebUser.SecurityGroupsDisplay, culture = Repository.CultureInfo.EnglishName, folder = GetCookie(SealLastFolderCookieName) });
+                //Refresh widgets
+                DashboardWidgetsPool.ForceReload();
+
+                return Json(new SWIUserProfile()
+                {
+                    name = WebUser.Name,
+                    group = WebUser.SecurityGroupsDisplay,
+                    culture = Repository.CultureInfo.EnglishName,
+                    folder = GetCookie(SealLastFolderCookieName),
+                    dashboard = GetCookie(SealLastDashboardCookieName),
+                    viewtype = WebUser.ViewType,
+                    lastview = view,
+                    role = WebUser.DashboardRole
+                });
             }
             catch (Exception ex)
             {
@@ -319,7 +336,7 @@ namespace SealWebServer.Controllers
 
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
-                if (!string.IsNullOrEmpty(outputGUID) && (FolderRight) folder.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this folder");
+                if (!string.IsNullOrEmpty(outputGUID) && (FolderRight)folder.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this folder");
 
                 string filePath = getFullPath(path);
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: report does not exist");
@@ -424,7 +441,7 @@ namespace SealWebServer.Controllers
 
 
         [HttpPost]
-        public ActionResult SWISetUserProfile(string culture)
+        public ActionResult SWISetUserProfile(string culture, string defaultView)
         {
             WriteDebug("SWISetUserProfile");
             try
@@ -433,7 +450,11 @@ namespace SealWebServer.Controllers
                 if (string.IsNullOrEmpty(culture)) throw new Exception("Error: culture must be supplied");
 
                 if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
+                WebUser.Profile.Culture = culture;
                 SetCookie(SealCultureCookieName, culture);
+
+                if (!string.IsNullOrEmpty(defaultView)) WebUser.Profile.View = defaultView;
+                WebUser.Profile.SaveToFile();
 
                 return Json(new { });
             }
@@ -452,7 +473,14 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
 
-                return Json(new SWIUserProfile() { authenticated = true, name = WebUser.Name, group = WebUser.SecurityGroupsDisplay, culture = Repository.CultureInfo.EnglishName, folder = GetCookie(SealLastFolderCookieName) });
+                return Json(new SWIUserProfile() {
+                    authenticated = true,
+                    name = WebUser.Name,
+                    group = WebUser.SecurityGroupsDisplay,
+                    culture = Repository.CultureInfo.EnglishName,
+                    folder = GetCookie(SealLastFolderCookieName),
+                    dashboard = GetCookie(SealLastDashboardCookieName)
+                });
             }
             catch
             {
@@ -512,6 +540,291 @@ namespace SealWebServer.Controllers
             }
         }
 
+        #region Dashboard
 
+        [HttpPost]
+        public ActionResult SWIGetUserDashboards()
+        {
+            WriteDebug("SWIGetUserDashboards");
+            try
+            {
+                checkSWIAuthentication();
+
+                return Json(WebUser.UserDashboards.OrderBy(i => i.Order).ToArray());
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SWIGetDashboards()
+        {
+            WriteDebug("SWIGetDashboards");
+            try
+            {
+                checkSWIAuthentication();
+
+                //Public Dashboards not selected 
+                return Json(WebUser.GetDashboards().Where(i => !WebUser.Profile.Dashboards.Contains(i.GUID)).OrderBy(i => i.Order).ToArray());
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SWIGetDashboardItems(string guid)
+        {
+            WriteDebug("SWIGetDashboardItems");
+            try
+            {
+                checkSWIAuthentication();
+
+                if (string.IsNullOrEmpty(guid)) throw new Exception("Error: guid must be supplied");
+
+                var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
+                if (dashboard == null) throw new Exception("Error: The dashboard does not exist");
+
+                return Json(dashboard.Items.OrderBy(i => string.IsNullOrEmpty(i.GroupOrder) ? "0" : i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order).ToArray());
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        List<ReportExecution> DashboardExecutions
+        {
+            get
+            {
+                List<ReportExecution> result = (List<ReportExecution>)Session[SessionDashboardExecutions];
+                if (result == null)
+                {
+                    result = new List<ReportExecution>();
+                    Session[SessionDashboardExecutions] = result;
+                }
+                return result;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SWIAddDashboard(string[] guids)
+        {
+            WriteDebug("SWIAddDashboard");
+            try
+            {
+                checkSWIAuthentication();
+
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                foreach(var guid in guids) WebUser.Profile.Dashboards.Add(guid);
+                WebUser.Profile.SaveToFile();
+
+                return Json(new object { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SWIRemoveDashboard(string guid)
+        {
+            WriteDebug("SWIRemoveDashboard");
+            try
+            {
+                checkSWIAuthentication();
+
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                if (WebUser.Profile.Dashboards.Contains(guid)) WebUser.Profile.Dashboards.Remove(guid);
+                WebUser.Profile.SaveToFile();
+
+                return Json(new object { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SWISwapDashboardOrder(string guid1, string guid2)
+        {
+            WriteDebug("SWISwapDashboardOrder");
+            try
+            {
+                checkSWIAuthentication();
+                if (WebUser.Profile.Dashboards.Contains(guid1) && WebUser.Profile.Dashboards.Contains(guid2))
+                {
+                    var newDashboards = new List<string>();
+                    foreach(var guid in WebUser.Profile.Dashboards)
+                    {
+                        if (guid == guid1) newDashboards.Add(guid2);
+                        else if (guid == guid2) newDashboards.Add(guid1);
+                        else newDashboards.Add(guid);
+                    }
+                    WebUser.Profile.Dashboards = newDashboards;
+                    WebUser.Profile.SaveToFile();
+                }
+                return Json(new object { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SWISetLastDashboard(string guid)
+        {
+            WriteDebug("SWISetLastDashboard");
+            try
+            {
+                checkSWIAuthentication();
+                SetCookie(SealLastDashboardCookieName, guid);
+                return Json(new object { });
+
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+
+        [HttpPost]
+        public ActionResult SWIGetDashboardResult(string guid, string itemguid)
+        {
+            WriteDebug("SWIGetDashboardResult");
+            try
+            {
+                checkSWIAuthentication();
+
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                Report report = null;
+                ReportExecution execution = null;
+                Repository repository = null;
+
+                var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
+                if (dashboard == null) throw new Exception("Error: The dashboard does not exist");
+                if (!WebUser.CanViewDashboard(dashboard)) throw new Exception("Error: no right to view this dashboard");
+
+                var item = dashboard.Items.FirstOrDefault(i => i.GUID == itemguid);
+                if (item == null) throw new Exception("Error: The item does not exist");
+
+                var widget = WebUser.Widgets.FirstOrDefault(i => i.GUID == item.WidgetGUID);
+                if (widget == null) throw new Exception("Error: the widget does not exist");
+                if (!WebUser.CanSelectWidget(widget)) throw new Exception("Error: no right to view this widget");
+
+                /* No check on exec rights for widgets...
+                SWIFolder folder = getParentFolder(widget.ReportPath);
+                if (folder.right == 0) throw new Exception("Error: no right on this folder");
+                */
+                var filePath = Repository.ReportsFolder + widget.ReportPath;
+                if (!System.IO.File.Exists(filePath)) throw new Exception("Error: the report does not exist");
+
+                execution = DashboardExecutions.FirstOrDefault(i => i.Report.FilePath == filePath);
+
+                if (execution != null && execution.Report.LastModification != System.IO.File.GetLastWriteTime(filePath))
+                {
+                    DashboardExecutions.RemoveAll(i => i.Report.FilePath == filePath);
+                    execution = null;
+                }
+
+                if (execution != null)
+                {
+                    report = execution.Report;
+                }
+                else
+                {
+                    repository = Repository.CreateFast();
+                    report = Report.LoadFromFile(filePath, repository);
+
+                    report.ExecutionContext = ReportExecutionContext.WebReport;
+                    //Disable basics
+                    report.ExecutionView.InitParameters(false);
+                    report.ExecutionView.SetParameter(Parameter.DrillEnabledParameter, false);
+                    report.ExecutionView.SetParameter(Parameter.SubReportsEnabledParameter, false);
+                    report.ExecutionView.SetParameter(Parameter.ServerPaginationParameter, false);
+
+                    report.ExecutionView.SetParameter(Parameter.ForceModelsLoad, true);
+                    //On force le load de tous les modèles
+                    //TODO optimiser en regroupant tous les widgets
+                    //var rootView = report.GetRootView(v);
+                    //if (rootView != null) report.CurrentViewGUID = rootView.GUID; //Set the root GUID
+                }
+
+                string content = "";
+                var view = report.GetWidgetViewToParse(report.Views, widget.GUID);
+                var modelView = report.CurrentModelView;
+                if (view != null)
+                {
+                    //Init parmeters if the root view is different from the one executed...
+                    var rootView = report.GetRootView(view);
+                    if (rootView != null && rootView != report.ExecutionView)
+                    {
+                        string templateErrors = "";
+                        rootView.InitTemplates(rootView, ref templateErrors);
+                    }
+
+                    if (execution != null)
+                    {
+                        if (!report.IsExecuting && report.ExecutionEndDate < DateTime.Now.AddSeconds(-10))
+                        {
+                            execution.Execute();
+                            while (report.IsExecuting) Thread.Sleep(100);
+                        }
+
+                    }
+                    else
+                    {
+                        execution = new ReportExecution() { Report = report };
+
+                        DashboardExecutions.Add(execution);
+                        execution.Execute();
+                        while (report.IsExecuting) Thread.Sleep(100);
+                    }
+
+                    //Reset pointers and parse
+                    lock (report)
+                    {
+                        report.CurrentModelView = modelView;
+                        if (modelView.Model.Pages.Count > 0)
+                        {
+                            report.CurrentPage = modelView.Model.Pages[0];
+                            report.CurrentPage.PageId = null; //Reset page id
+                        }
+                        content = view.Parse();
+                    }
+                }
+                else
+                {
+                    content = "<b>Invalid Widget definition</b>";
+                }
+
+                var result = new
+                {
+                    itemguid = itemguid,
+                    path = widget.Exec ? widget.ReportPath : "",
+                    lastexec = "Last execution at " + report.ExecutionStartDate.ToLongTimeString(),
+                    description = widget.Description,
+                    content = content
+                };
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        #endregion
     }
 }

@@ -7,6 +7,10 @@
         public string group;
         public string culture;
         public string folder;
+        public string dashboard;
+        public string lastview;
+        public ViewType viewtype;
+        public DashboardRole role;
     }
 
     public class SWIFolder

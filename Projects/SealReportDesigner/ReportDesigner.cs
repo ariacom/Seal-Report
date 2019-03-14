@@ -1056,6 +1056,7 @@ namespace Seal
                 views.Add((ReportView)newEntity);
                 _report.InitReferences();
                 ((RootComponent)newEntity).GUID = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(((ReportView)newEntity).WidgetDefinition.GUID)) ((ReportView)newEntity).WidgetDefinition.GUID = Guid.NewGuid().ToString();
                 ((ReportView)newEntity).ReinitGUIDChildren();
                 ((RootComponent)newEntity).Name = Helper.GetUniqueName(((RootComponent)selectedEntity).Name + " - Copy", (from i in views select i.Name).ToList());
                 int idx = 1;

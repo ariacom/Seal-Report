@@ -27,6 +27,7 @@ namespace SealWebServer.Controllers
 
         public const string SealCultureCookieName = "SR_Culture_Name";
         public const string SealLastFolderCookieName = "SR_Last_Folder";
+        public const string SealLastDashboardCookieName = "SR_Last_Dashboard";
 
         const string _loginContent = "<html><script>window.top.location.href='Main';</script></html>";
         string _noReportFoundMessage
@@ -77,6 +78,11 @@ namespace SealWebServer.Controllers
                 CreateRepository();
             }
             var user = new SecurityUser(Repository.Security);
+
+            //Load profile
+            if (System.IO.File.Exists(user.ProfilePath)) user.Profile = SecurityUserProfile.LoadFromFile(user.ProfilePath);
+            user.Profile.Path = user.ProfilePath;
+
             Session[SessionUser] = user;
             return user;
         }

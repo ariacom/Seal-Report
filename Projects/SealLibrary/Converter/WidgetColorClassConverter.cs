@@ -25,7 +25,7 @@ namespace Seal.Converter
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
             return new StandardValuesCollection(
-                new string[] { "", "bg-default", "bg-primary", "bg-success", "bg-info", "bg-warning", "bg-danger" });
+                new string[] { "", "default", "primary", "success", "info", "warning", "danger" });
         }
     }
 
