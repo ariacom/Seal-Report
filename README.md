@@ -1,8 +1,8 @@
-<a href="http://www.sealreport.org" target=_blank>Seal Report</a> offers a complete framework for producing daily reports and dashboards from any database.
+<a href="https://sealreport.org" target=_blank>Seal Report</a> offers a complete framework for producing daily reports and dashboards from any database.
 
 The product focuses on **easy installation** and **report design**: Once setup, reports can be built and published in a minute. 
 
-<a href="http://www.sealreport.org" target=_blank>Seal Report</a> is an Open Source tool for the Microsoft .Net Framework entirely written in C#.
+<a href="https://sealreport.org" target=_blank>Seal Report</a> is an Open Source tool for the Microsoft .Net Framework entirely written in C#.
 
 ## Main Features
 * **Dynamic SQL sources**: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
@@ -17,31 +17,31 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 Fill up your source Data Tables from your own code and display them in a report.
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
 
-A **live demonstration** of the <a href="http://demo.sealreport.org" target=_blank>Web Report Server</a> is available.
+A **live demonstration** of the <a href="https://sealreport.org/demo" target=_blank>Web Report Server</a> is available.
 
-**Quick start guides**  for building reports are available at the <a href="http://www.sealreport.org" target=_blank>Seal Report</a> Web site.
+**Quick start guides**  for building reports are available at the <a href="https://sealreport.org" target=_blank>Seal Report</a> Web site.
 
-Use the <a href="http://forum.sealreport.org" target=_blank>Seal Report Forum</a> to get free support, information and hints on the product, or read the [Wiki](https://github.com/ariacom/Seal-Report/wiki) for technical documentation.
+Use the <a href="https://sealreport.org/forum" target=_blank>Seal Report Forum</a> to get free support, information and hints on the product, or read the [Wiki](https://github.com/ariacom/Seal-Report/wiki) for technical documentation.
 
-In addition to the Open Source version, **<a href="http://www.ariacom.com" target=_blank>Ariacom</a>** offers consulting on the product and 2 commercial components:
-* The <a href="http://www.ariacom.com/sealweblicense.cshtml" target=_blank>Web Report Designer</a> to edit and schedule reports from any web browser.
-* The <a href="http://www.ariacom.com/sealreportlicense.cshtml" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
+In addition to the Open Source version, **<a href="https://ariacom.com" target=_blank>Ariacom</a>** offers consulting on the product and 2 commercial components:
+* The <a href="https://ariacom.com/sealweblicense.cshtml" target=_blank>Web Report Designer</a> to edit and schedule reports from any web browser.
+* The <a href="https://ariacom.com/sealreportlicense.cshtml" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
 
 # Screen shots
 ## HTML Report Result
-![HTML Report Result](http://sealreport.org/Images/reportResult3.png) 
+![HTML Report Result](https://sealreport.org/Images/reportResult3.png) 
 
 ## Report Designer
-![Report Designer](http://sealreport.org/Images/reportDesignerShot.png)
+![Report Designer](https://sealreport.org/Images/reportDesignerShot.png)
 
 ## Web Report Server
-![Web Report Server](http://sealreport.org/Images/webServer4.png)
+![Web Report Server](https://sealreport.org/Images/webServer4.png)
 
 ## Report Result with Responsive Layout
-![HTML Report Result](http://sealreport.org/Images/reportResultResp2.png) 
+![HTML Report Result](https://sealreport.org/Images/reportResultResp2.png) 
 
 ## Web Report Server with Responsive Layout
-![Web Report Server](http://sealreport.org/Images/webServerResp2.png)
+![Web Report Server](https://sealreport.org/Images/webServerResp2.png)
 
 ## System Requirements
 **For use:**
@@ -55,4 +55,4 @@ In addition to the Open Source version, **<a href="http://www.ariacom.com" targe
 * Visual Studio 2017
 
 ## License
-Seal Report is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>
+Seal Report is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>
