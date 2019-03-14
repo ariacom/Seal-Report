@@ -448,7 +448,7 @@ namespace Seal.Model
 
                     string sql = string.Format("SELECT {0} FROM {1} WHERE 1=0", colNames, FullSQLName);
 
-                    if (!string.IsNullOrEmpty(WhereSQL))
+                    if (!string.IsNullOrWhiteSpace(WhereSQL))
                     {
                         var where = RazorHelper.CompileExecute(WhereSQL, this);
                         if (!string.IsNullOrWhiteSpace(where)) sql += string.Format("\r\nAND ({0})", RazorHelper.CompileExecute(where, this));

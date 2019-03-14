@@ -186,6 +186,9 @@
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Model\CategoryFolder.cs" />
+    <Compile Include="Model\DashboardItem.cs" />
+    <Compile Include="Model\Dashboard.cs" />
+    <Compile Include="Model\DashboardWidgetsPool.cs" />
     <Compile Include="Model\Navigation.cs" />
     <Compile Include="Model\NavigationContext.cs" />
     <Compile Include="Model\NavigationLink.cs" />
@@ -208,6 +211,7 @@
     <Compile Include="Model\SealSecurity.cs" />
     <Compile Include="Model\CommonScript.cs" />
     <Compile Include="Model\SecurityDashboard.cs" />
+    <Compile Include="Model\SecurityUserProfile.cs" />
     <Compile Include="Model\SecurityWidget.cs" />
     <Compile Include="Model\SecuritySource.cs" />
     <Compile Include="Model\SecurityDevice.cs" />

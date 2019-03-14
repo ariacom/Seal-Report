@@ -230,6 +230,8 @@ namespace Seal.Forms
             else if (value is SecurityColumn) result = ((SecurityColumn)value).DisplayName;
             else if (value is SecuritySource) result = ((SecuritySource)value).DisplayName;
             else if (value is SecurityDevice) result = ((SecurityDevice)value).DisplayName;
+            else if (value is SecurityWidget) result = ((SecurityWidget)value).DisplayName;
+            else if (value is SecurityDashboard) result = ((SecurityDashboard)value).DisplayName;
             else if (value is SecurityConnection) result = ((SecurityConnection)value).DisplayName;
             else if (value is SubReport) result = ((SubReport)value).Name;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;

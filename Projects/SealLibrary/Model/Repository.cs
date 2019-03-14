@@ -389,6 +389,7 @@ namespace Seal.Model
                 if (!Directory.Exists(SubReportsFolder)) Directory.CreateDirectory(SubReportsFolder);
                 if (!Directory.Exists(SpecialsFolder)) Directory.CreateDirectory(SpecialsFolder);
                 if (!Directory.Exists(PersonalFolder)) Directory.CreateDirectory(PersonalFolder);
+                if (!Directory.Exists(DashboardPublicFolder)) Directory.CreateDirectory(DashboardPublicFolder);
             }
             catch { }
         }
@@ -486,6 +487,16 @@ namespace Seal.Model
         public string GetPersonalFolderName(SecurityUser user)
         {
             return TranslateWeb("Personal") + string.Format(" ({0})", user.GetPersonalFolderName()); ;
+        }
+
+        public string GetDashboardPersonalFolder(SecurityUser user)
+        {
+            return Path.Combine(GetPersonalFolderName(user), "Dashboards");
+        }
+
+        public string DashboardPublicFolder
+        {
+            get { return Path.Combine(SpecialsFolder, "Dashboards"); }
         }
 
         public string TranslationsPath

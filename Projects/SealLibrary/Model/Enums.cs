@@ -416,18 +416,16 @@ namespace Seal.Model
 
     public enum ViewType
     {
-        [Description("View reports and dashboards")]
-        ReportsDashboards,
         [Description("View reports only")]
         Reports,
         [Description("View dashboards only")]
         Dashboards,
+        [Description("View reports and dashboards")]
+        ReportsDashboards,
     }
 
     public enum DashboardRole
     {
-        [Description("None: No right on dashboards")]
-        None,
         [Description("Viewer: View public dashboards")]
         Viewer,
         [Description("Private designer: Create and edit private dashboards")]

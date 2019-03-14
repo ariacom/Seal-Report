@@ -196,8 +196,8 @@ namespace Seal.Model
                     if (result != null)
                     {
                         //Merge the groupFolder find in this group with the current result
-                        //Weakest right is applied..
-                        result.FolderRight = (FolderRight)Math.Min((int)result.FolderRight, (int)current.FolderRight);
+                        //Highest right is applied..
+                        result.FolderRight = (FolderRight)Math.Max((int)result.FolderRight, (int)current.FolderRight);
                         result.ExpandSubFolders = result.ExpandSubFolders || current.ExpandSubFolders;
                         result.ManageFolder = result.ManageFolder && current.ManageFolder;
                     }
@@ -247,6 +247,8 @@ namespace Seal.Model
                 result.AppendLine();
                 result.AppendFormat("    Dashboard Role:{0}\r\n", Helper.GetEnumDescription(group.DashboardRole.GetType(), group.DashboardRole));
                 result.AppendLine();
+                result.AppendFormat("    View All Public Dashboards:{0}\r\n", group.AllDashboards.ToString());
+                result.AppendLine();
                 foreach (var item in group.Devices)
                 {
                     result.AppendFormat("    Device:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
@@ -275,8 +277,6 @@ namespace Seal.Model
 
                 result.AppendLine(getSecuritySummary(group, Repository.ReportsFolder + "\\"));
             }
-
-            result.AppendLine("\r\nNote: If a user belongs to several groups, the weakest specified right is applied\r\n");
             return result.ToString();
         }
 

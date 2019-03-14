@@ -15,3 +15,14 @@ interface JQuery {
 interface ReportEditorInterface {
     init(): void;
 }
+
+interface DashboardInterface {
+    init(): void;
+}
+
+interface DashboardEditorInterface {
+    init(): void;
+    initMenu();
+    initDashboardMenu();
+    getEditButtons();
+}

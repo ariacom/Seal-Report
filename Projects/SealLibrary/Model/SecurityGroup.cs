@@ -28,7 +28,8 @@ namespace Seal.Model
                 GetProperty("Connections").SetIsBrowsable(true);
                 GetProperty("Sources").SetIsBrowsable(true);
                 GetProperty("Dashboards").SetIsBrowsable(true);
-                
+                GetProperty("AllDashboards").SetIsBrowsable(true);
+
                 GetProperty("DashboardRole").SetIsBrowsable(true);
                 GetProperty("Widgets").SetIsBrowsable(true);
 
@@ -120,8 +121,18 @@ namespace Seal.Model
         public bool ShouldSerializeColumns() { return _columns.Count > 0; }
 
 
+        private bool _allDashboards = true;
+        [Category("Dashboard Publications"), DisplayName("View all dashboards"), Description("If true, all the public dashboards can be viewed and selected. The security set in the 'Dashboards' property is ignored."), Id(1, 3)]
+        [DefaultValue(true)]
+        public bool AllDashboards
+        {
+            get { return _allDashboards; }
+            set { _allDashboards = value; }
+        }
+
+
         private List<SecurityDashboard> _dashboards = new List<SecurityDashboard>();
-        [Category("Dashboard Publications"), DisplayName("Dashboards"), Description("List of public dashboards published for the group. By default, public dashboards are not published."), Id(1, 3)]
+        [Category("Dashboard Publications"), DisplayName("Dashboards"), Description("If 'Allow all dashboards' is false, list of public dashboards published for the group."), Id(2, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityDashboard> Dashboards
         {

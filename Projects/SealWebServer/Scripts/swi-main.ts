@@ -17,7 +17,6 @@ var _main: SWIMain;
 var _editor: ReportEditorInterface;
 var _dashboard: DashboardInterface;
 
-
 declare var folderRightSchedule: number;
 declare var folderRightEdit: number;
 declare var hasEditor: boolean;
@@ -34,7 +33,7 @@ $(document).ready(function () {
 
 class SWIMain {
     private _connected: boolean = false;
-    private _profile: any = null;
+    public _profile: any = null;
     private _canEdit: boolean = false;
     public _folder: any = null;
     private _searchMode: boolean = false;
@@ -111,8 +110,6 @@ class SWIMain {
         $("#password").val("");
         $("#login-modal-error").text("");
 
-        _main.loadFolderTree();
-
         $("#main-container").css("display", "block");
 
         //Refresh
@@ -128,13 +125,33 @@ class SWIMain {
             }
         });
 
-        //TODO, default view
-        $(".folderview").show();
-        $(".dashboardview").hide();
-  /*      $(".folderview").hide();
-        $(".dashboardview").show();
-        $("#dashboard-toggle").attr("title", "View reports");
-        */
+        var hasReports = (_main._profile.viewtype == 0 || _main._profile.viewtype == 2);
+        var hasDashboard = (_main._profile.viewtype == 1 || _main._profile.viewtype == 2);
+
+        SWIUtil.ShowHideControl($("#dashboard-toggle"), _main._profile.viewtype == 2 /* reports and dashboards */)
+        //Dashboard toggle
+        $("#dashboard-toggle").unbind('click').on("click", function (e) {
+            _main.showDashboard($("#main-dashboard").css("display") != "block");
+        });
+
+        if (hasReports && hasDashboard) { }
+
+        if (hasReports) {
+            _main.loadFolderTree();
+        }
+
+        if (hasDashboard) {
+            _dashboard = new SWIDashboard();
+            _dashboard.init();
+        }
+
+        if (_main._profile.lastview == "dashboards") {
+            _main.showDashboard(true);
+        }
+        else {
+            _main.showDashboard(false);
+        }
+
         //Folders
         $("#folders-nav-item").unbind('click').on("click", function (e) {
             $outputPanel.hide();
@@ -199,9 +216,15 @@ class SWIMain {
             else $select.val(_main._profile.culture).change();
             $select.selectpicker('refresh');
 
+            var $select2 = $("#view-select");
+            $select2.unbind("change").selectpicker("destroy").empty();
+            $select2.append(SWIUtil.GetOption("reports", SWIUtil.tr("Reports"), _main._profile.lastview, "glyphicon glyphicon-th-list"));
+            $select2.append(SWIUtil.GetOption("dashboards", SWIUtil.tr("Dashboards"), _main._profile.lastview, "glyphicon glyphicon-th-large"));
+            $select2.selectpicker('refresh');
+
             $("#profile-save").unbind('click').on("click", function (e) {
                 $("#profile-dialog").modal('hide');
-                _gateway.SetUserProfile($("#culture-select").val(), function (data) {
+                _gateway.SetUserProfile($("#culture-select").val(), $("#view-select").val(), function (data) {
                     location.reload(true);
                 });
             });
@@ -399,7 +422,6 @@ class SWIMain {
         $("#search-pattern").css("background", _main._searchMode ? "orange" : "white");
     }
 
-
     private toJSTreeFolderData(data: any, result: any, parent: string) {
         for (var i = 0; i < data.length; i++) {
             var folder = data[i];
@@ -442,10 +464,6 @@ class SWIMain {
             }, 100);
 
             $waitDialog.modal('hide');
-
-            if (_dashboard) {
-                _dashboard.init();
-            }
         });
     }
 
@@ -595,4 +613,28 @@ class SWIMain {
 
         _main.enableControls();
     }
+
+    private showDashboard(show: boolean) {
+        //Dashboard toggle
+        var span = $("#dashboard-toggle").children("span");
+        span.removeClass("glyphicon-th-large");
+        span.removeClass("glyphicon-th-list");
+        if (show) {
+            $(".folderview").hide();
+            $(".dashboardview").show();
+            SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.role > 0)
+            span.addClass("glyphicon-th-list");
+            $("#dashboard-toggle").attr("title", SWIUtil.tr("View reports"));
+  //TODO ?          if (_da._dashboard) _da.reorderItems(_da._dashboard.GUID);
+        }
+        else {
+            $(".folderview").show();
+            $(".dashboardview").hide();
+            SWIUtil.ShowHideControl($(".dashboardvieweditor"), false)
+            span.addClass("glyphicon-th-large");
+            $("#dashboard-toggle").attr("title", SWIUtil.tr("View dashboards"));
+        }
+    }
+
+
 }

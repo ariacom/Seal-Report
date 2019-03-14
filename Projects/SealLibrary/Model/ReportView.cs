@@ -544,12 +544,12 @@ namespace Seal.Model
 
 
         public bool ShouldSerializeWidgetDefinition() {
-            return !string.IsNullOrEmpty(_widgetDefinition.Name);
+            return !string.IsNullOrEmpty(_widgetDefinition.Name) || !string.IsNullOrEmpty(_widgetDefinition.GUID);
         }
 
         private DashboardWidget _widgetDefinition = new DashboardWidget();
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Widget Defintion"), Description("The view configuration values."), Category("Web Report Server and Dashboard"), Id(3, 6)]
+        [DisplayName("Widget definition"), Description("Settings to publish the view as a dashboard widget. If a name is specified, the widget can be selected to build dashboards from the Web Report Server."), Category("Web Report Server and Dashboard"), Id(3, 6)]
         public DashboardWidget WidgetDefinition
         {
             get { return _widgetDefinition; }
@@ -1140,6 +1140,7 @@ namespace Seal.Model
             foreach (ReportView child in Views)
             {
                 child.GUID = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(child.WidgetDefinition.GUID)) child.WidgetDefinition.GUID = Guid.NewGuid().ToString();
                 child.ReinitGUIDChildren();
             }
         }

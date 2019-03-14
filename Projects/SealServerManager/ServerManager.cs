@@ -80,14 +80,17 @@ namespace Seal
 
             configureMenuItem.Click += configureClick;
             configurationToolStripMenuItem.DropDownItems.Add(configureMenuItem);
+            configureMenuItem.ShortcutKeys = (Keys.Control | Keys.C);
 
             configurationToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
             publishWebMenuItem.Click += configureClick;
             configurationToolStripMenuItem.DropDownItems.Add(publishWebMenuItem);
+            publishWebMenuItem.ShortcutKeys = (Keys.Control | Keys.P);
 
             configurationToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
             securityMenuItem.Click += securityClick;
             configurationToolStripMenuItem.DropDownItems.Add(securityMenuItem);
+            securityMenuItem.ShortcutKeys = (Keys.Control | Keys.W);
 
             ShowIcon = true;
             Icon = Properties.Resources.serverManager;

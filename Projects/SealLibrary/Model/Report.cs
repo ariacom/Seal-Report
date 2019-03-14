@@ -169,7 +169,6 @@ namespace Seal.Model
         [XmlIgnore]
         public DateTime LastModification;
 
-
         [XmlIgnore]
         public string ResultFilePath;
 
@@ -761,7 +760,7 @@ namespace Seal.Model
             result.Repository = repository;
             foreach (MetaSource source in repository.Sources)
             {
-                ReportSource reportSource = result.AddSource(source);
+                result.AddSource(source);
             }
             if (result.Sources.Count == 0) result.AddSource(null);
             foreach (ReportSource source in result.Sources)
@@ -1484,12 +1483,12 @@ namespace Seal.Model
             return result;
         }
 
-            public ReportView PrepareViewToParse(List<ReportView> views, string name)
+        public ReportView GetWidgetViewToParse(List<ReportView> views, string widgetGUID)
         {
             ReportView result = null;
             foreach (var view in views)
             {
-                if (view.Name == name)
+                if (view.WidgetDefinition.GUID == widgetGUID)
                 {
                     result = view;
                     break;
@@ -1499,7 +1498,7 @@ namespace Seal.Model
                     CurrentModelView = view;
                 }
 
-                result = PrepareViewToParse(view.Views, name);
+                result = GetWidgetViewToParse(view.Views, widgetGUID);
 
                 if (result != null) break;
             }

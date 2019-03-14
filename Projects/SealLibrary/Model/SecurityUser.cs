@@ -1,6 +1,7 @@
 ﻿using Seal.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Seal.Model
         public string Error = "";
         public string Warning = "";
         public List<SWIFolder> Folders = new List<SWIFolder>();
+        public SecurityUserProfile Profile = new SecurityUserProfile();
 
         //Parameters to authenticate
         public string WebUserName = "";
@@ -48,6 +50,55 @@ namespace Seal.Model
                     }
                 }
                 return _persFolderRight.Value;
+            }
+        }
+
+        private ViewType? _viewType = null;
+        public ViewType ViewType
+        {
+            get
+            {
+                if (_viewType == null)
+                {
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (_viewType == null || _viewType < group.ViewType) _viewType = group.ViewType;
+                    }
+                }
+                return _viewType.Value;
+            }
+        }
+
+        private DashboardRole? _dashboardRole = null;
+        public DashboardRole DashboardRole
+        {
+            get
+            {
+                if (_dashboardRole == null)
+                {
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (_dashboardRole == null || _dashboardRole < group.DashboardRole) _dashboardRole = group.DashboardRole;
+                    }
+                }
+                return _dashboardRole.Value;
+            }
+        }
+
+        private bool? _allDashboards = null;
+        public bool AllDashboards
+        {
+            get
+            {
+                if (_allDashboards == null)
+                {
+                    _allDashboards = false;
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (group.AllDashboards) _allDashboards = true;
+                    }
+                }
+                return _allDashboards.Value;
             }
         }
 
@@ -203,12 +254,49 @@ namespace Seal.Model
                 (string.IsNullOrEmpty(i.Name) || i.Name == item.Name)
                 );
         }
+
+
+        private List<SecurityWidget> _securityWidgets = null;
+        public List<SecurityWidget> ForbiddenWidgets
+        {
+            get
+            {
+                if (_securityWidgets == null) InitEditionRights();
+                return _securityWidgets;
+            }
+        }
+
+        public bool CanSelectWidget(DashboardWidget item)
+        {
+            return !ForbiddenWidgets.Exists(i =>
+                (string.IsNullOrEmpty(i.ReportName) || i.ReportName == item.ReportName) &&
+                (string.IsNullOrEmpty(i.Tag) || i.Tag == item.Tag) &&
+                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name)
+                );
+        }
+
+        private List<SecurityDashboard> _securityDashboards = null;
+        public bool CanViewDashboard(Dashboard item)
+        {
+            if (item.IsPrivate) return (DashboardRole != DashboardRole.Viewer);
+
+            if (AllDashboards) return true;
+
+            if (_securityDashboards == null) InitEditionRights();
+
+            return _securityDashboards.Exists(i =>
+                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name)
+                );
+        }
+
         private void InitEditionRights()
         {
             _securityConnections = new List<SecurityConnection>();
             _securityDevices = new List<SecurityDevice>();
             _securitySources = new List<SecuritySource>();
             _securityColumns = new List<SecurityColumn>();
+            _securityWidgets = new List<SecurityWidget>();
+            _securityDashboards = new List<SecurityDashboard>();
 
             foreach (var sgroup in SecurityGroups)
             {
@@ -216,9 +304,10 @@ namespace Seal.Model
                 _securityDevices.AddRange(sgroup.Devices.Where(i => i.Right == EditorRight.NoSelection));
                 _securitySources.AddRange(sgroup.Sources.Where(i => i.Right == EditorRight.NoSelection));
                 _securityColumns.AddRange(sgroup.Columns.Where(i => i.Right == EditorRight.NoSelection));
+                _securityWidgets.AddRange(sgroup.Widgets.Where(i => i.Right == EditorRight.NoSelection));
+                _securityDashboards.AddRange(sgroup.Dashboards.Where(i => i.Published));
             }
         }
-
 
         public void AddDefaultSecurityGroup()
         {
@@ -394,5 +483,123 @@ namespace Seal.Model
             else if (!string.IsNullOrEmpty(WebUserName)) result = WebUserName;
             return result;
         }
+
+        private string _profilePath;
+        public string ProfilePath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_profilePath))
+                {
+                    _profilePath = Path.Combine(Security.Repository.GetPersonalFolder(this), "_profile.xml");
+                }
+                return _profilePath;
+            }
+        }
+
+
+        #region Dashboard
+
+        public List<DashboardWidget> Widgets
+        {
+            get
+            {
+                var widgets = new List<DashboardWidget>();
+                foreach (var widget in DashboardWidgetsPool.Widgets)
+                {
+                    if (CanSelectWidget(widget)) widgets.Add(widget);
+                }
+                return widgets;
+            }
+        }
+
+
+        void LoadDashboard(string path, bool editable, bool isPrivate)
+        {
+            try
+            {
+                var dashboard = _dashboards.FirstOrDefault(i => i.Path == path);
+                if (dashboard == null || dashboard.LastModification != File.GetLastWriteTime(path))
+                {
+                    dashboard = Dashboard.LoadFromFile(path);
+                    dashboard.IsPrivate = isPrivate;
+                    if (CanViewDashboard(dashboard)) _dashboards.Add(dashboard);
+                }
+                dashboard.IsPrivate = isPrivate;
+                dashboard.Editable = editable;
+                dashboard.FullName = string.Format("{0} ({1})", dashboard.Name, Security.Repository.TranslateWeb(dashboard.IsPrivate ? "Private" : "Public"));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private string _dashboardPrivateFolder;
+        public string DashboardPrivateFolder
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_dashboardPrivateFolder))
+                {
+                    _dashboardPrivateFolder = Path.Combine(Security.Repository.GetPersonalFolder(this), "_dashboards");
+                    if (!Directory.Exists(_dashboardPrivateFolder)) Directory.CreateDirectory(_dashboardPrivateFolder);
+                }
+                return _dashboardPrivateFolder;
+            }
+        }
+
+        public List<Dashboard> UserDashboards
+        {
+            get
+            {
+                var result = new List<Dashboard>();
+                var dashboards = GetDashboards();
+                int order = 1;
+                foreach (var guid in Profile.Dashboards)
+                {
+                    var d = dashboards.FirstOrDefault(i => i.GUID == guid);
+                    if (d != null)
+                    {
+                        d.Order = order++;
+                        if (result.FirstOrDefault(i => i.FullName == d.FullName) != null) d.FullName += " [" + Path.GetFileNameWithoutExtension(d.Path) + "]";
+                        result.Add(d);
+                    }
+                }
+                return result;
+            }
+        }
+
+        private List<Dashboard> _dashboards = new List<Dashboard>();
+        public List<Dashboard> GetDashboards()
+        {
+            try
+            {
+                //private
+                if (DashboardRole != DashboardRole.Viewer)
+                {
+                    foreach (var p in Directory.GetFiles(DashboardPrivateFolder, "*." + Repository.SealDashboardExtension))
+                    {
+                        LoadDashboard(p, true, true);
+                    }
+                }
+
+                //public
+                foreach (var p in Directory.GetFiles(Security.Repository.DashboardPublicFolder, "*." + Repository.SealDashboardExtension))
+                {
+                    LoadDashboard(p, DashboardRole == DashboardRole.PublicDesigner, false);
+                }
+
+                //remove 
+                _dashboards.RemoveAll(i => !File.Exists(i.Path));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            return _dashboards;
+        }
+        #endregion
+
     }
 }
