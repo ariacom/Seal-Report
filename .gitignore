@@ -55,8 +55,10 @@ HomeControllerSWIEditor.cs
 SWIReportModels.cs
 swi-properties.*
 swi-editor.*
+swi-dashboard-editor.*
 swi-button-group.*
 swi.js
+MainEditor.cshtml
 
 # =========================
 # Operating System Files
