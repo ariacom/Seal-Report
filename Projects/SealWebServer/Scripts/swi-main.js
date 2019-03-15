@@ -549,7 +549,6 @@ var SWIMain = (function () {
             SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.role > 0);
             span.addClass("glyphicon-th-list");
             $("#dashboard-toggle").attr("title", SWIUtil.tr("View reports"));
-            //TODO ?          if (_da._dashboard) _da.reorderItems(_da._dashboard.GUID);
         }
         else {
             $(".folderview").show();

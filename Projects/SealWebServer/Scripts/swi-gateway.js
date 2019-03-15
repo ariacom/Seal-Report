@@ -57,9 +57,10 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.SetUserProfile = function (culture, callback, errorcb) {
+    SWIGateway.prototype.SetUserProfile = function (culture, defaultView, callback, errorcb) {
         $.post(_sealServer + "SWISetUserProfile", {
-            culture: culture
+            culture: culture,
+            defaultView: defaultView
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -176,6 +177,11 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
+    SWIGateway.prototype.GetUserDashboards = function (callback, errorcb) {
+        $.post(_sealServer + "SWIGetUserDashboards")
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    };
     SWIGateway.prototype.GetDashboards = function (callback, errorcb) {
         $.post(_sealServer + "SWIGetDashboards")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
@@ -184,6 +190,14 @@ var SWIGateway = (function () {
     SWIGateway.prototype.GetDashboardItems = function (guid, callback, errorcb) {
         $.post(_sealServer + "SWIGetDashboardItems", {
             guid: guid
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    };
+    SWIGateway.prototype.GetDashboardItem = function (guid, itemguid, callback, errorcb) {
+        $.post(_sealServer + "SWIGetDashboardItem", {
+            guid: guid,
+            itemguid: itemguid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -201,9 +215,24 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.CreateDashboard = function (name, callback, errorcb) {
+    SWIGateway.prototype.AddDashboard = function (guids, callback, errorcb) {
+        $.post(_sealServer + "SWIAddDashboard", {
+            guids: guids
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    };
+    SWIGateway.prototype.RemoveDashboard = function (guid, callback, errorcb) {
+        $.post(_sealServer + "SWIRemoveDashboard", {
+            guid: guid
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    };
+    SWIGateway.prototype.CreateDashboard = function (name, isPublic, callback, errorcb) {
         $.post(_sealServer + "SWICreateDashboard", {
-            name: name
+            name: name,
+            isPublic: isPublic
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -215,10 +244,12 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.RenameDashboard = function (guid, name, callback, errorcb) {
+    SWIGateway.prototype.RenameDashboard = function (guid, name, copyPublic, copyPrivate, callback, errorcb) {
         $.post(_sealServer + "SWIRenameDashboard", {
             guid: guid,
-            name: name
+            name: name,
+            copyPublic: copyPublic,
+            copyPrivate: copyPrivate
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -233,17 +264,26 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.SaveDashboardItem = function (guid, itemguid, name, title, titleorder, color, icon, width, height, callback, errorcb) {
+    SWIGateway.prototype.SaveDashboardItem = function (guid, itemguid, name, groupname, color, icon, width, height, dynamic, callback, errorcb) {
         $.post(_sealServer + "SWISaveDashboardItem", {
             guid: guid,
             itemguid: itemguid,
             name: name,
-            title: title,
-            titleorder: titleorder,
+            groupname: groupname,
             color: color,
             icon: icon,
             width: width,
-            height: height
+            height: height,
+            dynamic: dynamic
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    };
+    SWIGateway.prototype.UpdateDashboardItemsGroupName = function (guid, oldname, newname, callback, errorcb) {
+        $.post(_sealServer + "SWIUpdateDashboardItemsGroupName", {
+            guid: guid,
+            oldname: oldname,
+            newname: newname
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -264,10 +304,28 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.SaveDashboardItemsOrder = function (guid, order, callback, errorcb) {
+    SWIGateway.prototype.SwapDashboardGroupOrder = function (guid, source, destination, callback, errorcb) {
+        $.post(_sealServer + "SWISwapDashboardGroupOrder", {
+            guid: guid,
+            source: source,
+            destination: destination
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    };
+    SWIGateway.prototype.SetLastDashboard = function (guid, callback, errorcb) {
+        $.post(_sealServer + "SWISetLastDashboard", {
+            guid: guid
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    };
+    SWIGateway.prototype.SaveDashboardItemsOrder = function (guid, orders, itemguid, groupname, callback, errorcb) {
         $.post(_sealServer + "SWISaveDashboardItemsOrder", {
             guid: guid,
-            order: order
+            orders: orders,
+            itemguid: itemguid,
+            groupname: groupname
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });

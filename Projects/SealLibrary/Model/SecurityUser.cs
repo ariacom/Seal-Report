@@ -528,6 +528,7 @@ namespace Seal.Model
                 dashboard.IsPrivate = isPrivate;
                 dashboard.Editable = editable;
                 dashboard.FullName = string.Format("{0} ({1})", dashboard.Name, Security.Repository.TranslateWeb(dashboard.IsPrivate ? "Private" : "Public"));
+                dashboard.ReinitGroupOrders();
             }
             catch (Exception ex)
             {

@@ -63,9 +63,10 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public SetUserProfile(culture: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public SetUserProfile(culture: string, defaultView: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWISetUserProfile", {
-            culture: culture
+            culture: culture,
+            defaultView: defaultView
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -200,6 +201,12 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
+    public GetUserDashboards(callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWIGetUserDashboards")
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    }
+
     public GetDashboards(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetDashboards")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
@@ -209,6 +216,15 @@ class SWIGateway {
     public GetDashboardItems(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetDashboardItems", {
             guid: guid
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    }
+
+    public GetDashboardItem(guid: string, itemguid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWIGetDashboardItem", {
+            guid: guid,
+            itemguid: itemguid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -229,9 +245,26 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public CreateDashboard(name: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public AddDashboard(guids: string[], callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWIAddDashboard", {
+            guids: guids
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    }
+
+    public RemoveDashboard(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWIRemoveDashboard", {
+            guid: guid
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    }
+
+    public CreateDashboard(name: string, isPublic: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWICreateDashboard", {
-            name: name
+            name: name,
+            isPublic: isPublic
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -245,16 +278,18 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public RenameDashboard(guid: string, name: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public RenameDashboard(guid: string, name: string, copyPublic: boolean, copyPrivate: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIRenameDashboard", {
             guid: guid,
-            name: name
+            name: name,
+            copyPublic: copyPublic,
+            copyPrivate: copyPrivate
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     }
 
-    public AddDashboardItems(guid: string, widgetguids: string, title: string, order: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public AddDashboardItems(guid: string, widgetguids: string, title: string, order: number, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIAddDashboardItems", {
             guid: guid,
             widgetguids: widgetguids,
@@ -265,17 +300,27 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public SaveDashboardItem(guid: string, itemguid: string, name: string, title: string, titleorder: string, color: string, icon: string, width: number, height: number, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public SaveDashboardItem(guid: string, itemguid: string, name: string, groupname: string, color: string, icon: string, width: number, height: number, dynamic:boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWISaveDashboardItem", {
             guid: guid,
             itemguid: itemguid,
             name: name,
-            title: title,
-            titleorder: titleorder,
+            groupname: groupname,
             color: color,
             icon: icon,
             width: width,
-            height: height
+            height: height,
+            dynamic: dynamic
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    }
+
+    public UpdateDashboardItemsGroupName(guid: string, oldname: string, newname: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWIUpdateDashboardItemsGroupName", {
+            guid: guid,
+            oldname: oldname,
+            newname: newname
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -299,10 +344,30 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public SaveDashboardItemsOrder(guid: string, order: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public SwapDashboardGroupOrder(guid: string, source: number, destination: number, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWISwapDashboardGroupOrder", {
+            guid: guid,
+            source: source,
+            destination: destination
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    }
+
+    public SetLastDashboard(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWISetLastDashboard", {
+            guid: guid
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    }
+
+    public SaveDashboardItemsOrder(guid: string, orders: string[], itemguid: string, groupname: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWISaveDashboardItemsOrder", {
             guid: guid,
-            order: order
+            orders: orders,
+            itemguid: itemguid,
+            groupname: groupname
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
