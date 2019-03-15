@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace Seal.Model
@@ -41,6 +42,18 @@ namespace Seal.Model
             {
                 item.GUID = Guid.NewGuid().ToString();
             }        
+        }
+
+        public void ReinitGroupOrders()
+        {
+            int groupOrder = 1;
+            var groups = Items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).Select(i => i.GroupName).Distinct();
+
+            foreach (var group in groups)
+            {
+                foreach (var item2 in Items.Where(j => j.GroupName == group)) item2.GroupOrder = groupOrder;
+                groupOrder++;
+            }
         }
 
         public void SaveToFile()

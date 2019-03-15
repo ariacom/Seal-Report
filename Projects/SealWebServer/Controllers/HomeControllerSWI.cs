@@ -588,7 +588,31 @@ namespace SealWebServer.Controllers
                 var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
                 if (dashboard == null) throw new Exception("Error: The dashboard does not exist");
 
-                return Json(dashboard.Items.OrderBy(i => string.IsNullOrEmpty(i.GroupOrder) ? "0" : i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order).ToArray());
+                return Json(dashboard.Items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order).ToArray());
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SWIGetDashboardItem(string guid,string itemguid)
+        {
+            WriteDebug("SWIGetDashboardItems");
+            try
+            {
+                checkSWIAuthentication();
+
+                if (string.IsNullOrEmpty(guid)) throw new Exception("Error: guid must be supplied");
+
+                var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
+                if (dashboard == null) throw new Exception("Error: The dashboard does not exist");
+
+                var item = dashboard.Items.FirstOrDefault(i => i.GUID == itemguid);
+                if (item == null) throw new Exception("Error: The dashboard item does not exist");
+
+                return Json(item);
             }
             catch (Exception ex)
             {
@@ -678,6 +702,34 @@ namespace SealWebServer.Controllers
                 return HandleSWIException(ex);
             }
         }
+
+        [HttpPost]
+        public ActionResult SWISwapDashboardGroupOrder(string guid, int source, int destination)
+        {
+            WriteDebug("SWISwapDashboardGroupOrder");
+            try
+            {
+                checkSWIAuthentication();
+
+                var dashboard = checkDashboardEditRight(guid);
+                foreach(var item in dashboard.Items)
+                {
+                    if (item.GroupOrder == source) item.GroupOrder = int.MinValue;
+                    if (item.GroupOrder == destination) item.GroupOrder = source;
+                }
+                foreach (var item in dashboard.Items)
+                {
+                    if (item.GroupOrder == int.MinValue) item.GroupOrder = destination;
+                }
+                dashboard.SaveToFile();
+                return Json(new object { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
 
         [HttpPost]
         public ActionResult SWISetLastDashboard(string guid)
@@ -814,6 +866,7 @@ namespace SealWebServer.Controllers
                     path = widget.Exec ? widget.ReportPath : "",
                     lastexec = "Last execution at " + report.ExecutionStartDate.ToLongTimeString(),
                     description = widget.Description,
+                    dynamic = item.Dynamic,
                     content = content
                 };
 
