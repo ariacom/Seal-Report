@@ -59,7 +59,7 @@ namespace SealWebServer.Controllers
                     dashboard = GetCookie(SealLastDashboardCookieName),
                     viewtype = WebUser.ViewType,
                     lastview = view,
-                    role = WebUser.DashboardRole
+                    dashboardFolders = WebUser.DashboardFolders.ToArray()
                 });
             }
             catch (Exception ex)
@@ -478,8 +478,7 @@ namespace SealWebServer.Controllers
                     name = WebUser.Name,
                     group = WebUser.SecurityGroupsDisplay,
                     culture = Repository.CultureInfo.EnglishName,
-                    folder = GetCookie(SealLastFolderCookieName),
-                    dashboard = GetCookie(SealLastDashboardCookieName)
+                    viewtype = WebUser.ViewType
                 });
             }
             catch
@@ -750,7 +749,7 @@ namespace SealWebServer.Controllers
 
 
         [HttpPost]
-        public ActionResult SWIGetDashboardResult(string guid, string itemguid)
+        public ActionResult SWIGetDashboardResult(string guid, string itemguid, bool force)
         {
             WriteDebug("SWIGetDashboardResult");
             try
@@ -765,7 +764,6 @@ namespace SealWebServer.Controllers
 
                 var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
                 if (dashboard == null) throw new Exception("Error: The dashboard does not exist");
-                if (!WebUser.CanViewDashboard(dashboard)) throw new Exception("Error: no right to view this dashboard");
 
                 var item = dashboard.Items.FirstOrDefault(i => i.GUID == itemguid);
                 if (item == null) throw new Exception("Error: The item does not exist");
@@ -781,12 +779,18 @@ namespace SealWebServer.Controllers
                 var filePath = Repository.ReportsFolder + widget.ReportPath;
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: the report does not exist");
 
-                execution = DashboardExecutions.FirstOrDefault(i => i.Report.FilePath == filePath);
-
-                if (execution != null && execution.Report.LastModification != System.IO.File.GetLastWriteTime(filePath))
+                var executions = DashboardExecutions;
+                lock(executions)
                 {
-                    DashboardExecutions.RemoveAll(i => i.Report.FilePath == filePath);
-                    execution = null;
+                    //remove executions older than 2 hours
+                    executions.RemoveAll(i => i.Report.ExecutionEndDate < DateTime.Now.AddHours(-2));
+
+                    execution = executions.FirstOrDefault(i => i.Report.FilePath == filePath);
+                    if (execution != null && execution.Report.LastModification != System.IO.File.GetLastWriteTime(filePath))
+                    {
+                        executions.RemoveAll(i => i.Report.FilePath == filePath);
+                        execution = null;
+                    }
                 }
 
                 if (execution != null)
@@ -804,12 +808,8 @@ namespace SealWebServer.Controllers
                     report.ExecutionView.SetParameter(Parameter.DrillEnabledParameter, false);
                     report.ExecutionView.SetParameter(Parameter.SubReportsEnabledParameter, false);
                     report.ExecutionView.SetParameter(Parameter.ServerPaginationParameter, false);
-
+                    //Force load of all models
                     report.ExecutionView.SetParameter(Parameter.ForceModelsLoad, true);
-                    //On force le load de tous les modèles
-                    //TODO optimiser en regroupant tous les widgets
-                    //var rootView = report.GetRootView(v);
-                    //if (rootView != null) report.CurrentViewGUID = rootView.GUID; //Set the root GUID
                 }
 
                 string content = "";
@@ -827,18 +827,19 @@ namespace SealWebServer.Controllers
 
                     if (execution != null)
                     {
-                        if (!report.IsExecuting && report.ExecutionEndDate < DateTime.Now.AddSeconds(-10))
+                        if (!report.IsExecuting && (force || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache))) 
                         {
                             execution.Execute();
                             while (report.IsExecuting) Thread.Sleep(100);
                         }
-
                     }
                     else
                     {
                         execution = new ReportExecution() { Report = report };
-
-                        DashboardExecutions.Add(execution);
+                        lock (executions)
+                        {
+                            executions.Add(execution);
+                        }
                         execution.Execute();
                         while (report.IsExecuting) Thread.Sleep(100);
                     }
@@ -864,7 +865,7 @@ namespace SealWebServer.Controllers
                 {
                     itemguid = itemguid,
                     path = widget.Exec ? widget.ReportPath : "",
-                    lastexec = "Last execution at " + report.ExecutionStartDate.ToLongTimeString(),
+                    lastexec = Translate("Last execution at") + " " +  report.ExecutionEndDate.ToString("G", Repository.CultureInfo),
                     description = widget.Description,
                     dynamic = item.Dynamic,
                     content = content

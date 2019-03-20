@@ -64,6 +64,7 @@ namespace Seal.Model
         public bool Dynamic { get => _dynamic; set => _dynamic = value; }
 
         [DisplayName("Icon class"), Description("CSS class defining the icon of the widget header."), Id(5, 1)]
+        [TypeConverter(typeof(WidgetIconClassConverter))]
         [DefaultValue("glyphicon glyphicon-info-sign")]
         public string Icon { get => _icon; set => _icon = value; }
 

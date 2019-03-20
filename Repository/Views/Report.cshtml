@@ -66,9 +66,7 @@
             {
                 @foreach (RepositoryTranslation translation in repository.Translations.Where(i => i.Context == "NVD3"))
                 {
-                <text>
-                if (text == '@Raw(Helper.ToJS(translation.Reference))') return '@Raw(Helper.ToJS(report.ContextTranslate("NVD3", translation.Reference)))';
-                </text>
+                <text>if (text == '@Raw(Helper.ToJS(translation.Reference))') return '@Raw(Helper.ToJS(report.ContextTranslate("NVD3", translation.Reference)))';</text>
                 }
                 return text;
             }
@@ -188,6 +186,7 @@
             }
         } );
     </script>
+    @Raw(report.AttachScriptFile("helpers.js"))
     @Raw(report.AttachScriptFile("common.js"))
     @Raw(report.AttachScriptFile("custom.js"))
     <script>

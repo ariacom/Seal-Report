@@ -621,10 +621,11 @@ class SWIMain {
         span.removeClass("glyphicon-th-list");
         if (show) {
             $(".folderview").hide();
-            $(".dashboardview").show();
-            SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.role > 0);
+            $(".dashboardview").show();           
+            SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.dashboardFolders.length != 0);
             span.addClass("glyphicon-th-list");
             $("#dashboard-toggle").attr("title", SWIUtil.tr("View reports"));
+            _da.reorderItems(true);
         }
         else {
             $(".folderview").show();

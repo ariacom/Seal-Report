@@ -12,9 +12,8 @@ var WidgetWidthUnit = 200;
 var WidgetHeightUnit = 140;
 
 declare var Muuri: any;
-
 declare function nvd3UpdateCharts();
-
+declare function getTopLeft(item : any);
 
 //Serialize Muuri order
 function serializeLayout(grid) {
@@ -46,28 +45,28 @@ function loadLayout(grid, serializedLayout) {
     else grid.layout(true);
 }
 
-
 class SWIDashboard implements DashboardInterface {
     private _dashboards = [];
     private _gridOrders = [];
     private _grids = [];
-    private _gridsById = [];
+    public _gridsById = [];
     public _dashboard;
     public _lastGUID;
     public _dragType;
     public _dragData;
 
 
-    public reorderItems() {
+    public reorderItems(init : boolean) {
         if (!_da._dashboard) return;
 
+        if (init) _da._gridsById = []; //Force rebuild of grids
         _da._grids = [];
         $('.grid' + _da._dashboard.GUID).each(function (index, element) {
             var gridId = $(this).attr("id");
             var grid = _da._gridsById[gridId];
             if (!grid) {
                 grid = new Muuri('#' + gridId, {
-                    dragEnabled: _da.canEditDashboard(_da._dashboard.GUID),
+                    dragEnabled: _da._dashboard.Editable,
                     layoutOnInit: false,
                     dragStartPredicate: {
                         distance: 10,
@@ -117,14 +116,9 @@ class SWIDashboard implements DashboardInterface {
         });
     }
 
-    private canEditDashboard(guid: string): boolean {
-        var d =_da._dashboards[guid];
-        return !d || (d && ((_main._profile.role == 1 /*Private Designer*/ && d.IsPrivate) || _main._profile.role == 2 /*Public Designer*/));
-    }
-
     private enableControls() {
         var spinnerHidden = !$(".spinner-menu").is(":visible")
-        SWIUtil.EnableButton($("#dashboard-add-widget"), _da._dashboard && _da.canEditDashboard(_da._dashboard.GUID) && spinnerHidden);
+        SWIUtil.EnableButton($("#dashboard-add-widget"), _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
     }
 
@@ -206,7 +200,7 @@ class SWIDashboard implements DashboardInterface {
                         //Group name 
                         var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.GroupName);
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
-                        if (_da.canEditDashboard(guid)) {
+                        if (_da._dashboards[guid].Editable) {
                             //Edit group name
                             groupSpan.click(function () {
                                 "use strict";
@@ -238,7 +232,7 @@ class SWIDashboard implements DashboardInterface {
                         content.append(groupDrag);
                         content.append(groupInput);
 
-                        if (_da.canEditDashboard(guid)) {
+                        if (_da._dashboards[guid].Editable) {
                             //Drag for group name
                             groupDrag.on("dragstart", function (e) {
                                 _da._dragType = "group";
@@ -258,7 +252,7 @@ class SWIDashboard implements DashboardInterface {
                     content.append(grid);
                     currentGroup = item.GroupName;
 
-                    if (_da.canEditDashboard(guid)) {
+                    if (_da._dashboards[guid].Editable) {
                         //Drop for group name
                         grid.on("dragover", function (e) {
                             if (_da._dragType == "group") e.preventDefault();
@@ -306,7 +300,7 @@ class SWIDashboard implements DashboardInterface {
 
                 panelBody.append($("<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>"));
                 panelBody.append($("<h4 style='display:inline'></h4>").text(SWIUtil.tr("Processing...")));
-                _gateway.GetDashboardResult(guid, item.GUID, function (data) {
+                _gateway.GetDashboardResult(guid, item.GUID, false, function (data) {
                     _da.handleDashboardResult(data);
                 });
 
@@ -319,23 +313,15 @@ class SWIDashboard implements DashboardInterface {
                 //Panel buttons
                 panelHeader
                     .mouseenter(function (e) {
-                        var rect = $(this)[0].getBoundingClientRect();
-                        var obj = $(this)[0];
-                        var curleft = 0;
-                        var curtop = 0;
-                        if (obj.offsetParent) {  //TODO mettre cette fonction géniale dans common.js pour la popup
-                            do {
-                                curleft += obj.offsetLeft;
-                                curtop += obj.offsetTop;
-                            } while (obj == obj.offsetParent);
+                        var panelHeading = $(this).closest('.panel-heading');
+                        if (!panelHeading.children(".fa-spinner").is(":visible")) {
+                            var tl = getTopLeft($(this)[0]);
+                            var buttons = $(this).children("div");
+                            buttons.css("position", "absolute");
+                            buttons.css("left", tl[0] + $(this).width() - buttons.width() + 15);
+                            buttons.css("top", tl[1] + 10);
+                            buttons.show();
                         }
-                        //return [curleft,curtop];
-
-                        var buttons = $(this).children("div");
-                        buttons.css("position", "absolute");
-                        buttons.css("left", curtop + $(this).width() - buttons.width() + 15);
-                        buttons.css("top", curleft + 10);
-                        buttons.show();
 
                     })
                     .mouseleave(function () {
@@ -344,25 +330,20 @@ class SWIDashboard implements DashboardInterface {
 
                 //Refresh item
                 refreshButton.unbind('click').on("click", function (e) {
-                    setTimeout(function () {
-                        _da.reorderItems(); //evite bug, sur le 2 items d'1 deucième tab...à debugger
-                    }, 200);
-
                     var itemGuid = $(this).closest('.panel').attr('id');
 
                     var panelHeading = $(this).closest('.panel-heading');
                     panelHeading.children(".fa-spinner").show();
 
-                    _gateway.GetDashboardResult(guid2, itemGuid, function (data) {
+                    _gateway.GetDashboardResult(guid2, itemGuid, true, function (data) {
                         _da.handleDashboardResult(data);
-                        _da.reorderItems(); //evite bug, sur le 2 items d'1 deucième tab...à debugger
                     });
                 });
 
                 grid.append(panel);
             } //for
 
-            if (guid == _da._dashboard.GUID)_da.reorderItems();
+            if (_da._dashboard && guid == _da._dashboard.GUID) _da.reorderItems(false);
         });
     }
 
@@ -396,7 +377,7 @@ class SWIDashboard implements DashboardInterface {
                 var dashboard = data[i];
 
                 var menu = $("<a data-toggle='pill' href='#" + dashboard.GUID + "' did='" + dashboard.GUID + "'>");
-                if (dashboard.IsPrivate) menu.addClass("private");
+                if (dashboard.IsPersonal) menu.addClass("dashboard-personal");
                 menu.text(dashboard.Name);
                 var li = $("<li>");
 
@@ -425,34 +406,21 @@ class SWIDashboard implements DashboardInterface {
                 if (isActive) li.addClass("active");
                 $("#menu-dashboard").append(li.append(menu));
 
-                //Menu click
+                //Click on a dashboard pill
                 menu.unbind('click').click(function (e) {
                     var id = $(this).attr("did");
                     _da._lastGUID = id;
                     _da._dashboard = _da._dashboards[id];
                     _da.enableControls();
-                    _gateway.SetLastDashboard(_da._lastGUID, function (data) {
-                    });
+                    _gateway.SetLastDashboard(_da._lastGUID, null);
                     _main._profile.dashboard = _da._lastGUID;
 
-                    //redraw nvd3 charts
-                    /*                    setTimeout(function () { nvd3UpdateCharts(); }, 200);
-                                        setTimeout(function () { //redraw dt
-                                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
-                                        }, 200);
-                                        */
-
-                    // $("#" + id).hide();
                     setTimeout(function () {
-                        // $("#" + id).show();
-                        nvd3UpdateCharts(); //TODO faire update seulement sur le chart visible
+                        nvd3UpdateCharts();
                         $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
-                        _da.reorderItems();
-                        //setTimeout(function () {
-                        //}, 100);
+                        _da.reorderItems(true);
                     }, 200);
                 });
-                //TODO: gérer le resize de la window
 
                 var content = $("<div id='" + dashboard.GUID + "' class='tab-pane fade'>");
                 $("#content-dashboard").append(content);
@@ -506,7 +474,7 @@ class SWIDashboard implements DashboardInterface {
                             });
                     }
 
-                    if (hasEditor && _main._profile.role > 0) {
+                    if (hasEditor) {
                         _dashboardEditor.initDashboardMenu();
                     }
 
@@ -514,7 +482,7 @@ class SWIDashboard implements DashboardInterface {
                 });
             });
 
-            if (hasEditor && _main._profile.role > 0) {
+            if (hasEditor) {
                 _dashboardEditor.initMenu();
             }
 

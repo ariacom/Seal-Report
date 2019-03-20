@@ -25,63 +25,6 @@
     <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
 
     <link rel="stylesheet" href="~/Content/seal.css" />
-    <style class="cp-pen-styles">
-        .grid {
-            position: relative;
-        }
-
-        .item {
-            position: absolute;
-            width: 200px;
-            height: 140px;
-            /*line-height: 200px;*/
-            margin: 5px;
-            z-index: 1;
-            border-width: 2px;
-        }
-
-            .item.muuri-item-hidden {
-                z-index: 0;
-            }
-
-            .item.muuri-item-positioning {
-                z-index: 2;
-            }
-
-            .item.muuri-item-releasing {
-                z-index: 3;
-            }
-
-            .item.muuri-item-dragging {
-                z-index: 4;
-            }
-
-        .item-content {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            background: grey;
-            font-size: 50px;
-            color: white;
-            cursor: pointer;
-        }
-        /*
-        .private .active a,
-        .private .active a:hover {
-            background-color: #d9edf7 !important;
-        }
-
-        .private .nav-pills > .active > a, .nav-pills > .active > a:hover {
-            background-color: #d9edf7 !important;
-            color: #23527c !important;
-        }
-            */
-        .private {
-            font-weight: bold;
-            font-style: italic;
-        }
-    </style>
 </head>
 <body>
     <!--disable autofill for Chrome-->
@@ -111,7 +54,7 @@
                     <div class="input-group">
                         <input id="search-pattern" type="text" class="form-control input-sm col-sm-1" placeholder="@repository.TranslateWeb("Search")" />
                         <span class="input-group-btn">
-                            <button id="search-nav-item" type="button" class="btn btn-sm btn-success" title="Poplo"><span class="glyphicon glyphicon-search"></span></button>
+                            <button id="search-nav-item" type="button" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-search"></span></button>
                         </span>
                     </div>
                 </form>
@@ -353,7 +296,6 @@
         </div>
     </div>
 
-
     @if (ServerOptions.HasEditor())
     {
         @Html.Partial("~/Views/Home/MainEditor.cshtml");
@@ -382,10 +324,18 @@
     <script src="~/Scripts/datetime-moment.js"></script>
     <script src="~/Scripts/responsive.bootstrap.min.js"></script>
 
+    <!-- muuri -->
+    <script src='~/Scripts/web-animations.min.js'></script>
+    <script src='~/Scripts/hammer.min.js'></script>
+    <script src='~/Scripts/muuri.min.js'></script>
+
+    <!-- libraries for widgets excution -->
+    <script src="~/Scripts/helpers.js"></script>
     <script src="~/Scripts/d3.min.js"></script>
     <script src="~/Scripts/nv.d3.min.js"></script>
     <script src="~/Scripts/chartNVD3.js"></script>
     <script src="~/Scripts/Chart.min.js"></script>
+    <script src="~/Scripts/plotly-1.34.0.min.js"></script>
 
     <script type="text/javascript">
         //server
@@ -430,6 +380,19 @@
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
 
         var hasEditor = @Helper.ToJS(ServerOptions.HasEditor());
+
+        //specific for widget execution
+        function nvd3TranslateText(text)
+        {
+            @foreach (RepositoryTranslation translation in repository.Translations.Where(i => i.Context == "NVD3"))
+            {
+            <text>if (text == '@Helper.ToJS(translation.Reference)') return '@Helper.ToJS(repository.Translate("NVD3", translation.Reference))';</text>
+            }
+            return text;
+        }
+
+        function showPopupNavMenu(source, content, forChart) { }
+
     </script>
 
     @if (!ServerOptions.HasMinifiedScripts())
@@ -450,32 +413,6 @@
     {
         <script src="~/Scripts/swi.js"></script>
     }
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.3.1/web-animations.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js'></script>
-    <script src='https://unpkg.com/muuri@0.6.3/dist/muuri.min.js'></script>
-
-    <script>
-        function nvd3TranslateText(text) {
-            //TODO
-            return text;
-        }
-
-        function showPopupNavMenu(source, content, forChart) {
-        }
-
-        //d3 formatting TODO depuis common.js
-        String.prototype.replaceAll = function (find, replace) {
-            var str = this;
-            return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
-        };
-        String.prototype.valueFormat = function (value) {
-            var str = this;
-            return str.replaceAll(',', thousandSeparator).replaceAll('$', currencySymbol).replace('.', decimalSeparator);
-        };
-        String.prototype.normalizeNumeric = function (valueStr) {
-            return parseFloat(this.replaceAll(',', '').replace(/\s+/g, ''));
-        };
-    </script>
 
 </body>
 </html>

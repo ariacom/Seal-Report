@@ -5,10 +5,7 @@
     <ReportSource>
       <GUID>db41093d-d76c-4e64-849a-27a024e52816</GUID>
       <Name>Northwind (Repository)</Name>
-      <Connections />
       <ConnectionGUID>1</ConnectionGUID>
-      <InitScript />
-      <TasksScript />
       <MetaData>
         <Tables>
           <MetaTable>
@@ -16,11 +13,8 @@
             <Alias>SealMasterTable</Alias>
             <DynamicColumns>true</DynamicColumns>
             <MustRefresh>false</MustRefresh>
-            <Columns />
           </MetaTable>
         </Tables>
-        <Joins />
-        <Enums />
       </MetaData>
       <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
     </ReportSource>
@@ -30,17 +24,12 @@
       <GUID>f17fdf11-8666-4349-9822-814c7f78c133</GUID>
       <Name>country category</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>f7babb63-ed84-4c61-9262-8df667db1c94</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -50,10 +39,6 @@
           <GUID>7220dd5f-9bd6-4c9a-847c-86d94a1a2545</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -63,11 +48,7 @@
           <GUID>a33b5c21-c0d9-4da8-9bb8-2a5f650c84de</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -85,54 +66,35 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <GUID>e7d89367-9862-4968-b5de-342223e72474</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>73e4e19d-deca-4b91-824a-4837c79cfc95</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>55b4a1b1-dc14-4421-aeab-7ae6c3812094</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -142,49 +104,28 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>3151e9d9-3cc4-41d8-958c-85f44a321f3d</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>5d49225d-cb74-4cd2-a30d-694061b98efe</GUID>
       <Name>general country employee</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>c41d6b3d-2a1a-40d4-afe3-39d08ed73a39</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -194,10 +135,7 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <GUID>0553dda5-083b-40d4-9170-bc1bcb405a0f</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -209,10 +147,6 @@ AND [3151e9d9-3cc4-41d8-958c-85f44a321f3d]</Restriction>
           <GUID>7c831bd0-26b2-477b-86da-b81452ae9924</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -228,54 +162,35 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <GUID>bbb49ee6-a879-4a2d-9ca9-ab0da80c74ee</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>4fd84496-4d25-4c0b-bd05-c8e87fc6b331</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>adb58d0e-ed3b-4ce7-add9-ed5090116730</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -285,49 +200,29 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</GUID>
       <Name>employee category</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>a8c0411a-2ff5-4129-af5d-81c843cc877b</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -337,11 +232,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <GUID>2070cca7-f9da-47b6-98c3-f9df3fca117b</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
           <NumericStandardFormat>Custom</NumericStandardFormat>
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -351,11 +242,7 @@ AND [2131f375-9b4b-4ebb-9dc6-ed30e18d8c5b]</Restriction>
           <GUID>bc5e0a63-fd7a-43da-9a0d-a8fc7a67f1c2</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -373,54 +260,35 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <GUID>2eb5255b-8e47-44ed-ae97-92746de2e8e6</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>34da2119-d5a1-4b13-a97a-7cc76678a2bd</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>02ce1155-0b54-4f87-85cc-a11897ea80e0</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -430,49 +298,29 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>6cfbb0a8-c773-4ad3-9232-7087fd389cc6</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</GUID>
       <Name>category month</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>abb30815-cbd8-40c5-8f59-c231c2d03687</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -482,10 +330,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <GUID>c9b970ed-6f2c-48c2-9d60-8ee45eb61c74</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -495,11 +340,7 @@ AND [6cfbb0a8-c773-4ad3-9232-7087fd389cc6]</Restriction>
           <GUID>b4495332-0935-4f1b-afaf-afd3ce0d5823</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -517,54 +358,35 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <GUID>f053313f-de25-4fb3-86e0-918b4c39d038</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>2e3372c6-207c-47c8-8945-dd72392dc010</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>50472d27-50b8-4f67-83a5-5fe010bffa2c</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -574,49 +396,29 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>0b7eb028-6350-4ddd-b7dc-700222678c2d</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>c19fa517-6db1-4436-a2e7-219168eee98c</GUID>
       <Name>category month2</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>05538f42-a23e-4edd-b101-1fc0697a190d</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -626,10 +428,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <GUID>dd89083a-9c96-42e2-a3ef-5c94110df7b0</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -639,11 +438,7 @@ AND [0b7eb028-6350-4ddd-b7dc-700222678c2d]</Restriction>
           <GUID>c264175f-d469-4d4e-8876-1f9d94031e07</GUID>
           <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -661,54 +456,35 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <GUID>add364a6-f217-49db-aad9-829f86d45f78</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>4fde1f64-779e-400d-ab53-8c4dac49c4d1</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>3735c464-e8f6-4760-86d7-e56a7d8ff572</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -718,50 +494,29 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>80367e08-6576-421f-a749-3706615852a9</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</GUID>
       <Name>employee month</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>7a3e23ad-72d5-4843-b010-88b5c3e41c6e</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
           <NumericStandardFormat>Custom</NumericStandardFormat>
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -771,11 +526,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <GUID>ab307418-10c3-497d-917a-0f8f8e1ae4f6</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -786,10 +537,7 @@ AND [80367e08-6576-421f-a749-3706615852a9]</Restriction>
           <GUID>0232112c-12d5-43a4-9660-c8de3ceba030</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -805,54 +553,35 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <GUID>3df3fb28-7245-447d-8230-13f3c15408f8</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>fc5aa6fd-a2c2-4e70-a37b-6c3e39b24e76</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>9daa2e06-f043-4aa4-9fe3-c556ca6ee90b</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -862,49 +591,29 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>78056aaa-bc47-4314-a28d-cda4f04193db</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</GUID>
       <Name>general month</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>c1dad3dc-d8d0-417f-b1ca-af6cc8670477</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -914,11 +623,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <GUID>7771a722-e61e-4177-ac02-85d335f246c8</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -930,12 +635,9 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <GUID>7771a722-e61e-4177-ac02-85d335f246c8</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
           <DisplayName>%</DisplayName>
           <NumericStandardFormat>Percentage0</NumericStandardFormat>
           <Format>P0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <CalculationOption>PercentageAll</CalculationOption>
           <ShowTotal>Column</ShowTotal>
@@ -946,10 +648,7 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <GUID>78eda211-103f-4437-88bc-84a1dc486943</GUID>
           <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -960,12 +659,9 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <GUID>78eda211-103f-4437-88bc-84a1dc486943</GUID>
           <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
           <DisplayName>%</DisplayName>
           <NumericStandardFormat>Percentage0</NumericStandardFormat>
           <Format>P0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <CalculationOption>PercentageAll</CalculationOption>
           <ShowTotal>Column</ShowTotal>
@@ -975,13 +671,10 @@ AND [78056aaa-bc47-4314-a28d-cda4f04193db]</Restriction>
           <GUID>7771a722-e61e-4177-ac02-85d335f246c8</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
           <DisplayName>Progression</DisplayName>
           <NumericStandardFormat>Percentage0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <Format>P0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SerieDefinition>NVD3Serie</SerieDefinition>
           <Nvd3Serie>Line</Nvd3Serie>
@@ -1044,54 +737,35 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <GUID>ea3a4238-6dc5-41db-8776-102bb456cb4a</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>47db8b07-89a1-4cbf-ace9-9335fb2585f3</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>8c7f789b-85a8-4f72-8ef2-519c8453100d</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -1101,50 +775,29 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>9ff48512-2438-4c5b-a532-c04236374b2b</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>28577963-bd93-49f5-b117-8a983b7ec93c</GUID>
       <Name>general category</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>9e62664f-8e74-4d92-bdcb-75992c76a2b3</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <NumericStandardFormat>Custom</NumericStandardFormat>
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -1154,10 +807,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <GUID>8dc528c8-d6d7-4535-9843-1918cb269b09</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
@@ -1166,10 +816,7 @@ AND [9ff48512-2438-4c5b-a532-c04236374b2b]</Restriction>
           <GUID>226b39b7-6664-403a-ab55-2394f79f9542</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -1186,55 +833,35 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <GUID>7664e472-2ee9-432b-9043-bd19a78d2dca</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>ac203578-5166-4869-9cc8-9d54c90de630</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>3b272d83-7016-4379-aa05-38361de6822a</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -1244,49 +871,28 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>5aff132d-1848-471e-8204-5add7eb66bfa</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>57b96369-ed1b-4b96-9f91-47e501d794c7</GUID>
       <Name>country month</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>2a1c2e4a-e335-4cf3-b4d9-6f0c4342eba0</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Column</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <SerieDefinition>Splitter</SerieDefinition>
@@ -1296,10 +902,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <GUID>4b6d522f-cd73-438b-b34c-3326df08d0e0</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -1309,11 +912,7 @@ AND [5aff132d-1848-471e-8204-5add7eb66bfa]</Restriction>
           <GUID>6b9e24b9-94d6-408a-a836-545f54257f5a</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>RowColumn</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -1330,54 +929,35 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <GUID>806a0325-ac3c-44e0-bb9e-178b9a3afeb1</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>f321d7d8-2ee0-4b16-b5dd-de754fe3acc5</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>50199ce6-5c59-45e2-86df-567d99c3fbc7</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -1387,49 +967,29 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>e7e3c870-d93f-45bf-9bbf-a4eb138a79c8</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>b9b267bb-eeb4-4bd3-ac5c-e7b4e4ae609d</GUID>
       <Name>orders</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>3410cd85-7911-4235-925b-57aa4f8bd385</GUID>
           <Name>Orders.OrderID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
         </ReportElement>
@@ -1437,10 +997,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <GUID>36208fce-87bc-4b0b-9059-bb6d0998c02e</GUID>
           <Name>Orders.OrderDate</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>d</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <SerieDefinition>Axis</SerieDefinition>
@@ -1450,10 +1007,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <GUID>e8efe4ba-4f25-41a5-af2b-9d1f2217daf5</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -1464,10 +1018,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <GUID>7b209750-6b32-4b61-ae59-de20a90eb313</GUID>
           <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -1478,10 +1029,7 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <GUID>5995f6df-51c8-4ed4-896d-db54b09213e2</GUID>
           <Name>[Order Details].Quantity</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <SerieDefinition>NVD3Serie</SerieDefinition>
@@ -1492,10 +1040,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <GUID>5ec53375-b1ef-4ed7-889b-9903f2d9591e</GUID>
           <Name>Customers.CompanyName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
@@ -1504,10 +1048,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <GUID>3db82952-623a-4911-bb3d-9258f04ce07f</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
@@ -1516,11 +1056,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <GUID>d5edbd23-500d-4c0b-8f8b-aed37b719679</GUID>
           <Name>Suppliers.CompanyName</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>b5e2a5d1-4885-442c-9a7b-d460234c19e0</MetaColumnGUID>
@@ -1529,11 +1064,6 @@ AND [e7e3c870-d93f-45bf-9bbf-a4eb138a79c8]</Restriction>
           <GUID>eeefaf8e-e3b2-4b37-8240-c2fda6bf5937</GUID>
           <Name>Shippers.CompanyName</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>9026a76c-6c06-4240-8320-cf6debcc73ca</MetaColumnGUID>
@@ -1548,54 +1078,35 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <GUID>b3057c2a-ac93-431c-9611-9b6d4f1e2d46</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>1a2e5c0a-ebcd-489a-81f2-ac0b8ccc72aa</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>d2abc975-9c03-46f5-9d06-0c636bad1366</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Belgium</string>
             <string>France</string>
@@ -1605,50 +1116,28 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>2fff350a-a920-42ce-942e-fba7c822e55d</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
     <ReportModel>
       <GUID>8534d52d-19ae-4904-95f6-ff23e82e7863</GUID>
       <Name>maps</Name>
       <SourceGUID>db41093d-d76c-4e64-849a-27a024e52816</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
       <Elements>
         <ReportElement>
           <GUID>8f4bf879-0867-411a-a7a4-dddc825a389e</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <SortOrder>Not sorted</SortOrder>
           <AggregateFunction>Count</AggregateFunction>
@@ -1659,11 +1148,7 @@ AND [2fff350a-a920-42ce-942e-fba7c822e55d]</Restriction>
           <GUID>6db9a809-1478-4e75-8fba-1db0ede857ab</GUID>
           <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Data</PivotPosition>
           <SortOrder>Automatic Descendant</SortOrder>
           <PlotlySerie>Bar</PlotlySerie>
@@ -1680,56 +1165,35 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
           <GUID>b790f1b0-32a0-47f5-9ac8-7249026e1ea6</GUID>
           <Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), DatePart('m',[Orders.OrderDate]), 1)</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
           <Format>MM/yyyy</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>MM/yyyy</FormatRe>
           <Operator>Between</Operator>
-          <EnumValues />
           <Date1>1995-01-01T00:00:00</Date1>
           <Date2>1995-12-31T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>2d37a01c-8c34-4a05-a25e-15dbfd50f45c</GUID>
           <Name>Products.CategoryID</Name>
           <Category>Master</Category>
-          <Tag />
           <Format>N0</Format>
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <FormatRe>N0</FormatRe>
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>34e97dce-dc58-4228-8bf5-14113c89a1d6</GUID>
           <Name>Customers.Country</Name>
           <Category>Master</Category>
-          <Tag />
-          <DisplayName />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
           <EnumValues>
             <string>Austria</string>
             <string>Belgium</string>
@@ -1746,33 +1210,18 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
             <string>Switzerland</string>
             <string>UK</string>
           </EnumValues>
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
         <ReportRestriction>
           <GUID>810c8704-4d7e-4b9a-aa3a-9ed67406e111</GUID>
           <Name>Employees.LastName</Name>
           <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
-          <FormatRe />
-          <EnumValues />
-          <Date1>0001-01-01T00:00:00</Date1>
-          <Date2>0001-01-01T00:00:00</Date2>
-          <Date3>0001-01-01T00:00:00</Date3>
-          <Date4>0001-01-01T00:00:00</Date4>
         </ReportRestriction>
       </Restrictions>
       <AggregateRestriction />
-      <AggregateRestrictions />
     </ReportModel>
   </Models>
   <Outputs>
@@ -1782,7 +1231,6 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
       <OutputDeviceGUID>c428a6ba-061b-4a47-b9bc-f3f02442ab4b</OutputDeviceGUID>
       <PreScript />
       <PostScript />
-      <ViewParameters />
       <ViewGUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</ViewGUID>
       <FolderPath>%SEALREPORTSREPOSITORY%\</FolderPath>
       <FileName>Dashboard - Sales</FileName>
@@ -1790,12 +1238,8 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
       <UserName />
       <UserGroups>Default Group</UserGroups>
       <UserCulture />
-      <Restrictions />
     </ReportOutput>
   </Outputs>
-  <Tasks />
-  <CommonScripts />
-  <TasksScript />
   <Views>
     <ReportView>
       <GUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</GUID>
@@ -1820,9 +1264,7 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
                         <ReportView>
                           <GUID>e9b94995-0633-4ddb-ae1e-9c8f3488f5f5</GUID>
                           <Name>Chart NVD3</Name>
-                          <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_title</Name>
@@ -1833,9 +1275,7 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
                               <Value>True</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -1870,16 +1310,13 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>1</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -1918,33 +1355,25 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
                         <ReportView>
                           <GUID>ba6cf137-6e61-48c0-bf4e-4a3a10cc6d17</GUID>
                           <Name>Chart NVD3</Name>
-                          <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_title</Name>
                               <Value>Sales per %Customer Country% and %Order Month%</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
-                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>57b96369-ed1b-4b96-9f91-47e501d794c7</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>2</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -1983,28 +1412,19 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
                         <ReportView>
                           <GUID>044abfe4-5978-43c4-9920-7fd6daa9ee1f</GUID>
                           <Name>Data Table</Name>
-                          <Views />
                           <TemplateName>Data Table</TemplateName>
-                          <PartialTemplates />
-                          <Parameters />
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
-                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>f17fdf11-8666-4349-9822-814c7f78c133</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_charts</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>3</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2038,7 +1458,6 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
-                  <PartialTemplates />
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
@@ -2046,18 +1465,11 @@ AND [810c8704-4d7e-4b9a-aa3a-9ed67406e111]</Restriction>
 col-sm-12</Value>
                     </Parameter>
                   </Parameters>
-                  <CultureName />
                   <SortOrder>1</SortOrder>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <PartialTemplates />
-              <Parameters />
-              <CultureName />
               <SortOrder>3</SortOrder>
-              <PdfConfigurations />
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2104,10 +1516,8 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>6c2e9d56-3547-443e-a269-58ec232427aa</GUID>
                           <Name>Chart NVD3</Name>
-                          <Views />
                           <TemplateName>Chart NVD3</TemplateName>
                           <UseCustomTemplate>true</UseCustomTemplate>
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_title</Name>
@@ -2118,9 +1528,7 @@ col-sm-12</Value>
                               <Value>True</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2155,16 +1563,13 @@ col-sm-12</Value>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>1</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2203,28 +1608,19 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>f1778691-3b44-4536-9364-f112af491199</GUID>
                           <Name>Data Table</Name>
-                          <Views />
                           <TemplateName>Data Table</TemplateName>
-                          <PartialTemplates />
-                          <Parameters />
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
-                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>d5baed7b-669b-447b-b26c-0741c7bd5e79</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_charts</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>3</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2263,34 +1659,26 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>8a35b067-e0e3-4625-957e-c94b46d3c403</GUID>
                           <Name>Chart NVD3</Name>
-                          <Views />
                           <TemplateName>Chart NVD3</TemplateName>
                           <CustomTemplate />
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_title</Name>
                               <Value>Sales per %Employee Name% and %Order Month%</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
-                          <ExcelConfigurations />
                         </ReportView>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>f55e81b5-55c1-4e4a-8408-ef8090a40588</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>2</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2324,7 +1712,6 @@ col-sm-12</Value>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
-                  <PartialTemplates />
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
@@ -2332,18 +1719,11 @@ col-sm-12</Value>
 col-sm-12</Value>
                     </Parameter>
                   </Parameters>
-                  <CultureName />
                   <SortOrder>1</SortOrder>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <PartialTemplates />
-              <Parameters />
-              <CultureName />
               <SortOrder>4</SortOrder>
-              <PdfConfigurations />
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2387,9 +1767,7 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>60a86b26-9f14-43e6-9662-08ffa7a12ba1</GUID>
                           <Name>Chart NVD3</Name>
-                          <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_title</Name>
@@ -2400,9 +1778,7 @@ col-sm-12</Value>
                               <Value>True</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2437,16 +1813,13 @@ col-sm-12</Value>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>1</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2486,18 +1859,14 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>a49511f7-50be-491e-9d5e-b6fb29d8fc16</GUID>
                           <Name>Chart NVD3</Name>
-                          <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_title</Name>
                               <Value>Discounts per %Category% and %Order Month%</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2532,16 +1901,13 @@ col-sm-12</Value>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>c19fa517-6db1-4436-a2e7-219168eee98c</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>2</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2581,13 +1947,8 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>35f15521-c549-4e3d-b3e7-003ef39e2325</GUID>
                           <Name>Data Table</Name>
-                          <Views />
                           <TemplateName>Data Table</TemplateName>
-                          <PartialTemplates />
-                          <Parameters />
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2622,16 +1983,13 @@ col-sm-12</Value>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>c60c3a95-795b-4ac1-8eb9-14823f8ed940</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_charts</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>3</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2665,7 +2023,6 @@ col-sm-12</Value>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
-                  <PartialTemplates />
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
@@ -2673,9 +2030,7 @@ col-sm-12</Value>
 col-sm-12</Value>
                     </Parameter>
                   </Parameters>
-                  <CultureName />
                   <SortOrder>1</SortOrder>
-                  <PdfConfigurations />
                   <ExcelConfigurations>
                     <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2709,11 +2064,7 @@ col-sm-12</Value>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <PartialTemplates />
-              <Parameters />
-              <CultureName />
               <SortOrder>2</SortOrder>
-              <PdfConfigurations />
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2760,18 +2111,23 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>d13b6936-b9d7-4468-922f-76fe540364f8</GUID>
                           <Name>Chart Amount NVD3</Name>
-                          <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_title</Name>
                               <Value>Sales per %Order Month%</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
+                          <WidgetDefinition>
+                            <GUID>1a81248f-0e0b-4c40-8ee9-bd3fdcd0294a</GUID>
+                            <Name>Sales per month</Name>
+                            <Description>Chart Sales per month</Description>
+                            <Icon>glyphicon glyphicon-signal</Icon>
+                            <Color>success</Color>
+                            <Width>3</Width>
+                            <Height>3</Height>
+                          </WidgetDefinition>
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2807,16 +2163,13 @@ col-sm-12</Value>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>1</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2856,18 +2209,14 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>a3f9b8ad-20a1-4f1c-ab3e-63986be75c90</GUID>
                           <Name>Chart Category NVD3</Name>
-                          <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_title</Name>
                               <Value>Sales per %Category%</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2903,16 +2252,13 @@ col-sm-12</Value>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>28577963-bd93-49f5-b117-8a983b7ec93c</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>2</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -2952,7 +2298,6 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>c528a8f5-a8ea-44b4-95b8-e3b3ba58e285</GUID>
                           <Name>Chart Plotly</Name>
-                          <Views />
                           <TemplateName>Chart Plotly</TemplateName>
                           <UseCustomTemplate>true</UseCustomTemplate>
                           <CustomTemplate>@using Seal.Model
@@ -3048,7 +2393,6 @@ col-sm-12</Value>
         view.Error = "";
     }
 }</CustomTemplate>
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>plotly_width</Name>
@@ -3059,17 +2403,11 @@ col-sm-12</Value>
                               <Value>520px</Value>
                             </Parameter>
                             <Parameter>
-                              <Name>plotly_title</Name>
-                              <Value />
-                            </Parameter>
-                            <Parameter>
                               <Name>plotly_margins</Name>
                               <Value>{t:0, l:0, b:20, r:20, pad:2}</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3104,16 +2442,13 @@ col-sm-12</Value>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>8534d52d-19ae-4904-95f6-ff23e82e7863</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>6</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3152,13 +2487,17 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>550ac4f8-dc87-48e9-b22e-4325bd444c11</GUID>
                           <Name>Amount Data Table</Name>
-                          <Views />
                           <TemplateName>Data Table</TemplateName>
-                          <PartialTemplates />
-                          <Parameters />
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
+                          <WidgetDefinition>
+                            <GUID>12baccc8-f5f6-43ea-8dcc-9d4ef00ec299</GUID>
+                            <Name>Sales per month</Name>
+                            <Description>Table sales per month</Description>
+                            <Icon>glyphicon glyphicon-education</Icon>
+                            <Color>warning</Color>
+                            <Width>4</Width>
+                            <Height>3</Height>
+                          </WidgetDefinition>
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3194,16 +2533,13 @@ col-sm-12</Value>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>6b00ceac-12bb-48df-9fa7-5ae24bf7e4af</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_charts</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>5</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3243,9 +2579,7 @@ col-sm-12</Value>
                         <ReportView>
                           <GUID>4e0a76c9-ec53-4b4c-96fe-a0ae8ecf1baa</GUID>
                           <Name>Chart NVD3</Name>
-                          <Views />
                           <TemplateName>Chart NVD3</TemplateName>
-                          <PartialTemplates />
                           <Parameters>
                             <Parameter>
                               <Name>nvd3_chart_title</Name>
@@ -3260,9 +2594,7 @@ col-sm-12</Value>
                               <Value>True</Value>
                             </Parameter>
                           </Parameters>
-                          <CultureName />
                           <SortOrder>1</SortOrder>
-                          <PdfConfigurations />
                           <ExcelConfigurations>
                             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3297,16 +2629,13 @@ col-sm-12</Value>
                       </Views>
                       <TemplateName>Model</TemplateName>
                       <ModelGUID>5d49225d-cb74-4cd2-a30d-694061b98efe</ModelGUID>
-                      <PartialTemplates />
                       <Parameters>
                         <Parameter>
                           <Name>show_data_tables</Name>
                           <Value>False</Value>
                         </Parameter>
                       </Parameters>
-                      <CultureName />
                       <SortOrder>3</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3341,7 +2670,6 @@ col-sm-12</Value>
                     <ReportView>
                       <GUID>f5aacdc0-2928-4de7-83b2-93b0573408e1</GUID>
                       <Name>print break</Name>
-                      <Views />
                       <TemplateName>Free</TemplateName>
                       <UseCustomTemplate>true</UseCustomTemplate>
                       <CustomTemplate>@using Seal.Model
@@ -3355,11 +2683,7 @@ col-sm-12</Value>
         &lt;/div&gt;
     }
 }</CustomTemplate>
-                      <PartialTemplates />
-                      <Parameters />
-                      <CultureName />
                       <SortOrder>4</SortOrder>
-                      <PdfConfigurations />
                       <ExcelConfigurations>
                         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3393,7 +2717,6 @@ col-sm-12</Value>
                     </ReportView>
                   </Views>
                   <TemplateName>Container</TemplateName>
-                  <PartialTemplates />
                   <Parameters>
                     <Parameter>
                       <Name>grid_layout</Name>
@@ -3403,9 +2726,7 @@ col-sm-6;col-sm-6;
 </Value>
                     </Parameter>
                   </Parameters>
-                  <CultureName />
                   <SortOrder>1</SortOrder>
-                  <PdfConfigurations />
                   <ExcelConfigurations>
                     <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3440,11 +2761,7 @@ col-sm-6;col-sm-6;
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <PartialTemplates />
-              <Parameters />
-              <CultureName />
               <SortOrder>1</SortOrder>
-              <PdfConfigurations />
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3488,44 +2805,23 @@ col-sm-6;col-sm-6;
                     <ReportView>
                       <GUID>760af1f9-2546-4411-9402-e3759e3fb50d</GUID>
                       <Name>Chart NVD3</Name>
-                      <Views />
                       <TemplateName>Chart NVD3</TemplateName>
-                      <PartialTemplates />
-                      <Parameters />
-                      <CultureName />
                       <SortOrder>1</SortOrder>
-                      <PdfConfigurations />
-                      <ExcelConfigurations />
                     </ReportView>
                     <ReportView>
                       <GUID>a813f31c-ee49-481e-aeca-8dc85bd0a9cf</GUID>
                       <Name>Data Table</Name>
-                      <Views />
                       <TemplateName>Data Table</TemplateName>
-                      <PartialTemplates />
-                      <Parameters />
-                      <CultureName />
                       <SortOrder>2</SortOrder>
-                      <PdfConfigurations />
-                      <ExcelConfigurations />
                     </ReportView>
                   </Views>
                   <TemplateName>Model</TemplateName>
                   <ModelGUID>b9b267bb-eeb4-4bd3-ac5c-e7b4e4ae609d</ModelGUID>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
                   <SortOrder>1</SortOrder>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
-              <PartialTemplates />
-              <Parameters />
-              <CultureName />
               <SortOrder>5</SortOrder>
-              <PdfConfigurations />
               <ExcelConfigurations>
                 <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3560,11 +2856,7 @@ col-sm-6;col-sm-6;
           </Views>
           <TemplateName>Tab Control</TemplateName>
           <CustomTemplate />
-          <PartialTemplates />
-          <Parameters />
-          <CultureName />
           <SortOrder>1</SortOrder>
-          <PdfConfigurations />
           <ExcelConfigurations>
             <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -3598,8 +2890,6 @@ col-sm-6;col-sm-6;
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>
-      <ModelGUID />
-      <PartialTemplates />
       <Parameters>
         <Parameter>
           <Name>restriction_button</Name>
@@ -3610,7 +2900,6 @@ col-sm-6;col-sm-6;
           <Value>True</Value>
         </Parameter>
       </Parameters>
-      <CultureName />
       <SortOrder>0</SortOrder>
       <PdfConfigurations>
         <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -3786,8 +3075,5 @@ col-sm-6;col-sm-6;
       </ExcelConfigurations>
     </ReportView>
   </Views>
-  <DisplayName />
-  <InitScript />
   <ViewGUID>3146ef0e-017d-4b4c-a9d7-0a025e7d351b</ViewGUID>
-  <Schedules />
 </Report>

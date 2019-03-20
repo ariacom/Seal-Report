@@ -37,6 +37,35 @@ namespace Seal.Model
         }
 
 
+        private List<SecurityDashboardFolder> _securityDashboardFolders = null;
+        public List<SecurityDashboardFolder> SecurityDashboardFolders
+        {
+            get
+            {
+                if (_securityDashboardFolders == null)
+                {
+                    _securityDashboardFolders = new List<SecurityDashboardFolder>();
+                    foreach (var sgroup in SecurityGroups)
+                    {
+                        foreach (var sdf in sgroup.DashboardFolders)
+                        {
+                            var current = _securityDashboardFolders.FirstOrDefault(i => i.Name == sdf.Name);
+                            if (current == null)
+                            {
+                                _securityDashboardFolders.Add(sdf);
+                                current = sdf;                           
+                            }
+
+                            //Set highest right
+                            if (current.Right < sdf.Right) current.Right = sdf.Right;
+                        }
+                    }
+                }
+                return _securityDashboardFolders;
+            }
+        }
+
+
         private PersonalFolderRight? _persFolderRight = null;
         public PersonalFolderRight PersonalFolderRight
         {
@@ -69,36 +98,43 @@ namespace Seal.Model
             }
         }
 
-        private DashboardRole? _dashboardRole = null;
-        public DashboardRole DashboardRole
+        List<SWIDashboardFolder> _dashboardFolders;
+        public List<SWIDashboardFolder> DashboardFolders
         {
             get
             {
-                if (_dashboardRole == null)
+                if (_dashboardFolders == null)
                 {
-                    foreach (var group in SecurityGroups)
+                    _dashboardFolders = new List<SWIDashboardFolder>();
+                    if (HasPersonalDashboardFolder)
                     {
-                        if (_dashboardRole == null || _dashboardRole < group.DashboardRole) _dashboardRole = group.DashboardRole;
+                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateWeb("Personal"), path = SWIDashboardFolder .PersonalPath});
+                    }
+
+                    //public
+                    foreach (var f in SecurityDashboardFolders.Where(i => i.Right == DashboardFolderRight.Edit))
+                    {
+                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateFolderName(f.Name), path = f.Path});
                     }
                 }
-                return _dashboardRole.Value;
+                return _dashboardFolders;
             }
         }
 
-        private bool? _allDashboards = null;
-        public bool AllDashboards
+        private bool? _hasPersonalDashboardFolder = null;
+        public bool HasPersonalDashboardFolder
         {
             get
             {
-                if (_allDashboards == null)
+                if (_hasPersonalDashboardFolder == null)
                 {
-                    _allDashboards = false;
+                    _hasPersonalDashboardFolder = false;
                     foreach (var group in SecurityGroups)
                     {
-                        if (group.AllDashboards) _allDashboards = true;
+                        if (group.PersonalDashboardFolder) _hasPersonalDashboardFolder = true;
                     }
                 }
-                return _allDashboards.Value;
+                return _hasPersonalDashboardFolder.Value;
             }
         }
 
@@ -275,20 +311,6 @@ namespace Seal.Model
                 );
         }
 
-        private List<SecurityDashboard> _securityDashboards = null;
-        public bool CanViewDashboard(Dashboard item)
-        {
-            if (item.IsPrivate) return (DashboardRole != DashboardRole.Viewer);
-
-            if (AllDashboards) return true;
-
-            if (_securityDashboards == null) InitEditionRights();
-
-            return _securityDashboards.Exists(i =>
-                (string.IsNullOrEmpty(i.Name) || i.Name == item.Name)
-                );
-        }
-
         private void InitEditionRights()
         {
             _securityConnections = new List<SecurityConnection>();
@@ -296,7 +318,6 @@ namespace Seal.Model
             _securitySources = new List<SecuritySource>();
             _securityColumns = new List<SecurityColumn>();
             _securityWidgets = new List<SecurityWidget>();
-            _securityDashboards = new List<SecurityDashboard>();
 
             foreach (var sgroup in SecurityGroups)
             {
@@ -305,7 +326,6 @@ namespace Seal.Model
                 _securitySources.AddRange(sgroup.Sources.Where(i => i.Right == EditorRight.NoSelection));
                 _securityColumns.AddRange(sgroup.Columns.Where(i => i.Right == EditorRight.NoSelection));
                 _securityWidgets.AddRange(sgroup.Widgets.Where(i => i.Right == EditorRight.NoSelection));
-                _securityDashboards.AddRange(sgroup.Dashboards.Where(i => i.Published));
             }
         }
 
@@ -514,20 +534,35 @@ namespace Seal.Model
         }
 
 
-        void LoadDashboard(string path, bool editable, bool isPrivate)
+        void LoadDashboard(string path, string folderPath, string folderName, bool editable, bool isPersonal)
         {
             try
             {
                 var dashboard = _dashboards.FirstOrDefault(i => i.Path == path);
                 if (dashboard == null || dashboard.LastModification != File.GetLastWriteTime(path))
                 {
+                    if (dashboard != null) _dashboards.Remove(dashboard);
                     dashboard = Dashboard.LoadFromFile(path);
-                    dashboard.IsPrivate = isPrivate;
-                    if (CanViewDashboard(dashboard)) _dashboards.Add(dashboard);
+                    _dashboards.Add(dashboard);
                 }
-                dashboard.IsPrivate = isPrivate;
+                dashboard.IsPersonal = isPersonal;
                 dashboard.Editable = editable;
-                dashboard.FullName = string.Format("{0} ({1})", dashboard.Name, Security.Repository.TranslateWeb(dashboard.IsPrivate ? "Private" : "Public"));
+                dashboard.Folder = folderPath;
+
+                var name = Security.Repository.TranslateDashboard(dashboard.Name);
+
+                if (dashboard.IsPersonal)
+                {
+                    dashboard.FullName = string.Format("{0} ({1})", name, Security.Repository.TranslateDashboardFolder("Personal"));
+                }
+                else if (!string.IsNullOrEmpty(folderName))
+                {
+                    dashboard.FullName = string.Format("{0} ({1})", name, Security.Repository.TranslateDashboardFolder(folderName));
+                }
+                else
+                {
+                    dashboard.FullName = name;
+                }
                 dashboard.ReinitGroupOrders();
             }
             catch (Exception ex)
@@ -536,17 +571,17 @@ namespace Seal.Model
             }
         }
 
-        private string _dashboardPrivateFolder;
-        public string DashboardPrivateFolder
+        private string _dashboardPersonalFolder;
+        public string DashboardPersonalFolder
         {
             get
             {
-                if (string.IsNullOrEmpty(_dashboardPrivateFolder))
+                if (string.IsNullOrEmpty(_dashboardPersonalFolder))
                 {
-                    _dashboardPrivateFolder = Path.Combine(Security.Repository.GetPersonalFolder(this), "_dashboards");
-                    if (!Directory.Exists(_dashboardPrivateFolder)) Directory.CreateDirectory(_dashboardPrivateFolder);
+                    _dashboardPersonalFolder = Path.Combine(Security.Repository.GetPersonalFolder(this), "_dashboards");
+                    if (!Directory.Exists(_dashboardPersonalFolder)) Directory.CreateDirectory(_dashboardPersonalFolder);
                 }
-                return _dashboardPrivateFolder;
+                return _dashboardPersonalFolder;
             }
         }
 
@@ -576,22 +611,27 @@ namespace Seal.Model
         {
             try
             {
-                //private
-                if (DashboardRole != DashboardRole.Viewer)
+                //personal
+                if (HasPersonalDashboardFolder)
                 {
-                    foreach (var p in Directory.GetFiles(DashboardPrivateFolder, "*." + Repository.SealDashboardExtension))
+                    foreach (var p in Directory.GetFiles(DashboardPersonalFolder, "*." + Repository.SealDashboardExtension))
                     {
-                        LoadDashboard(p, true, true);
+                        LoadDashboard(p, SWIDashboardFolder.PersonalPath, "", true, true);
                     }
                 }
 
                 //public
-                foreach (var p in Directory.GetFiles(Security.Repository.DashboardPublicFolder, "*." + Repository.SealDashboardExtension))
+                foreach (var f in SecurityDashboardFolders. Where(i => i.Right != DashboardFolderRight.None))
                 {
-                    LoadDashboard(p, DashboardRole == DashboardRole.PublicDesigner, false);
+                    var dir = Path.Combine(Security.Repository.DashboardPublicFolder, f.Path);
+                    if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                    foreach (var p in Directory.GetFiles(dir, "*." + Repository.SealDashboardExtension))
+                    {
+                        LoadDashboard(p, f.Path, f.Name, f.Right == DashboardFolderRight.Edit, false);
+                    }
                 }
 
-                //remove 
+                //remove deleted
                 _dashboards.RemoveAll(i => !File.Exists(i.Path));
             }
             catch (Exception ex)

@@ -413,7 +413,6 @@ namespace Seal.Model
         Selection,
     }
 
-
     public enum ViewType
     {
         [Description("View reports only")]
@@ -424,14 +423,14 @@ namespace Seal.Model
         ReportsDashboards,
     }
 
-    public enum DashboardRole
+    public enum DashboardFolderRight
     {
-        [Description("Viewer: View public dashboards")]
-        Viewer,
-        [Description("Private designer: Create and edit private dashboards")]
-        PrivateDesigner,
-        [Description("Public designer: Create and edit private and public dashboards")]
-        PublicDesigner,
+        [Description("No right")]
+        None,
+        [Description("View dashboards")]
+        Execute,
+        [Description("Edit dashboards")]
+        Edit,
     }
 
     public enum FailoverEmailMode

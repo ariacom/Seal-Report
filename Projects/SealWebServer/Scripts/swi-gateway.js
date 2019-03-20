@@ -207,10 +207,11 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.GetDashboardResult = function (guid, itemguid, callback, errorcb) {
+    SWIGateway.prototype.GetDashboardResult = function (guid, itemguid, force, callback, errorcb) {
         $.post(_sealServer + "SWIGetDashboardResult", {
             guid: guid,
-            itemguid: itemguid
+            itemguid: itemguid,
+            force: force
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -229,10 +230,10 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.CreateDashboard = function (name, isPublic, callback, errorcb) {
+    SWIGateway.prototype.CreateDashboard = function (name, path, callback, errorcb) {
         $.post(_sealServer + "SWICreateDashboard", {
             name: name,
-            isPublic: isPublic
+            path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -244,12 +245,12 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.RenameDashboard = function (guid, name, copyPublic, copyPrivate, callback, errorcb) {
-        $.post(_sealServer + "SWIRenameDashboard", {
+    SWIGateway.prototype.MoveDashboard = function (guid, name, path, copy, callback, errorcb) {
+        $.post(_sealServer + "SWIMoveDashboard", {
             guid: guid,
             name: name,
-            copyPublic: copyPublic,
-            copyPrivate: copyPrivate
+            path: path,
+            copy: copy
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });

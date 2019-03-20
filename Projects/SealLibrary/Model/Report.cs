@@ -160,6 +160,14 @@ namespace Seal.Model
         }
         public bool ShouldSerializeSchedules() { return _schedules.Count > 0; }
 
+        private int _widgetCache = 60;
+        public int WidgetCache
+        {
+            get { return _widgetCache; }
+            set { _widgetCache = value; }
+        }
+        public bool ShouldSerializeWidgetCache() { return _widgetCache != 60; }
+
         [XmlIgnore]
         public Repository Repository = null;
 

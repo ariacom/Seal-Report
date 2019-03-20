@@ -122,9 +122,9 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
-            else if (CollectionItemType == typeof(SecurityDashboard))
+            else if (CollectionItemType == typeof(SecurityDashboardFolder))
             {
-                frmCollectionEditorForm.Text = "Dashboard Publications Collection Editor";
+                frmCollectionEditorForm.Text = "Security Dashboard Folders Collection Editor";
                 allowAdd = true;
                 allowRemove = true;
                 _useHandlerInterface = false;
@@ -231,7 +231,7 @@ namespace Seal.Forms
             else if (value is SecuritySource) result = ((SecuritySource)value).DisplayName;
             else if (value is SecurityDevice) result = ((SecurityDevice)value).DisplayName;
             else if (value is SecurityWidget) result = ((SecurityWidget)value).DisplayName;
-            else if (value is SecurityDashboard) result = ((SecurityDashboard)value).DisplayName;
+            else if (value is SecurityDashboardFolder) result = ((SecurityDashboardFolder)value).DisplayName;
             else if (value is SecurityConnection) result = ((SecurityConnection)value).DisplayName;
             else if (value is SubReport) result = ((SubReport)value).Name;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;

@@ -245,9 +245,7 @@ namespace Seal.Model
                 result.AppendLine();
                 result.AppendFormat("    Personal Folder: {0}\r\n", Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight));
                 result.AppendLine();
-                result.AppendFormat("    Dashboard Role:{0}\r\n", Helper.GetEnumDescription(group.DashboardRole.GetType(), group.DashboardRole));
-                result.AppendLine();
-                result.AppendFormat("    View All Public Dashboards:{0}\r\n", group.AllDashboards.ToString());
+                result.AppendFormat("    Dashboard Personal Folder: {0}\r\n", group.PersonalDashboardFolder? "yes" : "no");
                 result.AppendLine();
                 foreach (var item in group.Devices)
                 {
@@ -265,9 +263,9 @@ namespace Seal.Model
                 {
                     result.AppendFormat("    Column:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
-                foreach (var item in group.Dashboards)
+                foreach (var item in group.DashboardFolders)
                 {
-                    result.AppendFormat("    Dashboard:'{0}'  => Is Published:{1}\r\n", item.DisplayName, item.Published ? "true" : "false");
+                    result.AppendFormat("    Dashboard Folder:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));
                 }
                 foreach (var item in group.Widgets)
                 {

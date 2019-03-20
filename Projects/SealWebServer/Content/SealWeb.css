@@ -46,7 +46,7 @@ a {
 }
 
 .bootstrap-select2 {
-    width:100% !important; 
+    width: 100% !important;
 }
 
 #file-table-view > div > .row {
@@ -100,7 +100,7 @@ a {
 
 @media (min-width: 768px) {
     #wait-dialog > .modal-dialog {
-        width:300px;
+        width: 300px;
     }
 }
 
@@ -149,4 +149,37 @@ a {
 /* dataTables */
 table.dataTable {
     margin: 0px !important;
+}
+
+/*dashboards */
+.grid {
+    position: relative;
+}
+
+.item {
+    position: absolute;
+    margin: 5px;
+    z-index: 1;
+    border-width: 2px;
+}
+
+.item.muuri-item-hidden {
+    z-index: 0;
+}
+
+.item.muuri-item-positioning {
+    z-index: 2;
+}
+
+.item.muuri-item-releasing {
+    z-index: 3;
+}
+
+.item.muuri-item-dragging {
+    z-index: 4;
+}
+
+.dashboard-personal {
+    font-weight: bold;
+    font-style: italic;
 }

@@ -10,7 +10,7 @@
         public string dashboard;
         public string lastview;
         public ViewType viewtype;
-        public DashboardRole role;
+        public SWIDashboardFolder[] dashboardFolders;
     }
 
     public class SWIFolder
@@ -70,6 +70,15 @@
             return _fullPath;
         }
     }
+
+    public class SWIDashboardFolder
+    {
+        public static string PersonalPath = ":";
+
+        public string name;
+        public string path;
+    }
+
 
     public class SWIFile
     {
