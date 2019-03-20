@@ -210,7 +210,7 @@
     <Compile Include="Model\SealPdfConverter.cs" />
     <Compile Include="Model\SealSecurity.cs" />
     <Compile Include="Model\CommonScript.cs" />
-    <Compile Include="Model\SecurityDashboard.cs" />
+    <Compile Include="Model\SecurityDashboardFolder.cs" />
     <Compile Include="Model\SecurityUserProfile.cs" />
     <Compile Include="Model\SecurityWidget.cs" />
     <Compile Include="Model\SecuritySource.cs" />
@@ -366,6 +366,9 @@
     <None Include="..\..\Repository\Views\Scripts\chartNVD3.js">
       <Link>Views\Scripts\chartNVD3.js</Link>
     </None>
+    <None Include="..\..\Repository\Views\Scripts\helpers.js">
+      <Link>Views\Scripts\common.js</Link>
+    </None>
     <None Include="..\..\Repository\Views\Content\seal.css">
       <Link>Views\Content\seal.css</Link>
     </None>
@@ -471,6 +474,7 @@
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)..\..\Repository\Views\Scripts\common.js" "$(ProjectDir)..\SealWebServer\Scripts\"
 copy "$(ProjectDir)..\..\Repository\Views\Scripts\chartNVD3.js" "$(ProjectDir)..\SealWebServer\Scripts\"
+copy "$(ProjectDir)..\..\Repository\Views\Scripts\helpers.js" "$(ProjectDir)..\SealWebServer\Scripts\"
 copy "$(ProjectDir)..\..\Repository\Views\Content\seal.css" "$(ProjectDir)..\SealWebServer\Content\"
 </PostBuildEvent>
   </PropertyGroup>

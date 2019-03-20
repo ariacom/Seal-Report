@@ -606,7 +606,7 @@ namespace Seal
         }
 
 
-        bool _pdfExpanded = false, _excelExpanded = false, _configurationExpanded = true;
+        bool _pdfExpanded = false, _excelExpanded = false, _configurationExpanded = true, _widgetExpanded = false;
         private void mainTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             modelPanel.Visible = false;
@@ -624,6 +624,8 @@ namespace Seal
             if (entry != null) _excelExpanded = entry.Expanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "template configuration");
             if (entry != null) _configurationExpanded = entry.Expanded;
+            entry = Helper.GetGridEntry(mainPropertyGrid, "widget definition");
+            if (entry != null) _widgetExpanded = entry.Expanded;
 
             mainPropertyGrid.SelectedObject = null;
             if (selectedEntity is ReportModel)
@@ -654,6 +656,8 @@ namespace Seal
             if (entry != null) entry.Expanded = _excelExpanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "template configuration");
             if (entry != null) entry.Expanded = _configurationExpanded;
+            entry = Helper.GetGridEntry(mainPropertyGrid, "widget definition");
+            if (entry != null) entry.Expanded = _widgetExpanded;
 
             toolStripHelper.SetHelperButtons(selectedEntity);
             enableControls();

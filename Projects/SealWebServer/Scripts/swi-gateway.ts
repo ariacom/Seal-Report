@@ -236,10 +236,11 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public GetDashboardResult(guid: string, itemguid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public GetDashboardResult(guid: string, itemguid: string, force :boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetDashboardResult", {
             guid: guid,
-            itemguid: itemguid
+            itemguid: itemguid,
+            force : force
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -261,10 +262,10 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public CreateDashboard(name: string, isPublic: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public CreateDashboard(name: string, path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWICreateDashboard", {
             name: name,
-            isPublic: isPublic
+            path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -278,12 +279,12 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public RenameDashboard(guid: string, name: string, copyPublic: boolean, copyPrivate: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_sealServer + "SWIRenameDashboard", {
+    public MoveDashboard(guid: string, name: string, path : string, copy: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWIMoveDashboard", {
             guid: guid,
             name: name,
-            copyPublic: copyPublic,
-            copyPrivate: copyPrivate
+            path: path,
+            copy: copy
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });

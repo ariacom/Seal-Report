@@ -27,10 +27,9 @@ namespace Seal.Model
                 GetProperty("Devices").SetIsBrowsable(true);
                 GetProperty("Connections").SetIsBrowsable(true);
                 GetProperty("Sources").SetIsBrowsable(true);
-                GetProperty("Dashboards").SetIsBrowsable(true);
-                GetProperty("AllDashboards").SetIsBrowsable(true);
+                GetProperty("DashboardFolders").SetIsBrowsable(true);
+                GetProperty("PersonalDashboardFolder").SetIsBrowsable(true);
 
-                GetProperty("DashboardRole").SetIsBrowsable(true);
                 GetProperty("Widgets").SetIsBrowsable(true);
 
                 GetProperty("Culture").SetIsBrowsable(true);
@@ -51,7 +50,7 @@ namespace Seal.Model
         }
 
         private List<SecurityFolder> _folders = new List<SecurityFolder>();
-        [Category("Definition"), DisplayName("Folders"), Description("The folder configurations for this group used for Web Publication. By default, repository folders have no right."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Folders"), Description("The folder configurations for this group used for Web Publication of reports. By default, repository folders have no right."), Id(2, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityFolder> Folders
         {
@@ -121,39 +120,29 @@ namespace Seal.Model
         public bool ShouldSerializeColumns() { return _columns.Count > 0; }
 
 
-        private bool _allDashboards = true;
-        [Category("Dashboard Publications"), DisplayName("View all dashboards"), Description("If true, all the public dashboards can be viewed and selected. The security set in the 'Dashboards' property is ignored."), Id(1, 3)]
+        private bool _personalDashboardFolder = true;
+        [Category("Dashboards Security"), DisplayName("Personal Dashboard Folder"), Description("If true, users of the group have a personal folder to create private dashboards."), Id(1, 3)]
         [DefaultValue(true)]
-        public bool AllDashboards
+        public bool PersonalDashboardFolder
         {
-            get { return _allDashboards; }
-            set { _allDashboards = value; }
+            get { return _personalDashboardFolder; }
+            set { _personalDashboardFolder = value; }
         }
 
 
-        private List<SecurityDashboard> _dashboards = new List<SecurityDashboard>();
-        [Category("Dashboard Publications"), DisplayName("Dashboards"), Description("If 'Allow all dashboards' is false, list of public dashboards published for the group."), Id(2, 3)]
+        private List<SecurityDashboardFolder> _dashboardFolders = new List<SecurityDashboardFolder>();
+        [Category("Dashboards Security"), DisplayName("Dashboard Folders"), Description("The dashboard folder configurations for this group used for Web Publication of dashboards. By default, repository dashboard folders have no right."), Id(2, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<SecurityDashboard> Dashboards
+        public List<SecurityDashboardFolder> DashboardFolders
         {
-            get { return _dashboards; }
-            set { _dashboards = value; }
+            get { return _dashboardFolders; }
+            set { _dashboardFolders = value; }
         }
-        public bool ShouldSerializDashboards() { return _dashboards.Count > 0; }
+        public bool ShouldSerializDashboards() { return _dashboardFolders.Count > 0; }
 
-
-        DashboardRole _dashboardRole = DashboardRole.PublicDesigner;
-        [Category("Dashboard Designer Security"), DisplayName("Dashboard role"), Description("For the Dashboard Designer: Dashboard role of the users of this group."), Id(1, 4)]
-        [TypeConverter(typeof(NamedEnumConverter))]
-        [DefaultValue(DashboardRole.PublicDesigner)]
-        public DashboardRole DashboardRole
-        {
-            get { return _dashboardRole; }
-            set { _dashboardRole = value; }
-        }
 
         private List<SecurityWidget> _widgets = new List<SecurityWidget>();
-        [Category("Dashboard Designer Security"), DisplayName("Widgets"), Description("For the Dashboard Designer: Widget rights for the group. Set rights to widgets through the security tags or names assigned. By default all widgets can be selected."), Id(2, 4)]
+        [Category("Dashboards Security"), DisplayName("Widgets"), Description("For the Dashboard Designer: Widget rights for the group. Set rights to widgets through the security tags or names assigned. By default all widgets can be selected."), Id(4, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityWidget> Widgets
         {

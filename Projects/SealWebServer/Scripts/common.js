@@ -1,16 +1,4 @@
-﻿//d3 formatting
-String.prototype.replaceAll = function (find, replace) {
-    var str = this;
-    return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
-};
-String.prototype.valueFormat = function (value) {
-    var str = this;
-    return str.replaceAll(',', thousandSeparator).replaceAll('$', currencySymbol).replace('.', decimalSeparator);
-};
-String.prototype.normalizeNumeric = function (valueStr) {
-    return parseFloat(this.replaceAll(',', '').replace(/\s+/g, ''));
-};
-
+﻿
 function restrictionSelectChange(source) {
     var idSelect = "#" + $(source).attr('id');
     if ($(source).attr('opid') != null) {

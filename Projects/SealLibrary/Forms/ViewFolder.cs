@@ -27,6 +27,7 @@ namespace Seal.Forms
                 GetProperty("ViewGUID").SetIsBrowsable(true);
                 GetProperty("DisplayName").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsBrowsable(true);
+                GetProperty("WidgetCache").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -59,5 +60,14 @@ namespace Seal.Forms
             get { return Report.InitScript; }
             set { Report.InitScript = value; }
         }
+
+        [Category("Definition"), DisplayName("Widgets cache duration"), Description("For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report.")]
+        [DefaultValue(60)]
+        public int WidgetCache
+        {
+            get { return Report.WidgetCache; }
+            set { Report.WidgetCache = value; }
+        }
+
     }
 }

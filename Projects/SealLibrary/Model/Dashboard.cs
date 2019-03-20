@@ -82,9 +82,11 @@ namespace Seal.Model
         [XmlIgnore]
         public bool Editable = false;
         [XmlIgnore]
-        public bool IsPrivate = false;
+        public bool IsPersonal = false;
         [XmlIgnore]
         public string Path;
+        [XmlIgnore]
+        public string Folder;
         [XmlIgnore]
         public string FullName;
         [XmlIgnore]

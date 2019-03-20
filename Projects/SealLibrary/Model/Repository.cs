@@ -581,6 +581,22 @@ namespace Seal.Model
             return Translate(CultureInfo.TwoLetterISOLanguageName, "Report", reference);
         }
 
+        public string TranslateDashboardFolder(string reference)
+        {
+            return Translate(CultureInfo.TwoLetterISOLanguageName, "DashboardFolder", reference);
+        }
+
+        public string TranslateDashboard(string reference)
+        {
+            return Translate(CultureInfo.TwoLetterISOLanguageName, "Dashboard", reference);
+        }
+
+        public string TranslateWidgetName(string reference)
+        {
+            return Translate(CultureInfo.TwoLetterISOLanguageName, "WidgetName", reference);
+        }
+
+
         List<RepositoryTranslation> _repositoryTranslations = null;
         public List<RepositoryTranslation> RepositoryTranslations
         {
