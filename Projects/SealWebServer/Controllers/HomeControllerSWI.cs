@@ -718,33 +718,6 @@ namespace SealWebServer.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult SWISwapDashboardGroupOrder(string guid, int source, int destination)
-        {
-            WriteDebug("SWISwapDashboardGroupOrder");
-            try
-            {
-                checkSWIAuthentication();
-
-                var dashboard = checkDashboardEditRight(guid);
-                foreach(var item in dashboard.Items)
-                {
-                    if (item.GroupOrder == source) item.GroupOrder = int.MinValue;
-                    if (item.GroupOrder == destination) item.GroupOrder = source;
-                }
-                foreach (var item in dashboard.Items)
-                {
-                    if (item.GroupOrder == int.MinValue) item.GroupOrder = destination;
-                }
-                dashboard.SaveToFile();
-                return Json(new object { });
-            }
-            catch (Exception ex)
-            {
-                return HandleSWIException(ex);
-            }
-        }
-
 
         [HttpPost]
         public ActionResult SWISetLastDashboard(string guid)
@@ -762,7 +735,6 @@ namespace SealWebServer.Controllers
                 return HandleSWIException(ex);
             }
         }
-
 
         [HttpPost]
         public ActionResult SWIGetDashboardResult(string guid, string itemguid, bool force)

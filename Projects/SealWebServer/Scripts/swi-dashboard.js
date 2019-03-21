@@ -1,6 +1,5 @@
 /// <reference path="typings/jquery/jquery.d.ts" />
 /// <reference path="typings/bootstrap/index.d.ts" />
-/// <reference path="typings/jstree/jstree.d.ts" />
 /// <reference path="typings/main.d.ts" />
 var _da;
 var _dashboardEditor;
@@ -54,17 +53,20 @@ var SWIDashboard = (function () {
             var grid = _da._gridsById[gridId];
             if (!grid) {
                 grid = new Muuri('#' + gridId, {
-                    dragEnabled: _da._dashboard.Editable,
+                    dragEnabled: hasEditor && _da._dashboard.Editable,
                     layoutOnInit: false,
                     dragStartPredicate: {
                         distance: 10,
                         delay: 80
                     },
                     dragSort: function () {
-                        return _da._grids;
+                        return hasEditor ? _da._grids : [];
                     }
                 });
                 _da._gridsById[gridId] = grid;
+                if (hasEditor && _da._dashboard.Editable) {
+                    _dashboardEditor.initGridItemOrder(grid);
+                }
             }
             _da._grids.push(grid);
             var gridOrder = _da._gridOrders[gridId];
@@ -74,31 +76,6 @@ var SWIDashboard = (function () {
             else {
                 grid.layout(true);
             }
-            grid.on('dragReleaseEnd', function (widgetItem) {
-                var itemId = $(widgetItem._element).attr("id");
-                var destGroup = $(widgetItem._element).parent().attr("group-name");
-                var hasChanged = false;
-                var allSortIds = [];
-                $('.grid' + _da._dashboard.GUID).each(function (index, element) {
-                    var gridId = $(this).attr("id");
-                    var initialSort = _da._gridOrders[gridId];
-                    var sortIds = [];
-                    var grid = _da._gridsById[gridId];
-                    var items = grid.getItems();
-                    for (var i = 0; i < items.length; i++) {
-                        var item = items[i];
-                        var itemId = $(item._element).attr("id");
-                        sortIds.push(itemId);
-                        allSortIds.push(itemId);
-                    }
-                    _da._gridOrders[gridId] = serializeLayout(grid);
-                    if (JSON.stringify(sortIds) != initialSort)
-                        hasChanged = true;
-                });
-                if (hasChanged) {
-                    _gateway.SaveDashboardItemsOrder(_da._dashboard.GUID, allSortIds, itemId, destGroup, null);
-                }
-            });
         });
     };
     SWIDashboard.prototype.enableControls = function () {
@@ -172,67 +149,27 @@ var SWIDashboard = (function () {
                         //Group name 
                         var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.GroupName);
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
-                        if (_da._dashboards[guid].Editable) {
-                            //Edit group name
-                            groupSpan.click(function () {
-                                "use strict";
-                                $(this).hide();
-                                $('#' + $(this).attr('for'))
-                                    .val($(this).text())
-                                    .toggleClass("form-control")
-                                    .show().focus();
-                            });
-                            groupInput.blur(function () {
-                                "use strict";
-                                $(this)
-                                    .hide()
-                                    .toggleClass("form-control");
-                                var myid = (this).id;
-                                var span = $('span[for=' + myid + ']');
-                                if (span.text() != $(this).val()) {
-                                    _gateway.UpdateDashboardItemsGroupName(guid, span.text(), $(this).val(), function (data) {
-                                        _da.initDashboardItems(guid);
-                                    });
-                                }
-                                span.text($(this).val()).show();
-                            });
-                        }
                         var groupDrag = $("<h4 style='margin:0px 5px'>").append(groupSpan);
                         groupDrag.attr("group-order", item.GroupOrder);
                         content.append(groupDrag);
                         content.append(groupInput);
-                        if (_da._dashboards[guid].Editable) {
-                            //Drag for group name
-                            groupDrag.on("dragstart", function (e) {
-                                _da._dragType = "group";
-                                _da._dragData = $(this).attr("group-order");
-                            });
-                            groupDrag.prop("draggable", "true");
+                        //Add current grid
+                        grid = $("<div class='grid grid" + dashboard.GUID + "'>");
+                        grid.attr("id", "g" + dashboard.GUID + "-" + item.GroupOrder);
+                        grid.attr("group-order", item.GroupOrder);
+                        grid.attr("group-name", item.GroupName);
+                        _da._gridsById[grid.attr("id")] = null;
+                        content.append(grid);
+                        currentGroup = item.GroupName;
+                        if (hasEditor && _da._dashboards[guid].Editable) {
+                            _dashboardEditor.initGridGroupName(groupSpan, groupInput, groupDrag);
                         }
                     }
-                    //Add current grid
-                    grid = $("<div class='grid grid" + dashboard.GUID + "'>");
-                    grid.attr("id", "g" + dashboard.GUID + "-" + item.GroupOrder);
-                    grid.attr("group-order", item.GroupOrder);
-                    grid.attr("group-name", item.GroupName);
-                    _da._gridsById[grid.attr("id")] = null;
-                    content.append(grid);
-                    currentGroup = item.GroupName;
-                    if (_da._dashboards[guid].Editable) {
-                        //Drop for group name
-                        grid.on("dragover", function (e) {
-                            if (_da._dragType == "group")
-                                e.preventDefault();
-                        });
-                        grid.on("drop", function (e) {
-                            var sourceOrder = _da._dragData;
-                            var destinationOrder = parseInt($(this).attr("group-order"));
-                            _gateway.SwapDashboardGroupOrder(_da._lastGUID, sourceOrder, destinationOrder, function (data) {
-                                _da.initDashboardItems(_da._lastGUID);
-                            });
-                        });
+                    if (hasEditor && _da._dashboards[guid].Editable) {
+                        _dashboardEditor.initGrid(grid);
                     }
                 }
+                //Dashboard item
                 var panel = $("<div class='item panel panel-" + item.Color + "' id='" + item.GUID + "'>");
                 var panelHeader = $("<div class='panel-heading text-left' style='padding-right:2px;'>");
                 panel.append(panelHeader);
@@ -291,6 +228,7 @@ var SWIDashboard = (function () {
                 });
                 grid.append(panel);
             } //for
+            content.append($("<hr style='margin:5px 2px'>"));
             if (_da._dashboard && guid == _da._dashboard.GUID)
                 _da.reorderItems(false);
         });
