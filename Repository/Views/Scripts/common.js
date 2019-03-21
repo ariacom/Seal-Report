@@ -483,24 +483,11 @@ $(document).ready(function () {
     if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 
     //back to top
-    $(window)
-        .scroll(function () {
-            if ($(this).scrollTop() > 50) {
-            //    $('#back-to-top').fadeIn();
-                //            setTimeout(function () {
-                //              $('#back-to-top').fadeOut();
-                //        }, 5000);
-            }
-            else $('#back-to-top').fadeOut();
-        })
-        .mouseenter(function () {
-            if ($(this).scrollTop() > 50 && !$("#back-to-top").is(":visible")) $('#back-to-top').fadeIn();
-        })
-        .mouseleave(function () {
-            if ($("#back-to-top").is(":visible")) $('#back-to-top').fadeOut();
-        })
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
+        else $('#back-to-top').fadeOut();
+    });
 
-    // scroll body to 0px on click
     $('#back-to-top').click(function () {
         $('#back-to-top').tooltip('hide');
         $('body,html').animate({
@@ -508,6 +495,13 @@ $(document).ready(function () {
         }, 800);
         return false;
     });
+
+    $('#back-to-top-close').click(function () {
+        $('#back-to-top').tooltip('hide');
+        $('#back-to-top').fadeOut();
+        return false;
+    });
+
     if (!printLayout) $('#back-to-top').tooltip('show');
     initMessageMenu();
     scrollMessages();

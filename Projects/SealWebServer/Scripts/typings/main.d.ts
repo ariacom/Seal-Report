@@ -16,12 +16,11 @@ interface ReportEditorInterface {
     init(): void;
 }
 
-interface DashboardInterface {
-    init(): void;
-}
-
 interface DashboardEditorInterface {
     init(): void;
+    initGrid(grid: any);
+    initGridGroupName(groupSpan: any, groupInput: any, groupDrag: any);
+    initGridItemOrder(grid: any);
     initMenu();
     initDashboardMenu();
     getEditButtons();

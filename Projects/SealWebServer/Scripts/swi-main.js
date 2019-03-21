@@ -15,6 +15,7 @@ var _editor;
 var _dashboard;
 $(document).ready(function () {
     _gateway = new SWIGateway();
+    _dashboard = new SWIDashboard();
     _main = new SWIMain();
     _main.Process();
     $(window).scroll(function () {
@@ -107,12 +108,10 @@ var SWIMain = (function () {
         $("#dashboard-toggle").unbind('click').on("click", function (e) {
             _main.showDashboard($("#main-dashboard").css("display") != "block");
         });
-        if (hasReports && hasDashboard) { }
         if (hasReports) {
             _main.loadFolderTree();
         }
         if (hasDashboard) {
-            _dashboard = new SWIDashboard();
             _dashboard.init();
         }
         if (_main._profile.lastview == "dashboards") {

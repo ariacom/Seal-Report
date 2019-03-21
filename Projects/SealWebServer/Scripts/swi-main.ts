@@ -15,7 +15,7 @@ var $elementDropDown: JQuery;
 var _gateway: SWIGateway;
 var _main: SWIMain;
 var _editor: ReportEditorInterface;
-var _dashboard: DashboardInterface;
+var _dashboard: SWIDashboard;
 
 declare var folderRightSchedule: number;
 declare var folderRightEdit: number;
@@ -23,6 +23,7 @@ declare var hasEditor: boolean;
 
 $(document).ready(function () {
     _gateway = new SWIGateway();
+    _dashboard = new SWIDashboard();
     _main = new SWIMain();
     _main.Process();
 
@@ -134,14 +135,11 @@ class SWIMain {
             _main.showDashboard($("#main-dashboard").css("display") != "block");
         });
 
-        if (hasReports && hasDashboard) { }
-
         if (hasReports) {
             _main.loadFolderTree();
         }
 
         if (hasDashboard) {
-            _dashboard = new SWIDashboard();
             _dashboard.init();
         }
 

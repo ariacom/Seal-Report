@@ -30,7 +30,6 @@ class SWIGateway {
         return this._execForm;
     }
 
-
     public GetVersions(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetVersions", { })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
