@@ -541,6 +541,22 @@ namespace SealWebServer.Controllers
 
         #region Dashboard
 
+        Dashboard getDashboard(string guid)
+        {
+            if (string.IsNullOrEmpty(guid)) throw new Exception("Error: guid must be supplied");
+            var d = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
+            if (d == null) throw new Exception("Error: The dashboard does not exist");
+
+            return d;
+        }
+
+        Dashboard checkDashboardEditRight(string guid)
+        {
+            var d = getDashboard(guid);
+            if (!d.Editable) throw new Exception("Error: no right to edit this dashboard");
+            return d;
+        }
+
         [HttpPost]
         public ActionResult SWIGetUserDashboards()
         {

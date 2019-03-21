@@ -190,7 +190,7 @@ function initMessageMenu() {
     //autoscroll
     $("#message_autoscroll").click(function () {
         submitViewParameter(rootViewId, "messages_autoscroll", $('#message_autoscroll').is(":checked"));
-     });
+    });
 
     //message options
     $("#message_export").click(function () {
@@ -388,7 +388,7 @@ function mainInit() {
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
     });
-    
+
     //result links
     $(".sr_result").click(function () {
         $("#header_form").attr("target", urlPrefix != "" ? "_blank" : "");
@@ -483,10 +483,22 @@ $(document).ready(function () {
     if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 
     //back to top
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
-        else $('#back-to-top').fadeOut();
-    });
+    $(window)
+        .scroll(function () {
+            if ($(this).scrollTop() > 50) {
+            //    $('#back-to-top').fadeIn();
+                //            setTimeout(function () {
+                //              $('#back-to-top').fadeOut();
+                //        }, 5000);
+            }
+            else $('#back-to-top').fadeOut();
+        })
+        .mouseenter(function () {
+            if ($(this).scrollTop() > 50 && !$("#back-to-top").is(":visible")) $('#back-to-top').fadeIn();
+        })
+        .mouseleave(function () {
+            if ($("#back-to-top").is(":visible")) $('#back-to-top').fadeOut();
+        })
 
     // scroll body to 0px on click
     $('#back-to-top').click(function () {
