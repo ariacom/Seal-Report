@@ -129,7 +129,9 @@ namespace SealWebServer.Controllers
                 {
                     foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
                     {
+                        //check right on files only
                         if (folder.files && FileHelper.IsSealReportFile(newPath)) continue;
+                        if (folder.IsPersonal && newPath.ToLower() == WebUser.ProfilePath.ToLower()) continue;
 
                         files.Add(new SWIFile()
                         {

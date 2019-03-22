@@ -511,7 +511,7 @@ namespace Seal.Model
             {
                 if (string.IsNullOrEmpty(_profilePath))
                 {
-                    _profilePath = Path.Combine(Security.Repository.GetPersonalFolder(this), "_profile.xml");
+                    _profilePath = Path.Combine(Security.Repository.GetPersonalFolder(this), "_Profile.xml");
                 }
                 return _profilePath;
             }
@@ -578,7 +578,7 @@ namespace Seal.Model
             {
                 if (string.IsNullOrEmpty(_dashboardPersonalFolder))
                 {
-                    _dashboardPersonalFolder = Path.Combine(Security.Repository.GetPersonalFolder(this), "_dashboards");
+                    _dashboardPersonalFolder = Path.Combine(Security.Repository.GetPersonalFolder(this), "_Dashboards");
                     if (!Directory.Exists(_dashboardPersonalFolder)) Directory.CreateDirectory(_dashboardPersonalFolder);
                 }
                 return _dashboardPersonalFolder;
