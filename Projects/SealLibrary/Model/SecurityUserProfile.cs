@@ -47,6 +47,8 @@ namespace Seal.Model
         {
             try
             {
+                _dashboards.RemoveAll(i => string.IsNullOrEmpty(i));
+
                 XmlSerializer serializer = new XmlSerializer(typeof(SecurityUserProfile));
                 StreamWriter sw = new StreamWriter(path);
                 serializer.Serialize(sw, this);

@@ -2,7 +2,7 @@
 /// <reference path="typings/bootstrap/index.d.ts" />
 /// <reference path="typings/main.d.ts" />
 var _da;
-var _dashboardEditor;
+var _daEditor;
 var hasEditor;
 //Default units
 var WidgetWidthUnit = 200;
@@ -43,7 +43,7 @@ var SWIDashboard = (function () {
         this._gridsById = [];
     }
     SWIDashboard.prototype.reorderItems = function (init) {
-        if (!_da._dashboard)
+        if (!_da || !_da._dashboard)
             return;
         if (init)
             _da._gridsById = []; //Force rebuild of grids
@@ -65,7 +65,7 @@ var SWIDashboard = (function () {
                 });
                 _da._gridsById[gridId] = grid;
                 if (hasEditor && _da._dashboard.Editable) {
-                    _dashboardEditor.initGridItemOrder(grid);
+                    _daEditor.initGridItemOrder(grid);
                 }
             }
             _da._grids.push(grid);
@@ -145,6 +145,15 @@ var SWIDashboard = (function () {
                 var item = data[i];
                 if (currentGroup != item.GroupName || !grid) {
                     content.append($("<hr style='margin:5px 2px'>"));
+                    //Add current grid
+                    grid = $("<div class='grid grid" + dashboard.GUID + "'>");
+                    grid.attr("id", "g" + dashboard.GUID + "-" + item.GroupOrder);
+                    grid.attr("group-name", item.GroupName);
+                    grid.attr("group-order", item.GroupOrder);
+                    _da._gridsById[grid.attr("id")] = null;
+                    if (hasEditor && _da._dashboards[guid].Editable) {
+                        _daEditor.initGrid(grid);
+                    }
                     if (item.GroupName != "") {
                         //Group name 
                         var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.GroupName);
@@ -153,21 +162,12 @@ var SWIDashboard = (function () {
                         groupDrag.attr("group-order", item.GroupOrder);
                         content.append(groupDrag);
                         content.append(groupInput);
-                        //Add current grid
-                        grid = $("<div class='grid grid" + dashboard.GUID + "'>");
-                        grid.attr("id", "g" + dashboard.GUID + "-" + item.GroupOrder);
-                        grid.attr("group-order", item.GroupOrder);
-                        grid.attr("group-name", item.GroupName);
-                        _da._gridsById[grid.attr("id")] = null;
-                        content.append(grid);
-                        currentGroup = item.GroupName;
                         if (hasEditor && _da._dashboards[guid].Editable) {
-                            _dashboardEditor.initGridGroupName(groupSpan, groupInput, groupDrag);
+                            _daEditor.initGridGroupName(groupSpan, groupInput, groupDrag);
                         }
                     }
-                    if (hasEditor && _da._dashboards[guid].Editable) {
-                        _dashboardEditor.initGrid(grid);
-                    }
+                    content.append(grid);
+                    currentGroup = item.GroupName;
                 }
                 //Dashboard item
                 var panel = $("<div class='item panel panel-" + item.Color + "' id='" + item.GUID + "'>");
@@ -184,7 +184,7 @@ var SWIDashboard = (function () {
                 refreshButton.attr("title", "Refresh widget data");
                 panelButtons.append(refreshButton);
                 if (hasEditor && dashboard.Editable) {
-                    var buttons = _dashboardEditor.getEditButtons();
+                    var buttons = _daEditor.getEditButtons();
                     for (var j = 0; j < buttons.length; j++) {
                         panelButtons.append(buttons[j]);
                     }
@@ -238,9 +238,9 @@ var SWIDashboard = (function () {
         _da._dashboard = null;
         if (!_da._lastGUID)
             _da._lastGUID = _main._profile.dashboard;
-        if (_dashboardEditor)
-            _dashboardEditor.init();
-        $waitDialog.modal();
+        if (_daEditor)
+            _daEditor.init();
+        //    $waitDialog.modal();
         _gateway.GetUserDashboards(function (data) {
             _da._dashboards = [];
             $("#menu-dashboard").empty();
@@ -353,18 +353,18 @@ var SWIDashboard = (function () {
                         });
                     }
                     if (hasEditor) {
-                        _dashboardEditor.initDashboardMenu();
+                        _daEditor.initDashboardMenu();
                     }
                     $("#dashboard-dialog").modal();
                 });
             });
             if (hasEditor) {
-                _dashboardEditor.initMenu();
+                _daEditor.initMenu();
             }
             _da.enableControls();
         });
         _da.enableControls();
-        $waitDialog.modal('hide');
+        //    $waitDialog.modal('hide');
     };
     return SWIDashboard;
 }());

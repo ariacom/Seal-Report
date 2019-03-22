@@ -140,7 +140,9 @@ class SWIMain {
         }
 
         if (hasDashboard) {
-            _dashboard.init();
+            setTimeout(function () {
+                _dashboard.init();
+            }, 500);
         }
 
         if (_main._profile.lastview == "dashboards") {
@@ -472,12 +474,15 @@ class SWIMain {
     public LoadReports(path: string) {
         if (!path) return;
 
+        SWIUtil.ShowHideControl($("#refresh-nav-item").children("i"), true);
+
         _gateway.GetFolderDetail(path, function (data) {
             _main._searchMode = false;
             _main._folder = data.folder;
             _main._folder.isEmpty = (data.files.length == 0 && $folderTree.jstree("get_selected", true)[0].children.length == 0);
             _main.buildReportsTable(data);
             _main._profile.folder = path;
+            SWIUtil.ShowHideControl($("#refresh-nav-item").children("i"), false);
         });
     }
 
@@ -623,7 +628,7 @@ class SWIMain {
             SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.dashboardFolders.length != 0);
             span.addClass("glyphicon-th-list");
             $("#dashboard-toggle").attr("title", SWIUtil.tr("View reports"));
-            _da.reorderItems(true);
+            _dashboard.reorderItems(true);
         }
         else {
             $(".folderview").show();

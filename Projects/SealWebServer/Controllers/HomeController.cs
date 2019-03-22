@@ -680,6 +680,8 @@ namespace SealWebServer.Controllers
             string folderPath = folder.GetFullPath();
             foreach (string subFolder in Directory.GetDirectories(folderPath))
             {
+                if (folder.IsPersonal && subFolder.ToLower() == WebUser.DashboardPersonalFolder.ToLower()) continue;
+
                 SWIFolder sub = getFolder(folder.Combine(subFolder));
                 //Add if right on this folder, or a sub folder is defined with this root
                 if ((sub.right > 0) || WebUser.SecurityGroups.Exists(i => i.Folders.Exists(j => j.Path.StartsWith(sub.path + (sub.path == "\\" ? "" : "\\")) && j.FolderRight != FolderRight.None)))
