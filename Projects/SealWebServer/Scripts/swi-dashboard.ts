@@ -3,7 +3,7 @@
 /// <reference path="typings/main.d.ts" />
 
 var _da: SWIDashboard;
-var _dashboardEditor: DashboardEditorInterface;
+var _daEditor: DashboardEditorInterface;
 var hasEditor: boolean;
 
 //Default units
@@ -55,9 +55,8 @@ class SWIDashboard {
     public _dragType;
     public _dragData;
 
-
     public reorderItems(init : boolean) {
-        if (!_da._dashboard) return;
+        if (!_da || !_da._dashboard) return;
 
         if (init) _da._gridsById = []; //Force rebuild of grids
         _da._grids = [];
@@ -79,7 +78,7 @@ class SWIDashboard {
                 _da._gridsById[gridId] = grid;
 
                 if (hasEditor && _da._dashboard.Editable) {
-                    _dashboardEditor.initGridItemOrder(grid);
+                    _daEditor.initGridItemOrder(grid);
                 }
             }
             _da._grids.push(grid);
@@ -173,6 +172,16 @@ class SWIDashboard {
 
                 if (currentGroup != item.GroupName || !grid) {
                     content.append($("<hr style='margin:5px 2px'>"));
+                    //Add current grid
+                    grid = $("<div class='grid grid" + dashboard.GUID + "'>");
+                    grid.attr("id", "g" + dashboard.GUID + "-" + item.GroupOrder);
+                    grid.attr("group-name", item.GroupName);
+                    grid.attr("group-order", item.GroupOrder);
+                    _da._gridsById[grid.attr("id")] = null;
+                    if (hasEditor && _da._dashboards[guid].Editable) {
+                        _daEditor.initGrid(grid);
+                    }
+
                     if (item.GroupName != "") {
                         //Group name 
                         var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.GroupName);
@@ -182,23 +191,13 @@ class SWIDashboard {
                         content.append(groupDrag);
                         content.append(groupInput);
 
-                        //Add current grid
-                        grid = $("<div class='grid grid" + dashboard.GUID + "'>");
-                        grid.attr("id", "g" + dashboard.GUID + "-" + item.GroupOrder);
-                        grid.attr("group-order", item.GroupOrder);
-                        grid.attr("group-name", item.GroupName);
-                        _da._gridsById[grid.attr("id")] = null;
-                        content.append(grid);
-                        currentGroup = item.GroupName;
-
                         if (hasEditor && _da._dashboards[guid].Editable) {
-                            _dashboardEditor.initGridGroupName(groupSpan, groupInput, groupDrag);
+                            _daEditor.initGridGroupName(groupSpan, groupInput, groupDrag);
                         }
                     }
+                    content.append(grid);
 
-                    if (hasEditor && _da._dashboards[guid].Editable) {
-                        _dashboardEditor.initGrid(grid);
-                    }
+                    currentGroup = item.GroupName;
                 }
 
                 //Dashboard item
@@ -221,7 +220,7 @@ class SWIDashboard {
 
                 panelButtons.append(refreshButton);
                 if (hasEditor && dashboard.Editable) {
-                    var buttons = _dashboardEditor.getEditButtons();
+                    var buttons = _daEditor.getEditButtons();
                     for (var j = 0; j < buttons.length; j++) {
                         panelButtons.append(buttons[j]);
                     }
@@ -287,9 +286,9 @@ class SWIDashboard {
         _da = this;
         _da._dashboard = null;
         if (!_da._lastGUID) _da._lastGUID = _main._profile.dashboard;
-        if (_dashboardEditor) _dashboardEditor.init();
+        if (_daEditor) _daEditor.init();
 
-        $waitDialog.modal();
+    //    $waitDialog.modal();
 
         _gateway.GetUserDashboards(function (data) {
             _da._dashboards = [];
@@ -411,7 +410,7 @@ class SWIDashboard {
                     }
 
                     if (hasEditor) {
-                        _dashboardEditor.initDashboardMenu();
+                        _daEditor.initDashboardMenu();
                     }
 
                     $("#dashboard-dialog").modal();
@@ -419,13 +418,13 @@ class SWIDashboard {
             });
 
             if (hasEditor) {
-                _dashboardEditor.initMenu();
+                _daEditor.initMenu();
             }
 
             _da.enableControls();
         });
 
         _da.enableControls();
-        $waitDialog.modal('hide');
+    //    $waitDialog.modal('hide');
     }
 }
