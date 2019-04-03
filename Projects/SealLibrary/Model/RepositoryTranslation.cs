@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using Seal.Helpers;
 using System.Text.RegularExpressions;
+using System.Linq;
+using System;
 
 namespace Seal.Model
 {
@@ -17,32 +19,32 @@ namespace Seal.Model
         public Dictionary<string, string> Translations = new Dictionary<string, string>();
         public int Usage;
 
-        static public List<RepositoryTranslation> InitFromCSV(string filePath, bool hasInstance)
+        static public void InitFromCSV(List<RepositoryTranslation> translations, string path, bool hasInstance)
         {
             try
             {
-                return initFromCSV(filePath, hasInstance);
+                initFromCSV(translations, path, hasInstance);
             }
             catch
             {
-                if (File.Exists(filePath))
+                if (File.Exists(path))
                 {
                     try
                     {
-                        //copy in a temp file to try
-                        string newPath = FileHelper.GetTempUniqueFileName(filePath);
-                        File.Copy(filePath, newPath, true);
-                        return initFromCSV(newPath, hasInstance);
+                        //probably locked with Excel, copy in a temp file to try
+                        string newPath = FileHelper.GetTempUniqueFileName(path);
+                        File.Copy(path, newPath, true);
+                        initFromCSV(translations, newPath, hasInstance);
                     }
-                    catch { }
+                    catch (Exception ex) {
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                    }
                 }
             }
-            return new List<RepositoryTranslation>();
         }
-        static private List<RepositoryTranslation> initFromCSV(string filePath, bool hasInstance)
-        {
-            List<RepositoryTranslation> translations = new List<RepositoryTranslation>();
 
+        static private void initFromCSV(List<RepositoryTranslation> translations, string filePath, bool hasInstance)
+        {
             if (File.Exists(filePath))
             {
                 bool isHeader = true;
@@ -75,19 +77,39 @@ namespace Seal.Model
                         }
                         else
                         {
-                            RepositoryTranslation translation = new RepositoryTranslation() { Context = ExcelHelper.FromCsv(collection[0].Value), Reference = ExcelHelper.FromCsv(collection[startCol - 1].Value) };
-                            if (hasInstance) translation.Instance = ExcelHelper.FromCsv(collection[1].Value);
-                            translations.Add(translation);
+                            var context = ExcelHelper.FromCsv(collection[0].Value);
+                            var reference = ExcelHelper.FromCsv(collection[startCol - 1].Value);
+
+                            RepositoryTranslation translation = null;
+                            if (hasInstance)
+                            {
+                                var instance = ExcelHelper.FromCsv(collection[1].Value);
+                                translation = translations.FirstOrDefault(i => i.Context == context && i.Reference == reference && i.Instance == instance);
+                                if (translation == null)
+                                {
+                                    translation = new RepositoryTranslation() { Context = context, Reference = reference, Instance = instance };
+                                    translations.Add(translation);
+                                }
+                            }
+                            else
+                            {
+                                translation = translations.FirstOrDefault(i => i.Context == context && i.Reference == reference);
+                                if (translation == null)
+                                {
+                                    translation = new RepositoryTranslation() { Context = context, Reference = reference };
+                                    translations.Add(translation);
+                                }
+                            }
+
                             for (int i = 0; i < languages.Count && i + startCol < collection.Count; i++)
                             {
-                                if (string.IsNullOrEmpty(languages[i])) continue;
+                                if (string.IsNullOrEmpty(languages[i]) || translation.Translations.ContainsKey(languages[i])) continue;
                                 translation.Translations.Add(languages[i], ExcelHelper.FromCsv(collection[i + startCol].Value));
                             }
                         }
                     }
                 }
             }
-            return translations;
         }
-}
+    }
 }

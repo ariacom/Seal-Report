@@ -54,7 +54,7 @@ var SWIMain = (function () {
             _main.login();
         });
         _gateway.GetVersions(function (data) {
-            $("#brand-id").attr("title", SWIUtil.tr("Web Interface Version") + " : " + data.SWIVersion + "\r\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\r\n" + data.Info);
+            $("#brand-id").attr("title", SWIUtil.tr2("Web Interface Version") + " : " + data.SWIVersion + "\r\n" + SWIUtil.tr("Server Version") + " : " + data.SRVersion + "\r\n" + data.Info);
             $("#footer-version").text(data.SWIVersion);
         });
         _gateway.GetUserProfile(function (data) {
@@ -551,7 +551,7 @@ var SWIMain = (function () {
             $(".dashboardview").show();
             SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.dashboardFolders.length != 0);
             span.addClass("glyphicon-th-list");
-            $("#dashboard-toggle").attr("title", SWIUtil.tr("View reports"));
+            $("#dashboard-toggle").attr("title", SWIUtil.tr2("View reports"));
             _dashboard.reorderItems(true);
         }
         else {
@@ -559,7 +559,7 @@ var SWIMain = (function () {
             $(".dashboardview").hide();
             SWIUtil.ShowHideControl($(".dashboardvieweditor"), false);
             span.addClass("glyphicon-th-large");
-            $("#dashboard-toggle").attr("title", SWIUtil.tr("View dashboards"));
+            $("#dashboard-toggle").attr("title", SWIUtil.tr2("View dashboards"));
         }
     };
     return SWIMain;

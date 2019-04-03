@@ -40,6 +40,7 @@ namespace Seal.Model
         private double _height = 2;
         private bool _dynamic = false;
         private bool _exec = true;
+        private int _refresh = -1;
 
         [Browsable(false)]
         public string GUID { get => _guid; set => _guid = value; }
@@ -74,16 +75,20 @@ namespace Seal.Model
         public string Color { get => _color; set => _color = value; }
 
         [DisplayName("Width"), Description("Width of the widget of unit of 200 pixels."), Id(7, 1)]
-        [DefaultValue(2)]
+        [DefaultValue((double)2.0)]
         public double Width { get => _width; set => _width = value; }
 
         [DisplayName("Height"), Description("Height of the widget of 140 pixels."), Id(8, 1)]
-        [DefaultValue(2)]
+        [DefaultValue((double)2.0)]
         public double Height { get => _height; set => _height = value; }
 
         [DisplayName("Allow report execution"), Description("If true, the widget name is a link to execute the full report."), Id(9, 1)]
         [DefaultValue(true)]
         public bool Exec { get => _exec; set => _exec = value; }
+
+        [DisplayName("Auto-Refresh (seconds)"), Description("Number of seconds before the widget is re-executed. If -1, the rate of the root view is used, 0 means no refresh."), Id(10, 1)]
+        [DefaultValue(-1)]
+        public int Refresh { get => _refresh; set => _refresh = value; }
 
         //Run-time
         [XmlIgnore]

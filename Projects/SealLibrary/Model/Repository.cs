@@ -93,7 +93,7 @@ namespace Seal.Model
 
                 if (_cultureInfo == null && !string.IsNullOrEmpty(Configuration.DefaultCulture)) _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == Configuration.DefaultCulture);
                 if (_cultureInfo == null) _cultureInfo = CultureInfo.CurrentCulture;
-                
+
                 return _cultureInfo;
             }
         }
@@ -499,9 +499,9 @@ namespace Seal.Model
             get { return Path.Combine(SpecialsFolder, "Dashboards"); }
         }
 
-        public string TranslationsPath
+        public string TranslationsPattern
         {
-            get { return Path.Combine(SettingsFolder, "Translations.csv"); }
+            get { return "Translations*.csv"; }
         }
 
         public string RepositoryTranslationsPath
@@ -536,28 +536,35 @@ namespace Seal.Model
                 if (_translations == null)
                 {
                     _translations = new List<RepositoryTranslation>();
-                    _translations = RepositoryTranslation.InitFromCSV(TranslationsPath, false);
+                    foreach (string path in Directory.GetFiles(SettingsFolder, TranslationsPattern))
+                    {
+                        RepositoryTranslation.InitFromCSV(_translations, path, false);
+                    }
                 }
                 return _translations;
             }
         }
 
+        Dictionary<string, string> _jsTranslations = null;
         public Dictionary<string, string> JSTranslations
         {
             get
             {
-                var result = new Dictionary<string, string>();
-                foreach (var translation in Translations.Where(i => i.Context == "WebJS"))
+                if (_jsTranslations == null)
                 {
-                    var value = translation.Reference;
-                    if (translation.Translations.ContainsKey(CultureInfo.TwoLetterISOLanguageName))
+                    _jsTranslations = new Dictionary<string, string>();
+                    foreach (var translation in Translations.Where(i => i.Context == "WebJS"))
                     {
-                        value = translation.Translations[CultureInfo.TwoLetterISOLanguageName];
-                        if (string.IsNullOrEmpty(value)) value = translation.Reference;
+                        var value = translation.Reference;
+                        if (translation.Translations.ContainsKey(CultureInfo.TwoLetterISOLanguageName))
+                        {
+                            value = translation.Translations[CultureInfo.TwoLetterISOLanguageName];
+                            if (string.IsNullOrEmpty(value)) value = translation.Reference;
+                        }
+                        if (!_jsTranslations.ContainsKey(translation.Reference)) _jsTranslations.Add(translation.Reference, value);
                     }
-                    if (!result.ContainsKey(translation.Reference)) result.Add(translation.Reference, value);
                 }
-                return result;
+                return _jsTranslations;
             }
         }
 
@@ -581,21 +588,6 @@ namespace Seal.Model
             return Translate(CultureInfo.TwoLetterISOLanguageName, "Report", reference);
         }
 
-        public string TranslateDashboardFolder(string reference)
-        {
-            return Translate(CultureInfo.TwoLetterISOLanguageName, "DashboardFolder", reference);
-        }
-
-        public string TranslateDashboard(string reference)
-        {
-            return Translate(CultureInfo.TwoLetterISOLanguageName, "Dashboard", reference);
-        }
-
-        public string TranslateWidgetName(string reference)
-        {
-            return Translate(CultureInfo.TwoLetterISOLanguageName, "WidgetName", reference);
-        }
-
 
         List<RepositoryTranslation> _repositoryTranslations = null;
         public List<RepositoryTranslation> RepositoryTranslations
@@ -605,7 +597,7 @@ namespace Seal.Model
                 if (_repositoryTranslations == null)
                 {
                     _repositoryTranslations = new List<RepositoryTranslation>();
-                    _repositoryTranslations = RepositoryTranslation.InitFromCSV(RepositoryTranslationsPath, true);
+                    RepositoryTranslation.InitFromCSV(_repositoryTranslations, RepositoryTranslationsPath, true);
                 }
                 return _repositoryTranslations;
             }
@@ -640,17 +632,37 @@ namespace Seal.Model
 
         public string TranslateColumn(MetaColumn col)
         {
-            return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, "Element", col.Category + '.' + col.DisplayName, col.DisplayName);
+            return RepositoryTranslate("Element", col.Category + '.' + col.DisplayName, col.DisplayName);
         }
 
         public string TranslateCategory(string instance, string reference)
         {
-            return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, "Category", instance, reference);
+            return RepositoryTranslate("Category", instance, reference);
         }
 
         public string TranslateDevice(string instance, string reference)
         {
-            return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, "Device", instance, reference);
+            return RepositoryTranslate("Device", instance, reference);
+        }
+
+        public string TranslateDashboardFolder(string instance, string reference)
+        {
+            return RepositoryTranslate("DashboardFolder", instance, reference);
+        }
+
+        public string TranslateDashboardName(string instance, string reference)
+        {
+            return RepositoryTranslate("DashboardName", instance, reference);
+        }
+
+        public string TranslateWidgetName(string instance, string reference)
+        {
+            return RepositoryTranslate("WidgetName", instance, reference);
+        }
+
+        public string TranslateWidgetDescription(string instance, string reference)
+        {
+            return RepositoryTranslate("WidgetDescription", instance, reference);
         }
 
         public string TranslateFolderPath(string path)

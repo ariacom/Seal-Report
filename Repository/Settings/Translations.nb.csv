@@ -1,0 +1,399 @@
+﻿Context;Reference;nb
+NVD3;(right axis);(høyre aksis)
+NVD3;Expanded;Utvidet
+NVD3;Grouped;Gruppert
+NVD3;Re-scale y-axis;Re-skaler y-aksis
+NVD3;Stacked;Stablet
+NVD3;Stream;
+Report;!=;!=
+Report;# of % selected;# av % valgt
+Report;(filtered from _MAX_);(filtrert fra _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;En verdi er påkrevet for
+Report;All selected;Alle valgt
+Report;and;og
+Report;Average of;Gjennomsnitt av
+Report;Back to top;Tilbake til toppen
+Report;Between;Mellom
+Report;Cancel;Avbryt
+Report;Cancelling report...;Avbryter rapport
+Report;Charts;Grafer
+Report;Contains;Inneholder
+Report;Count of;Telling av
+Report;Description;Beskrivelse
+Report;Drill <;Nivå ut <
+Report;Drill >;Nivå inn >
+Report;Duration (seconds);Brukt tid
+Report;Ends with;Ender med
+Report;Execute;Utfør
+Report;Executing report...;Utfører rapport…
+Report;Execution date;Utført dato
+Report;Execution duration;Tidsforbruk
+Report;execution messages;Utførte meldinger
+Report;Filter:;Filter:
+Report;Hide;Skjul
+Report;Invalid date;Feil dato
+Report;Invalid numeric value;Feil nummerisk verdi
+Report;Maximum of;Maksimum av
+Report;Minimum of;Minimum
+Report;Model;Modell
+Report;New report;Ny rapport
+Report;No records. The report output generation has been cancelled.;Ingen rader tilgjengelig. Rapporten er avbrutt.
+Report;No reports;Ingen rapporter
+Report;No rows;Ingen rad
+Report;Not Between;Ikke mellom
+Report;Not Contains;Inneholder ikke
+Report;Now;Nå
+Report;Page;Side
+Report;"Page &p; of &P;";"Side &p; av &P;"
+Report;Pages;Sider
+Report;Processing;Utfører
+Report;Processing...;Utfører…
+Report;Report;
+Report;Model loaded...;
+Report;No records;
+Report;Task executed...;
+Report;Models loaded...;
+Report;Tasks executed...;
+Report;Results;
+Report;Records;Rader
+Report;Report has been cancelled;Rapport er blitt avbrutt
+Report;report information;rapportinformasjon
+Report;report restrictions;
+Report;Report result generated in '{0}';Rapport generert på '{0}'
+Report;report result panel;
+Report;Restrictions;Restriksjoner
+Report;second;sekund
+Report;seconds;sekunder
+Report;Select all;Velg alle
+Report;Show;Vis
+Report;Show _MENU_ reports;Vis _MENU_ rapporter
+Report;Show _MENU_ rows;Vis _MENU_ rader
+Report;Showing _START_ to _END_ of _TOTAL_;Viser _START_ til _END_ av _TOTAL_
+Report;Showing 0 to 0 of 0;Viser 0 to 0 av 0
+Report;Starting execution...;Starter utføring…
+Report;Starts with;Starter med
+Report;Sum of;Sum av
+Report;Summary;
+Report;The report has been generated.;Rapporten er ferdig.
+Report;This report has execution errors. Please check details in the Windows Event Viewer...;Rapporten kan ikke utføres. Vennligst sjekk detaljer i Windows Event Viewer…
+Report;ThisMonth;DenneMåned
+Report;ThisWeek;DenneUken
+Report;ThisYear;DetteÅret
+Report;Today;I dag
+Report;Total;Totalt
+Report;Use the date format '{0}' or one of the following keywords:;Bruk datoformat '{0}' eller en av følgende nøkkelord:
+Report;View Excel Result;Vis i Excel
+Report;View HTML Result;Vis i HTML
+Report;View PDF Result;Vis i PDF
+Report;View Print Result;Vis for Print
+Report;View CSV Result;Vis i CSV
+Report;View report result file;Vis oppsummering av rapport
+Report;Equals;Tilsvarer
+Report;Is between;Er mellom
+Report;Is different from;Er forskjellig fra
+Report;Does not contain;Inneholder ikke
+Report;Is empty;Er tom
+Report;Is greater or equal than;Er større eller lik
+Report;Is greater than;Er større enn
+Report;Is not between;Er ikke mellom
+Report;Is not empty;Er ikke tom
+Report;Is not Null;Er ikke Null
+Report;Is Null;Er Null
+Report;Is smaller or equal than;Er mindre eller lik enn
+Report;Is smaller than;Er mindre enn
+Report;Auto Scroll enabled;
+Report;Export messages...;
+Web;Actions;Handling
+Web;Aggregate;Summér
+Web;BCC;BCC
+Web;Body;Meldingstekst
+Web;Cancel;Avbryt
+Web;CC;CC
+Web;Chart axis;Diagram aksis
+Web;Chart height;Diagram høyde
+Web;Chart title;Diagram tittel
+Web;Chart JS;Diagram JS
+Web;Chart NVD3;Diagram NVD3
+Web;Chart Plotly;Diagram Plotly
+Web;Chart width;Diagram bredde
+Web;Close;Avslutt
+Web;Connection;Tilkopling
+Web;Copy;Kopier
+Web;Create new folder;Opprett ny mappe
+Web;Cut;Klipp
+Web;Days;Dager
+Web;Days of the week;Dager i uken
+Web;Default body;Standard tekst
+Web;Default sender address;Standard avsender
+Web;Default subject;Standard emne
+Web;Delete;Slett
+Web;Delete folder;Slett mappe
+Web;Description;Beskrivelse
+Web;Device;Enhet
+Web;Disconnect;Logg ut
+Web;Display options;Vis valg
+Web;Elements;Elementer
+Web;End date;Sluttdato
+Web;End date is before start date;Sluttdato er før startdato
+Web;Enter a password to protect the Zip file;Skriv et passord for å beskytte zip filen
+Web;"Enter addresses separated by ;";"Skriv inn adresser delt med ;"
+Web;Enter password;Skriv inn ditt passord
+Web;Enter the file name without extension;Skriv inn filnavnet uten filbeskrivelse
+Web;Enter user name;Skriv inn ditt brukernavn
+Web;Enter your new file name;Skriv inn ditt nye filnavn
+Web;Error;Feil
+Web;Error: This report name exists already.;Feil: Rapportnavnet eksisterer allerede
+Web;Execute;Utfør
+Web;Execute now;Utfør Planlagt nå
+Web;Edition;Versjon
+Web;Execution;Utført
+Web;File name;Filnavn
+Web;Folder;Mappe
+Web;Folders;Mapper
+Web;for a duration of;For en varighet av
+Web;Format;Format
+Web;From;Fra
+Web;Grid mode;Grid mode
+Web;Inconsistent duration or interval for the schedule. Check your entries.;Feil på intervaller for handlingen. Sjekk dine valg.
+Web;Invalid user name or password;Feil brukernavn eller passord
+Web;Is enabled;Er aktivert
+Web;Is required;Er påkrevet
+Web;Is Multiline;
+Web;Last;Siste
+Web;Last modification;Sist endret
+Web;Licensed to;Registrert til
+Web;Login;Logg inn
+Web;Logout;Logg ut
+Web;Logout the user;Logg ut bruker
+Web;Manage folders;Behandle mapper
+Web;Months;Måneder
+Web;Name;Navn
+Web;New;Ny
+Web;New folder name;Nytt mappenavn
+Web;No Email destination specified in the schedule;Ingen epostadresse spesifisert i handlingen
+Web;No file name specified in the schedule;Ingen filnavn spesifisert i handlingen
+Web;OK;OK
+Web;Operator;Operatør
+Web;"Optional addresses separated by ;";"Alternative adresser delt med ;"
+Web;Optional title chart;Alternativt navn på diagram
+Web;Options;Opsjoner
+Web;Output;Output av
+Web;Password;Passord
+Web;Paste;Lim inn
+Web;Personal;Personlig
+Web;Pivot mode;Pivot mode
+Web;Please wait;Vennligst vent
+Web;Profile;Profil
+Web;Profile information;Beskrivelse av profil
+Web;Prompt;Spør
+Web;Prompt at run-time;Spør ved kjøring
+Web;Recur every;Gjentas hver
+Web;Refresh;Oppdater
+Web;Remove;Fjern
+Web;Remove all;Fjern alle
+Web;Rename;Endre navn
+Web;Rename folder;Endre mappenavn
+Web;Repeat every;Genta hver
+Web;Report;Rapport
+Web;Report name;Navn på rapport
+Web;Report title;Tittel på rapport
+Web;Report title if different from report name;Tittel på rapport hvis forskjellig fra navn på rapport
+Web;Reports;Rapporter
+Web;Result as body;Resultat som tekst
+Web;Save;Lagre
+Web;Schedule;Planlegg
+Web;Search;Søk
+Web;Show totals;Vis totaler
+Web;Show sub-totals;
+Web;Sort;Sorter
+Web;Start date;Start dato
+Web;Subject;Emne
+Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;Maksimalt antall brukere er oppnådd for din lisens ({0}). Vennligst forsøk å logge inn senere...
+Web;To;Til
+Web;Total aggr.;Total av
+Web;Type;Type
+Web;User groups;Brukergrupper
+Web;User name;Brukernavn
+Web;Users;Brukere
+Web;Value;Verdi
+Web;Values;Verdier
+Web;Error: only files (and not reports) can be copied to this folder.;Feil: Kun filer (og ikke rapporter) kan kopieres til denne folderen.
+Web;Zip attachments;Zip vedlegg
+Web;Zip password;Zip passord
+WebJS;Options;
+WebJS;No calculation option;
+WebJS;% of the row;
+WebJS;% of the column;
+WebJS;% of the total;
+WebJS;# of % selected;# av % valgt
+WebJS;(filtered from _MAX_);(filtrert fra _MAX_)
+WebJS;No Output;Ingen målområde
+WebJS;No Schedule;Ingenting planlagt
+WebJS;1 Decimal;1 desimal
+WebJS;2 Decimals;2 desimaler
+WebJS;3 Decimals;3 desimaler
+WebJS;4 Decimals;4 desimaler
+WebJS;Percentage;
+WebJS;Percentage 1 Dec.;
+WebJS;Percentage 2 Dec.;
+WebJS;All selected;Alle valgt
+WebJS;Ascendant;Stigende
+WebJS;Automatic ascendant;Automatisk stignende
+WebJS;Automatic descendant;Automatisk synkende
+WebJS;Average;Gjennomsnitt
+WebJS;Average of;Gjennomsnitt av
+WebJS;Axis;Aksis
+WebJS;Bar;Bar
+WebJS;Contains;Inneholder
+WebJS;Count;Tell
+WebJS;Count of;Telling av
+WebJS;CSV;CSV
+WebJS;Data tables responsive;
+WebJS;Daily;Daglig
+WebJS;day;dag
+WebJS;days;dager
+WebJS;Decimal;Desimal
+WebJS;Default;Standard
+WebJS;Default report connection;Standard kopling for rapport
+WebJS;Default repository connection;Standard kopling for datasenter
+WebJS;Descendant;Synkende
+WebJS;Do you really want to delete the reports or files selected ?;Ønsker du virkelig å slette rapportene eller filene valgt?
+WebJS;Does not contain;Inneholder ikke
+WebJS;Drop your Column elements;Slipp dine elementer for Kolonner
+WebJS;Drop your Data;Slipp dine Data
+WebJS;Drop your Data elements;Slipp dine elementer for Data
+WebJS;Drop your Elements;Slipp dine elementer
+WebJS;Drop your Page elements;Slipp dine elementer for Siden
+WebJS;Drop your Restrictions;Slipp dine Restriksjoner
+WebJS;Drop your Row elements;Slipp dine elementer for Rader
+WebJS;Edit report;Endre rapport
+WebJS;Email;Epost
+WebJS;Ends with;Ender med
+WebJS;Equals;Tilsvarer
+WebJS;Error;Feil
+WebJS;Error : Unable to connect to the server;Feil: Kan ikke kople til server
+WebJS;Excel;Excel
+WebJS;Filter;Filter
+WebJS;Folder;Mappe
+WebJS;For rows;For rader
+WebJS;For columns;For kolonner
+WebJS;For rows and columns;For rader og kolonner
+WebJS;For rows (total only);For rader
+WebJS;For rows and columns (total only);For rader og kolonner
+WebJS;Force execution;Tving utføring
+WebJS;Use full screen width;
+WebJS;General;Generell
+WebJS;General date long time;Generell dato lang tid
+WebJS;General date short time;Generell dato kort tid
+WebJS;Horizontal Bar;Horisontal Bar
+WebJS;hour;time
+WebJS;hours;timer
+WebJS;HTML;HTML
+WebJS;HTML Print;HTML Utskrift
+WebJS;Indefinitely;Uendelig
+WebJS;Is between;Er mellom
+WebJS;Is different from;Er forskjellig fra
+WebJS;Is empty;Er tom
+WebJS;Is greater or equal than;Er større eller lik
+WebJS;Is greater than;Er større enn
+WebJS;Is not between;Er ikke mellom
+WebJS;Is not empty;Er ikke tom
+WebJS;Is not Null;Er ikke Null
+WebJS;Is Null;Er Null
+WebJS;Is smaller or equal than;Er mindre eller lik enn
+WebJS;Is smaller than;Er mindre enn
+WebJS;Line;Linje
+WebJS;Long date;Lang dato
+WebJS;Maximum;Maskimum
+WebJS;Maximum of;Maksimum av
+WebJS;Minimum;Minimum
+WebJS;Minimum of;Minimum av
+WebJS;minute;minutt
+WebJS;minutes;minutter
+WebJS;Modified;Endret
+WebJS;Monthly;Månedlig
+WebJS;New Output for;Nytt målområde
+WebJS;New report;Ny rapport
+WebJS;New Schedule;Ny Plan
+WebJS;No;Nei
+WebJS;No prompt;Ingen spørsmål
+WebJS;No report;Ingen rapport
+WebJS;No schedule;Ingen planlegging
+WebJS;No total;Ingen totaler
+WebJS;No (axis values are linear);
+WebJS;None;Ingen
+WebJS;Not sorted;Ikke sortert
+WebJS;Number;Nummer
+WebJS;Number 1 dec.;Nummer 1 des.
+WebJS;Number 2 dec.;Nummer 2 des.
+WebJS;Number 3 dec.;Nummer 3 des.
+WebJS;Number 4 dec.;Nummer 4 des.
+WebJS;One time;En gang
+WebJS;Output;Produksjon
+WebJS;PDF;PDF
+WebJS;PDF Print;PDF Utskrift
+WebJS;Pie;Kake
+WebJS;Please wait;Vennligst vent
+WebJS;Please note that only schedules can be edited for this report.;Merk at kun planlagte hendelser kan endres for denne rapporten.
+WebJS;Scatter;Punkt
+WebJS;Polar Area;
+WebJS;Radar;
+WebJS;Private (The output cannot be executed by other users);Privat (kan ikke utføres av andre brukere)
+WebJS;Private (The output cannot be edited by other users);Privat (kan ikke endres av andre brukere)
+WebJS;Prompt at execution;Spør før utføring
+WebJS;Prompt only one value;Spør kun en gang
+WebJS;Public;Offentlig
+WebJS;Remove;Fjern
+WebJS;Report has been modified, do you really want to close ?;Rapporten er endret, ønsker du virkelig å avslutte?
+WebJS;Report saved;Rapport er lagret
+WebJS;report(s) or file(s) cut in the clipboard;rapport(er) eller fil(er) klippet til minne
+WebJS;report(s) or file(s) have been deleted;rapport(er) eller fil(er) er blitt slettet
+WebJS;report(s) or file(s) processed;rapport(er) eller fil(er) utført
+WebJS;report(s) or files(s) copied in the clipboard;rapport(er) eller fil(er) kopiert til minne
+WebJS;Schedule;Planlegg
+WebJS;Select all;Velg alle
+WebJS;Server Version;Server versjon
+WebJS;Short date;Kort dato
+WebJS;Show _MENU_ reports;Vis _MENU_ rapporter
+WebJS;Show execution message panel;Vis utførte meldinger
+WebJS;Show information panel;Vis informasjon
+WebJS;Show first header line;Vis informasjon
+WebJS;Show report result panel;Vis resultater av rapporter
+WebJS;Show restrictions panel;Vis begrensninger
+WebJS;Showing _START_ to _END_ of _TOTAL_;Viser _START_ til _END_ av _TOTAL_
+WebJS;Showing 0 to 0 of 0;Viser 0 to 0 av 0
+WebJS;Splitter;Separator
+WebJS;Stacked Area;Stablet område
+WebJS;Starts with;Starter med
+WebJS;Sum;Sum
+WebJS;The folder has been created;Mappen er blitt opprettet
+WebJS;The folder has been deleted;Mappen er blitt slettet
+WebJS;The folder has been renamed;Mappen har fått nytt navn
+WebJS;The folder has been updated;Mappen er blitt oppdatert
+WebJS;The report or file has been renamed;Rapporten eller filen har fått nytt navn
+WebJS;Use data tables;Use av
+WebJS;View;Vis
+WebJS;Views and outputs;Visning og Produksjoner
+WebJS;Warning;Advarsel
+WebJS;Web Interface Version;Web versjon
+WebJS;Weekly;Ukentlig
+WebJS;weeks;uker
+WebJS;Yes;Ja
+WebJS;Yes (the attachments are zipped);Ja (vedlegget er zippet)
+WebJS;Yes (the HTML result is the body);Ja (HTML resultatet er i meldingen)
+WebJS;Yes (a new line with sub-totals is added when the value changes);
+WebJS;Yes (element values are used for the axis);
+WebJS;No Sort;Ingen sortering
+WebJS;By point ascending;Etter Punkt i økende
+WebJS;By axis label ascending;Etter Axis etikett økende
+WebJS;By point descending;Etter Punkt synkende 
+WebJS;By axis label descending;Etter Axis etikett synkende
+Web;Chart sort;Sorter på graf
+WebJS;Show summary table;
+WebJS;Show page tables;
+WebJS;Show data tables;

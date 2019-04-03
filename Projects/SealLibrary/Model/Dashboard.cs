@@ -88,6 +88,8 @@ namespace Seal.Model
         [XmlIgnore]
         public string Folder;
         [XmlIgnore]
+        public string DisplayName;
+        [XmlIgnore]
         public string FullName;
         [XmlIgnore]
         public DateTime LastModification;

@@ -255,17 +255,16 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.AddDashboardItems = function (guid, widgetguids, title, order, callback, errorcb) {
+    SWIGateway.prototype.AddDashboardItems = function (guid, widgetguids, group, callback, errorcb) {
         $.post(_sealServer + "SWIAddDashboardItems", {
             guid: guid,
             widgetguids: widgetguids,
-            title: title,
-            order: order
+            group: group
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.SaveDashboardItem = function (guid, itemguid, name, groupname, color, icon, width, height, dynamic, callback, errorcb) {
+    SWIGateway.prototype.SaveDashboardItem = function (guid, itemguid, name, groupname, color, icon, width, height, refresh, dynamic, callback, errorcb) {
         $.post(_sealServer + "SWISaveDashboardItem", {
             guid: guid,
             itemguid: itemguid,
@@ -275,6 +274,7 @@ var SWIGateway = (function () {
             icon: icon,
             width: width,
             height: height,
+            refresh: refresh,
             dynamic: dynamic
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
