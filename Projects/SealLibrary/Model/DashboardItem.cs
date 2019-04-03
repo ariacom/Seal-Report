@@ -17,6 +17,7 @@ namespace Seal.Model
         private double _width = 2;
         private double _height = 2;
         private int _order = 0;
+        private int _refresh = -1;
 
         public string GUID { get => _guid; set => _guid = value; }
         public string WidgetGUID { get => _widgetGUID; set => _widgetGUID = value; }
@@ -29,6 +30,7 @@ namespace Seal.Model
         public double Height { get => _height; set => _height = Math.Round(value, 2, MidpointRounding.AwayFromZero); }
         public int Order { get => _order; set => _order = value; }
         public bool Dynamic { get => _dynamic; set => _dynamic = value; }
+        public int Refresh { get => _refresh; set => _refresh = value; }
 
         [XmlIgnore]
         public DashboardWidget Widget;

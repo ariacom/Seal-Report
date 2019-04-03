@@ -289,18 +289,17 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public AddDashboardItems(guid: string, widgetguids: string, title: string, order: number, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public AddDashboardItems(guid: string, widgetguids: string, group: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIAddDashboardItems", {
             guid: guid,
             widgetguids: widgetguids,
-            title: title,
-            order: order
+            group: group
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     }
 
-    public SaveDashboardItem(guid: string, itemguid: string, name: string, groupname: string, color: string, icon: string, width: number, height: number, dynamic:boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public SaveDashboardItem(guid: string, itemguid: string, name: string, groupname: string, color: string, icon: string, width: number, height: number, refresh: number, dynamic:boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWISaveDashboardItem", {
             guid: guid,
             itemguid: itemguid,
@@ -310,6 +309,7 @@ class SWIGateway {
             icon: icon,
             width: width,
             height: height,
+            refresh: refresh,
             dynamic: dynamic
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })

@@ -1,403 +1,441 @@
-﻿Context;Reference;en;fr;it;pt;nb;ar
-NVD3;(right axis);;(axe de droite);(l'asse di destra);(eixo direito);(høyre aksis)
-NVD3;Expanded;;Etendue;Espanso;Expandido;Utvidet
-NVD3;Grouped;;Groupée;Raggruppata;Agrupado;Gruppert
-NVD3;Re-scale y-axis;;Rééchelonner l'axe y;Riscala l'asse y;Redimesionar eixo y;Re-skaler y-aksis
-NVD3;Stacked;;Empilée;Impilato/a;Empilhado;Stablet
-NVD3;Stream;;Flux;Flusso;Fluxo;
-Report;!=;;!=;!=;!=;!=
-Report;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %;# av % valgt
-Report;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_);(filtrert fra _MAX_)
-Report;<;;<;<;<;<
-Report;<=;;<=;<=;<=;<=
-Report;=;;=;=;=;=
-Report;>;;>;>;>;>
-Report;>=;;>=;>=;>=;>=
-Report;A value is required for;;Une valeur est requise pour;;;En verdi er påkrevet for
-Report;All selected;;Tout est sélectionné;Seleziona tutto;Selecionar tudo;Alle valgt
-Report;and;;et;e;e;og
-Report;Average of;;Moyenne de;Media di;Média de;Gjennomsnitt av
-Report;Back to top;;Retour en haut;Torna su;Voltar para o topo;Tilbake til toppen
-Report;Between;;Dans l'intervalle;Tra;Entre;Mellom
-Report;Cancel;;Annuler;Annulla;Cancelar;Avbryt
-Report;Cancelling report...;;Annulation...;Cancellazione...;Cancelando relatório...;Avbryter rapport
-Report;Charts;;Graphes;Grafici;Gráficos;Grafer
-Report;Contains;;Contient;Contiene;Contém;Inneholder
-Report;Count of;;Nombre de;Conteggio di;Contagem de;Telling av
-Report;Description;;Description;Descrizione;Descrição;Beskrivelse
-Report;Drill <;;Navigation <;Navigation <;Drill <;Nivå ut <
-Report;Drill >;;Navigation >;Navigation >;Drill >;Nivå inn >
-Report;Duration (seconds);;Durée (secondes);Durata;Duração;Brukt tid
-Report;Ends with;;Se termine par;Finisce con;Termina com;Ender med
-Report;Execute;;Exécuter;Esegui;Executar;Utfør;تنتهي بـ
-Report;Executing report...;;Exécution...;Esecuzione...;Executando relatório...;Utfører rapport…
-Report;Execution date;;Date d'exécution;Data di esecuzione;Data de execução;Utført dato
-Report;Execution duration;;Durée d'exécution;Durata esecuzione;Duração da execução;Tidsforbruk
-Report;execution messages;;les messages d'exécution;informazioni di esecuzione;Mensagem de execução;Utførte meldinger
-Report;Filter:;;Filtre:;Filtro:;Filtro:;Filter:
-Report;Hide;;Cacher;Nascondi;Esconder;Skjul
-Report;Invalid date;;Date invalide;Data non valida;Data inválida;Feil dato
-Report;Invalid numeric value;;Valeur numérique invalide;Valore numerico non corretto;Valor numérico inválido;Feil nummerisk verdi
-Report;Is Empty;;Est vide;E' vuoto;Está vazio;Er tom
-Report;Is Not Empty;;N'est pas vide;Non è vuoto;Não está vazio;Er ikke tom
-Report;Is Not Null;;N'est pas Null;Non è nullo;Não é nulo;Er ikke Null
-Report;Is Null;;Est Null;E' nullo;É nulo;Er Null
-Report;Maximum of;;Maximum de;Massimo di;Máximo de;Maksimum av
-Report;Minimum of;;Minimum de;Minimo di ;Mínimo de;Minimum
-Report;Model;;Modèle;Modello;Modelo;Modell
-Report;New report;;Nouveau rapport;;;Ny rapport
-Report;No records. The report output generation has been cancelled.;;Aucun enregistrement. La  génération a été annulée.;;;Ingen rader tilgjengelig. Rapporten er avbrutt.
-Report;No reports;;Pas de rapports;Nessun report;Nenhum relatório;Ingen rapporter
-Report;No rows;;Pas de lignes;Nessuna riga;Nenhuma linha;Ingen rad
-Report;Not Between;;En dehors de l'intervalle;Non compreso;Não está entre;Ikke mellom
-Report;Not Contains;;Ne contient pas;Non contiene;Não contém;Inneholder ikke
-Report;Now;;Maintenant;Ora;Agora;Nå
-Report;Page;;Page;Pagina;Página;Side
-Report;"Page &p; of &P;";;"Page &p; de &P;";"Pagina &p; de &P;";"Página &p; de &P;";"Side &p; av &P;"
-Report;Pages;;Pages;Pagine;Páginas;Sider
-Report;Processing;;En cours;Processamento;Processando;Utfører
-Report;Processing...;;En cours…;In corso;Processando...;Utfører…
-Report;Report;;Rapport;;;
-Report;Model loaded...;;Modèle chargé;;;
-Report;No records;;Aucun enregistrement;;;
-Report;Task executed...;;Tâche exécutée;;;
-Report;Models loaded...;;Modèles chargés;;;
-Report;Tasks executed...;;Tâches exécutées;;;
-Report;Results;;Résultats;;;
-Report;Records;;Enregistrements;Registra;Registros;Rader
-Report;Report has been cancelled;;Le rapport a été annulé;Il report è stato annullato;Relatório foi cancelado;Rapport er blitt avbrutt
-Report;report information;;les informations;informazioni;Informações;rapportinformasjon
-Report;report restrictions;;les restrictions du rapport;restrizioni report;Restrições do relatório;
-Report;Report result generated in '{0}';;Rapport généré dans  '{0}';Il risultato del report è stato generato in '{0}';Relatóro gerado em '{0}';Rapport generert på '{0}'
-Report;report result panel;;le panneau des résultats;pannello risultati report;Painél de resultados;
-Report;Restrictions;;Restrictions;Restrizioni;Restrições;Restriksjoner
-Report;second;;seconde;secondo;Segundo;sekund
-Report;seconds;;secondes;secondi;Segundos;sekunder
-Report;Select all;;Tout;Seleziona tutto;Selecionar tudo;Velg alle
-Report;Show;;Montrer;Mostra;Mostrar;Vis
-Report;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports;Mostrar_MENU_ relatórios;Vis _MENU_ rapporter
-Report;Show _MENU_ rows;;Afficher _MENU_ lignes;Mostra _MENU_ righe;Mostra_MENU_linhas;Vis _MENU_ rader
-Report;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_;Mostrando _START_ até _END_ de _TOTAL_;Viser _START_ til _END_ av _TOTAL_
-Report;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0;Mostrando 0 até 0 de 0;Viser 0 to 0 av 0
-Report;Starting execution...;;Exécution...;Esecuzione...;Iniciando execução...;Starter utføring…
-Report;Starts with;;Commence par;Inizia con;Começa com;Starter med
-Report;Sum of;;Somme de;Somma di;Soma de;Sum av
-Report;Summary;;Sommaire;;;
-Report;The report has been generated.;;Le rapport a été généré.;Il report è stato generato;O relatório foi gerado.;Rapporten er ferdig.
-Report;This report has execution errors. Please check details in the Windows Event Viewer...;;Ce rapport a des erreurs d'exécutions. Veuillez consulter les détails dans le journal des événements Windows.;Questo report produce degli errori durante l'esecuzione. Per favore controllare i dettagli nella finestra relativa alla visualizzazione Evento;Este relatório possui erros. Por favor verifique os detalhes no Visualizador de Eventos do Windows...;Rapporten kan ikke utføres. Vennligst sjekk detaljer i Windows Event Viewer…
-Report;ThisMonth;;CeMois;QuestoMese;EsteMês;DenneMåned
-Report;ThisWeek;;CetteSemaine;QuestaSettimana;EstaSemana;DenneUken
-Report;ThisYear;;CetteAnnée;QuestoAnno;EsteAno;DetteÅret
-Report;Today;;Aujourdhui;Oggi;Hoje;I dag
-Report;Total;;Total;Totale;Total;Totalt
-Report;Use the date format '{0}' or one of the following keywords:;;Utiliser le format de date '{0}' ou bien l'un des mots clés suivants:;Usa il formato data '{0}' in uno dei seguenti formati;Use o formato data '{0}' ou um dos seguintes formatos:;Bruk datoformat '{0}' eller en av følgende nøkkelord:
-Report;View Excel Result;;Afficher le résultat Excel;Vedi il risultato Excel;Mostrar em Excel;Vis i Excel
-Report;View HTML Result;;Afficher le résultat HTML;Vedi il risulato HTML;Mostrar em HTML;Vis i HTML
-Report;View PDF Result;;Afficher le résultat PDF;Vedi il risultato PDF;Mostrar em PDF;Vis i PDF
-Report;View Print Result;;Afficher le résultat Impression;Vedi il risultato di stampa;Mostrar Impressão;Vis for Print
-Report;View CSV Result;;Afficher le résultat CSV;Vedi il risultato CSV;Mostrar em CSV;Vis i CSV
-Report;View report result file;;Afficher le résultat du rapport;Visualizza il file del risultato del report;Mostrar o arquivo de relatório;Vis oppsummering av rapport
-Report;Equals;;Egale;;;Tilsvarer
-Report;Is between;;Est entre;;;Er mellom
-Report;Is different from;;Est différent de;;;Er forskjellig fra
-Report;Does not contain;;Ne contient pas;;;Inneholder ikke
-Report;Is empty;;Est vide;;;Er tom
-Report;Is greater or equal than;;Est plus grand ou égal à;;;Er større eller lik
-Report;Is greater than;;Est plus grand que;;;Er større enn
-Report;Is not between;;N'est pas entre;;;Er ikke mellom
-Report;Is not empty;;N'est pas vide;;;Er ikke tom
-Report;Is not Null;;N'est pas Null;;;Er ikke Null
-Report;Is Null;;Est Null;;;Er Null
-Report;Is smaller or equal than;;Est plus petit ou égal à;;;Er mindre eller lik enn
-Report;Is smaller than;;Est plus petit que;;;Er mindre enn
-Report;Auto Scroll enabled;;Défilement automatique;;;
-Report;Export messages...;;Exporter les messages...;;;
-Web;Actions;;Actions;;;Handling
-Web;Aggregate;;Agrégat;;;Summér
-Web;BCC;;BCC;;;BCC
-Web;Body;;Message;;;Meldingstekst
-Web;Cancel;;Annuler;Annulla;Cancelar;Avbryt
-Web;CC;;CC;;;CC
-Web;Chart axis;;Graphe;;;Diagram aksis
-Web;Chart height;;Hauteur graphe;;;Diagram høyde
-Web;Chart title;;Titre du graphe;;;Diagram tittel
-Web;Chart JS;;Graphe JS;;;Diagram JS
-Web;Chart NVD3;;Graphe NVD3;;;Diagram NVD3
-Web;Chart Plotly;;Graphe Plotly;;;Diagram Plotly
-Web;Chart width;;Largeur graphe;;;Diagram bredde
-Web;Close;;Fermer;Chiuso;Fechar;Avslutt
-Web;Connection;;Connexion;;;Tilkopling
-Web;Copy;;Copier;;;Kopier
-Web;Create new folder;;Créer un répertoire;;;Opprett ny mappe
-Web;Cut;;Couper;;;Klipp
-Web;Days;;Jours;;;Dager
-Web;Days of the week;;Jours de la semaine;;;Dager i uken
-Web;Default body;;Message par défaut;;;Standard tekst
-Web;Default sender address;;Adresse d'envoi par défaut;;;Standard avsender
-Web;Default subject;;Sujet par défaut;;;Standard emne
-Web;Delete;;Supprimer;;;Slett
-Web;Delete folder;;Supprimer le répertoire;;;Slett mappe
-Web;Description;;Description;;;Beskrivelse
-Web;Device;;Périphérique;;;Enhet
-Web;Disconnect;;Déconnecter;;;Logg ut
-Web;Display options;;Options d'affichage;;;Vis valg
-Web;Elements;;Eléments;;;Elementer
-Web;End date;;Date de fin;;;Sluttdato
-Web;End date is before start date;;La date de fin est avant la date de départ;;;Sluttdato er før startdato
-Web;Enter a password to protect the Zip file;;Mot de passe pour protéger le fichier zip;;;Skriv et passord for å beskytte zip filen
-Web;"Enter addresses separated by ;";;"Adresses séparées par ;";;;"Skriv inn adresser delt med ;"
-Web;Enter password;;Entrer le mot de passe;;;Skriv inn ditt passord
-Web;Enter the file name without extension;;Nom du fichier sans l'extension;;;Skriv inn filnavnet uten filbeskrivelse
-Web;Enter user name;;Entrer le nom d'utilisateur;;;Skriv inn ditt brukernavn
-Web;Enter your new file name;;Entrer un nouveau nom de fichier;;;Skriv inn ditt nye filnavn
-Web;Error;;Erreur;Errore;Erro;Feil
-Web;Error: This report name exists already.;;Erreur: Ce nom de rapport existe déjà;;;Feil: Rapportnavnet eksisterer allerede
-Web;Execute;;Exécuter;Esegui;Executar;Utfør
-Web;Execute now;;Exécuter maintenant;;;Utfør Planlagt nå
-Web;Edition;;Edition;;;Versjon
-Web;Execution;;Exécution;;;Utført
-Web;File name;;Nom du fichier;;;Filnavn
-Web;Folder;;Répertoire;Repertorio;Pasta;Mappe
-Web;Folders;;Répertoire;;;Mapper
-Web;for a duration of;;pour une durée de;;;For en varighet av
-Web;Format;;Format;;;Format
-Web;From;;De;;;Fra
-Web;Grid mode;;Mode grille;;;Grid mode
-Web;Inconsistent duration or interval for the schedule. Check your entries.;;La durée et l'intervalle de la planification ne sont pas consistent. Vérifiez vos entrées.;;;Feil på intervaller for handlingen. Sjekk dine valg.
-Web;Invalid user name or password;;Utilisateur ou mot de passe invalide;;;Feil brukernavn eller passord
-Web;Is enabled;;Actif;;;Er aktivert
-Web;Is required;;Requis;;;Er påkrevet
-Web;Is Multiline;;Multi-lignes;;;
-Web;Last;;Dernier;Ultima;Última;Siste
-Web;Last modification;;Modification;Ultima modifica;Última modificação;Sist endret
-Web;Licensed to;;Licence pour;;;Registrert til
-Web;Login;;Connexion;Login;Login;Logg inn
-Web;Logout;;Déconnexion;Uscita;Desconectar;Logg ut
-Web;Logout the user;;Déconnecte l'utilisateur;Uscita utente;Desconectar o usuário;Logg ut bruker
-Web;Manage folders;;Gestion des répertoires;;;Behandle mapper
-Web;Months;;Mois;;;Måneder
-Web;Name;;Nom;Nome;Nome;Navn
-Web;New;;Nouveau;;;Ny
-Web;New folder name;;Nouveau nom de répertoire;;;Nytt mappenavn
-Web;No Email destination specified in the schedule;;L'adresse Email n'est pas renseignée;;;Ingen epostadresse spesifisert i handlingen
-Web;No file name specified in the schedule;;Le nom du fichier n'est pas renseigné;;;Ingen filnavn spesifisert i handlingen
-Web;OK;;OK;;;OK
-Web;Operator;;Opérateur;;;Operatør
-Web;"Optional addresses separated by ;";;"Adresses optionnelles séparées par ;";;;"Alternative adresser delt med ;"
-Web;Optional title chart;;Titre optionnel du graphe;;;Alternativt navn på diagram
-Web;Options;;Options;;;Opsjoner
-Web;Output;;Destination;;;Output av
-Web;Password;;Mot de passe;Password;Senha;Passord
-Web;Paste;;Coller;;;Lim inn
-Web;Personal;;Personnel;;;Personlig
-Web;Pivot mode;;Mode pivot;;;Pivot mode
-Web;Please wait;;Veuillez patienter;Attendere prego;Por favor aguarde;Vennligst vent
-Web;Profile;;Profil;;;Profil
-Web;Profile information;;Profil utilisateur;;;Beskrivelse av profil
-Web;Prompt;;Demander;;;Spør
-Web;Prompt at run-time;;Demander à l'exécution;;;Spør ved kjøring
-Web;Recur every;;Récurrent tous les;;;Gjentas hver
-Web;Refresh;;Rafraîchir;;;Oppdater
-Web;Remove;;Supprimer;;;Fjern
-Web;Remove all;;Tout supprimer;;;Fjern alle
-Web;Rename;;Renommer;;;Endre navn
-Web;Rename folder;;Renommer le répertoire;;;Endre mappenavn
-Web;Repeat every;;Répéter tous les;;;Genta hver
-Web;Report;;Rapport;Report;Relatório;Rapport
-Web;Report name;;Nom du rapport;Nome del report;Nome do relatório;Navn på rapport
-Web;Report title;;Titre du rapport;;;Tittel på rapport
-Web;Report title if different from report name;;Titre du rapport si différent du nom;;;Tittel på rapport hvis forskjellig fra navn på rapport
-Web;Reports;;Rapports;Reports;Relatório;Rapporter
-Web;Result as body;;Message HTML;;;Resultat som tekst
-Web;Save;;Enregistrer;Salva;Gravar;Lagre
-Web;Schedule;;Planification;;;Planlegg
-Web;Search;;Rechercher;;;Søk
-Web;Show totals;;Totaux;;;Vis totaler
-Web;Show sub-totals;;Sous-totaux;;;
-Web;Sort;;Tri;;;Sorter
-Web;Start date;;Date de départ;;;Start dato
-Web;Subject;;Sujet;;;Emne
-Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;;Le nombre maximum de connexions a été atteint pour votre licence ({0}). Merci d'essayer plus tard...;;;Maksimalt antall brukere er oppnådd for din lisens ({0}). Vennligst forsøk å logge inn senere...
-Web;To;;Destinataire;;;Til
-Web;Total aggr.;;Aggr. totaux;;;Total av
-Web;Type;;Type;Tipo;Tipo;Type
-Web;User groups;;Groupes utilisateur;Gruppi utenti;Grupos de usuários;Brukergrupper
-Web;User name;;Nom d'utilisateur;Nome utente;Nome do usuário;Brukernavn
-Web;Users;;Utilisateurs;;;Brukere
-Web;Value;;Valeur;;;Verdi
-Web;Values;;Valeurs;;;Verdier
-Web;Error: only files (and not reports) can be copied to this folder.;;Erreur: Seulement les fichiers (et non les rapports) peuvent être copiés dans ce répetoire.;;;Feil: Kun filer (og ikke rapporter) kan kopieres til denne folderen.
-Web;Zip attachments;;Options ZIP;;;Zip vedlegg
-Web;Zip password;;Mot de passe ZIP;;;Zip passord
-WebJS;Options;;Options;;;
-WebJS;No calculation option;;Pas d'option de calcul;;;
-WebJS;% of the row;;% de la ligne;;;
-WebJS;% of the column;;% de  la colonne;;;
-WebJS;% of the total;;% du total;;;
-WebJS;# of % selected;;# de % sélectionné;# selezionati su %;# selezionati su %;# av % valgt
-WebJS;(filtered from _MAX_);;(filtré de _MAX_);(filtrato da _MAX_);(filtrado de _MAX_);(filtrert fra _MAX_)
-WebJS;No Output;;Aucune Destination;;;Ingen målområde
-WebJS;No Schedule;;Aucune Planification;;;Ingenting planlagt
-WebJS;1 Decimal;;1 Décimale;;;1 desimal
-WebJS;2 Decimals;;2 Décimales;;;2 desimaler
-WebJS;3 Decimals;;3 Décimales;;;3 desimaler
-WebJS;4 Decimals;;4 Décimales;;;4 desimaler
-WebJS;Percentage;;Pourcentage;;;
-WebJS;Percentage 1 Dec.;;Pourcentage 1 Déc.;;;
-WebJS;Percentage 2 Dec.;;Pourcentage 2 Déc.;;;
-WebJS;All selected;;Tout est sélectionné;Seleziona tutto;Selecionar tudo;Alle valgt
-WebJS;Ascendant;;Ascendant;;;Stigende
-WebJS;Automatic ascendant;;Automatique ascendant;;;Automatisk stignende
-WebJS;Automatic descendant;;Automatique descendant;;;Automatisk synkende
-WebJS;Average;;Moyenne;;;Gjennomsnitt
-WebJS;Average of;;Moyenne de;;;Gjennomsnitt av
-WebJS;Axis;;Axe;;;Aksis
-WebJS;Bar;;Barre;;;Bar
-WebJS;Contains;;Contient;;;Inneholder
-WebJS;Count;;Nombre;;;Tell
-WebJS;Count of;;Nombre de;;;Telling av
-WebJS;CSV;;CSV;;;CSV
-WebJS;Data tables responsive;;Data tables adaptable;;;
-WebJS;Daily;;Quotidien;;;Daglig
-WebJS;day;;jour;;;dag
-WebJS;days;;jours;;;dager
-WebJS;Decimal;;Décimale;;;Desimal
-WebJS;Default;;Défaut;;;Standard
-WebJS;Default report connection;;Connexion du rapport;;;Standard kopling for rapport
-WebJS;Default repository connection;;Connexion du repository;;;Standard kopling for datasenter
-WebJS;Descendant;;Descendant;;;Synkende
-WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?;;;Ønsker du virkelig å slette rapportene eller filene valgt?
-WebJS;Does not contain;;Ne contient pas;;;Inneholder ikke
-WebJS;Drop your Column elements;;Eléments de type Colonne;;;Slipp dine elementer for Kolonner
-WebJS;Drop your Data;;Données;;;Slipp dine Data
-WebJS;Drop your Data elements;;Eléments de type Donnée;;;Slipp dine elementer for Data
-WebJS;Drop your Elements;;Eléments;;;Slipp dine elementer
-WebJS;Drop your Page elements;;Eléments de type Page;;;Slipp dine elementer for Siden
-WebJS;Drop your Restrictions;;Restrictions;;;Slipp dine Restriksjoner
-WebJS;Drop your Row elements;;Eléments de type Ligne;;;Slipp dine elementer for Rader
-WebJS;Edit report;;Editer le rapport;;;Endre rapport
-WebJS;Email;;Courriel;;;Epost
-WebJS;Ends with;;Se termine par;;;Ender med
-WebJS;Equals;;Egale;;;Tilsvarer
-WebJS;Error;;Erreur;;;Feil
-WebJS;Error : Unable to connect to the server;;Erreur: Impossible de se connecter au serveur;;;Feil: Kan ikke kople til server
-WebJS;Excel;;Excel;;;Excel
-WebJS;Filter;;Filtre;Filtro;Filtro;Filter
-WebJS;Folder;;Répertoire;Repertorio;Pasta;Mappe
-WebJS;For rows;;Pour les lignes;;;For rader
-WebJS;For columns;;Pour les colonnes;;;For kolonner
-WebJS;For rows and columns;;Pour les lignes et colonnes;;;For rader og kolonner
-WebJS;For rows (total only);;Pour les lignes (Uniquement le total);;;For rader
-WebJS;For rows and columns (total only);;Pour les lignes et colonnes (Uniquement le total);;;For rader og kolonner
-WebJS;Force execution;;Forcer l'exécution;;;Tving utføring
-WebJS;Use full screen width;;Utiliser toute la largueur de l'écran;;;
-WebJS;General;;Général;;;Generell
-WebJS;General date long time;;Date générale avec le temps long;;;Generell dato lang tid
-WebJS;General date short time;;Date générale avec le temps court;;;Generell dato kort tid
-WebJS;Horizontal Bar;;Barre horizontale;;;Horisontal Bar
-WebJS;hour;;heure;;;time
-WebJS;hours;;heures;;;timer
-WebJS;HTML;;HTML;;;HTML
-WebJS;HTML Print;;HTML Impression;;;HTML Utskrift
-WebJS;Indefinitely;;Indéfiniment;;;Uendelig
-WebJS;Is between;;Est entre;;;Er mellom
-WebJS;Is different from;;Est différent de;;;Er forskjellig fra
-WebJS;Is empty;;Est vide;;;Er tom
-WebJS;Is greater or equal than;;Est plus grand ou égal à;;;Er større eller lik
-WebJS;Is greater than;;Est plus grand que;;;Er større enn
-WebJS;Is not between;;N'est pas entre;;;Er ikke mellom
-WebJS;Is not empty;;N'est pas vide;;;Er ikke tom
-WebJS;Is not Null;;N'est pas Null;;;Er ikke Null
-WebJS;Is Null;;Est Null;;;Er Null
-WebJS;Is smaller or equal than;;Est plus petit ou égal à;;;Er mindre eller lik enn
-WebJS;Is smaller than;;Est plus petit que;;;Er mindre enn
-WebJS;Line;;Ligne;;;Linje
-WebJS;Long date;;Date longue;;;Lang dato
-WebJS;Maximum;;Maximum;;;Maskimum
-WebJS;Maximum of;;Maximum de;;;Maksimum av
-WebJS;Minimum;;Minimum;;;Minimum
-WebJS;Minimum of;;Minimum de;;;Minimum av
-WebJS;minute;;minute;;;minutt
-WebJS;minutes;;minutes;;;minutter
-WebJS;Modified;;Modifié;;;Endret
-WebJS;Monthly;;Mensuel;;;Månedlig
-WebJS;New Output for;;Nouvelle Destination pour;;;Nytt målområde
-WebJS;New report;;Nouveau rapport;;;Ny rapport
-WebJS;New Schedule;;Nouvelle Planification;;;Ny Plan
-WebJS;No;;Non;;;Nei
-WebJS;No prompt;;Pas de prompt;;;Ingen spørsmål
-WebJS;No report;;Aucun rapport;;;Ingen rapport
-WebJS;No schedule;;Pas de planification;;;Ingen planlegging
-WebJS;No total;;Pas de totaux;;;Ingen totaler
-WebJS;No (axis values are linear);;Les valeurs de l'axe sont linéaires;;;
-WebJS;None;;Aucun;;;Ingen
-WebJS;Not sorted;;Pas de tri;;;Ikke sortert
-WebJS;Number;;Nombre;;;Nummer
-WebJS;Number 1 dec.;;Nombre 1 déc.;;;Nummer 1 des.
-WebJS;Number 2 dec.;;Nombre 2 déc.;;;Nummer 2 des.
-WebJS;Number 3 dec.;;Nombre 3 déc.;;;Nummer 3 des.
-WebJS;Number 4 dec.;;Nombre 4 déc.;;;Nummer 4 des.
-WebJS;One time;;Une fois;;;En gang
-WebJS;Output;;Destination;;;Produksjon
-WebJS;PDF;;PDF;;;PDF
-WebJS;PDF Print;;PDF Impression;;;PDF Utskrift
-WebJS;Pie;;Camembert;;;Kake
-WebJS;Please wait;;Veuillez patienter;Attendere prego;Por favor aguarde;Vennligst vent
-WebJS;Please note that only schedules can be edited for this report.;;Veuillez noter que seules les planifications peuvent être éditées pour ce rapport.;;;Merk at kun planlagte hendelser kan endres for denne rapporten.
-WebJS;Scatter;;Point;;;Punkt
-WebJS;Polar Area;;Aire Polaire;;;
-WebJS;Radar;;Radar;;;
-WebJS;Private (The output cannot be executed by other users);;Privée (la destination ne peut pas être exécutée par d'autres utilisateurs);;;Privat (kan ikke utføres av andre brukere)
-WebJS;Private (The output cannot be edited by other users);;Privée (la destination ne peut pas être éditée par d'autres utilisateurs);;;Privat (kan ikke endres av andre brukere)
-WebJS;Prompt at execution;;Demander à l'exécution;;;Spør før utføring
-WebJS;Prompt only one value;;Demander une valeur à l'exécution;;;Spør kun en gang
-WebJS;Public;;Publique;;;Offentlig
-WebJS;Remove;;Effacer;;;Fjern
-WebJS;Report has been modified, do you really want to close ?;;Le rapport a été modifié, voulez-vous vraiment fermer ?;;;Rapporten er endret, ønsker du virkelig å avslutte?
-WebJS;Report saved;;Rapport sauvegardé;;;Rapport er lagret
-WebJS;report(s) or file(s) cut in the clipboard;;rapport(s) ou fichier(s) ont été coupés dans le presse-papier;;;rapport(er) eller fil(er) klippet til minne
-WebJS;report(s) or file(s) have been deleted;;rapport(s) ou fichier(s) ont été effacés;;;rapport(er) eller fil(er) er blitt slettet
-WebJS;report(s) or file(s) processed;;rapport(s) ou fichier(s) ont été traités;;;rapport(er) eller fil(er) utført
-WebJS;report(s) or files(s) copied in the clipboard;;rapport(s) ou fichier(s) ont été copiés dans le presse-papier;;;rapport(er) eller fil(er) kopiert til minne
-WebJS;Schedule;;Planification;;;Planlegg
-WebJS;Select all;;Tout;Seleziona tutto;Selecionar tudo;Velg alle
-WebJS;Server Version;;Version du serveur;;;Server versjon
-WebJS;Short date;;Date courte;;;Kort dato
-WebJS;Show _MENU_ reports;;Afficher _MENU_ rapports;Mostra il _MENU_ reports;Mostrar_MENU_ relatórios;Vis _MENU_ rapporter
-WebJS;Show execution message panel;;Afficher les messages d'exécutions;;;Vis utførte meldinger
-WebJS;Show information panel;;Afficher les informations;;;Vis informasjon
-WebJS;Show first header line;;Afficher la première ligne d'en-tête;;;Vis informasjon
-WebJS;Show report result panel;;Afficher le panneau des résultats;;;Vis resultater av rapporter
-WebJS;Show restrictions panel;;Afficher les restrictions;;;Vis begrensninger
-WebJS;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_;Mostrando _START_ até _END_ de _TOTAL_;Viser _START_ til _END_ av _TOTAL_
-WebJS;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0;Mostra 0 a 0 di 0;Mostrando 0 até 0 de 0;Viser 0 to 0 av 0
-WebJS;Splitter;;Séparateur;;;Separator
-WebJS;Stacked Area;;Empilé;;;Stablet område
-WebJS;Starts with;;Commence par;;;Starter med
-WebJS;Sum;;Somme;;;Sum
-WebJS;The folder has been created;;Le répertoire a été créé;;;Mappen er blitt opprettet
-WebJS;The folder has been deleted;;Le répertoire a été effacé;;;Mappen er blitt slettet
-WebJS;The folder has been renamed;;Le répertoire a été renommé;;;Mappen har fått nytt navn
-WebJS;The folder has been updated;;Le répertoire a été mis à jour;;;Mappen er blitt oppdatert
-WebJS;The report or file has been renamed;;Le rapport ou le fichier a été renommé;;;Rapporten eller filen har fått nytt navn
-WebJS;Use data tables;;Utiliser les data tables;;;Use av
-WebJS;View;;Vue;;;Vis
-WebJS;Views and outputs;;Vues et destinations;;;Visning og Produksjoner
-WebJS;Warning;;Avertissement;;;Advarsel
-WebJS;Web Interface Version;;Version de l'interface Web;;;Web versjon
-WebJS;Weekly;;Hebdomadaire;;;Ukentlig
-WebJS;weeks;;semaines;;;uker
-WebJS;Yes;;Oui;;;Ja
-WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés);;;Ja (vedlegget er zippet)
-WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message);;;Ja (HTML resultatet er i meldingen)
-WebJS;Yes (a new line with sub-totals is added when the value changes);;Oui (Une nouvelle ligne avec les sous-totaux est ajoutée lorsque la valeur change);;;
-WebJS;Yes (element values are used for the axis);;Oui (Les valeurs de l'élément sont utilisés pour l'axe);;;
-WebJS;No Sort;;Pas de tri;;;Ingen sortering
-WebJS;By point ascending;;Par point ascendant;;;Etter Punkt i økende
-WebJS;By axis label ascending;;Par axe ascendant;;;Etter Axis etikett økende
-WebJS;By point descending;;Par point descendant;;;Etter Punkt synkende 
-WebJS;By axis label descending;;Par axe descendant;;;Etter Axis etikett synkende
-Web;Chart sort;;Tri graphe;;;Sorter på graf
-WebJS;Show summary table;;Afficher le sommaire;;;
-WebJS;Show page tables;;Afficher les tableaux des pages;;;
-WebJS;Show data tables;;Afficher les tableaux des données;;;
+﻿Context;Reference;en;fr
+NVD3;(right axis);;(axe de droite)
+NVD3;Expanded;;Etendue
+NVD3;Grouped;;Groupée
+NVD3;Re-scale y-axis;;Rééchelonner l'axe y
+NVD3;Stacked;;Empilée
+NVD3;Stream;;Flux
+Report;!=;;!=
+Report;# of % selected;;# de % sélectionné
+Report;(filtered from _MAX_);;(filtré de _MAX_)
+Report;<;;<
+Report;<=;;<=
+Report;=;;=
+Report;>;;>
+Report;>=;;>=
+Report;A value is required for;;Une valeur est requise pour
+Report;All selected;;Tout est sélectionné
+Report;and;;et
+Report;Auto Scroll enabled;;Défilement automatique
+Report;Average of;;Moyenne de
+Report;Back to top;;Retour en haut
+Report;Between;;Dans l'intervalle
+Report;Cancel;;Annuler
+Report;Cancelling report...;;Annulation...
+Report;Charts;;Graphes
+Report;Contains;;Contient
+Report;Count of;;Nombre de
+Report;Description;;Description
+Report;Does not contain;;Ne contient pas
+Report;Drill <;;Navigation <
+Report;Drill >;;Navigation >
+Report;Duration (seconds);;Durée (secondes)
+Report;Ends with;;Se termine par
+Report;Equals;;Egale
+Report;Execute;;Exécuter
+Report;Executing report...;;Exécution...
+Report;Execution date;;Date d'exécution
+Report;Execution duration;;Durée d'exécution
+Report;execution messages;;les messages d'exécution
+Report;Export messages...;;Exporter les messages...
+Report;Filter:;;Filtre:
+Report;Hide;;Cacher
+Report;Invalid date;;Date invalide
+Report;Invalid numeric value;;Valeur numérique invalide
+Report;Is between;;Est entre
+Report;Is different from;;Est différent de
+Report;Is empty;;Est vide
+Report;Is greater or equal than;;Est plus grand ou égal à
+Report;Is greater than;;Est plus grand que
+Report;Is not between;;N'est pas entre
+Report;Is not empty;;N'est pas vide
+Report;Is not Null;;N'est pas Null
+Report;Is Null;;Est Null
+Report;Is smaller or equal than;;Est plus petit ou égal à
+Report;Is smaller than;;Est plus petit que
+Report;Maximum of;;Maximum de
+Report;Minimum of;;Minimum de
+Report;Model;;Modèle
+Report;Model loaded...;;Modèle chargé
+Report;Models loaded...;;Modèles chargés
+Report;New report;;Nouveau rapport
+Report;No records;;Aucun enregistrement
+Report;No records. The report output generation has been cancelled.;;Aucun enregistrement. La  génération a été annulée.
+Report;No reports;;Pas de rapports
+Report;No rows;;Pas de lignes
+Report;Not Between;;En dehors de l'intervalle
+Report;Not Contains;;Ne contient pas
+Report;Now;;Maintenant
+Report;Page;;Page
+Report;"Page &p; of &P;";;"Page &p; de &P;"
+Report;Pages;;Pages
+Report;Processing;;En cours
+Report;Processing...;;En cours…
+Report;Records;;Enregistrements
+Report;Report;;Rapport
+Report;Report has been cancelled;;Le rapport a été annulé
+Report;report information;;les informations
+Report;report restrictions;;les restrictions du rapport
+Report;Report result generated in '{0}';;Rapport généré dans  '{0}'
+Report;report result panel;;le panneau des résultats
+Report;Restrictions;;Restrictions
+Report;Results;;Résultats
+Report;second;;seconde
+Report;seconds;;secondes
+Report;Select all;;Tout
+Report;Show;;Montrer
+Report;Show _MENU_ reports;;Afficher _MENU_ rapports
+Report;Show _MENU_ rows;;Afficher _MENU_ lignes
+Report;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_
+Report;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0
+Report;Starting execution...;;Exécution...
+Report;Starts with;;Commence par
+Report;Sum of;;Somme de
+Report;Summary;;Sommaire
+Report;Task executed...;;Tâche exécutée
+Report;Tasks executed...;;Tâches exécutées
+Report;The report has been generated.;;Le rapport a été généré.
+Report;This report has execution errors. Please check details in the Windows Event Viewer...;;Ce rapport a des erreurs d'exécutions. Veuillez consulter les détails dans le journal des événements Windows.
+Report;ThisMonth;;CeMois
+Report;ThisWeek;;CetteSemaine
+Report;ThisYear;;CetteAnnée
+Report;Today;;Aujourdhui
+Report;Total;;Total
+Report;Use the date format '{0}' or one of the following keywords:;;Utiliser le format de date '{0}' ou bien l'un des mots clés suivants:
+Report;View CSV Result;;Afficher le résultat CSV
+Report;View Excel Result;;Afficher le résultat Excel
+Report;View HTML Result;;Afficher le résultat HTML
+Report;View PDF Result;;Afficher le résultat PDF
+Report;View Print Result;;Afficher le résultat Impression
+Report;View report result file;;Afficher le résultat du rapport
+Web;Actions;;Actions
+Web;Add;;Ajouter
+Web;Add dashboards;;Ajouter des Dashboards
+Web;Add widgets to the dashboard;;Ajouter des Widgets au Dashboard
+Web;Aggregate;;Agrégat
+Web;Auto-Refresh (seconds);;Actualiser (secondes)
+Web;BCC;;BCC
+Web;Body;;Message
+Web;Cancel;;Annuler
+Web;CC;;CC
+Web;Chart axis;;Graphe
+Web;Chart height;;Hauteur graphe
+Web;Chart JS;;Graphe JS
+Web;Chart NVD3;;Graphe NVD3
+Web;Chart Plotly;;Graphe Plotly
+Web;Chart sort;;Tri graphe
+Web;Chart title;;Titre du graphe
+Web;Chart width;;Largeur graphe
+Web;Close;;Fermer
+Web;Color;;Couleur
+Web;Connection;;Connexion
+Web;Copy;;Copier
+Web;Create a new dashboard;;Créer un nouveau Dashboard
+Web;Create in folder;;Créer dans le répertoire
+Web;Create new folder;;Créer un répertoire
+Web;Cut;;Couper
+Web;Days;;Jours
+Web;Days of the week;;Jours de la semaine
+Web;Default body;;Message par défaut
+Web;Default sender address;;Adresse d'envoi par défaut
+Web;Default subject;;Sujet par défaut
+Web;Delete;;Supprimer
+Web;Delete folder;;Supprimer le répertoire
+Web;Description;;Description
+Web;Device;;Périphérique
+Web;Disconnect;;Déconnecter
+Web;Display options;;Options d'affichage
+Web;Edit the widget properties;;Editer les propriétés du Widget
+Web;Edition;;Edition
+Web;Elements;;Eléments
+Web;End date;;Date de fin
+Web;End date is before start date;;La date de fin est avant la date de départ
+Web;Enter a password to protect the Zip file;;Mot de passe pour protéger le fichier zip
+Web;"Enter addresses separated by ;";;"Adresses séparées par ;"
+Web;Enter password;;Entrer le mot de passe
+Web;Enter the file name without extension;;Nom du fichier sans l'extension
+Web;Enter user name;;Entrer le nom d'utilisateur
+Web;Enter your new file name;;Entrer un nouveau nom de fichier
+Web;Error;;Erreur
+Web;Error: only files (and not reports) can be copied to this folder.;;Erreur: Seulement les fichiers (et non les rapports) peuvent être copiés dans ce répetoire.
+Web;Error: This report name exists already.;;Erreur: Ce nom de rapport existe déjà
+Web;Execute;;Exécuter
+Web;Execute now;;Exécuter maintenant
+Web;Execution;;Exécution
+Web;File name;;Nom du fichier
+Web;Folder;;Répertoire
+Web;Folders;;Répertoire
+Web;for a duration of;;pour une durée de
+Web;Format;;Format
+Web;From;;De
+Web;Grid mode;;Mode grille
+Web;Group name;;Nom du groupe
+Web;Height;;Hauteur
+Web;Icon;;Icône
+Web;Inconsistent duration or interval for the schedule. Check your entries.;;La durée et l'intervalle de la planification ne sont pas consistent. Vérifiez vos entrées.
+Web;Invalid user name or password;;Utilisateur ou mot de passe invalide
+Web;Is dynamic;;Dynamique
+Web;Is enabled;;Actif
+Web;Is Multiline;;Multi-lignes
+Web;Is required;;Requis
+Web;Last;;Dernier
+Web;Last execution at;;Dernière exécution à
+Web;Last modification;;Modification
+Web;Licensed to;;Licence pour
+Web;Login;;Connexion
+Web;Logout;;Déconnexion
+Web;Logout the user;;Déconnecte l'utilisateur
+Web;Manage Dashboards;;Gérer les dashboards
+Web;Manage folders;;Gestion des répertoires
+Web;Months;;Mois
+Web;Name;;Nom
+Web;New;;Nouveau
+Web;New folder name;;Nouveau nom de répertoire
+Web;No Email destination specified in the schedule;;L'adresse Email n'est pas renseignée
+Web;No file name specified in the schedule;;Le nom du fichier n'est pas renseigné
+Web;OK;;OK
+Web;Operator;;Opérateur
+Web;"Optional addresses separated by ;";;"Adresses optionnelles séparées par ;"
+Web;Optional title chart;;Titre optionnel du graphe
+Web;Options;;Options
+Web;Output;;Destination
+Web;Password;;Mot de passe
+Web;Paste;;Coller
+Web;Personal;;Personnel
+Web;Pivot mode;;Mode pivot
+Web;Please wait;;Veuillez patienter
+Web;Profile;;Profil
+Web;Profile information;;Profil utilisateur
+Web;Prompt;;Demander
+Web;Prompt at run-time;;Demander à l'exécution
+Web;Recur every;;Récurrent tous les
+Web;Refresh;;Rafraîchir
+Web;Remove;;Supprimer
+Web;Remove all;;Tout supprimer
+Web;Rename;;Renommer
+Web;Rename folder;;Renommer le répertoire
+Web;Rename, move or copy;;Renommer, déplacer ou copier
+Web;Rename, move or copy dashboard;;Renommer, déplacer ou copier le Dashboard
+Web;Repeat every;;Répéter tous les
+Web;Report;;Rapport
+Web;Report name;;Nom du rapport
+Web;Report title;;Titre du rapport
+Web;Report title if different from report name;;Titre du rapport si différent du nom
+Web;Reports;;Rapports
+Web;Result as body;;Message HTML
+Web;Save;;Enregistrer
+Web;Schedule;;Planification
+Web;Search;;Rechercher
+Web;Select the widgets to add to the dashboard;;Sélectionner le Widget à ajouter au Dashboard
+Web;Show sub-totals;;Sous-totaux
+Web;Show totals;;Totaux
+Web;Sort;;Tri
+Web;Start date;;Date de départ
+Web;Subject;;Sujet
+Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;;Le nombre maximum de connexions a été atteint pour votre licence ({0}). Merci d'essayer plus tard...
+Web;To;;Destinataire
+Web;Total aggr.;;Aggr. totaux
+Web;Type;;Type
+Web;Update the dashboards view;;Changer la vue des Dashboards
+Web;User groups;;Groupes utilisateur
+Web;User name;;Nom d'utilisateur
+Web;Users;;Utilisateurs
+Web;Value;;Valeur
+Web;Values;;Valeurs
+Web;Widget name;;Nom du Widget
+Web;Width;;Largueur
+Web;Zip attachments;;Options ZIP
+Web;Zip password;;Mot de passe ZIP
+WebJS;# of % selected;;# de % sélectionné
+WebJS;% of the column;;% de  la colonne
+WebJS;% of the row;;% de la ligne
+WebJS;% of the total;;% du total
+WebJS;(filtered from _MAX_);;(filtré de _MAX_)
+WebJS;1 Decimal;;1 Décimale
+WebJS;2 Decimals;;2 Décimales
+WebJS;3 Decimals;;3 Décimales
+WebJS;4 Decimals;;4 Décimales
+WebJS;All selected;;Tout est sélectionné
+WebJS;Ascendant;;Ascendant
+WebJS;Automatic ascendant;;Automatique ascendant
+WebJS;Automatic descendant;;Automatique descendant
+WebJS;Average;;Moyenne
+WebJS;Average of;;Moyenne de
+WebJS;Axis;;Axe
+WebJS;Bar;;Barre
+WebJS;By axis label ascending;;Par axe ascendant
+WebJS;By axis label descending;;Par axe descendant
+WebJS;By point ascending;;Par point ascendant
+WebJS;By point descending;;Par point descendant
+WebJS;Contains;;Contient
+WebJS;Copy to;;Copier vers
+WebJS;Count;;Nombre
+WebJS;Count of;;Nombre de
+WebJS;Create in;;Créer dans
+WebJS;CSV;;CSV
+WebJS;Daily;;Quotidien
+WebJS;Data tables responsive;;Data tables adaptable
+WebJS;day;;jour
+WebJS;days;;jours
+WebJS;Decimal;;Décimale
+WebJS;Default;;Défaut
+WebJS;Default report connection;;Connexion du rapport
+WebJS;Default repository connection;;Connexion du repository
+WebJS;Delete the dashboard;;Effacer le Dashboard
+WebJS;Descendant;;Descendant
+WebJS;Do you really want to delete the dashboard ?;;Voulez-vous vraiment effacer le Dashboard ?
+WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?
+WebJS;Does not contain;;Ne contient pas
+WebJS;Drop your Column elements;;Eléments de type Colonne
+WebJS;Drop your Data;;Données
+WebJS;Drop your Data elements;;Eléments de type Donnée
+WebJS;Drop your Elements;;Eléments
+WebJS;Drop your Page elements;;Eléments de type Page
+WebJS;Drop your Restrictions;;Restrictions
+WebJS;Drop your Row elements;;Eléments de type Ligne
+WebJS;Edit report;;Editer le rapport
+WebJS;Edit widget properties;;Editer les propriétés du Widget
+WebJS;Email;;Courriel
+WebJS;Ends with;;Se termine par
+WebJS;Equals;;Egale
+WebJS;Error;;Erreur
+WebJS;Error : Unable to connect to the server;;Erreur: Impossible de se connecter au serveur
+WebJS;Excel;;Excel
+WebJS;Filter;;Filtre
+WebJS;Folder;;Répertoire
+WebJS;For columns;;Pour les colonnes
+WebJS;For rows;;Pour les lignes
+WebJS;For rows (total only);;Pour les lignes (Uniquement le total)
+WebJS;For rows and columns;;Pour les lignes et colonnes
+WebJS;For rows and columns (total only);;Pour les lignes et colonnes (Uniquement le total)
+WebJS;Force execution;;Forcer l'exécution
+WebJS;General;;Général
+WebJS;General date long time;;Date générale avec le temps long
+WebJS;General date short time;;Date générale avec le temps court
+WebJS;Horizontal Bar;;Barre horizontale
+WebJS;hour;;heure
+WebJS;hours;;heures
+WebJS;HTML;;HTML
+WebJS;HTML Print;;HTML Impression
+WebJS;Indefinitely;;Indéfiniment
+WebJS;Is between;;Est entre
+WebJS;Is different from;;Est différent de
+WebJS;Is empty;;Est vide
+WebJS;Is greater or equal than;;Est plus grand ou égal à
+WebJS;Is greater than;;Est plus grand que
+WebJS;Is not between;;N'est pas entre
+WebJS;Is not empty;;N'est pas vide
+WebJS;Is not Null;;N'est pas Null
+WebJS;Is Null;;Est Null
+WebJS;Is smaller or equal than;;Est plus petit ou égal à
+WebJS;Is smaller than;;Est plus petit que
+WebJS;Line;;Ligne
+WebJS;Long date;;Date longue
+WebJS;Maximum;;Maximum
+WebJS;Maximum of;;Maximum de
+WebJS;Minimum;;Minimum
+WebJS;Minimum of;;Minimum de
+WebJS;minute;;minute
+WebJS;minutes;;minutes
+WebJS;Modified;;Modifié
+WebJS;Monthly;;Mensuel
+WebJS;Move to;;Déplacer vers
+WebJS;New Output for;;Nouvelle Destination pour
+WebJS;New report;;Nouveau rapport
+WebJS;New Schedule;;Nouvelle Planification
+WebJS;No;;Non
+WebJS;No (axis values are linear);;Les valeurs de l'axe sont linéaires
+WebJS;No calculation option;;Pas d'option de calcul
+WebJS;No Output;;Aucune Destination
+WebJS;No prompt;;Pas de prompt
+WebJS;No report;;Aucun rapport
+WebJS;No Schedule;;Aucune Planification
+WebJS;No schedule;;Pas de planification
+WebJS;No Sort;;Pas de tri
+WebJS;No total;;Pas de totaux
+WebJS;No widget;;Aucun widget
+WebJS;None;;Aucun
+WebJS;Not sorted;;Pas de tri
+WebJS;Number;;Nombre
+WebJS;Number 1 dec.;;Nombre 1 déc.
+WebJS;Number 2 dec.;;Nombre 2 déc.
+WebJS;Number 3 dec.;;Nombre 3 déc.
+WebJS;Number 4 dec.;;Nombre 4 déc.
+WebJS;One time;;Une fois
+WebJS;Options;;Options
+WebJS;Output;;Destination
+WebJS;PDF;;PDF
+WebJS;PDF Print;;PDF Impression
+WebJS;Percentage;;Pourcentage
+WebJS;Percentage 1 Dec.;;Pourcentage 1 Déc.
+WebJS;Percentage 2 Dec.;;Pourcentage 2 Déc.
+WebJS;Pie;;Camembert
+WebJS;Please note that only schedules can be edited for this report.;;Veuillez noter que seules les planifications peuvent être éditées pour ce rapport.
+WebJS;Please wait;;Veuillez patienter
+WebJS;Polar Area;;Aire Polaire
+WebJS;Private (The output cannot be edited by other users);;Privée (la destination ne peut pas être éditée par d'autres utilisateurs)
+WebJS;Private (The output cannot be executed by other users);;Privée (la destination ne peut pas être exécutée par d'autres utilisateurs)
+WebJS;Processing;;En cours
+WebJS;Prompt at execution;;Demander à l'exécution
+WebJS;Prompt only one value;;Demander une valeur à l'exécution
+WebJS;Public;;Publique
+WebJS;Radar;;Radar
+WebJS;Remove;;Effacer
+WebJS;Remove the dashboard from your view;;Enlever le Dashboard de la vue
+WebJS;Remove widget from dashboard;;Enlever le Widget du Dashboard
+WebJS;Rename;;Renommer
+WebJS;Report has been modified, do you really want to close ?;;Le rapport a été modifié, voulez-vous vraiment fermer ?
+WebJS;Report saved;;Rapport sauvegardé
+WebJS;report(s) or file(s) cut in the clipboard;;rapport(s) ou fichier(s) ont été coupés dans le presse-papier
+WebJS;report(s) or file(s) have been deleted;;rapport(s) ou fichier(s) ont été effacés
+WebJS;report(s) or file(s) processed;;rapport(s) ou fichier(s) ont été traités
+WebJS;report(s) or files(s) copied in the clipboard;;rapport(s) ou fichier(s) ont été copiés dans le presse-papier
+WebJS;Scatter;;Point
+WebJS;Schedule;;Planification
+WebJS;Select all;;Tout
+WebJS;Server Version;;Version du serveur
+WebJS;Short date;;Date courte
+WebJS;Show _MENU_ reports;;Afficher _MENU_ rapports
+WebJS;Show _MENU_ widgets;;Afficher _MENU_ widgets
+WebJS;Show data tables;;Afficher les tableaux des données
+WebJS;Show execution message panel;;Afficher les messages d'exécutions
+WebJS;Show first header line;;Afficher la première ligne d'en-tête
+WebJS;Show information panel;;Afficher les informations
+WebJS;Show page tables;;Afficher les tableaux des pages
+WebJS;Show report result panel;;Afficher le panneau des résultats
+WebJS;Show restrictions panel;;Afficher les restrictions
+WebJS;Show summary table;;Afficher le sommaire
+WebJS;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_
+WebJS;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0
+WebJS;Splitter;;Séparateur
+WebJS;Stacked Area;;Empilé
+WebJS;Starts with;;Commence par
+WebJS;Sum;;Somme
+WebJS;The dashboard has been copied;;Le Dashboard a été copié
+WebJS;The dashboard has been deleted;;Le Dashboard a été effacé
+WebJS;The dashboard has been moved;;Le Dashboard a été déplacé
+WebJS;The dashboard has been renamed;;Le Dashboard a été renommé
+WebJS;The folder has been created;;Le répertoire a été créé
+WebJS;The folder has been deleted;;Le répertoire a été effacé
+WebJS;The folder has been renamed;;Le répertoire a été renommé
+WebJS;The folder has been updated;;Le répertoire a été mis à jour
+WebJS;The report or file has been renamed;;Le rapport ou le fichier a été renommé
+WebJS;The widget has been deleted;;Le Widget a été effacé
+WebJS;Use data tables;;Utiliser les data tables
+WebJS;Use full screen width;;Utiliser toute la largueur de l'écran
+WebJS;View;;Vue
+WebJS;View dashboards;;Voir les Dashboards
+WebJS;View reports;;Voir les rapports
+WebJS;Views and outputs;;Vues et destinations
+WebJS;Warning;;Avertissement
+WebJS;Warning: Check the new dashboard name;;Attention: Vérifier le nouveau nom du Dashboard
+WebJS;Web Interface Version;;Version de l'interface Web
+WebJS;Weekly;;Hebdomadaire
+WebJS;weeks;;semaines
+WebJS;widget(s) have been added to the dashboard;;Widget(s) ont été ajouté au Dashboard
+WebJS;Yes;;Oui
+WebJS;Yes (a new line with sub-totals is added when the value changes);;Oui (Une nouvelle ligne avec les sous-totaux est ajoutée lorsque la valeur change)
+WebJS;Yes (element values are used for the axis);;Oui (Les valeurs de l'élément sont utilisés pour l'axe)
+WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés)
+WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message)
+WebJS;Yes, name, color and icon may change after execution;;Oui, le nom, la couleur ou l'icône peuvent changer après l'exécution

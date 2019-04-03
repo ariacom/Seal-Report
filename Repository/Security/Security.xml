@@ -45,13 +45,13 @@
       </Folders>
       <DashboardFolders>
         <SecurityDashboardFolder>
+          <Name>General</Name>
+          <Path>General</Path>
+        </SecurityDashboardFolder>
+        <SecurityDashboardFolder>
           <Name>Sales</Name>
           <Path>Sales</Path>
           <Right>Execute</Right>
-        </SecurityDashboardFolder>
-        <SecurityDashboardFolder>
-          <Name>Products</Name>
-          <Path>Products</Path>
         </SecurityDashboardFolder>
       </DashboardFolders>
       <Culture />

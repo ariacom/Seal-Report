@@ -12,7 +12,7 @@ var WidgetHeightUnit = 140;
 
 declare var Muuri: any;
 declare function nvd3UpdateCharts();
-declare function getTopLeft(item : any);
+declare function getTopLeft(item: any);
 
 //Serialize Muuri order
 function serializeLayout(grid) {
@@ -50,12 +50,13 @@ class SWIDashboard {
     public _gridOrders = [];
     public _grids = [];
     public _gridsById = [];
+    public _refreshTimers = [];
     public _dashboard;
     public _lastGUID;
     public _dragType;
     public _dragData;
 
-    public reorderItems(init : boolean) {
+    public reorderItems(init: boolean) {
         if (!_da || !_da._dashboard) return;
 
         if (init) _da._gridsById = []; //Force rebuild of grids
@@ -141,6 +142,16 @@ class SWIDashboard {
         //Refresh button
         $("#rb" + data.itemguid).attr("title", data.lastexec);
 
+        //Auto-refresh
+        if (data.refresh > 0) _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false) }, 1000 * data.refresh);
+
+    }
+
+    private refreshDashboardItem(guid: string, itemguid: string, force : boolean) {
+        clearTimeout(_da._refreshTimers[itemguid]); 
+        _gateway.GetDashboardResult(guid, itemguid, force, function (data) {
+            _da.handleDashboardResult(data);
+        });
     }
 
     public initDashboardItems(guid: string) {
@@ -201,7 +212,9 @@ class SWIDashboard {
                 }
 
                 //Dashboard item
-                var panel = $("<div class='item panel panel-" + item.Color + "' id='" + item.GUID + "'>");
+                var panel = $("<div class='item panel panel-" + item.Color + "'>");
+                panel.attr("id", item.GUID);
+                panel.attr("did", dashboard.GUID);
                 var panelHeader = $("<div class='panel-heading text-left' style='padding-right:2px;'>");
                 panel.append(panelHeader);
                 panelHeader.append($("<span class='glyphicon glyphicon-" + item.Icon + "'>"));
@@ -216,7 +229,6 @@ class SWIDashboard {
                 var panelButtons = $("<div style='display:none;float:right;'>");
 
                 refreshButton.attr("id", "rb" + item.GUID);
-                refreshButton.attr("title", "Refresh widget data");
 
                 panelButtons.append(refreshButton);
                 if (hasEditor && dashboard.Editable) {
@@ -232,12 +244,9 @@ class SWIDashboard {
                 panel.append(panelBody);
 
                 panelBody.append($("<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>"));
-                panelBody.append($("<h4 style='display:inline'></h4>").text(SWIUtil.tr("Processing...")));
-                _gateway.GetDashboardResult(guid, item.GUID, false, function (data) {
-                    _da.handleDashboardResult(data);
-                });
+                panelBody.append($("<h4 style='display:inline'></h4>").text(SWIUtil.tr("Processing")+"..."));
 
-                var guid2 = dashboard.GUID;
+                _da.refreshDashboardItem(guid, item.GUID, false);
 
                 //Size
                 panel.width(Math.floor(item.Width * WidgetWidthUnit));
@@ -263,14 +272,13 @@ class SWIDashboard {
 
                 //Refresh item
                 refreshButton.unbind('click').on("click", function (e) {
+                    var dashboardGuid = $(this).closest('.panel').attr('did');
                     var itemGuid = $(this).closest('.panel').attr('id');
 
                     var panelHeading = $(this).closest('.panel-heading');
                     panelHeading.children(".fa-spinner").show();
 
-                    _gateway.GetDashboardResult(guid2, itemGuid, true, function (data) {
-                        _da.handleDashboardResult(data);
-                    });
+                    _da.refreshDashboardItem(dashboardGuid, itemGuid, true);
                 });
 
                 grid.append(panel);
@@ -287,8 +295,6 @@ class SWIDashboard {
         _da._dashboard = null;
         if (!_da._lastGUID) _da._lastGUID = _main._profile.dashboard;
         if (_daEditor) _daEditor.init();
-
-    //    $waitDialog.modal();
 
         _gateway.GetUserDashboards(function (data) {
             _da._dashboards = [];
@@ -313,7 +319,7 @@ class SWIDashboard {
 
                 var menu = $("<a data-toggle='pill' href='#" + dashboard.GUID + "' did='" + dashboard.GUID + "'>");
                 if (dashboard.IsPersonal) menu.addClass("dashboard-personal");
-                menu.text(dashboard.Name);
+                menu.text(dashboard.DisplayName);
                 var li = $("<li>");
 
                 //Drag and drop for menu
@@ -425,6 +431,5 @@ class SWIDashboard {
         });
 
         _da.enableControls();
-    //    $waitDialog.modal('hide');
     }
 }

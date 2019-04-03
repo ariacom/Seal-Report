@@ -114,7 +114,7 @@ namespace Seal.Model
                     //public
                     foreach (var f in SecurityDashboardFolders.Where(i => i.Right == DashboardFolderRight.Edit))
                     {
-                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateFolderName(f.Name), path = f.Path});
+                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateDashboardFolder("\\" + f.Path, f.Name), path = f.Path});
                     }
                 }
                 return _dashboardFolders;
@@ -527,7 +527,13 @@ namespace Seal.Model
                 var widgets = new List<DashboardWidget>();
                 foreach (var widget in DashboardWidgetsPool.Widgets)
                 {
-                    if (CanSelectWidget(widget)) widgets.Add(widget);
+                    if (CanSelectWidget(widget))
+                    {
+                        widgets.Add(widget);
+                        var instance = widget.ReportPath.Replace(Security.Repository.ReportsFolder, "\\");
+                        widget.Name = Security.Repository.TranslateWidgetName(instance, widget.Name);
+                        widget.Description = Security.Repository.TranslateWidgetDescription(instance, widget.Description);
+                    }
                 }
                 return widgets;
             }
@@ -549,19 +555,19 @@ namespace Seal.Model
                 dashboard.Editable = editable;
                 dashboard.Folder = folderPath;
 
-                var name = Security.Repository.TranslateDashboard(dashboard.Name);
+                dashboard.DisplayName = Security.Repository.TranslateDashboardName(path.Replace(Security.Repository.DashboardPublicFolder, ""), dashboard.Name);
 
                 if (dashboard.IsPersonal)
                 {
-                    dashboard.FullName = string.Format("{0} ({1})", name, Security.Repository.TranslateDashboardFolder("Personal"));
+                    dashboard.FullName = string.Format("{0} ({1})", dashboard.DisplayName, Security.Repository.TranslateWeb("Personal"));
                 }
                 else if (!string.IsNullOrEmpty(folderName))
                 {
-                    dashboard.FullName = string.Format("{0} ({1})", name, Security.Repository.TranslateDashboardFolder(folderName));
+                    dashboard.FullName = string.Format("{0} ({1})", dashboard.DisplayName, Security.Repository.TranslateDashboardFolder(Path.GetDirectoryName(path.Replace(Security.Repository.DashboardPublicFolder, "")), folderName));
                 }
                 else
                 {
-                    dashboard.FullName = name;
+                    dashboard.FullName = dashboard.DisplayName;
                 }
                 dashboard.ReinitGroupOrders();
             }

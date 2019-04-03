@@ -1,0 +1,399 @@
+﻿Context;Reference;it
+NVD3;(right axis);(l'asse di destra)
+NVD3;Expanded;Espanso
+NVD3;Grouped;Raggruppata
+NVD3;Re-scale y-axis;Riscala l'asse y
+NVD3;Stacked;Impilato/a
+NVD3;Stream;Flusso
+Report;!=;!=
+Report;# of % selected;# selezionati su %
+Report;(filtered from _MAX_);(filtrato da _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;
+Report;All selected;Seleziona tutto
+Report;and;e
+Report;Average of;Media di
+Report;Back to top;Torna su
+Report;Between;Tra
+Report;Cancel;Annulla
+Report;Cancelling report...;Cancellazione...
+Report;Charts;Grafici
+Report;Contains;Contiene
+Report;Count of;Conteggio di
+Report;Description;Descrizione
+Report;Drill <;Navigation <
+Report;Drill >;Navigation >
+Report;Duration (seconds);Durata
+Report;Ends with;Finisce con
+Report;Execute;Esegui
+Report;Executing report...;Esecuzione...
+Report;Execution date;Data di esecuzione
+Report;Execution duration;Durata esecuzione
+Report;execution messages;informazioni di esecuzione
+Report;Filter:;Filtro:
+Report;Hide;Nascondi
+Report;Invalid date;Data non valida
+Report;Invalid numeric value;Valore numerico non corretto
+Report;Maximum of;Massimo di
+Report;Minimum of;Minimo di 
+Report;Model;Modello
+Report;New report;
+Report;No records. The report output generation has been cancelled.;
+Report;No reports;Nessun report
+Report;No rows;Nessuna riga
+Report;Not Between;Non compreso
+Report;Not Contains;Non contiene
+Report;Now;Ora
+Report;Page;Pagina
+Report;"Page &p; of &P;";"Pagina &p; de &P;"
+Report;Pages;Pagine
+Report;Processing;Processamento
+Report;Processing...;In corso
+Report;Report;
+Report;Model loaded...;
+Report;No records;
+Report;Task executed...;
+Report;Models loaded...;
+Report;Tasks executed...;
+Report;Results;
+Report;Records;Registra
+Report;Report has been cancelled;Il report è stato annullato
+Report;report information;informazioni
+Report;report restrictions;restrizioni report
+Report;Report result generated in '{0}';Il risultato del report è stato generato in '{0}'
+Report;report result panel;pannello risultati report
+Report;Restrictions;Restrizioni
+Report;second;secondo
+Report;seconds;secondi
+Report;Select all;Seleziona tutto
+Report;Show;Mostra
+Report;Show _MENU_ reports;Mostra il _MENU_ reports
+Report;Show _MENU_ rows;Mostra _MENU_ righe
+Report;Showing _START_ to _END_ of _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_
+Report;Showing 0 to 0 of 0;Mostra 0 a 0 di 0
+Report;Starting execution...;Esecuzione...
+Report;Starts with;Inizia con
+Report;Sum of;Somma di
+Report;Summary;
+Report;The report has been generated.;Il report è stato generato
+Report;This report has execution errors. Please check details in the Windows Event Viewer...;Questo report produce degli errori durante l'esecuzione. Per favore controllare i dettagli nella finestra relativa alla visualizzazione Evento
+Report;ThisMonth;QuestoMese
+Report;ThisWeek;QuestaSettimana
+Report;ThisYear;QuestoAnno
+Report;Today;Oggi
+Report;Total;Totale
+Report;Use the date format '{0}' or one of the following keywords:;Usa il formato data '{0}' in uno dei seguenti formati
+Report;View Excel Result;Vedi il risultato Excel
+Report;View HTML Result;Vedi il risulato HTML
+Report;View PDF Result;Vedi il risultato PDF
+Report;View Print Result;Vedi il risultato di stampa
+Report;View CSV Result;Vedi il risultato CSV
+Report;View report result file;Visualizza il file del risultato del report
+Report;Equals;
+Report;Is between;
+Report;Is different from;
+Report;Does not contain;
+Report;Is empty;
+Report;Is greater or equal than;
+Report;Is greater than;
+Report;Is not between;
+Report;Is not empty;
+Report;Is not Null;
+Report;Is Null;
+Report;Is smaller or equal than;
+Report;Is smaller than;
+Report;Auto Scroll enabled;
+Report;Export messages...;
+Web;Actions;
+Web;Aggregate;
+Web;BCC;
+Web;Body;
+Web;Cancel;Annulla
+Web;CC;
+Web;Chart axis;
+Web;Chart height;
+Web;Chart title;
+Web;Chart JS;
+Web;Chart NVD3;
+Web;Chart Plotly;
+Web;Chart width;
+Web;Close;Chiuso
+Web;Connection;
+Web;Copy;
+Web;Create new folder;
+Web;Cut;
+Web;Days;
+Web;Days of the week;
+Web;Default body;
+Web;Default sender address;
+Web;Default subject;
+Web;Delete;
+Web;Delete folder;
+Web;Description;
+Web;Device;
+Web;Disconnect;
+Web;Display options;
+Web;Elements;
+Web;End date;
+Web;End date is before start date;
+Web;Enter a password to protect the Zip file;
+Web;"Enter addresses separated by ;";
+Web;Enter password;
+Web;Enter the file name without extension;
+Web;Enter user name;
+Web;Enter your new file name;
+Web;Error;Errore
+Web;Error: This report name exists already.;
+Web;Execute;Esegui
+Web;Execute now;
+Web;Edition;
+Web;Execution;
+Web;File name;
+Web;Folder;Repertorio
+Web;Folders;
+Web;for a duration of;
+Web;Format;
+Web;From;
+Web;Grid mode;
+Web;Inconsistent duration or interval for the schedule. Check your entries.;
+Web;Invalid user name or password;
+Web;Is enabled;
+Web;Is required;
+Web;Is Multiline;
+Web;Last;Ultima
+Web;Last modification;Ultima modifica
+Web;Licensed to;
+Web;Login;Login
+Web;Logout;Uscita
+Web;Logout the user;Uscita utente
+Web;Manage folders;
+Web;Months;
+Web;Name;Nome
+Web;New;
+Web;New folder name;
+Web;No Email destination specified in the schedule;
+Web;No file name specified in the schedule;
+Web;OK;
+Web;Operator;
+Web;"Optional addresses separated by ;";
+Web;Optional title chart;
+Web;Options;
+Web;Output;
+Web;Password;Password
+Web;Paste;
+Web;Personal;
+Web;Pivot mode;
+Web;Please wait;Attendere prego
+Web;Profile;
+Web;Profile information;
+Web;Prompt;
+Web;Prompt at run-time;
+Web;Recur every;
+Web;Refresh;
+Web;Remove;
+Web;Remove all;
+Web;Rename;
+Web;Rename folder;
+Web;Repeat every;
+Web;Report;Report
+Web;Report name;Nome del report
+Web;Report title;
+Web;Report title if different from report name;
+Web;Reports;Reports
+Web;Result as body;
+Web;Save;Salva
+Web;Schedule;
+Web;Search;
+Web;Show totals;
+Web;Show sub-totals;
+Web;Sort;
+Web;Start date;
+Web;Subject;
+Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;
+Web;To;
+Web;Total aggr.;
+Web;Type;Tipo
+Web;User groups;Gruppi utenti
+Web;User name;Nome utente
+Web;Users;
+Web;Value;
+Web;Values;
+Web;Error: only files (and not reports) can be copied to this folder.;
+Web;Zip attachments;
+Web;Zip password;
+WebJS;Options;
+WebJS;No calculation option;
+WebJS;% of the row;
+WebJS;% of the column;
+WebJS;% of the total;
+WebJS;# of % selected;# selezionati su %
+WebJS;(filtered from _MAX_);(filtrato da _MAX_)
+WebJS;No Output;
+WebJS;No Schedule;
+WebJS;1 Decimal;
+WebJS;2 Decimals;
+WebJS;3 Decimals;
+WebJS;4 Decimals;
+WebJS;Percentage;
+WebJS;Percentage 1 Dec.;
+WebJS;Percentage 2 Dec.;
+WebJS;All selected;Seleziona tutto
+WebJS;Ascendant;
+WebJS;Automatic ascendant;
+WebJS;Automatic descendant;
+WebJS;Average;
+WebJS;Average of;
+WebJS;Axis;
+WebJS;Bar;
+WebJS;Contains;
+WebJS;Count;
+WebJS;Count of;
+WebJS;CSV;
+WebJS;Data tables responsive;
+WebJS;Daily;
+WebJS;day;
+WebJS;days;
+WebJS;Decimal;
+WebJS;Default;
+WebJS;Default report connection;
+WebJS;Default repository connection;
+WebJS;Descendant;
+WebJS;Do you really want to delete the reports or files selected ?;
+WebJS;Does not contain;
+WebJS;Drop your Column elements;
+WebJS;Drop your Data;
+WebJS;Drop your Data elements;
+WebJS;Drop your Elements;
+WebJS;Drop your Page elements;
+WebJS;Drop your Restrictions;
+WebJS;Drop your Row elements;
+WebJS;Edit report;
+WebJS;Email;
+WebJS;Ends with;
+WebJS;Equals;
+WebJS;Error;
+WebJS;Error : Unable to connect to the server;
+WebJS;Excel;
+WebJS;Filter;Filtro
+WebJS;Folder;Repertorio
+WebJS;For rows;
+WebJS;For columns;
+WebJS;For rows and columns;
+WebJS;For rows (total only);
+WebJS;For rows and columns (total only);
+WebJS;Force execution;
+WebJS;Use full screen width;
+WebJS;General;
+WebJS;General date long time;
+WebJS;General date short time;
+WebJS;Horizontal Bar;
+WebJS;hour;
+WebJS;hours;
+WebJS;HTML;
+WebJS;HTML Print;
+WebJS;Indefinitely;
+WebJS;Is between;
+WebJS;Is different from;
+WebJS;Is empty;
+WebJS;Is greater or equal than;
+WebJS;Is greater than;
+WebJS;Is not between;
+WebJS;Is not empty;
+WebJS;Is not Null;
+WebJS;Is Null;
+WebJS;Is smaller or equal than;
+WebJS;Is smaller than;
+WebJS;Line;
+WebJS;Long date;
+WebJS;Maximum;
+WebJS;Maximum of;
+WebJS;Minimum;
+WebJS;Minimum of;
+WebJS;minute;
+WebJS;minutes;
+WebJS;Modified;
+WebJS;Monthly;
+WebJS;New Output for;
+WebJS;New report;
+WebJS;New Schedule;
+WebJS;No;
+WebJS;No prompt;
+WebJS;No report;
+WebJS;No schedule;
+WebJS;No total;
+WebJS;No (axis values are linear);
+WebJS;None;
+WebJS;Not sorted;
+WebJS;Number;
+WebJS;Number 1 dec.;
+WebJS;Number 2 dec.;
+WebJS;Number 3 dec.;
+WebJS;Number 4 dec.;
+WebJS;One time;
+WebJS;Output;
+WebJS;PDF;
+WebJS;PDF Print;
+WebJS;Pie;
+WebJS;Please wait;Attendere prego
+WebJS;Please note that only schedules can be edited for this report.;
+WebJS;Scatter;
+WebJS;Polar Area;
+WebJS;Radar;
+WebJS;Private (The output cannot be executed by other users);
+WebJS;Private (The output cannot be edited by other users);
+WebJS;Prompt at execution;
+WebJS;Prompt only one value;
+WebJS;Public;
+WebJS;Remove;
+WebJS;Report has been modified, do you really want to close ?;
+WebJS;Report saved;
+WebJS;report(s) or file(s) cut in the clipboard;
+WebJS;report(s) or file(s) have been deleted;
+WebJS;report(s) or file(s) processed;
+WebJS;report(s) or files(s) copied in the clipboard;
+WebJS;Schedule;
+WebJS;Select all;Seleziona tutto
+WebJS;Server Version;
+WebJS;Short date;
+WebJS;Show _MENU_ reports;Mostra il _MENU_ reports
+WebJS;Show execution message panel;
+WebJS;Show information panel;
+WebJS;Show first header line;
+WebJS;Show report result panel;
+WebJS;Show restrictions panel;
+WebJS;Showing _START_ to _END_ of _TOTAL_;Mostra _START_ alla _END_ del _TOTAL_
+WebJS;Showing 0 to 0 of 0;Mostra 0 a 0 di 0
+WebJS;Splitter;
+WebJS;Stacked Area;
+WebJS;Starts with;
+WebJS;Sum;
+WebJS;The folder has been created;
+WebJS;The folder has been deleted;
+WebJS;The folder has been renamed;
+WebJS;The folder has been updated;
+WebJS;The report or file has been renamed;
+WebJS;Use data tables;
+WebJS;View;
+WebJS;Views and outputs;
+WebJS;Warning;
+WebJS;Web Interface Version;
+WebJS;Weekly;
+WebJS;weeks;
+WebJS;Yes;
+WebJS;Yes (the attachments are zipped);
+WebJS;Yes (the HTML result is the body);
+WebJS;Yes (a new line with sub-totals is added when the value changes);
+WebJS;Yes (element values are used for the axis);
+WebJS;No Sort;
+WebJS;By point ascending;
+WebJS;By axis label ascending;
+WebJS;By point descending;
+WebJS;By axis label descending;
+Web;Chart sort;
+WebJS;Show summary table;
+WebJS;Show page tables;
+WebJS;Show data tables;

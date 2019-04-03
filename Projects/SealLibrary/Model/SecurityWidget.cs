@@ -41,7 +41,7 @@ namespace Seal.Model
         }
 
         string _tag;
-        [Category("Definition"), DisplayName("Security Tag"), Description("The name of the security tag (must match with the tags defined in the widgets)."), Id(2,1)]
+        [Category("Definition"), DisplayName("Security Tag"), Description("The name of the security tag (optional, must match with the tags defined in the widget)."), Id(2,1)]
         public string Tag
         {
             get { return _tag; }
@@ -49,7 +49,7 @@ namespace Seal.Model
         }
 
         string _name;
-        [Category("Definition"), DisplayName("Name"), Description("The name of the widget (must match with name defined in the widgets)."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Name"), Description("The name of the widget (optional, must match with name defined in the widget)."), Id(3, 1)]
         public string Name
         {
             get { return _name; }

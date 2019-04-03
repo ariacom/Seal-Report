@@ -805,6 +805,7 @@ namespace SealWebServer.Controllers
                 string content = "";
                 var view = report.GetWidgetViewToParse(report.Views, widget.GUID);
                 var modelView = report.CurrentModelView;
+                var rootAutoRefresh = 0;
                 if (view != null)
                 {
                     //Init parmeters if the root view is different from the one executed...
@@ -813,7 +814,9 @@ namespace SealWebServer.Controllers
                     {
                         string templateErrors = "";
                         rootView.InitTemplates(rootView, ref templateErrors);
+                        rootAutoRefresh = rootView.GetNumericValue("refresh_rate");
                     }
+                    else rootAutoRefresh = report.ExecutionView.GetNumericValue("refresh_rate");
 
                     if (execution != null)
                     {
@@ -853,12 +856,14 @@ namespace SealWebServer.Controllers
 
                 var result = new
                 {
+                    dashboardguid = guid,
                     itemguid = itemguid,
                     path = widget.Exec ? widget.ReportPath : "",
-                    lastexec = Translate("Last execution at") + " " +  report.ExecutionEndDate.ToString("G", Repository.CultureInfo),
+                    lastexec = Translate("Last execution at") + " " + report.ExecutionEndDate.ToString("G", Repository.CultureInfo),
                     description = widget.Description,
                     dynamic = item.Dynamic,
-                    content = content
+                    content = content,
+                    refresh = (item.Refresh == -1 ? rootAutoRefresh : item.Refresh)
                 };
 
                 return Json(result);

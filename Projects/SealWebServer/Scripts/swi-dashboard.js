@@ -41,6 +41,7 @@ var SWIDashboard = (function () {
         this._gridOrders = [];
         this._grids = [];
         this._gridsById = [];
+        this._refreshTimers = [];
     }
     SWIDashboard.prototype.reorderItems = function (init) {
         if (!_da || !_da._dashboard)
@@ -120,6 +121,15 @@ var SWIDashboard = (function () {
         panelHeader.children(".fa-spinner").hide();
         //Refresh button
         $("#rb" + data.itemguid).attr("title", data.lastexec);
+        //Auto-refresh
+        if (data.refresh > 0)
+            _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false); }, 1000 * data.refresh);
+    };
+    SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force) {
+        clearTimeout(_da._refreshTimers[itemguid]);
+        _gateway.GetDashboardResult(guid, itemguid, force, function (data) {
+            _da.handleDashboardResult(data);
+        });
     };
     SWIDashboard.prototype.initDashboardItems = function (guid) {
         var dashboard = _da._dashboards[guid];
@@ -170,7 +180,9 @@ var SWIDashboard = (function () {
                     currentGroup = item.GroupName;
                 }
                 //Dashboard item
-                var panel = $("<div class='item panel panel-" + item.Color + "' id='" + item.GUID + "'>");
+                var panel = $("<div class='item panel panel-" + item.Color + "'>");
+                panel.attr("id", item.GUID);
+                panel.attr("did", dashboard.GUID);
                 var panelHeader = $("<div class='panel-heading text-left' style='padding-right:2px;'>");
                 panel.append(panelHeader);
                 panelHeader.append($("<span class='glyphicon glyphicon-" + item.Icon + "'>"));
@@ -181,7 +193,6 @@ var SWIDashboard = (function () {
                 var refreshButton = $("<button class='btn btn-sm btn-info' type='button' style='margin-left:2px;margin-right:0px;padding:0px 6px;'><span class='glyphicon glyphicon-refresh'></span></button>");
                 var panelButtons = $("<div style='display:none;float:right;'>");
                 refreshButton.attr("id", "rb" + item.GUID);
-                refreshButton.attr("title", "Refresh widget data");
                 panelButtons.append(refreshButton);
                 if (hasEditor && dashboard.Editable) {
                     var buttons = _daEditor.getEditButtons();
@@ -193,11 +204,8 @@ var SWIDashboard = (function () {
                 var panelBody = $("<div class='panel-body text-center'>");
                 panel.append(panelBody);
                 panelBody.append($("<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>"));
-                panelBody.append($("<h4 style='display:inline'></h4>").text(SWIUtil.tr("Processing...")));
-                _gateway.GetDashboardResult(guid, item.GUID, false, function (data) {
-                    _da.handleDashboardResult(data);
-                });
-                var guid2 = dashboard.GUID;
+                panelBody.append($("<h4 style='display:inline'></h4>").text(SWIUtil.tr("Processing") + "..."));
+                _da.refreshDashboardItem(guid, item.GUID, false);
                 //Size
                 panel.width(Math.floor(item.Width * WidgetWidthUnit));
                 panel.height(Math.floor(item.Height * WidgetHeightUnit));
@@ -219,12 +227,11 @@ var SWIDashboard = (function () {
                 });
                 //Refresh item
                 refreshButton.unbind('click').on("click", function (e) {
+                    var dashboardGuid = $(this).closest('.panel').attr('did');
                     var itemGuid = $(this).closest('.panel').attr('id');
                     var panelHeading = $(this).closest('.panel-heading');
                     panelHeading.children(".fa-spinner").show();
-                    _gateway.GetDashboardResult(guid2, itemGuid, true, function (data) {
-                        _da.handleDashboardResult(data);
-                    });
+                    _da.refreshDashboardItem(dashboardGuid, itemGuid, true);
                 });
                 grid.append(panel);
             } //for
@@ -240,7 +247,6 @@ var SWIDashboard = (function () {
             _da._lastGUID = _main._profile.dashboard;
         if (_daEditor)
             _daEditor.init();
-        //    $waitDialog.modal();
         _gateway.GetUserDashboards(function (data) {
             _da._dashboards = [];
             $("#menu-dashboard").empty();
@@ -262,7 +268,7 @@ var SWIDashboard = (function () {
                 var menu = $("<a data-toggle='pill' href='#" + dashboard.GUID + "' did='" + dashboard.GUID + "'>");
                 if (dashboard.IsPersonal)
                     menu.addClass("dashboard-personal");
-                menu.text(dashboard.Name);
+                menu.text(dashboard.DisplayName);
                 var li = $("<li>");
                 //Drag and drop for menu
                 li.on("dragstart", function (e) {
@@ -364,7 +370,6 @@ var SWIDashboard = (function () {
             _da.enableControls();
         });
         _da.enableControls();
-        //    $waitDialog.modal('hide');
     };
     return SWIDashboard;
 }());
