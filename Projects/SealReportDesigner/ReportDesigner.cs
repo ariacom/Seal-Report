@@ -157,6 +157,11 @@ namespace Seal
             }
         }
 
+        public void RefreshModelTreeView()
+        {
+            modelPanel.ReinitSource();
+        }
+
         #endregion
 
         #region Helpers
@@ -203,7 +208,7 @@ namespace Seal
                 mainTreeView.Nodes.Add(modelTN);
                 foreach (var model in _report.Models)
                 {
-                    TreeNode tn = new TreeNode(model.Name) { Tag = model, ImageIndex = 10, SelectedImageIndex = 10 };
+                    TreeNode tn = new TreeNode(model.Name) { Tag = model, ImageIndex = model.IsSQLModel ? 15 : 10, SelectedImageIndex = model.IsSQLModel ? 15 : 10 };
                     tn.Tag = model;
                     modelTN.Nodes.Add(tn);
                 }
@@ -863,11 +868,23 @@ namespace Seal
 
                 addRemoveItem("Remove Schedules...");
             }
+            else if (entity is ModelFolder)
+            {
+                addAddItem("Add a MetaData Model", 1);
+                addAddItem("Add a SQL Model", 2);
+                addRemoveItem("Remove Models...");
+            }
             else if (entity is ReportModel)
             {
                 addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                 addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                 addSmartCopyItem("Smart copy...", entity);
+
+                if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                ToolStripMenuItem ts = new ToolStripMenuItem();
+                ts.Click += new System.EventHandler(convertModel);
+                ts.Text = ((ReportModel) entity).IsSQLModel ? "Convert SQL Model to a MetaData Model" : "Convert MetaData Model to a SQL Model";
+                treeContextMenuStrip.Items.Add(ts);
             }
             else if (entity is ReportTask)
             {
@@ -929,7 +946,7 @@ namespace Seal
             }
             else if (selectedEntity is ModelFolder)
             {
-                newEntity = _report.AddModel();
+                newEntity = _report.AddModel((int)((ToolStripMenuItem)sender).Tag == 2); //1 Meta Model, 2 SQL Model
             }
             else if (selectedEntity is ViewFolder)
             {
@@ -979,6 +996,54 @@ namespace Seal
             {
                 Cursor.Current = Cursors.Default;
             }
+        }
+
+        private void convertModel(object sender, EventArgs e)
+        {
+            var model = selectedEntity as ReportModel;
+
+            if (model.IsSQLModel)
+            {
+                var alias = model.Table.Alias;
+                foreach (var col in model.Table.Columns) col.Name = model.Table.Alias + "." + col.Name;
+                model.Source.MetaData.Tables.Add(model.Table);
+                model.Table = null;
+                MessageBox.Show(string.Format("A table named '{0}' has been created in the Data Source '{1}'.\r\nThe model is now a MetaData model.", alias, model.Source.Name), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                //Set column names
+                foreach (var el in model.Elements) el.SQLColumnName = el.MetaColumn.Name.Replace(el.MetaColumn.MetaTable.AliasName + ".", "");
+                foreach (var re in model.Restrictions) re.SQLColumnName = re.MetaColumn.Name.Replace(re.MetaColumn.MetaTable.AliasName + ".", "");
+                foreach (var re in model.AggregateRestrictions) re.SQLColumnName = re.MetaColumn.Name.Replace(re.MetaColumn.MetaTable.AliasName + ".", "");
+
+                model.BuildSQL(true);
+                model.Table = MetaTable.Create();
+                model.Table.DynamicColumns = true;
+                model.Table.Sql = model.Sql;
+                model.RefreshMetaTable(false);
+
+                //Set new metacolumn GUID
+                foreach (var el in model.Elements)
+                {
+                    var col = model.Table.Columns.FirstOrDefault(i => i.Name == el.SQLColumnName);
+                    if (col != null) el.MetaColumnGUID = col.GUID;
+                }
+                foreach (var re in model.Restrictions)
+                {
+                    var col = model.Table.Columns.FirstOrDefault(i => i.Name == re.SQLColumnName);
+                    if (col != null) re.MetaColumnGUID = col.GUID;
+                }
+                foreach (var re in model.AggregateRestrictions)
+                {
+                    var col = model.Table.Columns.FirstOrDefault(i => i.Name == re.SQLColumnName);
+                    if (col != null) re.MetaColumnGUID = col.GUID;
+                }
+
+                MessageBox.Show("The model is now a SQL model having the original SQL generated.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            SetModified();
+            init(model);
         }
 
         private void convertReportSourceAsRepositorySource(object sender, EventArgs e)
@@ -1267,7 +1332,7 @@ namespace Seal
                 if (MessageBox.Show("This report has no Model and cannot be executed. Do you want to create a Model now ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     IsModified = true;
-                    init(_report.AddModel());
+                    init(_report.AddModel(false));
                 }
                 return;
             }
@@ -1452,7 +1517,7 @@ namespace Seal
             }
             else if (selectedEntity is ReportModel)
             {
-                if (((ReportModel)selectedEntity).Elements.Count >0) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
+                if (((ReportModel)selectedEntity).Elements.Count > 0 || ((ReportModel)selectedEntity).IsSQLModel) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
             }
             else if (selectedEntity is ReportView)
             {

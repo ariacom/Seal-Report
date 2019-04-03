@@ -57,21 +57,22 @@ namespace Seal.Model
                 }
                 GetProperty("ShowFirstLine").SetIsBrowsable(true);
 
+
                 GetProperty("SqlSelect").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlFrom").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlGroupBy").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlOrderBy").SetIsBrowsable(!Source.IsNoSQL);
-                GetProperty("SqlEditor").SetIsBrowsable(!Source.IsNoSQL);
 
                 GetProperty("PreSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PostSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!Source.IsNoSQL);
-                GetProperty("BuildTimeout").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("BuildTimeout").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
 
-                GetProperty("ForceJoinTableGUID").SetIsBrowsable(!Source.IsNoSQL);
-                GetProperty("AvoidJoinTableGUID").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("KeepColNames").SetIsBrowsable(IsSQLModel);
+                GetProperty("UseRawSQL").SetIsBrowsable(IsSQLModel);
 
-                GetProperty("SqlEditor").SetIsReadOnly(true);
+                GetProperty("ForceJoinTableGUID").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
+                GetProperty("AvoidJoinTableGUID").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -166,17 +167,27 @@ namespace Seal.Model
             set { _showFirstLine = value; }
         }
 
-        [XmlIgnore]
-        [Category("SQL"), DisplayName("SQL Statement"), Description("The Select SQL Statement sent to the server to generate the main Result Data Table."), Id(2, 2)]
-        [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        public string SqlEditor
+        [Category("SQL Model Options"), DisplayName("Keep column names"), Description("If true, the column names of the source a kept when building the metadata columns."), Id(1, 2)]
+        [DefaultValue(false)]
+        public bool KeepColNames
         {
-            get { return "<Expand to view SQL>"; }
-            set { _sql = value; }
+            get { return Table != null ? Table.KeepColumnNames : false; }
+            set { if (Table != null) Table.KeepColumnNames = value; }
         }
+        public bool ShouldSerializeKeepColNames() { return IsSQLModel; }
+
+        bool _useRawSQL = false;
+        [Category("SQL Model Options"), DisplayName("Use raw source SQL"), Description("If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied"), Id(2, 2)]
+        [DefaultValue(false)]
+        public bool UseRawSQL
+        {
+            get { return _useRawSQL; }
+            set { _useRawSQL = value; }
+        }
+        public bool ShouldSerializeUseRawSQL() { return IsSQLModel; }
 
         string _sqlSelect;
-        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement."), Id(3, 2)]
+        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement."), Id(3, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string SqlSelect
@@ -186,7 +197,7 @@ namespace Seal.Model
         }
 
         string _sqlFrom;
-        [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrite the FROM clause in the generated SQL statement."), Id(4, 2)]
+        [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrite the FROM clause in the generated SQL statement."), Id(4, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string SqlFrom
@@ -196,7 +207,7 @@ namespace Seal.Model
         }
 
         string _sqlGroupBy;
-        [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrite the GROUP BY clause in the generated SQL statement."), Id(5, 2)]
+        [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrite the GROUP BY clause in the generated SQL statement."), Id(5, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string SqlGroupBy
@@ -207,7 +218,7 @@ namespace Seal.Model
 
         string _sqlOrderBy;
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrite the ORDER BY clause in the generated SQL statement."), Id(6, 2)]
+        [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrite the ORDER BY clause in the generated SQL statement."), Id(6, 3)]
         [DefaultValue("")]
         public string SqlOrderBy
         {
@@ -216,7 +227,7 @@ namespace Seal.Model
         }
 
         string _preSQL;
-        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(7, 2)]
+        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(7, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string PreSQL
@@ -226,7 +237,7 @@ namespace Seal.Model
         }
 
         string _postSQL;
-        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(8, 2)]
+        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(8, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string PostSQL
@@ -236,7 +247,7 @@ namespace Seal.Model
         }
 
         bool _ignorePrePostError = false;
-        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(9, 2)]
+        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(9, 3)]
         [DefaultValue(false)]
         public bool IgnorePrePostError
         {
@@ -246,7 +257,7 @@ namespace Seal.Model
 
         int _buildTimout = 4000;
         [DefaultValue(4000)]
-        [Category("SQL"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)."), Id(10, 2)]
+        [Category("SQL"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)."), Id(10, 3)]
         public int BuildTimeout
         {
             get { return _buildTimout; }
@@ -254,7 +265,7 @@ namespace Seal.Model
         }
 
         private string _forceJoinTableGUID;
-        [Category("Join Preferences"), DisplayName("Join table to use"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to use the table specified."), Id(2, 3)]
+        [Category("Join Preferences"), DisplayName("Join table to use"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to use the table specified."), Id(2, 4)]
         [TypeConverter(typeof(SourceTableConverter))]
         public string ForceJoinTableGUID
         {
@@ -269,7 +280,7 @@ namespace Seal.Model
         }
 
         private string _avoidTableGUID;
-        [Category("Join Preferences"), DisplayName("Join table to avoid"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to avoid the table specified."), Id(3, 3)]
+        [Category("Join Preferences"), DisplayName("Join table to avoid"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to avoid the table specified."), Id(3, 4)]
         [TypeConverter(typeof(SourceTableConverter))]
         public string AvoidJoinTableGUID
         {
@@ -446,6 +457,46 @@ namespace Seal.Model
         }
         public bool ShouldSerializeAggregateRestrictions() { return _aggregateRestrictions.Count > 0; }
 
+        //SQL Model
+        private MetaTable _table = null;
+        [Browsable(false)]
+        public MetaTable Table
+        {
+            get { return _table; }
+            set { _table = value; }
+        }
+        public bool ShouldSerializeTable() { return IsSQLModel; }
+
+        public void RefreshMetaTable(bool init)
+        {
+            if (_table == null)
+            {
+                _table = MetaTable.Create();
+                _table.DynamicColumns = true;
+            }
+
+            if (string.IsNullOrEmpty(_table.Alias)) _table.Alias = Helper.CleanFileName(Name).Replace(" ", "").Replace("%", "").Replace("[", "").Replace("]", "").Replace("&", "");
+
+            _table.Source = Source;
+            if (!string.IsNullOrEmpty(_table.Sql))
+            {
+                _table.IsForSQLModel = true;
+                _table.Refresh();
+
+                foreach (var col in _table.Columns)
+                {
+                    col.Category = Name;
+                    col.DisplayName = (Table.KeepColumnNames ? col.Name.Trim() : Helper.DBNameToDisplayName(col.Name.Trim()));
+                }
+                if (init) InitReferences();
+            }
+        }
+
+        public bool IsSQLModel
+        {
+            get { return _table != null; }
+        }
+
 
         //Execution
         private string _sql;
@@ -455,6 +506,7 @@ namespace Seal.Model
             get { return _sql; }
             set { _sql = value; }
         }
+        public bool ShouldSerializeSql() { return IsSQLModel; }
 
         List<MetaTable> _fromTables;
         [XmlIgnore]
@@ -718,6 +770,16 @@ namespace Seal.Model
                 restriction.Model = this;
             }
 
+            if (Table != null)
+            {
+                Table.Source = Source;
+                foreach (var column in Table.Columns)
+                {
+                    column.Source = Source;
+                    column.MetaTable = Table;
+                }
+            }
+
             //clean up lost elements...
             ClearLostElements();
 
@@ -761,7 +823,7 @@ namespace Seal.Model
         public void SetColumnsName()
         {
             int colIndex = 0;
-            foreach (ReportElement element in Elements) element.SQLColumnName = Source.IsNoSQL ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
+            foreach (ReportElement element in Elements) element.SQLColumnName = (Source.IsNoSQL || IsSQLModel) ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
         }
 
         void AddSubReportsElements()
@@ -791,16 +853,22 @@ namespace Seal.Model
         }
 
         DateTime _buildTimer;
-        public void BuildSQL()
+        public void BuildSQL(bool forConversion = false)
         {
             try
             {
-                _sql = "";
                 ExecutionError = "";
+                _sql = "";
+
+                if (IsSQLModel && UseRawSQL)
+                {
+                    _sql = Table.Sql;
+                    return;
+                }
 
                 if (Source.MetaData == null) return;
 
-                AddSubReportsElements();
+                if (!forConversion) AddSubReportsElements();
 
                 InitReferences();
 
@@ -837,7 +905,7 @@ namespace Seal.Model
                     List<MetaJoin> joins = new List<MetaJoin>();
                     List<string> selectColumns = new List<string>();
                     List<string> groupByColumns = new List<string>();
-                    SetColumnsName();
+                    if (!forConversion) SetColumnsName();
                     foreach (ReportElement element in Elements)
                     {
                         string sqlColumn = element.SQLColumn + " AS " + element.SQLColumnName;
@@ -1071,7 +1139,7 @@ namespace Seal.Model
                     if (execWhereClause.Length > 0) _sql += string.Format("WHERE {0}\r\n", execWhereClause);
                     if (execGroupByClause.Length > 0 || !string.IsNullOrEmpty(SqlGroupBy)) _sql += (!string.IsNullOrEmpty(SqlGroupBy) ? SqlGroupBy : string.Format("GROUP BY {0}", execGroupByClause)) + "\r\n";
                     if (execHavingClause.Length > 0) _sql += string.Format("HAVING {0}\r\n", execHavingClause);
-                    if (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy)) _sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
+                    if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) _sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
                 }
             }
             catch (TemplateCompilationException ex)
@@ -1247,6 +1315,8 @@ namespace Seal.Model
         }
         void executePrePostStatements(bool isPre)
         {
+            if (_fromTables == null) return;
+
             foreach (var table in _fromTables)
             {
                 executePrePostStatement(isPre ? table.PreSQL : table.PostSQL, isPre ? "Pre" : "Post", table.Name, table.IgnorePrePostError, table);

@@ -70,13 +70,7 @@ namespace Seal.Forms
                         throw new Exception("Error building the SQL Statement...\r\nPlease fix these errors first.\r\n" + model.ExecutionError); 
                     } 
 
-                    if (context.PropertyDescriptor.Name == "SqlEditor")
-                    {
-                        frm.clearToolStripButton.Visible = false;
-                        frm.sqlTextBox.Text = model.Sql;
-                        frm.sqlTextBox.ReadOnly = true;
-                    }
-                    else if (context.PropertyDescriptor.Name == "PreSQL" || context.PropertyDescriptor.Name == "PostSQL")
+                    if (context.PropertyDescriptor.Name == "PreSQL" || context.PropertyDescriptor.Name == "PostSQL")
                     {
                         template = razorModelTemplate; 
                         frm.clearToolStripButton.Visible = false;

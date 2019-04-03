@@ -348,6 +348,10 @@ namespace Seal.Model
                 }
                 return _metaTable;
             }
+            set
+            {
+                _metaTable = value;
+            }
         }
 
 

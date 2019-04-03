@@ -484,8 +484,8 @@ namespace Seal.Forms
             string entityName = null, copyEntityName = null;
             object entity = mainTreeView.SelectedNode.Tag;
             MetaSource metaSource = null;
-            if (entity is ModelFolder) entityName = "Model";
-            else if (entity is ConnectionFolder) entityName = "Connection";
+
+            if (entity is ConnectionFolder) entityName = "Connection";
             else if (entity is TableFolder)
             {
                 entityName = "Table";

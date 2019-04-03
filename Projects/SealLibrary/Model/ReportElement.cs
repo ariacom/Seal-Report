@@ -496,11 +496,16 @@ namespace Seal.Model
         {
             get
             {
-                if (_metaColumn == null)
+                if (_metaColumn == null && !string.IsNullOrEmpty(_metaColumnGUID))
                 {
-                    if (!string.IsNullOrEmpty(_metaColumnGUID) && Source != null && Source.MetaData != null) _metaColumn = Source.MetaData.GetColumnFromGUID(MetaColumnGUID);
+                    if (Model != null && Model.IsSQLModel && Model.Table != null) _metaColumn = Model.Table.Columns.FirstOrDefault(i => i.GUID == MetaColumnGUID);
+                    else if (Source != null && Source.MetaData != null) _metaColumn = Source.MetaData.GetColumnFromGUID(MetaColumnGUID);
                 }
                 return _metaColumn;
+            }
+            set
+            {
+                _metaColumn = value;
             }
         }
 
@@ -590,7 +595,7 @@ namespace Seal.Model
         [XmlIgnore, Browsable(false)]
         public string SQLColumnName
         {
-            get { return _SQLColumnName; }
+            get { return string.IsNullOrEmpty(_SQLColumnName) ? MetaColumn.Name : _SQLColumnName; }
             set { _SQLColumnName = value; }
         }
 
