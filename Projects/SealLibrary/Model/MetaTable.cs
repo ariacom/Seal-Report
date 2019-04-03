@@ -140,7 +140,7 @@ namespace Seal.Model
 
         bool _keepColumnNames = false;
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Keep Column Names"), Description("If true, column names are kept when generated from the database catalog."), Id(7, 1)]
+        [Category("Definition"), DisplayName("Keep Column Names"), Description("If true, the display names of the columns are kept when generated from the source SQL."), Id(7, 1)]
         public bool KeepColumnNames
         {
             get { return _keepColumnNames; }
@@ -225,22 +225,9 @@ namespace Seal.Model
             {
                 if (!string.IsNullOrEmpty(Sql))
                 {
-                    return string.Format("({0}) {1}", Sql, SQLName);
+                    return string.Format("({0}) {1}", Sql, AliasName);
                 }
-                return SQLName;
-            }
-        }
-
-        [XmlIgnore]
-        public string SQLName
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(_alias))
-                {
-                    return string.Format("{0} {1}", _name, _alias).Trim();
-                }
-                return string.Format("{0}", _name);
+                return AliasName;
             }
         }
 
@@ -271,6 +258,9 @@ namespace Seal.Model
         {
             get { return !_source.IsNoSQL; }
         }
+
+        [XmlIgnore]
+        public bool IsForSQLModel = false;
 
         protected MetaSource _source;
         [XmlIgnore, Browsable(false)]
@@ -324,11 +314,12 @@ namespace Seal.Model
                 _information = "";
                 _error = "";
                 MustRefresh = true;
-                DataTable defTable = GetDefinitionTable(string.Format("SELECT * FROM {0} WHERE 1=0", FullSQLName));
+                //Build table def from SQL or table name
+                DataTable defTable = GetDefinitionTable(IsForSQLModel ? Sql : string.Format("SELECT * FROM {0} WHERE 1=0", FullSQLName));
 
                 foreach (DataColumn column in defTable.Columns)
                 {
-                    string fullColumnName = (IsSQL ? Source.GetTableName(AliasName) + "." : "") + Source.GetColumnName(column.ColumnName);
+                    string fullColumnName = (IsSQL && !IsForSQLModel ? Source.GetTableName(AliasName) + "." : "") + Source.GetColumnName(column.ColumnName);
                     MetaColumn newColumn = Columns.FirstOrDefault(i => i.Name == fullColumnName);
                     ColumnType type = Helper.NetTypeConverter(column.DataType);
                     if (newColumn == null)
@@ -350,8 +341,8 @@ namespace Seal.Model
                     }
                 }
 
-                //Clear columns for No SQL
-                if (!IsSQL)
+                //Clear columns for No SQL or SQL Model
+                if (!IsSQL || IsForSQLModel)
                 {                    
                     Columns.RemoveAll(i => !defTable.Columns.Contains(i.Name));
                 }

@@ -200,6 +200,7 @@ namespace Seal.Controls
             element.Format = column.Format;
             element.Model = Model;
             element.MetaColumnGUID = column.GUID;
+            element.MetaColumn = column;
             element.Name = column.Name;
             element.PivotPosition = panel.Position;
             element.SetDefaults();
@@ -403,9 +404,17 @@ namespace Seal.Controls
 
         void initTreeView()
         {
-            TreeViewHelper.InitCategoryTreeNode(elementTreeView.Nodes, Model.Source.MetaData.Tables);
+            var tableList = Model.Source.MetaData.Tables;
+            if (Model.IsSQLModel)
+            {
+                tableList = new List<MetaTable>();
+                tableList.Add(Model.Table);
+            }
+
+            TreeViewHelper.InitCategoryTreeNode(elementTreeView.Nodes, tableList);
             elementTreeView.TreeViewNodeSorter = new NodeSorter(); 
             elementTreeView.Sort();
+            if (Model.IsSQLModel) elementTreeView.ExpandAll();
         }
 
         private void elementTreeView_ItemDrag(object sender, ItemDragEventArgs e)
@@ -510,6 +519,15 @@ namespace Seal.Controls
             {
                 e.Effect = DragDropEffects.Move;
             }
+        }
+
+        public void ReinitSource()
+        {
+            initNoSQL();
+            initTreeView();
+            restrictionsPanel.ModelToRestrictionText();
+            aggregateRestrictionsPanel.ModelToRestrictionText();
+            ElementsToPanels();
         }
 
         void Grid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)

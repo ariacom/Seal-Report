@@ -781,7 +781,7 @@ namespace Seal.Model
             }
 
             //and a first model
-            if (result.Models.Count == 0) result.AddModel();
+            if (result.Models.Count == 0) result.AddModel(false);
             //Add default views
             ReportView defaultView = result.AddModelHTMLView();
             if (defaultView == null) throw new Exception(string.Format("Unable to find any view in your repository. Check that your repository folder '{0}' contains all the default sub-folders and files...", repository.RepositoryPath));
@@ -947,11 +947,16 @@ namespace Seal.Model
             Sources.Remove(source);
         }
 
-        public ReportModel AddModel()
+        public ReportModel AddModel(bool sqlModel)
         {
             if (Sources.Count == 0) throw new Exception("Unable to create a model: No source available.\r\nPlease create a source first.");
             ReportModel result = ReportModel.Create();
             result.Name = Helper.GetUniqueName("model", (from i in Models select i.Name).ToList());
+            if (sqlModel)
+            {
+                result.Table = MetaTable.Create();
+                result.Table.DynamicColumns = true;
+            }
             ReportSource source = Sources.FirstOrDefault(i => i.IsDefault);
             if (source == null) source = Sources[0];
             result.SourceGUID = source.GUID;

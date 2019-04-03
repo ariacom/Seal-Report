@@ -326,6 +326,7 @@ namespace Seal.Controls
                 restriction.Source = ModelPanel.Model.Source;
                 restriction.Model = ModelPanel.Model;
                 restriction.MetaColumnGUID = column.GUID;
+                restriction.MetaColumn = column;
                 restriction.Name = column.Name;
                 //Set PivotPos for aggregate restrictions
                 restriction.PivotPosition = IsAggregate ? PivotPosition.Data : PivotPosition.Row;

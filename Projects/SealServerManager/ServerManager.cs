@@ -207,6 +207,10 @@ namespace Seal
         {
         }
 
+        public void RefreshModelTreeView()
+        {
+        }
+
         #endregion
 
         #region Helpers

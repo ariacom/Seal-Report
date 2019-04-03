@@ -516,6 +516,7 @@
             this.mainImageList.Images.SetKeyName(12, "task.png");
             this.mainImageList.Images.SetKeyName(13, "nosql.png");
             this.mainImageList.Images.SetKeyName(14, "task2.png");
+            this.mainImageList.Images.SetKeyName(15, "modelSQL.png");
             // 
             // mainPropertyGrid
             // 

@@ -82,10 +82,19 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is ReportModel)
             {
-                if (!((ReportModel)SelectedEntity).Source.IsNoSQL)
+                var model = (ReportModel)SelectedEntity;
+
+                if (!model.Source.IsNoSQL)
                 {
                     AddHelperButton("View and Check SQL", "View and check the SQL generated for the model", Keys.F8);
-                    AddHelperButton("View SQL", "View the SQL generated for the model", Keys.F7);
+                    if (!model.IsSQLModel)
+                    {
+                        AddHelperButton("View SQL", "View the SQL generated for the model", Keys.F7);
+                    }
+                    else
+                    {
+                        AddHelperButton("Edit SQL", "Edit the source SQL used for the model", Keys.F7);
+                    }
                 }
             }
             else if (SelectedEntity is ReportView)
@@ -215,26 +224,44 @@ namespace Seal.Forms
                             frm.PropertyName = "";
 
                             ReportModel model = SelectedEntity as ReportModel;
-                            model.Report.CheckingExecution = true;
-                            try
+                            if (model.IsSQLModel && key == Keys.F7)
                             {
-                                model.BuildSQL();
-                                frm.SqlToCheck = model.Sql;
-                                model.Report.CheckingExecution = false;
-                                model.BuildSQL();
+                                frm.WarningOnError = true;
+                                frm.sqlTextBox.Text = model.Table.Sql;
+                                if (frm.ShowDialog() == DialogResult.OK)
+                                {
+                                    model.Table.Sql = frm.sqlTextBox.Text;
+                                    model.RefreshMetaTable(true);
+                                    if (EntityHandler != null)
+                                    {
+                                        EntityHandler.SetModified();
+                                        EntityHandler.RefreshModelTreeView();
+                                    }
+                                }
                             }
-                            finally
+                            else
                             {
-                                model.Report.CheckingExecution = false;
+                                model.Report.CheckingExecution = true;
+                                try
+                                {
+                                    model.BuildSQL();
+                                    frm.SqlToCheck = model.Sql;
+                                    model.Report.CheckingExecution = false;
+                                    model.BuildSQL();
+                                }
+                                finally
+                                {
+                                    model.Report.CheckingExecution = false;
+                                }
+                                if (!string.IsNullOrEmpty(model.ExecutionError))
+                                {
+                                    throw new Exception("Error building the SQL Statement...\r\nPlease fix these errors first.\r\n" + model.ExecutionError);
+                                }
+                                frm.sqlTextBox.Text = model.Sql;
+                                frm.SetReadOnly();
+                                if (key == Keys.F8) frm.checkSQL();
+                                frm.ShowDialog();
                             }
-                            if (!string.IsNullOrEmpty(model.ExecutionError))
-                            {
-                                throw new Exception("Error building the SQL Statement...\r\nPlease fix these errors first.\r\n" + model.ExecutionError);
-                            }
-                            frm.sqlTextBox.Text = model.Sql;
-                            frm.SetReadOnly();
-                            if (key == Keys.F8) frm.checkSQL();
-                            frm.ShowDialog();
                         }
                     }
                     else if (SelectedEntity is ReportView)

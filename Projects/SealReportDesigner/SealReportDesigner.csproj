@@ -199,6 +199,7 @@
     <Content Include="Resources\label.png" />
     <Content Include="Resources\login.png" />
     <Content Include="Resources\model.png" />
+    <None Include="Resources\modelSQL.png" />
     <Content Include="Resources\new.png" />
     <None Include="Resources\nosql.png" />
     <Content Include="Resources\notepad.png" />
