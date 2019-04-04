@@ -780,12 +780,20 @@ namespace Seal.Model
                 if (source.IsNoSQL && source.MetaData.Tables.Count > 1) source.MetaData.Tables.RemoveAll(i => i.IsEditable);
             }
 
-            //and a first model
-            if (result.Models.Count == 0) result.AddModel(false);
+            //and a 2 models
+            if (result.Models.Count == 0)
+            {
+                result.AddModel(false);
+                var model = result.AddModel(true);
+                model.Name = "SQL model";
+            }
             //Add default views
-            ReportView defaultView = result.AddModelHTMLView();
-            if (defaultView == null) throw new Exception(string.Format("Unable to find any view in your repository. Check that your repository folder '{0}' contains all the default sub-folders and files...", repository.RepositoryPath));
-            result.ViewGUID = defaultView.GUID;
+            ReportView view = result.AddModelHTMLView();
+            if (view == null) throw new Exception(string.Format("Unable to find any view in your repository. Check that your repository folder '{0}' contains all the default sub-folders and files...", repository.RepositoryPath));
+            result.ViewGUID = view.GUID;
+
+            view = result.AddModelHTMLView();
+            view.Name = "SQL view";
 
             //Creation script
             if (!string.IsNullOrEmpty(repository.Configuration.ReportCreationScript))
@@ -1239,7 +1247,7 @@ namespace Seal.Model
                     {
                         foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None))
                         {
-                            if (!_executionCommonRestrictions.Exists(i => i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl))
+                            if (!_executionCommonRestrictions.Exists(i => (i.IsSharedRestriction && i.Name == restriction.Name) || (!i.IsSharedRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl)))
                             {
                                 restriction.HtmlIndex = index.ToString();
                                 _executionCommonRestrictions.Add(restriction);
@@ -1253,8 +1261,7 @@ namespace Seal.Model
                     {
                         foreach (ReportRestriction restriction in _executionCommonRestrictions)
                         {
-
-                            ReportRestriction modelRestriction = model.Restrictions.FirstOrDefault(i => i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl);
+                            ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.SharedRestrictions).FirstOrDefault(i => (i.IsSharedRestriction && i.Name == restriction.Name) || (!i.IsSharedRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl));
                             if (modelRestriction != null) modelRestriction.HtmlIndex = restriction.HtmlIndex;
                         }
                     }
@@ -1277,6 +1284,7 @@ namespace Seal.Model
                 {
                     foreach (ReportRestriction restriction in model.Restrictions) result.Add(restriction);
                     foreach (ReportRestriction restriction in model.AggregateRestrictions) result.Add(restriction);
+                    foreach (ReportRestriction restriction in model.SharedRestrictions) result.Add(restriction);
                 }
                 return result;
             }
@@ -1290,8 +1298,7 @@ namespace Seal.Model
                 List<ReportRestriction> result = new List<ReportRestriction>();
                 foreach (ReportModel model in ExecutionModels)
                 {
-                    foreach (ReportRestriction restriction in model.ExecutionRestrictions) result.Add(restriction);
-                    foreach (ReportRestriction restriction in model.ExecutionAggregateRestrictions) result.Add(restriction);
+                    result.AddRange(model.ExecutionRestrictions.Union(model.ExecutionAggregateRestrictions).Union(model.ExecutionSharedRestrictions));
                 }
                 return result;
             }
@@ -1604,6 +1611,7 @@ namespace Seal.Model
 
         public string TranslateElement(ReportElement element, string reference)
         {
+            if (string.IsNullOrEmpty(element.MetaColumnGUID)) return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Element", element.DisplayNameEl, reference);
             return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Element", element.MetaColumn.Category + '.' + element.DisplayNameEl, reference);
         }
 

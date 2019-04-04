@@ -16,7 +16,11 @@ namespace Seal.Forms
 {
     public class SQLEditor : UITypeEditor
     {
-        const string razorTableTemplate = "@using Seal.Model\r\n@{\r\nMetaTable table = Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
+        const string descriptionTemplate1 = "Note that Razor script can be used if the text starts with '@'.\r\n";
+        const string descriptionTemplate2 = "Note that Razor script can be used if the text starts with '@'.\r\nThe final SQL may contain Shared Restrictions by using the keyword '{SharedRestriction_<Name>}' where <Name> is the Shared Restriction name.\r\nShared Restrictions can then be configured in the Report Models involved.\r\n";
+        const string descriptionTemplate3 = "The final SQL may contain Shared Restrictions by using the keyword '{SharedRestriction_<Name>}' where <Name> is the Shared Restriction name.\r\nShared Restrictions can then be configured in the Report Models involved.\r\n";
+
+        const string razorTableTemplate = "@using Seal.Model\r\n@{\r\nMetaTable table = Model;\r\nstring result = \"update Employees set LastName=LastName where {SharedRestriction_LastName}\";\r\n}\r\n@Raw(result)";
         const string razorTableWhereTemplate = @"@using Seal.Model
 @using Seal.Helpers
 @{
@@ -35,10 +39,10 @@ namespace Seal.Forms
     string result = string.Format(""aColumnName={0}"", Helper.QuoteSingle(restriction));
     }
 @Raw(result)";
-        const string razorSourceTemplate = "@using Seal.Model\r\n@{\r\nMetaSource source = Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
-        const string razorModelTemplate = "@using Seal.Model\r\n@{\r\nReportModel model = Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
-        const string razorTaskTemplate = "@using Seal.Model\r\n@{\r\nReportTask task= Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
-        const string razorEnumTemplate = "@using Seal.Model\r\n@{\r\nMetaEnum enumList= Model;\r\nstring result = \"select...\";\r\n}\r\n@Raw(result)";
+        const string razorSourceTemplate = "@using Seal.Model\r\n@{\r\nMetaSource source = Model;\r\nstring result = \"update Employees set LastName=LastName\";\r\n}\r\n@Raw(result)";
+        const string razorModelTemplate = "@using Seal.Model\r\n@{\r\nReportModel model = Model;\r\nstring result = \"update Employees set LastName=LastName where {SharedRestriction_LastName}\";\r\n}\r\n@Raw(result)";
+        const string razorTaskTemplate = "@using Seal.Model\r\n@{\r\nReportTask task= Model;\r\nstring result = \"update Employees set LastName=LastName where {SharedRestriction_LastName}\";\r\n}\r\n@Raw(result)";
+        const string razorEnumTemplate = "@using Seal.Model\r\n@{\r\nMetaEnum enumList= Model;\r\nstring result = \"SELECT DISTINCT CategoryID, CategoryName FROM Categories ORDER BY 2\";\r\n}\r\n@Raw(result)";
 
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
@@ -57,9 +61,10 @@ namespace Seal.Forms
                 var frm = new SQLEditorForm();
                 frm.Instance = context.Instance;
                 frm.PropertyName = context.PropertyDescriptor.Name;
-                string template = "";
                 string valueToEdit = (value == null ? "" : value.ToString());
                 bool forceValueToEdit = false;
+                List<string> samples = new List<string>();
+                var description = "";
 
                 if (context.Instance is ReportModel)
                 {
@@ -72,8 +77,11 @@ namespace Seal.Forms
 
                     if (context.PropertyDescriptor.Name == "PreSQL" || context.PropertyDescriptor.Name == "PostSQL")
                     {
-                        template = razorModelTemplate; 
+                        samples.Add(razorModelTemplate);
+                        samples.Add("update Employees set LastName=LastName");
+                        samples.Add("update Employees set LastName=LastName where {SharedRestriction_LastName}");
                         frm.clearToolStripButton.Visible = false;
+                        description = descriptionTemplate2;
                     }
                     else
                     {
@@ -93,7 +101,8 @@ namespace Seal.Forms
                 }
                 else if (context.Instance is MetaEnum)
                 {
-                    template = razorEnumTemplate;
+                    samples.Add(razorEnumTemplate);
+                    samples.Add("SELECT DISTINCT CategoryID, CategoryName FROM Categories ORDER BY 2");
                     frm.clearToolStripButton.Visible = false;
                     MetaEnum anEnum = context.Instance as MetaEnum;
                     if (value == null || string.IsNullOrEmpty(value.ToString()))
@@ -101,37 +110,51 @@ namespace Seal.Forms
                         forceValueToEdit = true;
                         valueToEdit = anEnum.DefaultSQL;
                     }
+                    description = descriptionTemplate1;
                 }
                 else if (context.Instance is ReportSource || context.Instance is MetaSource)
                 {
-                    template = razorSourceTemplate;
+                    samples.Add(razorSourceTemplate);
                     frm.clearToolStripButton.Visible = false;
+                    description = descriptionTemplate1;
                 }
                 else if (context.Instance is MetaTable)
                 {
                     if (context.PropertyDescriptor.Name == "PreSQL" || context.PropertyDescriptor.Name == "PostSQL")
                     {
-                        template = razorTableTemplate; 
+                        samples.Add(razorTableTemplate);
+                        samples.Add("update Employees set LastName=LastName");
+                        samples.Add("update Employees set LastName=LastName where {SharedRestriction_LastName}");
+                        description = descriptionTemplate2;
                     }
                     else if (context.PropertyDescriptor.Name == "WhereSQL")
                     {
-                        template = razorTableWhereTemplate;
+                        samples.Add(razorTableWhereTemplate);
+                        samples.Add("{SharedRestriction_LastName}");
+                        description = descriptionTemplate2;
+                    }
+                    else if (context.PropertyDescriptor.Name == "Sql")
+                    {
+                        samples.Add("SELECT * FROM Employees WHERE {SharedRestriction_LastName}");
+                        description = descriptionTemplate3;
                     }
                     frm.clearToolStripButton.Visible = false;
                 }
                 else if (context.Instance is ReportTask)
                 {
-                    template = razorTaskTemplate;
+                    samples.Add(razorTaskTemplate);
+                    samples.Add("update Employees set LastName=LastName");
+                    description = descriptionTemplate1;
                     frm.clearToolStripButton.Visible = false;
                 }
 
                 if (value != null || forceValueToEdit) frm.sqlTextBox.Text = valueToEdit.ToString();
 
                 if (context.PropertyDescriptor.IsReadOnly) frm.SetReadOnly();
-                else if (!string.IsNullOrEmpty(template))
+                else 
                 {
-                    frm.SetSamples(new List<string>() { template });
-                    frm.errorTextBox.Text = "Note that Razor script can be used if the text starts with '@'.\r\n";
+                    frm.SetSamples(samples);
+                    if (!string.IsNullOrEmpty(description)) frm.errorTextBox.Text = description;
                 }
 
                 if (svc.ShowDialog(frm) == DialogResult.OK)

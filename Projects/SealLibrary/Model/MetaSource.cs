@@ -422,15 +422,15 @@ namespace Seal.Model
                 try
                 {
                     DbConnection connection = (model != null ? model.Connection.GetOpenConnection() : GetOpenConnection());
-                    Helper.ExecutePrePostSQL(connection, PreSQL, this, this.IgnorePrePostError); 
-                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, table.PreSQL, table, table.IgnorePrePostError);
-                    if (!isPrePost && model != null) Helper.ExecutePrePostSQL(connection, model.PreSQL, model, model.IgnorePrePostError);
+                    Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(PreSQL), this, this.IgnorePrePostError); 
+                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(table.PreSQL), table, table.IgnorePrePostError);
+                    if (!isPrePost && model != null) Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(model.PreSQL), model, model.IgnorePrePostError);
                     var command = connection.CreateCommand();
-                    command.CommandText = sql;
+                    command.CommandText = ReportModel.ClearSharedRestrictions(sql);
                     command.ExecuteReader();
-                    if (isPrePost && model != null) Helper.ExecutePrePostSQL(connection, model.PostSQL, model, model.IgnorePrePostError);
-                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, table.PostSQL, table, table.IgnorePrePostError);
-                    Helper.ExecutePrePostSQL(connection, PostSQL, this, this.IgnorePrePostError);
+                    if (isPrePost && model != null) Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(model.PostSQL), model, model.IgnorePrePostError);
+                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(table.PostSQL), table, table.IgnorePrePostError);
+                    Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(PostSQL), this, this.IgnorePrePostError);
                     command.Connection.Close();
                 }
                 catch (Exception ex)
@@ -457,11 +457,11 @@ namespace Seal.Model
             string[] names = name.Split('.');
             DataTable schemaColumns = null;
 
-            Helper.ExecutePrePostSQL(connection, table.PreSQL, table, table.IgnorePrePostError);
+            Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(table.PreSQL), table, table.IgnorePrePostError);
             if (names.Length == 3) schemaColumns = connection.GetSchema("Columns", names);
             else if (names.Length == 2) schemaColumns = connection.GetSchema("Columns", new string[] { null, names[0], names[1] });
             else schemaColumns = connection.GetSchema("Columns", new string[] { null, null, name });
-            Helper.ExecutePrePostSQL(connection, table.PostSQL, table, table.IgnorePrePostError);
+            Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(table.PostSQL), table, table.IgnorePrePostError);
 
             foreach (DataRow row in schemaColumns.Rows)
             {

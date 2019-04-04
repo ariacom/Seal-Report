@@ -883,7 +883,7 @@ namespace Seal
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                 ToolStripMenuItem ts = new ToolStripMenuItem();
                 ts.Click += new System.EventHandler(convertModel);
-                ts.Text = ((ReportModel) entity).IsSQLModel ? "Convert SQL Model to a MetaData Model" : "Convert MetaData Model to a SQL Model";
+                ts.Text = ((ReportModel)entity).IsSQLModel ? "Convert SQL Model to a MetaData Model" : "Convert MetaData Model to a SQL Model";
                 treeContextMenuStrip.Items.Add(ts);
             }
             else if (entity is ReportTask)
@@ -936,13 +936,23 @@ namespace Seal
                 MetaSource source = ((ToolStripMenuItem)sender).Tag as MetaSource;
                 ReportSource newSource = Report.AddSource(source);
                 newSource.IsNoSQL = ((ToolStripMenuItem)sender).Text.Contains("No SQL");
-                if (!newSource.IsNoSQL) newEntity = newSource.Connection;
-                else newEntity = newSource.MetaData.MasterTable;
                 if (source != null)
                 {
                     newSource.LoadRepositoryMetaSources(_repository);
                     newEntity = newSource;
                 }
+                if (newSource.IsNoSQL)
+                {
+                    //Add master table
+                    MetaTable master = MetaTable.Create();
+                    master.DynamicColumns = true;
+                    master.IsEditable = true;
+                    master.Alias = MetaData.MasterTableName;
+                    master.Source = newSource;
+                    newSource.MetaData.Tables.Add(master);
+                }
+                if (!newSource.IsNoSQL) newEntity = newSource.Connection;
+                else newEntity = newSource.MetaData.MasterTable;
             }
             else if (selectedEntity is ModelFolder)
             {
@@ -1521,7 +1531,7 @@ namespace Seal
             }
             else if (selectedEntity is ReportView)
             {
-                ReportView view = (ReportView)selectedEntity; 
+                ReportView view = (ReportView)selectedEntity;
                 if (view.UseCustomTemplate) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
             }
             else if (selectedEntity is ReportSchedule)

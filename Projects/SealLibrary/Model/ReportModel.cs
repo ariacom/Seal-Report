@@ -42,6 +42,7 @@ namespace Seal.Model
                 GetProperty("SourceGUID").SetIsBrowsable(true);
                 GetProperty("ConnectionGUID").SetIsBrowsable(true);
 
+                GetProperty("SharedRestrictions").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PreLoadScript").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("LoadScript").SetIsBrowsable(true);
                 GetProperty("FinalScript").SetIsBrowsable(true);
@@ -68,6 +69,7 @@ namespace Seal.Model
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("BuildTimeout").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
 
+                GetProperty("Alias").SetIsBrowsable(IsSQLModel);
                 GetProperty("KeepColNames").SetIsBrowsable(IsSQLModel);
                 GetProperty("UseRawSQL").SetIsBrowsable(IsSQLModel);
 
@@ -128,8 +130,20 @@ namespace Seal.Model
             }
         }
 
+        //Shared Restrictions
+        private List<ReportRestriction> _sharedRestrictions = new List<ReportRestriction>();
+        [Category("Model Definition"), DisplayName("Shared Restrictions"), Description("Defintion of the shared restrictions involved in the model. Shared restrictions are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{SharedRestriction_' keyword (e.g. {SharedRestriction_Amount} to create a shared restriction named 'Amount'9"), Id(3, 1)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<ReportRestriction> SharedRestrictions
+        {
+            get { return _sharedRestrictions; }
+            set { _sharedRestrictions = value; }
+        }
+        public bool ShouldSerializeSharedRestrictions() { return _sharedRestrictions.Count > 0; }
+
+
         string _preLoadScript;
-        [Category("Model Definition"), DisplayName("Pre Load Script"), Description("Optional Razor Script to modify the result table of the model just before the database load."), Id(3, 1)]
+        [Category("Model Definition"), DisplayName("Pre Load Script"), Description("Optional Razor Script to modify the result table of the model just before the database load."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string PreLoadScript
@@ -139,7 +153,7 @@ namespace Seal.Model
         }
 
         string _loadScript;
-        [Category("Model Definition"), DisplayName("Load Script"), Description("The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used."), Id(4, 1)]
+        [Category("Model Definition"), DisplayName("Load Script"), Description("The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string LoadScript
@@ -149,7 +163,7 @@ namespace Seal.Model
         }
 
         string _finalScript;
-        [Category("Model Definition"), DisplayName("Final Script"), Description("Optional Razor Script to modify the model after its generation."), Id(5, 1)]
+        [Category("Model Definition"), DisplayName("Final Script"), Description("Optional Razor Script to modify the model after its generation."), Id(6, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string FinalScript
@@ -159,7 +173,7 @@ namespace Seal.Model
         }
 
         bool _showFirstLine = true;
-        [Category("Model Definition"), DisplayName("Show First Header Line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(6, 1)]
+        [Category("Model Definition"), DisplayName("Show First Header Line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(7, 1)]
         [DefaultValue(true)]
         public bool ShowFirstLine
         {
@@ -167,7 +181,15 @@ namespace Seal.Model
             set { _showFirstLine = value; }
         }
 
-        [Category("SQL Model Options"), DisplayName("Keep column names"), Description("If true, the column names of the source a kept when building the metadata columns."), Id(1, 2)]
+        [Category("SQL Model Options"), DisplayName("Alias name"), Description("Alias name used for the table defining the select."), Id(1, 2)]
+        public string Alias
+        {
+            get { return Table != null ? Table.Alias : Name; }
+            set { if (Table != null) Table.Alias = value; }
+        }
+        public bool ShouldSerializeAlias() { return IsSQLModel; }
+
+        [Category("SQL Model Options"), DisplayName("Keep column names"), Description("If true, the column names of the source a kept when building the metadata columns."), Id(2, 2)]
         [DefaultValue(false)]
         public bool KeepColNames
         {
@@ -177,7 +199,7 @@ namespace Seal.Model
         public bool ShouldSerializeKeepColNames() { return IsSQLModel; }
 
         bool _useRawSQL = false;
-        [Category("SQL Model Options"), DisplayName("Use raw source SQL"), Description("If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied"), Id(2, 2)]
+        [Category("SQL Model Options"), DisplayName("Use raw source SQL"), Description("If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied"), Id(3, 2)]
         [DefaultValue(false)]
         public bool UseRawSQL
         {
@@ -429,7 +451,7 @@ namespace Seal.Model
         public string Restriction
         {
             get { return string.IsNullOrEmpty(_restriction) ? "" : _restriction; }
-            set {  _restriction = value; }
+            set { _restriction = value; }
         }
 
         private List<ReportRestriction> _restrictions = new List<ReportRestriction>();
@@ -727,6 +749,26 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        public List<ReportRestriction> ExecutionSharedRestrictions
+        {
+            get
+            {
+                List<ReportRestriction> result = new List<ReportRestriction>();
+                foreach (ReportRestriction restriction in SharedRestrictions)
+                {
+                    ReportRestriction newRestriction = restriction;
+                    if (Report.ForOutput && Report.OutputToExecute.UseCustomRestrictions)
+                    {
+                        newRestriction = Report.OutputToExecute.Restrictions.FirstOrDefault(i => i.GUID == restriction.GUID);
+                        if (newRestriction == null) newRestriction = restriction;
+                    }
+                    result.Add(newRestriction);
+                }
+                return result;
+            }
+        }
+
 
         [XmlIgnore]
         public string execSelect = "";
@@ -785,6 +827,132 @@ namespace Seal.Model
 
             if (AvoidJoinTable == null) _avoidTableGUID = "";
             if (ForceJoinTable == null) _forceJoinTableGUID = "";
+
+            InitSharedRestrictions();
+        }
+
+        public string ParseSharedRestrictions(string sql)
+        {
+            foreach (var restr in ExecutionSharedRestrictions)
+            {
+                sql = sql.Replace(Repository.SharedRestrictionKeyword + restr.Name + "}", restr.SQLText);
+            }
+            return ClearSharedRestrictions(sql);
+        }
+
+        public static string ClearSharedRestrictions(string sql)
+        {
+            if (string.IsNullOrEmpty(sql)) return "";
+
+            //Replace shared restrictions by 1=1
+            int index = 0;
+            do
+            {
+                index = sql.IndexOf(Repository.SharedRestrictionKeyword, index);
+                if (index > 0)
+                {
+                    index += Repository.SharedRestrictionKeyword.Length;
+                    for (int i = index; i < sql.Length; i++)
+                    {
+                        if (sql[i] == '}')
+                        {
+                            sql = sql.Replace(Repository.SharedRestrictionKeyword + sql.Substring(index, i - index) + "}", "1=1");
+                            index -= Repository.SharedRestrictionKeyword.Length;
+                            break;
+                        }
+                    }
+                }
+            }
+            while (index > 0 && index < sql.Length);
+            return sql;
+        }
+
+
+        public void InitSharedRestrictions()
+        {
+            //Get shared restrictions
+            try
+            {
+                var sqlToParse = "";
+                if (!string.IsNullOrEmpty(Restriction)) sqlToParse += "\r\n" + Restriction;
+                if (!string.IsNullOrEmpty(AggregateRestriction)) sqlToParse += "\r\n" + AggregateRestriction;
+
+                if (!string.IsNullOrEmpty(Source.PreSQL)) sqlToParse += "\r\n" + Source.PreSQL;
+                if (!string.IsNullOrEmpty(Source.PostSQL)) sqlToParse += "\r\n" + Source.PostSQL;
+                if (!string.IsNullOrEmpty(PreSQL)) sqlToParse += "\r\n" + PreSQL;
+                if (!string.IsNullOrEmpty(PostSQL)) sqlToParse += "\r\n" + PostSQL;
+
+                //Keywords in tables
+                var fromTables = new List<MetaTable>();
+                foreach (ReportElement element in Elements)
+                {
+                    MetaTable table = element.MetaColumn.MetaTable;
+                    if (table != null && !fromTables.Contains(table)) fromTables.Add(table);
+                }
+                foreach (ReportRestriction restriction in Restrictions.Union(AggregateRestrictions))
+                {
+                    MetaTable table = restriction.MetaColumn.MetaTable;
+                    if (table != null && !fromTables.Contains(table)) fromTables.Add(table);
+                }
+
+                if (IsSQLModel) fromTables.Add(Table);
+
+                foreach (var table in fromTables)
+                {
+                    if (!string.IsNullOrEmpty(table.PreSQL)) sqlToParse += "\r\n" + table.PreSQL;
+                    if (!string.IsNullOrEmpty(table.PostSQL)) sqlToParse += "\r\n" + table.PostSQL;
+                    if (!string.IsNullOrEmpty(table.Sql)) sqlToParse += "\r\n" + table.Sql;
+                    if (!string.IsNullOrEmpty(table.WhereSQL)) sqlToParse += "\r\n" + table.WhereSQL;
+                }
+
+                //Get restriction keywords
+                int index = 0;
+                do
+                {
+                    index = sqlToParse.IndexOf(Repository.SharedRestrictionKeyword, index);
+                    if (index > 0)
+                    {
+                        index += Repository.SharedRestrictionKeyword.Length;
+                        string restrictionName = "";
+                        for (int i = index; i < sqlToParse.Length; i++)
+                        {
+                            if (sqlToParse[i] == '}')
+                            {
+                                restrictionName = sqlToParse.Substring(index, i - index); ;
+                                break;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(restrictionName))
+                        {
+                            var sharedRestriction = SharedRestrictions.FirstOrDefault(i => i.Name == restrictionName);
+                            if (sharedRestriction == null)
+                            {
+                                sharedRestriction = ReportRestriction.CreateReportRestriction();
+                                sharedRestriction.Name = restrictionName;
+                                sharedRestriction.DisplayName = restrictionName;
+                                sharedRestriction.TypeRe = ColumnType.Text;
+                                SharedRestrictions.Add(sharedRestriction);
+                            }
+                        }
+                    }
+
+                }
+                while (index > 0);
+
+                //clean restrictions not used
+                SharedRestrictions.RemoveAll(i => !sqlToParse.Contains(Repository.SharedRestrictionKeyword + i.Name + "}"));
+
+                foreach (var restriction in SharedRestrictions)
+                {
+                    restriction.SetSourceReference(Source);
+                    restriction.Model = this;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
 
         public void ClearLostElements()
@@ -863,6 +1031,7 @@ namespace Seal.Model
                 if (IsSQLModel && UseRawSQL)
                 {
                     _sql = Table.Sql;
+                    _sql = ParseSharedRestrictions(_sql);
                     return;
                 }
 
@@ -897,6 +1066,10 @@ namespace Seal.Model
                 {
                     if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                     execHavingClause = execHavingClause.Replace("[" + restriction.GUID + "]", restriction.SQLText);
+                }
+                foreach (ReportRestriction restriction in ExecutionSharedRestrictions)
+                {
+                    if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                 }
 
                 if (Elements.Count > 0)
@@ -964,7 +1137,7 @@ namespace Seal.Model
                                     var list = rootPath.joinsToUse[join.LeftTableGUID];
                                     if (!list.Exists(i => i.LeftTableGUID == join.LeftTableGUID && i.RightTableGUID == join.RightTableGUID)) rootPath.joinsToUse[join.LeftTableGUID].Add(join);
                                 }
-                                
+
                                 if (join.IsBiDirectional)
                                 {
                                     //Create a new join having the other left-right
@@ -1033,7 +1206,7 @@ namespace Seal.Model
                                             //Add the join to the path
                                             if (!newPath.joins.Exists(i => i.GUID == join2.GUID))
                                             {
-                                                newPath.joins.Insert(0,join2); // Fix 108
+                                                newPath.joins.Insert(0, join2); // Fix 108
                                                 //newPath.print();
                                             }
                                             newPath.tablesToUse.Remove(join2.LeftTable);
@@ -1140,6 +1313,9 @@ namespace Seal.Model
                     if (execGroupByClause.Length > 0 || !string.IsNullOrEmpty(SqlGroupBy)) _sql += (!string.IsNullOrEmpty(SqlGroupBy) ? SqlGroupBy : string.Format("GROUP BY {0}", execGroupByClause)) + "\r\n";
                     if (execHavingClause.Length > 0) _sql += string.Format("HAVING {0}\r\n", execHavingClause);
                     if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) _sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
+
+                    //Finally inject shared restriction values
+                    if (!forConversion) _sql = ParseSharedRestrictions(_sql);
                 }
             }
             catch (TemplateCompilationException ex)
@@ -1177,7 +1353,7 @@ namespace Seal.Model
                 Debug.WriteLine("");
                 foreach (var join in joins)
                 {
-                        Debug.Write(string.Format("{0} {1} {2}\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
+                    Debug.Write(string.Format("{0} {1} {2}\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
                 }
                 Debug.WriteLine("");
 
@@ -1300,7 +1476,7 @@ namespace Seal.Model
                     string finalSql = RazorHelper.CompileExecute(sql, model);
                     if (!string.IsNullOrEmpty(finalSql))
                     {
-                        _command.CommandText = finalSql;
+                        _command.CommandText = ParseSharedRestrictions(finalSql);
                         _command.ExecuteNonQuery();
                     }
                     else Report.LogMessage("No SQL to execute...");
@@ -1357,7 +1533,7 @@ namespace Seal.Model
                         && ((LoadScript == null && runningModel.LoadScript == null) || (LoadScript.Trim() == runningModel.LoadScript.Trim()))
                         && ((FinalScript == null && runningModel.FinalScript == null) || (FinalScript.Trim() == runningModel.FinalScript.Trim()))
                         )
-                    {                        
+                    {
                         //we can wait to get the same data table 
                         Report.LogMessage("Model '{0}': Getting result table from '{1}'...", Name, runningModel.Name);
                         while (!Report.Cancel && !runningModel._resultTableAvailable)
@@ -1597,34 +1773,6 @@ namespace Seal.Model
                     page.DataTable.InvertDone = true;
                 }
             }
-        }
-
-        public string CheckSQL(string sql, List<MetaTable> tables, ReportModel model)
-        {
-            string result = "";
-            if (!string.IsNullOrEmpty(sql))
-            {
-                try
-                {
-                    DbConnection connection = Connection.GetOpenConnection();
-                    Helper.ExecutePrePostSQL(connection, PreSQL, this, this.IgnorePrePostError);
-                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, table.PreSQL, table, table.IgnorePrePostError);
-                    if (model != null) Helper.ExecutePrePostSQL(connection, model.PreSQL, model, model.IgnorePrePostError);
-                    var command = connection.CreateCommand();
-                    command.CommandText = sql;
-                    command.ExecuteReader();
-                    if (model != null) Helper.ExecutePrePostSQL(connection, model.PostSQL, model, model.IgnorePrePostError);
-                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, table.PostSQL, table, table.IgnorePrePostError);
-                    Helper.ExecutePrePostSQL(connection, PostSQL, this, this.IgnorePrePostError);
-                    command.Connection.Close();
-                }
-                catch (Exception ex)
-                {
-                    result = ex.Message;
-                }
-            }
-
-            return result;
         }
 
         public ReportRestriction GetRestrictionByName(string name)

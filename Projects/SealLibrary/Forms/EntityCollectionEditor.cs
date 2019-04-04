@@ -58,6 +58,11 @@ namespace Seal.Forms
             frmCollectionEditorForm.Text = "Collection Editor";
             if (CollectionItemType == typeof(ReportRestriction))
             {
+                if (Context.Instance is ReportModel)
+                {
+                    var model = Context.Instance as ReportModel;
+                    model.InitSharedRestrictions();
+                }
                 frmCollectionEditorForm.Text = "Restrictions Collection Editor";
             }
             else if (CollectionItemType == typeof(OutputParameter))
@@ -223,7 +228,12 @@ namespace Seal.Forms
         {
             string result = "";
             if (value is RootEditor) ((RootEditor)value).InitEditor();
-            if (value is ReportRestriction) result = string.Format("{0} ({1})", ((ReportRestriction)value).DisplayNameEl, ((ReportRestriction)value).Model.Name);
+            if (value is ReportRestriction)
+            {
+                var restr = value as ReportRestriction;
+                if (restr.MetaColumn == null) result = restr.Name; //Shared restriction
+                else result = string.Format("{0} ({1})", restr.DisplayNameEl, restr.Model.Name);
+            }
             else if (value is Parameter) result = ((Parameter)value).DisplayName;
             else if (value is SecurityGroup) result = ((SecurityGroup)value).Name;
             else if (value is SecurityFolder) result = ((SecurityFolder)value).Path;

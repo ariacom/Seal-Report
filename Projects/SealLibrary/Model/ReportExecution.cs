@@ -420,7 +420,11 @@ namespace Seal.Model
             {
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
-                    foreach (ReportRestriction restriction in model.ExecutionRestrictions.Where(i => i.Prompt != PromptType.None).Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None)))
+                    foreach (ReportRestriction restriction in model
+                        .ExecutionRestrictions.Where(i => i.Prompt != PromptType.None)
+                        .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None))
+                        .Union(model.ExecutionSharedRestrictions.Where(i => i.Prompt != PromptType.None))
+                        )
                     {
                         string val = Report.GetInputRestriction(restriction.OperatorHtmlId);
                         if (!string.IsNullOrEmpty(val)) restriction.Operator = (Operator)Enum.Parse(typeof(Operator), val);
