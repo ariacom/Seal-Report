@@ -101,13 +101,6 @@ namespace Seal.Model
         static public ReportSource Create(Repository repository, bool createConnection)
         {
             ReportSource result = new ReportSource() { GUID = Guid.NewGuid().ToString(), Name = "Data Source", Repository = repository };
-            //Add master table
-            MetaTable master = MetaTable.Create();
-            master.DynamicColumns = true;
-            master.IsEditable = true;
-            master.Alias = MetaData.MasterTableName;
-            master.Source = result;
-            result.MetaData.Tables.Add(master);
 
             if (createConnection) result.AddDefaultConnection(repository); 
 

@@ -225,7 +225,11 @@ namespace Seal.Model
             {
                 if (!string.IsNullOrEmpty(Sql))
                 {
-                    return string.Format("({0}) {1}", Sql, AliasName);
+                    return string.Format("(\r\n{0}\r\n) {1}", Sql, AliasName);
+                }
+                else if (!string.IsNullOrEmpty(_name) && !string.IsNullOrEmpty(_alias))
+                {
+                    return string.Format("{0} {1}", _name, _alias);
                 }
                 return AliasName;
             }
@@ -293,9 +297,9 @@ namespace Seal.Model
             if (IsSQL)
             {
                 DbConnection connection = _source.GetOpenConnection();
-                Helper.ExecutePrePostSQL(connection, PreSQL, this, IgnorePrePostError);
-                result = Helper.GetDataTable(connection, sql);
-                Helper.ExecutePrePostSQL(connection, PostSQL, this, IgnorePrePostError);
+                Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(PreSQL), this, IgnorePrePostError);
+                result = Helper.GetDataTable(connection, ReportModel.ClearSharedRestrictions(sql));
+                Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(PostSQL), this, IgnorePrePostError);
                 connection.Close();
             }
             else

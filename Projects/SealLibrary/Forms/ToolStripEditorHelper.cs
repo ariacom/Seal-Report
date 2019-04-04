@@ -40,7 +40,6 @@ namespace Seal.Forms
                 if (((MetaSource)SelectedEntity).MetaData.MasterTable != null)
                 {
                     if (!((MetaSource)SelectedEntity).MetaData.MasterTable.IsSQL) AddHelperButton("Edit Master Load Script", "Edit the default load script", Keys.F12);
-                    else AddHelperButton("Edit Master SQL", "Edit the select SQL Statement of the master table", Keys.F8);
                 }
                 AddHelperButton("Check connection", "Check the current database connection", Keys.F7);
             }
@@ -150,13 +149,13 @@ namespace Seal.Forms
                             source.Error = source.Connection.Error;
                             source.InitEditor();
                         }
-                        if (key == Keys.F8 || key == Keys.F12)
+                        if (key == Keys.F12)
                         {
                             MetaTable table = ((MetaSource)SelectedEntity).MetaData.MasterTable;
                             if (table != null)
                             {
                                 TreeViewHelper.SelectNode(MainTreeView, MainTreeView.SelectedNode.Nodes, table);
-                                EditProperty(table.IsSQL ? "SQL Statement" : "Default Load Script");
+                                EditProperty("Default Load Script");
                             }
                         }
                     }

@@ -109,7 +109,7 @@ namespace Seal.Model
                 GetProperty("Required").SetIsReadOnly(_prompt == PromptType.None);
 
                 //Aggregate restriction
-                if (PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate) GetProperty("AggregateFunction").SetIsBrowsable(true);
+                if (PivotPosition == PivotPosition.Data && !(MetaColumn != null && MetaColumn.IsAggregate)) GetProperty("AggregateFunction").SetIsBrowsable(true);
 
                 if (!GetProperty("Date1Keyword").IsReadOnly) GetProperty("Date1").SetIsReadOnly(HasDateKeyword(Date1Keyword));
                 if (!GetProperty("Date2Keyword").IsReadOnly) GetProperty("Date2").SetIsReadOnly(HasDateKeyword(Date2Keyword));
@@ -121,6 +121,11 @@ namespace Seal.Model
         }
         #endregion
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public const char kStartRestrictionChar = '[';
         public const char kStopRestrictionChar = ']';
 
@@ -131,7 +136,7 @@ namespace Seal.Model
 
         private PromptType _prompt = PromptType.None;
         [DefaultValue(PromptType.None)]
-        [CategoryAttribute("Definition"), DisplayName("Prompt restriction"), Description("Define if the value of the restriction is prompted to the user when the report is executed."), Id(3, 1)]
+        [Category("Definition"), DisplayName("\tPrompt restriction"), Description("Define if the value of the restriction is prompted to the user when the report is executed."), Id(5, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public PromptType Prompt
         {
@@ -141,7 +146,7 @@ namespace Seal.Model
 
         private bool _required = false;
         [DefaultValue(false)]
-        [CategoryAttribute("Definition"), DisplayName("Is required"), Description("If true and the restriction is prompted, a value is required to execute the report."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Is required"), Description("If true and the restriction is prompted, a value is required to execute the report."), Id(6, 1)]
         public bool Required
         {
             get { return _required; }
@@ -272,7 +277,7 @@ namespace Seal.Model
         Operator _operator = Operator.Equal;
         [DefaultValue(Operator.Equal)]
         [TypeConverter(typeof(RestrictionOperatorConverter))]
-        [Category("Definition"), DisplayName("Operator"), Description("The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator)."), Id(2, 1)]
+        [Category("Definition"), DisplayName("\tOperator"), Description("The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator)."), Id(2, 1)]
         public Operator Operator
         {
             get { return _operator; }
@@ -289,6 +294,7 @@ namespace Seal.Model
             get
             {
                 if (Enum != null) return Enum;
+                if (IsSharedRestriction) return null;
                 return MetaColumn.Enum;
             }
         }
@@ -302,7 +308,7 @@ namespace Seal.Model
                 return IsEnum;
             }
         }
-
+        
         [XmlIgnore]
         public bool HasOperator
         {
@@ -776,10 +782,11 @@ namespace Seal.Model
                 string result = "";
                 if (IsEnum)
                 {
-                    if (EnumValues.Count == 0) result = (MetaColumn.Type == ColumnType.Numeric ? "0" : "''");
+                    var type = (IsSharedRestriction ? Type : MetaColumn.Type);
+                    if (EnumValues.Count == 0) result = (type == ColumnType.Numeric ? "0" : "''");
                     foreach (string enumValue in EnumValues)
                     {
-                        Helper.AddValue(ref result, ",", MetaColumn.Type == ColumnType.Numeric ? enumValue : Helper.QuoteSingle(enumValue));
+                        Helper.AddValue(ref result, ",", type == ColumnType.Numeric ? enumValue : Helper.QuoteSingle(enumValue));
                     }
                 }
                 return result;

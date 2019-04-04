@@ -145,7 +145,7 @@ namespace Seal.Model
         }
 
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Name"), Description("Name of the element when displayed in result tables or restrictions."), Id(1, 1)]
+        [Category("Definition"), DisplayName("\tName"), Description("Name of the element when displayed in result tables or restrictions."), Id(1, 1)]
         [XmlIgnore]
         [TypeConverter(typeof(CustomNameConverter))]
         public string DisplayNameEl
@@ -215,7 +215,7 @@ namespace Seal.Model
         {
             get
             {
-                if (_type == ColumnType.Default) return MetaColumn.Type;
+                if (_type == ColumnType.Default && !IsSharedRestriction) return MetaColumn.Type;
                 return _type;
             }
         }
@@ -226,6 +226,8 @@ namespace Seal.Model
             get
             {
                 SetStandardFormat();
+                if (IsSharedRestriction) return Format;
+
                 string result = Format;
                 if (string.IsNullOrEmpty(result)) result = MetaColumn.Format;
                 if (string.IsNullOrEmpty(result))
@@ -557,12 +559,22 @@ namespace Seal.Model
             set { _enumGUID = value; }
         }
 
+        [XmlIgnore, Browsable(false)]
+        public bool IsSharedRestriction
+        {
+            get
+            {
+                return string.IsNullOrEmpty(MetaColumnGUID);
+            }
+        }
+
         [XmlIgnore]
         public MetaEnum EnumEL
         {
             get
             {
                 if (Enum != null) return Enum;
+                if (IsSharedRestriction) return null;
                 return MetaColumn.Enum;
             }
         }
@@ -572,6 +584,8 @@ namespace Seal.Model
         {
             get
             {
+                if (IsSharedRestriction) return Name;
+
                 string result = MetaColumn.Name;
                 if (PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate)
                 {
@@ -595,7 +609,7 @@ namespace Seal.Model
         [XmlIgnore, Browsable(false)]
         public string SQLColumnName
         {
-            get { return string.IsNullOrEmpty(_SQLColumnName) ? MetaColumn.Name : _SQLColumnName; }
+            get { return string.IsNullOrEmpty(_SQLColumnName) && !IsSharedRestriction ? MetaColumn.Name : _SQLColumnName; }
             set { _SQLColumnName = value; }
         }
 
