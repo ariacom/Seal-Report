@@ -52,7 +52,6 @@ function initNavMenu() {
     }
 }
 
-
 function setMessageHeight() {
     if (!printLayout) {
         setTimeout(function () {
@@ -238,7 +237,6 @@ function executeTimer() {
     }
 }
 
-
 function setProgressBarMessage(selector, progression, message, classname) {
     $(selector).css('width', progression + '%').css('min-width', '120px').attr('aria-valuenow', progression);
     $(selector).html(message);
@@ -312,7 +310,6 @@ function submitViewParameter(viewId, parameterName, parameterValue) {
         }
     }
 }
-
 
 function getTableData(datatable, guid, viewid, pageid, data, callback, settings) {
     try {
@@ -444,6 +441,72 @@ function mainInit() {
     }
 }
 
+//Enum select picker
+function initEnums() {
+    $(".enum")
+        .selectpicker({
+            "liveSearch": true,
+            "actionsBox": true
+        })
+        .on('shown.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            if ($(this).attr("id")) $("#id_enumload").val($(this).attr("id"));
+        });
+
+
+    var responseToSelect = function (data) { // convert ajax response ...
+        if (data.length > 0) {
+     //       alert(JSON.stringify(data));
+            var id = "#" + $("#id_enumload").val();
+            var $enum = $(id);
+            $(id + "  option:selected").each(function () {
+                var found = false;
+                for (var i = 0; !found && i < data.length; i++) {
+                    if ($(this).val() == data[i].v) {
+                        data[i].Selected = true;
+                        found = true;
+                    }
+                }
+
+                if (!found) {
+                    data.push({ Value: $(this).val(), Text: $(this).text(), Selected: true });
+                }
+            });
+
+            $enum.empty();
+            for (var i = 0; i < data.length; i++) {
+                $enum.append(
+                    $("<option" + (data[i].Selected ? " selected" : "") + "></option>").attr("value", data[i].v).text(data[i].t)
+                );
+            }
+            $enum.selectpicker("refresh");
+        }
+    }
+
+    var inp = "";
+    $(".bs-searchbox input").on("input", function (evt) { // listen on the created elements for input
+        var thi$ = $(this).parent().next();
+        var $earch = $(evt.target); // hold on to the search input field
+        if ($earch.val() !== inp) { // if the search value is changed
+            inp = $earch.val();
+            if (inp.length > 0) { // and it has 3 or more characters ...
+                $("#header_form").attr("action", "ActionGetEnumValues");
+                $("#filter_enumload").val(inp);
+                $("#header_form").submit();
+    //            alert($("#parameter_enumload").text());
+                var data = jQuery.parseJSON($("#parameter_enumload").text());
+      //          alert(JSON.stringify(data));
+//                var data = [{ Value: '123', Text: 'dadd' }, { Value: '124', Text: 'deee' }, { Value: '124', Text: 'dfaaaa' }];
+                responseToSelect(data);
+
+                //          var url = thi$.data("completeurl") + "/"; // get an url to ...
+
+
+                //        $.get(url, { code: "", search: inp }) // do an ajax call to get more countries
+                //          .done(function (data) { responseToSelect(data, thi$) });
+            }
+        }
+    });
+}
 
 $(document).ready(function () {
     mainInit();
@@ -452,10 +515,7 @@ $(document).ready(function () {
 
     //Select Picker
     $(".operator_select").selectpicker('refresh');
-    $(".enum").selectpicker({
-        "liveSearch": true,
-        "actionsBox": true
-    });
+    initEnums();
 
     //Date Picker
     $(".datepicker_datetime").datetimepicker({

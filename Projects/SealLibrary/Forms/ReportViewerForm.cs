@@ -317,6 +317,31 @@ namespace Seal.Forms
                             }
                         }
                         break;
+
+                    case ReportExecution.ActionGetEnumValues:
+                        cancelNavigation = true;
+                        string enumId = webBrowser.Document.All[ReportExecution.HtmlId_id_enumload].GetAttribute("value");
+                        string filter = webBrowser.Document.All[ReportExecution.HtmlId_filter_enumload].GetAttribute("value");
+                        HtmlElement enumValues = webBrowser.Document.All[ReportExecution.HtmlId_parameter_enumload];
+
+                        var restriction = _report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
+                        if (restriction != null && restriction.EnumRE != null)
+                        {
+                            var result = new StringBuilder();
+                            for(int j = 0; j < restriction.EnumRE.Values.Count; j++)
+                            { 
+                                var enumDef = restriction.EnumRE.Values[j];
+                                var display = restriction.GetEnumDisplayValue(enumDef.Id);
+                                if (display.Contains(filter))
+                                {
+                                    result.Append(result.Length == 0 ? "[" : ",");
+                                    result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"}}", restriction.OptionHtmlId + j.ToString(), restriction.GetEnumDisplayValue(enumDef.Id).Replace("\"", "\\\""));
+                                }
+                            }
+                            result.Append(result.Length == 0 ? "[]" : "]");
+                            enumValues.InnerText = result.ToString();
+                        }
+                        break;
                 }
             }
             catch (Exception ex)

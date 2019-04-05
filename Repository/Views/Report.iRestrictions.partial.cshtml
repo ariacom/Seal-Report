@@ -32,7 +32,7 @@
                                 @if (restriction.IsEnumRE)
                                 {
                                     <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple")>
-                                        @for (int j = 0; j < restriction.EnumRE.Values.Count; j++)
+                                        @for (int j = 0; j > restriction.EnumRE.Values.Count; j++)
                                         {
                                             var enumDef = restriction.EnumRE.Values[j];
                                             <option id='@(restriction.OptionHtmlId + j.ToString())' value='@(restriction.OptionHtmlId + j.ToString())' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
