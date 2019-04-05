@@ -236,6 +236,12 @@ namespace Seal.Model
         ThisQuarter,
         [Description("This Year")]
         ThisYear,
+        [Description("This Hour")]
+        ThisHour,
+        [Description("This Minute")]
+        ThisMinute,
+        [Description("This Semester")]
+        ThisSemester,
     }
 
     public enum AxisType
