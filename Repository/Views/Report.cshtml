@@ -202,12 +202,15 @@
             <input type="hidden" name="navigation_id" id="navigation_id" value="" />
             <input type="hidden" name="viewid_tableload" id="viewid_tableload" value="" />
             <input type="hidden" name="pageid_tableload" id="pageid_tableload" value="" />
+            <input type="hidden" name="id_enumload" id="id_enumload" value="" />
+            <input type="hidden" name="filter_enumload" id="filter_enumload" value="" />
 
             <input type="hidden" name="parameter_view_id" id="parameter_view_id" value="" />
             <input type="hidden" name="parameter_view_name" id="parameter_view_name" value="" />
             <input type="hidden" name="parameter_view_value" id="parameter_view_value" value="" />
 
             <span style="display: none;" id="parameter_tableload"></span>
+            <span style="display: none;" id="parameter_enumload"></span>
             @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
         </form>
 

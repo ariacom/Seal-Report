@@ -39,6 +39,7 @@ namespace Seal.Model
         public const string ActionSetUserInfo = "ActionSetUserInfo";
         public const string ActionGetNavigationLinks = "ActionGetNavigationLinks";
         public const string ActionGetTableData = "ActionGetTableData";
+        public const string ActionGetEnumValues = "ActionGetEnumValues";
 
         //Html Ids Keywords
         public const string HtmlId_header_form = "header_form";
@@ -55,6 +56,9 @@ namespace Seal.Model
         public const string HtmlId_parameter_tableload = "parameter_tableload";
         public const string HtmlId_viewid_tableload = "viewid_tableload";
         public const string HtmlId_pageid_tableload = "pageid_tableload";
+        public const string HtmlId_id_enumload = "id_enumload";
+        public const string HtmlId_filter_enumload = "filter_enumload";
+        public const string HtmlId_parameter_enumload = "parameter_enumload";
 
         public Report Report = null;
         public Report RootReport = null;
