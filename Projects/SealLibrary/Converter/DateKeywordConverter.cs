@@ -26,11 +26,17 @@ namespace Seal.Converter
         {
             return new StandardValuesCollection(
                 new string[] { "", DateRestrictionKeyword.Now.ToString(), 
-                    DateRestrictionKeyword.Today.ToString(), DateRestrictionKeyword.Today.ToString() + "-1", 
-                    DateRestrictionKeyword.ThisWeek.ToString(), DateRestrictionKeyword.ThisWeek.ToString() + "-1", 
-                    DateRestrictionKeyword.ThisMonth.ToString(), DateRestrictionKeyword.ThisMonth.ToString() + "-1",
-                    DateRestrictionKeyword.ThisQuarter.ToString(), DateRestrictionKeyword.ThisQuarter.ToString() + "-1",
-                    DateRestrictionKeyword.ThisYear.ToString(), DateRestrictionKeyword.ThisYear.ToString() + "-1" });
+                    DateRestrictionKeyword.Today.ToString(), DateRestrictionKeyword.Today.ToString() + "-1D", 
+                    DateRestrictionKeyword.ThisWeek.ToString(), DateRestrictionKeyword.ThisWeek.ToString() + "-1W", 
+                    DateRestrictionKeyword.ThisMonth.ToString(), DateRestrictionKeyword.ThisMonth.ToString() + "-1M",
+                    DateRestrictionKeyword.ThisQuarter.ToString(), DateRestrictionKeyword.ThisQuarter.ToString() + "-1Q",
+                    DateRestrictionKeyword.ThisSemester.ToString(), DateRestrictionKeyword.ThisSemester.ToString() + "-1S",
+                    DateRestrictionKeyword.ThisYear.ToString(), DateRestrictionKeyword.ThisYear.ToString() + "-1Y",
+                    DateRestrictionKeyword.ThisMinute.ToString(), DateRestrictionKeyword.ThisMinute.ToString() + "-1m", DateRestrictionKeyword.ThisMinute.ToString() + "-30s",
+                    DateRestrictionKeyword.ThisHour.ToString(), DateRestrictionKeyword.ThisHour.ToString() + "-1h",
+                    DateRestrictionKeyword.ThisYear.ToString(), DateRestrictionKeyword.ThisYear.ToString() + "-1Y",
+                    DateRestrictionKeyword.Now.ToString() + "+1.5s -2m +3h -4D +5W -6M +7Q -8S +9Y"
+                });
         }
     }
 

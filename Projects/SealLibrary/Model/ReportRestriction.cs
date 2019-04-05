@@ -504,19 +504,20 @@ namespace Seal.Model
         public DateTime Date4 { get; set; }
         public bool ShouldSerializeDate4() { return Date4 != DateTime.MinValue; }
 
-        [Category("Restriction Values"), DisplayName("Value 1 Keyword"), Description("Date keyword can be used to specify relative date and time for the restriction value."), Id(2, 2)]
+        const string DateKeywordDescription = "Date keyword can be used to specify relative date and time for the restriction value. From the chosen keyword, operations +/- are allowed with the following units: Y(Year), S(Semester), Q(Quarter), M(Month), D(Day), h(hour), m(minute), s(second)";
+        [Category("Restriction Values"), DisplayName("Value 1 Keyword"), Description(DateKeywordDescription), Id(2, 2)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date1Keyword { get; set; }
 
-        [CategoryAttribute("Restriction Values"), DisplayName("Value 2 Keyword"), Description("Date keyword can be used to specify relative date and time for the restriction value."), Id(4, 2)]
+        [CategoryAttribute("Restriction Values"), DisplayName("Value 2 Keyword"), Description(DateKeywordDescription), Id(4, 2)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date2Keyword { get; set; }
 
-        [CategoryAttribute("Restriction Values"), DisplayName("Value 3 Keyword"), Description("Date keyword can be used to specify relative date and time for the restriction value."), Id(6, 2)]
+        [CategoryAttribute("Restriction Values"), DisplayName("Value 3 Keyword"), Description(DateKeywordDescription), Id(6, 2)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date3Keyword { get; set; }
 
-        [CategoryAttribute("Restriction Values"), DisplayName("Value 4 Keyword"), Description("Date keyword can be used to specify relative date and time for the restriction value."), Id(8, 2)]
+        [CategoryAttribute("Restriction Values"), DisplayName("Value 4 Keyword"), Description(DateKeywordDescription), Id(8, 2)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date4Keyword { get; set; }
 
@@ -581,8 +582,6 @@ namespace Seal.Model
         {
             get
             {
-                if (string.IsNullOrEmpty(_value4)) return false;
-
                 return
                     (
                     IsDateTime && (HasDateKeyword(Date4Keyword) || Date4 != DateTime.MinValue)
@@ -598,49 +597,118 @@ namespace Seal.Model
 
             return
                 keyword.StartsWith(DateRestrictionKeyword.Now.ToString()) ||
+                keyword.StartsWith(DateRestrictionKeyword.ThisMinute.ToString()) ||
+                keyword.StartsWith(DateRestrictionKeyword.ThisHour.ToString()) ||
                 keyword.StartsWith(DateRestrictionKeyword.Today.ToString()) ||
                 keyword.StartsWith(DateRestrictionKeyword.ThisWeek.ToString()) ||
                 keyword.StartsWith(DateRestrictionKeyword.ThisMonth.ToString()) ||
                 keyword.StartsWith(DateRestrictionKeyword.ThisQuarter.ToString()) ||
-                keyword.StartsWith(DateRestrictionKeyword.ThisYear.ToString());
+                keyword.StartsWith(DateRestrictionKeyword.ThisSemester.ToString()) ||
+                keyword.StartsWith(DateRestrictionKeyword.ThisYear.ToString())
+                ;
         }
 
-        double GetGap(string datekeyword, string keyword)
+        static char[] DateUnits = new char[] { 's', 'm', 'h', 'D', 'W', 'M', 'Q', 'S', 'Y' };
+        DateTime CalcFinalDate(DateTime start, string input, DateRestrictionKeyword keyword, char def)
         {
-            string val = datekeyword.Replace(keyword, "");
-            double result = 0;
-            double.TryParse(val, out result);
-            return result;
+            string val = input.Replace(keyword.ToString(), "").Replace("+", "§+").Replace("-", "§-");
+            var vals = val.Split('§');
+
+            foreach (var v in vals.Where(i => !string.IsNullOrEmpty(i)))
+            {
+                var index = v.IndexOfAny(DateUnits);
+                double vNum = 0;
+                char unit = def;
+                if (index > 0)
+                {
+                    double.TryParse(v.Substring(0,index).Trim(), out vNum);
+                    unit = v[index];
+                }
+                else
+                {
+                    double.TryParse(v.Trim(), out vNum);
+                }
+
+                if (vNum == 0) continue;
+
+                switch (unit)
+                {
+                    case 's':
+                        start = start.AddSeconds(vNum);
+                        break;
+                    case 'm':
+                        start = start.AddMinutes(vNum);
+                        break;
+                    case 'h':
+                        start = start.AddHours(vNum);
+                        break;
+                    case 'D':
+                        start = start.AddDays(vNum);
+                        break;
+                    case 'W':
+                        start = start.AddDays(7*vNum);
+                        break;
+                    case 'M':
+                        start = start.AddMonths(Convert.ToInt32(vNum));
+                        break;
+                    case 'Q':
+                        start = start.AddMonths(Convert.ToInt32(3 *vNum));
+                        break;
+                    case 'S':
+                        start = start.AddMonths(Convert.ToInt32(6 *vNum));
+                        break;
+                    case 'Y':
+                        start = start.AddYears(Convert.ToInt32(vNum));
+                        break;
+                }
+            }
+            return start;
         }
+
 
         DateTime GetFinalDate(string dateKeyword, DateTime date)
         {
             DateTime result = date;
             if (!string.IsNullOrEmpty(dateKeyword))
             {
-                if (dateKeyword.StartsWith(DateRestrictionKeyword.Now.ToString())) result = DateTime.Now;
+                if (dateKeyword.StartsWith(DateRestrictionKeyword.Now.ToString()))
+                {
+                    result = CalcFinalDate(DateTime.Now, dateKeyword, DateRestrictionKeyword.Now, 's');
+                }
+                else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisMinute.ToString()))
+                {
+                    result = CalcFinalDate(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0), dateKeyword, DateRestrictionKeyword.ThisMinute, 'm');
+                }
+                else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisHour.ToString()))
+                {
+                    result = CalcFinalDate(new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, DateTime.Now.Hour, 0, 0), dateKeyword, DateRestrictionKeyword.ThisHour, 'h');
+                }
                 else if (dateKeyword.StartsWith(DateRestrictionKeyword.Today.ToString()))
                 {
-                    result = DateTime.Today.AddDays(GetGap(dateKeyword, (DateRestrictionKeyword.Today.ToString())));
+                    result = CalcFinalDate(DateTime.Today, dateKeyword, DateRestrictionKeyword.Today, 'D');
                 }
                 else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisWeek.ToString()))
                 {
                     //First monday of the week...
-                    result = DateTime.Today.AddDays(1 - (int)DateTime.Today.DayOfWeek).AddDays(7 * GetGap(dateKeyword, (DateRestrictionKeyword.ThisWeek.ToString())));
+                    result = CalcFinalDate(DateTime.Today.AddDays(1 - (int)DateTime.Today.DayOfWeek), dateKeyword, DateRestrictionKeyword.ThisWeek, 'W');
+
                 }
                 else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisMonth.ToString()))
                 {
-                    result = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(Convert.ToInt32(GetGap(dateKeyword, (DateRestrictionKeyword.ThisMonth.ToString()))));
+                    result = CalcFinalDate(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), dateKeyword, DateRestrictionKeyword.ThisMonth, 'M');
                 }
                 else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisQuarter.ToString()))
                 {
                     int thisQuarter = (DateTime.Today.Month + 2) / 3;
-                    int quarterGap = Convert.ToInt32(GetGap(dateKeyword, (DateRestrictionKeyword.ThisQuarter.ToString())));
-                    result = new DateTime(DateTime.Today.Year, 1 + 3 * (thisQuarter - 1), 1).AddMonths(3 * quarterGap);
+                    result = CalcFinalDate(new DateTime(DateTime.Today.Year, 1 + 3 * (thisQuarter - 1), 1), dateKeyword, DateRestrictionKeyword.ThisQuarter, 'Q');
+                }
+                else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisSemester.ToString()))
+                {
+                    result = CalcFinalDate(new DateTime(DateTime.Today.Year, DateTime.Today.Month >= 7 ? 7 : 1, 1), dateKeyword, DateRestrictionKeyword.ThisSemester, 'S');
                 }
                 else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisYear.ToString()))
                 {
-                    result = new DateTime(DateTime.Today.Year, 1, 1).AddYears(Convert.ToInt32(GetGap(dateKeyword, (DateRestrictionKeyword.ThisYear.ToString()))));
+                    result = CalcFinalDate(new DateTime(DateTime.Today.Year, 1, 1), dateKeyword, DateRestrictionKeyword.ThisYear, 'Y');
                 }
             }
             else if (date == DateTime.MinValue) result = DateTime.Now;
@@ -1175,7 +1243,7 @@ namespace Seal.Model
         {
             if (index == 2) return GetHtmlValue(Value2, Date2Keyword, Date2, forEdition);
             if (index == 3) return GetHtmlValue(Value3, Date3Keyword, Date3, forEdition);
-            if (index == 4) return GetHtmlValue(Value4, Date4Keyword, Date3, forEdition);
+            if (index == 4) return GetHtmlValue(Value4, Date4Keyword, Date4, forEdition);
             return GetHtmlValue(Value1, Date1Keyword, Date1, forEdition);
         }
     }
