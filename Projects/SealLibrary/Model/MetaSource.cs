@@ -416,7 +416,7 @@ namespace Seal.Model
 
         public string CheckSQL(string sql, List<MetaTable> tables, ReportModel model, bool isPrePost)
         {
-            string result = "";
+            string result = "", finalSQL = "";
             if (!string.IsNullOrEmpty(sql))
             {
                 try
@@ -426,7 +426,8 @@ namespace Seal.Model
                     if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(table.PreSQL), table, table.IgnorePrePostError);
                     if (!isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PreSQL), model, model.IgnorePrePostError);
                     var command = connection.CreateCommand();
-                    command.CommandText = Helper.ClearAllSQLKeywords(sql);
+                    finalSQL = Helper.ClearAllSQLKeywords(sql);
+                    command.CommandText = finalSQL;
                     command.ExecuteReader();
                     if (isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PostSQL), model, model.IgnorePrePostError);
                     if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(table.PostSQL), table, table.IgnorePrePostError);
@@ -436,6 +437,7 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     result = ex.Message;
+                    if (!string.IsNullOrEmpty(finalSQL)) result += "\r\nSQL Executed:\r\n" + finalSQL.Replace("\n", "\r\n");
                 }
             }
 

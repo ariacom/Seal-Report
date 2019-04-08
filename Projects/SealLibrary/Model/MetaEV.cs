@@ -68,5 +68,9 @@ namespace Seal.Model
         {
             get { return !string.IsNullOrEmpty(_restrictionValue) ? _restrictionValue : DisplayValue; }
         }
+
+        //For execution
+        [XmlIgnore]
+        public string HtmlId;
     }
 }

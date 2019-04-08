@@ -300,6 +300,33 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
+        public List<MetaEV> PromptedEnumValues
+        {
+            get
+            {
+                if (EnumRE == null) return new List<MetaEV>();
+                int i = 0;
+                foreach (var enumDef in EnumRE.Values) enumDef.HtmlId = (i++).ToString();
+
+                if (!EnumRE.HasDynamicDisplay) return EnumRE.Values;
+
+                //Add only selected values...
+                var result = new List<MetaEV>();
+                foreach (var v in EnumRE.Values)
+                {
+                    if (EnumValues.Contains(v.Id))
+                    {
+                        result.Add(v);
+                    }
+                }
+
+                return result;
+            }
+        }
+
+
+
+        [XmlIgnore]
         public bool IsEnumRE
         {
             get
@@ -827,6 +854,12 @@ namespace Seal.Model
             return Model.Report.EnumDisplayValue(EnumRE, id, true);
         }
 
+
+        public string GetEnumMessage()
+        {
+            return Model.Report.EnumMessage(EnumRE);
+        }
+
         public bool IsGreaterSmallerOperator
         {
             get { return _operator == Operator.Greater || _operator == Operator.GreaterEqual || _operator == Operator.Smaller || _operator == Operator.SmallerEqual; }
@@ -842,7 +875,7 @@ namespace Seal.Model
             get { return _operator == Operator.Between || _operator == Operator.NotBetween; }
         }
 
-        string EnumSQLValue
+        public string EnumSQLValue
         {
             get
             {

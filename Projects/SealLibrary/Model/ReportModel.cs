@@ -842,7 +842,7 @@ namespace Seal.Model
 
         public static string ClearSharedRestrictions(string sql)
         {
-            return Helper.ClearSQLKeywords(sql, Repository.SharedRestrictionKeyword);
+            return Helper.ClearSQLKeywords(sql, Repository.SharedRestrictionKeyword, "1=1");
         }
 
 

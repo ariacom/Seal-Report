@@ -1622,6 +1622,10 @@ namespace Seal.Model
             return result;
         }
 
+        public string EnumMessage(MetaEnum instance)
+        {
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "EnumMessage", instance.Name, instance.Message);
+        }
         #endregion
 
         #region Log
