@@ -842,29 +842,7 @@ namespace Seal.Model
 
         public static string ClearSharedRestrictions(string sql)
         {
-            if (string.IsNullOrEmpty(sql)) return "";
-
-            //Replace shared restrictions by 1=1
-            int index = 0;
-            do
-            {
-                index = sql.IndexOf(Repository.SharedRestrictionKeyword, index);
-                if (index > 0)
-                {
-                    index += Repository.SharedRestrictionKeyword.Length;
-                    for (int i = index; i < sql.Length; i++)
-                    {
-                        if (sql[i] == '}')
-                        {
-                            sql = sql.Replace(Repository.SharedRestrictionKeyword + sql.Substring(index, i - index) + "}", "1=1");
-                            index -= Repository.SharedRestrictionKeyword.Length;
-                            break;
-                        }
-                    }
-                }
-            }
-            while (index > 0 && index < sql.Length);
-            return sql;
+            return Helper.ClearSQLKeywords(sql, Repository.SharedRestrictionKeyword);
         }
 
 
@@ -905,44 +883,24 @@ namespace Seal.Model
                     if (!string.IsNullOrEmpty(table.WhereSQL)) sqlToParse += "\r\n" + table.WhereSQL;
                 }
 
-                //Get restriction keywords
-                int index = 0;
-                do
+                var names = Helper.GetSQLKeywordNames(sqlToParse, Repository.SharedRestrictionKeyword);
+                foreach (var restrictionName in names)
                 {
-                    index = sqlToParse.IndexOf(Repository.SharedRestrictionKeyword, index);
-                    if (index > 0)
+                    var sharedRestriction = SharedRestrictions.FirstOrDefault(i => i.Name == restrictionName);
+                    if (sharedRestriction == null)
                     {
-                        index += Repository.SharedRestrictionKeyword.Length;
-                        string restrictionName = "";
-                        for (int i = index; i < sqlToParse.Length; i++)
-                        {
-                            if (sqlToParse[i] == '}')
-                            {
-                                restrictionName = sqlToParse.Substring(index, i - index); ;
-                                break;
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(restrictionName))
-                        {
-                            var sharedRestriction = SharedRestrictions.FirstOrDefault(i => i.Name == restrictionName);
-                            if (sharedRestriction == null)
-                            {
-                                sharedRestriction = ReportRestriction.CreateReportRestriction();
-                                sharedRestriction.Name = restrictionName;
-                                sharedRestriction.DisplayName = restrictionName;
-                                sharedRestriction.TypeRe = ColumnType.Text;
-                                SharedRestrictions.Add(sharedRestriction);
-                            }
-                        }
+                        sharedRestriction = ReportRestriction.CreateReportRestriction();
+                        sharedRestriction.Name = restrictionName;
+                        sharedRestriction.DisplayName = restrictionName;
+                        sharedRestriction.TypeRe = ColumnType.Text;
+                        SharedRestrictions.Add(sharedRestriction);
                     }
-
                 }
-                while (index > 0);
 
                 //clean restrictions not used
                 SharedRestrictions.RemoveAll(i => !sqlToParse.Contains(Repository.SharedRestrictionKeyword + i.Name + "}"));
 
+                //Set references
                 foreach (var restriction in SharedRestrictions)
                 {
                     restriction.SetSourceReference(Source);
@@ -951,7 +909,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
             }
         }
 

@@ -246,7 +246,7 @@ namespace Seal.Helpers
 
         static public ColumnType NetTypeConverter(Type netType)
         {
-            if (netType == typeof(string) || netType== typeof(Guid)) return ColumnType.Text;
+            if (netType == typeof(string) || netType == typeof(Guid)) return ColumnType.Text;
             if (netType == typeof(DateTime)) return ColumnType.DateTime;
             return ColumnType.Numeric;
         }
@@ -351,7 +351,7 @@ namespace Seal.Helpers
             if (input != null && !input.Contains("Password=") && !string.IsNullOrEmpty(password)) result += string.Format(";Password={0}", password);
             return result;
         }
-        
+
 
         static public void ExecutePrePostSQL(DbConnection connection, string sql, object model, bool ignoreErrors)
         {
@@ -451,7 +451,7 @@ namespace Seal.Helpers
             if (request != null)
             {
                 result.AppendFormat("URL: '{0}'\r\n", request.Url.OriginalString);
-                if (request.RequestContext != null && request.RequestContext.HttpContext != null) result.AppendFormat("Session: '{0}'\r\n", request.RequestContext.HttpContext.Session.SessionID);                
+                if (request.RequestContext != null && request.RequestContext.HttpContext != null) result.AppendFormat("Session: '{0}'\r\n", request.RequestContext.HttpContext.Session.SessionID);
                 result.AppendFormat("IP: '{0}'\r\n", GetIPAddress(request));
                 if (request.Form.Count > 0) foreach (string key in request.Form.Keys) result.AppendFormat("{0}={1}\r\n", key, request.Form[key]);
                 if (request.QueryString.Count > 0) foreach (string key in request.QueryString.Keys) result.AppendFormat("{0}={1}\r\n", key, request.QueryString[key]);
@@ -664,5 +664,71 @@ namespace Seal.Helpers
             return "data:image/" + type + ";base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
         }
 
+
+        //SQL Keywords management
+        public static string ClearAllSQLKeywords(string sql)
+        {
+            sql = ClearSQLKeywords(sql, Repository.EnumFilterKeyword);
+            sql = ClearSQLKeywords(sql, Repository.EnumValuesKeyword);
+            sql = ClearSQLKeywords(sql, Repository.SharedRestrictionKeyword);
+            return sql;
+        }
+
+        public static string ClearSQLKeywords(string sql, string keyword)
+        {
+            if (string.IsNullOrEmpty(sql)) return "";
+
+            //Replace keyword by 1=1
+            int index = 0;
+            do
+            {
+                index = sql.IndexOf(keyword, index);
+                if (index > 0)
+                {
+                    index += keyword.Length;
+                    for (int i = index; i < sql.Length; i++)
+                    {
+                        if (sql[i] == '}')
+                        {
+                            sql = sql.Replace(keyword + sql.Substring(index, i - index) + "}", "1=1");
+                            index -= keyword.Length;
+                            break;
+                        }
+                    }
+                }
+            }
+            while (index > 0 && index < sql.Length);
+            return sql;
+        }
+
+
+        public static List<string> GetSQLKeywordNames(string sql, string keyword)
+        {
+            var result = new List<string>();
+            //Get keywords
+            int index = 0;
+            do
+            {
+                index = sql.IndexOf(Repository.SharedRestrictionKeyword, index);
+                if (index > 0)
+                {
+                    index += Repository.SharedRestrictionKeyword.Length;
+                    string restrictionName = "";
+                    for (int i = index; i < sql.Length; i++)
+                    {
+                        if (sql[i] == '}')
+                        {
+                            restrictionName = sql.Substring(index, i - index); ;
+                            break;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(restrictionName)) result.Add(restrictionName);
+                }
+
+            }
+            while (index > 0);
+            return result;
+        }
     }
 }
