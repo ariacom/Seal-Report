@@ -94,6 +94,11 @@ namespace Seal.Model
             set { _isDbRefresh = value; }
         }
 
+
+        //List is built when prompted with xx char
+        //List is built when prompted with dependencies
+        //Info message: Type xx char or select a country first
+
         private Boolean _usePosition = false;
         [DefaultValue(false)]
         [Category("Definition"), DisplayName("Use defined position to sort in reports"), Description("If True, the current position of the values in the list is used to sort the column in the report result."), Id(5, 1)]
