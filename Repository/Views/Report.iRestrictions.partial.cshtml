@@ -31,11 +31,10 @@
                                 </select>
                                 @if (restriction.IsEnumRE)
                                 {
-                                    <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple")>
-                                        @for (int j = 0; j > restriction.EnumRE.Values.Count; j++)
+                                    <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum @(restriction.EnumRE.HasDynamicDisplay ? "enum_dynamic"  :"")" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple") dependencies="@restriction.EnumRE.HasDependencies"  filterchars="@restriction.EnumRE.FilterChars" message="@Raw(restriction.GetEnumMessage())">
+                                        @foreach (var enumDef in restriction.PromptedEnumValues)
                                         {
-                                            var enumDef = restriction.EnumRE.Values[j];
-                                            <option id='@(restriction.OptionHtmlId + j.ToString())' value='@(restriction.OptionHtmlId + j.ToString())' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
+                                            <option id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
                                         }
                                     </select>
                                 }

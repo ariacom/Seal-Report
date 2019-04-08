@@ -40,6 +40,7 @@ namespace Seal.Model
         public const string ActionGetNavigationLinks = "ActionGetNavigationLinks";
         public const string ActionGetTableData = "ActionGetTableData";
         public const string ActionGetEnumValues = "ActionGetEnumValues";
+        public const string ActionUpdateEnumValues = "ActionUpdateEnumValues";
 
         //Html Ids Keywords
         public const string HtmlId_header_form = "header_form";
@@ -57,6 +58,7 @@ namespace Seal.Model
         public const string HtmlId_viewid_tableload = "viewid_tableload";
         public const string HtmlId_pageid_tableload = "pageid_tableload";
         public const string HtmlId_id_enumload = "id_enumload";
+        public const string HtmlId_values_enumload = "values_enumload";
         public const string HtmlId_filter_enumload = "filter_enumload";
         public const string HtmlId_parameter_enumload = "parameter_enumload";
 
@@ -436,10 +438,9 @@ namespace Seal.Model
                         if (restriction.IsEnum)
                         {
                             restriction.EnumValues.Clear();
-                            for (int i = 0; i < restriction.EnumRE.Values.Count; i++)
+                            foreach (var enumVal in restriction.EnumRE.Values)
                             {
-                                var enumVal = restriction.EnumRE.Values[i];
-                                val = Report.GetInputRestriction(restriction.OptionHtmlId + i.ToString());
+                                val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
                                 if (val.ToLower() == "true")
                                 {
                                     restriction.EnumValues.Add(enumVal.Id);
@@ -1851,5 +1852,6 @@ namespace Seal.Model
         public bool IsConvertingToPDF = false; //If true, do not run conversion again
         public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...
 
+        public Dictionary<MetaEnum, string> CurrentEnumValues = new Dictionary<MetaEnum, string>();
     }
 }

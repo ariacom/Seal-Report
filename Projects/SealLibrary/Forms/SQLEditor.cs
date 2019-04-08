@@ -101,19 +101,26 @@ namespace Seal.Forms
                 }
                 else if (context.Instance is MetaEnum)
                 {
-                    samples.Add(razorEnumTemplate);
-                    samples.Add("SELECT DISTINCT CategoryID, CategoryName\r\nFROM Categories\r\nORDER BY 2");
-                    samples.Add("SELECT DISTINCT CategoryID, CategoryName\r\nFROM Categories\r\nWHERE {EnumFilter}\r\nORDER BY 2");
-                    samples.Add("SELECT DISTINCT City\r\nFROM Categories\r\nWHERE CountryID in ({EnumValues_Country}\r\nORDER BY 1");
+                    if (context.PropertyDescriptor.Name == "SqlDisplay")
+                    {
+                        samples.Add("SELECT DISTINCT CategoryID, CategoryName\r\nFROM Categories\r\nWHERE CategoryName like '%{EnumFilter}%'\r\nORDER BY 2");
+                        samples.Add("SELECT DISTINCT City\r\nFROM Customers\r\nWHERE Country in ({EnumValues_Country})\r\nORDER BY 1");
+                        description = descriptionTemplate1 + "The SQL may contain the filter tag by using the keyword '{EnumFilter}' to build the enum  with filters got from the user.\r\nThe SQL may contain dependencies with other enum values got from the user by using the keyword {EnumValues_<Name>} where <Name> is the name of the other enumerated list.\r\n";
+                    }
+                    else
+                    {
+
+                        samples.Add(razorEnumTemplate);
+                        samples.Add("SELECT DISTINCT CategoryID, CategoryName\r\nFROM Categories\r\nORDER BY 2");
+                        description = descriptionTemplate1;
+                    }
                     frm.clearToolStripButton.Visible = false;
                     MetaEnum anEnum = context.Instance as MetaEnum;
                     if (value == null || string.IsNullOrEmpty(value.ToString()))
                     {
                         forceValueToEdit = true;
-                        valueToEdit = anEnum.DefaultSQL;
+                        valueToEdit = "select col1,col2 from table order by col2";
                     }
-                    description = descriptionTemplate1 + "The SQL may contain the filter tag by using the keyword '{EnumFilter}' to build the enum  with filters got from the user.\r\nThe SQL may contain dependencies with other enum values got from the user by using the keyword {EnumValues_<Name>} where <Name> is the name of the other enumerated list.\r\n";
-                    ;
                 }
                 else if (context.Instance is ReportSource || context.Instance is MetaSource)
                 {

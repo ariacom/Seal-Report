@@ -442,11 +442,26 @@ function mainInit() {
 }
 
 //Enum select picker
+function requestEnumData(inp) {
+    var data;
+    if (urlPrefix != "") {
+        //TODO $.post(urlPrefix + "ActionUpdateViewParameter", { execution_guid: $("#execution_guid").val(), parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+    }
+    else {
+        $("#header_form").attr("action", "ActionGetEnumValues");
+        $("#filter_enumload").val(inp);
+        $("#header_form").submit();
+        data = jQuery.parseJSON($("#parameter_enumload").text());
+    }
+    return data;
+}
+
+
 function fillEnumSelect(data) {
+    var id = "#" + $("#id_enumload").val();
+    var $enum = $(id);
     if (data.length > 0) {
-        //       alert(JSON.stringify(data));
-        var id = "#" + $("#id_enumload").val();
-        var $enum = $(id);
+        //alert(JSON.stringify(data));
         $(id + " option:selected").each(function () {
             var found = false;
             for (var i = 0; !found && i < data.length; i++) {
@@ -464,53 +479,73 @@ function fillEnumSelect(data) {
         $enum.empty();
         for (var i = 0; i < data.length; i++) {
             $enum.append(
-                $("<option" + (data[i].Selected ? " selected" : "") + "></option>").attr("value", data[i].v).text(data[i].t)
+                $("<option" + (data[i].Selected ? " selected" : "") + "></option>").attr("id", data[i].v).attr("value", data[i].v).text(data[i].t)
             );
         }
+
         $enum.selectpicker("refresh");
+    }
+
+    if ($enum.attr("message")) {
+        //Add info message
+        var $message = $("#enum-message");
+        if ($message.length == 0) {
+            $message = $("<li>").attr("id", "enum-message").addClass("no-results").text($enum.attr("message"));
+        }
+        $enum.parent().children("div").children("ul").append($message);
     }
 }
 
 
 function initEnums() {
-    $(".enum")
-        .selectpicker({
-            "liveSearch": true,
-            "actionsBox": true
-        })
-        .on('shown.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-            if ($(this).attr("id")) {
-                $("#id_enumload").val($(this).attr("id"));
-                var data = [];
+    $(".enum").selectpicker({
+        "liveSearch": true,
+        "actionsBox": true
+    });
+
+    $(".enum").on('hide.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+        //send current values
+        var ids = "";
+        $("#" + $(this).attr("id") + " option:selected").each(function () {
+            ids += $(this).val() + ",";
+        });
+        if (urlPrefix != "") {
+            //TODO $.post(urlPrefix + "ActionUpdateViewParameter", { execution_guid: $("#execution_guid").val(), parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+        }
+        else {
+            $("#id_enumload").val($(this).attr("id"));
+            $("#values_enumload").val(ids);
+            $("#header_form").attr("action", "ActionUpdateEnumValues");
+            $("#header_form").submit();
+        }
+    });
+
+    $(".enum_dynamic").on('shown.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+        if ($(this).attr("id")) {
+            $("#id_enumload").val($(this).attr("id"));
+
+            var data = [];
+            if ($(this).attr("dependencies")) {
+                data = requestEnumData()
+            }
+            else {
                 $("#" + $(this).attr("id") + " option:selected").each(function () {
                     data.push({ v: $(this).val(), t: $(this).text(), Selected: true });
                 });
-                fillEnumSelect(data);
             }
-        });
+            fillEnumSelect(data);
 
-    var inp = "";
-    $(".bs-searchbox input").on("input", function (evt) { // listen on the created elements for input
-        var thi$ = $(this).parent().next();
-        var $earch = $(evt.target); // hold on to the search input field
-        if ($earch.val() !== inp) { // if the search value is changed
-            inp = $earch.val();
-            if (inp.length > 0) { // and it has 3 or more characters ...
-                $("#header_form").attr("action", "ActionGetEnumValues");
-                $("#filter_enumload").val(inp);
-                $("#header_form").submit();
-    //            alert($("#parameter_enumload").text());
-                var data = jQuery.parseJSON($("#parameter_enumload").text());
-      //          alert(JSON.stringify(data));
-//                var data = [{ Value: '123', Text: 'dadd' }, { Value: '124', Text: 'deee' }, { Value: '124', Text: 'dfaaaa' }];
-                fillEnumSelect(data);
-
-                //          var url = thi$.data("completeurl") + "/"; // get an url to ...
-
-
-                //        $.get(url, { code: "", search: inp }) // do an ajax call to get more countries
-                //          .done(function (data) { responseToSelect(data, thi$) });
-            }
+            var inp = "";
+            $(".bs-searchbox input").on("input", function (evt) {
+                var $earch = $(evt.target);
+                if ($earch.val() !== inp) { // search value is changed
+                    inp = $earch.val();
+                    if (inp.length >= $("#" + $("#id_enumload").val()).attr("filterchars")) { // more than xx characters
+                        var data = requestEnumData(inp)
+                        fillEnumSelect(data);
+                    }
+                }
+            });
         }
     });
 }

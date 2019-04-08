@@ -668,13 +668,13 @@ namespace Seal.Helpers
         //SQL Keywords management
         public static string ClearAllSQLKeywords(string sql)
         {
-            sql = ClearSQLKeywords(sql, Repository.EnumFilterKeyword);
-            sql = ClearSQLKeywords(sql, Repository.EnumValuesKeyword);
-            sql = ClearSQLKeywords(sql, Repository.SharedRestrictionKeyword);
+            sql = ClearSQLKeywords(sql, Repository.EnumFilterKeyword, "filter");
+            sql = ClearSQLKeywords(sql, Repository.EnumValuesKeyword, "'1'");
+            sql = ClearSQLKeywords(sql, Repository.SharedRestrictionKeyword, "1=1");
             return sql;
         }
 
-        public static string ClearSQLKeywords(string sql, string keyword)
+        public static string ClearSQLKeywords(string sql, string keyword, string replacedBy)
         {
             if (string.IsNullOrEmpty(sql)) return "";
 
@@ -690,7 +690,7 @@ namespace Seal.Helpers
                     {
                         if (sql[i] == '}')
                         {
-                            sql = sql.Replace(keyword + sql.Substring(index, i - index) + "}", "1=1");
+                            sql = sql.Replace(keyword + sql.Substring(index, i - index) + "}", replacedBy);
                             index -= keyword.Length;
                             break;
                         }
