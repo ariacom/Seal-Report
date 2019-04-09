@@ -176,9 +176,10 @@ class SWIGateway {
             .fail(function () { failure(); });
     }
 
-    public NewReportDefinition(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public NewReportDefinition(path: string, sqlmodel : boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWINewReportDefinition", {
-            path: path
+            path: path,
+            sqlmodel: sqlmodel
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -195,6 +196,14 @@ class SWIGateway {
     public SaveReportDefinition(path: string, check: boolean, report: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWISaveReportDefinition", {
             path: path, check: check, report: report
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    }
+
+    public RefreshSQLModel(report: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_sealServer + "SWIRefreshSQLModel", {
+            report: report
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });

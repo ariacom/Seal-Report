@@ -641,6 +641,7 @@ namespace SealWebServer.Controllers
             SWIFolder result = new SWIFolder();
             result.path = path;
             result.right = 0;
+            result.sql = WebUser.SqlModel;
             result.SetFullPath(getFullPath(path));
 
             if (result.IsPersonal)

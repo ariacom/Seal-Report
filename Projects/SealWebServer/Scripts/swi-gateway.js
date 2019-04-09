@@ -156,9 +156,10 @@ var SWIGateway = (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
     };
-    SWIGateway.prototype.NewReportDefinition = function (path, callback, errorcb) {
+    SWIGateway.prototype.NewReportDefinition = function (path, sqlmodel, callback, errorcb) {
         $.post(_sealServer + "SWINewReportDefinition", {
-            path: path
+            path: path,
+            sqlmodel: sqlmodel
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });
@@ -173,6 +174,13 @@ var SWIGateway = (function () {
     SWIGateway.prototype.SaveReportDefinition = function (path, check, report, callback, errorcb) {
         $.post(_sealServer + "SWISaveReportDefinition", {
             path: path, check: check, report: report
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function () { failure(); });
+    };
+    SWIGateway.prototype.RefreshSQLModel = function (report, callback, errorcb) {
+        $.post(_sealServer + "SWIRefreshSQLModel", {
+            report: report
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function () { failure(); });

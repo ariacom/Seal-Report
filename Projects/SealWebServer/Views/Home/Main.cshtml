@@ -140,7 +140,7 @@
     </div>
 
     <!-- File Name Dialog -->
-    <div id="report-name-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div id="report-name-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index:25000;">
         <div class="modal-dialog">
             <div class="modal-content" style="top:60px">
                 <div class="modal-header">
@@ -159,7 +159,7 @@
     </div>
 
     <!-- Message Dialog -->
-    <div id="message-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index:5000;">
+    <div id="message-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index:25000;">
         <div class="modal-dialog">
             <div class="modal-content" style="top: 60px;">
                 <div class="modal-header">
@@ -170,7 +170,7 @@
                     <span id="message-text"></span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                    <button id="message-cancel-button" type="button" class="btn btn-default" data-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
                     <button id="message-ok-button" type="button" class="btn btn-primary">@repository.TranslateWeb("OK")</button>
                 </div>
             </div>
@@ -178,7 +178,7 @@
     </div>
 
     <!-- Login Modal -->
-    <div id="login-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="top:50px;">
+    <div id="login-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="top:50px;z-index:25000;">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
