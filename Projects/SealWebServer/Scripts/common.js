@@ -457,38 +457,38 @@ function requestEnumData(inp) {
 }
 
 
-function fillEnumSelect(data) {
+function fillEnumSelect(data, noMessage) {
     var id = "#" + $("#id_enumload").val();
     var $enum = $(id);
+
+    //Add selected items
+    $(id + " option:selected").each(function () {
+        var found = false;
+        for (var i = 0; !found && i < data.length; i++) {
+            if ($(this).val() == data[i].v) {
+                data[i].Selected = true;
+                found = true;
+            }
+        }
+
+        if (!found) {
+            data.push({ v: $(this).val(), t: $(this).text(), Selected: true });
+        }
+    });
+
     if (data.length > 0) {
-        //alert(JSON.stringify(data));
-        $(id + " option:selected").each(function () {
-            var found = false;
-            for (var i = 0; !found && i < data.length; i++) {
-                if ($(this).val() == data[i].v) {
-                    data[i].Selected = true;
-                    found = true;
-                }
-            }
-
-            if (!found) {
-                data.push({ v: $(this).val(), t: $(this).text(), Selected: true });
-            }
-        });
-
         $enum.empty();
         for (var i = 0; i < data.length; i++) {
             $enum.append(
                 $("<option" + (data[i].Selected ? " selected" : "") + "></option>").attr("id", data[i].v).attr("value", data[i].v).text(data[i].t)
             );
         }
-
         $enum.selectpicker("refresh");
-    }
+     }
 
     var $message = $("#enum-message");
     if ($message) $message.text("");
-    if ($enum.attr("message")) {
+    if (!noMessage && $enum.attr("message")) {
         //Add info message
         var $message = $("#enum-message");
         if ($message.length == 0) {
@@ -498,7 +498,6 @@ function fillEnumSelect(data) {
         $enum.parent().children("div").children("ul").append($message);
     }
 }
-
 
 function initEnums() {
     $(".enum").selectpicker({
@@ -528,15 +527,8 @@ function initEnums() {
             $("#id_enumload").val($(this).attr("id"));
 
             var data = [];
-            if ($(this).attr("dependencies")) {
-                data = requestEnumData()
-            }
-            else {
-                $("#" + $(this).attr("id") + " option:selected").each(function () {
-                    data.push({ v: $(this).val(), t: $(this).text(), Selected: true });
-                });
-            }
-            fillEnumSelect(data);
+            if ($(this).attr("dependencies")) data = requestEnumData();            
+            fillEnumSelect(data, data.length > 0);
 
             var inp = "";
             $(".bs-searchbox input").on("input", function (evt) {
@@ -545,7 +537,7 @@ function initEnums() {
                     inp = $earch.val();
                     if (inp.length >= $("#" + $("#id_enumload").val()).attr("filterchars")) { // more than xx characters
                         var data = requestEnumData(inp)
-                        fillEnumSelect(data);
+                        fillEnumSelect(data, true);
                     }
                 }
             });

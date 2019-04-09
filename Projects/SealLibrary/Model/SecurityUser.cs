@@ -82,6 +82,22 @@ namespace Seal.Model
             }
         }
 
+        private bool? _sqlModel = null;
+        public bool SqlModel
+        {
+            get
+            {
+                if (_sqlModel == null)
+                {
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (_sqlModel == null || group.SqlModel) _sqlModel = true;
+                    }
+                }
+                return _sqlModel.Value;
+            }
+        }
+
         private ViewType? _viewType = null;
         public ViewType ViewType
         {

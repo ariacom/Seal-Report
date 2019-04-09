@@ -21,6 +21,7 @@
         public string name;
         public string fullname;
         public int right = 0;
+        public bool sql = false; //can edit sql model
         public bool expand = true;
         public bool files = false; //true = files only = no reports
         public int manage = 0; //0 do not manage, 1 manage sub-folders only, 2 manage all :create, delete and rename
