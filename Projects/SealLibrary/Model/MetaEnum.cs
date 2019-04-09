@@ -55,9 +55,8 @@ namespace Seal.Model
                 GetProperty("Values").SetIsReadOnly(!IsDynamic);
                 GetProperty("NumberOfValues").SetIsReadOnly(true);
 
-                GetProperty("FilterChars").SetIsReadOnly(!HasDynamicDisplay);
-                GetProperty("FilterChars").SetIsReadOnly(!HasDynamicDisplay);
-                GetProperty("Message").SetIsReadOnly(!HasDynamicDisplay);
+                GetProperty("FilterChars").SetIsReadOnly(!HasDynamicDisplay || !HasFilters);
+                GetProperty("Message").SetIsReadOnly(!HasDynamicDisplay || (!HasFilters && !HasDependencies));
 
                 GetProperty("Information").SetIsReadOnly(true);
                 GetProperty("Error").SetIsReadOnly(true);
@@ -151,9 +150,9 @@ namespace Seal.Model
         }
 
         //List is built when prompted with xx char
-        private int _filterChars;
+        private int _filterChars = 2;
         [DefaultValue(2)]
-        [Category("Dynamic Display"), DisplayName("Filter characters"), Description("If the list is dynamic, refreshed upon database connection and the SQL contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed."), Id(2, 2)]
+        [Category("Dynamic Display"), DisplayName("Filter characters to type"), Description("If the list is dynamic, refreshed upon database connection and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed."), Id(2, 2)]
         public int FilterChars
         {
             get { return _filterChars; }
@@ -174,7 +173,7 @@ namespace Seal.Model
         }
 
         private string _message;
-        [Category("Dynamic Display"), DisplayName("Message"), Description("If the list is dynamic, refreshed upon database connection and and has filter characters or dependencies, the message displayed to the end user to trigger the list (e.g. 'Select a country first' or 'Type 5 characters')."), Id(4, 2)]
+        [Category("Dynamic Display"), DisplayName("Information message"), Description("If the list is dynamic, refreshed upon database connection and has filter characters or dependencies, the message displayed to the end user to trigger the list (e.g. 'Select a country first' or 'Type 5 characters')."), Id(4, 2)]
         public string Message
         {
             get { return _message; }

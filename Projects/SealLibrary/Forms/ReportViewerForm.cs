@@ -351,8 +351,14 @@ namespace Seal.Forms
                             var restriction = _report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
                             if (restriction != null && restriction.EnumRE != null)
                             {
-                                var values = new List<MetaEV>();
+                                //Set current restrictions
+                                foreach (var r in _report.AllRestrictions)
+                                {
+                                    if (!_execution.CurrentEnumValues.ContainsKey(r.EnumRE)) _execution.CurrentEnumValues.Add(r.EnumRE, null);
+                                    _execution.CurrentEnumValues[r.EnumRE] = r.EnumSQLValue;
+                                }
 
+                                var values = new List<MetaEV>();
                                 if ((restriction.EnumRE.HasFilters && filter.Length >= restriction.EnumRE.FilterChars) || (restriction.EnumRE.HasDependencies && _execution.CurrentEnumValues.Count > 0))
                                 {
                                     values = restriction.EnumRE.GetSubSetValues(filter, _execution.CurrentEnumValues);

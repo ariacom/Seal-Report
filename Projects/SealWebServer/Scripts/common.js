@@ -486,12 +486,15 @@ function fillEnumSelect(data) {
         $enum.selectpicker("refresh");
     }
 
+    var $message = $("#enum-message");
+    if ($message) $message.text("");
     if ($enum.attr("message")) {
         //Add info message
         var $message = $("#enum-message");
         if ($message.length == 0) {
-            $message = $("<li>").attr("id", "enum-message").addClass("no-results").text($enum.attr("message"));
+            $message = $("<li>").attr("id", "enum-message").addClass("no-results");
         }
+        $message.text($enum.attr("message"));
         $enum.parent().children("div").children("ul").append($message);
     }
 }
