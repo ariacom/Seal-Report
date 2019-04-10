@@ -1852,6 +1852,60 @@ namespace Seal.Model
         public bool IsConvertingToPDF = false; //If true, do not run conversion again
         public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...
 
+
+        //Dynamic Enums 
         public Dictionary<MetaEnum, string> CurrentEnumValues = new Dictionary<MetaEnum, string>();
+
+        public void UpdateEnumValues(string enumId, string values)
+        {
+            var restriction = Report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
+            if (restriction != null && restriction.EnumRE != null)
+            {
+                if (!CurrentEnumValues.ContainsKey(restriction.EnumRE)) CurrentEnumValues.Add(restriction.EnumRE, null);
+                //Build the SQL value
+                restriction.EnumValues.Clear();
+                foreach (var v in values.Split(',').Where(i => !string.IsNullOrEmpty(i)))
+                {
+                    foreach (var ev in restriction.EnumRE.Values)
+                    {
+                        if (restriction.OptionHtmlId + ev.HtmlId == v) restriction.EnumValues.Add(ev.Id);
+                    }
+                }
+                CurrentEnumValues[restriction.EnumRE] = restriction.EnumSQLValue;
+            }
+        }
+
+        public string GetEnumValues(string enumId, string filter)
+        {
+            var restriction = Report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
+            var result = new StringBuilder();
+            if (restriction != null && restriction.EnumRE != null)
+            {
+                //Set current restrictions
+                foreach (var r in Report.AllRestrictions)
+                {
+                    if (!CurrentEnumValues.ContainsKey(r.EnumRE)) CurrentEnumValues.Add(r.EnumRE, null);
+                    CurrentEnumValues[r.EnumRE] = r.EnumSQLValue;
+                }
+
+                var values = new List<MetaEV>();
+                if ((restriction.EnumRE.HasFilters && filter.Length >= restriction.EnumRE.FilterChars) || (restriction.EnumRE.HasDependencies && CurrentEnumValues.Count > 0))
+                {
+                    values = restriction.EnumRE.GetSubSetValues(filter, CurrentEnumValues);
+                }
+
+                foreach (var enumDef in restriction.EnumRE.Values)
+                {
+                    if (values.Exists(i => i.Id == enumDef.Id))
+                    {
+                        var display = restriction.GetEnumDisplayValue(enumDef.Id);
+                        result.Append(result.Length == 0 ? "[" : ",");
+                        result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"}}", restriction.OptionHtmlId + enumDef.HtmlId, restriction.GetEnumDisplayValue(enumDef.Id).Replace("\"", "\\\""));
+                    }
+                }
+                result.Append(result.Length == 0 ? "[]" : "]");
+            }
+            return result.ToString();
+        }
     }
 }

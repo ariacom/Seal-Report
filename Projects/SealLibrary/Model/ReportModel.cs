@@ -949,7 +949,7 @@ namespace Seal.Model
         public void SetColumnsName()
         {
             int colIndex = 0;
-            foreach (ReportElement element in Elements) element.SQLColumnName = (Source.IsNoSQL || IsSQLModel) ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
+            foreach (ReportElement element in Elements) element.SQLColumnName = Source.IsNoSQL ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
         }
 
         void AddSubReportsElements()
