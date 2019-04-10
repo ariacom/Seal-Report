@@ -323,21 +323,7 @@ namespace Seal.Forms
                             cancelNavigation = true;
                             string enumId = webBrowser.Document.All[ReportExecution.HtmlId_id_enumload].GetAttribute("value");
                             string values = webBrowser.Document.All[ReportExecution.HtmlId_values_enumload].GetAttribute("value");
-                            var restriction = _report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
-                            if (restriction != null && restriction.EnumRE != null)
-                            {
-                                if (!_execution.CurrentEnumValues.ContainsKey(restriction.EnumRE)) _execution.CurrentEnumValues.Add(restriction.EnumRE, null);
-                                //Build the SQL value
-                                restriction.EnumValues.Clear();
-                                foreach (var v in values.Split(',').Where(i => !string.IsNullOrEmpty(i)))
-                                {
-                                    foreach (var ev in restriction.EnumRE.Values)
-                                    {
-                                        if (restriction.OptionHtmlId + ev.HtmlId == v) restriction.EnumValues.Add(ev.Id);
-                                    }
-                                }
-                                _execution.CurrentEnumValues[restriction.EnumRE] = restriction.EnumSQLValue;
-                            }
+                            _execution.UpdateEnumValues(enumId, values);
                         }
                         break;
                         
@@ -347,36 +333,7 @@ namespace Seal.Forms
                             string enumId = webBrowser.Document.All[ReportExecution.HtmlId_id_enumload].GetAttribute("value");
                             string filter = webBrowser.Document.All[ReportExecution.HtmlId_filter_enumload].GetAttribute("value");
                             HtmlElement enumValues = webBrowser.Document.All[ReportExecution.HtmlId_parameter_enumload];
-
-                            var restriction = _report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
-                            if (restriction != null && restriction.EnumRE != null)
-                            {
-                                //Set current restrictions
-                                foreach (var r in _report.AllRestrictions)
-                                {
-                                    if (!_execution.CurrentEnumValues.ContainsKey(r.EnumRE)) _execution.CurrentEnumValues.Add(r.EnumRE, null);
-                                    _execution.CurrentEnumValues[r.EnumRE] = r.EnumSQLValue;
-                                }
-
-                                var values = new List<MetaEV>();
-                                if ((restriction.EnumRE.HasFilters && filter.Length >= restriction.EnumRE.FilterChars) || (restriction.EnumRE.HasDependencies && _execution.CurrentEnumValues.Count > 0))
-                                {
-                                    values = restriction.EnumRE.GetSubSetValues(filter, _execution.CurrentEnumValues);
-                                }
-
-                                var result = new StringBuilder();
-                                foreach (var enumDef in restriction.EnumRE.Values)
-                                {
-                                    if (values.Exists(i => i.Id == enumDef.Id))
-                                    {
-                                        var display = restriction.GetEnumDisplayValue(enumDef.Id);
-                                        result.Append(result.Length == 0 ? "[" : ",");
-                                        result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"}}", restriction.OptionHtmlId + enumDef.HtmlId, restriction.GetEnumDisplayValue(enumDef.Id).Replace("\"", "\\\""));
-                                    }
-                                }
-                                result.Append(result.Length == 0 ? "[]" : "]");
-                                enumValues.InnerText = result.ToString();
-                            }
+                            enumValues.InnerText = _execution.GetEnumValues(enumId, filter);
                         }
                         break;
                 }

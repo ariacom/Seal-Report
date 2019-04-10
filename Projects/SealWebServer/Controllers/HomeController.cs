@@ -609,7 +609,49 @@ namespace SealWebServer.Controllers
         }
 
 
-#region private methods
+        public ActionResult ActionUpdateEnumValues(string execution_guid, string enum_id, string values)
+        {
+            WriteDebug("ActionUpdateEnumValues");
+            try
+            {
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
+                {
+                    ReportExecution execution = Session[execution_guid] as ReportExecution;
+                    execution.UpdateEnumValues(enum_id, values);
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            return Json(new { });
+        }
+
+        public ActionResult ActionGetEnumValues(string execution_guid, string enum_id, string filter)
+        {
+            WriteDebug("ActionGetEnumValues");
+            string result = "";
+            try
+            {
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
+                {
+                    ReportExecution execution = Session[execution_guid] as ReportExecution;
+                    result = execution.GetEnumValues(enum_id, filter);
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            return Json(result);
+        }
+
+
+        #region private methods
 
         void checkSWIAuthentication()
         {

@@ -354,8 +354,6 @@
         var folderRightSchedule = @((int) FolderRight.Schedule);
         var folderRightEdit = @((int) FolderRight.Edit);
 
-        var availableDateKeywords = ['@repository.TranslateReport("Now")', '@repository.TranslateReport("Today")', '@repository.TranslateReport("Today")-1', '@repository.TranslateReport("ThisWeek")', '@repository.TranslateReport("ThisWeek")-1', '@repository.TranslateReport("ThisMonth")', '@repository.TranslateReport("ThisMonth")-1', '@repository.TranslateReport("ThisYear")', '@repository.TranslateReport("ThisYear")-1'];
-
         //translations
         var tra = [];
         @foreach(var translation in repository.JSTranslations)

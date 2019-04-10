@@ -442,18 +442,23 @@ function mainInit() {
 }
 
 //Enum select picker
-function requestEnumData(inp) {
-    var data;
+function requestEnumData(filter, forceNoMessage) {
+    var result;
     if (urlPrefix != "") {
-        //TODO $.post(urlPrefix + "ActionUpdateViewParameter", { execution_guid: $("#execution_guid").val(), parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+        $.post(urlPrefix + "ActionGetEnumValues", { execution_guid: $("#execution_guid").val(), enum_id: $("#id_enumload").val(), filter: filter })
+            .done(function (data) {
+                result = jQuery.parseJSON(data);
+                fillEnumSelect(result, forceNoMessage || result.length > 0);
+            });
     }
     else {
         $("#header_form").attr("action", "ActionGetEnumValues");
-        $("#filter_enumload").val(inp);
+        $("#filter_enumload").val(filter);
         $("#header_form").submit();
-        data = jQuery.parseJSON($("#parameter_enumload").text());
+        result = jQuery.parseJSON($("#parameter_enumload").text());
+        fillEnumSelect(result, forceNoMessage || result.length > 0);
     }
-    return data;
+    return result;
 }
 
 
@@ -484,7 +489,7 @@ function fillEnumSelect(data, noMessage) {
             );
         }
         $enum.selectpicker("refresh");
-     }
+    }
 
     var $message = $("#enum-message");
     if ($message) $message.text("");
@@ -512,7 +517,7 @@ function initEnums() {
             ids += $(this).val() + ",";
         });
         if (urlPrefix != "") {
-            //TODO $.post(urlPrefix + "ActionUpdateViewParameter", { execution_guid: $("#execution_guid").val(), parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+            $.post(urlPrefix + "ActionUpdateEnumValues", { execution_guid: $("#execution_guid").val(), enum_id: $(this).attr("id"), values: ids });
         }
         else {
             $("#id_enumload").val($(this).attr("id"));
@@ -527,17 +532,15 @@ function initEnums() {
             $("#id_enumload").val($(this).attr("id"));
 
             var data = [];
-            if ($(this).attr("dependencies")) data = requestEnumData();            
-            fillEnumSelect(data, data.length > 0);
-
-            var inp = "";
+            if ($(this).attr("dependencies")) requestEnumData("", false);
+ 
+            var filter = "";
             $(".bs-searchbox input").on("input", function (evt) {
                 var $earch = $(evt.target);
-                if ($earch.val() !== inp) { // search value is changed
-                    inp = $earch.val();
-                    if (inp.length >= $("#" + $("#id_enumload").val()).attr("filterchars")) { // more than xx characters
-                        var data = requestEnumData(inp)
-                        fillEnumSelect(data, true);
+                if ($earch.val() !== filter) { // search value is changed
+                    filter = $earch.val();
+                    if (filter.length >= $("#" + $("#id_enumload").val()).attr("filterchars")) { // more than xx characters
+                        requestEnumData(filter, true);
                     }
                 }
             });
