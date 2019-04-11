@@ -15,7 +15,7 @@
     string chartId = "cpl" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
-        <div id="@chartId" style="@Helper.AddIfNotEmpty("width:", view.GetValue("plotly_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("plotly_height"), ";")"></div>
+        <div id="@chartId" style="page-break-inside:avoid; @Helper.AddIfNotEmpty("width:", view.GetValue("plotly_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("plotly_height"), ";")"></div>
 
         <script>
             $(document).ready(function () {

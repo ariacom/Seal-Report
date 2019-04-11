@@ -931,6 +931,7 @@ namespace Seal
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
         {
             object newEntity = null;
+            KeyEventArgs key = null;
             if (selectedEntity is SourceFolder && Report != null)
             {
                 MetaSource source = ((ToolStripMenuItem)sender).Tag as MetaSource;
@@ -956,7 +957,9 @@ namespace Seal
             }
             else if (selectedEntity is ModelFolder)
             {
-                newEntity = _report.AddModel((int)((ToolStripMenuItem)sender).Tag == 2); //1 Meta Model, 2 SQL Model
+                bool isSQLModel = (int)((ToolStripMenuItem)sender).Tag == 2;
+                newEntity = _report.AddModel(isSQLModel); //1 Meta Model, 2 SQL Model
+                if (isSQLModel) key = new KeyEventArgs(Keys.F7);
             }
             else if (selectedEntity is ViewFolder)
             {
@@ -990,6 +993,8 @@ namespace Seal
             {
                 IsModified = true;
                 init(newEntity);
+
+                if (key != null) toolStripHelper.HandleShortCut(key);
             }
         }
 
@@ -1527,7 +1532,8 @@ namespace Seal
             }
             else if (selectedEntity is ReportModel)
             {
-                if (((ReportModel)selectedEntity).Elements.Count > 0 || ((ReportModel)selectedEntity).IsSQLModel) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
+                if (((ReportModel)selectedEntity).IsSQLModel) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F7));
+                else if (((ReportModel)selectedEntity).Elements.Count > 0) toolStripHelper.HandleShortCut(new KeyEventArgs(Keys.F8));
             }
             else if (selectedEntity is ReportView)
             {

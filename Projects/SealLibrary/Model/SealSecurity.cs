@@ -247,6 +247,8 @@ namespace Seal.Model
                 result.AppendLine();
                 result.AppendFormat("    Dashboard Personal Folder: {0}\r\n", group.PersonalDashboardFolder? "yes" : "no");
                 result.AppendLine();
+                result.AppendFormat("    SQL Models: {0}\r\n", group.SqlModel ? "yes" : "no");
+                result.AppendLine();
                 foreach (var item in group.Devices)
                 {
                     result.AppendFormat("    Device:'{0}'  => Right:{1}\r\n", item.DisplayName, Helper.GetEnumDescription(item.Right.GetType(), item.Right));

@@ -15,7 +15,7 @@
     string chartId = "cnv" + Guid.NewGuid().ToString().Replace("-", "");
     if (modelView.InitPageChart(page))
     {
-        <div id='@chartId' style="position: relative;@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_contheight"), ";")">
+        <div id='@chartId' style="page-break-inside:avoid; position: relative; @Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_contheight"), ";")">
             <svg style="@Helper.AddIfNotEmpty("width:", view.GetValue("nvd3_chart_width"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("nvd3_chart_height"), ";")" />
         </div>
         <script>

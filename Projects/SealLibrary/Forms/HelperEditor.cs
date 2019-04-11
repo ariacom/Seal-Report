@@ -346,14 +346,19 @@ namespace Seal.Forms
                             {
                                 foreach (var restriction in model.Restrictions.Where(i => i.Prompt != PromptType.None))
                                 {
-                                    var col = _metaColumn.MetaTable.Columns.FirstOrDefault(i => i.GUID == restriction.MetaColumnGUID);
-                                    if (col != null) tableOk = true;
-                                    
-                                    sr.Restrictions.Add(col.GUID);
+                                    foreach (var table in _metaColumn.MetaTable.Source.MetaData.Tables)
+                                    {
+                                        var col = table.Columns.FirstOrDefault(i => i.GUID == restriction.MetaColumnGUID);
+                                        if (col != null)
+                                        {
+                                            tableOk = true;
+                                            sr.Restrictions.Add(col.GUID);
+                                        }
+                                    }
                                 }
                             }
 
-                            if (!tableOk) throw new Exception("Unable to add this Sub-Report:\r\nThe report does no contain any prompted restriction belonging to the table...");
+                            if (!tableOk) throw new Exception("Unable to add this Sub-Report:\r\nThe report does no contain any prompted restriction...");
 
                             _metaColumn.SubReports.Add(sr);
                             MessageBox.Show(string.Format("The Sub-Report named '{0}' has been added with {1} restriction(s).", Path.GetFileName(dlg.FileName), sr.Restrictions.Count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);

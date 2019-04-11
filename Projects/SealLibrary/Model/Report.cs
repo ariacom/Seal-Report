@@ -785,7 +785,7 @@ namespace Seal.Model
             {
                 result.AddModel(false);
                 var model = result.AddModel(true);
-                model.Name = "SQL model";
+                model.Name = "SQL Model";
             }
             //Add default views
             ReportView view = result.AddModelHTMLView();
