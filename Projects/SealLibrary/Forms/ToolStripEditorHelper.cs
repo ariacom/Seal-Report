@@ -225,6 +225,8 @@ namespace Seal.Forms
                             ReportModel model = SelectedEntity as ReportModel;
                             if (model.IsSQLModel && key == Keys.F7)
                             {
+                                frm.Text = "SQL Editor: Edit the SQL Select Statement";
+                                frm.SetSamples(new List<string>() { "SELECT * FROM Orders"});
                                 frm.WarningOnError = true;
                                 frm.sqlTextBox.Text = model.Table.Sql;
                                 if (frm.ShowDialog() == DialogResult.OK)

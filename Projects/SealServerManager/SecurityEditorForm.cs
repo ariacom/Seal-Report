@@ -64,6 +64,7 @@ Rules applied if a user belongs to several groups:
 - View type: the union of the views (Reports, Dashboards)
 
 Web Report Designer Security
+- SQL Models: True if true in one group
 - Devices: Cannot be selected if it is specified in one group
 - Sources: Cannot be selected if it is specified in one group
 - Connections: Cannot be selected if it is specified in one group

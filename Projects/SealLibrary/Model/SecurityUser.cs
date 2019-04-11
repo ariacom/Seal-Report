@@ -89,9 +89,10 @@ namespace Seal.Model
             {
                 if (_sqlModel == null)
                 {
+                    _sqlModel = false;
                     foreach (var group in SecurityGroups)
                     {
-                        if (_sqlModel == null || group.SqlModel) _sqlModel = true;
+                        if (group.SqlModel) _sqlModel = true;
                     }
                 }
                 return _sqlModel.Value;

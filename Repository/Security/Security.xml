@@ -64,6 +64,7 @@
           <FolderRight>Execute</FolderRight>
         </SecurityFolder>
       </Folders>
+      <SqlModel>false</SqlModel>
       <DashboardFolders />
       <Culture />
     </SecurityGroup>
@@ -75,6 +76,7 @@
           <FolderRight>ExecuteReportOuput</FolderRight>
         </SecurityFolder>
       </Folders>
+      <SqlModel>false</SqlModel>
       <DashboardFolders />
       <Culture />
     </SecurityGroup>
@@ -87,6 +89,7 @@
         </SecurityFolder>
       </Folders>
       <PersFolderRight>Files</PersFolderRight>
+      <SqlModel>false</SqlModel>
       <DashboardFolders />
       <Culture />
     </SecurityGroup>

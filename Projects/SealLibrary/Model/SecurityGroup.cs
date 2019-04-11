@@ -81,7 +81,7 @@ namespace Seal.Model
         }
 
         private bool _sqlModel = true;
-        [Category("Web Report Designer Security"), DisplayName("\t\t\tSQL Models"), Description("For the Web Report Designer: If true, SQL Models and SQL can be edited through the Web Report Designer."), Id(1, 2)]
+        [Category("Web Report Designer Security"), DisplayName("\t\t\tSQL Models"), Description("For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer. Note that dynamic filters set for security purpose will not be applied."), Id(1, 2)]
         [DefaultValue(true)]
         public bool SqlModel
         {

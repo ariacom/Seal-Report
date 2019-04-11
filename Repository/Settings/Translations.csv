@@ -126,6 +126,7 @@ Web;Chart Plotly;;Graphe Plotly
 Web;Chart sort;;Tri graphe
 Web;Chart title;;Titre du graphe
 Web;Chart width;;Largeur graphe
+Web;Check SQL;;Vérifier le SQL
 Web;Close;;Fermer
 Web;Color;;Couleur
 Web;Connection;;Connexion
@@ -133,6 +134,7 @@ Web;Copy;;Copier
 Web;Create a new dashboard;;Créer un nouveau Dashboard
 Web;Create in folder;;Créer dans le répertoire
 Web;Create new folder;;Créer un répertoire
+Web;Custom SQL;;SQL
 Web;Cut;;Couper
 Web;Days;;Jours
 Web;Days of the week;;Jours de la semaine
@@ -226,10 +228,12 @@ Web;Result as body;;Message HTML
 Web;Save;;Enregistrer
 Web;Schedule;;Planification
 Web;Search;;Rechercher
-Web;Select the widgets to add to the dashboard;;Sélectionner le Widget à ajouter au Dashboard
+Web;Select the widgets to add to the dashboard;;Sélectionner les Widgets à ajouter au Dashboard
 Web;Show sub-totals;;Sous-totaux
 Web;Show totals;;Totaux
 Web;Sort;;Tri
+Web;SQL;;SQL
+Web;SQL Select Statement;;SQL Commande Select
 Web;Start date;;Date de départ
 Web;Subject;;Sujet
 Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;;Le nombre maximum de connexions a été atteint pour votre licence ({0}). Merci d'essayer plus tard...
@@ -243,6 +247,7 @@ Web;Users;;Utilisateurs
 Web;Value;;Valeur
 Web;Values;;Valeurs
 Web;Widget name;;Nom du Widget
+Web;Widget group name;;Nom du groupe du Widget
 Web;Width;;Largueur
 Web;Zip attachments;;Options ZIP
 Web;Zip password;;Mot de passe ZIP
@@ -285,6 +290,7 @@ WebJS;Delete the dashboard;;Effacer le Dashboard
 WebJS;Descendant;;Descendant
 WebJS;Do you really want to delete the dashboard ?;;Voulez-vous vraiment effacer le Dashboard ?
 WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?
+WebJS;Do you want to create a SQL report ?;;Voulez-vous créer un rapport de type SQL ?
 WebJS;Does not contain;;Ne contient pas
 WebJS;Drop your Column elements;;Eléments de type Colonne
 WebJS;Drop your Data;;Données
@@ -337,6 +343,7 @@ WebJS;Minimum;;Minimum
 WebJS;Minimum of;;Minimum de
 WebJS;minute;;minute
 WebJS;minutes;;minutes
+WebJS;Model updated;;Modèle mis à jour
 WebJS;Modified;;Modifié
 WebJS;Monthly;;Mensuel
 WebJS;Move to;;Déplacer vers
@@ -354,6 +361,7 @@ WebJS;No schedule;;Pas de planification
 WebJS;No Sort;;Pas de tri
 WebJS;No total;;Pas de totaux
 WebJS;No widget;;Aucun widget
+WebJS;No, create a standard report;;Non, créer un rapport standard
 WebJS;None;;Aucun
 WebJS;Not sorted;;Pas de tri
 WebJS;Number;;Nombre
@@ -411,6 +419,7 @@ WebJS;Splitter;;Séparateur
 WebJS;Stacked Area;;Empilé
 WebJS;Starts with;;Commence par
 WebJS;Sum;;Somme
+WebJS;The dashboard has been created;;Le Dashboard a été créé
 WebJS;The dashboard has been copied;;Le Dashboard a été copié
 WebJS;The dashboard has been deleted;;Le Dashboard a été effacé
 WebJS;The dashboard has been moved;;Le Dashboard a été déplacé
@@ -432,7 +441,7 @@ WebJS;Warning: Check the new dashboard name;;Attention: Vérifier le nouveau nom
 WebJS;Web Interface Version;;Version de l'interface Web
 WebJS;Weekly;;Hebdomadaire
 WebJS;weeks;;semaines
-WebJS;widget(s) have been added to the dashboard;;Widget(s) ont été ajouté au Dashboard
+WebJS;The dashboard has been updated;;Le Dashboard a été mis à jour
 WebJS;Yes;;Oui
 WebJS;Yes (a new line with sub-totals is added when the value changes);;Oui (Une nouvelle ligne avec les sous-totaux est ajoutée lorsque la valeur change)
 WebJS;Yes (element values are used for the axis);;Oui (Les valeurs de l'élément sont utilisés pour l'axe)

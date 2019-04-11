@@ -1090,11 +1090,11 @@
         <GUID>acc81a1e-6950-4e9f-9fbf-401ab53dbfd8</GUID>
         <Name>Category</Name>
         <IsDynamic>true</IsDynamic>
-        <Translate>true</Translate>
         <Sql>SELECT DISTINCT 
 CategoryID, CategoryName
 FROM Categories
 ORDER BY 2</Sql>
+        <Translate>true</Translate>
         <Values>
           <MetaEV>
             <Id>1</Id>

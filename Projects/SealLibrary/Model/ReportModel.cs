@@ -497,7 +497,7 @@ namespace Seal.Model
                 _table.DynamicColumns = true;
             }
 
-            if (string.IsNullOrEmpty(_table.Alias)) _table.Alias = Helper.CleanFileName(Name).Replace(" ", "").Replace("%", "").Replace("[", "").Replace("]", "").Replace("&", "");
+            if (string.IsNullOrEmpty(_table.Alias)) _table.Alias = "Master";
 
             _table.Source = Source;
             if (!string.IsNullOrEmpty(_table.Sql))
