@@ -42,7 +42,7 @@ namespace Seal.Model
         {
             get
             {
-                bool hasMultipleSerieDef = Element.Model.Elements.Exists(i => i != Element && i.SerieDefinition == Element.SerieDefinition);
+                bool hasMultipleSerieDef = Element.Model.Elements.Exists(i => i != Element && i.PivotPosition == PivotPosition.Data && ((i.ChartJSSerie != ChartJSSerieDefinition.None && Element.ChartJSSerie != ChartJSSerieDefinition.None) || (i.Nvd3Serie != NVD3SerieDefinition.None && Element.Nvd3Serie != NVD3SerieDefinition.None) || (i.PlotlySerie != PlotlySerieDefinition.None || Element.PlotlySerie != PlotlySerieDefinition.None)));
                 if (!hasMultipleSerieDef) return string.IsNullOrEmpty(SplitterValues) ? Element.DisplayNameElTranslated : SplitterValues;
                 return Element.DisplayNameElTranslated + (string.IsNullOrEmpty(SplitterValues) ? "" : ": " + SplitterValues);
             }
