@@ -4,16 +4,9 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
 using System.Windows.Forms;
 using Seal.Model;
-using System.Data.OleDb;
-using System.Data;
-using System.Drawing;
 using Seal.Helpers;
-using System.Collections;
 
 namespace Seal.Forms
 {

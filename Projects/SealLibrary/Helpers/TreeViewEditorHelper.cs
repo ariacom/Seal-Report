@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Seal.Model;
@@ -16,7 +15,6 @@ using Seal.Helpers;
 using System.Collections;
 using System.Data.Common;
 using System.Data.Odbc;
-using System.Diagnostics;
 
 namespace Seal.Forms
 {

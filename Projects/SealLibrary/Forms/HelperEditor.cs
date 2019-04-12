@@ -5,18 +5,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Drawing.Design;
 using System.ComponentModel;
-using System.Windows.Forms.Design;
 using System.Windows.Forms;
 using Seal.Model;
 using System.Diagnostics;
 using System.IO;
 using Seal.Helpers;
-using System.Threading;
 using System.Security.Principal;
-using System.Net.Mail;
 using System.Data.OleDb;
 using System.Data;
 

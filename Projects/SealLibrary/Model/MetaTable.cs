@@ -5,20 +5,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.Data;
-using System.Data.OleDb;
-using Seal.Converter;
 using System.Drawing.Design;
 using System.Xml.Serialization;
 using Seal.Helpers;
 using Seal.Forms;
 using DynamicTypeDescriptor;
-using RazorEngine;
 using RazorEngine.Templating;
 using System.Globalization;
-using System.Runtime.Serialization;
 using System.Data.Common;
 
 namespace Seal.Model

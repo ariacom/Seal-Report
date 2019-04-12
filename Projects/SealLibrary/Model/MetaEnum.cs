@@ -5,14 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.ComponentModel;
-using Seal.Converter;
 using DynamicTypeDescriptor;
-using System.ComponentModel.Design;
 using System.Drawing.Design;
 using System.Xml.Serialization;
-using System.Data.OleDb;
 using System.Data;
 using Seal.Forms;
 using Seal.Helpers;
