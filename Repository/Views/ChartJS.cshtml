@@ -49,6 +49,7 @@
                         borderColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + serieIndex + "]"),
                         backgroundColor: colors@(reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? "" : "[" + serieIndex++ + "]"),
                         borderWidth: 1,
+                        pointRadius: @Raw(view.GetValue("chartjs_point_radius")),
                         steppedLine: @Raw(view.GetValue("chartjs_stepped_line")),
                         fill: @Raw(view.GetValue("chartjs_fill")),
                         @(chartType == "horizontalBar" ? "x" : "y")AxisID: 'yaxis-@(serie.Element.YAxisType == AxisType.Secondary ? 2 : 1)'
@@ -116,6 +117,7 @@
                 scales: {
                     @(chartType != "horizontalBar" ? "x" : "y")Axes: [{
                         offset: true,
+                        display: @Helper.ToJS(view.GetBoolValue("chartjs_show_xaxis")),
                         stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                         @if (reportModel.ExecChartIsDateTimeAxis) {
                             <text>
@@ -142,6 +144,7 @@
                             <text>
                                 {
                                 id: 'yaxis-1',
+                                display: @Helper.ToJS(view.GetBoolValue("chartjs_show_yaxis")),
                                 stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                                 ticks: {
                                     callback: function (label, index, labels) {
@@ -156,6 +159,7 @@
                             <text>
                                 {
                                 id: 'yaxis-2',
+                                display: @Helper.ToJS(view.GetBoolValue("chartjs_show_yaxis")),
                                 position: 'right',
                                 ticks: {
                                     callback: function(label, index, labels) {

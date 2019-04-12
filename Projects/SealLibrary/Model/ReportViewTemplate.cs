@@ -22,6 +22,7 @@ namespace Seal.Model
         public const string DataTableName = "Data Table";
         public const string PageTableName = "Page Table";
         public const string ChartNVD3Name = "Chart NVD3";
+        public const string KPIName = "KPI";
         public const string ChartJSName = "Chart JS";
         public const string ChartPlotlyName = "Chart Plotly";
         public const string ModelContainerName = "Model Container";

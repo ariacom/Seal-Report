@@ -306,6 +306,12 @@
     <None Include="..\..\Repository\Views\ChartJS.cshtml">
       <Link>Views\ChartJS.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\KPI.config.cshtml">
+      <Link>Views\KPI.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\KPI.cshtml">
+      <Link>Views\KPI.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Views\Model.iCSV.partial.cshtml">
       <Link>Views\Model.iCSV.partial.cshtml</Link>
     </None>

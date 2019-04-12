@@ -1,0 +1,90 @@
+﻿@using Seal.Model
+@using Seal.Helpers
+<div class="text-center" style="width:250px">
+    @{
+        Report report = Model;
+        ReportView view = report.CurrentView;
+        ReportView modelView = report.CurrentModelView;
+        ReportModel reportModel = modelView.Model;
+        ResultPage page = report.CurrentPage;
+        ResultTable table = page.DataTable;
+
+        bool hasGoals = view.GetBoolValue("kpi_has_goals");
+        bool trendDirection = view.GetBoolValue("kpi_trend_direction");
+        int trendValues = view.GetNumericValue("kpi_trend_values");
+        string buttonSize = ""; //btn-lg, sm, xs
+    }
+    @{
+        //Calculate trend
+        int trend = 0;
+        string headerValue = "", lastValue = "", trendPercentage = "", trendColor = "primary", trendIcon = "option-horizontal";
+        for (int col = 1; col < table.ColumnCount; col++)
+        {
+            var lastCell = table[table.BodyEndRow - 1, col];
+            if (lastCell.Element != null && lastCell.Element.IsNumeric && lastCell.Element.PivotPosition == PivotPosition.Data && lastCell.Value != null)
+            {
+                if (table.BodyStartRow == 0) { headerValue = lastCell.Element.DisplayNameElTranslated; }
+                else if (table.BodyStartRow == 1 || (table.BodyStartRow == 2 && !reportModel.ShowFirstLine)) { headerValue = table[0, col].HTMLValue; }
+                else { headerValue = table[1, col].HTMLValue; }
+
+                lastValue = lastCell.HTMLValue;
+                var valueEnd = lastCell.DoubleValue;
+
+                double? valueStart = null;
+                int rowStart = table.BodyEndRow - 2;
+                while (rowStart >= table.BodyStartRow && (trendValues < 0 || trendValues + 1 >= table.BodyEndRow - rowStart || valueStart == null))
+                {
+                    if (table[rowStart, col].Value != null) { valueStart = table[rowStart, col].DoubleValue; }
+                    --rowStart;
+                }
+
+                if (valueStart != null && valueStart != valueEnd)
+                {
+                    trend = (valueStart < valueEnd ? 1 : -1);
+                    trendIcon = (trend == 1 ? "export" : "import");
+                    if (!trendDirection) { trend = -1 * trend; }
+                    trendColor = (trend == 1 ? "success" : "danger");
+                }
+                if (valueStart != null && valueStart != 0) { trendPercentage = string.Format("{0:+0;-0;0} %", 100 * (valueEnd - valueStart) / valueStart); }
+
+                //Goals
+                string goalValue = "", goalColor = "default", goalPercentage = "", goalIcon = "";
+                if (hasGoals)
+                {
+                    col++;
+                    if (col < table.ColumnCount)
+                    {
+                        var goalCell = table[table.BodyEndRow - 1, col];
+                        if (goalCell.Element.IsNumeric && goalCell.Value != null)
+                        {
+                            goalValue = string.Format("{0}: {1}", report.Translate("Goal"), goalCell.HTMLValue);
+                            int goal = (goalCell.DoubleValue <= valueEnd ? 1 : -1);
+                            if (!trendDirection) { trend = -1 * trend; }
+                            goalIcon = (goal == 1 ? "ok" : "circle-arrow-down");
+                            goalColor = (goal == 1 ? "success" : "danger");
+
+                            if (goalCell.DoubleValue != 0) { goalPercentage = string.Format("({0:+0;-0;0} %)", 100 * (valueEnd - goalCell.DoubleValue) / goalCell.DoubleValue); }
+                        }
+
+                    }
+                    else
+                    {
+                        goalValue = "Error: the goal is not defined, check your model...";
+                    }
+                }
+
+                <span class="text-center btn btn-@trendColor @buttonSize" title="@Raw(headerValue)" style="margin-top:5px;">
+                    <span class="glyphicon glyphicon-@trendIcon" aria-hidden="true"></span> @Raw(headerValue) <strong>@Raw(lastValue)</strong>
+                    <span class="badge">@Raw(trendPercentage)</span>
+                </span>
+
+                if (!string.IsNullOrEmpty(goalValue))
+                {
+                    <span class="text-center label label-@goalColor @buttonSize" title="@Raw(headerValue)" style="margin-top:0px;font-size: 12px;">
+                        <span class="glyphicon glyphicon-@goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage)
+                    </span>
+                }
+            }
+        }
+    }
+</div>
