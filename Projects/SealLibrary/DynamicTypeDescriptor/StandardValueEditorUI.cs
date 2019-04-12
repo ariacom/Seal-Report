@@ -1,19 +1,17 @@
+//
+// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+//
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using System.Diagnostics;
-using System.Reflection;
 using System.Drawing;
 
 namespace DynamicTypeDescriptor
 {
 
-  internal partial class StandardValueEditorUI : UserControl
+    internal partial class StandardValueEditorUI : UserControl
   {
     private class TagItem
     {

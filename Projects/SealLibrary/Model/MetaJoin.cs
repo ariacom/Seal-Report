@@ -5,11 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using Seal.Converter;
 using System.Xml.Serialization;
-using System.ComponentModel.Design;
 using System.Drawing.Design;
 using Seal.Forms;
 using DynamicTypeDescriptor;

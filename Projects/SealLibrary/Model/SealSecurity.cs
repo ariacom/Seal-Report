@@ -7,19 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using System.Data.OleDb;
 using System.Data;
 using System.ComponentModel;
 using Seal.Converter;
 using System.Drawing.Design;
-using System.ComponentModel.Design;
 using System.IO;
 using Seal.Helpers;
-using System.Text.RegularExpressions;
 using Seal.Forms;
 using DynamicTypeDescriptor;
-using System.Windows.Forms.Design;
-using System.Net.Mail;
 
 namespace Seal.Model
 {

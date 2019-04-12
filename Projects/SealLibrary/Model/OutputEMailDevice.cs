@@ -3,12 +3,9 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net.Mail;
-using System.Text;
 using System.Xml.Serialization;
 using DynamicTypeDescriptor;
 using Seal.Helpers;

@@ -5,18 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.IO;
-using Seal.Helpers;
-using RazorEngine;
-using System.Xml.Serialization;
-using System.Globalization;
 using System.Data;
-using System.Text.RegularExpressions;
-using System.Diagnostics;
-using System.Windows.Forms;
-using System.Reflection;
-using System.Drawing;
 
 namespace Seal.Model
 {

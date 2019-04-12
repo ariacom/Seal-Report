@@ -5,10 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using Seal.Model;
-using Seal.Helpers;
 using System.Globalization;
 
 namespace Seal.Converter

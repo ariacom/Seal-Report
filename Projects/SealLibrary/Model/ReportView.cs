@@ -15,7 +15,6 @@ using Seal.Forms;
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
 using RazorEngine.Templating;
-using System.Drawing;
 using System.Globalization;
 using System.Web;
 using System.Data;

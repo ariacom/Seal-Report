@@ -1,14 +1,16 @@
-﻿using System;
+﻿//
+// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
+//
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing.Design;
 using System.Collections;
 using System.ComponentModel;
 
 namespace DynamicTypeDescriptor
 {
-  internal class PropertyValueUIService : IPropertyValueUIService
+    internal class PropertyValueUIService : IPropertyValueUIService
   {
     private PropertyValueUIHandler m_ValueUIHandler;
     private EventHandler m_NotifyHandler;
