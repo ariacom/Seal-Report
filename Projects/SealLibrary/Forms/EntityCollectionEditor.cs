@@ -57,7 +57,7 @@ namespace Seal.Forms
                 if (Context.Instance is ReportModel)
                 {
                     var model = Context.Instance as ReportModel;
-                    model.InitSharedRestrictions();
+                    model.InitCommonRestrictions();
                 }
                 frmCollectionEditorForm.Text = "Restrictions Collection Editor";
             }
@@ -227,7 +227,7 @@ namespace Seal.Forms
             if (value is ReportRestriction)
             {
                 var restr = value as ReportRestriction;
-                if (restr.MetaColumn == null) result = restr.Name; //Shared restriction
+                if (restr.MetaColumn == null) result = restr.Name; //Common restriction
                 else result = string.Format("{0} ({1})", restr.DisplayNameEl, restr.Model.Name);
             }
             else if (value is Parameter) result = ((Parameter)value).DisplayName;

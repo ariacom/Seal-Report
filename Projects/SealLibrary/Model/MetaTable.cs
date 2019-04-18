@@ -15,6 +15,7 @@ using DynamicTypeDescriptor;
 using RazorEngine.Templating;
 using System.Globalization;
 using System.Data.Common;
+using System.Text;
 
 namespace Seal.Model
 {
@@ -261,6 +262,65 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsForSQLModel = false;
 
+
+        public void GetExecSQLName(ref string CTE, ref string name)
+        {
+            CTE = "";
+            string sql = "";
+            if (_sql != null && _sql.Length > 5 && _sql.ToLower().Trim().StartsWith("with"))
+            {
+                var startIndex = _sql.IndexOf("(");
+                if (startIndex > 0)
+                {
+                    bool inComment = false, inQuote = false;
+                    for (int i = 0; i < _sql.Length - 5; i++)
+                    {
+                        switch (_sql[i])
+                        {
+                            case ')':
+                                if (!inComment && !inQuote)
+                                {
+                                    CTE = _sql.Substring(0, i + 1).Trim() + "\r\n";
+                                    sql = _sql.Substring(i + 1).Trim();
+                                    i = _sql.Length;
+                                }
+                                break;
+                            case '\'':
+                                inQuote = !inQuote;
+                                break;
+                            case '/':
+                                if (_sql[i + 1] == '*')
+                                {
+                                    inComment = true;
+                                }
+                                break;
+                            case '*':
+                                if (inComment && _sql[i + 1] == '/')
+                                {
+                                    inComment = false;
+                                }
+                                break;
+                            case '-':
+                                if (inComment && _sql[i + 1] == '-')
+                                {
+                                    while (i < _sql.Length - 5 && (_sql[i] != '\r' || _sql[i] != '\n')) i++;
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(CTE) || string.IsNullOrEmpty(sql))
+            {
+                name = FullSQLName;
+            }
+            else
+            {
+                name = string.Format("(\r\n{0}\r\n) {1}", sql, AliasName); ;
+            }
+        }
+
         protected MetaSource _source;
         [XmlIgnore, Browsable(false)]
         public MetaSource Source
@@ -292,9 +352,9 @@ namespace Seal.Model
             if (IsSQL)
             {
                 DbConnection connection = _source.GetOpenConnection();
-                Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(PreSQL), this, IgnorePrePostError);
-                result = Helper.GetDataTable(connection, ReportModel.ClearSharedRestrictions(sql));
-                Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(PostSQL), this, IgnorePrePostError);
+                Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(PreSQL), this, IgnorePrePostError);
+                result = Helper.GetDataTable(connection, ReportModel.ClearCommonRestrictions(sql));
+                Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(PostSQL), this, IgnorePrePostError);
                 connection.Close();
             }
             else
@@ -314,7 +374,17 @@ namespace Seal.Model
                 _error = "";
                 MustRefresh = true;
                 //Build table def from SQL or table name
-                DataTable defTable = GetDefinitionTable(IsForSQLModel ? Sql : string.Format("SELECT * FROM {0} WHERE 1=0", FullSQLName));
+
+                var sql = "";
+                if (IsForSQLModel) sql = Sql;
+                else
+                {
+                    string CTE = "", name = "";
+                    GetExecSQLName(ref CTE, ref name);
+                    sql = string.Format("{0}SELECT * FROM {1} WHERE 1=0", CTE, name);
+                }
+
+                DataTable defTable = GetDefinitionTable(sql);
 
                 foreach (DataColumn column in defTable.Columns)
                 {
@@ -342,7 +412,7 @@ namespace Seal.Model
 
                 //Clear columns for No SQL or SQL Model
                 if (!IsSQL || IsForSQLModel)
-                {                    
+                {
                     Columns.RemoveAll(i => !defTable.Columns.Contains(i.Name));
                 }
 
@@ -436,7 +506,9 @@ namespace Seal.Model
                     }
                     if (string.IsNullOrEmpty(colNames)) colNames = "1";
 
-                    string sql = string.Format("SELECT {0} FROM {1} WHERE 1=0", colNames, FullSQLName);
+                    string CTE = "", name = "";
+                    GetExecSQLName(ref CTE, ref name);
+                    string sql = string.Format("{0}SELECT {1} FROM {2} WHERE 1=0", CTE, colNames, name);
 
                     if (!string.IsNullOrWhiteSpace(WhereSQL))
                     {

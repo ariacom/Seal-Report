@@ -337,11 +337,13 @@ namespace Seal.Helpers
         static public string GetExceptionMessage(TemplateCompilationException ex)
         {
             var result = new StringBuilder("");
+            var firstError = "";
             foreach (var err in ex.CompilerErrors)
             {
+                if (string.IsNullOrEmpty(firstError) && err.Line > 0) firstError = err.ErrorText + "\r\n\r\n";
                 result.AppendFormat("{0}\r\nLine {1} Column {2} Error Number {3}\r\n", err.ErrorText, err.Line, err.Column, err.ErrorNumber);
             }
-            return result.ToString();
+            return firstError + result.ToString();
         }
 
         static public string GetOleDbConnectionString(string input, string userName, string password)
@@ -670,7 +672,7 @@ namespace Seal.Helpers
         {
             sql = ClearSQLKeywords(sql, Repository.EnumFilterKeyword, "filter");
             sql = ClearSQLKeywords(sql, Repository.EnumValuesKeyword, "'1'");
-            sql = ClearSQLKeywords(sql, Repository.SharedRestrictionKeyword, "1=1");
+            sql = ClearSQLKeywords(sql, Repository.CommonRestrictionKeyword, "1=1");
             return sql;
         }
 
@@ -701,6 +703,21 @@ namespace Seal.Helpers
             return sql;
         }
 
+        public static string AddCTE(string current, string CTE)
+        {
+            var result = current;
+            if (!string.IsNullOrEmpty(result))
+            {
+                if (CTE != null && CTE.Length > 5 && CTE.ToLower().Trim().StartsWith("with"))
+                {
+                    var startIndex = CTE.ToLower().IndexOf("with");
+                    if (startIndex >= 0) result += "," + CTE.Substring(startIndex+5);
+                }
+            }
+            else result = CTE;
+
+            return result;
+        }
 
         public static List<string> GetSQLKeywordNames(string sql, string keyword)
         {
@@ -709,10 +726,10 @@ namespace Seal.Helpers
             int index = 0;
             do
             {
-                index = sql.IndexOf(Repository.SharedRestrictionKeyword, index);
+                index = sql.IndexOf(Repository.CommonRestrictionKeyword, index);
                 if (index > 0)
                 {
-                    index += Repository.SharedRestrictionKeyword.Length;
+                    index += Repository.CommonRestrictionKeyword.Length;
                     string restrictionName = "";
                     for (int i = index; i < sql.Length; i++)
                     {

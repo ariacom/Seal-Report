@@ -182,7 +182,7 @@ namespace Seal.Helpers
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
                     if (_task.CancelReport) break;
-                    LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
+                    LogMessage("Importing table for connection '{0}'.", connection.Name);
                     DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
                     LogMessage("Dropping and creating table '{0}'", destinationTableName);
                     DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
@@ -230,7 +230,7 @@ namespace Seal.Helpers
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
                     if (_task.CancelReport) break;
-                    LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
+                    LogMessage("Importing table for connection '{0}'.", connection.Name);
                     DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
                     LogMessage("Dropping and creating table '{0}'", destinationTableName);
                     DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
@@ -262,17 +262,24 @@ namespace Seal.Helpers
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
                     if (_task.CancelReport) break;
-                    LogMessage("\r\nImporting table for connection '{0}'.", connection.Name);
+                    LogMessage("Importing table for connection '{0}'.", connection.Name);
                     bool doIt = true;
                     if (!string.IsNullOrEmpty(sourceCheckSelect) && !string.IsNullOrEmpty(destinationCheckSelect))
                     {
                         LogMessage("Checking if load is required using '{0}' and '{1}'", sourceCheckSelect, destinationCheckSelect);
                         doIt = false;
-                        DataTable checkTable1 = DatabaseHelper.LoadDataTable(connectionString, sourceCheckSelect);
-                        if (_task.CancelReport) break;
-                        DataTable checkTable2 = DatabaseHelper.LoadDataTable(connection.FullConnectionString, destinationCheckSelect);
-                        if (_task.CancelReport) break;
-                        if (!DatabaseHelper.AreTablesIdentical(checkTable1, checkTable2)) doIt = true;
+                        try
+                        {
+                            DataTable checkTable1 = DatabaseHelper.LoadDataTable(connectionString, sourceCheckSelect);
+                            if (_task.CancelReport) break;
+                            DataTable checkTable2 = DatabaseHelper.LoadDataTable(connection.FullConnectionString, destinationCheckSelect);
+                            if (_task.CancelReport) break;
+                            if (!DatabaseHelper.AreTablesIdentical(checkTable1, checkTable2)) doIt = true;
+                        }
+                        catch 
+                        {
+                            doIt = true;
+                        }
                     }
 
                     if (doIt && !_task.CancelReport)

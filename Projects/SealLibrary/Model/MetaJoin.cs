@@ -158,9 +158,15 @@ namespace Seal.Model
                 if (RightTable == null) throw new Exception("Please select a Right table for the join");
                 if (_joinType != JoinType.Cross && string.IsNullOrEmpty(Clause.Trim())) throw new Exception("Please enter a SQL statement for the join");
 
-                string sql = string.Format("SELECT * FROM {0}\r\n", LeftTable.FullSQLName);
-                if (_joinType != JoinType.Cross) sql += string.Format("{0} {1} ON {2}\r\n", SQLJoinType, RightTable.FullSQLName, Clause.Trim());
-                else sql += string.Format("{0} {1}\r\n", SQLJoinType, RightTable.FullSQLName);
+                string CTE1 = "", name1 = "", CTE2 = "", name2 = "";
+                LeftTable.GetExecSQLName(ref CTE1, ref name1);
+                RightTable.GetExecSQLName(ref CTE2, ref name2);
+
+                string CTE = Helper.AddCTE(CTE1,CTE2);
+                string sql = string.Format("{0}SELECT * FROM {1}\r\n", CTE, name1);
+
+                if (_joinType != JoinType.Cross) sql += string.Format("{0} {1} ON {2}\r\n", SQLJoinType, name2, Clause.Trim());
+                else sql += string.Format("{0} {1}\r\n", SQLJoinType, name2);
                 sql += "WHERE 0=1";
                 _error = Source.CheckSQL(sql, new List<MetaTable>() { LeftTable, RightTable }, null, false);
                 if (!string.IsNullOrEmpty(_error)) _information = "Error got when checking join. Please check the SQL:\r\n" + sql;

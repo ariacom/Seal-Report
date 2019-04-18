@@ -215,7 +215,7 @@ namespace Seal.Model
         {
             get
             {
-                if (_type == ColumnType.Default && !IsSharedRestriction) return MetaColumn.Type;
+                if (_type == ColumnType.Default && !IsCommonRestriction) return MetaColumn.Type;
                 return _type;
             }
         }
@@ -226,7 +226,7 @@ namespace Seal.Model
             get
             {
                 SetStandardFormat();
-                if (IsSharedRestriction) return Format;
+                if (IsCommonRestriction) return Format;
 
                 string result = Format;
                 if (string.IsNullOrEmpty(result)) result = MetaColumn.Format;
@@ -560,7 +560,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore, Browsable(false)]
-        public bool IsSharedRestriction
+        public bool IsCommonRestriction
         {
             get
             {
@@ -574,7 +574,7 @@ namespace Seal.Model
             get
             {
                 if (Enum != null) return Enum;
-                if (IsSharedRestriction) return null;
+                if (IsCommonRestriction) return null;
                 return MetaColumn.Enum;
             }
         }
@@ -584,7 +584,7 @@ namespace Seal.Model
         {
             get
             {
-                if (IsSharedRestriction) return Name;
+                if (IsCommonRestriction) return Name;
 
                 string result = MetaColumn.Name;
                 if (PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate)
@@ -609,7 +609,7 @@ namespace Seal.Model
         [XmlIgnore, Browsable(false)]
         public string SQLColumnName
         {
-            get { return string.IsNullOrEmpty(_SQLColumnName) && !IsSharedRestriction ? MetaColumn.Name : _SQLColumnName; }
+            get { return string.IsNullOrEmpty(_SQLColumnName) && !IsCommonRestriction ? MetaColumn.Name : _SQLColumnName; }
             set { _SQLColumnName = value; }
         }
 

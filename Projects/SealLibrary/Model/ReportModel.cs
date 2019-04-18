@@ -42,7 +42,7 @@ namespace Seal.Model
                 GetProperty("SourceGUID").SetIsBrowsable(true);
                 GetProperty("ConnectionGUID").SetIsBrowsable(true);
 
-                GetProperty("SharedRestrictions").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("CommonRestrictions").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PreLoadScript").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("LoadScript").SetIsBrowsable(true);
                 GetProperty("FinalScript").SetIsBrowsable(true);
@@ -130,16 +130,16 @@ namespace Seal.Model
             }
         }
 
-        //Shared Restrictions
-        private List<ReportRestriction> _sharedRestrictions = new List<ReportRestriction>();
-        [Category("Model Definition"), DisplayName("Shared Restrictions"), Description("Defintion of the shared restrictions involved in the model. Shared restrictions are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{SharedRestriction_' keyword (e.g. {SharedRestriction_Amount} to create a shared restriction named 'Amount'9"), Id(3, 1)]
+        //Common Restrictions
+        private List<ReportRestriction> _commonRestrictions = new List<ReportRestriction>();
+        [Category("Model Definition"), DisplayName("Common Restrictions"), Description("Definition of the common restrictions involved in the model. Common restrictions are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' keyword (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount'9"), Id(3, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<ReportRestriction> SharedRestrictions
+        public List<ReportRestriction> CommonRestrictions
         {
-            get { return _sharedRestrictions; }
-            set { _sharedRestrictions = value; }
+            get { return _commonRestrictions; }
+            set { _commonRestrictions = value; }
         }
-        public bool ShouldSerializeSharedRestrictions() { return _sharedRestrictions.Count > 0; }
+        public bool ShouldSerializeCommonRestrictions() { return _commonRestrictions.Count > 0; }
 
 
         string _preLoadScript;
@@ -750,12 +750,12 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public List<ReportRestriction> ExecutionSharedRestrictions
+        public List<ReportRestriction> ExecutionCommonRestrictions
         {
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
-                foreach (ReportRestriction restriction in SharedRestrictions)
+                foreach (ReportRestriction restriction in CommonRestrictions)
                 {
                     ReportRestriction newRestriction = restriction;
                     if (Report.ForOutput && Report.OutputToExecute.UseCustomRestrictions)
@@ -774,6 +774,8 @@ namespace Seal.Model
         public string execSelect = "";
         [XmlIgnore]
         public StringBuilder execSelectClause = new StringBuilder();
+        [XmlIgnore]
+        public string execCTEClause = "";
         [XmlIgnore]
         public StringBuilder execFromClause = new StringBuilder();
         [XmlIgnore]
@@ -828,27 +830,27 @@ namespace Seal.Model
             if (AvoidJoinTable == null) _avoidTableGUID = "";
             if (ForceJoinTable == null) _forceJoinTableGUID = "";
 
-            InitSharedRestrictions();
+            InitCommonRestrictions();
         }
 
-        public string ParseSharedRestrictions(string sql)
+        public string ParseCommonRestrictions(string sql)
         {
-            foreach (var restr in ExecutionSharedRestrictions)
+            foreach (var restr in ExecutionCommonRestrictions)
             {
-                sql = sql.Replace(Repository.SharedRestrictionKeyword + restr.Name + "}", restr.SQLText);
+                sql = sql.Replace(Repository.CommonRestrictionKeyword + restr.Name + "}", restr.SQLText);
             }
-            return ClearSharedRestrictions(sql);
+            return ClearCommonRestrictions(sql);
         }
 
-        public static string ClearSharedRestrictions(string sql)
+        public static string ClearCommonRestrictions(string sql)
         {
-            return Helper.ClearSQLKeywords(sql, Repository.SharedRestrictionKeyword, "1=1");
+            return Helper.ClearSQLKeywords(sql, Repository.CommonRestrictionKeyword, "1=1");
         }
 
 
-        public void InitSharedRestrictions()
+        public void InitCommonRestrictions()
         {
-            //Get shared restrictions
+            //Get common restrictions
             try
             {
                 var sqlToParse = "";
@@ -883,25 +885,25 @@ namespace Seal.Model
                     if (!string.IsNullOrEmpty(table.WhereSQL)) sqlToParse += "\r\n" + table.WhereSQL;
                 }
 
-                var names = Helper.GetSQLKeywordNames(sqlToParse, Repository.SharedRestrictionKeyword);
+                var names = Helper.GetSQLKeywordNames(sqlToParse, Repository.CommonRestrictionKeyword);
                 foreach (var restrictionName in names)
                 {
-                    var sharedRestriction = SharedRestrictions.FirstOrDefault(i => i.Name == restrictionName);
-                    if (sharedRestriction == null)
+                    var commonRestriction = CommonRestrictions.FirstOrDefault(i => i.Name == restrictionName);
+                    if (commonRestriction == null)
                     {
-                        sharedRestriction = ReportRestriction.CreateReportRestriction();
-                        sharedRestriction.Name = restrictionName;
-                        sharedRestriction.DisplayName = restrictionName;
-                        sharedRestriction.TypeRe = ColumnType.Text;
-                        SharedRestrictions.Add(sharedRestriction);
+                        commonRestriction = ReportRestriction.CreateReportRestriction();
+                        commonRestriction.Name = restrictionName;
+                        commonRestriction.DisplayName = restrictionName;
+                        commonRestriction.TypeRe = ColumnType.Text;
+                        CommonRestrictions.Add(commonRestriction);
                     }
                 }
 
                 //clean restrictions not used
-                SharedRestrictions.RemoveAll(i => !sqlToParse.Contains(Repository.SharedRestrictionKeyword + i.Name + "}"));
+                CommonRestrictions.RemoveAll(i => !sqlToParse.Contains(Repository.CommonRestrictionKeyword + i.Name + "}"));
 
                 //Set references
-                foreach (var restriction in SharedRestrictions)
+                foreach (var restriction in CommonRestrictions)
                 {
                     restriction.SetSourceReference(Source);
                     restriction.Model = this;
@@ -989,7 +991,7 @@ namespace Seal.Model
                 if (IsSQLModel && UseRawSQL)
                 {
                     _sql = Table.Sql;
-                    _sql = ParseSharedRestrictions(_sql);
+                    _sql = ParseCommonRestrictions(_sql);
                     return;
                 }
 
@@ -1000,6 +1002,7 @@ namespace Seal.Model
                 InitReferences();
 
                 execSelectClause = new StringBuilder();
+                execCTEClause = "";
                 execFromClause = new StringBuilder();
                 execWhereClause = new StringBuilder(Restriction.Trim());
                 execGroupByClause = new StringBuilder();
@@ -1025,7 +1028,7 @@ namespace Seal.Model
                     if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                     execHavingClause = execHavingClause.Replace("[" + restriction.GUID + "]", restriction.SQLText);
                 }
-                foreach (ReportRestriction restriction in ExecutionSharedRestrictions)
+                foreach (ReportRestriction restriction in ExecutionCommonRestrictions)
                 {
                     if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                 }
@@ -1074,7 +1077,10 @@ namespace Seal.Model
                     List<MetaTable> extraWhereTables = _fromTables.Where(i => !string.IsNullOrEmpty(i.WhereSQL)).ToList();
                     if (_fromTables.Count == 1)
                     {
-                        execFromClause = new StringBuilder(_fromTables[0].FullSQLName + "\r\n");
+                        string CTE = "", name = "";
+                        _fromTables[0].GetExecSQLName(ref CTE, ref name);
+                        execCTEClause = Helper.AddCTE(execCTEClause, CTE);
+                        execFromClause.Append(name + "\r\n");
                     }
                     else
                     {
@@ -1200,7 +1206,10 @@ namespace Seal.Model
                         if (bestPath.joins.Count == 0)
                         {
                             //only one table
-                            execFromClause = new StringBuilder(bestPath.currentTable.FullSQLName + "\r\n");
+                            string CTE = "", name = "";
+                            bestPath.currentTable.GetExecSQLName(ref CTE, ref name);
+                            execCTEClause = Helper.AddCTE(execCTEClause, CTE);
+                            execFromClause.Append(name + "\r\n");
                         }
                         else
                         {
@@ -1212,7 +1221,10 @@ namespace Seal.Model
                                 MetaJoin join = bestPath.joins[i];
                                 if (string.IsNullOrEmpty(lastTable))
                                 {
-                                    lastTable = join.RightTable.FullSQLName + "\r\n";
+                                    string CTE2 = "", name2 = "";
+                                    join.RightTable.GetExecSQLName(ref CTE2, ref name2);
+                                    execCTEClause = Helper.AddCTE(execCTEClause, CTE2);
+                                    lastTable = name2 + "\r\n";
                                     tablesUsed.Add(join.RightTable);
                                 }
 
@@ -1239,8 +1251,12 @@ namespace Seal.Model
                                 }
 
                                 //finally build the clause
-                                if (join.JoinType != JoinType.Cross) lastTable = string.Format("\r\n({0} {1} {2} ON {3})\r\n", leftTable.FullSQLName, join.SQLJoinType, lastTable, joinClause);
-                                else lastTable = string.Format("\r\n({0} {1} {2})\r\n", leftTable.FullSQLName, join.SQLJoinType, lastTable);
+                                string CTE = "", name = "";
+                                leftTable.GetExecSQLName(ref CTE, ref name);
+                                execCTEClause = Helper.AddCTE(execCTEClause, CTE);
+
+                                if (join.JoinType != JoinType.Cross) lastTable = string.Format("\r\n({0} {1} {2} ON {3})\r\n", name, join.SQLJoinType, lastTable, joinClause);
+                                else lastTable = string.Format("\r\n({0} {1} {2})\r\n", name, join.SQLJoinType, lastTable);
 
                                 tablesUsed.Add(leftTable);
                             }
@@ -1262,9 +1278,11 @@ namespace Seal.Model
                         }
                     }
 
+                    //Get CTE first
                     execSelect = execGroupByClause.Length > 0 ? "SELECT\r\n" : "SELECT DISTINCT\r\n";
                     execSelect = !string.IsNullOrEmpty(SqlSelect) ? SqlSelect : execSelect;
-                    _sql = execSelect;
+                    _sql = execCTEClause;
+                    _sql += execSelect;
                     _sql += string.Format("{0}\r\n", execSelectClause);
                     _sql += !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("FROM {0}", execFromClause);
                     if (execWhereClause.Length > 0) _sql += string.Format("WHERE {0}\r\n", execWhereClause);
@@ -1272,8 +1290,8 @@ namespace Seal.Model
                     if (execHavingClause.Length > 0) _sql += string.Format("HAVING {0}\r\n", execHavingClause);
                     if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) _sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
 
-                    //Finally inject shared restriction values
-                    if (!forConversion) _sql = ParseSharedRestrictions(_sql);
+                    //Finally inject common restriction values
+                    if (!forConversion) _sql = ParseCommonRestrictions(_sql);
                 }
             }
             catch (TemplateCompilationException ex)
@@ -1434,7 +1452,7 @@ namespace Seal.Model
                     string finalSql = RazorHelper.CompileExecute(sql, model);
                     if (!string.IsNullOrEmpty(finalSql))
                     {
-                        _command.CommandText = ParseSharedRestrictions(finalSql);
+                        _command.CommandText = ParseCommonRestrictions(finalSql);
                         _command.ExecuteNonQuery();
                     }
                     else Report.LogMessage("No SQL to execute...");

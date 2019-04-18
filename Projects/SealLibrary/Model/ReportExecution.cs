@@ -429,7 +429,7 @@ namespace Seal.Model
                     foreach (ReportRestriction restriction in model
                         .ExecutionRestrictions.Where(i => i.Prompt != PromptType.None)
                         .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None))
-                        .Union(model.ExecutionSharedRestrictions.Where(i => i.Prompt != PromptType.None))
+                        .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None))
                         )
                     {
                         string val = Report.GetInputRestriction(restriction.OperatorHtmlId);

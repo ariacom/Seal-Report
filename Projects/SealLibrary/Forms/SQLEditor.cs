@@ -15,10 +15,10 @@ namespace Seal.Forms
     public class SQLEditor : UITypeEditor
     {
         const string descriptionTemplate1 = "Note that Razor script can be used if the text starts with '@'.\r\n";
-        const string descriptionTemplate2 = "Note that Razor script can be used if the text starts with '@'.\r\nThe final SQL may contain Shared Restrictions by using the keyword '{SharedRestriction_<Name>}' where <Name> is the Shared Restriction name.\r\nShared Restrictions can then be configured in the Report Models involved.\r\n";
-        const string descriptionTemplate3 = "The final SQL may contain Shared Restrictions by using the keyword '{SharedRestriction_<Name>}' where <Name> is the Shared Restriction name.\r\nShared Restrictions can then be configured in the Report Models involved.\r\n";
+        const string descriptionTemplate2 = "Note that Razor script can be used if the text starts with '@'.\r\nThe final SQL may contain Common Restrictions by using the keyword '{CommonRestriction_<Name>}' where <Name> is the Common Restriction name.\r\nCommon Restrictions can then be configured in the Report Models involved.\r\n";
+        const string descriptionTemplate3 = "The final SQL may contain Common Restrictions by using the keyword '{CommonRestriction_<Name>}' where <Name> is the Common Restriction name.\r\nCommon Restrictions can then be configured in the Report Models involved.\r\n";
 
-        const string razorTableTemplate = "@using Seal.Model\r\n@{\r\nMetaTable table = Model;\r\nstring result = \"update Employees set LastName=LastName where {SharedRestriction_LastName}\";\r\n}\r\n@Raw(result)";
+        const string razorTableTemplate = "@using Seal.Model\r\n@{\r\nMetaTable table = Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
         const string razorTableWhereTemplate = @"@using Seal.Model
 @using Seal.Helpers
 @{
@@ -38,8 +38,8 @@ namespace Seal.Forms
     }
 @Raw(result)";
         const string razorSourceTemplate = "@using Seal.Model\r\n@{\r\nMetaSource source = Model;\r\nstring result = \"update Employees set LastName=LastName\";\r\n}\r\n@Raw(result)";
-        const string razorModelTemplate = "@using Seal.Model\r\n@{\r\nReportModel model = Model;\r\nstring result = \"update Employees set LastName=LastName where {SharedRestriction_LastName}\";\r\n}\r\n@Raw(result)";
-        const string razorTaskTemplate = "@using Seal.Model\r\n@{\r\nReportTask task= Model;\r\nstring result = \"update Employees set LastName=LastName where {SharedRestriction_LastName}\";\r\n}\r\n@Raw(result)";
+        const string razorModelTemplate = "@using Seal.Model\r\n@{\r\nReportModel model = Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
+        const string razorTaskTemplate = "@using Seal.Model\r\n@{\r\nReportTask task= Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
         const string razorEnumTemplate = "@using Seal.Model\r\n@{\r\nMetaEnum enumList= Model;\r\nstring result = \"SELECT DISTINCT CategoryID, CategoryName FROM Categories ORDER BY 2\";\r\n}\r\n@Raw(result)";
 
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
@@ -77,7 +77,7 @@ namespace Seal.Forms
                     {
                         samples.Add(razorModelTemplate);
                         samples.Add("update Employees set LastName=LastName");
-                        samples.Add("update Employees set LastName=LastName where {SharedRestriction_LastName}");
+                        samples.Add("update Employees set LastName=LastName where {CommonRestriction_LastName}");
                         frm.clearToolStripButton.Visible = false;
                         description = descriptionTemplate2;
                     }
@@ -132,18 +132,18 @@ namespace Seal.Forms
                     {
                         samples.Add(razorTableTemplate);
                         samples.Add("update Employees set LastName=LastName");
-                        samples.Add("update Employees set LastName=LastName where {SharedRestriction_LastName}");
+                        samples.Add("update Employees set LastName=LastName where {CommonRestriction_LastName}");
                         description = descriptionTemplate2;
                     }
                     else if (context.PropertyDescriptor.Name == "WhereSQL")
                     {
                         samples.Add(razorTableWhereTemplate);
-                        samples.Add("{SharedRestriction_LastName}");
+                        samples.Add("{CommonRestriction_LastName}");
                         description = descriptionTemplate2;
                     }
                     else if (context.PropertyDescriptor.Name == "Sql")
                     {
-                        samples.Add("SELECT * FROM Employees WHERE {SharedRestriction_LastName}");
+                        samples.Add("SELECT * FROM Employees WHERE {CommonRestriction_LastName}");
                         description = descriptionTemplate3;
                     }
                     frm.clearToolStripButton.Visible = false;

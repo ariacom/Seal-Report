@@ -294,7 +294,7 @@ namespace Seal.Model
             get
             {
                 if (Enum != null) return Enum;
-                if (IsSharedRestriction) return null;
+                if (IsCommonRestriction) return null;
                 return MetaColumn.Enum;
             }
         }
@@ -774,7 +774,7 @@ namespace Seal.Model
             }
         }
 
-        string EnumDisplayValue
+        public string EnumDisplayValue
         {
             get
             {
@@ -883,7 +883,7 @@ namespace Seal.Model
                 string result = "";
                 if (IsEnum)
                 {
-                    var type = (IsSharedRestriction ? Type : MetaColumn.Type);
+                    var type = (IsCommonRestriction ? Type : MetaColumn.Type);
                     if (EnumValues.Count == 0) result = (type == ColumnType.Numeric ? "0" : "''");
                     foreach (string enumValue in EnumValues)
                     {
