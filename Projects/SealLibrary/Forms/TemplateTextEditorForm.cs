@@ -23,6 +23,8 @@ namespace Seal.Forms
         static Size? LastSize = null;
         static Point? LastLocation = null;
 
+        Dictionary<int, string> _compilationErrors = new Dictionary<int, string>();
+
         public TemplateTextEditorForm()
         {
             InitializeComponent();
@@ -98,7 +100,7 @@ namespace Seal.Forms
                 {
                     if (MessageBox.Show("The Razor syntax is incorrect. Do you really want to save this script and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
                 }
-            } 
+            }
 
             DialogResult = textBox.Modified ? DialogResult.OK : DialogResult.Cancel;
             textBox.SetSavePoint();
@@ -113,9 +115,19 @@ namespace Seal.Forms
             toolStripStatusLabel.Image = null;
         }
 
+
         private string checkSyntax()
         {
             string error = "";
+            const int NUM = 18;
+
+            // Remove all uses of our indicator
+            textBox.IndicatorCurrent = NUM;
+            textBox.IndicatorClearRange(0, textBox.TextLength);
+
+            textBox.IndicatorClick -=  TextBox_IndicatorClick;
+            textBox.IndicatorClick += TextBox_IndicatorClick;
+            _compilationErrors.Clear();
             try
             {
                 string script = textBox.Text;
@@ -126,6 +138,44 @@ namespace Seal.Forms
             }
             catch (TemplateCompilationException ex)
             {
+                // Update indicator appearance
+                textBox.Indicators[NUM].Style = IndicatorStyle.StraightBox;
+                textBox.Indicators[NUM].Under = true;
+                textBox.Indicators[NUM].ForeColor = Color.Red;
+                textBox.Indicators[NUM].OutlineAlpha = 120;
+                textBox.Indicators[NUM].Alpha = 120;
+
+                foreach (var err in ex.CompilerErrors)
+                {
+                    var sourceLines = ex.CompilationData.SourceCode.Split('\n');
+                    if (err.Line > 0 && err.Line < sourceLines.Length)
+                    {
+                        var pattern = sourceLines[err.Line - 1];
+                        foreach (var line in textBox.Lines)
+                        {
+                            if (line.Text.Trim() == pattern.Trim())
+                            {
+                                line.Goto();
+                                textBox.CurrentPosition += err.Column - 1;
+                                int end = textBox.CurrentPosition;
+                                while (++end < textBox.Text.Length)
+                                {
+                                    if (" [](){}.,;\"\':-+*&".IndexOf(textBox.Text[end])>=0) break;
+                                }
+                                textBox.SelectionStart = textBox.CurrentPosition;
+                                textBox.SelectionEnd = textBox.CurrentPosition;
+                                textBox.Focus();
+
+                                textBox.IndicatorFillRange(textBox.CurrentPosition, end - textBox.CurrentPosition);
+                                for (int i = textBox.CurrentPosition; i < end; i++)
+                                {
+                                    if (!_compilationErrors.ContainsKey(i)) _compilationErrors.Add(i, err.ErrorText);
+                                }
+                            }
+                        }
+                    }
+                }
+
                 error = string.Format("Compilation error:\r\n{0}", Helper.GetExceptionMessage(ex));
                 if (ex.InnerException != null) error += "\r\n" + ex.InnerException.Message;
                 if (error.ToLower().Contains("are you missing an assembly reference")) error += string.Format("\r\nNote that you can add assemblies to load by copying your .dll files in the Assemblies Repository folder:'{0}'", Repository.Instance.AssembliesFolder);
@@ -150,6 +200,12 @@ namespace Seal.Forms
             return error;
         }
 
+        private void TextBox_IndicatorClick(object sender, IndicatorClickEventArgs e)
+        {
+            if (_compilationErrors.ContainsKey(e.Position)) textBox.CallTipShow(e.Position, _compilationErrors[e.Position]);
+        }
+
+
         private void checkSyntaxToolStripButton_Click(object sender, EventArgs e)
         {
             string error = checkSyntax();
@@ -167,13 +223,13 @@ namespace Seal.Forms
                 if (sample.Contains("|"))
                 {
                     var index = sample.LastIndexOf('|');
-                    title = sample.Substring(index+1);
+                    title = sample.Substring(index + 1);
                     value = sample.Substring(0, index);
                 }
                 ToolStripMenuItem item = new ToolStripMenuItem(title);
                 item.Click += new System.EventHandler(this.item_Click);
                 item.Tag = value;
-                item.ToolTipText = value.Length > 900 ? value.Substring(0,900) + "..." : value;
+                item.ToolTipText = value.Length > 900 ? value.Substring(0, 900) + "..." : value;
                 samplesMenuItem.DropDownItems.Add(item);
             }
             if (!mainToolStrip.Items.Contains(samplesMenuItem)) mainToolStrip.Items.Add(samplesMenuItem);
@@ -181,7 +237,7 @@ namespace Seal.Forms
 
         void item_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem) textBox.Text = ((ToolStripMenuItem) sender).Tag.ToString();
+            if (sender is ToolStripMenuItem) textBox.Text = ((ToolStripMenuItem)sender).Tag.ToString();
         }
 
         public void SetResetText(string resetText)
@@ -189,7 +245,7 @@ namespace Seal.Forms
             if (!string.IsNullOrEmpty(resetText))
             {
                 var resetButton = new ToolStripButton("Reset script");
-                resetButton.Click += new EventHandler(delegate(object sender2, EventArgs e2) { textBox.Text = resetText; });
+                resetButton.Click += new EventHandler(delegate (object sender2, EventArgs e2) { textBox.Text = resetText; });
                 mainToolStrip.Items.Add(resetButton);
             }
         }

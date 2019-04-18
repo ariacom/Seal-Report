@@ -1247,7 +1247,7 @@ namespace Seal.Model
                     {
                         foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None))
                         {
-                            if (!_executionCommonRestrictions.Exists(i => (i.IsSharedRestriction && i.Name == restriction.Name) || (!i.IsSharedRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl)))
+                            if (!_executionCommonRestrictions.Exists(i => (i.IsCommonRestriction && i.Name == restriction.Name) || (!i.IsCommonRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl)))
                             {
                                 restriction.HtmlIndex = index.ToString();
                                 _executionCommonRestrictions.Add(restriction);
@@ -1261,7 +1261,7 @@ namespace Seal.Model
                     {
                         foreach (ReportRestriction restriction in _executionCommonRestrictions)
                         {
-                            ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.SharedRestrictions).FirstOrDefault(i => (i.IsSharedRestriction && i.Name == restriction.Name) || (!i.IsSharedRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl));
+                            ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions).FirstOrDefault(i => (i.IsCommonRestriction && i.Name == restriction.Name) || (!i.IsCommonRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl));
                             if (modelRestriction != null) modelRestriction.HtmlIndex = restriction.HtmlIndex;
                         }
                     }
@@ -1284,7 +1284,7 @@ namespace Seal.Model
                 {
                     foreach (ReportRestriction restriction in model.Restrictions) result.Add(restriction);
                     foreach (ReportRestriction restriction in model.AggregateRestrictions) result.Add(restriction);
-                    foreach (ReportRestriction restriction in model.SharedRestrictions) result.Add(restriction);
+                    foreach (ReportRestriction restriction in model.CommonRestrictions) result.Add(restriction);
                 }
                 return result;
             }
@@ -1298,7 +1298,7 @@ namespace Seal.Model
                 List<ReportRestriction> result = new List<ReportRestriction>();
                 foreach (ReportModel model in ExecutionModels)
                 {
-                    result.AddRange(model.ExecutionRestrictions.Union(model.ExecutionAggregateRestrictions).Union(model.ExecutionSharedRestrictions));
+                    result.AddRange(model.ExecutionRestrictions.Union(model.ExecutionAggregateRestrictions).Union(model.ExecutionCommonRestrictions));
                 }
                 return result;
             }

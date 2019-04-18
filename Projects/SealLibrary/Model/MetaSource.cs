@@ -455,11 +455,11 @@ namespace Seal.Model
             string[] names = name.Split('.');
             DataTable schemaColumns = null;
 
-            Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(table.PreSQL), table, table.IgnorePrePostError);
+            Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(table.PreSQL), table, table.IgnorePrePostError);
             if (names.Length == 3) schemaColumns = connection.GetSchema("Columns", names);
             else if (names.Length == 2) schemaColumns = connection.GetSchema("Columns", new string[] { null, names[0], names[1] });
             else schemaColumns = connection.GetSchema("Columns", new string[] { null, null, name });
-            Helper.ExecutePrePostSQL(connection, ReportModel.ClearSharedRestrictions(table.PostSQL), table, table.IgnorePrePostError);
+            Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(table.PostSQL), table, table.IgnorePrePostError);
 
             foreach (DataRow row in schemaColumns.Rows)
             {

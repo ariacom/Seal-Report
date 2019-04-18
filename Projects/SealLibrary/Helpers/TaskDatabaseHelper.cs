@@ -100,59 +100,65 @@ namespace Seal.Helpers
 
         public DataTable LoadDataTable(string connectionString, string sql)
         {
-            if (MyLoadDataTable != null) return MyLoadDataTable(connectionString, sql);
-
             DataTable table = new DataTable();
+            try
+            {
+                if (MyLoadDataTable != null) return MyLoadDataTable(connectionString, sql);
 
-            if (UseDbDataAdapter)
-            {
-                DbDataAdapter adapter = null;
-                var connection = Helper.DbConnectionFromConnectionString(connectionString);
-                connection.Open();
-                if (connection is OdbcConnection) adapter = new OdbcDataAdapter(sql, (OdbcConnection)connection);
-                else adapter = new OleDbDataAdapter(sql, (OleDbConnection)connection);
-                adapter.SelectCommand.CommandTimeout = SelectTimeout;
-                adapter.Fill(table);
-            }
-            else
-            {
-                DbCommand cmd = new OdbcCommand();
-                var connection = Helper.DbConnectionFromConnectionString(connectionString);
-                connection.Open();
-                if (connection is OdbcConnection) cmd = new OdbcCommand(sql, (OdbcConnection)connection);
-                else cmd = new OleDbCommand(sql, (OleDbConnection)connection);
-                cmd.CommandTimeout = 0;
-                cmd.CommandType = CommandType.Text;
-                DbDataReader dr = cmd.ExecuteReader();
-                DataTable schemaTable = dr.GetSchemaTable();
-                foreach (DataRow dataRow in schemaTable.Rows)
+                if (UseDbDataAdapter)
                 {
-                    DataColumn dataColumn = new DataColumn();
-                    dataColumn.ColumnName = dataRow["ColumnName"].ToString();
-                    dataColumn.DataType = Type.GetType(dataRow["DataType"].ToString());
-                    dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
-                    dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
-                    dataColumn.Unique = (bool)dataRow["IsUnique"];
-
-                    for (int i = 0; i < table.Columns.Count; i++)
+                    DbDataAdapter adapter = null;
+                    var connection = Helper.DbConnectionFromConnectionString(connectionString);
+                    connection.Open();
+                    if (connection is OdbcConnection) adapter = new OdbcDataAdapter(sql, (OdbcConnection)connection);
+                    else adapter = new OleDbDataAdapter(sql, (OleDbConnection)connection);
+                    adapter.SelectCommand.CommandTimeout = SelectTimeout;
+                    adapter.Fill(table);
+                }
+                else
+                {
+                    DbCommand cmd = new OdbcCommand();
+                    var connection = Helper.DbConnectionFromConnectionString(connectionString);
+                    connection.Open();
+                    if (connection is OdbcConnection) cmd = new OdbcCommand(sql, (OdbcConnection)connection);
+                    else cmd = new OleDbCommand(sql, (OleDbConnection)connection);
+                    cmd.CommandTimeout = 0;
+                    cmd.CommandType = CommandType.Text;
+                    DbDataReader dr = cmd.ExecuteReader();
+                    DataTable schemaTable = dr.GetSchemaTable();
+                    foreach (DataRow dataRow in schemaTable.Rows)
                     {
-                        if (dataColumn.ColumnName == table.Columns[i].ColumnName)
+                        DataColumn dataColumn = new DataColumn();
+                        dataColumn.ColumnName = dataRow["ColumnName"].ToString();
+                        dataColumn.DataType = Type.GetType(dataRow["DataType"].ToString());
+                        dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
+                        dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
+                        dataColumn.Unique = (bool)dataRow["IsUnique"];
+
+                        for (int i = 0; i < table.Columns.Count; i++)
                         {
-                            dataColumn.ColumnName += "_" + table.Columns.Count.ToString();
+                            if (dataColumn.ColumnName == table.Columns[i].ColumnName)
+                            {
+                                dataColumn.ColumnName += "_" + table.Columns.Count.ToString();
+                            }
                         }
+                        table.Columns.Add(dataColumn);
                     }
-                    table.Columns.Add(dataColumn);
-                }
 
-                while (dr.Read())
-                {
-                    DataRow dataRow = table.NewRow();
-                    for (int i = 0; i < table.Columns.Count; i++)
+                    while (dr.Read())
                     {
-                        dataRow[i] = dr[i];
+                        DataRow dataRow = table.NewRow();
+                        for (int i = 0; i < table.Columns.Count; i++)
+                        {
+                            dataRow[i] = dr[i];
+                        }
+                        table.Rows.Add(dataRow);
                     }
-                    table.Rows.Add(dataRow);
                 }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(string.Format("Error got when executing '{0}':\r\n{1}\r\n", sql, ex.Message));
             }
 
             return table;
