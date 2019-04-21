@@ -135,8 +135,8 @@ namespace Seal.Forms
                     ReportModel model = Instance as ReportModel;
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
-                        if (sqlTextBox.Text.StartsWith("@")) error = FormHelper.CheckRazorSyntax(sqlTextBox, "", model, _compilationErrors);
-                        if (string.IsNullOrEmpty(error)) error = model.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, model), null, model, true);
+                        if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", model, _compilationErrors);
+                        error = model.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, model), null, model, true);
                     }
                     else
                     {
@@ -146,16 +146,16 @@ namespace Seal.Forms
                 if (Instance is MetaEnum)
                 {
                     MetaEnum anEnum = Instance as MetaEnum;
-                    if (sqlTextBox.Text.StartsWith("@")) error = FormHelper.CheckRazorSyntax(sqlTextBox, "", anEnum, _compilationErrors);
-                    if (string.IsNullOrEmpty(error)) error = anEnum.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, anEnum), null, null, false);
+                    if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", anEnum, _compilationErrors);
+                    error = anEnum.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, anEnum), null, null, false);
                 }
                 else if (Instance is MetaSource)
                 {
                     MetaSource source = Instance as MetaSource;
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
-                        if (sqlTextBox.Text.StartsWith("@")) error = FormHelper.CheckRazorSyntax(sqlTextBox, "", source, _compilationErrors);
-                        if (string.IsNullOrEmpty(error)) error = source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, source), null, null, true);
+                        if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", source, _compilationErrors);
+                        error = source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, source), null, null, true);
                     }
                 }
                 else if (Instance is MetaTable)
@@ -163,16 +163,16 @@ namespace Seal.Forms
                     MetaTable table = Instance as MetaTable;
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
-                        if (sqlTextBox.Text.StartsWith("@")) error = FormHelper.CheckRazorSyntax(sqlTextBox, "", table, _compilationErrors);
-                        if (string.IsNullOrEmpty(error)) error = table.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, table), null, null, true);
+                        if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", table, _compilationErrors);
+                        error = table.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, table), null, null, true);
                     }
                     else
                     {
                         if (PropertyName == "WhereSQL")
                         {
                             initialSQL = table.WhereSQL;
-                            if (sqlTextBox.Text.StartsWith("@")) error = FormHelper.CheckRazorSyntax(sqlTextBox, "", table, _compilationErrors);
-                            if (string.IsNullOrEmpty(error)) table.WhereSQL = RazorHelper.CompileExecute(sqlTextBox.Text, table);
+                            if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", table, _compilationErrors);
+                            table.WhereSQL = RazorHelper.CompileExecute(sqlTextBox.Text, table);
                         }
                         else
                         {
@@ -217,8 +217,8 @@ namespace Seal.Forms
                 else if (Instance is ReportTask)
                 {
                     ReportTask task = Instance as ReportTask;
-                    if (sqlTextBox.Text.StartsWith("@")) error = FormHelper.CheckRazorSyntax(sqlTextBox, "", task, _compilationErrors);
-                    if (string.IsNullOrEmpty(error)) error = task.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, task), null, null, false);
+                    if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", task, _compilationErrors);
+                    error = task.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, task), null, null, false);
                 }
             }
             catch (Exception ex)
