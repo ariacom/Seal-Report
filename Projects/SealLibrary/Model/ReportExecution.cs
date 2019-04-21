@@ -433,8 +433,11 @@ namespace Seal.Model
                         )
                     {
                         string val = Report.GetInputRestriction(restriction.OperatorHtmlId);
-                        if (!string.IsNullOrEmpty(val)) restriction.Operator = (Operator)Enum.Parse(typeof(Operator), val);
-
+                        if (!string.IsNullOrEmpty(val) && restriction.ChangeOperator)
+                        {
+                            //Change operator only if allowed and not value only
+                            if (val != Operator.ValueOnly.ToString()) restriction.Operator = (Operator)Enum.Parse(typeof(Operator), val);
+                        }
                         if (restriction.IsEnum)
                         {
                             restriction.EnumValues.Clear();

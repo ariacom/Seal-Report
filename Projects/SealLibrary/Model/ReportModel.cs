@@ -63,6 +63,7 @@ namespace Seal.Model
                 GetProperty("SqlFrom").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlGroupBy").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlOrderBy").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("SqlCTE").SetIsBrowsable(!Source.IsNoSQL);
 
                 GetProperty("PreSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PostSQL").SetIsBrowsable(!Source.IsNoSQL);
@@ -209,7 +210,7 @@ namespace Seal.Model
         public bool ShouldSerializeUseRawSQL() { return IsSQLModel; }
 
         string _sqlSelect;
-        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement."), Id(3, 3)]
+        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')."), Id(3, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string SqlSelect
@@ -248,8 +249,19 @@ namespace Seal.Model
             set { _sqlOrderBy = value; }
         }
 
+        string _sqlCTE;
+        [Category("SQL"), DisplayName("Common Table Expressions Clause"), Description("If not empty, overwrite the CTE (Common Table Expressions) clause in the generated SQL statement."), Id(7, 3)]
+        [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
+        public string SqlCTE
+        {
+            get { return (_sqlSelect == DefaultClause) ? "" : _sqlCTE; }
+            set { _sqlCTE = value; }
+        }
+
+
         string _preSQL;
-        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(7, 3)]
+        [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(8, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string PreSQL
@@ -259,7 +271,7 @@ namespace Seal.Model
         }
 
         string _postSQL;
-        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(8, 3)]
+        [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(9, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string PostSQL
@@ -269,7 +281,7 @@ namespace Seal.Model
         }
 
         bool _ignorePrePostError = false;
-        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(9, 3)]
+        [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(10, 3)]
         [DefaultValue(false)]
         public bool IgnorePrePostError
         {
@@ -279,7 +291,7 @@ namespace Seal.Model
 
         int _buildTimout = 4000;
         [DefaultValue(4000)]
-        [Category("SQL"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)."), Id(10, 3)]
+        [Category("SQL"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)."), Id(11, 3)]
         public int BuildTimeout
         {
             get { return _buildTimout; }
@@ -856,6 +868,11 @@ namespace Seal.Model
                 var sqlToParse = "";
                 if (!string.IsNullOrEmpty(Restriction)) sqlToParse += "\r\n" + Restriction;
                 if (!string.IsNullOrEmpty(AggregateRestriction)) sqlToParse += "\r\n" + AggregateRestriction;
+                if (!string.IsNullOrEmpty(SqlSelect)) sqlToParse += "\r\n" + SqlSelect;
+                if (!string.IsNullOrEmpty(SqlFrom)) sqlToParse += "\r\n" + SqlFrom;
+                if (!string.IsNullOrEmpty(SqlGroupBy)) sqlToParse += "\r\n" + SqlGroupBy;
+                if (!string.IsNullOrEmpty(SqlOrderBy)) sqlToParse += "\r\n" + SqlOrderBy;
+                if (!string.IsNullOrEmpty(SqlCTE)) sqlToParse += "\r\n" + SqlCTE;
 
                 if (!string.IsNullOrEmpty(Source.PreSQL)) sqlToParse += "\r\n" + Source.PreSQL;
                 if (!string.IsNullOrEmpty(Source.PostSQL)) sqlToParse += "\r\n" + Source.PostSQL;
@@ -1281,7 +1298,7 @@ namespace Seal.Model
                     //Get CTE first
                     execSelect = execGroupByClause.Length > 0 ? "SELECT\r\n" : "SELECT DISTINCT\r\n";
                     execSelect = !string.IsNullOrEmpty(SqlSelect) ? SqlSelect : execSelect;
-                    _sql = execCTEClause;
+                    _sql = !string.IsNullOrEmpty(SqlCTE) ? SqlCTE : execCTEClause;
                     _sql += execSelect;
                     _sql += string.Format("{0}\r\n", execSelectClause);
                     _sql += !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("FROM {0}", execFromClause);
