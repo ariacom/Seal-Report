@@ -91,6 +91,7 @@ namespace Seal.Forms
                         if (context.PropertyDescriptor.Name == "SqlFrom" && string.IsNullOrEmpty(value2.ToString())) valueToEdit = "FROM " + model.execFromClause.ToString();
                         if (context.PropertyDescriptor.Name == "SqlGroupBy" && string.IsNullOrEmpty(value2.ToString())) valueToEdit = "GROUP BY " + model.execGroupByClause.ToString();
                         if (context.PropertyDescriptor.Name == "SqlOrderBy" && string.IsNullOrEmpty(value2.ToString())) valueToEdit = "ORDER BY " + model.execOrderByClause.ToString();
+                        if (context.PropertyDescriptor.Name == "SqlCTE" && string.IsNullOrEmpty(value2.ToString())) valueToEdit = model.execCTEClause.ToString();
                     }
                 }
                 else if (context.Instance is MetaJoin)
@@ -101,7 +102,7 @@ namespace Seal.Forms
                 {
                     if (context.PropertyDescriptor.Name == "SqlDisplay")
                     {
-                        samples.Add("SELECT DISTINCT CategoryID, CategoryName\r\nFROM Categories\r\nWHERE CategoryName like '%{EnumFilter}%'\r\nORDER BY 2");
+                        samples.Add("SELECT DISTINCT CategoryID, CategoryName\r\nFROM Categories\r\nWHERE CategoryName LIKE '%{EnumFilter}%'\r\nORDER BY 2");
                         samples.Add("SELECT DISTINCT City\r\nFROM Customers\r\nWHERE Country in ({EnumValues_Country})\r\nORDER BY 1");
                         description = descriptionTemplate1 + "The SQL may contain the filter tag by using the keyword '{EnumFilter}' to build the enum  with filters got from the user.\r\nThe SQL may contain dependencies with other enum values got from the user by using the keyword {EnumValues_<Name>} where <Name> is the name of the other enumerated list.\r\n";
                     }
@@ -117,7 +118,7 @@ namespace Seal.Forms
                     if (value == null || string.IsNullOrEmpty(value.ToString()))
                     {
                         forceValueToEdit = true;
-                        valueToEdit = "select col1,col2 from table order by col2";
+                        valueToEdit = "SELECT col1,col2 FROM table ORDER BY col2";
                     }
                 }
                 else if (context.Instance is ReportSource || context.Instance is MetaSource)
@@ -131,8 +132,8 @@ namespace Seal.Forms
                     if (context.PropertyDescriptor.Name == "PreSQL" || context.PropertyDescriptor.Name == "PostSQL")
                     {
                         samples.Add(razorTableTemplate);
-                        samples.Add("update Employees set LastName=LastName");
-                        samples.Add("update Employees set LastName=LastName where {CommonRestriction_LastName}");
+                        samples.Add("UPDATE Employees SET LastName=LastName");
+                        samples.Add("UPDATE Employees SET LastName=LastName WHERE {CommonRestriction_LastName}");
                         description = descriptionTemplate2;
                     }
                     else if (context.PropertyDescriptor.Name == "WhereSQL")
@@ -151,7 +152,7 @@ namespace Seal.Forms
                 else if (context.Instance is ReportTask)
                 {
                     samples.Add(razorTaskTemplate);
-                    samples.Add("update Employees set LastName=LastName");
+                    samples.Add("UPDATE Employees SET LastName=LastName");
                     description = descriptionTemplate1;
                     frm.clearToolStripButton.Visible = false;
                 }

@@ -101,6 +101,7 @@
     </Compile>
     <Compile Include="Forms\ConnectionCollectionEditor.cs" />
     <Compile Include="Forms\ConnectionStringEditor.cs" />
+    <Compile Include="Forms\FormHelper.cs" />
     <Compile Include="Forms\InformationErrorUITypeEditor.cs" />
     <Compile Include="Forms\SmartCopyForm.cs">
       <SubType>Form</SubType>
