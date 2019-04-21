@@ -118,7 +118,15 @@ namespace Seal.Forms
 
         private string checkSyntax()
         {
-            string error = FormHelper.CheckRazorSyntax(textBox, ScriptHeader, ObjectForCheckSyntax, _compilationErrors);
+            string error = "";
+            try
+            {
+                FormHelper.CheckRazorSyntax(textBox, ScriptHeader, ObjectForCheckSyntax, _compilationErrors);
+            }
+            catch(Exception ex)
+            {
+                error = ex.Message;
+            }
 
             if (!string.IsNullOrEmpty(error))
             {

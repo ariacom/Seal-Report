@@ -13,7 +13,7 @@ namespace Seal.Forms
 {
     class FormHelper
     {
-        public static string CheckRazorSyntax(Scintilla textBox, string header, object objectForCheckSyntax, Dictionary<int, string> compilationErrors)
+        public static void CheckRazorSyntax(Scintilla textBox, string header, object objectForCheckSyntax, Dictionary<int, string> compilationErrors)
         {
             string error = "";
             const int NUM = 18;
@@ -96,7 +96,7 @@ namespace Seal.Forms
                 if (ex.InnerException != null) error += "\r\n" + ex.InnerException.Message;
             }
 
-            return error;
+            if (!string.IsNullOrEmpty(error)) throw new Exception(error);
         } 
     }
 }
