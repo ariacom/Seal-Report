@@ -243,7 +243,7 @@ namespace Seal.Model
         public MetaJoin AddJoin()
         {
             MetaJoin result = MetaJoin.Create();
-            result.Name = "Join";
+            result.Name = Repository.JoinAutoName;
             result.Name = Helper.GetUniqueName(result.Name, (from i in MetaData.Joins select i.Name).ToList());
             result.Source = this;
             MetaData.Joins.Add(result);
