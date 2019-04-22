@@ -960,7 +960,7 @@ namespace Seal.Forms
                     }
 
                 }
-                else if (selectedEntity is MetaJoin && propertyName == "Name")
+                else if (selectedEntity is MetaJoin && (propertyName == "Name" || propertyName == "LeftTableGUID" || propertyName == "RightTableGUID"))
                 {
                     MetaJoin entity = (MetaJoin)selectedEntity;
                     entity.Name = Helper.GetUniqueName(entity.Name, (from i in source.MetaData.Joins where i != entity select i.Name).ToList());

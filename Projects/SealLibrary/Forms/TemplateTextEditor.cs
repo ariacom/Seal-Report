@@ -650,7 +650,7 @@ namespace Seal.Forms
                     if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = templateText;
                     template = templateText;
                     frm.Text = "Edit custom partial template";
-                    frm.ObjectForCheckSyntax = pt.View.Template.ForReportModel ? (object)pt.View.Model : (object)pt.View;
+                    frm.ObjectForCheckSyntax = pt.View;
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
                 else if (context.Instance is ReportTask)

@@ -97,6 +97,22 @@ namespace Seal.Forms
                 else if (context.Instance is MetaJoin)
                 {
                     frm.clearToolStripButton.Visible = false;
+                    MetaJoin join = context.Instance as MetaJoin;
+
+                    if (join.LeftTable != null && join.RightTable != null && join.LeftTable.Columns.Count > 0 && join.RightTable.Columns.Count > 0)
+                    {
+                        for (int i=0; i< join.LeftTable.Columns.Count && i < join.RightTable.Columns.Count; i++)
+                        {
+                            samples.Add(string.Format("{0} = {1}", join.LeftTable.Columns[i].Name, join.RightTable.Columns[i].Name));
+                        }
+                    }
+
+
+                    if ((value == null || string.IsNullOrEmpty(value.ToString())) && join.LeftTable != null && join.RightTable != null)
+                    {
+                        forceValueToEdit = true;
+                        valueToEdit = string.Format("{0}.<ColumnName> = {1}.<ColumnName>", join.LeftTable.AliasName, join.RightTable.AliasName);
+                    }
                 }
                 else if (context.Instance is MetaEnum)
                 {

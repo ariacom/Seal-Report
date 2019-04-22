@@ -52,12 +52,26 @@ namespace Seal.Model
             return new MetaJoin() { GUID = Guid.NewGuid().ToString() };
         }
 
+        bool _isAutoName = false;
+
+        string getAutoName()
+        {
+            if (RightTable != null && LeftTable != null) return LeftTable.Name + " - " + RightTable.Name;
+            return Repository.JoinAutoName;
+        }
+
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Name"), Description("Name of the join."), Id(1, 1)]
+        [Category("Definition"), DisplayName("Name"), Description("Name of the join. If reset to Empty string, the name is built using the table names."), Id(1, 1)]
         public override string Name
         {
             get { return _name; }
-            set { _name = value; }
+            set
+            {
+                _name = value;
+                if (_dctd != null && string.IsNullOrEmpty(_name)) {
+                    _name = getAutoName();
+                }
+            }
         }
 
         private string _leftTableGUID;
@@ -67,9 +81,14 @@ namespace Seal.Model
         public string LeftTableGUID
         {
             get { return _leftTableGUID; }
-            set {
+            set
+            {
+                if (_dctd != null) _isAutoName = (Name == Repository.JoinAutoName || string.IsNullOrEmpty(Name) || getAutoName() == Name);
+
                 _leftTable = null;
                 _leftTableGUID = value;
+
+                if (_dctd != null && _isAutoName) _name = getAutoName();
             }
         }
 
@@ -78,7 +97,8 @@ namespace Seal.Model
         [XmlIgnore]
         public MetaTable LeftTable
         {
-            get {
+            get
+            {
                 if (_leftTable == null) _leftTable = _source.MetaData.Tables.FirstOrDefault(i => i.GUID == _leftTableGUID);
                 return _leftTable;
             }
@@ -91,9 +111,14 @@ namespace Seal.Model
         public string RightTableGUID
         {
             get { return _rightTableGUID; }
-            set {
+            set
+            {
+                if (_dctd != null) _isAutoName = (Name == Repository.JoinAutoName || string.IsNullOrEmpty(Name) || getAutoName() == Name);
+
                 _rightTable = null;
                 _rightTableGUID = value;
+
+                if (_dctd != null && _isAutoName) _name = getAutoName();
             }
         }
 
@@ -101,7 +126,8 @@ namespace Seal.Model
         [XmlIgnore]
         public MetaTable RightTable
         {
-            get {
+            get
+            {
                 if (_rightTable == null) _rightTable = _source.MetaData.Tables.FirstOrDefault(i => i.GUID == _rightTableGUID);
                 return _rightTable;
             }
@@ -162,7 +188,7 @@ namespace Seal.Model
                 LeftTable.GetExecSQLName(ref CTE1, ref name1);
                 RightTable.GetExecSQLName(ref CTE2, ref name2);
 
-                string CTE = Helper.AddCTE(CTE1,CTE2);
+                string CTE = Helper.AddCTE(CTE1, CTE2);
                 string sql = string.Format("{0}SELECT * FROM {1}\r\n", CTE, name1);
 
                 if (_joinType != JoinType.Cross) sql += string.Format("{0} {1} ON {2}\r\n", SQLJoinType, name2, Clause.Trim());
