@@ -27,7 +27,7 @@
                         <img src="@report.AttachImageFile(configuration.LogoName)" class="img-responsive" alt="@report.ExecutionName">
                     </a>
                 }
-                <a id="nav_button" href="#" class="navbar-brand">@(!configuration.HasLogo ? configuration.WebProductName + " - " : "")@report.ExecutionName</a><span id="nav_badge" class="badge hidden">@report.Translate("Nav")</span>
+                <a id="nav_button" href="#" class="navbar-brand">@(!configuration.HasLogo ? configuration.WebProductName + " - " : "")@report.ExecutionName</a><span id="nav_badge" class="badge navbar-left hidden">@report.Translate("Nav")</span>
             </div>
             <div id="navbarCollapse" class="collapse navbar-collapse">
                 @if (report.GenerateHTMLDisplay)

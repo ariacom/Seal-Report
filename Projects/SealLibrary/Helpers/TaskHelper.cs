@@ -422,7 +422,7 @@ namespace Seal.Helpers
 
         string _mssqlError = "";
         int _mssqlErrorClassLevel = 11;
-        public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11)
+        public void ExecuteMSSQLScripts(string scriptsDirectory, bool useAllConnections = false, bool stopOnError = true, int errorClassLevel = 11, string fileNameFilter = "")
         {
             _mssqlError = "";
             _mssqlErrorClassLevel = errorClassLevel;
@@ -430,6 +430,8 @@ namespace Seal.Helpers
             var files = Directory.GetFiles(scriptsDirectory, "*.sql");
             foreach (var file in files.OrderBy(i => i))
             {
+                if (!string.IsNullOrEmpty(fileNameFilter) && !Path.GetFileNameWithoutExtension(file).ToLower().Contains(fileNameFilter.ToLower())) continue;
+
                 LogMessage("Processing file '{0}'", file);
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {

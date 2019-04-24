@@ -34,7 +34,7 @@ namespace Seal.Model
         public const string CommonRestrictionKeyword = "{CommonRestriction_";
         public const string EnumFilterKeyword = "{EnumFilter";
         public const string EnumValuesKeyword = "{EnumValues_";
-        public const string JoinAutoName = "<JoinName>";
+        public const string JoinAutoName = "<AutomaticJoinName>";
 
         public const string SealWebPublishTemp = "temp";
 
