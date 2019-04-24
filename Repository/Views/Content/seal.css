@@ -22,6 +22,10 @@ body {
     margin-right: 10px;
 }
 
+#nav_badge {
+    margin-top: 4px;
+}
+
 .tr-totals {
     font-weight: bold;
 }

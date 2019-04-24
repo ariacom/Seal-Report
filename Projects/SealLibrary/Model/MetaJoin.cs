@@ -61,7 +61,7 @@ namespace Seal.Model
         }
 
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Name"), Description("Name of the join. If reset to Empty string, the name is built using the table names."), Id(1, 1)]
+        [Category("Definition"), DisplayName("Name"), Description("Name of the join. If reset to an Empty String, the name is built using the table names."), Id(1, 1)]
         public override string Name
         {
             get { return _name; }
