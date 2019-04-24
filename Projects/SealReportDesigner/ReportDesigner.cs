@@ -876,15 +876,19 @@ namespace Seal
             }
             else if (entity is ReportModel)
             {
+                var reportModel = entity as ReportModel;
                 addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                 addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                 addSmartCopyItem("Smart copy...", entity);
 
-                if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                 ToolStripMenuItem ts = new ToolStripMenuItem();
                 ts.Click += new System.EventHandler(convertModel);
-                ts.Text = ((ReportModel)entity).IsSQLModel ? "Convert SQL Model to a MetaData Model" : "Convert MetaData Model to a SQL Model";
-                treeContextMenuStrip.Items.Add(ts);
+                ts.Text = reportModel.IsSQLModel ? "Convert SQL Model to a MetaData Model" : "Convert MetaData Model to a SQL Model";
+                if (!reportModel.IsSQLModel || (reportModel.IsSQLModel && !string.IsNullOrEmpty(reportModel.Table.Sql)))
+                {
+                    if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                    treeContextMenuStrip.Items.Add(ts);
+                }
             }
             else if (entity is ReportTask)
             {

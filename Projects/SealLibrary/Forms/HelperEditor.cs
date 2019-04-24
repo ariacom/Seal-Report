@@ -213,8 +213,8 @@ namespace Seal.Forms
                         }
                         else if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.MSSQLServer)
                         {
-                            year.Name = string.Format("select dateadd(dd, -day({0}) + 1, dateadd(mm, -month({0}) + 1, cast({0} as Date)))", _metaColumn.Name);
-                            month.Name = string.Format("select dateadd(dd, -day({0}) + 1, cast({0} as Date))", _metaColumn.Name);
+                            year.Name = string.Format("DATETIME2FROMPARTS(year({0}),1,1,0,0,0,0,0)", _metaColumn.Name);
+                            month.Name = string.Format("DATETIME2FROMPARTS(year({0}),month({0}),1,0,0,0,0,0)", _metaColumn.Name);
                         }
                         else if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.MSAccess)
                         {
