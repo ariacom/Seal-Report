@@ -44,6 +44,7 @@ namespace Seal.Helpers
         public string LoadSortColumn = ""; //Sort column used if LoadBurstSize is specified
         public bool UseDbDataAdapter = false;
         public int InsertBurstSize = 500;
+        public int MaxDecimalNumber = -1; //If set, limit the number of decimals for numeric values
         public string ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
         public Encoding DefaultEncoding = Encoding.Default;
         public bool TrimText = true;
@@ -559,25 +560,33 @@ namespace Seal.Helpers
 
         public string RootGetTableColumnValue(DataRow row, DataColumn col, string dateTimeFormat)
         {
-            StringBuilder result = new StringBuilder();
+            string result = "";
             if (row.IsNull(col))
             {
-                result.Append("NULL");
+                result = "NULL";
             }
             else if (IsNumeric(col))
             {
-                result.AppendFormat(row[col].ToString().Replace(',', '.'));
+                result = row[col].ToString().Replace(',', '.');
+                if (!(row[col] is int) && MaxDecimalNumber >= 0 && result.Length > MaxDecimalNumber)
+                {
+                    string[] parts = result.Split('.');
+                    if (parts.Length == 2 && parts[1].Length > MaxDecimalNumber)
+                    {
+                        result = parts[0] + "." + parts[1].Substring(0, MaxDecimalNumber);
+                    }
+                }
             }
             else if (col.DataType.Name == "DateTime" || col.DataType.Name == "Date")
             {
-                result.Append(Helper.QuoteSingle(((DateTime)row[col]).ToString(dateTimeFormat)));
+                result= Helper.QuoteSingle(((DateTime)row[col]).ToString(dateTimeFormat));
             }
             else
             {
                 string res = row[col].ToString();
                 if (TrimText) res = res.Trim();
                 if (RemoveCrLf) res = res.Replace("\r", " ").Replace("\n", " ");
-                result.Append(Helper.QuoteSingle(res));
+                result = Helper.QuoteSingle(res);
             }
 
             return result.ToString();

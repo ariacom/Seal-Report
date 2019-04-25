@@ -896,6 +896,7 @@ namespace Seal.Model
 
                 foreach (var table in fromTables)
                 {
+                    if (!string.IsNullOrEmpty(table.Name)) sqlToParse += "\r\n" + table.Name;
                     if (!string.IsNullOrEmpty(table.PreSQL)) sqlToParse += "\r\n" + table.PreSQL;
                     if (!string.IsNullOrEmpty(table.PostSQL)) sqlToParse += "\r\n" + table.PostSQL;
                     if (!string.IsNullOrEmpty(table.Sql)) sqlToParse += "\r\n" + table.Sql;
@@ -968,7 +969,7 @@ namespace Seal.Model
         public void SetColumnsName()
         {
             int colIndex = 0;
-            foreach (ReportElement element in Elements) element.SQLColumnName = Source.IsNoSQL ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
+            foreach (ReportElement element in Elements) element.SQLColumnName = Source.IsNoSQL || UseRawSQL ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
         }
 
         void AddSubReportsElements()

@@ -959,7 +959,7 @@ namespace Seal.Model
         {
             if (Sources.Count == 0) throw new Exception("Unable to create a model: No source available.\r\nPlease create a source first.");
             ReportModel result = ReportModel.Create();
-            result.Name = Helper.GetUniqueName("model", (from i in Models select i.Name).ToList());
+            result.Name = Helper.GetUniqueName("Model", (from i in Models select i.Name).ToList());
             if (sqlModel)
             {
                 result.Table = MetaTable.Create();

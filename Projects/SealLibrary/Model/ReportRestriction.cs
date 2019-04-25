@@ -1007,7 +1007,8 @@ namespace Seal.Model
                 }
                 else
                 {
-                    _SQLText = UseAsParameter ? "(1=1)" : (HasValue1 ? GetSQLValue(Value1, FinalDate1, _operator) : "NULL");
+                    if (!UseAsParameter && !HasValue1 && IsText) _SQLText = GetSQLValue("", FinalDate1, _operator);
+                    else _SQLText = UseAsParameter ? "(1=1)" : (HasValue1 ? GetSQLValue(Value1, FinalDate1, _operator) : "NULL");
                     _displayText = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue1 ? GetDisplayValue(Value1, FinalDate1) : "?");
                     _displayRestriction = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue1 ? GetDisplayRestriction(Value1, Date1Keyword, Date1) : "?");
                 }
