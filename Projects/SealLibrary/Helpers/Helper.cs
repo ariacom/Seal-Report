@@ -668,10 +668,11 @@ namespace Seal.Helpers
 
 
         //SQL Keywords management
-        public static string ClearAllSQLKeywords(string sql)
+        public static string ClearAllSQLKeywords(string sql, ReportModel model = null)
         {
             sql = ClearSQLKeywords(sql, Repository.EnumFilterKeyword, "filter");
             sql = ClearSQLKeywords(sql, Repository.EnumValuesKeyword, "'1'");
+            if (model != null) sql = model.ParseCommonRestrictions(sql);
             sql = ClearSQLKeywords(sql, Repository.CommonRestrictionKeyword, "1=1");
             return sql;
         }

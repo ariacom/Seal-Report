@@ -418,16 +418,16 @@ namespace Seal.Model
                 try
                 {
                     DbConnection connection = (model != null ? model.Connection.GetOpenConnection() : GetOpenConnection());
-                    Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(PreSQL), this, this.IgnorePrePostError); 
-                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(table.PreSQL), table, table.IgnorePrePostError);
-                    if (!isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PreSQL), model, model.IgnorePrePostError);
+                    Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(PreSQL, model), this, this.IgnorePrePostError); 
+                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(table.PreSQL, model), table, table.IgnorePrePostError);
+                    if (!isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PreSQL, model), model, model.IgnorePrePostError);
                     var command = connection.CreateCommand();
-                    finalSQL = Helper.ClearAllSQLKeywords(sql);
+                    finalSQL = Helper.ClearAllSQLKeywords(sql, model);
                     command.CommandText = finalSQL;
                     command.ExecuteReader();
-                    if (isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PostSQL), model, model.IgnorePrePostError);
-                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(table.PostSQL), table, table.IgnorePrePostError);
-                    Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(PostSQL), this, this.IgnorePrePostError);
+                    if (isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PostSQL, model), model, model.IgnorePrePostError);
+                    if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(table.PostSQL, model), table, table.IgnorePrePostError);
+                    Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(PostSQL, model), this, this.IgnorePrePostError);
                     command.Connection.Close();
                 }
                 catch (Exception ex)

@@ -498,12 +498,13 @@ namespace Seal.Forms
     var helper = new TaskHelper(task);
     var dbHelper = helper.DatabaseHelper;
 	// configuration of the database helper may be changed to control the table creation and load...	
-	dbHelper.ColumnCharType = """"; //Type of table created when text is detected
-	dbHelper.ColumnIntegerType = """"; //Type of table created when integer is detected
-	dbHelper.ColumnNumericType = """"; //Type of table created when numeric is detected
-	dbHelper.ColumnDateTimeType = """"; //Type of table created when datetime is detected
+	dbHelper.ColumnCharType = """"; //type of table created when text is detected
+	dbHelper.ColumnIntegerType = """"; //type of table created when integer is detected
+	dbHelper.ColumnNumericType = """"; //type of table created when numeric is detected
+	dbHelper.ColumnDateTimeType = """"; //type of table created when datetime is detected
 	dbHelper.ColumnCharLength = 0; //char length, 0 means auto size (or max for SQLServer)
 	dbHelper.InsertBurstSize = 500; //number of insert per SQL command when inserting records in the destination table
+    dbHelper.MaxDecimalNumber = -1; //if >= 0, the maximum number of decimals for numeric values in the INSERT command
 	dbHelper.LoadBurstSize = 0; //number of records to load from the table (to be used with LoadSortColumn), 0 means to load all records in one query, otherwise several queries are performed
 	dbHelper.LoadSortColumn = """"; //name of the column used to sort if LoadBurstSize is specified, 
     dbHelper.UseDbDataAdapter = false; //If true, the DbDataAdapter.Fill() is used instead of the DataReader
