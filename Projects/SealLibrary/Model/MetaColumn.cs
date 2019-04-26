@@ -126,7 +126,7 @@ namespace Seal.Model
 
         private bool _isAggregate = false;
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Is Aggregate"), Description("Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,CNT,AVG."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Is Aggregate"), Description("Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG."), Id(3, 1)]
         public bool IsAggregate
         {
             get { return _isAggregate; }
