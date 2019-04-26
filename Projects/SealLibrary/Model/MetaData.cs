@@ -76,9 +76,6 @@ namespace Seal.Model
             get
             {
                 MetaTable result = Tables.FirstOrDefault(i => i.Alias == MasterTableName);
-                if (result == null)
-                {
-                }
                 return result;
             }
         }
