@@ -14,6 +14,7 @@ using DynamicTypeDescriptor;
 using System.Windows.Forms.Design;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Seal.Model
 {
@@ -257,10 +258,11 @@ namespace Seal.Model
             SealServerConfiguration result = null;
             try
             {
-                StreamReader sr = new StreamReader(path);
                 XmlSerializer serializer = new XmlSerializer(typeof(SealServerConfiguration));
-                result = (SealServerConfiguration)serializer.Deserialize(sr);
-                sr.Close();
+                using (XmlReader xr = XmlReader.Create(path))
+                {
+                    result = (SealServerConfiguration)serializer.Deserialize(xr);
+                }
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);
             }
@@ -302,9 +304,12 @@ namespace Seal.Model
             }
 #endif
             XmlSerializer serializer = new XmlSerializer(typeof(SealServerConfiguration), xmlOverrides);
-            StreamWriter sw = new StreamWriter(path);
-            serializer.Serialize(sw, (SealServerConfiguration)this);
-            sw.Close();
+            XmlWriterSettings ws = new XmlWriterSettings();
+            ws.NewLineHandling = NewLineHandling.Entitize;
+            using (XmlWriter xw = XmlWriter.Create(path, ws))
+            {
+                serializer.Serialize(xw, this);
+            }
             FilePath = path;
             LastModification = File.GetLastWriteTime(path);
         }

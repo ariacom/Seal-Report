@@ -224,13 +224,24 @@ namespace Seal.Forms
                                 frm.sqlTextBox.Text = model.Table.Sql;
                                 if (frm.ShowDialog() == DialogResult.OK)
                                 {
-                                    model.Table.Sql = frm.sqlTextBox.Text;
-                                    model.RefreshMetaTable(true);
+                                    try
+                                    {
+                                        Cursor.Current = Cursors.WaitCursor;
+                                        model.Table.Sql = frm.sqlTextBox.Text;
+                                        model.RefreshMetaTable(true);
+                                    }
+                                    finally
+                                    {
+                                        Cursor.Current = Cursors.Default;
+                                    }
+
                                     if (EntityHandler != null)
                                     {
                                         EntityHandler.SetModified();
                                         EntityHandler.RefreshModelTreeView();
                                     }
+
+                                    if (!string.IsNullOrEmpty(model.Table.Error)) throw new Exception("Error when building columns from the Select SQL:\r\n" + model.Table.Error);
                                 }
                             }
                             else

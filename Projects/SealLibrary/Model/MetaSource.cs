@@ -16,6 +16,7 @@ using Seal.Forms;
 using DynamicTypeDescriptor;
 using System.Data.Common;
 using System.Data.Odbc;
+using System.Xml;
 
 namespace Seal.Model
 {
@@ -353,10 +354,11 @@ namespace Seal.Model
             MetaSource result = null;
             try
             {
-                StreamReader sr = new StreamReader(path);
                 XmlSerializer serializer = new XmlSerializer(typeof(MetaSource));
-                result = (MetaSource)serializer.Deserialize(sr);
-                sr.Close();
+                using (XmlReader xr = XmlReader.Create(path))
+                {
+                    result = (MetaSource)serializer.Deserialize(xr);
+                }
                 result.Name = Path.GetFileNameWithoutExtension(path); 
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);
@@ -386,9 +388,12 @@ namespace Seal.Model
             }
             Name = Path.GetFileNameWithoutExtension(path);
             XmlSerializer serializer = new XmlSerializer(typeof(MetaSource));
-            StreamWriter sw = new StreamWriter(path);
-            serializer.Serialize(sw, (MetaSource)this);
-            sw.Close();
+            XmlWriterSettings ws = new XmlWriterSettings();
+            ws.NewLineHandling = NewLineHandling.Entitize;
+            using (XmlWriter xw = XmlWriter.Create(path, ws))
+            {
+                serializer.Serialize(xw, this);
+            }
             FilePath = path;
             LastModification = File.GetLastWriteTime(path);
         }

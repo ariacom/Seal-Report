@@ -500,7 +500,7 @@ namespace Seal.Model
             {
                 if (_metaColumn == null && !string.IsNullOrEmpty(_metaColumnGUID))
                 {
-                    if (Model != null && Model.IsSQLModel && Model.Table != null) _metaColumn = Model.Table.Columns.FirstOrDefault(i => i.GUID == MetaColumnGUID);
+                    if (Model != null && Model.IsSQLModel) _metaColumn = Model.Table.Columns.FirstOrDefault(i => i.GUID == MetaColumnGUID);
                     else if (Source != null && Source.MetaData != null) _metaColumn = Source.MetaData.GetColumnFromGUID(MetaColumnGUID);
                 }
                 return _metaColumn;

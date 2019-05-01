@@ -638,7 +638,7 @@ namespace Seal.Model
         static char[] DateUnits = new char[] { 's', 'm', 'h', 'D', 'W', 'M', 'Q', 'S', 'Y' };
         DateTime CalcFinalDate(DateTime start, string input, DateRestrictionKeyword keyword, char def)
         {
-            string val = input.Replace(keyword.ToString(), "").Replace("+", "§+").Replace("-", "§-");
+            string val = input.Replace(keyword.ToString(), "").Replace(" ", "").Replace("+", "§+").Replace("-", "§-");
             var vals = val.Split('§');
 
             foreach (var v in vals.Where(i => !string.IsNullOrEmpty(i)))
