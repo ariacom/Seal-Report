@@ -42,6 +42,14 @@ function nvd3UpdateCharts() {
 }
 nv.utils.windowResize(nvd3UpdateCharts);
 
+//Hide tooltips when scrolling
+window.onscroll = function () {
+    for (var i = 0; i < nvd3Charts.length; i++) {
+        nvd3Charts[i].tooltip.hidden(true);
+        nvd3Charts[i].interactiveLayer.tooltip.hidden(true);
+    }
+};
+
 function nvd3TooltipGenerator(data, series, xvalformatter, y1formatter, y2formatter) {
 		var header =xvalformatter(data.value);
 		var headerhtml = '<thead><tr><td colspan=3><strong class="x-value">' + header + '</strong></td></tr></thead>';

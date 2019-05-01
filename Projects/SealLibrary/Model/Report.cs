@@ -14,6 +14,7 @@ using Microsoft.Win32.TaskScheduler;
 using System.Threading;
 using System.Text;
 using System.Diagnostics;
+using System.Xml;
 
 namespace Seal.Model
 {
@@ -735,12 +736,13 @@ namespace Seal.Model
             Report result = null;
             try
             {
-                StreamReader sr = new StreamReader(path);
                 XmlSerializer serializer = new XmlSerializer(typeof(Report));
-                result = (Report)serializer.Deserialize(sr);
+                using (XmlReader xr = XmlReader.Create(path))
+                {
+                    result = (Report)serializer.Deserialize(xr);
+                }
                 result.FilePath = path;
                 result.Repository = repository;
-                sr.Close();
                 result.LastModification = File.GetLastWriteTime(path);
 
                 result.LoadErrors = "";
@@ -910,9 +912,12 @@ namespace Seal.Model
                     source.MetaData.Enums.RemoveAll(i => !i.IsEditable);
                 }
                 XmlSerializer serializer = new XmlSerializer(typeof(Report));
-                StreamWriter sw = new StreamWriter(path);
-                serializer.Serialize(sw, this);
-                sw.Close();
+                XmlWriterSettings ws = new XmlWriterSettings();
+                ws.NewLineHandling = NewLineHandling.Entitize;
+                using (XmlWriter xw = XmlWriter.Create(path, ws))
+                {
+                    serializer.Serialize(xw, this);
+                }
             }
             finally
             {

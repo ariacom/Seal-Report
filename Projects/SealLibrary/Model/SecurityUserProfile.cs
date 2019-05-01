@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Seal.Model
@@ -24,11 +25,12 @@ namespace Seal.Model
             SecurityUserProfile result = null;
             try
             {
-                StreamReader sr = new StreamReader(path);
                 XmlSerializer serializer = new XmlSerializer(typeof(SecurityUserProfile));
-                result = (SecurityUserProfile)serializer.Deserialize(sr);
+                using (XmlReader xr = XmlReader.Create(path))
+                {
+                    result = (SecurityUserProfile)serializer.Deserialize(xr);
+                }
                 result.Path = path;
-                sr.Close();
             }
             catch (Exception ex)
             {
@@ -49,9 +51,12 @@ namespace Seal.Model
                 _dashboards.RemoveAll(i => string.IsNullOrEmpty(i));
 
                 XmlSerializer serializer = new XmlSerializer(typeof(SecurityUserProfile));
-                StreamWriter sw = new StreamWriter(path);
-                serializer.Serialize(sw, this);
-                sw.Close();
+                XmlWriterSettings ws = new XmlWriterSettings();
+                ws.NewLineHandling = NewLineHandling.Entitize;
+                using (XmlWriter xw = XmlWriter.Create(path, ws))
+                {
+                    serializer.Serialize(xw, this);
+                }
             }
             finally
             {
