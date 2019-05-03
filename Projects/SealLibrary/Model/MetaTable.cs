@@ -390,7 +390,7 @@ namespace Seal.Model
                 {
                     string fullColumnName = (IsSQL && !IsForSQLModel ? Source.GetTableName(AliasName) + "." : "") + Source.GetColumnName(column.ColumnName);
                     MetaColumn newColumn = Columns.FirstOrDefault(i => i.Name == fullColumnName);
-                    column.ColumnName = fullColumnName; //Set it here to cleatr the columns later
+                    column.ColumnName = fullColumnName; //Set it here to clear the columns later
                     ColumnType type = Helper.NetTypeConverter(column.DataType);
                     if (newColumn == null)
                     {
