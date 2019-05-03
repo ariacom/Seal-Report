@@ -107,6 +107,7 @@ namespace Seal.Model
 
                 GetProperty("UseAsParameter").SetIsReadOnly(_operator != Operator.ValueOnly);
                 GetProperty("Required").SetIsReadOnly(_prompt == PromptType.None);
+                GetProperty("ChangeOperator").SetIsReadOnly(_prompt == PromptType.None);
 
                 //Aggregate restriction
                 if (PivotPosition == PivotPosition.Data && !(MetaColumn != null && MetaColumn.IsAggregate)) GetProperty("AggregateFunction").SetIsBrowsable(true);

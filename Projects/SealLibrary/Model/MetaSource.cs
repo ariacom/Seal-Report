@@ -510,7 +510,7 @@ namespace Seal.Model
         {
             string delimiters = getDelimiters(Connection.DatabaseType);
             var keywords = getKeywords(Connection.DatabaseType);
-            if ( (!rawName.StartsWith("[") && !rawName.EndsWith("]") && rawName.IndexOfAny(" '\"-$-".ToCharArray()) != -1) 
+            if ( (!rawName.StartsWith(delimiters[0].ToString()) && !rawName.EndsWith(delimiters[1].ToString()) && rawName.IndexOfAny(" '\"-$-".ToCharArray()) != -1) 
                 || keywords.Contains(rawName.ToUpper()))
                 return string.Format("{0}{1}{2}", delimiters[0], rawName, delimiters[1]);
             return rawName;
@@ -520,13 +520,11 @@ namespace Seal.Model
         {
             string delimiters = getDelimiters(Connection.DatabaseType);
             var keywords = getKeywords(Connection.DatabaseType);
-            if ((!rawName.StartsWith("[") && !rawName.EndsWith("]") && rawName.IndexOfAny(" '\"-$-".ToCharArray()) != -1)
+            if ((!rawName.StartsWith(delimiters[0].ToString()) && !rawName.EndsWith(delimiters[1].ToString()) && rawName.IndexOfAny(" '\"-$-".ToCharArray()) != -1)
                 || keywords.Contains(rawName.ToUpper()))
                 return string.Format("{0}{1}{2}", delimiters[0], rawName, delimiters[1]);
             return rawName;
         }
-
-
 
         #region Helpers
 
