@@ -30,6 +30,13 @@ namespace Seal.Model
             set { _name = value; }
         }
 
+        string _description = "";
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
+
         string _filePath;
         public string FilePath
         {

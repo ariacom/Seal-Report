@@ -35,6 +35,7 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("ModelGUID").SetIsBrowsable(Template.ForReportModel);
                 GetProperty("TemplateName").SetIsBrowsable(true);
+                GetProperty("TemplateDescription").SetIsBrowsable(true);
 
                 //Set culture only on master view
                 GetProperty("CultureName").SetIsBrowsable(IsRootView);
@@ -350,8 +351,17 @@ namespace Seal.Model
             set { _templateName = value; }
         }
 
+        [DisplayName("Template Description"), Description("The description of the template."), Category("Definition"), Id(2, 1)]
+        public string TemplateDescription
+        {
+            get
+            {
+                return Template != null ? Template.Description : "";
+            }
+        }
+
         string _modelGUID;
-        [DisplayName("Model"), Description("The data model used for the view."), Category("Definition"), Id(2, 1)]
+        [DisplayName("Model"), Description("The data model used for the view."), Category("Definition"), Id(3, 1)]
         [TypeConverter(typeof(ReportModelConverter))]
         public string ModelGUID
         {

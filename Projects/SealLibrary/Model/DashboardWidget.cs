@@ -54,7 +54,10 @@ namespace Seal.Model
             set {
                 _name = value;
                 //Create guid for the first time
-                if (!string.IsNullOrEmpty(_name) && string.IsNullOrEmpty(_guid)) _guid = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(_name) && string.IsNullOrEmpty(_guid))
+                {
+                    _guid = Guid.NewGuid().ToString();
+                }
             }
         }
 
@@ -93,6 +96,16 @@ namespace Seal.Model
         [DisplayName("Auto-Refresh (seconds)"), Description("Number of seconds before the widget is re-executed. If -1, the rate of the root view is used, 0 means no refresh."), Id(10, 1)]
         [DefaultValue(-1)]
         public int Refresh { get => _refresh; set => _refresh = value; }
+
+        [XmlIgnore]
+        [DisplayName("Dashboard XML"), Description("The XML to insert in a dashboard definition file to show this widget."), Id(11, 1)]
+        public string XML
+        {
+            get
+            {
+                return string.IsNullOrEmpty(_name) ? "" : string.Format("<DashboardItem><WidgetGUID>{0}</WidgetGUID></DashboardItem>", _guid);
+            }
+        }
 
         //Run-time
         [XmlIgnore]
