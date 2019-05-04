@@ -663,7 +663,7 @@ namespace Seal
             if (entry != null) entry.Expanded = _configurationExpanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "widget definition");
             if (entry != null) entry.Expanded = _widgetExpanded;
-
+            
             toolStripHelper.SetHelperButtons(selectedEntity);
             enableControls();
         }
@@ -745,12 +745,13 @@ namespace Seal
             removeToolStripMenuItem.Enabled = (selectSource.Count > 0);
         }
 
-        void addAddItem(string text, object tag)
+        void addAddItem(string text, object tag, string toolTip = "")
         {
             ToolStripMenuItem ts = new ToolStripMenuItem();
             ts.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
             ts.Tag = tag;
             ts.Text = text;
+            if (!string.IsNullOrEmpty(toolTip)) ts.ToolTipText = toolTip;
             treeContextMenuStrip.Items.Add(ts);
         }
 
@@ -832,7 +833,7 @@ namespace Seal
                 var currentTemplateName = ((ReportView)entity).TemplateName;
                 foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(currentTemplateName)))
                 {
-                    addAddItem("Add a " + template.Name + " View", template);
+                    addAddItem("Add a " + template.Name + " View", template, template.Description);
                 }
                 addRemoveItem("Remove Views...");
                 addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);

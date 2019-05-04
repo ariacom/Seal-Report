@@ -200,7 +200,7 @@ namespace Seal.Model
         public bool ShouldSerializeKeepColNames() { return IsSQLModel; }
 
         bool _useRawSQL = false;
-        [Category("SQL Model Options"), DisplayName("Use raw source SQL"), Description("If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied"), Id(3, 2)]
+        [Category("SQL Model Options"), DisplayName("Use raw SQL"), Description("If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied"), Id(3, 2)]
         [DefaultValue(false)]
         public bool UseRawSQL
         {
