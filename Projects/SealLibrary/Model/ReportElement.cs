@@ -41,6 +41,7 @@ namespace Seal.Model
                 GetProperty("CellScript").SetIsBrowsable(true);
                 GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("EnumGUIDEL").SetIsBrowsable(true);
+                GetProperty("ForceAggregate").SetIsBrowsable(true);
 
                 GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
                 GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
@@ -240,6 +241,7 @@ namespace Seal.Model
                 return result;
             }
         }
+
 
         [XmlIgnore]
         public bool HasTimeEl
@@ -557,6 +559,27 @@ namespace Seal.Model
         {
             get { return _enumGUID; }
             set { _enumGUID = value; }
+        }
+
+        YesNoDefault _forceAggregate = YesNoDefault.Default;
+        [DefaultValue(YesNoDefault.Default)]
+        [Category("Advanced"), DisplayName("Force aggregrate"), Description("If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause."), Id(5, 5)]
+        public YesNoDefault ForceAggregate
+        {
+            get { return _forceAggregate; }
+            set { _forceAggregate = value; }
+        }
+        public bool ShouldSerializeHasAggregate() { return _forceAggregate != YesNoDefault.Default; }
+
+        [XmlIgnore, Browsable(false)]
+        public bool IsAggregateEl
+        {
+            get
+            {
+                if (_forceAggregate == YesNoDefault.Yes) return true;
+                if (_forceAggregate == YesNoDefault.No) return false;
+                return MetaColumn.IsAggregate;
+            }
         }
 
         [XmlIgnore, Browsable(false)]

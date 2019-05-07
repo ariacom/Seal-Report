@@ -138,7 +138,7 @@ namespace Seal.Model
         [Category("Display"), DisplayName("Category Name"), Description("Category used to display the column in the Report Designer tree view. Category hierarchy can be defined using the '/' character (e.g. 'Master/Name1/Name2')"), Id(2, 2)]
         public string Category
         {
-            get { return string.IsNullOrEmpty(_category) ? "Master" : _category; }
+            get { return _category; }
             set { _category = value; }
         }
 

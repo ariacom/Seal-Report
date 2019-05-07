@@ -1070,7 +1070,7 @@ namespace Seal.Model
                         MetaTable table = element.MetaColumn.MetaTable;
                         if (table != null && !_fromTables.Contains(table)) _fromTables.Add(table);
 
-                        if (element.PivotPosition != PivotPosition.Data && !groupByColumns.Contains(element.SQLColumn))
+                        if (element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl && !groupByColumns.Contains(element.SQLColumn))
                         {
                             Helper.AddValue(ref execGroupByClause, ",", element.SQLColumn);
                             groupByColumns.Add(element.SQLColumn);
@@ -1083,7 +1083,8 @@ namespace Seal.Model
                         if (table != null && !_fromTables.Contains(table) && restriction.HasValue && restriction.Operator != Operator.ValueOnly) _fromTables.Add(table);
                     }
 
-                    if (GetElements(PivotPosition.Data).Count() == 0 && execHavingClause.Length == 0) execGroupByClause = new StringBuilder();
+                    //Clear group by clause if not necessary
+                    if (GetElements(PivotPosition.Data).Count() == 0 && Elements.Count(i => i.IsAggregateEl) == 0 &&  execHavingClause.Length == 0) execGroupByClause = new StringBuilder();
 
                     List<string> orderColumns = new List<string>();
                     UpdateFinalSortOrders();

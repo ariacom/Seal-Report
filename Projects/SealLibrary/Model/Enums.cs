@@ -456,4 +456,15 @@ namespace Seal.Model
         [Description("Log in one file per execution")]
         OneFilePerExecution,
     }
+
+    public enum YesNoDefault
+    {
+        [Description("Default")]
+        Default,
+        [Description("Yes")]
+        Yes,
+        [Description("No")]
+        No,
+    }
+
 }
