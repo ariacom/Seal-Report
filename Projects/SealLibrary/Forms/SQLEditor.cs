@@ -127,6 +127,7 @@ namespace Seal.Forms
 
                         samples.Add(razorEnumTemplate);
                         samples.Add("SELECT DISTINCT CategoryID, CategoryName\r\nFROM Categories\r\nORDER BY 2");
+                        samples.Add("SELECT DISTINCT CategoryID, CategoryName, CategoryName, 'font-style:italic', 'info'\r\nFROM Categories\r\nORDER BY 2");
                         description = descriptionTemplate1;
                     }
                     frm.clearToolStripButton.Visible = false;
