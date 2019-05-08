@@ -15,8 +15,8 @@ namespace Seal.Forms
     public class SQLEditor : UITypeEditor
     {
         const string descriptionTemplate1 = "Note that Razor script can be used if the text starts with '@'.\r\n";
-        const string descriptionTemplate2 = "Note that Razor script can be used if the text starts with '@'.\r\nThe final SQL may contain Common Restrictions by using the keyword '{CommonRestriction_<Name>}' where <Name> is the Common Restriction name.\r\nCommon Restrictions can then be configured in the Report Models involved.\r\n";
-        const string descriptionTemplate3 = "The final SQL may contain Common Restrictions by using the keyword '{CommonRestriction_<Name>}' where <Name> is the Common Restriction name.\r\nCommon Restrictions can then be configured in the Report Models involved.\r\n";
+        const string descriptionTemplate2 = "Note that Razor script can be used if the text starts with '@'.\r\nThe final SQL may contain Common Restrictions or Values by using the keywords '{CommonRestriction_<Name>}' or '{CommonValue_<Name>}' where <Name> is the Common Restriction name.\r\nCommon Restrictions can then be configured in the Report Models involved.\r\n";
+        const string descriptionTemplate3 = "The final SQL may contain Common Restrictions or Values by using the keyword '{CommonRestriction_<Name>}' or '{CommonValue_<Name>}' where <Name> is the Common Restriction name.\r\nCommon Restrictions can then be configured in the Report Models involved.\r\n";
 
         const string razorTableTemplate = "@using Seal.Model\r\n@{\r\nMetaTable table = Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
         const string razorTableWhereTemplate = @"@using Seal.Model
@@ -78,6 +78,7 @@ namespace Seal.Forms
                         samples.Add(razorModelTemplate);
                         samples.Add("update Employees set LastName=LastName");
                         samples.Add("update Employees set LastName=LastName where {CommonRestriction_LastName}");
+                        samples.Add("update Employees set LastName={CommonValue_NewName} where {CommonRestriction_OldName}");
                         frm.clearToolStripButton.Visible = false;
                         description = descriptionTemplate2;
                     }
@@ -157,11 +158,13 @@ namespace Seal.Forms
                     {
                         samples.Add(razorTableWhereTemplate);
                         samples.Add("{CommonRestriction_LastName}");
+                        samples.Add("LastName={CommonValue_LastNameValue}");
                         description = descriptionTemplate2;
                     }
                     else if (context.PropertyDescriptor.Name == "Sql")
                     {
                         samples.Add("SELECT * FROM Employees WHERE {CommonRestriction_LastName}");
+                        samples.Add("SELECT * FROM Employees WHERE EmployeeID > {CommonValue_ID}");
                         description = descriptionTemplate3;
                     }
                     frm.clearToolStripButton.Visible = false;

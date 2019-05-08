@@ -578,7 +578,8 @@ namespace Seal.Model
             {
                 if (_forceAggregate == YesNoDefault.Yes) return true;
                 if (_forceAggregate == YesNoDefault.No) return false;
-                return MetaColumn.IsAggregate;
+                if (MetaColumn != null) return MetaColumn.IsAggregate;
+                return false;
             }
         }
 

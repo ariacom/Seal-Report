@@ -751,6 +751,12 @@ namespace Seal.Model
                     source.Report = result;
                     source.LoadRepositoryMetaSources(repository);
                 }
+
+                if (result.Views.Count == 0)
+                {
+                    var view = result.AddRootView();
+                    view.Name = "View";
+                }
                 result.InitReferences();
 
                 //Refresh enums

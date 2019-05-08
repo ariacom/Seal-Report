@@ -260,8 +260,13 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public bool IsForSQLModel = false;
+        public bool IsForSQLModel
+        {
+            get { return Model != null; }
+        } 
 
+        [XmlIgnore]
+        public ReportModel Model = null;
 
         public void GetExecSQLName(ref string CTE, ref string name)
         {
@@ -349,18 +354,29 @@ namespace Seal.Model
         DataTable GetDefinitionTable(string sql)
         {
             DataTable result = null;
-            if (IsSQL)
+            var finalSQL = sql;
+            try
             {
-                DbConnection connection = _source.GetOpenConnection();
-                Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(PreSQL), this, IgnorePrePostError);
-                result = Helper.GetDataTable(connection, ReportModel.ClearCommonRestrictions(sql));
-                Helper.ExecutePrePostSQL(connection, ReportModel.ClearCommonRestrictions(PostSQL), this, IgnorePrePostError);
-                connection.Close();
+                if (IsSQL)
+                {
+                    DbConnection connection = _source.GetOpenConnection();
+
+                    Helper.ExecutePrePostSQL(connection, Model == null ? ReportModel.ClearCommonRestrictions(PreSQL) : Model.ParseCommonRestrictions(PreSQL), this, IgnorePrePostError);
+                    finalSQL = Model == null ? ReportModel.ClearCommonRestrictions(sql) : Model.ParseCommonRestrictions(sql);
+                    result = Helper.GetDataTable(connection, finalSQL);
+                    Helper.ExecutePrePostSQL(connection, Model == null ? ReportModel.ClearCommonRestrictions(PostSQL) : Model.ParseCommonRestrictions(PostSQL), this, IgnorePrePostError);
+                    connection.Close();
+                }
+                else
+                {
+                    result = BuildNoSQLTable(false);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                result = BuildNoSQLTable(false);
+                throw new Exception(ex.Message + "\r\n" + finalSQL);
             }
+
             return result;
         }
 

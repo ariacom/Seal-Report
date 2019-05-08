@@ -219,7 +219,10 @@ namespace Seal.Forms
                             if (model.IsSQLModel && key == Keys.F7)
                             {
                                 frm.Text = "SQL Editor: Edit the SQL Select Statement";
-                                frm.SetSamples(new List<string>() { "SELECT * FROM Orders", "SELECT *\r\nFROM Employees\r\nWHERE {CommonRestriction_LastName}" });
+                                frm.SetSamples(new List<string>() {
+                                    "SELECT * FROM Orders", "SELECT *\r\nFROM Employees\r\nWHERE {CommonRestriction_LastName}",
+                                    "SELECT * FROM Orders", "SELECT *\r\nFROM Employees\r\nWHERE EmployeeID > {CommonValue_ID}"
+                                });
                                 frm.WarningOnError = true;
                                 frm.sqlTextBox.Text = model.Table.Sql;
                                 if (frm.ShowDialog() == DialogResult.OK)

@@ -133,7 +133,7 @@ namespace Seal.Model
 
         //Common Restrictions
         private List<ReportRestriction> _commonRestrictions = new List<ReportRestriction>();
-        [Category("Model Definition"), DisplayName("Common Restrictions"), Description("Definition of the common restrictions involved in the model. Common restrictions are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' keyword (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount'9"), Id(3, 1)]
+        [Category("Model Definition"), DisplayName("Common Restrictions"), Description("Definition of the common restrictions involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount'9"), Id(3, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<ReportRestriction> CommonRestrictions
         {
@@ -514,7 +514,7 @@ namespace Seal.Model
             _table.Source = Source;
             if (!string.IsNullOrEmpty(_table.Sql))
             {
-                _table.IsForSQLModel = true;
+                _table.Model = this;
                 _table.Refresh();
 
                 foreach (var col in _table.Columns)
@@ -847,16 +847,22 @@ namespace Seal.Model
 
         public string ParseCommonRestrictions(string sql)
         {
+            if (string.IsNullOrEmpty(sql)) return "";
+
             foreach (var restr in ExecutionCommonRestrictions)
             {
                 sql = sql.Replace(Repository.CommonRestrictionKeyword + restr.Name + "}", restr.SQLText);
+                sql = sql.Replace(Repository.CommonValueKeyword + restr.Name + "}", restr.SQLText);
             }
             return ClearCommonRestrictions(sql);
         }
 
         public static string ClearCommonRestrictions(string sql)
         {
-            return Helper.ClearSQLKeywords(sql, Repository.CommonRestrictionKeyword, "1=1");
+            if (string.IsNullOrEmpty(sql)) return "";
+
+            var result = Helper.ClearSQLKeywords(sql, Repository.CommonRestrictionKeyword, "1=1");
+            return Helper.ClearSQLKeywords(result, Repository.CommonValueKeyword, "NULL");
         }
 
 
@@ -904,6 +910,8 @@ namespace Seal.Model
                 }
 
                 var names = Helper.GetSQLKeywordNames(sqlToParse, Repository.CommonRestrictionKeyword);
+                var valueNames = Helper.GetSQLKeywordNames(sqlToParse, Repository.CommonValueKeyword);
+                names.AddRange(valueNames);
                 foreach (var restrictionName in names)
                 {
                     var commonRestriction = CommonRestrictions.FirstOrDefault(i => i.Name == restrictionName);
@@ -917,8 +925,18 @@ namespace Seal.Model
                     }
                 }
 
+                //If not defined, set operator to NULL for Value...
+                foreach (var restrictionName in valueNames)
+                {
+                    var commonRestriction = CommonRestrictions.FirstOrDefault(i => i.Name == restrictionName);
+                    if (commonRestriction != null && commonRestriction.Operator != Operator.ValueOnly)
+                    {
+                        commonRestriction.TypeRe = ColumnType.Numeric;
+                        commonRestriction.Operator = Operator.ValueOnly;
+                    }
+                }
                 //clean restrictions not used
-                CommonRestrictions.RemoveAll(i => !sqlToParse.Contains(Repository.CommonRestrictionKeyword + i.Name + "}"));
+                CommonRestrictions.RemoveAll(i => !sqlToParse.Contains(Repository.CommonRestrictionKeyword + i.Name + "}") && !sqlToParse.Contains(Repository.CommonValueKeyword + i.Name + "}"));
 
                 //Set references
                 foreach (var restriction in CommonRestrictions)
