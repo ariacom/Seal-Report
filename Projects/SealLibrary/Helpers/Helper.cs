@@ -727,10 +727,10 @@ namespace Seal.Helpers
             int index = 0;
             do
             {
-                index = sql.IndexOf(Repository.CommonRestrictionKeyword, index);
+                index = sql.IndexOf(keyword, index);
                 if (index > 0)
                 {
-                    index += Repository.CommonRestrictionKeyword.Length;
+                    index += keyword.Length;
                     string restrictionName = "";
                     for (int i = index; i < sql.Length; i++)
                     {

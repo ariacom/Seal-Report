@@ -32,6 +32,7 @@ namespace Seal.Model
         public const string SealReportDisplayNameKeyword = "%SEALREPORTDISPLAYNAME%";
         public const string SealReportDisplayNameKeyword2 = "{Report Name}";
         public const string CommonRestrictionKeyword = "{CommonRestriction_";
+        public const string CommonValueKeyword = "{CommonValue_";
         public const string EnumFilterKeyword = "{EnumFilter";
         public const string EnumValuesKeyword = "{EnumValues_";
         public const string JoinAutoName = "<AutomaticJoinName>";
@@ -496,7 +497,7 @@ namespace Seal.Model
 
         public string DashboardPublicFolder
         {
-            get { return Path.Combine(SpecialsFolder, "Dashboards"); }
+            get { return Path.Combine(_path, "Dashboards"); }
         }
 
         public string TranslationsPattern

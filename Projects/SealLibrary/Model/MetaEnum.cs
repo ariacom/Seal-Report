@@ -100,7 +100,7 @@ namespace Seal.Model
 
         public bool HasDynamicDisplay
         {
-            get { return IsDynamic && IsDbRefresh; }
+            get { return !string.IsNullOrEmpty(SqlDisplay) && IsDynamic && IsDbRefresh; }
         }
 
         [XmlIgnore]
@@ -128,7 +128,7 @@ namespace Seal.Model
 
         private Boolean _translate = false;
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are transalted using the Repository translations."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are translated using the Repository translations."), Id(6, 1)]
         public Boolean Translate
         {
             get { return _translate; }
