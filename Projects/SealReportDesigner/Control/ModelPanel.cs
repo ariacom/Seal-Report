@@ -198,6 +198,7 @@ namespace Seal.Controls
             ReportElement element = ReportElement.Create();
             element.Source = Model.Source;
             element.Format = column.Format;
+            element.Report = Model.Report;
             element.Model = Model;
             element.MetaColumnGUID = column.GUID;
             element.MetaColumn = column;
@@ -547,13 +548,15 @@ namespace Seal.Controls
                     if (result == DialogResult.Yes)
                     {
                         initNoSQL();
+                        if (Model.IsSQLModel) Model.RefreshMetaTable(true);
+
                         initTreeView();
                         Model.Elements.Clear();
                         Model.Restrictions.Clear();
                         Model.InitEditor();
                         Model.Restriction = "";
                         Model.AggregateRestrictions.Clear();
-                        Model.AggregateRestriction = "";
+                        Model.AggregateRestriction = "";                    
                         restrictionsPanel.ModelToRestrictionText();
                         aggregateRestrictionsPanel.ModelToRestrictionText();
                         ElementsToPanels();

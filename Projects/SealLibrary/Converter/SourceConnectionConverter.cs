@@ -47,7 +47,7 @@ namespace Seal.Converter
                 choices = choices2.ToArray();
             }
 
-            return new StandardValuesCollection(choices);
+            return new StandardValuesCollection(choices.OrderBy(i => i).ToList());
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destType)

@@ -98,6 +98,37 @@ namespace Seal.Model
         }
         public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(_tasksScript); }
 
+
+        //Tasks Restrictions
+        private List<ReportRestriction> _tasksRestrictions = new List<ReportRestriction>();
+        public List<ReportRestriction> TasksRestrictions
+        {
+            get { return _tasksRestrictions; }
+            set { _tasksRestrictions = value; }
+        }
+        public bool ShouldSerializeTaskRestrictions() { return _tasksRestrictions.Count > 0; }
+
+
+        [XmlIgnore]
+        public List<ReportRestriction> ExecutionTasksRestrictions
+        {
+            get
+            {
+                List<ReportRestriction> result = new List<ReportRestriction>();
+                foreach (ReportRestriction restriction in TasksRestrictions)
+                {
+                    ReportRestriction newRestriction = restriction;
+                    if (ForOutput && OutputToExecute.UseCustomRestrictions)
+                    {
+                        newRestriction = OutputToExecute.Restrictions.FirstOrDefault(i => i.GUID == restriction.GUID);
+                        if (newRestriction == null) newRestriction = restriction;
+                    }
+                    result.Add(newRestriction);
+                }
+                return result;
+            }
+        }
+
         private List<ReportView> _views = new List<ReportView>();
         public List<ReportView> Views
         {
@@ -704,6 +735,11 @@ namespace Seal.Model
                 task.InitReferences();
             }
 
+            foreach (var restriction in TasksRestrictions)
+            {
+                restriction.Report = this;
+            }
+
             i = Outputs.Count;
             while (--i >= 0)
             {
@@ -1254,16 +1290,16 @@ namespace Seal.Model
 
                     int index = 0;
                     _executionCommonRestrictions = new List<ReportRestriction>();
-                    foreach (ReportModel model in ExecutionModels)
+                    foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None))
                     {
-                        foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None))
+                        if (
+                            restriction.IsTaskRestriction ||
+                            !_executionCommonRestrictions.Exists(i => (i.IsCommonRestriction && i.Name == restriction.Name) || (!i.IsCommonRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl))
+                            )
                         {
-                            if (!_executionCommonRestrictions.Exists(i => (i.IsCommonRestriction && i.Name == restriction.Name) || (!i.IsCommonRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl)))
-                            {
-                                restriction.HtmlIndex = index.ToString();
-                                _executionCommonRestrictions.Add(restriction);
-                                index++;
-                            }
+                            restriction.HtmlIndex = index.ToString();
+                            _executionCommonRestrictions.Add(restriction);
+                            index++;
                         }
                     }
 
@@ -1291,11 +1327,10 @@ namespace Seal.Model
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
+                result.AddRange(TasksRestrictions);
                 foreach (ReportModel model in Models)
                 {
-                    foreach (ReportRestriction restriction in model.Restrictions) result.Add(restriction);
-                    foreach (ReportRestriction restriction in model.AggregateRestrictions) result.Add(restriction);
-                    foreach (ReportRestriction restriction in model.CommonRestrictions) result.Add(restriction);
+                    result.AddRange(model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions));
                 }
                 return result;
             }
@@ -1307,6 +1342,7 @@ namespace Seal.Model
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
+                result.AddRange(ExecutionTasksRestrictions);
                 foreach (ReportModel model in ExecutionModels)
                 {
                     result.AddRange(model.ExecutionRestrictions.Union(model.ExecutionAggregateRestrictions).Union(model.ExecutionCommonRestrictions));

@@ -57,6 +57,7 @@ namespace Test
             //Add a restriction to the model
             var restriction = ReportRestriction.CreateReportRestriction();
             restriction.Source = report.Models[0].Source;
+            restriction.Report = report;
             restriction.Model = report.Models[0];
             restriction.MetaColumnGUID = table.Columns.FirstOrDefault(i => i.Name == "products.ProductName").GUID;
             restriction.SetDefaults();

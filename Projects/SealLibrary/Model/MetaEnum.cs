@@ -78,7 +78,7 @@ namespace Seal.Model
 
         private Boolean _isDynamic = false;
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("List is dynamically loaded from database"), Description("If True, the list is loaded using the Select SQL statement defined."), Id(2, 1)]
+        [Category("Definition"), DisplayName("List is dynamically loaded from database"), Description("If True, the list is loaded using the SQL Select Statement defined."), Id(2, 1)]
         public Boolean IsDynamic
         {
             get { return _isDynamic; }
@@ -105,7 +105,7 @@ namespace Seal.Model
 
         [XmlIgnore]
         private string _sql;
-        [Category("Definition"), DisplayName("Select SQL Statement"), Description("If the list is loaded from the database, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell."), Id(4, 1)]
+        [Category("Definition"), DisplayName("SQL Select Statement"), Description("If the list is loaded from the database, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell."), Id(4, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string Sql
         {
@@ -137,7 +137,7 @@ namespace Seal.Model
 
         [XmlIgnore]
         private string _sqlDisplay;
-        [Category("Dynamic Display"), DisplayName("Select SQL for prompted restriction"), Description("SQL Select used to build the values displayed in a prompted restriction. The SQL can contain the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. The SQL is used only if the list is dynamic, refreshed upon database connection."), Id(1, 2)]
+        [Category("Dynamic Display"), DisplayName("SQL Select Statement for prompted restriction"), Description("SQL Select Statement used to build the values displayed in a prompted restriction. The SQL can contain the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. The SQL is used only if the list is dynamic, refreshed upon database connection."), Id(1, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string SqlDisplay
         {

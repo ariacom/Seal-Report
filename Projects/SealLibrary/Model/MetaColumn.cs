@@ -307,7 +307,20 @@ namespace Seal.Model
         {
             get {
                 MetaEnum result = null;
-                if (!string.IsNullOrEmpty(_enumGUID)) result = _source.MetaData.Enums.FirstOrDefault(i => i.GUID == _enumGUID);
+                if (!string.IsNullOrEmpty(_enumGUID))
+                {
+                    if (_source  != null) result = _source.MetaData.Enums.FirstOrDefault(i => i.GUID == _enumGUID);
+                    else if (this is ReportRestriction)
+                    {
+                        //task restriction
+                        var restriction = this as ReportRestriction;
+                        foreach (var source in restriction.Report.Sources)
+                        {
+                            result = source.MetaData.Enums.FirstOrDefault(i => i.GUID == _enumGUID);
+                            if (source != null) break;
+                        }
+                    }
+                }
                 return result;
             }
         }
@@ -326,7 +339,7 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsSQL
         {
-            get { return !_source.IsNoSQL; }
+            get { return _source == null || !_source.IsNoSQL; }
         }
 
         MetaTable _metaTable = null;
@@ -335,7 +348,7 @@ namespace Seal.Model
         {
             get
             {
-                if (_metaTable == null)
+                if (_metaTable == null && _source != null)
                 {
                     foreach (MetaTable table in _source.MetaData.Tables)
                     {

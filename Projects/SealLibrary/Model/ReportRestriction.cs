@@ -34,16 +34,16 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("Prompt").SetIsBrowsable(true);
                 GetProperty("Required").SetIsBrowsable(true);
-                GetProperty("Operator").SetIsBrowsable(true);
+                GetProperty("Operator").SetIsBrowsable(!IsTaskRestriction);
                 GetProperty("DisplayNameEl").SetIsBrowsable(true);
-                GetProperty("SQL").SetIsBrowsable(!Source.IsNoSQL);
-                GetProperty("FormatRe").SetIsBrowsable(!IsEnum);
-                GetProperty("TypeRe").SetIsBrowsable(!Source.IsNoSQL);
-                GetProperty("OperatorLabel").SetIsBrowsable(true);
+                GetProperty("SQL").SetIsBrowsable(!IsTaskRestriction && !IsNoSQL);
+                GetProperty("FormatRe").SetIsBrowsable(!IsTaskRestriction && !IsEnum);
+                GetProperty("TypeRe").SetIsBrowsable(!IsNoSQL);
+                GetProperty("OperatorLabel").SetIsBrowsable(!IsTaskRestriction);
                 GetProperty("EnumGUIDRE").SetIsBrowsable(true);
-                GetProperty("ChangeOperator").SetIsBrowsable(true);
+                GetProperty("ChangeOperator").SetIsBrowsable(!IsTaskRestriction);
                 GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
-                GetProperty("UseAsParameter").SetIsBrowsable(true);
+                GetProperty("UseAsParameter").SetIsBrowsable(!IsTaskRestriction);
 
                 //Conditional
                 if (IsEnum)
@@ -325,6 +325,23 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        public bool IsNoSQL
+        {
+            get
+            {
+                return Source != null && Source.IsNoSQL;
+            }
+        }
+
+        [XmlIgnore]
+        public bool IsTaskRestriction
+        {
+            get
+            {
+                return Source == null;
+            }
+        }
 
 
         [XmlIgnore]
@@ -361,8 +378,8 @@ namespace Seal.Model
 
         public string GetOperatorLabel(Operator op)
         {
-            if (Operator == Operator.ValueOnly) return OperatorLabel;
-            return Model.Report.Translate(Helper.GetEnumDescription(typeof(Operator), op));
+            if (Operator == Operator.ValueOnly || Model == null) return OperatorLabel;
+            return Report.Translate(Helper.GetEnumDescription(typeof(Operator), op));
         }
 
 
@@ -425,8 +442,8 @@ namespace Seal.Model
         {
             get
             {
-                if (Operator == Seal.Model.Operator.ValueOnly) return AllowedOperators.Where(i => i == Seal.Model.Operator.ValueOnly).ToList();
-                return AllowedOperators.Where(i => i != Seal.Model.Operator.ValueOnly).ToList();
+                if (Operator == Operator.ValueOnly) return AllowedOperators.Where(i => i == Operator.ValueOnly).ToList();
+                return AllowedOperators.Where(i => i != Operator.ValueOnly).ToList();
 
             }
         }
@@ -784,7 +801,7 @@ namespace Seal.Model
                 {
                     foreach (string enumValue in EnumValues)
                     {
-                        Helper.AddValue(ref result, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, Model.Report.EnumDisplayValue(EnumRE, enumValue, true));
+                        Helper.AddValue(ref result, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, Report.EnumDisplayValue(EnumRE, enumValue, true));
                     }
                 }
                 return result;
@@ -852,13 +869,13 @@ namespace Seal.Model
 
         public string GetEnumDisplayValue(string id)
         {
-            return Model.Report.EnumDisplayValue(EnumRE, id, true);
+            return Report.EnumDisplayValue(EnumRE, id, true);
         }
 
 
         public string GetEnumMessage()
         {
-            return Model.Report.EnumMessage(EnumRE);
+            return Report.EnumMessage(EnumRE);
         }
 
         public bool IsGreaterSmallerOperator
@@ -910,7 +927,11 @@ namespace Seal.Model
             else if (IsDateTime)
             {
                 if (date == DateTime.MinValue) date = DateTime.Now;
-                if (Model.Connection.DatabaseType == DatabaseType.MSAccess || Model.Connection.DatabaseType == DatabaseType.MSExcel)
+                if (Model == null)
+                {
+                    result = date.ToString();
+                }
+                else if (Model.Connection.DatabaseType == DatabaseType.MSAccess || Model.Connection.DatabaseType == DatabaseType.MSExcel)
                 {
                     //Serial
                     result = Double.Parse(date.ToOADate().ToString()).ToString(CultureInfo.InvariantCulture.NumberFormat);
@@ -931,7 +952,11 @@ namespace Seal.Model
                 result = Helper.QuoteSingle(value2);
                 if (TypeEl == ColumnType.UnicodeText)
                 {
-                    if (Model.Connection.DatabaseType == DatabaseType.Oracle)
+                    if (Model == null)
+                    {
+                        result = value2;
+                    }
+                    else if (Model.Connection.DatabaseType == DatabaseType.Oracle)
                     {
                         //For Oracle, we convert the unicode char using UNISTR
                         result = "";
@@ -965,8 +990,8 @@ namespace Seal.Model
 
         void addEqualOperator(ref string displayText, ref string displayRestriction, ref string sqlText, string value, DateTime finalDate, string dateKeyword, DateTime date)
         {
-            Helper.AddValue(ref displayText, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
-            Helper.AddValue(ref displayRestriction, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayRestriction(value, dateKeyword, date));
+            Helper.AddValue(ref displayText, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
+            Helper.AddValue(ref displayRestriction, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayRestriction(value, dateKeyword, date));
             if (IsDateTime) Helper.AddValue(ref sqlText, ",", GetSQLValue(value, finalDate, _operator));
             else
             {
@@ -980,8 +1005,8 @@ namespace Seal.Model
         void addContainOperator(ref string displayText, ref string displayRestriction, ref string sqlText, string value, DateTime finalDate, string sqlOperator, string dateKeyword, DateTime date)
         {
             string separator = (_operator == Operator.NotContains ? " AND " : " OR ");
-            Helper.AddValue(ref displayText, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
-            Helper.AddValue(ref displayRestriction, Model.Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayRestriction(value, dateKeyword, date));
+            Helper.AddValue(ref displayText, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
+            Helper.AddValue(ref displayRestriction, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayRestriction(value, dateKeyword, date));
             if (IsDateTime) Helper.AddValue(ref sqlText, separator, string.Format("{0} {1}{2}", SQLColumn, sqlOperator, GetSQLValue(value, finalDate, _operator)));
             else
             {
@@ -991,8 +1016,6 @@ namespace Seal.Model
                 }
             }
         }
-
-
 
         void BuildTexts()
         {
@@ -1019,7 +1042,7 @@ namespace Seal.Model
             _SQLText = "";
 
             string operatorLabel = Helper.GetEnumDescription(typeof(Operator), _operator);
-            if (Model != null && Model.Report != null) operatorLabel = Model.Report.Translate(operatorLabel);
+            if (Report != null) operatorLabel = Report.Translate(operatorLabel);
             _displayText = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? operatorLabel : OperatorLabel);
             _displayRestriction = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? operatorLabel : OperatorLabel);
 
@@ -1069,9 +1092,9 @@ namespace Seal.Model
                     _displayText += " " + GetDisplayValue(Value1, FinalDate1);
                     _displayRestriction += " " + GetDisplayRestriction(Value1, Date1Keyword, Date1);
 
-                    _displayText += " " + Model.Report.Translate("and") + " " + GetDisplayValue(Value2, FinalDate2);
-                    _displayRestriction += " " + Model.Report.Translate("and") + " " + GetDisplayRestriction(Value2, Date2Keyword, Date2);
-                    if (Model.Source.IsNoSQL)
+                    _displayText += " " + Report.Translate("and") + " " + GetDisplayValue(Value2, FinalDate2);
+                    _displayRestriction += " " + Report.Translate("and") + " " + GetDisplayRestriction(Value2, Date2Keyword, Date2);
+                    if (IsNoSQL)
                     {
                         //Between is not supported for NoSQL
                         _SQLText += "(" + SQLColumn + ">=" + GetSQLValue(Value1, FinalDate1, _operator);
@@ -1234,7 +1257,7 @@ namespace Seal.Model
         {
             get
             {
-                var format = Model.Report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern;
+                var format = Report.ExecutionView.CultureInfo.DateTimeFormat.ShortDatePattern;
                 if (HasTimeRe) format = "G";
                 return format;
             }
@@ -1252,7 +1275,7 @@ namespace Seal.Model
             {
                 if (forEdition && HasDateKeyword(keyword))
                 {
-                    result = Model.Report.TranslateDateKeywords(keyword);
+                    result = Report.TranslateDateKeywords(keyword);
                 }
                 else if (date == DateTime.MinValue && !HasDateKeyword(keyword))
                 {
@@ -1260,7 +1283,7 @@ namespace Seal.Model
                 }
                 else
                 {
-                    var culture = Model.Report.ExecutionView.CultureInfo;
+                    var culture = Report.ExecutionView.CultureInfo;
                     date = GetFinalDate(keyword, date);
                     //for date, format should be synchro with the date picker, which should use short date
                     result = date.ToString(InputDateFormat, culture);

@@ -59,6 +59,11 @@ namespace Seal.Forms
                     var model = Context.Instance as ReportModel;
                     model.InitCommonRestrictions();
                 }
+                else if (Context.Instance is TasksFolder)
+                {
+                    allowAdd = true;
+                    allowRemove = true;
+                }
                 frmCollectionEditorForm.Text = "Restrictions Collection Editor";
             }
             else if (CollectionItemType == typeof(OutputParameter))
@@ -196,9 +201,9 @@ namespace Seal.Forms
         void propertyGrid_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
         {
             // Fire our customized collection event...
-            if (EntityCollectionEditor.MyPropertyValueChanged != null)
+            if (MyPropertyValueChanged != null)
             {
-                EntityCollectionEditor.MyPropertyValueChanged(this, e);
+                MyPropertyValueChanged(this, e);
             }
             SetModified();
         }
@@ -210,6 +215,17 @@ namespace Seal.Forms
             object instance = Activator.CreateInstance(itemType, true);
             SetModified();
             if (_component != null) _component.UpdateEditor();
+
+            if (instance is ReportRestriction && _component is TasksFolder)
+            {
+                var result = ReportRestriction.CreateReportRestriction();
+                result.TypeRe = ColumnType.Text;
+                result.Operator = Operator.Equal;
+                result.ChangeOperator = false;
+                result.Report = ((TasksFolder)_component).Report;
+                instance = result;
+            }
+
             return instance;
         }
 
@@ -227,8 +243,9 @@ namespace Seal.Forms
             if (value is ReportRestriction)
             {
                 var restr = value as ReportRestriction;
-                if (restr.MetaColumn == null) result = restr.Name; //Common restriction
-                else result = string.Format("{0} ({1})", restr.DisplayNameEl, restr.Model.Name);
+                if (restr.MetaColumn == null && string.IsNullOrEmpty(restr.Name)) result = restr.DisplayNameEl; //Task restriction
+                else if (restr.MetaColumn == null) result = restr.Name; //Common restriction
+                else if (restr.Model != null)  result = string.Format("{0} ({1})", restr.DisplayNameEl, restr.Model.Name);
             }
             else if (value is Parameter) result = ((Parameter)value).DisplayName;
             else if (value is SecurityGroup) result = ((SecurityGroup)value).Name;

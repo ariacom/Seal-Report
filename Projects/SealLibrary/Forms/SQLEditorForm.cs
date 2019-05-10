@@ -136,18 +136,21 @@ namespace Seal.Forms
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
                         if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", model, _compilationErrors);
-                        error = model.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, model), null, model, true);
+                        error = model.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, model), null, model, true, false);
                     }
                     else
                     {
-                        error = model.Source.CheckSQL(!string.IsNullOrEmpty(SqlToCheck) ? SqlToCheck : sqlTextBox.Text, model.FromTables, model, false);
+                        var sql = !string.IsNullOrEmpty(SqlToCheck) ? SqlToCheck : sqlTextBox.Text;
+                        bool addSelectFrom = false;
+                        if (model.IsSQLModel && !model.UseRawSQL) addSelectFrom = true;
+                        error = model.Source.CheckSQL(sql, model.FromTables, model, false, addSelectFrom);
                     }
                 }
                 if (Instance is MetaEnum)
                 {
                     MetaEnum anEnum = Instance as MetaEnum;
                     if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", anEnum, _compilationErrors);
-                    error = anEnum.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, anEnum), null, null, false);
+                    error = anEnum.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, anEnum), null, null, false, false);
                 }
                 else if (Instance is MetaSource)
                 {
@@ -155,7 +158,7 @@ namespace Seal.Forms
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
                         if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", source, _compilationErrors);
-                        error = source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, source), null, null, true);
+                        error = source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, source), null, null, true, false);
                     }
                 }
                 else if (Instance is MetaTable)
@@ -164,7 +167,7 @@ namespace Seal.Forms
                     if (PropertyName == "PreSQL" || PropertyName == "PostSQL")
                     {
                         if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", table, _compilationErrors);
-                        error = table.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, table), null, null, true);
+                        error = table.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, table), null, null, true, false);
                     }
                     else
                     {
@@ -218,7 +221,7 @@ namespace Seal.Forms
                 {
                     ReportTask task = Instance as ReportTask;
                     if (sqlTextBox.Text.StartsWith("@")) FormHelper.CheckRazorSyntax(sqlTextBox, "", task, _compilationErrors);
-                    error = task.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, task), null, null, false);
+                    error = task.Source.CheckSQL(RazorHelper.CompileExecute(sqlTextBox.Text, task), null, null, false, false);
                 }
             }
             catch (Exception ex)

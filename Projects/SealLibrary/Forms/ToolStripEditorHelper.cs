@@ -49,7 +49,7 @@ namespace Seal.Forms
                     button.Enabled = ((MetaTable)SelectedEntity).DynamicColumns;
                 }
 
-                if (((MetaTable)SelectedEntity).IsSQL) AddHelperButton("Edit SQL", "Edit the select SQL Statement", Keys.F8);
+                if (((MetaTable)SelectedEntity).IsSQL) AddHelperButton("Edit SQL", "Edit the SQL Select Statement", Keys.F8);
                 else AddHelperButton("Edit Definition Script", "Edit the definition script for the table", Keys.F8);
                 AddHelperButton("Check table", "Check the table definition", Keys.F7);
 
@@ -95,7 +95,7 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is TasksFolder)
             {
-                AddHelperButton("Edit Tasks Script", "Edit the Tasks Script", Keys.F8);
+                AddHelperButton("Edit Tasks Restrictions", "Edit the Tasks Restrictions", Keys.F8);
                 AddHelperButton("Edit Common Scripts", "Edit the Common Scripts", Keys.F7);
             }
             else if (SelectedEntity is ReportTask)
@@ -185,7 +185,7 @@ namespace Seal.Forms
                     }
                     else if (SelectedEntity is MetaEnum)
                     {
-                        if (key == Keys.F8) EditProperty("Select SQL Statement");
+                        if (key == Keys.F8) EditProperty("SQL Select Statement");
                         if (key == Keys.F9)
                         {
                             if (EntityHandler != null) EntityHandler.SetModified();
@@ -200,7 +200,7 @@ namespace Seal.Forms
                     else if (SelectedEntity is TasksFolder)
                     {
                         if (key == Keys.F7) EditProperty("Common Scripts");
-                        if (key == Keys.F8) EditProperty("Tasks Script");
+                        if (key == Keys.F8) EditProperty("Tasks Restrictions");
                     }
                     else if (SelectedEntity is ReportTask)
                     {
@@ -244,7 +244,7 @@ namespace Seal.Forms
                                         EntityHandler.RefreshModelTreeView();
                                     }
 
-                                    if (!string.IsNullOrEmpty(model.Table.Error)) throw new Exception("Error when building columns from the Select SQL:\r\n" + model.Table.Error);
+                                    if (!string.IsNullOrEmpty(model.Table.Error)) throw new Exception("Error when building columns from the SQL Select Statement:\r\n" + model.Table.Error);
                                 }
                             }
                             else
