@@ -402,6 +402,7 @@ namespace Seal.Model
                 else
                 {
                     _restrictions[index].SetSourceReference(restriction.Source);
+                    _restrictions[index].Report = Report;
                     _restrictions[index].Model = restriction.Model;
                 }
             }

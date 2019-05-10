@@ -83,7 +83,7 @@ namespace Seal.Model
         }
 
         string _sql;
-        [Category("Definition"), DisplayName("SQL Statement"), Description("Select SQL Statement executed to define the table. If empty, the table name is used."), Id(2, 1)]
+        [Category("Definition"), DisplayName("SQL Select Statement"), Description("SQL Select Statement executed to define the table. If empty, the table name is used."), Id(2, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string Sql
         {
@@ -123,7 +123,7 @@ namespace Seal.Model
 
         bool _dynamicColumns = false;
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("Dynamic Columns"), Description("If true, columns are generated automatically from the Table Name or the Select SQL Statement by reading the database catalog."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Dynamic Columns"), Description("If true, columns are generated automatically from the Table Name or the SQL Select Statement by reading the database catalog."), Id(6, 1)]
         public bool DynamicColumns
         {
             get { return _dynamicColumns; }
@@ -392,7 +392,11 @@ namespace Seal.Model
                 //Build table def from SQL or table name
 
                 var sql = "";
-                if (IsForSQLModel) sql = Sql;
+                if (IsForSQLModel)
+                {
+                    if (Model.UseRawSQL) sql = Sql;
+                    else sql = string.Format("SELECT * FROM ({0}) a WHERE 1=0", Sql);
+                }
                 else
                 {
                     string CTE = "", name = "";
@@ -501,7 +505,7 @@ namespace Seal.Model
 
             if (IsMasterTable && IsSQL && string.IsNullOrEmpty(Sql))
             {
-                _information = Helper.FormatMessage("No Select SQL Statement defined for the Master table...");
+                _information = Helper.FormatMessage("No SQL Select Statement defined for the Master table...");
                 return;
             }
             if (IsMasterTable && !IsSQL && string.IsNullOrEmpty(DefinitionScript))
@@ -536,7 +540,7 @@ namespace Seal.Model
                     {
                         sql += string.Format("\r\nGROUP BY {0}", groupByNames);
                     }
-                    _error = _source.CheckSQL(sql, new List<MetaTable>() { this }, null, false);
+                    _error = _source.CheckSQL(sql, new List<MetaTable>() { this }, null, false, false);
                 }
                 else
                 {

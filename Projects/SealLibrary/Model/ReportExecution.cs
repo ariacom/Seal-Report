@@ -420,10 +420,58 @@ namespace Seal.Model
             }
         }
 
+
+        void setRestriction(ReportRestriction restriction)
+        {
+            string val = Report.GetInputRestriction(restriction.OperatorHtmlId);
+            if (!string.IsNullOrEmpty(val) && restriction.ChangeOperator)
+            {
+                //Change operator only if allowed and not value only
+                if (val != Operator.ValueOnly.ToString()) restriction.Operator = (Operator)Enum.Parse(typeof(Operator), val);
+            }
+            if (restriction.IsEnum)
+            {
+                restriction.EnumValues.Clear();
+                foreach (var enumVal in restriction.EnumRE.Values)
+                {
+                    val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
+                    if (val.ToLower() == "true")
+                    {
+                        restriction.EnumValues.Add(enumVal.Id);
+                        //Check only one restriction
+                        if (restriction.Prompt == PromptType.PromptOneValue) break;
+                    }
+                }
+
+                //check required flag
+                if (restriction.EnumValues.Count == 0 && restriction.Required)
+                {
+                    Report.HasValidationErrors = true;
+                    Report.ExecutionErrors += string.Format("{0} '{1}'\r\n", Report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
+                }
+            }
+            else
+            {
+                SetRestrictions(Report, restriction,
+                       Report.GetInputRestriction(restriction.ValueHtmlId + "_1"),
+                       Report.GetInputRestriction(restriction.ValueHtmlId + "_2"),
+                       Report.GetInputRestriction(restriction.ValueHtmlId + "_3"),
+                       Report.GetInputRestriction(restriction.ValueHtmlId + "_4"),
+                       true
+                       );
+            }
+        }
+
+
         public void CheckInputRestrictions()
         {
             try
             {
+                foreach (ReportRestriction restriction in Report.ExecutionTasksRestrictions.Where(i => i.Prompt != PromptType.None))
+                {
+                    setRestriction(restriction);
+                }
+
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
                     foreach (ReportRestriction restriction in model
@@ -432,43 +480,7 @@ namespace Seal.Model
                         .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None))
                         )
                     {
-                        string val = Report.GetInputRestriction(restriction.OperatorHtmlId);
-                        if (!string.IsNullOrEmpty(val) && restriction.ChangeOperator)
-                        {
-                            //Change operator only if allowed and not value only
-                            if (val != Operator.ValueOnly.ToString()) restriction.Operator = (Operator)Enum.Parse(typeof(Operator), val);
-                        }
-                        if (restriction.IsEnum)
-                        {
-                            restriction.EnumValues.Clear();
-                            foreach (var enumVal in restriction.EnumRE.Values)
-                            {
-                                val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
-                                if (val.ToLower() == "true")
-                                {
-                                    restriction.EnumValues.Add(enumVal.Id);
-                                    //Check only one restriction
-                                    if (restriction.Prompt == PromptType.PromptOneValue) break;
-                                }
-                            }
-
-                            //check required flag
-                            if (restriction.EnumValues.Count == 0 && restriction.Required)
-                            {
-                                Report.HasValidationErrors = true;
-                                Report.ExecutionErrors += string.Format("{0} '{1}'\r\n", Report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
-                            }
-                        }
-                        else
-                        {
-                            SetRestrictions(Report, restriction,
-                                   Report.GetInputRestriction(restriction.ValueHtmlId + "_1"),
-                                   Report.GetInputRestriction(restriction.ValueHtmlId + "_2"),
-                                   Report.GetInputRestriction(restriction.ValueHtmlId + "_3"),
-                                   Report.GetInputRestriction(restriction.ValueHtmlId + "_4"),
-                                   true
-                                   );
-                        }
+                        setRestriction(restriction);
                     }
                 }
             }
@@ -1761,7 +1773,7 @@ namespace Seal.Model
             Report.IsNavigating = false;
             var originalFormat = Report.Format;
             string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".htm"));
- 
+
             Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
             bool initialValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
             try

@@ -23,6 +23,7 @@ namespace Seal.Forms
                 GetProperty("CommonScripts").SetIsBrowsable(true);
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (Report.CommonScripts.Count == 0 ? "None" : Report.CommonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("TasksScript").SetIsBrowsable(true);
+                GetProperty("TasksRestrictions").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -46,5 +47,14 @@ namespace Seal.Forms
             get { return Report.TasksScript; }
             set { Report.TasksScript = value; }
         }
+
+        [Category("Restrictions"), DisplayName("Tasks Restrictions"), Description("Definition of the task restrictions. Restriction values can then be used in the task scripts.")]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<ReportRestriction> TasksRestrictions
+        {
+            get { return Report.TasksRestrictions; }
+            set { Report.TasksRestrictions = value; }
+        }
+
     }
 }

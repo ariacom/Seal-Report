@@ -811,18 +811,21 @@ namespace Seal.Model
             foreach (var element in Elements)
             {
                 element.SetSourceReference(Source);
+                element.Report= Report;
                 element.Model = this;
             }
 
             foreach (var restriction in Restrictions)
             {
                 restriction.SetSourceReference(Source);
+                restriction.Report = Report;
                 restriction.Model = this;
             }
 
             foreach (var restriction in AggregateRestrictions)
             {
                 restriction.SetSourceReference(Source);
+                restriction.Report = Report;
                 restriction.Model = this;
             }
 
@@ -942,6 +945,7 @@ namespace Seal.Model
                 foreach (var restriction in CommonRestrictions)
                 {
                     restriction.SetSourceReference(Source);
+                    restriction.Report = Report;
                     restriction.Model = this;
                 }
             }
@@ -1004,6 +1008,7 @@ namespace Seal.Model
                             //Add the element
                             ReportElement element = ReportElement.Create();
                             element.Source = Source;
+                            element.Report = Report;
                             element.Model = this;
                             element.MetaColumnGUID = guid;
                             element.PivotPosition = PivotPosition.Hidden;

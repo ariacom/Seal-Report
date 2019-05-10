@@ -437,7 +437,7 @@ namespace Seal.Forms
     var helper = new TaskHelper(task);
 	helper.LoadTableFromDataSource(
         ""DataSourceName"", //the name of the source Data Source defined in the Repository
-        ""SourceSelectStatement"", //Select SQL Statement to get the source table
+        ""SourceSelectStatement"", //SQL Select Statement to get the source table
         ""DestinationTableName"", //destination table name
         false, //if true, the table is loaded for all connections defined in the Source
         """", //optional SQL Select Statement to get a Check table from the source connection
@@ -452,7 +452,7 @@ namespace Seal.Forms
     var helper = new TaskHelper(task);
 	helper.LoadTableFromExternalSource(
         ""SourceConnectionString"", //full connection string used to load the source table
-        ""SourceSelectStatement"", //Select SQL Statement to get the source table
+        ""SourceSelectStatement"", //SQL Select Statement to get the source table
         ""DestinationTableName"", //destination table name
         false, //if true, the table is loaded for all connections defined in the Source
         """", //optional SQL Select Statement to get a Check table from the source connection

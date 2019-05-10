@@ -44,7 +44,7 @@ namespace Seal.Converter
                 choices.Add("No Connection");
             }
 
-            return new StandardValuesCollection(choices);
+            return new StandardValuesCollection(choices.OrderBy(i => i).ToList());
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destType)

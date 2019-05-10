@@ -415,7 +415,7 @@ namespace Seal.Model
         }
 
 
-        public string CheckSQL(string sql, List<MetaTable> tables, ReportModel model, bool isPrePost)
+        public string CheckSQL(string sql, List<MetaTable> tables, ReportModel model, bool isPrePost, bool addSelectFrom)
         {
             string result = "", finalSQL = "";
             if (!string.IsNullOrEmpty(sql))
@@ -428,7 +428,8 @@ namespace Seal.Model
                     if (!isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PreSQL, model), model, model.IgnorePrePostError);
                     var command = connection.CreateCommand();
                     finalSQL = Helper.ClearAllSQLKeywords(sql, model);
-                    command.CommandText = finalSQL;
+                    if (addSelectFrom) command.CommandText = string.Format("SELECT * FROM ({0}) a WHERE 1=0", finalSQL);
+                    else command.CommandText = finalSQL;
                     command.ExecuteReader();
                     if (isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PostSQL, model), model, model.IgnorePrePostError);
                     if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(table.PostSQL, model), table, table.IgnorePrePostError);

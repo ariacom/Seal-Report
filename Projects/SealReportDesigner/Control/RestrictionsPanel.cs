@@ -324,6 +324,7 @@ namespace Seal.Controls
                 //Add restriction to current place
                 ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
                 restriction.Source = ModelPanel.Model.Source;
+                restriction.Report = ModelPanel.Model.Report;
                 restriction.Model = ModelPanel.Model;
                 restriction.MetaColumnGUID = column.GUID;
                 restriction.MetaColumn = column;

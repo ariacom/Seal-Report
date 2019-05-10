@@ -90,6 +90,7 @@ namespace Seal.Model
                             //Drill Down: Add restriction 
                             ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
                             restriction.Source = model.Source;
+                            restriction.Report = newReport;
                             restriction.Model = model;
                             restriction.MetaColumnGUID = src;
                             restriction.SetDefaults();

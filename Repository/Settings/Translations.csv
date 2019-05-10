@@ -233,7 +233,7 @@ Web;Show sub-totals;;Sous-totaux
 Web;Show totals;;Totaux
 Web;Sort;;Tri
 Web;SQL;;SQL
-Web;SQL Select Statement;;SQL Commande Select
+Web;SQL Select Statement;;SQL Select
 Web;Start date;;Date de départ
 Web;Subject;;Sujet
 Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;;Le nombre maximum de connexions a été atteint pour votre licence ({0}). Merci d'essayer plus tard...
@@ -290,7 +290,7 @@ WebJS;Delete the dashboard;;Effacer le Dashboard
 WebJS;Descendant;;Descendant
 WebJS;Do you really want to delete the dashboard ?;;Voulez-vous vraiment effacer le Dashboard ?
 WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?
-WebJS;Do you want to create a SQL report ?;;Voulez-vous créer un rapport de type SQL ?
+WebJS;Please select first the type of report you want to create...;;Veuillez choisir le type de rapport que vous voulez créer...
 WebJS;Does not contain;;Ne contient pas
 WebJS;Drop your Column elements;;Eléments de type Colonne
 WebJS;Drop your Data;;Données
@@ -361,7 +361,8 @@ WebJS;No schedule;;Pas de planification
 WebJS;No Sort;;Pas de tri
 WebJS;No total;;Pas de totaux
 WebJS;No widget;;Aucun widget
-WebJS;No, create a standard report;;Non, créer un rapport standard
+WebJS;Create a Standard report;;Créer un rapport Standard
+WebJS;Create a SQL report;;Créer un rapport SQL
 WebJS;None;;Aucun
 WebJS;Not sorted;;Pas de tri
 WebJS;Number;;Nombre

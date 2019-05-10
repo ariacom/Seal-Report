@@ -168,7 +168,7 @@ namespace Seal.Model
         {
             get
             {
-                return Model.Report.TranslateElement(this, DisplayNameEl);
+                return Report.TranslateElement(this, DisplayNameEl);
             }
         }
 
@@ -261,7 +261,7 @@ namespace Seal.Model
                 string result = value.ToString();
                 try
                 {
-                    result = ((IFormattable)value).ToString(FormatEl, Model.Report.ExecutionView.CultureInfo);
+                    result = ((IFormattable)value).ToString(FormatEl, Report.ExecutionView.CultureInfo);
                 }
                 catch { }
                 return result;
@@ -288,7 +288,7 @@ namespace Seal.Model
             if (value != null)
             {
                 string sortPrefix = elementSortPosition ? string.Format("{0:000000}", en.Values.LastIndexOf(value)) : "";
-                result = sortPrefix + Model.Report.EnumDisplayValue(en, value.Id);
+                result = sortPrefix + Report.EnumDisplayValue(en, value.Id);
             }
             else
             {
@@ -523,7 +523,7 @@ namespace Seal.Model
         {
             get
             {
-                if (MetaColumn != null && PivotPosition == PivotPosition.Data && AggregateFunction != AggregateFunction.Sum && !MetaColumn.IsAggregate) return string.Format("{0} {1}", Model.Report.Translate(Helper.GetEnumDescription(typeof(AggregateFunction), AggregateFunction) + " of"), MetaColumn.DisplayName);
+                if (MetaColumn != null && PivotPosition == PivotPosition.Data && AggregateFunction != AggregateFunction.Sum && !MetaColumn.IsAggregate) return string.Format("{0} {1}", Report.Translate(Helper.GetEnumDescription(typeof(AggregateFunction), AggregateFunction) + " of"), MetaColumn.DisplayName);
                 else if (MetaColumn != null) return MetaColumn.DisplayName;
                 return "";
             }
@@ -635,6 +635,14 @@ namespace Seal.Model
         {
             get { return string.IsNullOrEmpty(_SQLColumnName) && !IsCommonRestriction ? MetaColumn.Name : _SQLColumnName; }
             set { _SQLColumnName = value; }
+        }
+
+        protected Report _report;
+        [XmlIgnore, Browsable(false)]
+        public Report Report
+        {
+            get { return _report; }
+            set { _report = value; }
         }
 
         protected ReportModel _model;
