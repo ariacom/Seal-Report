@@ -54,7 +54,8 @@ if the user can view reports and/or dashboards,
 if the user has personal folders,
 which columns, data sources, connections or devices can be selected with the Web Report Designer,
 which public dashboards are published,
-which widgets can be selected which the Dashboard Designer.
+if the user has personal dashboards,
+which widgets can be selected with the Dashboard Designer.
 
 The security provider performs the authentication and select the security groups of the user.
 
