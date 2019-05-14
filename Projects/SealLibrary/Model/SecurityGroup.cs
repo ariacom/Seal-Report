@@ -133,7 +133,7 @@ namespace Seal.Model
 
 
         private bool _personalDashboardFolder = true;
-        [Category("Dashboards Security"), DisplayName("Personal Dashboard Folder"), Description("If true, users of the group have a personal folder to create private dashboards."), Id(1, 3)]
+        [Category("Dashboards Security"), DisplayName("Personal Dashboard Folder"), Description("If true, users of the group have a personal folder to create personal dashboards."), Id(1, 3)]
         [DefaultValue(true)]
         public bool PersonalDashboardFolder
         {

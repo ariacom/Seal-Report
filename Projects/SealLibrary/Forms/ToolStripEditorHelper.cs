@@ -161,7 +161,7 @@ namespace Seal.Forms
                         if (key == Keys.F7) ((MetaTable)SelectedEntity).CheckTable(null);
                         if (key == Keys.F8)
                         {
-                            if (((MetaTable)SelectedEntity).IsSQL) EditProperty("SQL Statement");
+                            if (((MetaTable)SelectedEntity).IsSQL) EditProperty("SQL Select Statement");
                             else EditProperty("Definition Script");
                         }
                         if (key == Keys.F9 && ((MetaTable)SelectedEntity).DynamicColumns)

@@ -194,7 +194,7 @@ namespace Seal.Model
                 if (_joinType != JoinType.Cross) sql += string.Format("{0} {1} ON {2}\r\n", SQLJoinType, name2, Clause.Trim());
                 else sql += string.Format("{0} {1}\r\n", SQLJoinType, name2);
                 sql += "WHERE 0=1";
-                _error = Source.CheckSQL(sql, new List<MetaTable>() { LeftTable, RightTable }, null, false, false);
+                _error = Source.CheckSQL(sql, new List<MetaTable>() { LeftTable, RightTable }, null, false);
                 if (!string.IsNullOrEmpty(_error)) _information = "Error got when checking join. Please check the SQL:\r\n" + sql;
                 else _information = "Join checked successfully.";
             }

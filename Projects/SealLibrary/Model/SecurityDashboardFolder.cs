@@ -37,8 +37,8 @@ namespace Seal.Model
             set { _name = value; }
         }
 
-        string _path = "Folder Path";
-        [Category("Definition"), DisplayName("\tDashboard Folder Path"), Description("The physical path on the disk of the dashboard folder. The path is relative from the repository foder 'SpecialFolders\\Dashboards'."), Id(2, 1)]
+        string _path = "Default";
+        [Category("Definition"), DisplayName("\tDashboard Folder Path"), Description("The physical path on the disk of the dashboard folder. The path is relative from the repository foder '\\Dashboards'."), Id(2, 1)]
         public string Path
         {
             get { return _path; }

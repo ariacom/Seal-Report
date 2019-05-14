@@ -540,7 +540,7 @@ namespace Seal.Model
                     {
                         sql += string.Format("\r\nGROUP BY {0}", groupByNames);
                     }
-                    _error = _source.CheckSQL(sql, new List<MetaTable>() { this }, null, false, false);
+                    _error = _source.CheckSQL(sql, new List<MetaTable>() { this }, null, false);
                 }
                 else
                 {
