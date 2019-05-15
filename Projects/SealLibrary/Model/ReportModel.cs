@@ -77,6 +77,9 @@ namespace Seal.Model
                 GetProperty("ForceJoinTableGUID").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
                 GetProperty("AvoidJoinTableGUID").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
 
+                GetProperty("HelperViewJoins").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
+                GetProperty("HelperViewJoins").SetIsReadOnly(true);
+
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -326,6 +329,13 @@ namespace Seal.Model
         public MetaTable AvoidJoinTable
         {
             get { return Source.MetaData.Tables.FirstOrDefault(i => i.GUID == _avoidTableGUID); }
+        }
+
+        [Category("Join Preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(4,4)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperViewJoins
+        {
+            get { return "<Click to view the joins evaluated for the model>"; }
         }
 
         [XmlIgnore]
@@ -1022,6 +1032,7 @@ namespace Seal.Model
         }
 
         DateTime _buildTimer;
+        public StringBuilder JoinPaths = null;
         public void BuildSQL(bool forConversion = false)
         {
             try
@@ -1180,15 +1191,18 @@ namespace Seal.Model
                             }
                             //Debug.WriteLine("{0}ms {1}", (DateTime.Now - _timer).TotalMilliseconds, resultPaths.Count);
                         }
-#if DEBUG
-                        if (resultPaths.Count < 500)
+
+
+                        if (JoinPaths != null)
                         {
-                            foreach (var path in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count))
+                            JoinPaths.AppendLine("Joins found by priority order (The first one will be used):\r\n");
+                            int index = 1;
+                            foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenByDescending(i => i.rank).ThenBy(i => i.joins.Count))
                             {
-                                path.print();
+                                JoinPaths.AppendFormat("Join {0}: ", index++);
+                                path.print(JoinPaths);
                             }
                         }
-#endif
 
                         //Choose the path having all tables, then preferred, then less joins...
                         if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
@@ -1255,7 +1269,7 @@ namespace Seal.Model
                         }
                         else
                         {
-                            bestPath.print();
+//                            bestPath.print(JoinPaths);
                             string lastTable = null;
                             List<MetaTable> tablesUsed = new List<MetaTable>();
                             for (int i = bestPath.joins.Count - 1; i >= 0; i--)
@@ -1358,24 +1372,24 @@ namespace Seal.Model
             public SortedList<string, List<MetaJoin>> joinsToUse;
             public int rank = 0;
 
-            public void print()
+            public void print(StringBuilder joinPaths)
             {
-#if DEBUG
-                bool isFirst = true;
-                foreach (var join in joins)
+                if (joinPaths == null) return;
+                joinPaths.AppendFormat("{0} Tables left, {1} Joins used, Rank = {2}\r\n", tablesToUse.Count, joins.Count, rank);
+                for (int i=0; i<joins.Count; i++)
                 {
-                    if (isFirst) Debug.Write(join.LeftTable.DisplayName + "->");
-                    Debug.Write(join.RightTable.DisplayName + "->");
-                    isFirst = false;
+                    var join = joins[i];
+                    if (i==0) joinPaths.Append(join.LeftTable.DisplayName + "->");
+                    joinPaths.Append(join.RightTable.DisplayName);
+                    if (i < joins.Count-1) joinPaths.Append( "->");
                 }
-                Debug.WriteLine("");
-                foreach (var join in joins)
-                {
-                    Debug.Write(string.Format("{0} {1} {2}\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
-                }
-                Debug.WriteLine("");
 
-#endif
+                joinPaths.AppendLine("\r\nDetail:");
+                foreach (var join in joins)
+                {
+                    joinPaths.AppendFormat(string.Format("{0}-{1} ({2})\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
+                }
+                joinPaths.AppendLine();
             }
         }
 

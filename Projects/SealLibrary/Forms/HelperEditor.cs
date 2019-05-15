@@ -15,6 +15,7 @@ using Seal.Helpers;
 using System.Security.Principal;
 using System.Data.OleDb;
 using System.Data;
+using System.Text;
 
 namespace Seal.Forms
 {
@@ -33,6 +34,7 @@ namespace Seal.Forms
         Parameter _parameter;
         SealSecurity _security;
         OutputEmailDevice _emailDevice;
+        ReportModel _model;
 
         void setContext(ITypeDescriptorContext context)
         {
@@ -47,6 +49,7 @@ namespace Seal.Forms
             _parameter = context.Instance as Parameter;
             _security = context.Instance as SealSecurity;
             _emailDevice = context.Instance as OutputEmailDevice;
+            _model = context.Instance as ReportModel;
         }
 
         void setModified()
@@ -373,6 +376,31 @@ namespace Seal.Forms
                     if (context.PropertyDescriptor.Name == "HelperCheckJoin")
                     {
                         _metaJoin.CheckJoin();
+                    }
+                }
+                else if (_model != null)
+                {
+                    if (context.PropertyDescriptor.Name == "HelperViewJoins")
+                    {
+                        try
+                        {
+                            _model.JoinPaths = new StringBuilder();
+                            _model.BuildSQL();
+
+                            var frm = new ExecutionForm(null);
+                            frm.Text = "List of Joins";
+                            frm.cancelToolStripButton.Visible = false;
+                            frm.pauseToolStripButton.Visible = false;
+                            frm.logTextBox.Text = _model.JoinPaths.ToString();
+                            frm.logTextBox.SelectionStart = 0;
+                            frm.logTextBox.SelectionLength = 0;
+                            frm.ShowDialog();
+                        }
+                        finally
+                        {
+                            _model.JoinPaths = null;
+                        }
+
                     }
                 }
                 else if (_reportView != null)
