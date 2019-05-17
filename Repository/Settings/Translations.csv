@@ -117,6 +117,7 @@ Web;Auto-Refresh (seconds);;Actualiser (secondes)
 Web;BCC;;BCC
 Web;Body;;Message
 Web;Cancel;;Annuler
+Web;Cancel if empty;;Annuler si vide
 Web;CC;;CC
 Web;Chart axis;;Graphe
 Web;Chart height;;Hauteur graphe
@@ -134,7 +135,8 @@ Web;Copy;;Copier
 Web;Create a new dashboard;;Créer un nouveau Dashboard
 Web;Create in folder;;Créer dans le répertoire
 Web;Create new folder;;Créer un répertoire
-Web;Custom SQL;;SQL
+Web;Custom SQL;;SQL Spécifique
+Web;Custom;;Spécifique
 Web;Cut;;Couper
 Web;Days;;Jours
 Web;Days of the week;;Jours de la semaine
@@ -225,6 +227,7 @@ Web;Report title;;Titre du rapport
 Web;Report title if different from report name;;Titre du rapport si différent du nom
 Web;Reports;;Rapports
 Web;Result as body;;Message HTML
+Web;Rights;;Droits
 Web;Save;;Enregistrer
 Web;Schedule;;Planification
 Web;Search;;Rechercher
@@ -245,6 +248,7 @@ Web;User groups;;Groupes utilisateur
 Web;User name;;Nom d'utilisateur
 Web;Users;;Utilisateurs
 Web;Value;;Valeur
+Web;Values for axis;;Valeurs pour l'axe
 Web;Values;;Valeurs
 Web;Widget name;;Nom du Widget
 Web;Widget group name;;Nom du groupe du Widget
@@ -278,12 +282,14 @@ WebJS;Count;;Nombre
 WebJS;Count of;;Nombre de
 WebJS;Create in;;Créer dans
 WebJS;CSV;;CSV
+WebJS;CSV: Use element format;;CSV: Utiliser le format de l'élément
 WebJS;Daily;;Quotidien
 WebJS;Data tables responsive;;Data tables adaptable
 WebJS;day;;jour
 WebJS;days;;jours
 WebJS;Decimal;;Décimale
 WebJS;Default;;Défaut
+WebJS;Custom;;Spécifique
 WebJS;Default report connection;;Connexion du rapport
 WebJS;Default repository connection;;Connexion du repository
 WebJS;Delete the dashboard;;Effacer le Dashboard
@@ -291,6 +297,8 @@ WebJS;Descendant;;Descendant
 WebJS;Do you really want to delete the dashboard ?;;Voulez-vous vraiment effacer le Dashboard ?
 WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous vraiment effacer les rapports et fichiers sélectionnés ?
 WebJS;Please select first the type of report you want to create...;;Veuillez choisir le type de rapport que vous voulez créer...
+WebJS;Public edition;;Edition publique
+WebJS;Public execution;;Exécution publique
 WebJS;Does not contain;;Ne contient pas
 WebJS;Drop your Column elements;;Eléments de type Colonne
 WebJS;Drop your Data;;Données
@@ -351,7 +359,7 @@ WebJS;New Output for;;Nouvelle Destination pour
 WebJS;New report;;Nouveau rapport
 WebJS;New Schedule;;Nouvelle Planification
 WebJS;No;;Non
-WebJS;No (axis values are linear);;Les valeurs de l'axe sont linéaires
+WebJS;No (axis values are linear);;Non (les valeurs de l'axe sont linéaires)
 WebJS;No calculation option;;Pas d'option de calcul
 WebJS;No Output;;Aucune Destination
 WebJS;No prompt;;Pas de prompt
@@ -434,7 +442,6 @@ WebJS;The widget has been deleted;;Le Widget a été effacé
 WebJS;Use data tables;;Utiliser les data tables
 WebJS;Use full screen width;;Utiliser toute la largueur de l'écran
 WebJS;Excel: Use element format;;Excel: Utiliser le format de l'élément
-WebJS;CSV: Use element format;;CSV: Utiliser le format de l'élément
 WebJS;View;;Vue
 WebJS;View dashboards;;Voir les Dashboards
 WebJS;View reports;;Voir les rapports
@@ -451,3 +458,4 @@ WebJS;Yes (element values are used for the axis);;Oui (Les valeurs de l'élémen
 WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés)
 WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message)
 WebJS;Yes, name, color and icon may change after execution;;Oui, le nom, la couleur ou l'icône peuvent changer après l'exécution
+WebJS;Yes (The output is not generated if the result set is empty);;Oui (la génération sera annulée sil n'y a pas d'enregistrements)

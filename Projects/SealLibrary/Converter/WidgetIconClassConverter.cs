@@ -30,7 +30,7 @@ namespace Seal.Converter
                     "glyphicon glyphicon-star",
                     "glyphicon glyphicon-signal",
                     "glyphicon glyphicon-cog",
-                    "glyphicon glyphicon-alt",
+                    "glyphicon glyphicon-list-alt",
                     "glyphicon glyphicon-education",
                     "glyphicon glyphicon-thumbs-up",
                     "glyphicon glyphicon-bell",
