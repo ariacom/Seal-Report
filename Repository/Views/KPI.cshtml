@@ -21,7 +21,7 @@
         for (int col = 1; col < table.ColumnCount; col++)
         {
             var lastCell = table[table.BodyEndRow - 1, col];
-            if (lastCell.Element != null && lastCell.Element.IsNumeric && lastCell.Element.PivotPosition == PivotPosition.Data && lastCell.Value != null)
+            if (lastCell.Element != null && lastCell.Element.IsNumeric && !lastCell.IsTotal && lastCell.Element.PivotPosition == PivotPosition.Data && lastCell.Value != null)
             {
                 if (table.BodyStartRow == 0) { headerValue = lastCell.Element.DisplayNameElTranslated; }
                 else if (table.BodyStartRow == 1 || (table.BodyStartRow == 2 && !reportModel.ShowFirstLine)) { headerValue = table[0, col].HTMLValue; }

@@ -37,6 +37,7 @@ namespace Seal.Converter
                     "glyphicon glyphicon-folder-open",
                     "glyphicon glyphicon-pencil",
                     "glyphicon glyphicon-usd",
+                    "glyphicon glyphicon-user",
                     "glyphicon glyphicon-euro"
                 });
         }
