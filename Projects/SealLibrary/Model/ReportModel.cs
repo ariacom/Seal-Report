@@ -1031,8 +1031,12 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
         DateTime _buildTimer;
+
+        [XmlIgnore]
         public StringBuilder JoinPaths = null;
+
         public void BuildSQL(bool forConversion = false)
         {
             try
@@ -1134,6 +1138,7 @@ namespace Seal.Model
                         _fromTables[0].GetExecSQLName(ref CTE, ref name);
                         execCTEClause = Helper.AddCTE(execCTEClause, CTE);
                         execFromClause.Append(name + "\r\n");
+                        if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
                     }
                     else
                     {
@@ -1185,7 +1190,7 @@ namespace Seal.Model
                                 bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
                                 if (bestPath != null && bestPath.joins.Count <= _fromTables.Count + 2)
                                 {
-                                    Debug.WriteLine("Exiting the joins search after xx seconds");
+                                    if (JoinPaths != null) JoinPaths.AppendLine("WARNING: Exiting the joins search after timeout...\r\n");
                                     break;
                                 }
                             }
@@ -1195,21 +1200,22 @@ namespace Seal.Model
 
                         if (JoinPaths != null)
                         {
-                            JoinPaths.AppendLine("Joins found by priority order (The first one will be used):\r\n");
+                            JoinPaths.AppendFormat("Time elapsed: {0:N0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                            JoinPaths.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined):\r\n");
                             int index = 1;
                             foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenByDescending(i => i.rank).ThenBy(i => i.joins.Count))
                             {
-                                JoinPaths.AppendFormat("Join {0}: ", index++);
+                                JoinPaths.AppendFormat("Direct Join {0}: ", index++);
                                 path.print(JoinPaths);
                             }
                         }
 
                         //Choose the path having all tables, then preferred, then less joins...
                         if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
-                        if (bestPath == null)
+                        if (bestPath == null || bestPath.joins.Count > 3)
                         {
                             List<JoinPath> resultPaths2 = new List<JoinPath>();
-                            //no direct joins found...try using several path...
+                            //no direct joins found or more than 3 joins...try using several path...
                             foreach (var path in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count))
                             {
                                 JoinPath newPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), rank = path.rank };
@@ -1246,19 +1252,51 @@ namespace Seal.Model
 
                                 if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout / 2)
                                 {
-                                    bestPath = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
-                                    if (bestPath != null)
+                                    var bestPathIndirect = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
+                                    if (bestPath != null || bestPathIndirect != null)
                                     {
-                                        Debug.WriteLine("Exiting the joins search after xx seconds");
+                                        JoinPaths.AppendLine("Exiting the joins search after xx seconds");
                                         break;
                                     }
                                 }
                             }
-                            bestPath = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
+
+                            if (JoinPaths != null)
+                            {
+                                JoinPaths.AppendFormat("\r\nTime elapsed: {0:N0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                                JoinPaths.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined):\r\n");
+                                int index = 1;
+                                foreach (var path in resultPaths2.OrderBy(i => i.tablesToUse.Count).ThenByDescending(i => i.rank).ThenBy(i => i.joins.Count))
+                                {
+                                    JoinPaths.AppendFormat("Indirect Join {0}: ", index++);
+                                    path.print(JoinPaths);
+                                }
+                            }
+
+                            var bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
+                            if (bestPath != null && bestPath2 != null)
+                            {
+                                //Choose here between direct best path or indirect best path
+                                if (bestPath2.rank > bestPath.rank) bestPath = bestPath2;
+                                else if (bestPath2.joins.Count < bestPath.joins.Count) bestPath = bestPath2;
+                            }
+                            else if (bestPath == null) {
+                                bestPath = bestPath2;
+                            }
                         }
 
-                        if (bestPath == null) throw new Exception("Unable to link all elements using the joins defined...\r\nAdd Joins to your Data Source\r\nOR remove elements or restrictions in your model\r\nOR add relevant elements or restrictions in your model.");
+                        if (JoinPaths != null && bestPath != null)
+                        {
+                            JoinPaths.AppendLine("\r\nAND THE WINNER IS:");
+                            bestPath.print(JoinPaths);
+                        }
 
+                        if (bestPath == null)
+                        {
+                            var errMessage = "Unable to link all elements using the joins defined...\r\nAdd Joins to your Data Source\r\nOR remove elements or restrictions in your model\r\nOR add relevant elements or restrictions in your model.";
+                            if (JoinPaths != null) JoinPaths.AppendLine("\r\n" + errMessage);
+                            throw new Exception(errMessage);
+                        }
                         if (bestPath.joins.Count == 0)
                         {
                             //only one table
@@ -1266,10 +1304,11 @@ namespace Seal.Model
                             bestPath.currentTable.GetExecSQLName(ref CTE, ref name);
                             execCTEClause = Helper.AddCTE(execCTEClause, CTE);
                             execFromClause.Append(name + "\r\n");
+
+                            if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
                         }
                         else
                         {
-//                            bestPath.print(JoinPaths);
                             string lastTable = null;
                             List<MetaTable> tablesUsed = new List<MetaTable>();
                             for (int i = bestPath.joins.Count - 1; i >= 0; i--)
@@ -1317,6 +1356,11 @@ namespace Seal.Model
                                 tablesUsed.Add(leftTable);
                             }
                             execFromClause = new StringBuilder(lastTable);
+                        }
+                        if (JoinPaths != null)
+                        {
+                            JoinPaths.Append("\r\nSQL Generated:");
+                            JoinPaths.Append(execFromClause.ToString());
                         }
                     }
 
@@ -1375,13 +1419,21 @@ namespace Seal.Model
             public void print(StringBuilder joinPaths)
             {
                 if (joinPaths == null) return;
-                joinPaths.AppendFormat("{0} Tables left, {1} Joins used, Rank = {2}\r\n", tablesToUse.Count, joins.Count, rank);
+                joinPaths.AppendFormat("Tables left: {0} , Joins used:{1} , Rank:{2}\r\n", tablesToUse.Count, joins.Count, rank);
                 for (int i=0; i<joins.Count; i++)
                 {
                     var join = joins[i];
                     if (i==0) joinPaths.Append(join.LeftTable.DisplayName + "->");
+                    if (i > 0 && join.LeftTableGUID != joins[i-1].RightTableGUID)
+                    {
+                        //Break
+                        joinPaths.Append("\r\n" + join.LeftTable.DisplayName + "->");
+                    }
                     joinPaths.Append(join.RightTable.DisplayName);
-                    if (i < joins.Count-1) joinPaths.Append( "->");
+                    if (i < joins.Count - 1 && join.RightTableGUID == joins[i+1].LeftTableGUID)
+                    {
+                        joinPaths.Append("->");
+                    }
                 }
 
                 joinPaths.AppendLine("\r\nDetail:");

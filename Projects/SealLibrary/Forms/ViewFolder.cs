@@ -49,7 +49,7 @@ namespace Seal.Forms
             set { Report.DisplayName = value; }
         }
 
-        [Category("Definition"), DisplayName("Init script"), Description("A Razor script  executed when the report is initialized. The script can be used to modify the report definition (e.g. set default values in restrictions).")]
+        [Category("Definition"), DisplayName("Report Execution Init script"), Description("A Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions).")]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string InitScript
         {

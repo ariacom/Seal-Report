@@ -1915,7 +1915,7 @@ namespace Seal.Model
                     {
                         var display = restriction.GetEnumDisplayValue(enumDef.Id);
                         result.Append(result.Length == 0 ? "[" : ",");
-                        result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"}}", restriction.OptionHtmlId + enumDef.HtmlId, restriction.GetEnumDisplayValue(enumDef.Id).Replace("\"", "\\\""));
+                        result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"}}", restriction.OptionHtmlId + enumDef.HtmlId, display.Replace("\"", "\\\""));
                     }
                 }
                 result.Append(result.Length == 0 ? "[]" : "]");
