@@ -138,6 +138,7 @@ Web;Create new folder;;Créer un répertoire
 Web;Custom SQL;;SQL Spécifique
 Web;Custom;;Spécifique
 Web;Cut;;Couper
+Web;Dashboard name;;Nom du Dashboard
 Web;Days;;Jours
 Web;Days of the week;;Jours de la semaine
 Web;Default body;;Message par défaut
@@ -194,6 +195,7 @@ Web;Manage folders;;Gestion des répertoires
 Web;Months;;Mois
 Web;Name;;Nom
 Web;New;;Nouveau
+Web;New dashboard name;;Nouveau nom du Dashboard
 Web;New folder name;;Nouveau nom de répertoire
 Web;No Email destination specified in the schedule;;L'adresse Email n'est pas renseignée
 Web;No file name specified in the schedule;;Le nom du fichier n'est pas renseigné

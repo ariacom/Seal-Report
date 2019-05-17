@@ -45,8 +45,8 @@ nv.utils.windowResize(nvd3UpdateCharts);
 //Hide tooltips when scrolling
 window.onscroll = function () {
     for (var i = 0; i < nvd3Charts.length; i++) {
-        nvd3Charts[i].tooltip.hidden(true);
-        nvd3Charts[i].interactiveLayer.tooltip.hidden(true);
+        if (nvd3Charts[i].tooltip) nvd3Charts[i].tooltip.hidden(true);
+        if (nvd3Charts[i].interactiveLayer && nvd3Charts[i].interactiveLayer.tooltip) nvd3Charts[i].interactiveLayer.tooltip.hidden(true);
     }
 };
 
