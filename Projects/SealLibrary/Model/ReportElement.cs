@@ -754,7 +754,7 @@ namespace Seal.Model
                 else if (format == "C3") return "$ #,##0.000";
                 else if (format == "C4") return "$ #,##0.0000";
                 else if (format.StartsWith("C")) return "$ #,##0";
-                else if (format == "0" || format.StartsWith("N") || format.StartsWith("D") || format.StartsWith("E") || format.StartsWith("F") || format.StartsWith("G") || format.StartsWith("H")) return "0";
+                else if (format.StartsWith("N") || format.StartsWith("D") || format.StartsWith("E") || format.StartsWith("F") || format.StartsWith("G") || format.StartsWith("H")) return "@";
             }
             else if (IsDateTime)
             {

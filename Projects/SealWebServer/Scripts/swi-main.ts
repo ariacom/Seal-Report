@@ -253,6 +253,8 @@ class SWIMain {
             var checked: number = $(".report-checkbox:checked").length;
             $("#message-title").html(SWIUtil.tr("Warning"));
             $("#message-text").html(SWIUtil.tr("Do you really want to delete the reports or files selected ?"));
+            $("#message-cancel-button").html(SWIUtil.tr("Cancel"));
+            $("#message-ok-button").html(SWIUtil.tr("OK"));
             $("#message-ok-button").unbind("click").on("click", function (e) {
                 $("#message-dialog").modal('hide');
                 $waitDialog.modal();

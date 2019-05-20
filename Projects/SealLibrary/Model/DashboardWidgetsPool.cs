@@ -70,6 +70,9 @@ namespace Seal.Model
                     //Report did not change
                     if (reports.ContainsKey(reportPath) && reports[reportPath] == File.GetLastWriteTime(reportPath)) continue;
 
+                    var reportStr = File.ReadAllText(reportPath);
+                    if (!reportStr.Contains("<WidgetDefinition>")) continue;
+
                     Report report = Report.LoadFromFile(reportPath, repository);
                     if (string.IsNullOrEmpty(report.LoadErrors))
                     {

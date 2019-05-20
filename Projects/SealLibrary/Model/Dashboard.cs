@@ -47,7 +47,7 @@ namespace Seal.Model
             foreach (var item in Items)
             {
                 item.GUID = Guid.NewGuid().ToString();
-            }        
+            }
         }
 
         public void ReinitGroupOrders()
@@ -102,6 +102,31 @@ namespace Seal.Model
         public string FullName;
         [XmlIgnore]
         public DateTime LastModification;
+
+        public static string[] Icons = new string[] {
+                    "info-sign",
+                    "warning-sign",
+                    "ok",
+                    "remove",
+                    "envelope",
+                    "search",
+                    "star",
+                    "signal",
+                    "cog",
+                    "list-alt",
+                    "education",
+                    "thumbs-up",
+                    "thumbs-down",
+                    "bell",
+                    "folder-close",
+                    "folder-open",
+                    "pencil",
+                    "usd",
+                    "euro",
+                    "user",
+                    "tag",
+                    "check",
+                };
     }
 
 }

@@ -29,6 +29,10 @@ namespace Seal.Forms
     Report report = task.Report;
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
     string result = ""1""; //Set result to 0 to cancel the report.
+    //Or cancel report with the flag CancelReport
+    //task.CancelReport = true;
+    //Or disable another task
+    //report.Tasks[1].Enabled = false;
 }
 @Raw(result)
 ";

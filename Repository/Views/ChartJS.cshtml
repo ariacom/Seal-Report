@@ -70,6 +70,11 @@
                     text: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_title"))))',
                     position: '@view.GetValue("chartjs_title_position")'
                 },
+                layout: {
+                    padding: {
+                        @view.GetValue("chartjs_padding")
+                    }
+                },
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {

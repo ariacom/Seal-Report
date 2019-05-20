@@ -306,7 +306,7 @@ namespace Seal.Model
 
                 if (sqlResult != null && !(sqlResult is DBNull))
                 {
-                    if (sqlResult.ToString() == "0")
+                    if (sqlResult.ToString().Trim() == "0")
                     {
                         LogMessage("SQL returns 0, the report is cancelled.");
                         CancelReport = true;
@@ -318,7 +318,7 @@ namespace Seal.Model
             {
                 LogMessage("Executing Script...");
                 string result = RazorHelper.CompileExecute(Script, this);
-                if (result == "0")
+                if (result.Trim() == "0")
                 {
                     LogMessage("Script returns 0, the report is cancelled.");
                     CancelReport = true;
