@@ -28,6 +28,7 @@
     Template.Parameters.Add(new Parameter() { Name = "chartjs_fill", DisplayName = "Line or Radar: Fill area", Description = "Option used to create area between two datasets or a dataset and a boundary (only for Line or Radar chart).", Value = "false", Enums = new string[] { "true", "false", "'start'", "'end'", "'origin'", "1", "2", "3", "'-1'", "'-2'", "'-3'", "'+1'" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "chartjs_colors", DisplayName = "Colors", Description = "The list of colors used for the series (list of strings). By default, d3.scale.category10 or 20 colors are used.", Value = "d3", Enums = new string[] { "d3|D3 (default)", "['#3366cc','#dc3912','#ff9900','#109618','#990099','#0099c6','#dd4477','#66aa00','#b82e2e','#316395','#994499','#22aa99','#aaaa11','#6633cc','#e67300','#8b0707','#651067','#329262','#5574a6','#3b3eac']|Google", "['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e']" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "chartjs_point_radius", NumericValue=3, DisplayName = "Point radius", Description = "Point size in pixels for Line chart." });
+    Template.Parameters.Add(new Parameter() { Name = "chartjs_padding", DisplayName = "Padding", Description = "Padding applied in pixels to all sides of the chart (left, top, right, bottom).", Value = "left:0, right:0, top:0, bottom:0" });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Model", "Model Container" };

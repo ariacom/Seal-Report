@@ -239,13 +239,13 @@ namespace Seal.Model
                 //Render report
                 Report.ExecutionRenderingDate = DateTime.Now;
                 //Render first to get the result file, necessary if new extension or for output
-                if (!Report.IsBasicHTMLWithNoOutput)
+                if (!Report.Cancel && !Report.IsBasicHTMLWithNoOutput)
                 {
                     RenderResult();
                     Report.LogMessage("Report result generated in '{0}'", Report.DisplayResultFilePath);
                 }
 
-                if (Report.OutputToExecute != null)
+                if (!Report.Cancel && Report.OutputToExecute != null)
                 {
                     if (!Report.HasErrors)
                     {
@@ -597,6 +597,7 @@ namespace Seal.Model
                 try
                 {
                     if (Report.TaskToExecute != null && task != Report.TaskToExecute) continue; //Exec only one task
+                    if (!task.Enabled) continue;
 
                     Report.LogMessage("Starting task '{0}'", task.Name);
                     Thread thread = new Thread(TaskExecuteThread);

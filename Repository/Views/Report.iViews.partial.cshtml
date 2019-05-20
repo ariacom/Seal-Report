@@ -12,28 +12,26 @@
     {
         @Raw(view.ParseChildren());
     }
-    else if (report.ForOutput && report.Status == ReportStatus.RenderingDisplay)
+    else if (report.ForOutput && report.Status == ReportStatus.RenderingDisplay && !report.Cancel)
     {
         <div class="panel panel-default panel-success">
             <div class="panel-heading">
                 <p>@Raw(Helper.ToHtml(report.OutputToExecute.Information))</p>
             </div>
             <div class="panel-footer">
-                @if (!string.IsNullOrEmpty(report.ResultFilePath) && !report.HasErrors)
+                @if (!string.IsNullOrEmpty(report.ResultFilePath) && !report.HasErrors )
                 {
                     string url = !string.IsNullOrEmpty(report.WebUrl) ? report.WebUrl + "OutputResult?execution_guid=" + report.ExecutionGUID : "file:///" + report.ResultFilePath;
                     <a href="@url" target="_new" class="btn btn-info" role="button">@report.Translate("View report result file")</a><br />
                 }
-
             </div>
         </div>
     }
-    else if (report.HasExternalViewer && report.Status == ReportStatus.RenderingDisplay)
+    else if (report.HasExternalViewer && report.Status == ReportStatus.RenderingDisplay && !string.IsNullOrEmpty(report.ResultFilePath) && !report.HasErrors & !report.Cancel)
     {
         <div class="panel panel-default panel-success">
             <div class="panel-footer">
-                @if (!string.IsNullOrEmpty(report.ResultFilePath) && !report.HasErrors)
-                {
+                @{
                     string url = !string.IsNullOrEmpty(report.WebUrl) ? report.WebUrl + "OutputResult?execution_guid=" + report.ExecutionGUID : "file:///" + report.ResultFilePath;
                     <a href="@url" target="_new" class="btn btn-info" role="button">@report.Translate("View report result file")</a><br />
                     if (!string.IsNullOrEmpty(report.WebUrl))
