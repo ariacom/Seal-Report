@@ -317,7 +317,7 @@ namespace Seal.Model
                         foreach (var source in restriction.Report.Sources)
                         {
                             result = source.MetaData.Enums.FirstOrDefault(i => i.GUID == _enumGUID);
-                            if (source != null) break;
+                            if (result != null) break;
                         }
                     }
                 }

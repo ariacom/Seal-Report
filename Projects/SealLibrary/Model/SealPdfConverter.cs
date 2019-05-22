@@ -6,6 +6,7 @@ using Seal.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -48,7 +49,9 @@ namespace Seal.Model
                     result = (SealPdfConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);
                     result.ApplicationPath = applicationPath;
                 }
-                catch { }
+                catch (Exception ex) {
+                    Debug.WriteLine(ex.Message);
+                }
             }
 
             if (result == null) result = new SealPdfConverter();

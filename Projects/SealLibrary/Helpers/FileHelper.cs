@@ -36,8 +36,8 @@ namespace Seal.Helpers
             {
                 try
                 {
-                    //purge razor dir older than 2 hour
-                    if (Directory.GetLastWriteTime(dir).AddHours(2) < DateTime.Now)
+                    //purge razor dir older than 120 min
+                    if (Directory.GetLastWriteTime(dir).AddMinutes(120) < DateTime.Now)
                     Directory.Delete(dir, true);
                 }
                 catch { }

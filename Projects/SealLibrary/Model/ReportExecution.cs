@@ -199,6 +199,7 @@ namespace Seal.Model
             if (Report.HasErrors)
             {
                 Report.Cancel = true;
+                Report.LogExecution();
             }
             else
             {
@@ -1761,6 +1762,8 @@ namespace Seal.Model
                         break;
                     }
                 }
+
+                FileHelper.PurgeTempApplicationDirectory();
             }
             catch (Exception ex)
             {

@@ -398,6 +398,16 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
+                "Display the tasks restrictions values",
+@"ReportTask task = Model;
+    Report report = task.Report;
+    foreach (var restr in report.ExecutionTasksRestrictions) {
+        report.LogMessage(""[{0}]={1}"", restr.DisplayNameEl, restr.DisplayText); //You can use restr.Value1, restr.FinalDate1, restr.EnumValues[0], restr.EnumDisplayValue);
+    }
+}
+"
+            ),
+            new Tuple<string, string>(
                 "Load a table from an Excel file, may need ODBC Office 2007 Drivers",
 @"ReportTask task = Model;
 	var helper = new TaskHelper(task);
