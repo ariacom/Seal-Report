@@ -358,9 +358,17 @@ namespace Seal.Model
                 Cancel = true;
                 if (string.IsNullOrEmpty(fileFolder) && OutputToExecute != null && !string.IsNullOrEmpty(OutputToExecute.FolderPath)) fileFolder = OutputToExecute.FolderPath;
                 ExecutionErrors += string.Format("Error initializing report Path, check your report execution or output Path '{0}'\r\n{1}\r\n", Path.Combine(fileFolder, fileName), ex.Message);
+                ExecutionErrorStackTrace = ex.StackTrace;
             }
 
             //Init scripts
+
+            //Load converter assembly
+            if (ExecutionView != null)
+            {
+                var converter = ExecutionView.PdfConverter;
+            }
+
             //First config
             if (!string.IsNullOrEmpty(Repository.Configuration.InitScript))
             {
@@ -371,6 +379,7 @@ namespace Seal.Model
                 catch (Exception ex2)
                 {
                     ExecutionErrors += string.Format("Error executing configuration init script:\r\n{0}\r\n", ex2.Message);
+                    ExecutionErrorStackTrace = ex2.StackTrace;
                 }
             }
 
@@ -386,6 +395,7 @@ namespace Seal.Model
                     catch (Exception ex2)
                     {
                         ExecutionErrors += string.Format("Error executing source init script for '{0}'\r\n{1}\r\n", source.Name, ex2.Message);
+                        ExecutionErrorStackTrace = ex2.StackTrace;
                     }
                 }
             }
@@ -400,6 +410,7 @@ namespace Seal.Model
                 catch (Exception ex2)
                 {
                     ExecutionErrors += string.Format("Error executing report init script:\r\n{0}\r\n", ex2.Message);
+                    ExecutionErrorStackTrace = ex2.StackTrace;
                 }
             }
         }
@@ -1689,6 +1700,7 @@ namespace Seal.Model
 
                 string logFileName = Path.Combine(Repository.LogsFolder, string.Format("log_{0:yyyy_MM_dd}.txt", DateTime.Now));
                 var message = ExecutionMessages;
+                if (string.IsNullOrEmpty(message) && !string.IsNullOrEmpty(ExecutionErrors)) message = ExecutionErrors;
                 if (!string.IsNullOrEmpty(ExecutionErrorStackTrace)) message += string.Format("\r\nError Stack Trace:\r\n{0}\r\n", ExecutionErrorStackTrace);
                 string log = string.Format("********************\r\nExecution of '{0}' on {1} {2}\r\n{3}********************\r\n", FilePath, DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), message);
                 File.AppendAllText(logFileName, log);
