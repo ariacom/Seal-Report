@@ -391,8 +391,11 @@ namespace Seal.Model
             {
                 foreach (var val in GetVals(value))
                 {
-                    Double result;
-                    if (!Double.TryParse(val, out result)) throw new Exception("Invalid numeric value: " + val);
+                    double d;
+                    if (!Helper.ValidateNumeric(val, out d))
+                    {
+                        throw new Exception("Invalid numeric value: " + val);
+                    }
                 }
             }
         }
@@ -820,7 +823,10 @@ namespace Seal.Model
                     {
                         if (string.IsNullOrEmpty(val)) continue;
                         if (!string.IsNullOrEmpty(result)) result += ";";
-                        result += ElementDisplayValue(double.Parse(val, NumberStyles.Any));
+
+                        double d;
+                        Helper.ValidateNumeric(val, out d);
+                        result += ElementDisplayValue(d);
                     }
                 }
             }
@@ -921,7 +927,15 @@ namespace Seal.Model
                 else
                 {
                     var vals = GetVals(value);
-                    if (vals.Length > 0) result = Double.Parse(vals[0]).ToString(CultureInfo.InvariantCulture.NumberFormat);
+                    if (vals.Length > 0)
+                    {
+                        double d;
+                        if (!Helper.ValidateNumeric(vals[0], out d))
+                        {
+                            throw new Exception("Invalid numeric value: " + vals[0]);
+                        }
+                        result = d.ToString(CultureInfo.InvariantCulture.NumberFormat);
+                    }
                 }
             }
             else if (IsDateTime)

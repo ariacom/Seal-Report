@@ -133,6 +133,7 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        public bool ShouldSerializeDynamicColumns() { return _dynamicColumns; }
 
         bool _keepColumnNames = false;
         [DefaultValue(false)]
@@ -154,11 +155,13 @@ namespace Seal.Model
 
 
         private bool _mustRefresh = false;
+        [DefaultValue(false)]
         public bool MustRefresh
         {
             get { return _mustRefresh; }
             set { _mustRefresh = value; }
         }
+        public bool ShouldSerializeMustRefresh() { return _mustRefresh; }
 
         string _preSQL;
         [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(2, 2)]
@@ -186,6 +189,7 @@ namespace Seal.Model
             get { return _ignorePrePostError; }
             set { _ignorePrePostError = value; }
         }
+        public bool ShouldSerializeIgnorePrePostError() { return _ignorePrePostError; }
 
         string _whereSQL;
         [Category("SQL"), DisplayName("Additional WHERE Clause"), Description("Additional SQL added in the WHERE clause when the table is involved in a query. The text may contain Razor script if it starts with '@'."), Id(5, 2)]

@@ -1146,40 +1146,50 @@ namespace Seal.Model
                         List<MetaTable> tablesToUse = _fromTables.ToList();
                         List<JoinPath> resultPaths = new List<JoinPath>();
                         JoinPath bestPath = null;
+
+                        //Build the list of joins to use
+                        var joinsToUse = new SortedList<string, List<MetaJoin>>();
+                        foreach (var join in Source.MetaData.Joins.Where(i => i.LeftTableGUID != null))
+                        {
+                            if (!joinsToUse.Keys.Contains(join.LeftTableGUID)) joinsToUse.Add(join.LeftTableGUID, new List<MetaJoin>() { join });
+                            else
+                            {
+                                var list = joinsToUse[join.LeftTableGUID];
+                                if (!list.Exists(i => i.LeftTableGUID == join.LeftTableGUID && i.RightTableGUID == join.RightTableGUID)) joinsToUse[join.LeftTableGUID].Add(join);
+                            }
+
+                            if (join.IsBiDirectional)
+                            {
+                                //Create a new join having the other left-right
+                                var newJoin = MetaJoin.Create();
+                                newJoin.IsBiDirectional = false;
+                                newJoin.GUID = join.GUID;
+                                newJoin.Source = join.Source;
+                                newJoin.LeftTableGUID = join.RightTableGUID;
+                                newJoin.RightTableGUID = join.LeftTableGUID;
+
+                                //Bug 131: Invert left and right
+                                if (join.JoinType == JoinType.LeftOuter) newJoin.JoinType = JoinType.RightOuter;
+                                else if (join.JoinType == JoinType.RightOuter) newJoin.JoinType = JoinType.LeftOuter;
+                                else newJoin.JoinType = join.JoinType;
+
+                                newJoin.Clause = join.Clause;
+
+                                if (!joinsToUse.Keys.Contains(newJoin.LeftTableGUID)) joinsToUse.Add(newJoin.LeftTableGUID, new List<MetaJoin>() { newJoin });
+                                else
+                                {
+                                    var list = joinsToUse[newJoin.LeftTableGUID];
+                                    if (!list.Exists(i => i.LeftTableGUID == newJoin.LeftTableGUID && i.RightTableGUID == newJoin.RightTableGUID)) joinsToUse[newJoin.LeftTableGUID].Add(newJoin);
+                                }
+                            }
+                        }
+
                         _buildTimer = DateTime.Now;
                         foreach (var leftTable in _fromTables)
                         {
-                            JoinPath rootPath = new JoinPath() { currentTable = leftTable, joinsToUse = new SortedList<string, List<MetaJoin>>() };
-                            //Build the list of joins to use
-                            foreach (var join in Source.MetaData.Joins.Where(i => i.LeftTableGUID != null))
-                            {
-                                if (!rootPath.joinsToUse.Keys.Contains(join.LeftTableGUID)) rootPath.joinsToUse.Add(join.LeftTableGUID, new List<MetaJoin>() { join });
-                                else
-                                {
-                                    var list = rootPath.joinsToUse[join.LeftTableGUID];
-                                    if (!list.Exists(i => i.LeftTableGUID == join.LeftTableGUID && i.RightTableGUID == join.RightTableGUID)) rootPath.joinsToUse[join.LeftTableGUID].Add(join);
-                                }
-
-                                if (join.IsBiDirectional)
-                                {
-                                    //Create a new join having the other left-right
-                                    var newJoin = MetaJoin.Create();
-                                    newJoin.IsBiDirectional = false;
-                                    newJoin.GUID = join.GUID;
-                                    newJoin.Source = join.Source;
-                                    newJoin.LeftTableGUID = join.RightTableGUID;
-                                    newJoin.RightTableGUID = join.LeftTableGUID;
-                                    newJoin.JoinType = join.JoinType;
-                                    newJoin.Clause = join.Clause;
-
-                                    if (!rootPath.joinsToUse.Keys.Contains(newJoin.LeftTableGUID)) rootPath.joinsToUse.Add(newJoin.LeftTableGUID, new List<MetaJoin>() { newJoin });
-                                    else
-                                    {
-                                        var list = rootPath.joinsToUse[newJoin.LeftTableGUID];
-                                        if (!list.Exists(i => i.LeftTableGUID == newJoin.LeftTableGUID && i.RightTableGUID == newJoin.RightTableGUID)) rootPath.joinsToUse[newJoin.LeftTableGUID].Add(newJoin);
-                                    }
-                                }
-                            }
+                            JoinPath rootPath = new JoinPath() { currentTable = leftTable, joinsToUse = new Dictionary<string, MetaJoin[]>() };
+                            //Copy the list of joins to use from the reference
+                            foreach (var key in joinsToUse.Keys) rootPath.joinsToUse.Add(key, joinsToUse[key].ToArray());
 
                             rootPath.tablesToUse = new List<MetaTable>(_fromTables.Where(i => i.GUID != leftTable.GUID));
                             JoinTables(rootPath, resultPaths);
@@ -1194,16 +1204,17 @@ namespace Seal.Model
                                     break;
                                 }
                             }
-                            //Debug.WriteLine("{0}ms {1}", (DateTime.Now - _timer).TotalMilliseconds, resultPaths.Count);
+                            Debug.WriteLine("{0}ms {1}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count);
+                     //       break;
                         }
 
 
                         if (JoinPaths != null)
                         {
                             JoinPaths.AppendFormat("Time elapsed: {0:N0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                            JoinPaths.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined):\r\n");
+                            JoinPaths.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined, shown with 0 to 2 tables left):\r\n");
                             int index = 1;
-                            foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenByDescending(i => i.rank).ThenBy(i => i.joins.Count))
+                            foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenByDescending(i => i.rank).ThenBy(i => i.joins.Count).Where(i => i.tablesToUse.Count <= 2))
                             {
                                 JoinPaths.AppendFormat("Direct Join {0}: ", index++);
                                 path.print(JoinPaths);
@@ -1212,7 +1223,7 @@ namespace Seal.Model
 
                         //Choose the path having all tables, then preferred, then less joins...
                         if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
-                        if (bestPath == null || bestPath.joins.Count > 3)
+                        if (bestPath == null || (bestPath.joins.Count > tablesToUse.Count -1) /* otherwise it means that a direct join with a minimum joins have been found, no need to check indirect joins */  )
                         {
                             List<JoinPath> resultPaths2 = new List<JoinPath>();
                             //no direct joins found or more than 3 joins...try using several path...
@@ -1255,7 +1266,7 @@ namespace Seal.Model
                                     var bestPathIndirect = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
                                     if (bestPath != null || bestPathIndirect != null)
                                     {
-                                        JoinPaths.AppendLine("Exiting the joins search after xx seconds");
+                                        if (JoinPaths != null) JoinPaths.AppendLine("Exiting the joins search after xx seconds");
                                         break;
                                     }
                                 }
@@ -1264,9 +1275,9 @@ namespace Seal.Model
                             if (JoinPaths != null)
                             {
                                 JoinPaths.AppendFormat("\r\nTime elapsed: {0:N0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                                JoinPaths.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined):\r\n");
+                                JoinPaths.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 20 are shown):\r\n");
                                 int index = 1;
-                                foreach (var path in resultPaths2.OrderBy(i => i.tablesToUse.Count).ThenByDescending(i => i.rank).ThenBy(i => i.joins.Count))
+                                foreach (var path in resultPaths2.OrderBy(i => i.tablesToUse.Count).ThenByDescending(i => i.rank).ThenBy(i => i.joins.Count).Take(20))
                                 {
                                     JoinPaths.AppendFormat("Indirect Join {0}: ", index++);
                                     path.print(JoinPaths);
@@ -1413,8 +1424,15 @@ namespace Seal.Model
             public MetaTable finalTable = null;
             public List<MetaJoin> joins = new List<MetaJoin>();
             public List<MetaTable> tablesToUse;
-            public SortedList<string, List<MetaJoin>> joinsToUse;
+            public Dictionary<string, MetaJoin[]> joinsToUse;
             public int rank = 0;
+
+            public string print()
+            {
+                var str = new StringBuilder();
+                print(str);
+                return str.ToString();
+            }
 
             public void print(StringBuilder joinPaths)
             {
@@ -1435,20 +1453,20 @@ namespace Seal.Model
                         joinPaths.Append("->");
                     }
                 }
-
+                /*
                 joinPaths.AppendLine("\r\nDetail:");
                 foreach (var join in joins)
                 {
                     joinPaths.AppendFormat(string.Format("{0}-{1} ({2})\r\n", join.LeftTable.DisplayName, join.RightTable.DisplayName, join.Clause.Trim()));
-                }
-                joinPaths.AppendLine();
+                }*/
+                joinPaths.Append("\r\n\r\n");
             }
         }
 
         void JoinTables(JoinPath path, List<JoinPath> resultPath)
         {
             //If the search is longer than xx seconds, we exit with the first path found...
-            if ((DateTime.Now - _buildTimer).TotalSeconds > BuildTimeout)
+            if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout)
             {
                 if (resultPath.Exists(i => i.tablesToUse.Count == 0))
                 {
@@ -1461,8 +1479,8 @@ namespace Seal.Model
             {
                 if (path.joinsToUse.Keys.Contains(path.currentTable.GUID))
                 {
-                    var joins = path.joinsToUse[path.currentTable.GUID].ToList();
-                    foreach (var join in joins)
+//                    var joins = path.joinsToUse[path.currentTable.GUID].ToList();
+                    foreach (var join in path.joinsToUse[path.currentTable.GUID])
                     {
                         //Check that the new table reached for this join has not already been reached
                         if (path.joins.Exists(i => i.RightTableGUID == join.RightTableGUID || i.LeftTableGUID == join.RightTableGUID))
@@ -1473,15 +1491,31 @@ namespace Seal.Model
                         MetaTable newTable = join.RightTable;
                         //if (_level == 1) Debug.WriteLine("{0} {1}", resultPath.Count, newTable.Name);
 
-                        JoinPath newJoinPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), joinsToUse = new SortedList<string, List<MetaJoin>>(path.joinsToUse), rank = path.rank };
+                        JoinPath newJoinPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), joinsToUse = new Dictionary<string, MetaJoin[]>(), rank = path.rank };
+                        //copy the list of joins to use 
+//                        Buffer.BlockCopy(path.joinsToUse.Keys, 0, newJoinPath.joinsToUse, )
+
+                        foreach (var key in path.joinsToUse.Keys)
+                        {
+                           if (key != path.currentTable.GUID) newJoinPath.joinsToUse.Add(key, path.joinsToUse[key].ToArray());
+                        }
+
                         //add the join and continue the path
                         newJoinPath.currentTable = newTable;
                         newJoinPath.joins.Add(join);
                         newJoinPath.tablesToUse.Remove(newTable);
-                        path.joinsToUse[path.currentTable.GUID].Remove(join);
+//                        newJoinPath.joinsToUse[path.currentTable.GUID].Remove(join);
                         //Set preferred path
                         if (newTable.GUID == ForceJoinTableGUID) newJoinPath.rank++;
                         if (newTable.GUID == AvoidJoinTableGUID) newJoinPath.rank--;
+
+//                        Debug.WriteLine(newJoinPath.print());
+//                     if (newJoinPath.print().Contains("ERV_MANAGER->APS_VRDLPERS->ERT_MOVEMENT->ERT_TITREGEN"))
+//                       {
+//                          var er = "";
+ //                     }
+
+
                         JoinTables(newJoinPath, resultPath);
                     }
                 }

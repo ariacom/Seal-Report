@@ -144,12 +144,6 @@
                             return d3.format('.2%')(d / total);
                         });
                     }
-                    //stacked area
-                    else if (chartType == 'pieChart') {
-                        (@chartId).interactiveLayer.tooltip.headerFormatter(function (d, i) {
-                            return d;
-                        });
-                    }
 
                     //Title
                     if (chartTitle.length > 0) {
