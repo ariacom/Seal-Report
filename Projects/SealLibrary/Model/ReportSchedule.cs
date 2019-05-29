@@ -287,6 +287,8 @@ namespace Seal.Model
             else
             {
                 //default user
+                //FUTURE required the user password...., 
+                //definition.Principal.LogonType = TaskLogonType.InteractiveTokenOrPassword;
                 _task = Report.TaskFolder.RegisterTaskDefinition(TaskName, definition);
             }
         }

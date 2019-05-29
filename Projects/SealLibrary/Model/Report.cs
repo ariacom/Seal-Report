@@ -1616,9 +1616,17 @@ namespace Seal.Model
         {
             try
             {
-                //string are supposed to be thread-safe...
-                Debug.WriteLine(string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args)));
-                ExecutionMessages += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args));
+                if (string.IsNullOrWhiteSpace(message.Trim()) && args.Length == 0)
+                {
+                    Debug.WriteLine(message);
+                    ExecutionMessages += message;
+                }
+                else
+                {
+                    //string are supposed to be thread-safe...
+                    Debug.WriteLine(string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args)));
+                    ExecutionMessages += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args));
+                }
             }
             catch (Exception ex)
             {
@@ -1701,7 +1709,7 @@ namespace Seal.Model
                 string logFileName = Path.Combine(Repository.LogsFolder, string.Format("log_{0:yyyy_MM_dd}.txt", DateTime.Now));
                 var message = ExecutionMessages;
                 if (string.IsNullOrEmpty(message) && !string.IsNullOrEmpty(ExecutionErrors)) message = ExecutionErrors;
-                if (!string.IsNullOrEmpty(ExecutionErrorStackTrace)) message += string.Format("\r\nError Stack Trace:\r\n{0}\r\n", ExecutionErrorStackTrace);
+                if (!Cancel && !string.IsNullOrEmpty(ExecutionErrorStackTrace)) message += string.Format("\r\nError Stack Trace:\r\n{0}\r\n", ExecutionErrorStackTrace);
                 string log = string.Format("********************\r\nExecution of '{0}' on {1} {2}\r\n{3}********************\r\n", FilePath, DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), message);
                 File.AppendAllText(logFileName, log);
 

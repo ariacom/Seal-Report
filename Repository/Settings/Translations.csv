@@ -99,6 +99,10 @@ Report;This report has execution errors. Please check details in the Windows Eve
 Report;ThisMonth;;CeMois
 Report;ThisWeek;;CetteSemaine
 Report;ThisYear;;CetteAnnée
+Report;ThisQuarter;;CeTrimestre
+Report;ThisSemester;;CeSemestre
+Report;ThisMinute;;CetteMinute
+Report;ThisHour;;CetteHeure
 Report;Today;;Aujourdhui
 Report;Total;;Total
 Report;Use the date format '{0}' or one of the following keywords:;;Utiliser le format de date '{0}' ou bien l'un des mots clés suivants:
@@ -135,6 +139,7 @@ Web;Copy;;Copier
 Web;Create a new dashboard;;Créer un nouveau Dashboard
 Web;Create in folder;;Créer dans le répertoire
 Web;Create new folder;;Créer un répertoire
+Web;Culture;;Culture
 Web;Custom SQL;;SQL Spécifique
 Web;Custom;;Spécifique
 Web;Cut;;Couper
@@ -144,6 +149,7 @@ Web;Days of the week;;Jours de la semaine
 Web;Default body;;Message par défaut
 Web;Default sender address;;Adresse d'envoi par défaut
 Web;Default subject;;Sujet par défaut
+Web;Default view;;Vue par défaut
 Web;Delete;;Supprimer
 Web;Delete folder;;Supprimer le répertoire
 Web;Description;;Description
@@ -267,6 +273,7 @@ WebJS;2 Decimals;;2 Décimales
 WebJS;3 Decimals;;3 Décimales
 WebJS;4 Decimals;;4 Décimales
 WebJS;All selected;;Tout est sélectionné
+WebJS;and;;et
 WebJS;Ascendant;;Ascendant
 WebJS;Automatic ascendant;;Automatique ascendant
 WebJS;Automatic descendant;;Automatique descendant
@@ -301,6 +308,7 @@ WebJS;Do you really want to delete the reports or files selected ?;;Voulez-vous 
 WebJS;Please select first the type of report you want to create...;;Veuillez choisir le type de rapport que vous voulez créer...
 WebJS;Public edition;;Edition publique
 WebJS;Public execution;;Exécution publique
+WebJS;Dashboards;;Dashboards
 WebJS;Does not contain;;Ne contient pas
 WebJS;Drop your Column elements;;Eléments de type Colonne
 WebJS;Drop your Data;;Données
@@ -403,6 +411,7 @@ WebJS;Remove;;Effacer
 WebJS;Remove the dashboard from your view;;Enlever le Dashboard de la vue
 WebJS;Remove widget from dashboard;;Enlever le Widget du Dashboard
 WebJS;Rename;;Renommer
+WebJS;Reports;;Rapports
 WebJS;Report has been modified, do you really want to close ?;;Le rapport a été modifié, voulez-vous vraiment fermer ?
 WebJS;Report saved;;Rapport sauvegardé
 WebJS;report(s) or file(s) cut in the clipboard;;rapport(s) ou fichier(s) ont été coupés dans le presse-papier

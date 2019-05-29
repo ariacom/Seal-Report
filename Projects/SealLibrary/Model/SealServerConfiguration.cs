@@ -82,7 +82,7 @@ namespace Seal.Model
         }
 
         string _logoName = "logo.png";
-        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images'. If empty, the Web Product Name is used as prefix."), Id(5, 1)]
+        [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images' and in the \\Images sub-folder of the Web publication directory. If empty, the Web Product Name is used as prefix."), Id(5, 1)]
         [DefaultValue("logo.png")]
         public string LogoName
         {

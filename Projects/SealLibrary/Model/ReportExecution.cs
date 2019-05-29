@@ -309,8 +309,8 @@ namespace Seal.Model
         {
             foreach (var v in ReportRestriction.GetVals(val))
             {
-                Double result;
-                if (!Double.TryParse(v, out result))
+                double d;
+                if (!Helper.ValidateNumeric(v, out d))
                 {
                     report.HasValidationErrors = true;
                     report.ExecutionErrors += string.Format("{0}: '{1}'\r\n", report.Translate("Invalid numeric value"), v);
@@ -811,6 +811,12 @@ namespace Seal.Model
             foreach (ResultPage page in model.Pages)
             {
                 if (Report.Cancel) break;
+                //If we have rows and columns OR if there are cell scripts, we have to resort the rows and columns as the SQL cannot do that directly...
+                if ((page.Rows.Count > 0 && page.Columns.Count > 0) || model.Elements.Count(e => !string.IsNullOrEmpty(e.CellScript) && e.IsSorted) > 0)
+                {
+                    page.Rows.Sort(ResultCell.CompareCells);
+                    page.Columns.Sort(ResultCell.CompareCells);
+                }
 
                 //Summary table values
                 if (model.Pages.Count > 1) model.SummaryTable.Lines.Add(page.Pages);
@@ -1426,12 +1432,6 @@ namespace Seal.Model
             model.UpdateFinalSortOrders();
             foreach (var page in model.Pages)
             {
-                //If we have rows and columns OR if there are cell scripts, we have to resort the rows and columns as the SQL cannot do that directly...
-                if ((page.Rows.Count > 0 && page.Columns.Count > 0) || model.Elements.Count(e => !string.IsNullOrEmpty(e.CellScript) && e.IsSorted) > 0)
-                {
-                    page.Rows.Sort(ResultCell.CompareCells);
-                    page.Columns.Sort(ResultCell.CompareCells);
-                }
                 //Sort also series axis
                 if (model.HasSerie)
                 {

@@ -100,6 +100,21 @@ namespace Seal.Helpers
             else input = new StringBuilder(value);
         }
 
+        static public bool ValidateNumeric(string value, out Double d)
+        {
+            bool result = false;
+            if (Double.TryParse(value, out d))
+            {
+                result = true;
+            }
+            else {
+                if (value.Contains(".")) value = value.Replace(".", ",");
+                else if (value.Contains(",")) value = value.Replace(",", ".");
+                if (Double.TryParse(value, out d)) result = true;
+            }
+            return result;
+        }
+
         static public string ConcatCellValues(ResultCell[] cells, string separator)
         {
             string result = "";
@@ -426,6 +441,10 @@ namespace Seal.Helpers
             catch { }
             try
             {
+                if (msg.Length > 25000)
+                {
+                    msg = msg.Substring(0, 25000) + "\r\n...\r\nMessage truncated, check the log file in the Logs Repository sub-folder.";
+                }
                 EventLog.WriteEntry(source, msg, type);
             }
             catch { }
