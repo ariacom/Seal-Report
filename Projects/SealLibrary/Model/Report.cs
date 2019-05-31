@@ -100,22 +100,22 @@ namespace Seal.Model
 
 
         //Tasks Restrictions
-        private List<ReportRestriction> _tasksRestrictions = new List<ReportRestriction>();
-        public List<ReportRestriction> TasksRestrictions
+        private List<ReportRestriction> _reportRestrictions = new List<ReportRestriction>();
+        public List<ReportRestriction> ReportRestrictions
         {
-            get { return _tasksRestrictions; }
-            set { _tasksRestrictions = value; }
+            get { return _reportRestrictions; }
+            set { _reportRestrictions = value; }
         }
-        public bool ShouldSerializeTaskRestrictions() { return _tasksRestrictions.Count > 0; }
+        public bool ShouldSerializeReportRestrictions() { return _reportRestrictions.Count > 0; }
 
 
         [XmlIgnore]
-        public List<ReportRestriction> ExecutionTasksRestrictions
+        public List<ReportRestriction> ExecutionReportRestrictions
         {
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
-                foreach (ReportRestriction restriction in TasksRestrictions)
+                foreach (ReportRestriction restriction in ReportRestrictions)
                 {
                     ReportRestriction newRestriction = restriction;
                     if (ForOutput && OutputToExecute.UseCustomRestrictions)
@@ -746,7 +746,7 @@ namespace Seal.Model
                 task.InitReferences();
             }
 
-            foreach (var restriction in TasksRestrictions)
+            foreach (var restriction in ReportRestrictions)
             {
                 restriction.Report = this;
             }
@@ -1338,7 +1338,7 @@ namespace Seal.Model
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
-                result.AddRange(TasksRestrictions);
+                result.AddRange(ReportRestrictions);
                 foreach (ReportModel model in Models)
                 {
                     result.AddRange(model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions));
@@ -1353,7 +1353,7 @@ namespace Seal.Model
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
-                result.AddRange(ExecutionTasksRestrictions);
+                result.AddRange(ExecutionReportRestrictions);
                 foreach (ReportModel model in ExecutionModels)
                 {
                     result.AddRange(model.ExecutionRestrictions.Union(model.ExecutionAggregateRestrictions).Union(model.ExecutionCommonRestrictions));

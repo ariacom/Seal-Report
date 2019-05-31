@@ -1706,6 +1706,7 @@ namespace Seal.Model
                 try
                 {
                     Source.MetaData.MasterTable.Log = Report;
+                    Source.MetaData.MasterTable.NoSQLModel = this;
                     string key = !string.IsNullOrEmpty(LoadScript) ? LoadScript : "_Master_" + Source.MetaData.MasterTable.LoadScript;
 
                     //Check if we can use a data table from another model

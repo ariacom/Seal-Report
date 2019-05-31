@@ -468,7 +468,7 @@ namespace Seal.Model
         {
             try
             {
-                foreach (ReportRestriction restriction in Report.ExecutionTasksRestrictions.Where(i => i.Prompt != PromptType.None))
+                foreach (ReportRestriction restriction in Report.ExecutionReportRestrictions.Where(i => i.Prompt != PromptType.None))
                 {
                     setRestriction(restriction);
                 }

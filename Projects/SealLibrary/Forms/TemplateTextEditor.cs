@@ -197,6 +197,9 @@ namespace Seal.Forms
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
 	ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List<ReportRestriction> restrictions = (report != null ? report.ReportRestrictions : null);
 
     //Default Script executed to fill the model result table from a non SQL source (if the model 'Load Script' is empty)
     //Insert values in the table, values must match the table columns defined in 'Definition Script'
@@ -398,10 +401,10 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
-                "Display the tasks restrictions values",
+                "Display the report restriction values",
 @"ReportTask task = Model;
     Report report = task.Report;
-    foreach (var restr in report.ExecutionTasksRestrictions) {
+    foreach (var restr in report.ExecutionReportRestrictions) {
         report.LogMessage(""[{0}]={1}"", restr.DisplayNameEl, restr.DisplayText); //You can use restr.Value1, restr.FinalDate1, restr.EnumValues[0], restr.EnumDisplayValue);
     }
 }
