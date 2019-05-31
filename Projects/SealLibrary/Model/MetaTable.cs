@@ -95,6 +95,10 @@ namespace Seal.Model
         [XmlIgnore]
         public DataTable NoSQLTable = null;
 
+        //Model set for No SQL Source
+        [XmlIgnore]
+        public ReportModel NoSQLModel = null;
+
         string _definitionScript;
         [Category("Definition"), DisplayName("Definition Script"), Description("The Razor Script used to built the DataTable object that defines the table."), Id(1, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
@@ -269,6 +273,7 @@ namespace Seal.Model
             get { return Model != null; }
         } 
 
+        //Set when MetaTable comes from a SQL Model
         [XmlIgnore]
         public ReportModel Model = null;
 

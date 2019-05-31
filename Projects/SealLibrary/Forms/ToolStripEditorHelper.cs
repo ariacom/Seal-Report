@@ -95,7 +95,7 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is TasksFolder)
             {
-                AddHelperButton("Edit Tasks Restrictions", "Edit the Tasks Restrictions", Keys.F8);
+                AddHelperButton("Edit Report Restriction Values", "Edit the Report Restriction Values", Keys.F8);
                 AddHelperButton("Edit Common Scripts", "Edit the Common Scripts", Keys.F7);
             }
             else if (SelectedEntity is ReportTask)
@@ -200,7 +200,7 @@ namespace Seal.Forms
                     else if (SelectedEntity is TasksFolder)
                     {
                         if (key == Keys.F7) EditProperty("Common Scripts");
-                        if (key == Keys.F8) EditProperty("Tasks Restrictions");
+                        if (key == Keys.F8) EditProperty("Report Restriction Values");
                     }
                     else if (SelectedEntity is ReportTask)
                     {
