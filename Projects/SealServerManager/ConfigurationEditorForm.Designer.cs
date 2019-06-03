@@ -139,7 +139,7 @@
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPanel.Location = new System.Drawing.Point(0, 25);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(932, 618);
+            this.mainPanel.Size = new System.Drawing.Size(932, 636);
             this.mainPanel.TabIndex = 3;
             // 
             // mainPropertyGrid
@@ -147,16 +147,16 @@
             this.mainPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPropertyGrid.Location = new System.Drawing.Point(0, 0);
             this.mainPropertyGrid.Name = "mainPropertyGrid";
-            this.mainPropertyGrid.Size = new System.Drawing.Size(932, 351);
+            this.mainPropertyGrid.Size = new System.Drawing.Size(932, 394);
             this.mainPropertyGrid.TabIndex = 5;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.infoTextBox);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 351);
+            this.panel2.Location = new System.Drawing.Point(0, 394);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(932, 245);
+            this.panel2.Size = new System.Drawing.Size(932, 220);
             this.panel2.TabIndex = 4;
             // 
             // infoTextBox
@@ -168,7 +168,7 @@
             this.infoTextBox.Multiline = true;
             this.infoTextBox.Name = "infoTextBox";
             this.infoTextBox.ReadOnly = true;
-            this.infoTextBox.Size = new System.Drawing.Size(932, 245);
+            this.infoTextBox.Size = new System.Drawing.Size(932, 220);
             this.infoTextBox.TabIndex = 3;
             this.infoTextBox.TabStop = false;
             // 
@@ -176,7 +176,7 @@
             // 
             this.mainStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel});
-            this.mainStatusStrip.Location = new System.Drawing.Point(0, 596);
+            this.mainStatusStrip.Location = new System.Drawing.Point(0, 614);
             this.mainStatusStrip.Name = "mainStatusStrip";
             this.mainStatusStrip.Size = new System.Drawing.Size(932, 22);
             this.mainStatusStrip.TabIndex = 1;
@@ -192,7 +192,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(932, 643);
+            this.ClientSize = new System.Drawing.Size(932, 661);
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.mainToolStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

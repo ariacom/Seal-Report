@@ -54,17 +54,18 @@ namespace Seal.Forms
             frmCollectionEditorForm.Text = "Collection Editor";
             if (CollectionItemType == typeof(ReportRestriction))
             {
+                frmCollectionEditorForm.Text = "Restrictions Collection Editor";
                 if (Context.Instance is ReportModel)
                 {
                     var model = Context.Instance as ReportModel;
                     model.InitCommonRestrictions();
                 }
-                else if (Context.Instance is TasksFolder)
+                else if (Context.Instance is ViewFolder)
                 {
                     allowAdd = true;
                     allowRemove = true;
+                    frmCollectionEditorForm.Text = "Report Input Values Collection Editor";
                 }
-                frmCollectionEditorForm.Text = "Restrictions Collection Editor";
             }
             else if (CollectionItemType == typeof(OutputParameter))
             {

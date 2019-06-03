@@ -132,6 +132,7 @@ namespace Seal.Model
             get { return _isAggregate; }
             set { _isAggregate = value; }
         }
+        public bool ShouldSerializeIsAggregate() { return _isAggregate; }
 
 
         private string _category;
@@ -158,7 +159,6 @@ namespace Seal.Model
             get { return _displayName; }
             set { _displayName = value; }
         }
-        public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(_displayName); }
 
         int _displayOrder = 0;
         [DefaultValue(0)]
@@ -168,6 +168,7 @@ namespace Seal.Model
             get { return _displayOrder; }
             set { _displayOrder = value; }
         }
+        public bool ShouldSerializeDisplayOrder() { return _displayOrder != 0; }
 
         public int GetSort()
         {
@@ -193,6 +194,7 @@ namespace Seal.Model
                 else _numericStandardFormat = value;
             }
         }
+        public bool ShouldSerializeNumericStandardFormat() { return _numericStandardFormat != NumericStandardFormat.Default; }
 
         protected DateTimeStandardFormat _datetimeStandardFormat = DateTimeStandardFormat.Default;
         [DefaultValue(DateTimeStandardFormat.Default)]
@@ -212,6 +214,7 @@ namespace Seal.Model
                 else _datetimeStandardFormat = value;
             }
         }
+        public bool ShouldSerializeDateTimeStandardFormat() { return _datetimeStandardFormat != DateTimeStandardFormat.Default; }
 
         protected string _format = "";
         [Category("Options"), DisplayName("Custom Format"), Description("If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)."), Id(3, 3)]
@@ -301,6 +304,7 @@ namespace Seal.Model
             get { return _enumGUID; }
             set { _enumGUID = value; }
         }
+        public bool ShouldSerializeEnumGUID() { return !string.IsNullOrEmpty(_enumGUID); }
 
         [XmlIgnore]
         public MetaEnum Enum
@@ -374,6 +378,15 @@ namespace Seal.Model
             get {
                 if (MetaTable == null) return _displayName;
                 return string.Format("{0}.{1}", string.IsNullOrEmpty(MetaTable.Name) ? MetaTable.Alias : MetaTable.Name, _displayName);
+            }
+        }
+
+        [XmlIgnore]
+        public string DisplayName2
+        {
+            get
+            {
+                return string.Format("{0} ({1})", _name, _displayName);
             }
         }
 

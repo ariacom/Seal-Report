@@ -401,10 +401,10 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
-                "Display the report restriction values",
+                "Display the report input values",
 @"ReportTask task = Model;
     Report report = task.Report;
-    foreach (var restr in report.ExecutionReportRestrictions) {
+    foreach (ReportRestriction restr in report.InputValues) {
         report.LogMessage(""[{0}]={1}"", restr.DisplayNameEl, restr.DisplayText); //You can use restr.Value1, restr.FinalDate1, restr.EnumValues[0], restr.EnumDisplayValue);
     }
 }
