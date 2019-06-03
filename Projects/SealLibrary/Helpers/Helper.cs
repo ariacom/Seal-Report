@@ -767,5 +767,24 @@ namespace Seal.Helpers
             while (index > 0);
             return result;
         }
+
+        public static void RunInAnotherAppDomain(string assemblyFile)
+        {
+            // RazorEngine cannot clean up from the default appdomain...
+            Console.WriteLine("Switching to secound AppDomain, for RazorEngine...");
+            AppDomainSetup adSetup = new AppDomainSetup();
+            adSetup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            var current = AppDomain.CurrentDomain;
+            // You only need to add strongnames when your appdomain is not a full trust environment.
+            var strongNames = new System.Security.Policy.StrongName[0];
+
+            var domain = AppDomain.CreateDomain(
+                "MyMainDomain", null,
+                current.SetupInformation, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted),
+                strongNames);
+            domain.ExecuteAssembly(assemblyFile);
+            // RazorEngine will cleanup. 
+            AppDomain.Unload(domain);
+        }
     }
 }

@@ -350,8 +350,8 @@ namespace Seal.Forms
             }
             else if (entity is MetaTable && source != null)
             {
-                selectSource = ((MetaTable)entity).Columns.OrderBy(i => i.Name).ToList();
-                displayName = "Name";
+                selectSource = ((MetaTable)entity).Columns.OrderBy(i => i.DisplayName2).ToList();
+                displayName = "DisplayName2";
             }
             else if (entity is ModelFolder)
             {
@@ -886,16 +886,6 @@ namespace Seal.Forms
             {
                 var entity = selectedEntity as MetaJoin;
                 if (e.OldValue != null && !entity.Source.MetaData.Tables.Exists(i => i.GUID == newValue)) entity.RightTableGUID = e.OldValue.ToString();
-            }
-            else if (selectedEntity is ReportModel && propertyName == "ForceJoinTableGUID")
-            {
-                var entity = selectedEntity as ReportModel;
-                if (e.OldValue != null && !entity.Source.MetaData.Tables.Exists(i => i.GUID == newValue)) entity.ForceJoinTableGUID = e.OldValue.ToString();
-            }
-            else if (selectedEntity is ReportModel && propertyName == "AvoidJoinTableGUID")
-            {
-                var entity = selectedEntity as ReportModel;
-                if (e.OldValue != null && !entity.Source.MetaData.Tables.Exists(i => i.GUID == newValue)) entity.AvoidJoinTableGUID = e.OldValue.ToString();
             }
         }
 

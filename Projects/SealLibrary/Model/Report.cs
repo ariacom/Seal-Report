@@ -99,14 +99,14 @@ namespace Seal.Model
         public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(_tasksScript); }
 
 
-        //Tasks Restrictions
-        private List<ReportRestriction> _reportRestrictions = new List<ReportRestriction>();
-        public List<ReportRestriction> ReportRestrictions
+        //Input Values
+        private List<ReportRestriction> _inputValues = new List<ReportRestriction>();
+        public List<ReportRestriction> InputValues
         {
-            get { return _reportRestrictions; }
-            set { _reportRestrictions = value; }
+            get { return _inputValues; }
+            set { _inputValues = value; }
         }
-        public bool ShouldSerializeReportRestrictions() { return _reportRestrictions.Count > 0; }
+        public bool ShouldSerializeInputValues() { return _inputValues.Count > 0; }
 
 
         [XmlIgnore]
@@ -115,7 +115,7 @@ namespace Seal.Model
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
-                foreach (ReportRestriction restriction in ReportRestrictions)
+                foreach (ReportRestriction restriction in InputValues)
                 {
                     ReportRestriction newRestriction = restriction;
                     if (ForOutput && OutputToExecute.UseCustomRestrictions)
@@ -746,7 +746,7 @@ namespace Seal.Model
                 task.InitReferences();
             }
 
-            foreach (var restriction in ReportRestrictions)
+            foreach (var restriction in InputValues)
             {
                 restriction.Report = this;
             }
@@ -1338,7 +1338,7 @@ namespace Seal.Model
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
-                result.AddRange(ReportRestrictions);
+                result.AddRange(InputValues);
                 foreach (ReportModel model in Models)
                 {
                     result.AddRange(model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions));

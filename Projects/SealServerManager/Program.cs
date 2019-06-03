@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
 using Seal.Helpers;
+using System.Reflection;
 
 namespace Seal
 {
@@ -19,16 +20,23 @@ namespace Seal
         [STAThread]
         static void Main()
         {
-            // Add the event handler for handling UI thread exceptions to the event.
-            Application.ThreadException += new ThreadExceptionEventHandler(ExceptionHandler);
+            if (AppDomain.CurrentDomain.IsDefaultAppDomain())
+            {
+                Helper.RunInAnotherAppDomain(Assembly.GetExecutingAssembly().Location);
+            }
+            else
+            {
+                // Add the event handler for handling UI thread exceptions to the event.
+                Application.ThreadException += new ThreadExceptionEventHandler(ExceptionHandler);
 
-            // Set the unhandled exception mode to force all Windows Forms errors to go through 
-            // our handler.
-            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+                // Set the unhandled exception mode to force all Windows Forms errors to go through 
+                // our handler.
+                Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ServerManager());
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new ServerManager());
+            }
         }
 
         private static void ExceptionHandler(object sender, ThreadExceptionEventArgs t)

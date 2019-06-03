@@ -50,7 +50,15 @@ namespace Seal.Model
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
-                
+
+                GetProperty("ExcelConverter").SetIsBrowsable(!ForPublication);
+                GetProperty("PdfConverter").SetIsBrowsable(!ForPublication);
+                if (!ForPublication)
+                {
+                    ExcelConverter.InitEditor();
+                    PdfConverter.InitEditor();
+                }
+
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
                 GetProperty("WebPublicationDirectory").SetIsBrowsable(ForPublication);
@@ -116,9 +124,9 @@ namespace Seal.Model
             set { _webProductName = value; }
         }
 
-        bool _isLocal = false;
+        bool _isLocal = true;
         [Category("Server Settings"), DisplayName("Server is local (No internet)"), Description("If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path)."), Id(8, 1)]
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool IsLocal
         {
             get { return _isLocal; }
@@ -161,6 +169,87 @@ namespace Seal.Model
             get { return _commonScripts; }
             set { _commonScripts = value; }
         }
+
+        #region PDF and Excel Converters
+
+        private List<string> _pdfConfigurations = new List<string>();
+        public List<string> PdfConfigurations
+        {
+            get { return _pdfConfigurations; }
+            set { _pdfConfigurations = value; }
+        }
+        public bool ShouldSerializePdfConfigurations() { return _pdfConfigurations.Count > 0; }
+
+        private SealPdfConverter _pdfConverter = null;
+        [XmlIgnore]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Default PDF Configuration"), Description("All the default options applied to the PDF conversion from the HTML result."), Category("PDF and Excel Converter"), Id(1, 4)]
+        public SealPdfConverter PdfConverter
+        {
+            get
+            {
+                if (_pdfConverter == null)
+                {
+                    _pdfConverter = SealPdfConverter.Create(Repository.Instance.ApplicationPath);
+                    _pdfConverter.SetConfigurations(PdfConfigurations, null);
+                    _pdfConverter.EntityHandler = HelperEditor.HandlerInterface;
+                    UpdateEditorAttributes();
+                }
+                return _pdfConverter;
+            }
+            set { _pdfConverter = value; }
+        }
+
+        public bool PdfConverterEdited
+        {
+            get { return _pdfConverter != null; }
+        }
+
+        private List<string> _excelConfigurations = new List<string>();
+        public List<string> ExcelConfigurations
+        {
+            get { return _excelConfigurations; }
+            set { _excelConfigurations = value; }
+        }
+        public bool ShouldSerializeExcelConfigurations() { return _excelConfigurations.Count > 0; }
+
+        private SealExcelConverter _excelConverter = null;
+        [XmlIgnore]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Default Excel Configuration"), Description("All the default options applied to the Excel conversion from the view."), Category("PDF and Excel Converter"), Id(2, 4)]
+        public SealExcelConverter ExcelConverter
+        {
+            get
+            {
+                if (_excelConverter == null)
+                {
+                    _excelConverter = SealExcelConverter.Create(Repository.Instance.ApplicationPath);
+                    _excelConverter.SetConfigurations(ExcelConfigurations, null);
+                    _excelConverter.EntityHandler = HelperEditor.HandlerInterface;
+                    UpdateEditorAttributes();
+                }
+                return _excelConverter;
+            }
+            set { _excelConverter = value; }
+        }
+
+        public bool ExcelConverterEdited
+        {
+            get { return _excelConverter != null; }
+        }
+
+        public string ConvertToExcel(string destination)
+        {
+            return ExcelConverter.ConvertToExcel(destination);
+        }
+
+        public string ConvertToCSV(string destination)
+        {
+            return ExcelConverter.ConvertToExcel(destination);
+        }
+
+        #endregion
+
 
         [XmlIgnore]
         public string CommonScriptsHeader
@@ -295,6 +384,16 @@ namespace Seal.Model
             attrs.XmlIgnore = true;
             xmlOverrides.Add(typeof(RootComponent), "Name", attrs);
             xmlOverrides.Add(typeof(RootComponent), "GUID", attrs);
+
+            //Pdf & Excel
+            if (PdfConverterEdited)
+            {
+                _pdfConfigurations = PdfConverter.GetConfigurations();
+            }
+            if (ExcelConverterEdited)
+            {
+                _excelConfigurations = ExcelConverter.GetConfigurations();
+            }
 
 #if !DEBUG
             //Set installation path, used by, to define schedules

@@ -93,9 +93,12 @@ namespace Seal.Forms
             {
                 if (((ReportView)SelectedEntity).UseCustomTemplate) AddHelperButton("Edit Custom Template", "Edit the custom template texts", Keys.F8);
             }
+            else if (SelectedEntity is ViewFolder)
+            {
+                AddHelperButton("Edit Report Input Values", "Edit the Report Input Values", Keys.F8);
+            }
             else if (SelectedEntity is TasksFolder)
             {
-                AddHelperButton("Edit Report Restriction Values", "Edit the Report Restriction Values", Keys.F8);
                 AddHelperButton("Edit Common Scripts", "Edit the Common Scripts", Keys.F7);
             }
             else if (SelectedEntity is ReportTask)
@@ -200,7 +203,6 @@ namespace Seal.Forms
                     else if (SelectedEntity is TasksFolder)
                     {
                         if (key == Keys.F7) EditProperty("Common Scripts");
-                        if (key == Keys.F8) EditProperty("Report Restriction Values");
                     }
                     else if (SelectedEntity is ReportTask)
                     {
@@ -275,6 +277,10 @@ namespace Seal.Forms
                     else if (SelectedEntity is ReportView)
                     {
                         if (key == Keys.F8) EditProperty("Custom template");
+                    }
+                    else if (SelectedEntity is ViewFolder)
+                    {
+                        if (key == Keys.F8) EditProperty("Report Input Values");
                     }
                     else if (SelectedEntity is ReportSchedule)
                     {

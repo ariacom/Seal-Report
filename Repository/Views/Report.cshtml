@@ -19,7 +19,7 @@
     <!--CSS-->
     @Raw(report.AttachCSSFile("bootstrap.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"))
     @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"))
-    @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css"))
+    @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css"))
     @Raw(report.AttachCSSFile("dataTables.bootstrap.min.css", "https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"))
     @Raw(report.AttachCSSFile("responsive.bootstrap.min.css", "https://cdn.datatables.net/responsive/2.2.1/css/responsive.bootstrap.min.css"))
     @Raw(report.AttachCSSFile("seal.css"))
@@ -49,12 +49,12 @@
 
     @if (report.HasChartJSChart)
     {
-        @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"))
+        @Raw(report.AttachScriptFile("Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"))
     }
 
     @if (report.HasPlotlyChart)
     {
-        @Raw(report.AttachScriptFile("plotly-1.34.0.min.js", "https://cdn.plot.ly/plotly-1.34.0.min.js"))
+        @Raw(report.AttachScriptFile("plotly-latest.min.js", "https://cdn.plot.ly/plotly-1.48.1.min.js"))
     }
 
     @if (report.HasNVD3Chart)

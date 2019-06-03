@@ -74,8 +74,7 @@ namespace Seal.Model
                 GetProperty("KeepColNames").SetIsBrowsable(IsSQLModel);
                 GetProperty("UseRawSQL").SetIsBrowsable(IsSQLModel);
 
-                GetProperty("ForceJoinTableGUID").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
-                GetProperty("AvoidJoinTableGUID").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
+                GetProperty("JoinsToSelect").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
 
                 GetProperty("HelperViewJoins").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
                 GetProperty("HelperViewJoins").SetIsReadOnly(true);
@@ -292,8 +291,8 @@ namespace Seal.Model
             set { _ignorePrePostError = value; }
         }
 
-        int _buildTimout = 4000;
-        [DefaultValue(4000)]
+        int _buildTimout = 2000;
+        [DefaultValue(2000)]
         [Category("SQL"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)."), Id(11, 3)]
         public int BuildTimeout
         {
@@ -301,35 +300,24 @@ namespace Seal.Model
             set { _buildTimout = value; }
         }
 
-        private string _forceJoinTableGUID;
-        [Category("Join Preferences"), DisplayName("Join table to use"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to use the table specified."), Id(2, 4)]
-        [TypeConverter(typeof(SourceTableConverter))]
-        public string ForceJoinTableGUID
-        {
-            get { return _forceJoinTableGUID; }
-            set { _forceJoinTableGUID = value; }
-        }
-        public bool ShouldSerializeForceJoinTableGUID() { return !string.IsNullOrEmpty(_forceJoinTableGUID); }
 
-        public MetaTable ForceJoinTable
+        private List<string> _joinsToUse = new List<string>();
+        public List<string> JoinsToUse
         {
-            get { return Source.MetaData.Tables.FirstOrDefault(i => i.GUID == _forceJoinTableGUID); }
+            get { return _joinsToUse; }
+            set { _joinsToUse = value; }
+        }
+        public bool ShouldSerializeJoinsToUse() { return _joinsToUse.Count > 0; }
+
+        [Category("Join Preferences"), DisplayName("Joins to use"), Description("If specified, Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used."), Id(2, 4)]
+        [Editor(typeof(JoinsValuesEditor), typeof(UITypeEditor))]
+        [XmlIgnore]
+        public string JoinsToSelect
+        {
+            get { return "<Click to select joins>"; }
+            set { } //keep set for modification handler
         }
 
-        private string _avoidTableGUID;
-        [Category("Join Preferences"), DisplayName("Join table to avoid"), Description("If not empty, the dynamic SQL joins used to perform the query will be chosen to avoid the table specified."), Id(3, 4)]
-        [TypeConverter(typeof(SourceTableConverter))]
-        public string AvoidJoinTableGUID
-        {
-            get { return _avoidTableGUID; }
-            set { _avoidTableGUID = value; }
-        }
-        public bool ShouldSerializeAvoidJoinTableGUID() { return !string.IsNullOrEmpty(_avoidTableGUID); }
-
-        public MetaTable AvoidJoinTable
-        {
-            get { return Source.MetaData.Tables.FirstOrDefault(i => i.GUID == _avoidTableGUID); }
-        }
 
         [Category("Join Preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(4,4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
@@ -852,9 +840,6 @@ namespace Seal.Model
             //clean up lost elements...
             ClearLostElements();
 
-            if (AvoidJoinTable == null) _avoidTableGUID = "";
-            if (ForceJoinTable == null) _forceJoinTableGUID = "";
-
             InitCommonRestrictions();
         }
 
@@ -1033,6 +1018,12 @@ namespace Seal.Model
 
         [XmlIgnore]
         DateTime _buildTimer;
+        [XmlIgnore]
+        int _bestJoinsCount = 0;
+        [XmlIgnore]
+        int _directCount = 0;
+        [XmlIgnore]
+        int _indirectCount = 0;
 
         [XmlIgnore]
         public StringBuilder JoinPaths = null;
@@ -1147,10 +1138,13 @@ namespace Seal.Model
                         List<JoinPath> resultPaths = new List<JoinPath>();
                         JoinPath bestPath = null;
 
-                        //Build the list of joins to use
-                        var joinsToUse = new SortedList<string, List<MetaJoin>>();
+                        //Build the list of joins to use: for each table, joins related
+                        var joinsToUse = new Dictionary<string, List<MetaJoin>>();
                         foreach (var join in Source.MetaData.Joins.Where(i => i.LeftTableGUID != null))
                         {
+                            //Filter in joins to use here
+                            if (JoinsToUse.Count > 0 && !JoinsToUse.Contains(join.GUID)) continue;
+
                             if (!joinsToUse.Keys.Contains(join.LeftTableGUID)) joinsToUse.Add(join.LeftTableGUID, new List<MetaJoin>() { join });
                             else
                             {
@@ -1185,36 +1179,30 @@ namespace Seal.Model
                         }
 
                         _buildTimer = DateTime.Now;
+                        _directCount = 0;
+                        _indirectCount = 0;
+                        _bestJoinsCount = joinsToUse.Count;
+
                         foreach (var leftTable in _fromTables)
                         {
                             JoinPath rootPath = new JoinPath() { currentTable = leftTable, joinsToUse = new Dictionary<string, MetaJoin[]>() };
                             //Copy the list of joins to use from the reference
-                            foreach (var key in joinsToUse.Keys) rootPath.joinsToUse.Add(key, joinsToUse[key].ToArray());
+                            foreach (var key in joinsToUse.Keys)
+                            {
+                                rootPath.joinsToUse.Add(key, joinsToUse[key].Where(i => i.RightTableGUID != leftTable.GUID).ToArray());
+                            }
 
                             rootPath.tablesToUse = new List<MetaTable>(_fromTables.Where(i => i.GUID != leftTable.GUID));
                             JoinTables(rootPath, resultPaths);
-
-                            //Optimisation: if many result paths, check if we have aready a relevant result, here a number of join almost equal to number of tables to reach
-                            if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout / 2)
-                            {
-                                bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
-                                if (bestPath != null && bestPath.joins.Count <= _fromTables.Count + 2)
-                                {
-                                    if (JoinPaths != null) JoinPaths.AppendLine("WARNING: Exiting the joins search after timeout...\r\n");
-                                    break;
-                                }
-                            }
-                            Debug.WriteLine("{0}ms {1}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count);
-                     //       break;
                         }
-
+                        Debug.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
 
                         if (JoinPaths != null)
                         {
-                            JoinPaths.AppendFormat("Time elapsed: {0:N0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                            JoinPaths.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined, shown with 0 to 2 tables left):\r\n");
+                            JoinPaths.AppendFormat("Time elapsed after Direct Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                            JoinPaths.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
                             int index = 1;
-                            foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenByDescending(i => i.rank).ThenBy(i => i.joins.Count).Where(i => i.tablesToUse.Count <= 2))
+                            foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
                             {
                                 JoinPaths.AppendFormat("Direct Join {0}: ", index++);
                                 path.print(JoinPaths);
@@ -1222,24 +1210,33 @@ namespace Seal.Model
                         }
 
                         //Choose the path having all tables, then preferred, then less joins...
-                        if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
-                        if (bestPath == null || (bestPath.joins.Count > tablesToUse.Count -1) /* otherwise it means that a direct join with a minimum joins have been found, no need to check indirect joins */  )
+                        if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
+                        bool checkIndirectJoin = false;
+                        if (bestPath == null) checkIndirectJoin = true;
+                        else if (bestPath.joins.Count > tablesToUse.Count - 1) checkIndirectJoin = true;
+                        // otherwise it means that a direct join with a minimum joins have been found, no need to check indirect joins 
+
+                        if (checkIndirectJoin)
                         {
                             List<JoinPath> resultPaths2 = new List<JoinPath>();
                             //no direct joins found or more than 3 joins...try using several path...
-                            foreach (var path in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count))
+                            foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count))
                             {
-                                JoinPath newPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), rank = path.rank };
+                                JoinPath newPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse) };
                                 //newPath.print();
                                 foreach (var join in path.joins)
                                 {
+                                    if (newPath.joins.Count >= _bestJoinsCount) break;
                                     //search a path starting from RightTable and finishing by a remaining table
-                                    foreach (var path2 in resultPaths.OrderByDescending(i => i.rank).ThenBy(i => i.tablesToUse.Count).Where(i => i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)))
+                                    foreach (var path2 in resultPaths.OrderBy(i => i.tablesToUse.Count).Where(i => i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)))
                                     {
+                                        if (newPath.joins.Count >= _bestJoinsCount) break;
                                         //ok add joins to the newPath and remove tables to use
-                                        newPath.rank += path2.rank;
                                         foreach (var join2 in path2.joins)
                                         {
+                                            if (newPath.joins.Count >= _bestJoinsCount) break;
+                                            _indirectCount++;
+
                                             //Add the join to the path
                                             if (!newPath.joins.Exists(i => i.GUID == join2.GUID))
                                             {
@@ -1254,6 +1251,11 @@ namespace Seal.Model
                                         {
                                             //got one
                                             resultPaths2.Add(newPath);
+
+                                            if (newPath.joins.Count < _bestJoinsCount)
+                                            {
+                                                _bestJoinsCount = newPath.joins.Count;
+                                            }
                                             break;
                                         }
                                     }
@@ -1261,35 +1263,36 @@ namespace Seal.Model
                                     if (newPath.tablesToUse.Count == 0) break;
                                 }
 
-                                if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout / 2)
+                                if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout)
                                 {
-                                    var bestPathIndirect = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
+                                    var bestPathIndirect = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
                                     if (bestPath != null || bestPathIndirect != null)
                                     {
-                                        if (JoinPaths != null) JoinPaths.AppendLine("Exiting the joins search after xx seconds");
+                                        if (JoinPaths != null) JoinPaths.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
                                         break;
                                     }
                                 }
                             }
 
+                            Debug.WriteLine("Indirect Joins: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths2.Count, _indirectCount);
+
                             if (JoinPaths != null)
                             {
-                                JoinPaths.AppendFormat("\r\nTime elapsed: {0:N0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                                JoinPaths.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 20 are shown):\r\n");
+                                JoinPaths.AppendFormat("\r\nTime elapsed after Indirect Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                                JoinPaths.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
                                 int index = 1;
-                                foreach (var path in resultPaths2.OrderBy(i => i.tablesToUse.Count).ThenByDescending(i => i.rank).ThenBy(i => i.joins.Count).Take(20))
+                                foreach (var path in resultPaths2.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
                                 {
                                     JoinPaths.AppendFormat("Indirect Join {0}: ", index++);
                                     path.print(JoinPaths);
                                 }
                             }
 
-                            var bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderByDescending(i => i.rank).ThenBy(i => i.joins.Count).FirstOrDefault();
+                            var bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
                             if (bestPath != null && bestPath2 != null)
                             {
                                 //Choose here between direct best path or indirect best path
-                                if (bestPath2.rank > bestPath.rank) bestPath = bestPath2;
-                                else if (bestPath2.joins.Count < bestPath.joins.Count) bestPath = bestPath2;
+                                if (bestPath2.joins.Count < bestPath.joins.Count) bestPath = bestPath2;
                             }
                             else if (bestPath == null) {
                                 bestPath = bestPath2;
@@ -1298,6 +1301,7 @@ namespace Seal.Model
 
                         if (JoinPaths != null && bestPath != null)
                         {
+                            JoinPaths.AppendFormat("\r\nTime elapsed: {0:F0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
                             JoinPaths.AppendLine("\r\nAND THE WINNER IS:");
                             bestPath.print(JoinPaths);
                         }
@@ -1425,7 +1429,6 @@ namespace Seal.Model
             public List<MetaJoin> joins = new List<MetaJoin>();
             public List<MetaTable> tablesToUse;
             public Dictionary<string, MetaJoin[]> joinsToUse;
-            public int rank = 0;
 
             public string print()
             {
@@ -1437,7 +1440,7 @@ namespace Seal.Model
             public void print(StringBuilder joinPaths)
             {
                 if (joinPaths == null) return;
-                joinPaths.AppendFormat("Tables left: {0} , Joins used:{1} , Rank:{2}\r\n", tablesToUse.Count, joins.Count, rank);
+                joinPaths.AppendFormat("Tables left: {0} , Joins used:{1}\r\n", tablesToUse.Count, joins.Count);
                 for (int i=0; i<joins.Count; i++)
                 {
                     var join = joins[i];
@@ -1465,12 +1468,15 @@ namespace Seal.Model
 
         void JoinTables(JoinPath path, List<JoinPath> resultPath)
         {
+            //no need to find another path as it will be worth...
+            if (path.joins.Count >= _bestJoinsCount) return;
+
             //If the search is longer than xx seconds, we exit with the first path found...
             if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout)
             {
                 if (resultPath.Exists(i => i.tablesToUse.Count == 0))
                 {
-                    Debug.WriteLine("Exiting the joins search after build timeout");
+                    if (JoinPaths != null) JoinPaths.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
                     return;
                 }
             }
@@ -1479,52 +1485,44 @@ namespace Seal.Model
             {
                 if (path.joinsToUse.Keys.Contains(path.currentTable.GUID))
                 {
-//                    var joins = path.joinsToUse[path.currentTable.GUID].ToList();
                     foreach (var join in path.joinsToUse[path.currentTable.GUID])
                     {
-                        //Check that the new table reached for this join has not already been reached
-                        if (path.joins.Exists(i => i.RightTableGUID == join.RightTableGUID || i.LeftTableGUID == join.RightTableGUID))
-                        {
-                            continue;
-                        }
-
                         MetaTable newTable = join.RightTable;
-                        //if (_level == 1) Debug.WriteLine("{0} {1}", resultPath.Count, newTable.Name);
 
-                        JoinPath newJoinPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), joinsToUse = new Dictionary<string, MetaJoin[]>(), rank = path.rank };
+                        JoinPath newJoinPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse), joinsToUse = new Dictionary<string, MetaJoin[]>() };
                         //copy the list of joins to use 
-//                        Buffer.BlockCopy(path.joinsToUse.Keys, 0, newJoinPath.joinsToUse, )
-
                         foreach (var key in path.joinsToUse.Keys)
                         {
-                           if (key != path.currentTable.GUID) newJoinPath.joinsToUse.Add(key, path.joinsToUse[key].ToArray());
+                            if (key != path.currentTable.GUID)
+                            {
+                                //we take only the joins that can reach a table different than the new reached table
+                                var joins = path.joinsToUse[key].Where(i => i.RightTableGUID != newTable.GUID).ToArray();
+                                if (joins.Length > 0) newJoinPath.joinsToUse.Add(key, joins);
+                            }
                         }
 
                         //add the join and continue the path
                         newJoinPath.currentTable = newTable;
                         newJoinPath.joins.Add(join);
                         newJoinPath.tablesToUse.Remove(newTable);
-//                        newJoinPath.joinsToUse[path.currentTable.GUID].Remove(join);
-                        //Set preferred path
-                        if (newTable.GUID == ForceJoinTableGUID) newJoinPath.rank++;
-                        if (newTable.GUID == AvoidJoinTableGUID) newJoinPath.rank--;
-
-//                        Debug.WriteLine(newJoinPath.print());
-//                     if (newJoinPath.print().Contains("ERV_MANAGER->APS_VRDLPERS->ERT_MOVEMENT->ERT_TITREGEN"))
-//                       {
-//                          var er = "";
- //                     }
-
 
                         JoinTables(newJoinPath, resultPath);
+
+                        _directCount++;
                     }
                 }
             }
+
             if (path.joins.Count > 0 && _fromTables.Contains(path.joins.Last().RightTable))
             {
                 path.startTable = path.joins.First().LeftTable;
                 path.finalTable = path.joins.Last().RightTable;
                 resultPath.Add(path);
+                if (path.tablesToUse.Count == 0 && path.joins.Count < _bestJoinsCount)
+                {
+                    //This is the best for the moment...
+                    _bestJoinsCount = path.joins.Count;
+                }
             }
         }
 

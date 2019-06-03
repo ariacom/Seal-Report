@@ -6,6 +6,7 @@ using System.ComponentModel;
 using Seal.Converter;
 using Seal.Model;
 using System.Drawing.Design;
+using System.Collections.Generic;
 
 namespace Seal.Forms
 {
@@ -23,6 +24,7 @@ namespace Seal.Forms
                 GetProperty("ViewGUID").SetIsBrowsable(true);
                 GetProperty("DisplayName").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsBrowsable(true);
+                GetProperty("InputValues").SetIsBrowsable(true);
                 GetProperty("WidgetCache").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
@@ -55,6 +57,14 @@ namespace Seal.Forms
         {
             get { return Report.InitScript; }
             set { Report.InitScript = value; }
+        }
+
+        [Category("Definition"), DisplayName("Report Input Values"), Description("Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report.")]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<ReportRestriction> InputValues
+        {
+            get { return Report.InputValues; }
+            set { Report.InputValues = value; }
         }
 
         [Category("Definition"), DisplayName("Widgets cache duration"), Description("For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report.")]
