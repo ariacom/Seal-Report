@@ -53,6 +53,8 @@ namespace Seal.Model
 
                 GetProperty("ExcelConverter").SetIsBrowsable(!ForPublication);
                 GetProperty("PdfConverter").SetIsBrowsable(!ForPublication);
+                GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(!ForPublication);
+                GetProperty("HelperResetExcelConfigurations").SetIsBrowsable(!ForPublication);
                 if (!ForPublication)
                 {
                     ExcelConverter.InitEditor();
@@ -192,7 +194,6 @@ namespace Seal.Model
                 {
                     _pdfConverter = SealPdfConverter.Create(Repository.Instance.ApplicationPath);
                     _pdfConverter.SetConfigurations(PdfConfigurations, null);
-                    _pdfConverter.EntityHandler = HelperEditor.HandlerInterface;
                     UpdateEditorAttributes();
                 }
                 return _pdfConverter;
@@ -225,7 +226,6 @@ namespace Seal.Model
                 {
                     _excelConverter = SealExcelConverter.Create(Repository.Instance.ApplicationPath);
                     _excelConverter.SetConfigurations(ExcelConfigurations, null);
-                    _excelConverter.EntityHandler = HelperEditor.HandlerInterface;
                     UpdateEditorAttributes();
                 }
                 return _excelConverter;
@@ -238,14 +238,18 @@ namespace Seal.Model
             get { return _excelConverter != null; }
         }
 
-        public string ConvertToExcel(string destination)
+        [Category("PDF and Excel Converter"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(3, 4)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperResetPDFConfigurations
         {
-            return ExcelConverter.ConvertToExcel(destination);
+            get { return "<Click to reset the PDF configuration values to their default values>"; }
         }
 
-        public string ConvertToCSV(string destination)
+        [Category("PDF and Excel Converter"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(4, 4)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperResetExcelConfigurations
         {
-            return ExcelConverter.ConvertToExcel(destination);
+            get { return "<Click to reset the Excel configuration values to their default values>"; }
         }
 
         #endregion

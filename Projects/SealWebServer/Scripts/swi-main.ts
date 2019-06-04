@@ -118,7 +118,6 @@ class SWIMain {
             if ($("#main-dashboard").css("display") != "block") {
                 _main.ReloadReportsTable();
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
-                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been updated"), 5000);
             }
             else if (_dashboard) {
                 _dashboard = new SWIDashboard();
@@ -477,7 +476,6 @@ class SWIMain {
         if (!path) return;
 
         SWIUtil.ShowHideControl($("#refresh-nav-item").children("i"), true);
-
         _gateway.GetFolderDetail(path, function (data) {
             _main._searchMode = false;
             _main._folder = data.folder;

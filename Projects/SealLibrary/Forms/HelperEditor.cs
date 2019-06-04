@@ -35,6 +35,7 @@ namespace Seal.Forms
         SealSecurity _security;
         OutputEmailDevice _emailDevice;
         ReportModel _model;
+        SealServerConfiguration _configuration;
 
         void setContext(ITypeDescriptorContext context)
         {
@@ -50,6 +51,7 @@ namespace Seal.Forms
             _security = context.Instance as SealSecurity;
             _emailDevice = context.Instance as OutputEmailDevice;
             _model = context.Instance as ReportModel;
+            _configuration = context.Instance as SealServerConfiguration;
         }
 
         void setModified()
@@ -427,6 +429,19 @@ namespace Seal.Forms
                         _reportView.ExcelConverter = null;
                         _reportView.Information = Helper.FormatMessage("The Excel configuration values have been reset");
                         setModified();
+                    }
+                }
+                else if (_configuration != null)
+                {
+                    if (context.PropertyDescriptor.Name == "HelperResetPDFConfigurations")
+                    {
+                        _configuration.PdfConfigurations = new List<string>();
+                        _configuration.PdfConverter = null;
+                    }
+                    else if (context.PropertyDescriptor.Name == "HelperResetExcelConfigurations")
+                    {
+                        _configuration.ExcelConfigurations = new List<string>();
+                        _configuration.ExcelConverter = null;
                     }
                 }
                 else if (_reportSchedule != null)

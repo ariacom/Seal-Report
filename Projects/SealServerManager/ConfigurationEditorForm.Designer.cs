@@ -147,16 +147,16 @@
             this.mainPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPropertyGrid.Location = new System.Drawing.Point(0, 0);
             this.mainPropertyGrid.Name = "mainPropertyGrid";
-            this.mainPropertyGrid.Size = new System.Drawing.Size(932, 394);
+            this.mainPropertyGrid.Size = new System.Drawing.Size(932, 424);
             this.mainPropertyGrid.TabIndex = 5;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.infoTextBox);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 394);
+            this.panel2.Location = new System.Drawing.Point(0, 424);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(932, 220);
+            this.panel2.Size = new System.Drawing.Size(932, 190);
             this.panel2.TabIndex = 4;
             // 
             // infoTextBox
@@ -168,7 +168,7 @@
             this.infoTextBox.Multiline = true;
             this.infoTextBox.Name = "infoTextBox";
             this.infoTextBox.ReadOnly = true;
-            this.infoTextBox.Size = new System.Drawing.Size(932, 220);
+            this.infoTextBox.Size = new System.Drawing.Size(932, 190);
             this.infoTextBox.TabIndex = 3;
             this.infoTextBox.TabStop = false;
             // 

@@ -749,7 +749,10 @@ namespace SealWebServer.Controllers
                 Repository repository = null;
 
                 var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
-                if (dashboard == null) throw new Exception("Error: The dashboard does not exist");
+                if (dashboard == null)
+                {
+                    return Json(new object { });
+                }
 
                 var item = dashboard.Items.FirstOrDefault(i => i.GUID == itemguid);
                 if (item == null) throw new Exception("Error: The item does not exist");

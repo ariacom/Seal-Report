@@ -588,7 +588,18 @@ namespace Seal.Model
             get { return _pdfConfigurations; }
             set { _pdfConfigurations = value; }
         }
-        public bool ShouldSerializePdfConfigurations() { return _pdfConfigurations.Count > 0; }
+        public bool ShouldSerializePdfConfigurations() {
+            bool result = false;
+            for (int i = 0; i < _pdfConfigurations.Count && i < Report.Repository.Configuration.PdfConfigurations.Count; i++)
+            {
+                if (_pdfConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.PdfConfigurations[i].Trim().Replace("\r\n", "\n"))
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
 
         private SealPdfConverter _pdfConverter = null;
         [XmlIgnore]
@@ -601,6 +612,7 @@ namespace Seal.Model
                 if (_pdfConverter == null)
                 {
                     _pdfConverter = SealPdfConverter.Create(Report.Repository.ApplicationPath);
+                    if (PdfConfigurations.Count == 0) PdfConfigurations = Report.Repository.Configuration.PdfConfigurations.ToList();
                     _pdfConverter.SetConfigurations(PdfConfigurations, this);
                     _pdfConverter.EntityHandler = HelperEditor.HandlerInterface;
                     UpdateEditorAttributes();
@@ -621,7 +633,18 @@ namespace Seal.Model
             get { return _excelConfigurations; }
             set { _excelConfigurations = value; }
         }
-        public bool ShouldSerializeExcelConfigurations() { return _excelConfigurations.Count > 0; }
+        public bool ShouldSerializeExcelConfigurations() {
+            bool result = false;
+            for (int i = 0; i <_excelConfigurations.Count && i < Report.Repository.Configuration.ExcelConfigurations.Count; i++)
+            {
+                if (_excelConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.ExcelConfigurations[i].Trim().Replace("\r\n", "\n"))
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
 
         private SealExcelConverter _excelConverter = null;
         [XmlIgnore]
@@ -634,6 +657,8 @@ namespace Seal.Model
                 if (_excelConverter == null)
                 {
                     _excelConverter = SealExcelConverter.Create(Report.Repository.ApplicationPath);
+                    if (ExcelConfigurations.Count == 0) ExcelConfigurations = Report.Repository.Configuration.ExcelConfigurations.ToList();
+
                     _excelConverter.SetConfigurations(ExcelConfigurations, this);
                     _excelConverter.EntityHandler = HelperEditor.HandlerInterface;
                     UpdateEditorAttributes();
@@ -649,11 +674,6 @@ namespace Seal.Model
         }
 
         public string ConvertToExcel(string destination)
-        {
-            return ExcelConverter.ConvertToExcel(destination);
-        }
-
-        public string ConvertToCSV(string destination)
         {
             return ExcelConverter.ConvertToExcel(destination);
         }
