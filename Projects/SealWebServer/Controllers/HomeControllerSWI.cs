@@ -807,7 +807,7 @@ namespace SealWebServer.Controllers
                 var rootAutoRefresh = 0;
                 if (view != null)
                 {
-                    //Init parmeters if the root view is different from the one executed...
+                    //Init parameters if the root view is different from the one executed...
                     var rootView = report.GetRootView(view);
                     if (rootView != null && rootView != report.ExecutionView)
                     {

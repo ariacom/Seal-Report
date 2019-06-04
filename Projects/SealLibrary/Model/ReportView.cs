@@ -553,7 +553,7 @@ namespace Seal.Model
 
 
         public bool ShouldSerializeWidgetDefinition() {
-            return !string.IsNullOrEmpty(_widgetDefinition.Name) || !string.IsNullOrEmpty(_widgetDefinition.GUID);
+            return _widgetDefinition.IsPublished || !string.IsNullOrEmpty(_widgetDefinition.GUID);
         }
 
         private DashboardWidget _widgetDefinition = new DashboardWidget();

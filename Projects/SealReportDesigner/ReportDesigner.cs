@@ -57,6 +57,7 @@ namespace Seal
         ModelPanel modelPanel = new ModelPanel();
         Repository _repository;
         ReportViewerForm _reportViewer = null;
+        ToolStripMenuItem nextWidgetMenuItem = new ToolStripMenuItem() { Text = "Go to next published Widget", ToolTipText = "select the next view having a published Widget", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W))), ShowShortcutKeys = true };
 
         public ReportDesigner()
         {
@@ -78,6 +79,10 @@ namespace Seal
             toolStripHelper = new ToolStripEditorHelper() { MainToolStrip = mainToolStrip, MainPropertyGrid = mainPropertyGrid, EntityHandler = this, MainTreeView = mainTreeView };
             toolsHelper = new ToolsHelper() { EntityHandler = this };
             toolsHelper.InitHelpers(toolsToolStripMenuItem, true);
+
+            toolsToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            toolsToolStripMenuItem.DropDownItems.Add(nextWidgetMenuItem);
+            nextWidgetMenuItem.Click += nextWidget_Click;
 
             HelperEditor.HandlerInterface = this;
 
@@ -182,6 +187,12 @@ namespace Seal
             }
         }
 
+        private TreeNode _sourceTN;
+        private TreeNode _viewTN;
+        private TreeNode _tasksTN;
+        private TreeNode _outputsTN;
+        private TreeNode _schedulesTN;
+
         void init(object entityToSelect = null)
         {
             if (entityToSelect == null && mainTreeView.SelectedNode != null) entityToSelect = mainTreeView.SelectedNode.Tag;
@@ -196,13 +207,13 @@ namespace Seal
                 mainSplitContainer.Visible = true;
 
                 mainTreeView.Nodes.Clear();
-                TreeNode sourceTN = new TreeNode("Sources") { Tag = new SourceFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(sourceTN);
+                _sourceTN = new TreeNode("Sources") { Tag = new SourceFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
+                mainTreeView.Nodes.Add(_sourceTN);
                 foreach (var source in _report.Sources)
                 {
-                    treeViewHelper.addSource(sourceTN.Nodes, source, 13);
+                    treeViewHelper.addSource(_sourceTN.Nodes, source, 13);
                 }
-                sourceTN.Expand();
+                _sourceTN.Expand();
 
                 TreeNode modelTN = new TreeNode("Models") { Tag = new ModelFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
                 mainTreeView.Nodes.Add(modelTN);
@@ -214,48 +225,48 @@ namespace Seal
                 }
                 modelTN.Expand();
 
-                TreeNode viewTN = new TreeNode("Views") { Tag = new ViewFolder() { Report = Report }, ImageIndex = 8, SelectedImageIndex = 8 };
-                mainTreeView.Nodes.Add(viewTN);
+                _viewTN = new TreeNode("Views") { Tag = new ViewFolder() { Report = Report }, ImageIndex = 8, SelectedImageIndex = 8 };
+                mainTreeView.Nodes.Add(_viewTN);
                 foreach (ReportView view in _report.Views)
                 {
                     TreeNode reportViewTN = new TreeNode(view.Name) { ImageIndex = 8, SelectedImageIndex = 8 };
                     reportViewTN.Tag = view;
-                    viewTN.Nodes.Add(reportViewTN);
+                    _viewTN.Nodes.Add(reportViewTN);
                     initTreeNodeViews(reportViewTN, view);
                 }
-                viewTN.ExpandAll();
+                _viewTN.ExpandAll();
 
-                TreeNode tasksTN = new TreeNode("Tasks") { Tag = new TasksFolder() { Report = Report }, ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(tasksTN);
+                _tasksTN = new TreeNode("Tasks") { Tag = new TasksFolder() { Report = Report }, ImageIndex = 2, SelectedImageIndex = 2 };
+                mainTreeView.Nodes.Add(_tasksTN);
                 foreach (var task in _report.Tasks)
                 {
                     var imageIndex = task.Enabled ? 12 : 14;
                     TreeNode taskTN = new TreeNode(task.Name) { Tag = task, ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
-                    tasksTN.Nodes.Add(taskTN);
+                    _tasksTN.Nodes.Add(taskTN);
                 }
-                tasksTN.Expand();
+                _tasksTN.Expand();
 
-                TreeNode outputsTN = new TreeNode("Outputs") { Tag = new OutputFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(outputsTN);
+                _outputsTN = new TreeNode("Outputs") { Tag = new OutputFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
+                mainTreeView.Nodes.Add(_outputsTN);
                 foreach (var output in _report.Outputs)
                 {
                     TreeNode outputTN = new TreeNode(output.Name) { Tag = output, ImageIndex = 9, SelectedImageIndex = 9 };
-                    outputsTN.Nodes.Add(outputTN);
+                    _outputsTN.Nodes.Add(outputTN);
                 }
-                outputsTN.Expand();
+                _outputsTN.Expand();
 
-                TreeNode schedulesTN = new TreeNode("Schedules") { Tag = new ScheduleFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTreeView.Nodes.Add(schedulesTN);
+                _schedulesTN = new TreeNode("Schedules") { Tag = new ScheduleFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
+                mainTreeView.Nodes.Add(_schedulesTN);
                 foreach (var schedule in _report.Schedules)
                 {
                     TreeNode scheduleTN = new TreeNode(schedule.Name) { Tag = schedule, ImageIndex = 11, SelectedImageIndex = 11 };
-                    schedulesTN.Nodes.Add(scheduleTN);
+                    _schedulesTN.Nodes.Add(scheduleTN);
                 }
-                schedulesTN.Expand();
+                _schedulesTN.Expand();
 
                 if (mainTreeView.SelectedNode == null)
                 {
-                    mainTreeView.SelectedNode = sourceTN;
+                    mainTreeView.SelectedNode = _sourceTN;
                 }
             }
             if (entityToSelect != null) selectNode(entityToSelect);
@@ -283,6 +294,7 @@ namespace Seal
             executeToolStripButton.Enabled = executeToolStripMenuItem.Enabled;
             renderToolStripMenuItem.Enabled = (_canRender && _report != null && _reportViewer != null && _reportViewer.Visible && _reportViewer.CanRender);
             renderToolStripButton.Enabled = renderToolStripMenuItem.Enabled;
+            nextWidgetMenuItem.Enabled = (_report != null);
 
             bool showViewOutput = (selectedEntity is ReportView || selectedEntity is ReportOutput);
             executeViewOutputToolStripMenuItem.Visible = showViewOutput;
@@ -1567,6 +1579,38 @@ namespace Seal
         private void ReportDesigner_KeyDown(object sender, KeyEventArgs e)
         {
             toolStripHelper.HandleShortCut(e);
+        }
+        
+
+        private void nextWidget_Click(object sender, EventArgs e)
+        {
+            ReportView currentView = mainTreeView.SelectedNode.Tag as ReportView;
+
+            if (_report != null)
+            {
+                List<ReportView> widgets = new List<ReportView>();
+                _report.GetWidgetViews(widgets);
+                if (widgets.Count > 0)
+                {
+                    ReportView view = widgets[0];
+                    if (currentView != null) 
+                    {
+                        for (int i = 0; i < widgets.Count; i++)
+                        {
+                            if (currentView == widgets[i])
+                            {
+                                if (i == widgets.Count-1) view = widgets[0];
+                                else view = widgets[i+1];
+                            }
+                        }
+                    }
+                    selectNode(view);
+                }
+                else
+                {
+                    MessageBox.Show("This report has no Widget published for Dashboards", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
         }
 
         #endregion

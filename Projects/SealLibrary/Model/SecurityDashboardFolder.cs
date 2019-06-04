@@ -4,6 +4,7 @@
 //
 using DynamicTypeDescriptor;
 using Seal.Converter;
+using Seal.Helpers;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
@@ -20,7 +21,6 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("Name").SetIsBrowsable(true);
-                GetProperty("Path").SetIsBrowsable(true);
                 GetProperty("Right").SetIsBrowsable(true);
 
                 TypeDescriptor.Refresh(this);
@@ -30,19 +30,12 @@ namespace Seal.Model
 
 
         string _name = "Folder Name";
-        [Category("Definition"), DisplayName("\tDashboard Folder Name"), Description("The name of the public dashboard folder."), Id(1, 1)]
+        [Category("Definition"), DisplayName("\tDashboard Folder Name"), Description("The name of the public dashboard folder. The physical path on the disk of the dashboard folder is relative from the repository folder '\\Dashboards'"), Id(1, 1)]
+        [TypeConverter(typeof(DashboardFolderConverter))]
         public string Name
         {
             get { return _name; }
             set { _name = value; }
-        }
-
-        string _path = "Default";
-        [Category("Definition"), DisplayName("\tDashboard Folder Path"), Description("The physical path on the disk of the dashboard folder. The path is relative from the repository foder '\\Dashboards'."), Id(2, 1)]
-        public string Path
-        {
-            get { return _path; }
-            set { _path = value; }
         }
 
         DashboardFolderRight _right = DashboardFolderRight.Edit;
@@ -60,13 +53,20 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
+        public string FolderPath
+        {
+            get
+            {
+                return Helper.CleanFileName(Name);
+            }
+        }
+
+        [XmlIgnore]
         public string DisplayName
         {
             get
             {
-                var result = "";
-                if (!string.IsNullOrEmpty(Name)) result = string.Format("{0} ({1})", Name, Path);
-                return result;
+                return Name;
             }
         }
     }

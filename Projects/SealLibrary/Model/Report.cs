@@ -1583,6 +1583,17 @@ namespace Seal.Model
             return result;
         }
 
+        public void GetWidgetViews(List<ReportView> widgetViews, List<ReportView> fromViews = null)
+        {
+            var list = (fromViews == null ? Views : fromViews);
+
+            foreach (var view in list.OrderBy(i => i.SortOrder))
+            {
+                if (view.WidgetDefinition.IsPublished) widgetViews.Add(view);
+                GetWidgetViews(widgetViews, view.Views);
+            }
+        }
+
         public ReportView FindViewFromTemplate(List<ReportView> views, string templateName)
         {
             ReportView result = null;
