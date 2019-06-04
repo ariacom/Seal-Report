@@ -94,7 +94,6 @@ var SWIMain = (function () {
                 _main.ReloadReportsTable();
                 if (SWIUtil.IsMobile())
                     $('.navbar-toggle').click();
-                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The folder has been updated"), 5000);
             }
             else if (_dashboard) {
                 _dashboard = new SWIDashboard();

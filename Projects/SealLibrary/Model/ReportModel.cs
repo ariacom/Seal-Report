@@ -463,6 +463,7 @@ namespace Seal.Model
             get { return string.IsNullOrEmpty(_restriction) ? "" : _restriction; }
             set { _restriction = value; }
         }
+        public bool ShouldSerializeRestriction() { return !string.IsNullOrEmpty(_restriction); }
 
         private List<ReportRestriction> _restrictions = new List<ReportRestriction>();
         public List<ReportRestriction> Restrictions
@@ -480,6 +481,7 @@ namespace Seal.Model
             get { return string.IsNullOrEmpty(_aggregateRestriction) ? "" : _aggregateRestriction; }
             set { _aggregateRestriction = value; }
         }
+        public bool ShouldSerializeAggregateRestriction() { return!string.IsNullOrEmpty(_aggregateRestriction); }
 
         private List<ReportRestriction> _aggregateRestrictions = new List<ReportRestriction>();
         public List<ReportRestriction> AggregateRestrictions

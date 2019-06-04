@@ -341,7 +341,7 @@ var SWIDashboard = (function () {
                         _gateway.AddDashboard($("#dashboard-user").val(), function (data) {
                             _da._lastGUID = null;
                             _da.init();
-                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The dashboards has been added to your view"), 5000);
+                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The dashboards have been added to your view"), 5000);
                         });
                     });
                     //Remove
