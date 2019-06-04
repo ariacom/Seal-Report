@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converter\DashboardFolderConverter.cs" />
     <Compile Include="Converter\WidgetIconClassConverter.cs" />
     <Compile Include="Converter\WidgetColorClassConverter.cs" />
     <Compile Include="Converter\RestrictionDateConverter.cs" />

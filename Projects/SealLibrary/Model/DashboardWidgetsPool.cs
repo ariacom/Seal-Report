@@ -46,7 +46,7 @@ namespace Seal.Model
         {
             _widgets.RemoveAll(i => i.GUID == view.WidgetDefinition.GUID);
 
-            if (!string.IsNullOrEmpty(view.WidgetDefinition.Name))
+            if (view.WidgetDefinition.IsPublished)
             {
                 view.WidgetDefinition.ReportPath = view.Report.FilePath.Replace(repository.ReportsFolder, "");
                 view.WidgetDefinition.ReportName = view.Report.DisplayNameEx;

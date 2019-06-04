@@ -135,7 +135,7 @@ namespace Seal.Model
                     //public
                     foreach (var f in SecurityDashboardFolders.Where(i => i.Right == DashboardFolderRight.Edit))
                     {
-                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateDashboardFolder("\\" + f.Path, f.Name), path = f.Path});
+                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateDashboardFolder("\\" + f.FolderPath, f.Name), path = f.FolderPath});
                     }
                 }
                 return _dashboardFolders;
@@ -650,11 +650,11 @@ namespace Seal.Model
                 //public
                 foreach (var f in SecurityDashboardFolders. Where(i => i.Right != DashboardFolderRight.None))
                 {
-                    var dir = Path.Combine(Security.Repository.DashboardPublicFolder, f.Path);
+                    var dir = Path.Combine(Security.Repository.DashboardPublicFolder, FileHelper.CleanFilePath(f.Name));
                     if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
                     foreach (var p in Directory.GetFiles(dir, "*." + Repository.SealDashboardExtension))
                     {
-                        LoadDashboard(p, f.Path, f.Name, f.Right == DashboardFolderRight.Edit, false);
+                        LoadDashboard(p, f.FolderPath, f.Name, f.Right == DashboardFolderRight.Edit, false);
                     }
                 }
 

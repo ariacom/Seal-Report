@@ -320,6 +320,7 @@ class SWIDashboard {
                 var menu = $("<a data-toggle='pill' href='#" + dashboard.GUID + "' did='" + dashboard.GUID + "'>");
                 if (dashboard.IsPersonal) menu.addClass("dashboard-personal");
                 menu.text(dashboard.DisplayName);
+                menu.attr("title", dashboard.FullName);
                 var li = $("<li>");
 
                 //Drag and drop for menu
@@ -357,10 +358,17 @@ class SWIDashboard {
                     _main._profile.dashboard = _da._lastGUID;
 
                     setTimeout(function () {
-                        nvd3UpdateCharts();
-                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
                         _da.reorderItems(true);
+                    }, 190);
+
+                    setTimeout(function () {
+                        nvd3UpdateCharts();
                     }, 200);
+
+                    setTimeout(function () {
+                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+                    }, 220);
+
                 });
 
                 var content = $("<div id='" + dashboard.GUID + "' class='tab-pane fade'>");
