@@ -105,6 +105,33 @@
         var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
         var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
 
+        var dtTooltips = {
+            today: '@Raw(report.TranslateToJS("Go to today")))',
+            clear: '@Raw(report.TranslateToJS("Clear selection"))',
+            close: '@Raw(report.TranslateToJS("Close"))',
+            selectMonth: '@Raw(report.TranslateToJS("Select Month"))',
+            prevMonth: '@Raw(report.TranslateToJS("Previous Month"))',
+            nextMonth: '@Raw(report.TranslateToJS("Next Month"))',
+            selectYear: '@Raw(report.TranslateToJS("Select Year"))',
+            prevYear: '@Raw(report.TranslateToJS("Previous Year"))',
+            nextYear: '@Raw(report.TranslateToJS("Next Year"))',
+            selectDecade: '@Raw(report.TranslateToJS("Select Decade"))',
+            prevDecade: '@Raw(report.TranslateToJS("Previous Decade"))',
+            nextDecade: '@Raw(report.TranslateToJS("Next Decade"))',
+            prevCentury: '@Raw(report.TranslateToJS("Previous Century"))',
+            nextCentury: '@Raw(report.TranslateToJS("Next Century"))',
+            pickHour: '@Raw(report.TranslateToJS("Pick Hour"))',
+            incrementHour: '@Raw(report.TranslateToJS("Increment"))',
+            decrementHour: '@Raw(report.TranslateToJS("Decrement"))',
+            pickMinute: '@Raw(report.TranslateToJS("Pick Minute"))',
+            incrementMinute: '@Raw(report.TranslateToJS("Increment"))',
+            decrementMinute: '@Raw(report.TranslateToJS("Decrement"))',
+            pickSecond: '@Raw(report.TranslateToJS("Pick Second"))',
+            incrementSecond: '@Raw(report.TranslateToJS("Increment"))',
+            decrementSecond: '@Raw(report.TranslateToJS("Decrement"))',
+            togglePeriod: '@Raw(report.TranslateToJS("Toggle Period"))',
+            selectTime: '@Raw(report.TranslateToJS("Select Time"))'
+        }
         $.fn.dataTable.moment(shortDateFormat);
         $.fn.dataTable.moment(shortDateTimeFormat);
         $.extend( true, $.fn.dataTable.defaults, {

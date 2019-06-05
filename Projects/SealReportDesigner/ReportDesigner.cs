@@ -57,7 +57,7 @@ namespace Seal
         ModelPanel modelPanel = new ModelPanel();
         Repository _repository;
         ReportViewerForm _reportViewer = null;
-        ToolStripMenuItem nextWidgetMenuItem = new ToolStripMenuItem() { Text = "Go to next published Widget", ToolTipText = "select the next view having a published Widget", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W))), ShowShortcutKeys = true };
+        ToolStripMenuItem nextWidgetMenuItem = new ToolStripMenuItem() { Text = "Go to next Widget in the report", ToolTipText = "select the next view having a published Widget", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W))), ShowShortcutKeys = true };
 
         public ReportDesigner()
         {
@@ -80,12 +80,10 @@ namespace Seal
             toolsHelper = new ToolsHelper() { EntityHandler = this };
             toolsHelper.InitHelpers(toolsToolStripMenuItem, true);
 
-            toolsToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-            toolsToolStripMenuItem.DropDownItems.Add(nextWidgetMenuItem);
+            toolsToolStripMenuItem.DropDownItems.Insert(4, nextWidgetMenuItem);
             nextWidgetMenuItem.Click += nextWidget_Click;
 
             HelperEditor.HandlerInterface = this;
-
 
             mainSplitContainer.Panel2.Controls.Add(modelPanel);
             modelPanel.Dock = DockStyle.Fill;
@@ -1588,8 +1586,7 @@ namespace Seal
 
             if (_report != null)
             {
-                List<ReportView> widgets = new List<ReportView>();
-                _report.GetWidgetViews(widgets);
+                List<ReportView> widgets = _report.GetWidgetViews();
                 if (widgets.Count > 0)
                 {
                     ReportView view = widgets[0];
@@ -1604,6 +1601,7 @@ namespace Seal
                             }
                         }
                     }
+                    _widgetExpanded = true;
                     selectNode(view);
                 }
                 else

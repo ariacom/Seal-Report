@@ -34,7 +34,11 @@ namespace Seal.Model
 
                     lock (_widgets)
                     {
-                        getWidgets(_widgets, _reports, Repository.Instance.ReportsFolder, Repository.Instance);
+                        var repository = Repository.Instance;
+                        getWidgets(_widgets, _reports, repository.ReportsFolder, repository);
+                        //Remove reports deleted
+                        _widgets.RemoveAll(i => !File.Exists(repository.ReportsFolder + i.ReportPath));
+
                         _forceReload = false;
                     }
                 }

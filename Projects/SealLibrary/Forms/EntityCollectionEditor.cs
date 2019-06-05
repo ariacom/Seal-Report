@@ -217,13 +217,13 @@ namespace Seal.Forms
             SetModified();
             if (_component != null) _component.UpdateEditor();
 
-            if (instance is ReportRestriction && _component is TasksFolder)
+            if (instance is ReportRestriction && _component is ViewFolder)
             {
                 var result = ReportRestriction.CreateReportRestriction();
                 result.TypeRe = ColumnType.Text;
                 result.Operator = Operator.Equal;
                 result.ChangeOperator = false;
-                result.Report = ((TasksFolder)_component).Report;
+                result.Report = ((ViewFolder)_component).Report;
                 instance = result;
             }
 
@@ -244,7 +244,7 @@ namespace Seal.Forms
             if (value is ReportRestriction)
             {
                 var restr = value as ReportRestriction;
-                if (restr.MetaColumn == null && string.IsNullOrEmpty(restr.Name)) result = restr.DisplayNameEl; //Task restriction
+                if (restr.MetaColumn == null && string.IsNullOrEmpty(restr.Name)) result = restr.DisplayNameEl; //Report input value
                 else if (restr.MetaColumn == null) result = restr.Name; //Common restriction
                 else if (restr.Model != null)  result = string.Format("{0} ({1})", restr.DisplayNameEl, restr.Model.Name);
             }
