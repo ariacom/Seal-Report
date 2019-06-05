@@ -25,6 +25,7 @@ Report;Cancelling report...;;Annulation...
 Report;Charts;;Graphes
 Report;Contains;;Contient
 Report;Count of;;Nombre de
+Report;Close;;Fermer
 Report;Description;;Description
 Report;Does not contain;;Ne contient pas
 Report;Drill <;;Navigation <
@@ -84,6 +85,7 @@ Report;second;;seconde
 Report;seconds;;secondes
 Report;Select all;;Tout
 Report;Show;;Montrer
+Report;Show/Hide Restrictions;;Afficher/Cacher les restrictions
 Report;Show _MENU_ reports;;Afficher _MENU_ rapports
 Report;Show _MENU_ rows;;Afficher _MENU_ lignes
 Report;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_
@@ -112,6 +114,26 @@ Report;View HTML Result;;Afficher le résultat HTML
 Report;View PDF Result;;Afficher le résultat PDF
 Report;View Print Result;;Afficher le résultat Impression
 Report;View report result file;;Afficher le résultat du rapport
+Report;Go to today;;Aujourd'hui
+Report;Clear selection;;Effacer la sélection
+Report;Select Month;;Sélectionner le mois
+Report;Previous Month;;Mois précédent
+Report;Next Month;;Mois suivant
+Report;Select Year;;Sélectionner l'année
+Report;Previous Year;;Année précédente
+Report;Next Year;;Année suivante
+Report;Select Decade;;Sélectionner la décennie
+Report;Previous Decade;;Décennie précédente
+Report;Next Decade;;Décennie suivante
+Report;Previous Century;;Siècle précédent
+Report;Next Century;;Siècle suivant
+Report;Pick Hour;;Heure
+Report;Increment;;Incrémenter
+Report;Decrement;;Décrémenter
+Report;Pick Minute;;Minute
+Report;Pick Second;;Seconde
+Report;Toggle Period;;Changer la période
+Report;Select Time;;Sélectionner l'heure
 Web;Actions;;Actions
 Web;Add;;Ajouter
 Web;Add dashboards;;Ajouter des Dashboards

@@ -562,12 +562,14 @@ $(document).ready(function () {
         showClose: true,
         showClear: true,
         format: shortDateTimeFormat,
+        tooltips: dtTooltips
     });
 
     $(".datepicker_date").datetimepicker({
         showClose: true,
         showClear: true,
-        format: shortDateFormat
+        format: shortDateFormat,
+        tooltips: dtTooltips
     });
 
     $('.datepicker_date,.datepicker_datetime').datetimepicker({

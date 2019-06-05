@@ -1384,6 +1384,11 @@ namespace Seal.Model
             return Repository.Translate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Report", reference);
         }
 
+        public string TranslateToJS(string reference)
+        {
+            return Helper.ToJS(Translate(reference));
+        }
+
         public string ContextTranslate(string context, string reference)
         {
             if (ExecutionView == null) return reference;
@@ -1583,14 +1588,22 @@ namespace Seal.Model
             return result;
         }
 
-        public void GetWidgetViews(List<ReportView> widgetViews, List<ReportView> fromViews = null)
+        public List<ReportView> GetWidgetViews()
         {
-            var list = (fromViews == null ? Views : fromViews);
-
-            foreach (var view in list.OrderBy(i => i.SortOrder))
+            List<ReportView> result = new List<ReportView>();
+            foreach (var view in Views.OrderBy(i => i.SortOrder))
             {
-                if (view.WidgetDefinition.IsPublished) widgetViews.Add(view);
-                GetWidgetViews(widgetViews, view.Views);
+                getWidgetViews(result, view);
+            }
+            return result;
+        }
+
+        void getWidgetViews(List<ReportView> widgetViews, ReportView view)
+        {
+            if (view.WidgetDefinition.IsPublished) widgetViews.Add(view);
+            foreach (var subview in view.Views.OrderBy(i => i.SortOrder))
+            {
+                getWidgetViews(widgetViews, subview);
             }
         }
 

@@ -106,7 +106,7 @@ namespace Seal.Model
                 return string.IsNullOrEmpty(_name) ? "" : string.Format("<DashboardItem><WidgetGUID>{0}</WidgetGUID></DashboardItem>", _guid);
             }
         }
-        [XmlIgnore]
+        [XmlIgnore, Browsable(false)]
         public bool IsPublished
         {
             get { return !string.IsNullOrEmpty(_name);  }

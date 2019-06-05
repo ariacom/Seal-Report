@@ -44,6 +44,7 @@ namespace Seal.Forms
         ToolStripMenuItem _executeDesigner = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Report Designer", ToolTipText = "run the Report Designer application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D))), ShowShortcutKeys = true };
         ToolStripMenuItem _executeManager = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Server Manager", ToolTipText = "run the Server Manager application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M))), ShowShortcutKeys = true };
         ToolStripMenuItem _openReportFolder = new ToolStripMenuItem() { Text = "Open Repository Reports Folder", ToolTipText = "open the Reports repository folder in Windows Explorer", AutoToolTip = true };
+        ToolStripMenuItem _viewWidgetList = new ToolStripMenuItem() { Text = "List Widgets published in the repository", ToolTipText = "view all reports having Widgets published in the repository", AutoToolTip = true };
 
         public void InitHelpers(ToolStripMenuItem toolsMenuItem, bool forDesigner)
         {
@@ -70,7 +71,14 @@ namespace Seal.Forms
 
                 _checkExecution.Click += tools_Click;
                 toolsMenuItem.DropDownItems.Add(_checkExecution);
+            }
 
+            _viewWidgetList.Click += tools_Click;
+            toolsMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            toolsMenuItem.DropDownItems.Add(_viewWidgetList);
+
+            if (!forDesigner)
+            {
                 toolsMenuItem.DropDownItems.Add(new ToolStripSeparator());
 
                 _exportSourceTranslations.Click += tools_Click;
@@ -113,28 +121,28 @@ namespace Seal.Forms
                 Thread thread = null;
                 if (sender == _checkSource)
                 {
-                    thread = new Thread(delegate(object param) { CheckDataSources((ExecutionLogInterface)param, sources); });
+                    thread = new Thread(delegate (object param) { CheckDataSources((ExecutionLogInterface)param, sources); });
                 }
                 else if (sender == _refreshEnum)
                 {
-                    thread = new Thread(delegate(object param) { RefreshEnums((ExecutionLogInterface)param, sources); });
+                    thread = new Thread(delegate (object param) { RefreshEnums((ExecutionLogInterface)param, sources); });
                 }
                 else if (sender == _checkExecution)
                 {
-                    thread = new Thread(delegate(object param) { CheckExecutions((ExecutionLogInterface)param); });
+                    thread = new Thread(delegate (object param) { CheckExecutions((ExecutionLogInterface)param); });
                 }
                 else if (sender == _exportSourceTranslations)
                 {
-                    thread = new Thread(delegate(object param) { ExportSourceTranslations((ExecutionLogInterface)param); });
+                    thread = new Thread(delegate (object param) { ExportSourceTranslations((ExecutionLogInterface)param); });
                 }
                 else if (sender == _exportReportsTranslations)
                 {
-                    thread = new Thread(delegate(object param) { ExportReportsTranslations((ExecutionLogInterface)param); });
+                    thread = new Thread(delegate (object param) { ExportReportsTranslations((ExecutionLogInterface)param); });
                 }
                 else if (sender == _synchronizeSchedules || sender == _synchronizeSchedulesCurrentUser)
                 {
                     if (!Helper.CheckTaskSchedulerOS()) return;
-                    thread = new Thread(delegate(object param) { SynchronizeSchedules((ExecutionLogInterface)param, sender == _synchronizeSchedulesCurrentUser); });
+                    thread = new Thread(delegate (object param) { SynchronizeSchedules((ExecutionLogInterface)param, sender == _synchronizeSchedulesCurrentUser); });
                 }
                 else if (sender == _executeManager || sender == _executeDesigner)
                 {
@@ -148,6 +156,10 @@ namespace Seal.Forms
                 else if (sender == _openReportFolder)
                 {
                     Process.Start(Repository.Instance.ReportsFolder);
+                }
+                else if (sender == _viewWidgetList)
+                {
+                    thread = new Thread(delegate (object param) { ViewWidgetsList((ExecutionLogInterface)param); });
                 }
 
                 if (thread != null)
@@ -506,6 +518,11 @@ namespace Seal.Forms
         void exportViewsTranslations(ExecutionLogInterface log, ReportView view, Repository repository, StringBuilder translations, string reportPath, string separator, string extraSeparators, int len)
         {
             translations.AppendFormat("ReportViewName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(reportPath.Substring(len)), Helper.QuoteDouble(view.Name), extraSeparators);
+            if (view.WidgetDefinition.IsPublished)
+            {
+                translations.AppendFormat("WidgetName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(reportPath.Substring(len)), Helper.QuoteDouble(view.WidgetDefinition.Name), extraSeparators);
+                if (!string.IsNullOrEmpty(view.WidgetDefinition.Description)) translations.AppendFormat("WidgetDescription{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(reportPath.Substring(len)), Helper.QuoteDouble(view.WidgetDefinition.Description), extraSeparators);
+            }
             foreach (var child in view.Views)
             {
                 exportViewsTranslations(log, child, repository, translations, reportPath, separator, extraSeparators, len);
@@ -560,8 +577,24 @@ namespace Seal.Forms
                 log.Log("Adding file names in context: FileName\r\n");
                 exportReportNamesTranslations(repository.ReportsFolder, translations, separator, extraSeparators, repository.ReportsFolder.Length);
 
-                log.Log("Adding report names in context: ReportExecutionName, ReportViewName, ReportOutputName\r\n");
+                log.Log("Adding report names in context: ReportExecutionName, ReportViewName, ReportOutputName, WidgetName, WidgetDescription\r\n");
                 exportReportsTranslations(log, repository.ReportsFolder, repository, translations, separator, extraSeparators, repository.ReportsFolder.Length);
+
+                log.Log("Adding dashboard folders in context: DashboardFolder\r\n");
+                foreach (var folder in Directory.GetDirectories(repository.DashboardPublicFolder))
+                {
+                    translations.AppendFormat("DashboardFolder{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(folder.Substring(repository.DashboardPublicFolder.Length)), Helper.QuoteDouble(Path.GetFileName(folder)), extraSeparators);
+                }
+
+                log.Log("Adding dashboard names in context: DashboardName\r\n");
+                foreach (var folder in Directory.GetDirectories(repository.DashboardPublicFolder))
+                {
+                    foreach (var p in Directory.GetFiles(folder, "*." + Repository.SealDashboardExtension))
+                    {
+                        var dashboard = Dashboard.LoadFromFile(p);
+                        translations.AppendFormat("DashboardName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(p.Substring(repository.DashboardPublicFolder.Length)), Helper.QuoteDouble(dashboard.Name), extraSeparators);
+                    }
+                }
 
                 string fileName = FileHelper.GetUniqueFileName(Path.Combine(repository.SettingsFolder, "FoldersReportsTranslations_WORK.csv"));
                 File.WriteAllText(fileName, translations.ToString(), Encoding.UTF8);
@@ -726,5 +759,34 @@ namespace Seal.Forms
             return newPath;
         }
 
+        public void ViewWidgetsList(ExecutionLogInterface log)
+        {
+            Repository repository = Repository.Instance.CreateFast();
+            StringBuilder translations = new StringBuilder();
+            try
+            {
+                DashboardWidgetsPool.ForceReload();
+
+                log.Log("Building the list of Published Widgets in the repository...\r\n");
+                foreach (var path in (from w in DashboardWidgetsPool.Widgets select w.ReportPath).Distinct())
+                {
+                    if (log.IsJobCancelled()) return;
+
+                    Report report = Report.LoadFromFile(repository.ReportsFolder + path, repository);
+                    StringBuilder summary = new StringBuilder();
+                    foreach (var view in report.GetWidgetViews())
+                    {
+                        summary.AppendFormat("Widget '{0}' in View '{1}' of Type '{2}'\r\n", view.WidgetDefinition.Name, view.Name, view.TemplateName);
+                    }
+                    log.Log("Report: '{0}' ({1}):\r\n{2}", report.ExecutionName, path, summary);
+                }
+
+                if (DashboardWidgetsPool.Widgets.Count == 0) log.Log("No Widget published in this repository.\r\n");
+            }
+            catch (Exception ex)
+            {
+                log.Log("\r\n[UNEXPECTED ERROR RECEIVED]\r\n{0}\r\n", ex.Message);
+            }
+        }
     }
 }
