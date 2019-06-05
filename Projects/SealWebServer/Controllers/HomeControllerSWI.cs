@@ -471,7 +471,8 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
 
-                return Json(new SWIUserProfile() {
+                return Json(new SWIUserProfile()
+                {
                     authenticated = true,
                     name = WebUser.Name,
                     group = WebUser.SecurityGroupsDisplay,
@@ -610,7 +611,7 @@ namespace SealWebServer.Controllers
         }
 
         [HttpPost]
-        public ActionResult SWIGetDashboardItem(string guid,string itemguid)
+        public ActionResult SWIGetDashboardItem(string guid, string itemguid)
         {
             WriteDebug("SWIGetDashboardItems");
             try
@@ -657,7 +658,7 @@ namespace SealWebServer.Controllers
 
                 if (!CheckAuthentication()) return Content(_loginContent);
 
-                foreach(var guid in guids) WebUser.Profile.Dashboards.Add(guid);
+                foreach (var guid in guids) WebUser.Profile.Dashboards.Add(guid);
                 WebUser.Profile.SaveToFile();
 
                 return Json(new object { });
@@ -699,7 +700,7 @@ namespace SealWebServer.Controllers
                 if (WebUser.Profile.Dashboards.Contains(guid1) && WebUser.Profile.Dashboards.Contains(guid2))
                 {
                     var newDashboards = new List<string>();
-                    foreach(var guid in WebUser.Profile.Dashboards)
+                    foreach (var guid in WebUser.Profile.Dashboards)
                     {
                         if (guid == guid1) newDashboards.Add(guid2);
                         else if (guid == guid2) newDashboards.Add(guid1);
@@ -769,7 +770,7 @@ namespace SealWebServer.Controllers
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: the report does not exist");
 
                 var executions = DashboardExecutions;
-                lock(executions)
+                lock (executions)
                 {
                     //remove executions older than 2 hours
                     executions.RemoveAll(i => i.Report.ExecutionEndDate < DateTime.Now.AddHours(-2));
@@ -805,52 +806,48 @@ namespace SealWebServer.Controllers
                 var view = report.GetWidgetViewToParse(report.Views, widget.GUID);
                 var modelView = report.CurrentModelView;
                 var rootAutoRefresh = 0;
-                if (view != null)
-                {
-                    //Init parameters if the root view is different from the one executed...
-                    var rootView = report.GetRootView(view);
-                    if (rootView != null && rootView != report.ExecutionView)
-                    {
-                        string templateErrors = "";
-                        rootView.InitTemplates(rootView, ref templateErrors);
-                        rootAutoRefresh = rootView.GetNumericValue("refresh_rate");
-                    }
-                    else rootAutoRefresh = report.ExecutionView.GetNumericValue("refresh_rate");
 
-                    if (execution != null)
+                if (view == null) throw new Exception("Error: the widget does not exist");
+
+                //Init parameters if the root view is different from the one executed...
+                var rootView = report.GetRootView(view);
+                if (rootView != null && rootView != report.ExecutionView)
+                {
+                    string templateErrors = "";
+                    rootView.InitTemplates(rootView, ref templateErrors);
+                    rootAutoRefresh = rootView.GetNumericValue("refresh_rate");
+                }
+                else rootAutoRefresh = report.ExecutionView.GetNumericValue("refresh_rate");
+
+                if (execution != null)
+                {
+                    if (!report.IsExecuting && (force || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
                     {
-                        if (!report.IsExecuting && (force || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache))) 
-                        {
-                            execution.Execute();
-                            while (report.IsExecuting) Thread.Sleep(100);
-                        }
-                    }
-                    else
-                    {
-                        execution = new ReportExecution() { Report = report };
-                        lock (executions)
-                        {
-                            executions.Add(execution);
-                        }
                         execution.Execute();
                         while (report.IsExecuting) Thread.Sleep(100);
-                    }
-
-                    //Reset pointers and parse
-                    lock (report)
-                    {
-                        report.CurrentModelView = modelView;
-                        if (modelView.Model.Pages.Count > 0)
-                        {
-                            report.CurrentPage = modelView.Model.Pages[0];
-                            report.CurrentPage.PageId = null; //Reset page id
-                        }
-                        content = view.Parse();
                     }
                 }
                 else
                 {
-                    content = "<b>Invalid Widget definition</b>";
+                    execution = new ReportExecution() { Report = report };
+                    lock (executions)
+                    {
+                        executions.Add(execution);
+                    }
+                    execution.Execute();
+                    while (report.IsExecuting) Thread.Sleep(100);
+                }
+
+                //Reset pointers and parse
+                lock (report)
+                {
+                    report.CurrentModelView = modelView;
+                    if (modelView.Model.Pages.Count > 0)
+                    {
+                        report.CurrentPage = modelView.Model.Pages[0];
+                        report.CurrentPage.PageId = null; //Reset page id
+                    }
+                    content = view.Parse();
                 }
 
                 var result = new
@@ -869,7 +866,14 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                return HandleSWIException(ex);
+                var result = new
+                {
+                    dashboardguid = guid,
+                    itemguid = itemguid,
+                    content = "<b>" + Translate("This Widget has an error. Please consider to remove it from your Dashboard...") + "</b><br><br>" + Helper.ToHtml(ex.Message)
+                };
+
+                return Json(result);
             }
         }
 
