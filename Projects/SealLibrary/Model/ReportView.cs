@@ -50,7 +50,7 @@ namespace Seal.Model
                 GetProperty("ExcelConverter").SetIsBrowsable(true);
                 ExcelConverter.InitEditor();
 
-                GetProperty("WidgetDefinition").SetIsBrowsable(true);
+                GetProperty("WidgetDefinition").SetIsBrowsable(Template.Name != ReportViewTemplate.ReportName); //No widget from the root view...
                 GetProperty("WebExec").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
 
                 //Read only
@@ -543,7 +543,7 @@ namespace Seal.Model
         #region Web Report Server and Dashboard Widgets
 
         private bool _webExec = true;
-        [Category("Web Report Server and Dashboard"), DisplayName("Web Execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(2, 6)]
+        [Category("Web Report Server and Dashboard"), DisplayName("Web execution"), Description("For the Web Report Server: If true, the view can be executed from the report list."), Id(2, 6)]
         [DefaultValue(true)]
         public bool WebExec
         {

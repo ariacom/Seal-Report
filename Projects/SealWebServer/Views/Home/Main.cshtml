@@ -226,7 +226,7 @@
                             <select id="culture-select" data-width="100%"></select>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="view-select-group">
                         <label for="view-select"><span class="fa fa-bars"></span> @repository.TranslateWeb("Default view")</label>
                         <div>
                             <select id="view-select" data-width="100%"></select>
@@ -380,9 +380,9 @@
         //specific for widget execution
         function nvd3TranslateText(text)
         {
-            @foreach (RepositoryTranslation translation in repository.Translations.Where(i => i.Context == "NVD3"))
+            @foreach (var translation in repository.NVD3Translations)
             {
-            <text>if (text == '@Helper.ToJS(translation.Reference)') return '@Helper.ToJS(repository.Translate("NVD3", translation.Reference))';</text>
+            <text>if (text == '@Helper.ToJS(translation.Key)') return '@Helper.ToJS(translation.Value)';</text>
             }
             return text;
         }

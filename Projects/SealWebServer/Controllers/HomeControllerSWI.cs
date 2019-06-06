@@ -803,8 +803,8 @@ namespace SealWebServer.Controllers
                 }
 
                 string content = "";
-                var view = report.GetWidgetViewToParse(report.Views, widget.GUID);
-                var modelView = report.CurrentModelView;
+                ReportView view = null, modelView = null;
+                report.GetWidgetViewToParse(report.Views, widget.GUID, ref view, ref modelView);
                 var rootAutoRefresh = 0;
 
                 if (view == null) throw new Exception("Error: the widget does not exist");
@@ -842,7 +842,7 @@ namespace SealWebServer.Controllers
                 lock (report)
                 {
                     report.CurrentModelView = modelView;
-                    if (modelView.Model.Pages.Count > 0)
+                    if (modelView != null && modelView.Model != null &&  modelView.Model.Pages.Count > 0)
                     {
                         report.CurrentPage = modelView.Model.Pages[0];
                         report.CurrentPage.PageId = null; //Reset page id

@@ -347,7 +347,7 @@ WebJS;Email;;Courriel
 WebJS;Ends with;;Se termine par
 WebJS;Equals;;Egale
 WebJS;Error;;Erreur
-WebJS;Error : Unable to connect to the server;;Erreur: Impossible de se connecter au serveur
+WebJS;Unexpected error on server;;Erreur sur le serveur
 WebJS;Excel;;Excel
 WebJS;Filter;;Filtre
 WebJS;Folder;;Répertoire
@@ -424,6 +424,7 @@ WebJS;Percentage 2 Dec.;;Pourcentage 2 Déc.
 WebJS;Pie;;Camembert
 WebJS;Please note that only schedules can be edited for this report.;;Veuillez noter que seules les planifications peuvent être éditées pour ce rapport.
 WebJS;Please wait;;Veuillez patienter
+WebJS;Please Click on the 'Dashboard' menu to create or add Dashboards to your current view...;;Cliquez sur le menu 'Dashboard' pour créer ou ajouter des Dashboards à votre vue...
 WebJS;Polar Area;;Aire Polaire
 WebJS;Private (The output cannot be edited by other users);;Privée (la destination ne peut pas être éditée par d'autres utilisateurs)
 WebJS;Private (The output cannot be executed by other users);;Privée (la destination ne peut pas être exécutée par d'autres utilisateurs)
@@ -496,4 +497,5 @@ WebJS;Yes (element values are used for the axis);;Oui (Les valeurs de l'élémen
 WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés)
 WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message)
 WebJS;Yes, name, color and icon may change after execution;;Oui, le nom, la couleur ou l'icône peuvent changer après l'exécution
-WebJS;Yes (The output is not generated if the result set is empty);;Oui (la génération sera annulée sil n'y a pas d'enregistrements)
+WebJS;Yes (The output is not generated if the result set is empty);;Oui (la génération sera annulée s'il n'y a pas d'enregistrements)
+

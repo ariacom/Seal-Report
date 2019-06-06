@@ -1,6 +1,6 @@
 ﻿declare var WebApplicationName: string;
 var _sealServer: string = WebApplicationName;
-var _errorServer: string = SWIUtil.tr("Error: Unable to connect to the server") + ": '" + _sealServer + "'"; 
+var _errorServer: string = SWIUtil.tr("Unexpected error on server") + ": '" + _sealServer + "'"; 
 
 function callbackHandler(data: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
     if (!data.error) {
@@ -17,8 +17,8 @@ function callbackHandler(data: any, callback: (data: any) => void, errorcb?: (da
     }
 }
 
-function failure() {
-    SWIUtil.ShowMessage("alert-danger", _errorServer, 0);
+function failure(xhr, status, error) {
+    SWIUtil.ShowMessage("alert-danger", error +". " + _errorServer, 0);
 }
 
 class SWIGateway {
@@ -33,7 +33,7 @@ class SWIGateway {
     public GetVersions(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetVersions", { })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public Login(user: string, password: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -41,25 +41,25 @@ class SWIGateway {
             user: user, password: password
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public Logout(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWILogout")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetUserProfile(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetUserProfile")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetCultures(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetCultures")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public SetUserProfile(culture: string, defaultView: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -68,7 +68,7 @@ class SWIGateway {
             defaultView: defaultView
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public DeleteFiles(paths: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -76,7 +76,7 @@ class SWIGateway {
             paths: paths
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public MoveFile(source: string, destination: string, copy : boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -84,14 +84,14 @@ class SWIGateway {
             source: source, destination: destination, copy: copy
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetRootFolders(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetRootFolders", {
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetFolders(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -99,7 +99,7 @@ class SWIGateway {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetFolderDetail(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -107,7 +107,7 @@ class SWIGateway {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public CreateFolder(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -115,7 +115,7 @@ class SWIGateway {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public DeleteFolder(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -123,7 +123,7 @@ class SWIGateway {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public RenameFolder(source: string, destination : string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -131,7 +131,7 @@ class SWIGateway {
             source: source, destination: destination
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public Search(path: string, pattern: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -139,7 +139,7 @@ class SWIGateway {
             path: path, pattern: pattern
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public ExecuteReport(path: string, render: boolean, viewGUID: string, outputGUID: string) {
@@ -173,7 +173,7 @@ class SWIGateway {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public NewReportDefinition(path: string, sqlmodel : boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -182,7 +182,7 @@ class SWIGateway {
             sqlmodel: sqlmodel
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetReportDefinition(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -190,7 +190,7 @@ class SWIGateway {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public SaveReportDefinition(path: string, check: boolean, report: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -198,7 +198,7 @@ class SWIGateway {
             path: path, check: check, report: report
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public RefreshSQLModel(report: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -206,19 +206,19 @@ class SWIGateway {
             report: report
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetUserDashboards(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetUserDashboards")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetDashboards(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetDashboards")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetDashboardItems(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -226,7 +226,7 @@ class SWIGateway {
             guid: guid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetDashboardItem(guid: string, itemguid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -235,13 +235,13 @@ class SWIGateway {
             itemguid: itemguid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetWidgets(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_sealServer + "SWIGetWidgets")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public GetDashboardResult(guid: string, itemguid: string, force :boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -251,7 +251,7 @@ class SWIGateway {
             force : force
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public AddDashboard(guids: string[], callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -259,7 +259,7 @@ class SWIGateway {
             guids: guids
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public RemoveDashboard(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -267,7 +267,7 @@ class SWIGateway {
             guid: guid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public CreateDashboard(name: string, path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -276,7 +276,7 @@ class SWIGateway {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public DeleteDashboard(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -284,7 +284,7 @@ class SWIGateway {
             guid: guid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public MoveDashboard(guid: string, name: string, path : string, copy: boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -295,7 +295,7 @@ class SWIGateway {
             copy: copy
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public AddDashboardItems(guid: string, widgetguids: string, group: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -305,7 +305,7 @@ class SWIGateway {
             group: group
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public SaveDashboardItem(guid: string, itemguid: string, name: string, groupname: string, color: string, icon: string, width: number, height: number, refresh: number, dynamic:boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -322,7 +322,7 @@ class SWIGateway {
             dynamic: dynamic
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public UpdateDashboardItemsGroupName(guid: string, oldname: string, newname: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -332,7 +332,7 @@ class SWIGateway {
             newname: newname
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public DeleteDashboardItem(guid: string, itemguid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -341,7 +341,7 @@ class SWIGateway {
             itemguid: itemguid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public SwapDashboardOrder(guid1: string, guid2: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -350,7 +350,7 @@ class SWIGateway {
             guid2: guid2
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public SwapDashboardGroupOrder(guid: string, source: number, destination: number, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -360,7 +360,7 @@ class SWIGateway {
             destination: destination
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public SetLastDashboard(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -368,7 +368,7 @@ class SWIGateway {
             guid: guid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
     public SaveDashboardItemsOrder(guid: string, orders: string[], itemguid: string, groupname: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
@@ -379,7 +379,7 @@ class SWIGateway {
             groupname: groupname
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
 }

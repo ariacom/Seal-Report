@@ -178,11 +178,14 @@ var SWIMain = (function () {
             else
                 $select.val(_main._profile.culture).change();
             $select.selectpicker('refresh');
-            var $select2 = $("#view-select");
-            $select2.unbind("change").selectpicker("destroy").empty();
-            $select2.append(SWIUtil.GetOption("reports", SWIUtil.tr("Reports"), _main._profile.lastview, "glyphicon glyphicon-th-list"));
-            $select2.append(SWIUtil.GetOption("dashboards", SWIUtil.tr("Dashboards"), _main._profile.lastview, "glyphicon glyphicon-th-large"));
-            $select2.selectpicker('refresh');
+            SWIUtil.ShowHideControl($("#view-select-group"), _main._profile.viewtype == 2);
+            if (_main._profile.viewtype == 2 /* reports and dashboards */) {
+                var $select2 = $("#view-select");
+                $select2.unbind("change").selectpicker("destroy").empty();
+                $select2.append(SWIUtil.GetOption("reports", SWIUtil.tr("Reports"), _main._profile.lastview, "glyphicon glyphicon-th-list"));
+                $select2.append(SWIUtil.GetOption("dashboards", SWIUtil.tr("Dashboards"), _main._profile.lastview, "glyphicon glyphicon-th-large"));
+                $select2.selectpicker('refresh');
+            }
             $("#profile-save").unbind('click').on("click", function (e) {
                 $("#profile-dialog").modal('hide');
                 _gateway.SetUserProfile($("#culture-select").val(), $("#view-select").val(), function (data) {

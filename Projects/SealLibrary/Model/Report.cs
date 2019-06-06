@@ -1566,26 +1566,22 @@ namespace Seal.Model
             return result;
         }
 
-        public ReportView GetWidgetViewToParse(List<ReportView> views, string widgetGUID)
+        public void GetWidgetViewToParse(List<ReportView> views, string widgetGUID, ref ReportView widgetView, ref ReportView modelView)
         {
-            ReportView result = null;
             foreach (var view in views)
             {
                 if (view.WidgetDefinition.GUID == widgetGUID)
                 {
-                    result = view;
-                    break;
+                    widgetView = view;
                 }
                 if (view.Model != null)
                 {
-                    CurrentModelView = view;
+                    modelView = view;
                 }
+                if (widgetView != null) break;
 
-                result = GetWidgetViewToParse(view.Views, widgetGUID);
-
-                if (result != null) break;
+                GetWidgetViewToParse(view.Views, widgetGUID, ref widgetView, ref modelView);
             }
-            return result;
         }
 
         public List<ReportView> GetWidgetViews()

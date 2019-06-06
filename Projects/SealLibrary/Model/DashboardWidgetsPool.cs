@@ -84,7 +84,8 @@ namespace Seal.Model
                     }
                     else Debug.WriteLine(report.LoadErrors);
 
-                    reports.Add(reportPath, report.LastModification);
+                    if (reports.ContainsKey(reportPath)) reports[reportPath] = report.LastModification;
+                    else reports.Add(reportPath, report.LastModification);
                 }
                 catch (Exception ex)
                 {

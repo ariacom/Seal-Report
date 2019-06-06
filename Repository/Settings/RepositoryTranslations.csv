@@ -79,19 +79,18 @@ Enum;Category;Meat/Poultry;;Viandes
 Enum;Category;Produce;;Produit
 Enum;Category;Seafood;;Fruits de mer
 FolderName;\Samples;Samples;;Exemples
-FileName;\Dashboard - Sales.srex;Dashboard - Sales;;Tableau de bord - Ventes
-ReportDisplayName;\Dashboard - Sales.srex;Dashboard - Sales;;Tableau de bord - Ventes
-ReportViewName;\Dashboard - Sales.srex;Employee;;Employé
-ReportViewName;\Dashboard - Sales.srex;Customer country;;Pays du client
-ReportViewName;\Dashboard - Sales.srex;Category;;Catégorie
-ReportViewName;\Dashboard - Sales.srex;General;;Général
-ReportViewName;\Dashboard - Sales.srex;Orders;;Commandes
-ReportViewName;\Dashboard - Sales.srex;Dashboard;;Tableau de bord
-ReportGeneral;\Dashboard - Sales.srex;Sales and discounts per %Order Month%;;Ventes et rabais par %Order Month%
-ReportGeneral;\Dashboard - Sales.srex;Sales per %0%;;Ventes par %0%
-ReportGeneral;\Dashboard - Sales.srex;Sales per %0% and %1%;;Ventes par %0% et %1%
-ReportGeneral;\Dashboard - Sales.srex;Discounts per %0% and %1%;;Rabais par %0% et %1%
-ReportOutputName;\Dashboard - Sales.srex;HTML File;;Fichier HTML
+FileName;\Overview - Sales.srex;Overview - Sales;;Vue d'ensemble - Ventes
+ReportDisplayName;\Overview - Sales.srex;Overview - Sales;;Vue d'ensemble - Ventes
+ReportViewName;\Overview - Sales.srex;Employee;;Employé
+ReportViewName;\Overview - Sales.srex;Customer country;;Pays du client
+ReportViewName;\Overview - Sales.srex;Category;;Catégorie
+ReportViewName;\Overview - Sales.srex;General;;Général
+ReportViewName;\Overview - Sales.srex;Orders;;Commandes
+ReportGeneral;\Overview - Sales.srex;Sales and discounts per %Order Month%;;Ventes et rabais par %Order Month%
+ReportGeneral;\Overview - Sales.srex;Sales per %0%;;Ventes par %0%
+ReportGeneral;\Overview - Sales.srex;Sales per %0% and %1%;;Ventes par %0% et %1%
+ReportGeneral;\Overview - Sales.srex;Discounts per %0% and %1%;;Rabais par %0% et %1%
+ReportOutputName;\Overview - Sales.srex;HTML File;;Fichier HTML
 FileName;\Search - Orders.srex;Search - Orders;;Recherche - Commandes
 ReportDisplayName;\Search - Orders.srex;Search - Orders;;Recherche - Commandes
 ReportViewName;\Search - Orders.srex;Orders;;Commandes
@@ -99,10 +98,14 @@ SubReport;Customers.Customer;Customer Detail;;Détail Client
 SubReport;Employees.Employee Name;Employee Detail;;Détail Employé
 SubReport;Orders.Order ID;Order Detail;;Détail Commande
 SubReport;Suppliers.Supplier;Supplier Detail;;Détail Fournisseur
+SubReport;Products.Product Name;Product Detail;;Détail Produit
 ReportDisplayName;\..\SubReports\Supplier Detail.srex;Supplier Detail;;Détail Fournisseur
 ReportDisplayName;\..\SubReports\Order Detail.srex;Order Detail;;Détail Commande
 ReportDisplayName;\..\SubReports\Employee Detail.srex;Employee Detail;;Détail Employé
 ReportDisplayName;\..\SubReports\Customer Detail.srex;Customer Detail;;Détail Client
+ReportDisplayName;\..\SubReports\Product Detail.srex;Product Detail;;Détail Produit
+ReportViewName;\..\SubReports\Order Detail.srex;Order;;Commande
+ReportViewName;\..\SubReports\Order Detail.srex;Detail;;Détail
 Category;Orders;Orders;;Commandes
 Category;Orders/Shipping;Shipping;;Livraison
 Category;Customers;Orders;;Commandes

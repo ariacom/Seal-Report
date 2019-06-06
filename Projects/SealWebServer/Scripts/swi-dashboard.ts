@@ -6,22 +6,11 @@ var _da: SWIDashboard;
 var _daEditor: DashboardEditorInterface;
 var hasEditor: boolean;
 
-//Default units
-var WidgetWidthUnit = 200;
-var WidgetHeightUnit = 140;
-
 declare var Muuri: any;
 declare function nvd3UpdateCharts();
 declare function getTopLeft(item: any);
 
-//Serialize Muuri order
-function serializeLayout(grid) {
-    var itemIds = grid.getItems().map(function (item) {
-        return item.getElement().getAttribute('id');
-    });
-    return JSON.stringify(itemIds);
-}
-
+//Muuri layout
 function loadLayout(grid, serializedLayout) {
     var layout = JSON.parse(serializedLayout);
     var currentItems = grid.getItems();
@@ -35,7 +24,7 @@ function loadLayout(grid, serializedLayout) {
     for (var i = 0; i < layout.length; i++) {
         itemId = layout[i];
         itemIndex = currentItemIds.indexOf(itemId);
-        if (itemIndex > -1) {
+        if (itemIndex > -1 && newItems.indexOf(currentItems[itemIndex])==-1) {
             newItems.push(currentItems[itemIndex])
         }
     }
@@ -67,7 +56,7 @@ class SWIDashboard {
             if (!grid) {
                 grid = new Muuri('#' + gridId, {
                     dragEnabled: hasEditor && _da._dashboard.Editable,
-                    layoutOnInit: false,
+                    layoutOnInit: true,
                     dragStartPredicate: {
                         distance: 10,
                         delay: 80
@@ -145,6 +134,9 @@ class SWIDashboard {
         //Auto-refresh
         if (data.refresh > 0) _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false) }, 1000 * data.refresh);
 
+        for (var i = 0; i < _da._grids.length; i++) {
+            _da._grids[i].refreshItems().layout(); 
+        }
     }
 
     private refreshDashboardItem(guid: string, itemguid: string, force : boolean) {
@@ -249,8 +241,8 @@ class SWIDashboard {
                 _da.refreshDashboardItem(guid, item.GUID, false);
 
                 //Size
-                panel.width(Math.floor(item.Width * WidgetWidthUnit));
-                panel.height(Math.floor(item.Height * WidgetHeightUnit));
+                if (item.Width > 0) panel.width(item.Width);
+                if (item.Height > 0) panel.height(item.Height);
 
                 //Panel buttons
                 panelHeader
@@ -272,6 +264,7 @@ class SWIDashboard {
 
                 //Refresh item
                 refreshButton.unbind('click').on("click", function (e) {
+                    SWIUtil.HideMessages();
                     var dashboardGuid = $(this).closest('.panel').attr('did');
                     var itemGuid = $(this).closest('.panel').attr('id');
 
@@ -362,6 +355,13 @@ class SWIDashboard {
                     }, 190);
 
                     setTimeout(function () {
+                        for (var i = 0; i < _da._grids.length; i++) {
+                            _da._grids[i].refreshItems().layout();
+                        }
+                    }, 1000);
+
+
+                    setTimeout(function () {
                         nvd3UpdateCharts();
                     }, 200);
 
@@ -383,8 +383,13 @@ class SWIDashboard {
                 if (!_da._lastGUID || data[i].GUID != _da._lastGUID) _da.initDashboardItems(data[i].GUID);
             }
 
+            if (data.length == 0) {
+                SWIUtil.ShowMessage("alert-info", SWIUtil.tr("Please Click on the 'Dashboard' menu to create or add Dashboards to your view..."), 0);
+            }
+
             //Manage
             $("#dashboards-nav-item").unbind('click').on("click", function (e) {
+                SWIUtil.HideMessages();
                 _gateway.GetDashboards(function (data) {
                     var select = $("#dashboard-user");
                     select.unbind("change").selectpicker("destroy").empty();

@@ -64,9 +64,9 @@
         <script>
             function nvd3TranslateText(text)
             {
-                @foreach (RepositoryTranslation translation in repository.Translations.Where(i => i.Context == "NVD3"))
+                @foreach (var translation in repository.NVD3Translations)
                 {
-                <text>if (text == '@Raw(Helper.ToJS(translation.Reference))') return '@Raw(Helper.ToJS(report.ContextTranslate("NVD3", translation.Reference)))';</text>
+                <text>if (text == '@Raw(Helper.ToJS(translation.Key))') return '@Raw(Helper.ToJS(translation.Value))';</text>
                 }
                 return text;
             }

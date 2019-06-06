@@ -23,7 +23,7 @@ namespace Seal.Converter
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
             var icons = new List<string>();
-            foreach (var icon in Dashboard.Icons) icons.Add("glyphicon glyphicon- " + icon);
+            foreach (var icon in Dashboard.Icons) icons.Add("glyphicon glyphicon-" + icon);
             return new StandardValuesCollection(icons);
         }
     }

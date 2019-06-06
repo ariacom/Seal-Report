@@ -137,4 +137,13 @@ module SWIUtil {
     export function IsMobile() {
         return SWIUtil.FindBootstrapEnvironment() == "xs";
     }
+
+    export function InitNumericInput() {
+        $(".numeric_input").keyup(function () {
+            var v = this.value;
+            if (!$.isNumeric(v)) {
+                this.value = this.value.slice(0, -1);
+            }
+        });
+    }
 }
