@@ -422,7 +422,7 @@ namespace Seal.Forms
             string extraSeparators = "";
             if (repository.Translations.Count > 0)
             {
-                foreach (var lang in repository.Translations[0].Translations)
+                foreach (var lang in repository.Translations[repository.Translations.Keys.First()].Translations)
                 {
                     translations.AppendFormat("{0}{1}", separator, lang.Key);
                     extraSeparators += separator;
@@ -768,7 +768,7 @@ namespace Seal.Forms
                 DashboardWidgetsPool.ForceReload();
 
                 log.Log("Building the list of Published Widgets in the repository...\r\n");
-                foreach (var path in (from w in DashboardWidgetsPool.Widgets select w.ReportPath).Distinct())
+                foreach (var path in (from w in DashboardWidgetsPool.Widgets select w.ReportPath).Distinct().OrderBy(i => i))
                 {
                     if (log.IsJobCancelled()) return;
 

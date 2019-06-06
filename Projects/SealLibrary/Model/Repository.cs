@@ -529,17 +529,20 @@ namespace Seal.Model
         #region Translations
 
         //Translations, one dictionary per context
-        List<RepositoryTranslation> _translations = null;
-        public List<RepositoryTranslation> Translations
+        Dictionary<string, RepositoryTranslation> _translations = null;
+        public Dictionary<string, RepositoryTranslation> Translations
         {
             get
             {
                 if (_translations == null)
                 {
-                    _translations = new List<RepositoryTranslation>();
-                    foreach (string path in Directory.GetFiles(SettingsFolder, TranslationsPattern))
+                    lock (this)
                     {
-                        RepositoryTranslation.InitFromCSV(_translations, path, false);
+                        _translations = new Dictionary<string, RepositoryTranslation>();
+                        foreach (string path in Directory.GetFiles(SettingsFolder, TranslationsPattern))
+                        {
+                            RepositoryTranslation.InitFromCSV(_translations, path, false);
+                        }
                     }
                 }
                 return _translations;
@@ -553,19 +556,48 @@ namespace Seal.Model
             {
                 if (_jsTranslations == null)
                 {
-                    _jsTranslations = new Dictionary<string, string>();
-                    foreach (var translation in Translations.Where(i => i.Context == "WebJS"))
+                    lock (this)
                     {
-                        var value = translation.Reference;
-                        if (translation.Translations.ContainsKey(CultureInfo.TwoLetterISOLanguageName))
+                        _jsTranslations = new Dictionary<string, string>();
+                        foreach (var translation in Translations.Values.Where(i => i.Context == "WebJS"))
                         {
-                            value = translation.Translations[CultureInfo.TwoLetterISOLanguageName];
-                            if (string.IsNullOrEmpty(value)) value = translation.Reference;
+                            var value = translation.Reference;
+                            if (translation.Translations.ContainsKey(CultureInfo.TwoLetterISOLanguageName))
+                            {
+                                value = translation.Translations[CultureInfo.TwoLetterISOLanguageName];
+                                if (string.IsNullOrEmpty(value)) value = translation.Reference;
+                            }
+                            if (!_jsTranslations.ContainsKey(translation.Reference)) _jsTranslations.Add(translation.Reference, value);
                         }
-                        if (!_jsTranslations.ContainsKey(translation.Reference)) _jsTranslations.Add(translation.Reference, value);
                     }
                 }
                 return _jsTranslations;
+            }
+        }
+
+        Dictionary<string, string> _nvd3Translations = null;
+        public Dictionary<string, string> NVD3Translations
+        {
+            get
+            {
+                if (_nvd3Translations == null)
+                {
+                    lock (this)
+                    {
+                        _nvd3Translations = new Dictionary<string, string>();
+                        foreach (var translation in Translations.Values.Where(i => i.Context == "NVD3"))
+                        {
+                            var value = translation.Reference;
+                            if (translation.Translations.ContainsKey(CultureInfo.TwoLetterISOLanguageName))
+                            {
+                                value = translation.Translations[CultureInfo.TwoLetterISOLanguageName];
+                                if (string.IsNullOrEmpty(value)) value = translation.Reference;
+                            }
+                            if (!_nvd3Translations.ContainsKey(translation.Reference)) _nvd3Translations.Add(translation.Reference, value);
+                        }
+                    }
+                }
+                return _nvd3Translations;
             }
         }
 
@@ -590,15 +622,18 @@ namespace Seal.Model
         }
 
 
-        List<RepositoryTranslation> _repositoryTranslations = null;
-        public List<RepositoryTranslation> RepositoryTranslations
+        Dictionary<string, RepositoryTranslation> _repositoryTranslations = null;
+        public Dictionary<string, RepositoryTranslation> RepositoryTranslations
         {
             get
             {
                 if (_repositoryTranslations == null)
                 {
-                    _repositoryTranslations = new List<RepositoryTranslation>();
-                    RepositoryTranslation.InitFromCSV(_repositoryTranslations, RepositoryTranslationsPath, true);
+                    lock (this)
+                    {
+                        _repositoryTranslations = new Dictionary<string, RepositoryTranslation>();
+                        RepositoryTranslation.InitFromCSV(_repositoryTranslations, RepositoryTranslationsPath, true);
+                    }
                 }
                 return _repositoryTranslations;
             }
@@ -609,7 +644,8 @@ namespace Seal.Model
             string result = reference;
             try
             {
-                RepositoryTranslation myTranslation = RepositoryTranslations.FirstOrDefault(i => i.Context == context && i.Instance == instance && i.Reference == reference);
+                var key = context + "\r" + reference + "\r" + instance;
+                RepositoryTranslation myTranslation = Translations.ContainsKey(key) ? Translations[key] : null;
                 if (myTranslation != null)
                 {
                     if (!string.IsNullOrEmpty(culture) && myTranslation.Translations.ContainsKey(culture))
@@ -712,7 +748,7 @@ namespace Seal.Model
                     }
                 }
                 Debug.WriteLine("\r\nTranslations usage: consider to remove translations not used from the Translations.csv file:");
-                foreach (var translation in Translations.OrderBy(i => i.Usage)) Debug.WriteLine(string.Format("Used {0} time(s): (Context:{1}) {2}", translation.Usage, translation.Context, translation.Reference));
+                foreach (var translation in Translations.Values.OrderBy(i => i.Usage)) Debug.WriteLine(string.Format("Used {0} time(s): (Context:{1}) {2}", translation.Usage, translation.Context, translation.Reference));
             }
         }
 #endif
@@ -722,7 +758,8 @@ namespace Seal.Model
             string result = reference;
             try
             {
-                RepositoryTranslation myTranslation = Translations.FirstOrDefault(i => i.Context == context && i.Reference == reference);
+                var key = context + "\r" + reference;
+                RepositoryTranslation myTranslation = Translations.ContainsKey(key) ? Translations[key] : null;
                 if (myTranslation != null)
                 {
 #if DEBUG

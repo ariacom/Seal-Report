@@ -4,6 +4,9 @@ function restrictionSelectChange(source) {
     if ($(source).attr('opid') != null) {
         idSelect = "#" + $(source).attr('opid');
     }
+    if ($(source).attr('id') == null && $(source).attr('opid') !== null) return;
+    if ($(idSelect).val() == null) return;
+
     var idValue = idSelect.replace("Operator", "Value");
 
     var op = $(idSelect).val().toLowerCase();

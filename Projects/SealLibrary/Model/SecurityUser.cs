@@ -546,7 +546,7 @@ namespace Seal.Model
             get
             {
                 var widgets = new List<DashboardWidget>();
-                foreach (var widget in DashboardWidgetsPool.Widgets)
+                foreach (var widget in DashboardWidgetsPool.Widgets.OrderBy(i =>i.Name))
                 {
                     if (CanSelectWidget(widget))
                     {

@@ -1,5 +1,5 @@
 var _sealServer = WebApplicationName;
-var _errorServer = SWIUtil.tr("Error: Unable to connect to the server") + ": '" + _sealServer + "'";
+var _errorServer = SWIUtil.tr("Unexpected error on server") + ": '" + _sealServer + "'";
 function callbackHandler(data, callback, errorcb) {
     if (!data.error) {
         if (callback)
@@ -16,8 +16,8 @@ function callbackHandler(data, callback, errorcb) {
         }
     }
 }
-function failure() {
-    SWIUtil.ShowMessage("alert-danger", _errorServer, 0);
+function failure(xhr, status, error) {
+    SWIUtil.ShowMessage("alert-danger", error + ". " + _errorServer, 0);
 }
 var SWIGateway = (function () {
     function SWIGateway() {
@@ -33,29 +33,29 @@ var SWIGateway = (function () {
     SWIGateway.prototype.GetVersions = function (callback, errorcb) {
         $.post(_sealServer + "SWIGetVersions", {})
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.Login = function (user, password, callback, errorcb) {
         $.post(_sealServer + "SWILogin", {
             user: user, password: password
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.Logout = function (callback, errorcb) {
         $.post(_sealServer + "SWILogout")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetUserProfile = function (callback, errorcb) {
         $.post(_sealServer + "SWIGetUserProfile")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetCultures = function (callback, errorcb) {
         $.post(_sealServer + "SWIGetCultures")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.SetUserProfile = function (culture, defaultView, callback, errorcb) {
         $.post(_sealServer + "SWISetUserProfile", {
@@ -63,68 +63,68 @@ var SWIGateway = (function () {
             defaultView: defaultView
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.DeleteFiles = function (paths, callback, errorcb) {
         $.post(_sealServer + "SWIDeleteFiles", {
             paths: paths
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.MoveFile = function (source, destination, copy, callback, errorcb) {
         $.post(_sealServer + "SWIMoveFile", {
             source: source, destination: destination, copy: copy
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetRootFolders = function (callback, errorcb) {
         $.post(_sealServer + "SWIGetRootFolders", {})
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetFolders = function (path, callback, errorcb) {
         $.post(_sealServer + "SWIGetFolders", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetFolderDetail = function (path, callback, errorcb) {
         $.post(_sealServer + "SWIGetFolderDetail", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.CreateFolder = function (path, callback, errorcb) {
         $.post(_sealServer + "SWICreateFolder", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.DeleteFolder = function (path, callback, errorcb) {
         $.post(_sealServer + "SWIDeleteFolder", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.RenameFolder = function (source, destination, callback, errorcb) {
         $.post(_sealServer + "SWIRenameFolder", {
             source: source, destination: destination
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.Search = function (path, pattern, callback, errorcb) {
         $.post(_sealServer + "SWISearch", {
             path: path, pattern: pattern
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.ExecuteReport = function (path, render, viewGUID, outputGUID) {
         var f = this.getExecForm("SWExecuteReport");
@@ -154,7 +154,7 @@ var SWIGateway = (function () {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.NewReportDefinition = function (path, sqlmodel, callback, errorcb) {
         $.post(_sealServer + "SWINewReportDefinition", {
@@ -162,45 +162,45 @@ var SWIGateway = (function () {
             sqlmodel: sqlmodel
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetReportDefinition = function (path, callback, errorcb) {
         $.post(_sealServer + "SWIGetReportDefinition", {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.SaveReportDefinition = function (path, check, report, callback, errorcb) {
         $.post(_sealServer + "SWISaveReportDefinition", {
             path: path, check: check, report: report
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.RefreshSQLModel = function (report, callback, errorcb) {
         $.post(_sealServer + "SWIRefreshSQLModel", {
             report: report
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetUserDashboards = function (callback, errorcb) {
         $.post(_sealServer + "SWIGetUserDashboards")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetDashboards = function (callback, errorcb) {
         $.post(_sealServer + "SWIGetDashboards")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetDashboardItems = function (guid, callback, errorcb) {
         $.post(_sealServer + "SWIGetDashboardItems", {
             guid: guid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetDashboardItem = function (guid, itemguid, callback, errorcb) {
         $.post(_sealServer + "SWIGetDashboardItem", {
@@ -208,12 +208,12 @@ var SWIGateway = (function () {
             itemguid: itemguid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetWidgets = function (callback, errorcb) {
         $.post(_sealServer + "SWIGetWidgets")
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.GetDashboardResult = function (guid, itemguid, force, callback, errorcb) {
         $.post(_sealServer + "SWIGetDashboardResult", {
@@ -222,21 +222,21 @@ var SWIGateway = (function () {
             force: force
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.AddDashboard = function (guids, callback, errorcb) {
         $.post(_sealServer + "SWIAddDashboard", {
             guids: guids
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.RemoveDashboard = function (guid, callback, errorcb) {
         $.post(_sealServer + "SWIRemoveDashboard", {
             guid: guid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.CreateDashboard = function (name, path, callback, errorcb) {
         $.post(_sealServer + "SWICreateDashboard", {
@@ -244,14 +244,14 @@ var SWIGateway = (function () {
             path: path
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.DeleteDashboard = function (guid, callback, errorcb) {
         $.post(_sealServer + "SWIDeleteDashboard", {
             guid: guid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.MoveDashboard = function (guid, name, path, copy, callback, errorcb) {
         $.post(_sealServer + "SWIMoveDashboard", {
@@ -261,7 +261,7 @@ var SWIGateway = (function () {
             copy: copy
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.AddDashboardItems = function (guid, widgetguids, group, callback, errorcb) {
         $.post(_sealServer + "SWIAddDashboardItems", {
@@ -270,7 +270,7 @@ var SWIGateway = (function () {
             group: group
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.SaveDashboardItem = function (guid, itemguid, name, groupname, color, icon, width, height, refresh, dynamic, callback, errorcb) {
         $.post(_sealServer + "SWISaveDashboardItem", {
@@ -286,7 +286,7 @@ var SWIGateway = (function () {
             dynamic: dynamic
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.UpdateDashboardItemsGroupName = function (guid, oldname, newname, callback, errorcb) {
         $.post(_sealServer + "SWIUpdateDashboardItemsGroupName", {
@@ -295,7 +295,7 @@ var SWIGateway = (function () {
             newname: newname
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.DeleteDashboardItem = function (guid, itemguid, callback, errorcb) {
         $.post(_sealServer + "SWIDeleteDashboardItem", {
@@ -303,7 +303,7 @@ var SWIGateway = (function () {
             itemguid: itemguid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.SwapDashboardOrder = function (guid1, guid2, callback, errorcb) {
         $.post(_sealServer + "SWISwapDashboardOrder", {
@@ -311,7 +311,7 @@ var SWIGateway = (function () {
             guid2: guid2
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.SwapDashboardGroupOrder = function (guid, source, destination, callback, errorcb) {
         $.post(_sealServer + "SWISwapDashboardGroupOrder", {
@@ -320,14 +320,14 @@ var SWIGateway = (function () {
             destination: destination
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.SetLastDashboard = function (guid, callback, errorcb) {
         $.post(_sealServer + "SWISetLastDashboard", {
             guid: guid
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.SaveDashboardItemsOrder = function (guid, orders, itemguid, groupname, callback, errorcb) {
         $.post(_sealServer + "SWISaveDashboardItemsOrder", {
@@ -337,7 +337,7 @@ var SWIGateway = (function () {
             groupname: groupname
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function () { failure(); });
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     return SWIGateway;
 }());

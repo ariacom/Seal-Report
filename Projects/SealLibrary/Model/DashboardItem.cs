@@ -18,8 +18,8 @@ namespace Seal.Model
         private string _icon = "";
         private string _color = "";
         private bool _dynamic = false;
-        private double _width = 2;
-        private double _height = 2;
+        private int _width = 400;
+        private int _height = 0;
         private int _order = 0;
         private int _refresh = -1;
 
@@ -30,8 +30,8 @@ namespace Seal.Model
         public string Name { get => _name; set => _name = value; }
         public string Icon { get => _icon; set => _icon = value; }
         public string Color { get => _color; set => _color = value; }
-        public double Width { get => _width; set => _width = Math.Round(value, 2, MidpointRounding.AwayFromZero); }
-        public double Height { get => _height; set => _height = Math.Round(value, 2, MidpointRounding.AwayFromZero); }
+        public int Width { get => _width; set => _width = value; }
+        public int Height { get => _height; set => _height = value; }
         public int Order { get => _order; set => _order = value; }
         public bool Dynamic { get => _dynamic; set => _dynamic = value; }
         public int Refresh { get => _refresh; set => _refresh = value; }

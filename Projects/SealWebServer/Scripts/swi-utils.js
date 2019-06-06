@@ -149,5 +149,14 @@ var SWIUtil;
         return SWIUtil.FindBootstrapEnvironment() == "xs";
     }
     SWIUtil.IsMobile = IsMobile;
+    function InitNumericInput() {
+        $(".numeric_input").keyup(function () {
+            var v = this.value;
+            if (!$.isNumeric(v)) {
+                this.value = this.value.slice(0, -1);
+            }
+        });
+    }
+    SWIUtil.InitNumericInput = InitNumericInput;
 })(SWIUtil || (SWIUtil = {}));
 //# sourceMappingURL=swi-utils.js.map
