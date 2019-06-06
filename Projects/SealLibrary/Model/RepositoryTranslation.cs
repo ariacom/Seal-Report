@@ -19,7 +19,7 @@ namespace Seal.Model
         public Dictionary<string, string> Translations = new Dictionary<string, string>();
         public int Usage;
 
-        static public void InitFromCSV(List<RepositoryTranslation> translations, string path, bool hasInstance)
+        static public void InitFromCSV(Dictionary<string, RepositoryTranslation> translations, string path, bool hasInstance)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Seal.Model
             }
         }
 
-        static private void initFromCSV(List<RepositoryTranslation> translations, string filePath, bool hasInstance)
+        static private void initFromCSV(Dictionary<string, RepositoryTranslation> translations, string filePath, bool hasInstance)
         {
             if (File.Exists(filePath))
             {
@@ -81,24 +81,26 @@ namespace Seal.Model
                             var reference = ExcelHelper.FromCsv(collection[startCol - 1].Value);
 
                             RepositoryTranslation translation = null;
+                            var key = context + "\r" + reference;
                             if (hasInstance)
                             {
                                 var instance = ExcelHelper.FromCsv(collection[1].Value);
-                                translation = translations.FirstOrDefault(i => i.Context == context && i.Reference == reference && i.Instance == instance);
-                                if (translation == null)
+                                key += "\r" + instance;
+                                if (!translations.ContainsKey(key))
                                 {
                                     translation = new RepositoryTranslation() { Context = context, Reference = reference, Instance = instance };
-                                    translations.Add(translation);
+                                    translations.Add(key, translation);
                                 }
+                                else translation = translations[key];
                             }
                             else
                             {
-                                translation = translations.FirstOrDefault(i => i.Context == context && i.Reference == reference);
-                                if (translation == null)
+                                if (!translations.ContainsKey(key))
                                 {
                                     translation = new RepositoryTranslation() { Context = context, Reference = reference };
-                                    translations.Add(translation);
+                                    translations.Add(key, translation);
                                 }
+                                else translation = translations[key];
                             }
 
                             for (int i = 0; i < languages.Count && i + startCol < collection.Count; i++)
