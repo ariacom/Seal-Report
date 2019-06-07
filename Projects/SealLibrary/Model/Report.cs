@@ -1573,10 +1573,17 @@ namespace Seal.Model
                 if (view.WidgetDefinition.GUID == widgetGUID)
                 {
                     widgetView = view;
-                }
-                if (view.Model != null)
-                {
-                    modelView = view;
+
+                    var lastView = widgetView;
+                    while (lastView.ParentView != null)
+                    {
+                        if (lastView.ParentView.Model != null)
+                        {
+                            modelView = lastView.ParentView;
+                            break;
+                        }
+                        else lastView = lastView.ParentView;
+                    }
                 }
                 if (widgetView != null) break;
 

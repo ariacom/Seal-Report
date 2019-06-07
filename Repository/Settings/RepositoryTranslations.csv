@@ -93,6 +93,7 @@ ReportGeneral;\Overview - Sales.srex;Discounts per %0% and %1%;;Rabais par %0% e
 ReportOutputName;\Overview - Sales.srex;HTML File;;Fichier HTML
 FileName;\Search - Orders.srex;Search - Orders;;Recherche - Commandes
 ReportDisplayName;\Search - Orders.srex;Search - Orders;;Recherche - Commandes
+ReportDisplayName;\Search - Reports.srex;Search - Reports;;Recherche - Rapports
 ReportViewName;\Search - Orders.srex;Orders;;Commandes
 SubReport;Customers.Customer;Customer Detail;;Détail Client
 SubReport;Employees.Employee Name;Employee Detail;;Détail Employé
@@ -120,6 +121,9 @@ Device;Email Device;Email Device;;Courriel
 Device;GMail Device;GMail Device;;Courriel Gmail
 DashboardFolder;\General;General;;Général
 DashboardFolder;\Sales;Sales;;Ventes
-DashboardName;\General\a dashboard name.sdax;a dashboard name;;Un nom de dashboard
-WidgetName;\work\test dashboard.srex;a free text;;Un texte
-WidgetDescription;\work\test dashboard.srex;a free text description;;Une description
+DashboardName;\Sales\Product Sales.sdax;Product Sales;;Vente Produits
+DashboardGroupName;\Sales\Product Sales.sdax;Product Sales;;Vente Produits
+WidgetName;\Overview - Sales.srex;Sales per month;;Ventes par mois
+WidgetDescription;\Overview - Sales.srex;Chart of sales, discounts and progressions for 1995;;Graphes des ventes, réductions et progressions pour 1995 
+WidgetName;\Samples\13-KPI Published.srex;KPI Customers;;KPI Clients
+DashboardGroupName;\Sales\Test.sdax;Product Sales;;Vente Produits

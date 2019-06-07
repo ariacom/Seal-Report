@@ -90,6 +90,7 @@ namespace Seal.Model
             AddDefaultModelViews();
             foreach (var childView in Views)
             {
+                childView.ParentView = this;
                 childView.Report = Report;
                 childView.InitReferences();
 
@@ -578,7 +579,8 @@ namespace Seal.Model
                 return _report.Models.FirstOrDefault(i => i.GUID == _modelGUID);
             }
         }
-
+        [XmlIgnore]
+        public ReportView ParentView { get; set; } = null;
 
         #region PDF and Excel Converters
 

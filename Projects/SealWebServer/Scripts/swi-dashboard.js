@@ -26,7 +26,7 @@ function loadLayout(grid, serializedLayout) {
     else
         grid.layout(true);
 }
-var SWIDashboard = (function () {
+var SWIDashboard = /** @class */ (function () {
     function SWIDashboard() {
         this._dashboards = [];
         this._gridOrders = [];
@@ -47,6 +47,7 @@ var SWIDashboard = (function () {
                 grid = new Muuri('#' + gridId, {
                     dragEnabled: hasEditor && _da._dashboard.Editable,
                     layoutOnInit: true,
+                    layoutDuration: 600,
                     dragStartPredicate: {
                         distance: 10,
                         delay: 80
@@ -160,7 +161,7 @@ var SWIDashboard = (function () {
                     }
                     if (item.GroupName != "") {
                         //Group name 
-                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.GroupName);
+                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName);
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
                         var groupDrag = $("<h4 style='margin:0px 5px'>").append(groupSpan);
                         groupDrag.attr("group-order", item.GroupOrder);
@@ -180,7 +181,7 @@ var SWIDashboard = (function () {
                 var panelHeader = $("<div class='panel-heading text-left' style='padding-right:2px;'>");
                 panel.append(panelHeader);
                 panelHeader.append($("<span class='glyphicon glyphicon-" + item.Icon + "'>"));
-                var nameLink = $("<a>)").text(" " + item.Name);
+                var nameLink = $("<a>)").text(" " + item.DisplayName);
                 var panelName = $("<h3 class='panel-title' style='display:inline'>").append(nameLink);
                 panelHeader.append(panelName);
                 panelHeader.append($("<i class='fa fa-spinner fa-spin fa-sm fa-fw'></i>"));
@@ -301,19 +302,14 @@ var SWIDashboard = (function () {
                     _gateway.SetLastDashboard(_da._lastGUID, null);
                     _main._profile.dashboard = _da._lastGUID;
                     setTimeout(function () {
-                        _da.reorderItems(true);
-                    }, 190);
-                    setTimeout(function () {
-                        for (var i = 0; i < _da._grids.length; i++) {
-                            _da._grids[i].refreshItems().layout();
-                        }
-                    }, 1000);
-                    setTimeout(function () {
                         nvd3UpdateCharts();
-                    }, 200);
+                    }, 250);
                     setTimeout(function () {
                         $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
-                    }, 220);
+                    }, 300);
+                    setTimeout(function () {
+                        _da.reorderItems(true);
+                    }, 500);
                 });
                 var content = $("<div id='" + dashboard.GUID + "' class='tab-pane fade'>");
                 $("#content-dashboard").append(content);
@@ -384,4 +380,3 @@ var SWIDashboard = (function () {
     };
     return SWIDashboard;
 }());
-//# sourceMappingURL=swi-dashboard.js.map

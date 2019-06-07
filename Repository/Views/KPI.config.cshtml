@@ -11,7 +11,7 @@
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "kpi_trend_direction", BoolValue = true, DisplayName = "Trend: Direction", Description = "If true, the trend is up if the last value if greater than the first value, otherwise it is down." });
     Template.Parameters.Add(new Parameter() { Name = "kpi_trend_values", NumericValue = 1, DisplayName = "Trend: First value to use", Description = "The index (from the last row) of the value to used to defined the trend. If -1 is set, the value of the first row of the table is used. If 1 is set, the value of the row before the last row is used." });
-    Template.Parameters.Add(new Parameter() { Name = "kpi_has_goals", BoolValue = false, DisplayName = "Goals defined", Description = "If true, the goal values are taken from the next column in the result table. In this case, a data element dedicated for goals values must be defined in the model after the data element used for the values." });
+    Template.Parameters.Add(new Parameter() { Name = "kpi_size", DisplayName = "Button size", Description = "Size of the buttons used to display the values.", Value = "", Enums = new string[] { "|default", "btn-lg|large", "btn-sm|small", "btn-xs|very small" }, UseOnlyEnumValues = true });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Model", "Model Container" };

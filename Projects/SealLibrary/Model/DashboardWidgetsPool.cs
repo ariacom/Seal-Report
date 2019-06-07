@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace Seal.Model
 {
     public class DashboardWidgetsPool
     {
-        static List<DashboardWidget> _widgets;
+        static Dictionary<string, DashboardWidget> _widgets;
         static Dictionary<string, DateTime> _reports;
 
         static bool _forceReload = false;
@@ -20,7 +21,7 @@ namespace Seal.Model
             _forceReload = true;
         }
 
-        public static List<DashboardWidget> Widgets
+        public static Dictionary<string, DashboardWidget> Widgets
         {
             get
             {
@@ -28,7 +29,7 @@ namespace Seal.Model
                 {
                     if (_widgets == null)
                     {
-                        _widgets = new List<DashboardWidget>();
+                        _widgets = new Dictionary<string, DashboardWidget>();
                         _reports = new Dictionary<string, DateTime>();
                     }
 
@@ -37,7 +38,11 @@ namespace Seal.Model
                         var repository = Repository.Instance;
                         getWidgets(_widgets, _reports, repository.ReportsFolder, repository);
                         //Remove reports deleted
-                        _widgets.RemoveAll(i => !File.Exists(repository.ReportsFolder + i.ReportPath));
+                        var keys = _widgets.Keys.ToList();
+                        foreach (var key in keys)
+                        {
+                            if (!File.Exists(repository.ReportsFolder + _widgets[key].ReportPath)) _widgets.Remove(key);
+                        }
 
                         _forceReload = false;
                     }
@@ -46,9 +51,9 @@ namespace Seal.Model
             }
         }
 
-        static void getWidgets(List<DashboardWidget> widgets, Dictionary<string, DateTime> reports, ReportView view, Repository repository)
+        static void getWidgets(Dictionary<string, DashboardWidget> widgets, Dictionary<string, DateTime> reports, ReportView view, Repository repository)
         {
-            _widgets.RemoveAll(i => i.GUID == view.WidgetDefinition.GUID);
+            if (!string.IsNullOrEmpty(view.WidgetDefinition.GUID) && _widgets.ContainsKey(view.WidgetDefinition.GUID)) _widgets.Remove(view.WidgetDefinition.GUID);
 
             if (view.WidgetDefinition.IsPublished)
             {
@@ -56,7 +61,7 @@ namespace Seal.Model
                 view.WidgetDefinition.ReportName = view.Report.DisplayNameEx;
                 view.WidgetDefinition.LastModification = view.Report.LastModification;
                 if (string.IsNullOrEmpty(view.WidgetDefinition.Description)) view.WidgetDefinition.Description = "";
-                widgets.Add(view.WidgetDefinition);
+                widgets.Add(view.WidgetDefinition.GUID, view.WidgetDefinition);
             }
 
             foreach (ReportView child in view.Views)
@@ -65,7 +70,7 @@ namespace Seal.Model
             }
         }
 
-        static void getWidgets(List<DashboardWidget> widgets, Dictionary<string, DateTime> reports, string folder, Repository repository)
+        static void getWidgets(Dictionary<string, DashboardWidget> widgets, Dictionary<string, DateTime> reports, string folder, Repository repository)
         {
             foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))
             {

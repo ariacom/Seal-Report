@@ -22,7 +22,7 @@ $(document).ready(function () {
         SWIUtil.HideMessages();
     });
 });
-var SWIMain = (function () {
+var SWIMain = /** @class */ (function () {
     function SWIMain() {
         this._connected = false;
         this._profile = null;
@@ -568,4 +568,3 @@ var SWIMain = (function () {
     };
     return SWIMain;
 }());
-//# sourceMappingURL=swi-main.js.map

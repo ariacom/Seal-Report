@@ -45,6 +45,7 @@ namespace SealWebServer.Controllers
 
                 //Refresh widgets
                 DashboardWidgetsPool.ForceReload();
+                DashboardExecutions.Clear();
 
                 return Json(new SWIUserProfile()
                 {
@@ -446,10 +447,13 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
                 if (string.IsNullOrEmpty(culture)) throw new Exception("Error: culture must be supplied");
-
-                if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
-                WebUser.Profile.Culture = culture;
-                SetCookie(SealCultureCookieName, culture);
+                if (culture != WebUser.Profile.Culture)
+                {
+                    if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
+                    WebUser.ClearCache();
+                    WebUser.Profile.Culture = culture;
+                    SetCookie(SealCultureCookieName, culture);
+                }
 
                 if (!string.IsNullOrEmpty(defaultView)) WebUser.Profile.View = defaultView;
                 WebUser.Profile.SaveToFile();
@@ -758,7 +762,7 @@ namespace SealWebServer.Controllers
                 var item = dashboard.Items.FirstOrDefault(i => i.GUID == itemguid);
                 if (item == null) throw new Exception("Error: The item does not exist");
 
-                var widget = WebUser.Widgets.FirstOrDefault(i => i.GUID == item.WidgetGUID);
+                var widget = WebUser.Widgets.ContainsKey(item.WidgetGUID) ? WebUser.Widgets[item.WidgetGUID] : null;
                 if (widget == null) throw new Exception("Error: the widget does not exist");
                 if (!WebUser.CanSelectWidget(widget)) throw new Exception("Error: no right to view this widget");
 

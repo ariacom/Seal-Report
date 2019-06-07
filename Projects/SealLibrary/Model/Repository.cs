@@ -126,6 +126,8 @@ namespace Seal.Model
                 {
                     result = true;
                     _cultureInfo = newCulture;
+                    _nvd3Translations = null;
+                    _jsTranslations = null;
                 }
             }
             catch { }
@@ -641,11 +643,13 @@ namespace Seal.Model
 
         public string RepositoryTranslate(string culture, string context, string instance, string reference)
         {
+            if (string.IsNullOrEmpty(reference)) return "";
+
             string result = reference;
             try
             {
                 var key = context + "\r" + reference + "\r" + instance;
-                RepositoryTranslation myTranslation = Translations.ContainsKey(key) ? Translations[key] : null;
+                RepositoryTranslation myTranslation = RepositoryTranslations.ContainsKey(key) ? RepositoryTranslations[key] : null;
                 if (myTranslation != null)
                 {
                     if (!string.IsNullOrEmpty(culture) && myTranslation.Translations.ContainsKey(culture))
@@ -690,6 +694,11 @@ namespace Seal.Model
         public string TranslateDashboardName(string instance, string reference)
         {
             return RepositoryTranslate("DashboardName", instance, reference);
+        }
+
+        public string TranslateDashboardGroupName(string instance, string reference)
+        {
+            return RepositoryTranslate("DashboardGroupName", instance, reference);
         }
 
         public string TranslateWidgetName(string instance, string reference)
