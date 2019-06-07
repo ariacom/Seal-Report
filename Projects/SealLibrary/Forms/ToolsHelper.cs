@@ -768,7 +768,7 @@ namespace Seal.Forms
                 DashboardWidgetsPool.ForceReload();
 
                 log.Log("Building the list of Published Widgets in the repository...\r\n");
-                foreach (var path in (from w in DashboardWidgetsPool.Widgets select w.ReportPath).Distinct().OrderBy(i => i))
+                foreach (var path in (from w in DashboardWidgetsPool.Widgets.Values select w.ReportPath).Distinct().OrderBy(i => i))
                 {
                     if (log.IsJobCancelled()) return;
 

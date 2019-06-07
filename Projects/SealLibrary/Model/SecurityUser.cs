@@ -40,6 +40,12 @@ namespace Seal.Model
             Security = security;
         }
 
+        public void ClearCache()
+        {
+            //reset pointers of objects having translations
+            _dashboards = null;
+            _widgets = null;
+        }
 
         private List<SecurityDashboardFolder> _securityDashboardFolders = null;
         public List<SecurityDashboardFolder> SecurityDashboardFolders
@@ -540,23 +546,29 @@ namespace Seal.Model
 
 
         #region Dashboard
-
-        public List<DashboardWidget> Widgets
+        private Dictionary<string, DashboardWidget> _widgets = null;
+        public Dictionary<string, DashboardWidget> Widgets
         {
             get
             {
-                var widgets = new List<DashboardWidget>();
-                foreach (var widget in DashboardWidgetsPool.Widgets.OrderBy(i =>i.Name))
+                if (_widgets == null)
                 {
-                    if (CanSelectWidget(widget))
+                    _widgets = new Dictionary<string, DashboardWidget>();
+                    foreach (var widget in DashboardWidgetsPool.Widgets.Values.OrderBy(i => i.Name))
                     {
-                        widgets.Add(widget);
-                        var instance = widget.ReportPath.Replace(Security.Repository.ReportsFolder, "\\");
-                        widget.Name = Security.Repository.TranslateWidgetName(instance, widget.Name);
-                        widget.Description = Security.Repository.TranslateWidgetDescription(instance, widget.Description);
+                        if (CanSelectWidget(widget))
+                        {
+                            DashboardWidget newWidget = (DashboardWidget) Helper.Clone(widget);
+                            newWidget.ReportName = widget.ReportName;
+                            newWidget.ReportPath = widget.ReportPath;
+                            _widgets.Add(newWidget.GUID, newWidget);
+                            var instance = newWidget.ReportPath.Replace(Security.Repository.ReportsFolder, "\\");
+                            newWidget.Name = Security.Repository.TranslateWidgetName(instance, newWidget.Name);
+                            newWidget.Description = Security.Repository.TranslateWidgetDescription(instance, newWidget.Description);
+                        }
                     }
                 }
-                return widgets;
+                return _widgets;
             }
         }
 
@@ -591,6 +603,18 @@ namespace Seal.Model
                     dashboard.FullName = dashboard.DisplayName;
                 }
                 dashboard.ReinitGroupOrders();
+                //Set display names
+                foreach (var item in dashboard.Items)
+                {
+                    if (!string.IsNullOrEmpty(item.Name)) item.DisplayName = item.Name;
+                    else
+                    {
+                        var widget = Widgets.ContainsKey(item.WidgetGUID) ? Widgets[item.WidgetGUID] : null;
+                        if (widget != null) item.DisplayName = widget.Name;
+                    }
+
+                    if (!string.IsNullOrEmpty(item.GroupName)) item.DisplayGroupName = Security.Repository.TranslateDashboardGroupName(path.Replace(Security.Repository.DashboardPublicFolder, ""), item.GroupName);
+                }
             }
             catch (Exception ex)
             {
@@ -633,11 +657,12 @@ namespace Seal.Model
             }
         }
 
-        private List<Dashboard> _dashboards = new List<Dashboard>();
+        private List<Dashboard> _dashboards = null;
         public List<Dashboard> GetDashboards()
         {
             try
             {
+                if (_dashboards == null) _dashboards = new List<Dashboard>();
                 //personal
                 if (HasPersonalDashboardFolder)
                 {

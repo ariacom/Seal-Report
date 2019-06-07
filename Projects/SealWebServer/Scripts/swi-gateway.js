@@ -19,7 +19,7 @@ function callbackHandler(data, callback, errorcb) {
 function failure(xhr, status, error) {
     SWIUtil.ShowMessage("alert-danger", error + ". " + _errorServer, 0);
 }
-var SWIGateway = (function () {
+var SWIGateway = /** @class */ (function () {
     function SWIGateway() {
         this._execForm = null;
     }
@@ -341,4 +341,3 @@ var SWIGateway = (function () {
     };
     return SWIGateway;
 }());
-//# sourceMappingURL=swi-gateway.js.map

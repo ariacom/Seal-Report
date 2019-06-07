@@ -13,13 +13,9 @@ namespace Seal.Model
 {
     public class Dashboard
     {
-        private string _GUID;
-        private string _name;
-        private List<DashboardItem> _items = new List<DashboardItem>();
-
-        public string GUID { get => _GUID; set => _GUID = value; }
-        public string Name { get => _name; set => _name = value; }
-        public List<DashboardItem> Items { get => _items; set => _items = value; }
+        public string GUID { get; set; }
+        public string Name { get; set; }
+        public List<DashboardItem> Items { get; set; } = new List<DashboardItem>();
 
         static public Dashboard LoadFromFile(string path)
         {
@@ -57,7 +53,7 @@ namespace Seal.Model
 
             foreach (var group in groups)
             {
-                foreach (var item2 in Items.Where(j => j.GroupName == group)) item2.GroupOrder = groupOrder;
+                foreach (var item in Items.Where(j => j.GroupName == group)) item.GroupOrder = groupOrder;
                 groupOrder++;
             }
         }

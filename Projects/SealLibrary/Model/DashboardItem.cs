@@ -10,33 +10,21 @@ namespace Seal.Model
 
     public class DashboardItem
     {
-        private string _guid;
-        private string _widgetGUID;
-        private string _groupName = "";
-        private int _groupOrder = 1;
-        private string _name = "";
-        private string _icon = "";
-        private string _color = "";
-        private bool _dynamic = false;
-        private int _width = 400;
-        private int _height = 0;
-        private int _order = 0;
-        private int _refresh = -1;
-
-        public string GUID { get => _guid; set => _guid = value; }
-        public string WidgetGUID { get => _widgetGUID; set => _widgetGUID = value; }
-        public string GroupName { get => _groupName; set => _groupName = value; }
-        public int GroupOrder { get => _groupOrder; set => _groupOrder = value; }
-        public string Name { get => _name; set => _name = value; }
-        public string Icon { get => _icon; set => _icon = value; }
-        public string Color { get => _color; set => _color = value; }
-        public int Width { get => _width; set => _width = value; }
-        public int Height { get => _height; set => _height = value; }
-        public int Order { get => _order; set => _order = value; }
-        public bool Dynamic { get => _dynamic; set => _dynamic = value; }
-        public int Refresh { get => _refresh; set => _refresh = value; }
-
+        public string GUID { get; set; }
+        public string WidgetGUID { get; set; }
+        public string GroupName { get; set; } = "";
+        public int GroupOrder { get; set; } = 1;
+        public string Name { get; set; } = "";
+        public string Icon { get; set; }
+        public string Color { get; set; }
+        public int Width { get; set; } = 0;
+        public int Height { get; set; } = 0;
+        public int Order { get; set; } = 0;
+        public bool Dynamic { get; set; } = false;
+        public int Refresh { get; set; } = -1;
         [XmlIgnore]
-        public DashboardWidget Widget;
+        public string DisplayName { get; set; }
+        [XmlIgnore]
+        public string DisplayGroupName { get; set; }
     }
 }
