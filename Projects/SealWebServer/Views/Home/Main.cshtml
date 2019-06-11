@@ -371,6 +371,33 @@
 
         //date time sort
         $.fn.dataTable.moment(shortDateTimeFormat);
+        //datatables defaults
+        $.fn.dataTable.moment(shortDateFormat);
+        $.fn.dataTable.moment(shortDateTimeFormat);
+        $.extend( true, $.fn.dataTable.defaults, {
+            language: {
+                decimal: decimalSeparator,
+                thousands: thousandSeparator,
+                processing: "@repository.TranslateReport("Processing...")",
+                lengthMenu: "@repository.TranslateReport("Show _MENU_ rows")",
+                zeroRecords: "@repository.TranslateReport("No rows")",
+                emptyTable: "@repository.TranslateReport("No records")",
+                info: "@repository.TranslateReport("Showing _START_ to _END_ of _TOTAL_")",
+                infoEmpty: "@repository.TranslateReport("Showing 0 to 0 of 0")",
+                infoFiltered: "@repository.TranslateReport("(filtered from _MAX_)")",
+                infoPostFix: "",
+                search: "@repository.TranslateReport("Filter:")",
+                paginate: {
+                    first: "|&lt;",
+                    previous: "&lt;&lt;",
+                    next: ">>",
+                    last: ">|"
+                }
+            },
+            pagingType: "full_numbers",
+            autoWidth: false,
+            stateSave: false,
+        });
 
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';

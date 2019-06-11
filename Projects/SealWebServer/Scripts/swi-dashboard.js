@@ -88,24 +88,28 @@ var SWIDashboard = /** @class */ (function () {
                 _gateway.ExecuteReport($(e.currentTarget).attr("path"), false, null, null);
             });
         }
+        else {
+            nameLink.css("cursor", "default");
+            nameLink.css("text-decoration", "none");
+        }
         //Set content
         var panelBody = panel.children(".panel-body");
         panelBody.empty();
         panelBody.html(data.content);
         //Dynamic properties
         if (data.dynamic) {
-            var newIcon = $(data.content).children("#new-widget-icon").val();
+            var newIcon = $(data.content).find("#new-widget-icon").val();
             if (newIcon) {
                 var spanIcon = panelHeader.children(".glyphicon");
                 spanIcon.removeClass();
-                spanIcon.addClass("glyphicon glyphicon-" + newIcon);
+                spanIcon.addClass(newIcon);
             }
-            var newColor = $(data.content).children("#new-widget-color").val();
+            var newColor = $(data.content).find("#new-widget-color").val();
             if (newColor) {
                 panel.removeClass();
                 panel.addClass("item panel panel-" + newColor);
             }
-            var newName = $(data.content).children("#new-widget-name").val();
+            var newName = $(data.content).find("#new-widget-name").val();
             if (newName) {
                 panelHeader.find("a").text(" " + newName);
             }
@@ -196,7 +200,7 @@ var SWIDashboard = /** @class */ (function () {
                     }
                 }
                 panelHeader.append(panelButtons);
-                var panelBody = $("<div class='panel-body text-center'>");
+                var panelBody = $("<div class='panel-body'>");
                 panel.append(panelBody);
                 panelBody.append($("<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>"));
                 panelBody.append($("<h4 style='display:inline'></h4>").text(SWIUtil.tr("Processing") + "..."));

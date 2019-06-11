@@ -10,6 +10,7 @@ Element;Customers.Fax;Fax;;Fax
 Element;Customers.Phone;Phone;;Téléphone
 Element;Customers.Postal Code;Postal Code;;Code Postal
 Element;Customers.Region;Region;;Région
+Element;Customers.Customers;Customers;;Clients
 Element;Employees.Employee ID;Employee ID;;ID Employé
 Element;Employees.Address;Address;;Adresse
 Element;Employees.Birth Date;Birth Date;;Date de naissance
@@ -41,6 +42,7 @@ Element;Orders/Shipping.Ship Region;Ship Region;;Région de livraison
 Element;Orders/Shipping.Ship Via;Ship Via;;Livré Via
 Element;Orders.Order Year;Order Year;;Année de la commande
 Element;Orders.Order Month;Order Month;;Mois de la commande
+Element;Products.Products;Products;;Produits
 Element;Products.Product ID;Product ID;;ID Produit
 Element;Products.Discontinued;Discontinued;;Indisponible
 Element;Products.Product Name;Product Name;;Nom du produit
@@ -70,6 +72,8 @@ Element;Order Details.Quantity;Quantity;;Quantité
 Element;Order Details.Unit Price;Unit Price;;Prix unitaire
 Element;Order Details.Amount;Amount;;Montant
 Element;Order Details.Discount;Discount;;Rabais
+Element;Order Details.Orders Amount;Orders Amount;;Montant Commandes
+Element;Orders.Orders Count;Orders Count;;Nombre de Commandes
 Enum;Category;Beverages;;Boissons
 Enum;Category;Condiments;;Condiments
 Enum;Category;Confections;;Confections
@@ -122,8 +126,24 @@ Device;GMail Device;GMail Device;;Courriel Gmail
 DashboardFolder;\General;General;;Général
 DashboardFolder;\Sales;Sales;;Ventes
 DashboardName;\Sales\Product Sales.sdax;Product Sales;;Vente Produits
-DashboardGroupName;\Sales\Product Sales.sdax;Product Sales;;Vente Produits
+DashboardItemGroupName;\Sales\Product Sales.sdax;Detail;;Détail
+DashboardName;\General\KPI.sdax;KPI;;KPI
+DashboardItemName;\General\KPI.sdax;KPI Sales / category;;KPI Ventes / catégorie
+DashboardItemGroupName;\General\KPI.sdax;Additional information;;Autres informations
+DashboardItemGroupName;\General\KPI.sdax;Last Amount;;Dernier Montant
 WidgetName;\Overview - Sales.srex;Sales per month;;Ventes par mois
+WidgetName;\Overview - Sales.srex;Sales per month;;Ventes par mois
+WidgetName;\Overview - Sales.srex;Sales for 1995;;Ventes pour 1995
+WidgetName;\Overview - Sales.srex;Sales per category;;Ventes par catégorie
+WidgetName;\Overview - Sales.srex;Orders;;Commandes
+WidgetDescription;\Overview - Sales.srex;Chart of sales per category for 1995 ;;Graphes des ventes par catégorie pour 1995
 WidgetDescription;\Overview - Sales.srex;Chart of sales, discounts and progressions for 1995;;Graphes des ventes, réductions et progressions pour 1995 
+WidgetDescription;\Overview - Sales.srex;Table of sales, discounts and progressions for 1995 ;;Tableau des ventes, réductions et progressions pour 1995
+WidgetDescription;\Overview - Sales.srex;Pie chart of sales per category;;Graphe camembert des ventes par catégorie
+WidgetName;\Samples\12-KPI.srex;Product Sales;;Ventes Produits
 WidgetName;\Samples\13-KPI Published.srex;KPI Customers;;KPI Clients
-DashboardGroupName;\Sales\Test.sdax;Product Sales;;Vente Produits
+WidgetName;\Samples\13-KPI Published.srex;KPI Sales per category;;KPI Ventes par catégorie
+WidgetName;\Samples\13-KPI Published.srex;Sales per employee;;Ventes par employé
+WidgetName;\Samples\13-KPI Published.srex;KPI Orders;;KPI Commandes
+WidgetName;\Samples\13-KPI Published.srex;KPI Products;;KPI Produits
+WidgetName;\Samples\13-KPI Published.srex;Last Amount;;Dernier Montant

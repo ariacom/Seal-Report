@@ -589,6 +589,7 @@ namespace Seal.Model
                 dashboard.Folder = folderPath;
 
                 dashboard.DisplayName = Security.Repository.TranslateDashboardName(path.Replace(Security.Repository.DashboardPublicFolder, ""), dashboard.Name);
+                var repositoryPath = path.Replace(Security.Repository.DashboardPublicFolder, "");
 
                 if (dashboard.IsPersonal)
                 {
@@ -596,7 +597,7 @@ namespace Seal.Model
                 }
                 else if (!string.IsNullOrEmpty(folderName))
                 {
-                    dashboard.FullName = string.Format("{0} ({1})", dashboard.DisplayName, Security.Repository.TranslateDashboardFolder(Path.GetDirectoryName(path.Replace(Security.Repository.DashboardPublicFolder, "")), folderName));
+                    dashboard.FullName = string.Format("{0} ({1})", dashboard.DisplayName, Security.Repository.TranslateDashboardFolder(Path.GetDirectoryName(repositoryPath), folderName));
                 }
                 else
                 {
@@ -606,14 +607,17 @@ namespace Seal.Model
                 //Set display names
                 foreach (var item in dashboard.Items)
                 {
-                    if (!string.IsNullOrEmpty(item.Name)) item.DisplayName = item.Name;
+                    if (!string.IsNullOrEmpty(item.Name))
+                    {
+                        item.DisplayName = Security.Repository.TranslateDashboardItemName(repositoryPath, item.Name);
+                    }
                     else
                     {
                         var widget = Widgets.ContainsKey(item.WidgetGUID) ? Widgets[item.WidgetGUID] : null;
                         if (widget != null) item.DisplayName = widget.Name;
                     }
 
-                    if (!string.IsNullOrEmpty(item.GroupName)) item.DisplayGroupName = Security.Repository.TranslateDashboardGroupName(path.Replace(Security.Repository.DashboardPublicFolder, ""), item.GroupName);
+                    if (!string.IsNullOrEmpty(item.GroupName)) item.DisplayGroupName = Security.Repository.TranslateDashboardItemGroupName(repositoryPath, item.GroupName);
                 }
             }
             catch (Exception ex)

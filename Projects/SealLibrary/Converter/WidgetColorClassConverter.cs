@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using Seal.Model;
 using System.ComponentModel;
 
 namespace Seal.Converter
@@ -19,8 +20,7 @@ namespace Seal.Converter
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            return new StandardValuesCollection(
-                new string[] { "", "default", "primary", "success", "info", "warning", "danger" });
+            return new StandardValuesCollection(Dashboard.Colors);
         }
     }
 
