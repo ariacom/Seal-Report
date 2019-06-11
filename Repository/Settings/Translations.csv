@@ -5,9 +5,9 @@ NVD3;Grouped;;Groupée
 NVD3;Re-scale y-axis;;Rééchelonner l'axe y
 NVD3;Stacked;;Empilée
 NVD3;Stream;;Flux
+Report;(filtered from _MAX_);;(filtré de _MAX_)
 Report;!=;;!=
 Report;# of % selected;;# de % sélectionné
-Report;(filtered from _MAX_);;(filtré de _MAX_)
 Report;<;;<
 Report;<=;;<=
 Report;=;;=
@@ -40,6 +40,7 @@ Report;Execution duration;;Durée d'exécution
 Report;execution messages;;les messages d'exécution
 Report;Export messages...;;Exporter les messages...
 Report;Filter:;;Filtre:
+Report;Goal;;But
 Report;Hide;;Cacher
 Report;Invalid date;;Date invalide
 Report;Invalid numeric value;;Valeur numérique invalide
@@ -290,7 +291,6 @@ WebJS;# of % selected;;# de % sélectionné
 WebJS;% of the column;;% de  la colonne
 WebJS;% of the row;;% de la ligne
 WebJS;% of the total;;% du total
-WebJS;(filtered from _MAX_);;(filtré de _MAX_)
 WebJS;1 Decimal;;1 Décimale
 WebJS;2 Decimals;;2 Décimales
 WebJS;3 Decimals;;3 Décimales
@@ -349,7 +349,6 @@ WebJS;Equals;;Egale
 WebJS;Error;;Erreur
 WebJS;Unexpected error on server;;Erreur sur le serveur
 WebJS;Excel;;Excel
-WebJS;Filter;;Filtre
 WebJS;Folder;;Répertoire
 WebJS;For columns;;Pour les colonnes
 WebJS;For rows;;Pour les lignes
@@ -459,8 +458,6 @@ WebJS;Show page tables;;Afficher les tableaux des pages
 WebJS;Show report result panel;;Afficher le panneau des résultats
 WebJS;Show restrictions panel;;Afficher les restrictions
 WebJS;Show summary table;;Afficher le sommaire
-WebJS;Showing _START_ to _END_ of _TOTAL_;;Affichage de _START_ à _END_ sur _TOTAL_
-WebJS;Showing 0 to 0 of 0;;Affichage de 0 à 0 sur 0
 WebJS;Splitter;;Séparateur
 WebJS;Stacked Area;;Empilé
 WebJS;Starts with;;Commence par
