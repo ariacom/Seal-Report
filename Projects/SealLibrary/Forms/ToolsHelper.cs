@@ -38,7 +38,7 @@ namespace Seal.Forms
         ToolStripMenuItem _refreshEnum = new ToolStripMenuItem() { Text = "Refresh Enumerated Lists...", ToolTipText = "Refresh all the dynamic enmerated list values from the database", AutoToolTip = true };
         ToolStripMenuItem _checkExecution = new ToolStripMenuItem() { Text = "Check Report Executions...", ToolTipText = "Check all the reports in the repository", AutoToolTip = true };
         ToolStripMenuItem _exportSourceTranslations = new ToolStripMenuItem() { Text = "Export Data Source translations in CSV...", ToolTipText = "Export all translations found in the Data Source into a CSV file.", AutoToolTip = true };
-        ToolStripMenuItem _exportReportsTranslations = new ToolStripMenuItem() { Text = "Export Folders and Reports translations in CSV...", ToolTipText = "Export all report and folders translations found in the repository into a CSV file.", AutoToolTip = true };
+        ToolStripMenuItem _exportReportsTranslations = new ToolStripMenuItem() { Text = "Export Folders, Reports and Dashboards translations in CSV...", ToolTipText = "Export all report and folders translations found in the repository into a CSV file.", AutoToolTip = true };
         ToolStripMenuItem _synchronizeSchedules = new ToolStripMenuItem() { Text = "Synchronize Report Schedules...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler", AutoToolTip = true };
         ToolStripMenuItem _synchronizeSchedulesCurrentUser = new ToolStripMenuItem() { Text = "Synchronize Report Schedules with the logged user...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler using the current logged user", AutoToolTip = true };
         ToolStripMenuItem _executeDesigner = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Report Designer", ToolTipText = "run the Report Designer application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D))), ShowShortcutKeys = true };
@@ -567,32 +567,51 @@ namespace Seal.Forms
             StringBuilder translations = new StringBuilder();
             try
             {
-                log.Log("Starting the export of the Folders and Reports translations\r\n");
+                log.Log("Starting the export of the Folders, Reports and Dasboards translations\r\n");
                 string separator = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
                 string extraSeparators = initTranslationFile(translations, separator, repository);
 
-                log.Log("Adding folder names in context: FolderName, FolderPath\r\n");
+                log.Log("Adding texts in context: FolderName, FolderPath\r\n");
                 exportFolderNamesTranslations(repository.ReportsFolder, translations, separator, extraSeparators, repository.ReportsFolder.Length);
 
                 log.Log("Adding file names in context: FileName\r\n");
                 exportReportNamesTranslations(repository.ReportsFolder, translations, separator, extraSeparators, repository.ReportsFolder.Length);
 
-                log.Log("Adding report names in context: ReportExecutionName, ReportViewName, ReportOutputName, WidgetName, WidgetDescription\r\n");
+                log.Log("Adding texts in context: ReportExecutionName, ReportViewName, ReportOutputName, WidgetName, WidgetDescription\r\n");
                 exportReportsTranslations(log, repository.ReportsFolder, repository, translations, separator, extraSeparators, repository.ReportsFolder.Length);
 
-                log.Log("Adding dashboard folders in context: DashboardFolder\r\n");
+                log.Log("Adding texts in context: DashboardFolder\r\n");
                 foreach (var folder in Directory.GetDirectories(repository.DashboardPublicFolder))
                 {
                     translations.AppendFormat("DashboardFolder{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(folder.Substring(repository.DashboardPublicFolder.Length)), Helper.QuoteDouble(Path.GetFileName(folder)), extraSeparators);
                 }
 
-                log.Log("Adding dashboard names in context: DashboardName\r\n");
+                log.Log("Adding texts in context: DashboardName, DashboardItemName, DashboardItemGroupName\r\n");
                 foreach (var folder in Directory.GetDirectories(repository.DashboardPublicFolder))
                 {
                     foreach (var p in Directory.GetFiles(folder, "*." + Repository.SealDashboardExtension))
                     {
+                        List<string> names = new List<string>();
+                        List<string> groupNames = new List<string>();
                         var dashboard = Dashboard.LoadFromFile(p);
                         translations.AppendFormat("DashboardName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(p.Substring(repository.DashboardPublicFolder.Length)), Helper.QuoteDouble(dashboard.Name), extraSeparators);
+
+                        foreach(var item in dashboard.Items)
+                        {
+                            if (!string.IsNullOrEmpty(item.Name) && !names.Contains(item.GroupName)) names.Add(item.Name);
+                            if (!string.IsNullOrEmpty(item.GroupName) && !groupNames.Contains(item.GroupName)) groupNames.Add(item.GroupName);
+                        }
+
+                        foreach (var name in names.OrderBy(i => i))
+                        {
+                            translations.AppendFormat("DashboardItemName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(p.Substring(repository.DashboardPublicFolder.Length)), Helper.QuoteDouble(name), extraSeparators);
+                        }
+
+                        foreach (var groupName in groupNames.OrderBy(i => i))
+                        {
+                            translations.AppendFormat("DashboardItemGroupName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(p.Substring(repository.DashboardPublicFolder.Length)), Helper.QuoteDouble(groupName), extraSeparators);
+                        }
+
                     }
                 }
 

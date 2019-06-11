@@ -9,17 +9,42 @@
         ResultPage page = report.CurrentPage;
         ResultTable table = page.DataTable;
 
-        bool trendDirection = view.GetBoolValue("kpi_trend_direction");
-        int trendValues = view.GetNumericValue("kpi_trend_values");
-        string buttonSize = view.GetValue("kpi_size");
+        int trendIndex = view.GetNumericValue("kpi_trend_index");
+        string buttonSize = view.GetValue("kpi_button_size");
         string goalSuffix = "_GOAL";
+        string newWidgetColor = "", newWidgetIcon = "";
     }
+    @functions {
+        public string getValueFromRange(string definition, int percentage)
+        {
+            var result = "";
+            foreach (var def in definition.Replace("\r\n", "\n").Split('\n'))
+            {
+                if (!string.IsNullOrEmpty(def))
+                {
+                    var defs = def.Split('|');
+                    if (defs.Length == 1) result = defs[0];
+                    else if (defs.Length > 1)
+                    {
+                        int threshold;
+                        if (int.TryParse(defs[1], out threshold))
+                        {
+                            if (percentage < threshold) result = defs[0];
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(result)) break;
+            }
+            return result;
+        }
+    }
+
     @{
-        //Calculate trend
-        int trend = 0;
-        string headerValue = "", lastValue = "", trendPercentage = "", trendColor = "primary", trendIcon = "option-horizontal";
         for (int col = 0; col < table.ColumnCount; col++)
         {
+            string headerValue = "", lastValue = "", trendColor = "", trendIcon = "", goalValue = "", goalColor = "", goalIcon = "";
+            int? trendPercentage = null, goalPercentage = null;
             var lastCell = table[table.BodyEndRow - 1, col];
             if (table.BodyStartRow == table.BodyEndRow)
             {
@@ -36,60 +61,65 @@
 
                 double? valueStart = null;
                 int rowStart = table.BodyEndRow - 2;
-                while (rowStart >= table.BodyStartRow && (trendValues < 0 || trendValues + 1 >= table.BodyEndRow - rowStart || valueStart == null))
+                while (rowStart >= table.BodyStartRow && (trendIndex < 0 || trendIndex + 1 >= table.BodyEndRow - rowStart || valueStart == null))
                 {
                     if (table[rowStart, col].Value != null) { valueStart = table[rowStart, col].DoubleValue; }
                     --rowStart;
                 }
 
-                if (valueStart != null && valueStart != valueEnd)
+                int val = 0;
+                if (valueStart != null && valueStart != 0)
                 {
-                    trend = (valueStart < valueEnd ? 1 : -1);
-                    trendIcon = (trend == 1 ? "export" : "import");
-                    if (!trendDirection) { trend = -1 * trend; }
-                    trendColor = (trend == 1 ? "success" : "danger");
+                    trendPercentage = Convert.ToInt32(100 * (valueEnd - valueStart) / valueStart);
+                    val = trendPercentage.Value;
                 }
-                if (valueStart != null && valueStart != 0) { trendPercentage = string.Format("{0:+0;-0;0} %", 100 * (valueEnd - valueStart) / valueStart); }
+                trendColor = getValueFromRange(view.GetValueOrDefault("kpi_trend_color"), val);
+                newWidgetColor = trendColor.Replace("btn-", "");
+                trendIcon = getValueFromRange(view.GetValueOrDefault("kpi_trend_icon"), val);
+                newWidgetIcon = trendIcon;
 
                 //Check if a Goal is defined
-                string goalValue = "", goalColor = "default", goalPercentage = "", goalIcon = "";
                 for (int colGoal = 0; colGoal < table.ColumnCount; colGoal++)
                 {
                     var goalCell = table[table.BodyEndRow - 1, colGoal];
                     if (goalCell.Element != null && goalCell.Element.DisplayNameEl == lastCell.Element.DisplayNameEl + goalSuffix && goalCell.Element.IsNumeric && goalCell.Value != null)
                     {
                         goalValue = string.Format("{0}: {1}", report.Translate("Goal"), goalCell.HTMLValue);
-                        int goal = (goalCell.DoubleValue <= valueEnd ? 1 : -1);
-                        if (!trendDirection) { trend = -1 * trend; }
-                        goalIcon = (goal == 1 ? "ok" : "circle-arrow-down");
-                        goalColor = (goal == 1 ? "success" : "danger");
-
-                        if (goalCell.DoubleValue != 0) { goalPercentage = string.Format("({0:+0;-0;0} %)", 100 * (valueEnd - goalCell.DoubleValue) / goalCell.DoubleValue); }
+                        val = 0;
+                        if (goalCell.DoubleValue != 0)
+                        {
+                            goalPercentage = Convert.ToInt32(100 * (valueEnd - goalCell.DoubleValue) / goalCell.DoubleValue);
+                            val = goalPercentage.Value;
+                        }
+                        goalColor = getValueFromRange(view.GetValueOrDefault("kpi_goal_color"), val);
+                        goalIcon = getValueFromRange(view.GetValueOrDefault("kpi_goal_icon"), val);
                     }
                 }
 
-                if (!string.IsNullOrEmpty(trendPercentage))
-                {
-                    <span class="text-center btn btn-@trendColor @buttonSize" title="@Raw(headerValue)" style="margin-top:5px;">
-                        <span class="glyphicon glyphicon-@trendIcon" aria-hidden="true"></span> @Raw(headerValue) <strong>@Raw(lastValue)</strong>
-                        <span class="badge">@Raw(trendPercentage)</span>
-                    </span>
-                }
-                else
-                {
-                    <span class="text-center btn btn-@trendColor @buttonSize" title="@Raw(headerValue)" style="margin-top:5px;">
-                        @Raw(headerValue) <strong>@Raw(lastValue)</strong>
-                    </span>
-                }
-
+                <span class="text-center btn @trendColor @buttonSize" title="@Raw(headerValue)" style="margin-top:5px;">
+                    <span class="@trendIcon" aria-hidden="true"></span> @Raw(headerValue) <strong>@Raw(lastValue)</strong>
+                    @if (trendPercentage != null)
+                    {
+                        <span class="badge">@Raw(string.Format("{0:+0;-0;0} %", trendPercentage.Value))</span>
+                    }
+                </span>
 
                 if (!string.IsNullOrEmpty(goalValue))
                 {
-                    <span class="text-center label label-@goalColor @buttonSize" title="@Raw(headerValue)" style="margin-top:0px;font-size: 12px;">
-                        <span class="glyphicon glyphicon-@goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage)
+                    <span class="text-center label @goalColor" title="@Raw(headerValue)" style="margin-top:0px;font-size: 12px;">
+                        <span class="glyphicon @goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null ? string.Format("({0:+0;-0;0} %)", goalPercentage.Value) : "")
                     </span>
                 }
             }
         }
+    }
+
+    @if (!string.IsNullOrEmpty(newWidgetColor))
+    {
+        <input type="hidden" id="new-widget-color" name="new-widget-color" value="@newWidgetColor" />
+    }
+    @if (!string.IsNullOrEmpty(newWidgetIcon))
+    {
+        <input type="hidden" id="new-widget-icon" name="new-widget-icon" value="@newWidgetIcon" />
     }
 </div>

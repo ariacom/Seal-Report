@@ -99,6 +99,8 @@ namespace Seal.Model
         [XmlIgnore]
         public DateTime LastModification;
 
+        public static string[] Colors = new string[] { "", "default", "primary", "success", "info", "warning", "danger" };
+
         public static string[] Icons = new string[] {
                     "info-sign",
                     "warning-sign",

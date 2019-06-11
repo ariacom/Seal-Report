@@ -602,12 +602,8 @@ class SWIMain {
                     sNext: ">>",
                     sLast: ">|"
                 },
-                sSearch: SWIUtil.tr("Filter") + " ",
                 sZeroRecords: SWIUtil.tr("No report"),
                 sLengthMenu: SWIUtil.tr("Show _MENU_ reports"),
-                sInfo: SWIUtil.tr("Showing _START_ to _END_ of _TOTAL_"),
-                sInfoEmpty: SWIUtil.tr("Showing 0 to 0 of 0"),
-                sInfoFiltered: SWIUtil.tr("(filtered from _MAX_)"),
                 sInfoPostFix: "",
             },
             aoColumnDefs: [{ "bSortable": false, "aTargets": [0, 2] }]

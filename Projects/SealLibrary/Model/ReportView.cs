@@ -199,6 +199,17 @@ namespace Seal.Model
             return parameter == null ? "" : parameter.Value;
         }
 
+        public string GetValueOrDefault(string name)
+        {
+            Parameter parameter = _parameters.FirstOrDefault(i => i.Name == name);
+            if (parameter != null)
+            {
+                if (string.IsNullOrEmpty(parameter.Value)) return parameter.ConfigValue;
+                else return parameter.Value;
+            }
+            return "";
+        }
+
         public string AddAttribute(string attrName, string paramName)
         {
             return Helper.AddAttribute(attrName, GetValue(paramName));

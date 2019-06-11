@@ -696,9 +696,14 @@ namespace Seal.Model
             return RepositoryTranslate("DashboardName", instance, reference);
         }
 
-        public string TranslateDashboardGroupName(string instance, string reference)
+        public string TranslateDashboardItemName(string instance, string reference)
         {
-            return RepositoryTranslate("DashboardGroupName", instance, reference);
+            return RepositoryTranslate("DashboardItemName", instance, reference);
+        }
+
+        public string TranslateDashboardItemGroupName(string instance, string reference)
+        {
+            return RepositoryTranslate("DashboardItemGroupName", instance, reference);
         }
 
         public string TranslateWidgetName(string instance, string reference)
