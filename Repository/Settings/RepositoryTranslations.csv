@@ -96,6 +96,7 @@ ReportGeneral;\Overview - Sales.srex;Sales per %0% and %1%;;Ventes par %0% et %1
 ReportGeneral;\Overview - Sales.srex;Discounts per %0% and %1%;;Rabais par %0% et %1%
 ReportOutputName;\Overview - Sales.srex;HTML File;;Fichier HTML
 FileName;\Search - Orders.srex;Search - Orders;;Recherche - Commandes
+FileName;\Search - Reports.srex;Search - Reports;;Recherche - Rapports
 ReportDisplayName;\Search - Orders.srex;Search - Orders;;Recherche - Commandes
 ReportDisplayName;\Search - Reports.srex;Search - Reports;;Recherche - Rapports
 ReportViewName;\Search - Orders.srex;Orders;;Commandes

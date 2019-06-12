@@ -218,7 +218,7 @@ var SWIDashboard = /** @class */ (function () {
                         var tl = getTopLeft($(this)[0]);
                         var buttons = $(this).children("div");
                         buttons.css("position", "absolute");
-                        buttons.css("left", tl[0] + $(this).width() - buttons.width() + 15);
+                        buttons.css("left", tl[0] + $(this).width() - Math.max(buttons.width(), buttons.height()) + 15);
                         buttons.css("top", tl[1] + 10);
                         buttons.show();
                     }
@@ -327,8 +327,8 @@ var SWIDashboard = /** @class */ (function () {
                 if (!_da._lastGUID || data[i].GUID != _da._lastGUID)
                     _da.initDashboardItems(data[i].GUID);
             }
-            if (data.length == 0) {
-                SWIUtil.ShowMessage("alert-info", SWIUtil.tr("Please Click on the 'Dashboard' menu to create or add Dashboards to your view..."), 0);
+            if (data.length == 0 && $("#main-dashboard").css("display") == "block") {
+                SWIUtil.ShowMessage("alert-danger", SWIUtil.tr("Please Click on the 'Dashboard' menu to create or add Dashboards to your view..."), 0);
             }
             //Manage
             $("#dashboards-nav-item").unbind('click').on("click", function (e) {
@@ -384,3 +384,4 @@ var SWIDashboard = /** @class */ (function () {
     };
     return SWIDashboard;
 }());
+//# sourceMappingURL=swi-dashboard.js.map

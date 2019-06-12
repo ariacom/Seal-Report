@@ -24,10 +24,10 @@
 &#xD;
 @functions {&#xD;
     public void ListReports(ReportExecutionLog log, string folder, Repository repository, DataTable table, List&lt;ReportRestriction&gt; restrictions) {&#xD;
-        &#xD;
-        var element = restrictions[0].Value1.ToLower();&#xD;
-        var restriction = restrictions[1].Value1.ToLower();&#xD;
-        var hasSchedule = restrictions[2].EnumValues[0];&#xD;
+        string element="", restriction="", hasSchedule = "";&#xD;
+        if (restrictions.Count &gt; 0 &amp;&amp; !string.IsNullOrEmpty(restrictions[0].Value1)) element = restrictions[0].Value1.ToLower();&#xD;
+        if (restrictions.Count &gt; 1 &amp;&amp; !string.IsNullOrEmpty(restrictions[1].Value1)) restriction = restrictions[1].Value1.ToLower();&#xD;
+        if (restrictions.Count &gt; 2 &amp;&amp; restrictions[2].EnumValues.Count &gt; 0) hasSchedule = restrictions[2].EnumValues[0];&#xD;
 &#xD;
         foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))&#xD;
         {&#xD;

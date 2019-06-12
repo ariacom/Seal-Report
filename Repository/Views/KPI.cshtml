@@ -14,6 +14,7 @@
         string goalSuffix = "_GOAL";
         string newWidgetColor = "", newWidgetIcon = "";
     }
+
     @functions {
         public string getValueFromRange(string definition, int percentage)
         {
@@ -41,12 +42,12 @@
     }
 
     @{
-        for (int col = 0; col < table.ColumnCount; col++)
+        for (int col = 0; col < table.ColumnCount && table.RowCount > 1; col++)
         {
             string headerValue = "", lastValue = "", trendColor = "", trendIcon = "", goalValue = "", goalColor = "", goalIcon = "";
             int? trendPercentage = null, goalPercentage = null;
             var lastCell = table[table.BodyEndRow - 1, col];
-            if (table.BodyStartRow == table.BodyEndRow)
+            if (table.BodyStartRow == table.BodyEndRow && table.BodyEndRow < table.RowCount)
             {
                 lastCell = table[table.BodyEndRow, col]; //Case only one value
             }
