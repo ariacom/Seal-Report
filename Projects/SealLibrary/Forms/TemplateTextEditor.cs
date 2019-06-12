@@ -405,7 +405,7 @@ namespace Seal.Forms
 @"ReportTask task = Model;
     Report report = task.Report;
     foreach (ReportRestriction restr in report.InputValues) {
-        report.LogMessage(""[{0}]={1}"", restr.DisplayNameEl, restr.DisplayText); //You can use restr.Value1, restr.FinalDate1, restr.EnumValues[0], restr.EnumDisplayValue);
+        report.LogMessage(""[{0}]={1}"", restr.DisplayNameEl, restr.DisplayText); //You can use restr.Value1, restr.FinalDate1, restr.EnumValues[0], restr.EnumDisplayValue
     }
 }
 "

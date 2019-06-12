@@ -72,7 +72,8 @@ Web Report Designer Security
 - Columns: Cannot be selected if it is specified in one group
 
 Dashboard Publication
--Dashboards: the union of the Dashboards published
+-Dashboards Folders: the union of the Dashboards folders published with their highest right
+-Personal Dashboard Folder: true if one group has a personal Dashboard Folder
 
 Dashboard Designer Security
 - Widgets: Cannot be selected if it is specified in one group
