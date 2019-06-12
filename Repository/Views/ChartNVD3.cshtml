@@ -47,7 +47,6 @@
                     }
                     var @chartId = nv.models.@(reportModel.ExecNVD3ChartType)();
                     var svg = d3.select('#@chartId svg');
-                    var svgJQ = $("#@chartId svg");
 
                     var chartTitle = '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("nvd3_chart_title"))))';
 
@@ -125,8 +124,7 @@
                             .labelThreshold(@view.GetValue("nvd3_pie_labelthreshold")/100)
                             .donut(true)
                             .donutRatio(@view.GetValue("nvd3_pie_holeratio")/100)
-                            //.labelType('@view.GetValue("nvd3_pie_labeltype")')
-                                ;
+                        ;
 
                         (@chartId).labelType(function (d) {
                             if (labelType == 'key') return XValueFormatter(d.data.x);
@@ -146,6 +144,7 @@
                     }
 
                     //Title
+                    var svgJQ = $("#@chartId svg");
                     if (chartTitle.length > 0) {
                         svg.append('text')
                             .attr('class','chartTitleWrap')
@@ -154,6 +153,9 @@
                             .style('font-weight', 'bold')
                             .style('font-size', '14px')
                             .text(chartTitle);
+
+                        //re-adjust title...
+                        setTimeout(function () { nvd3UpdateCharts(); }, 200);               
                     }
 
                     svg

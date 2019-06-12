@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString>
-  <TaskFolderName>Seal Report</TaskFolderName>
-  <DefaultCulture />
-  <LogoName>logo.png</LogoName>
-  <CsvSeparator />
-  <LogDays>30</LogDays>
-  <WebProductName>Seal Report</WebProductName>
-  <WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName>
-  <WebApplicationName>/seal</WebApplicationName>
-  <WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory>
-</SealServerConfiguration>
+﻿<?xml version="1.0" encoding="utf-8"?><SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString><TaskFolderName>Seal Report</TaskFolderName><WebProductName>Seal Report</WebProductName><InitScript /><ReportCreationScript /><TasksScript /><CommonScripts /><DefaultCulture /><CsvSeparator /><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebApplicationName>/seal</WebApplicationName><WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>

@@ -106,6 +106,9 @@ var SWIMain = /** @class */ (function () {
         //Dashboard toggle
         $("#dashboard-toggle").unbind('click').on("click", function (e) {
             _main.showDashboard($("#main-dashboard").css("display") != "block");
+            if (!_da._dashboard && $("#main-dashboard").css("display") == "block") {
+                SWIUtil.ShowMessage("alert-danger", SWIUtil.tr("Please Click on the 'Dashboard' menu to create or add Dashboards to your view..."), 0);
+            }
         });
         if (hasReports) {
             _main.loadFolderTree();
@@ -564,3 +567,4 @@ var SWIMain = /** @class */ (function () {
     };
     return SWIMain;
 }());
+//# sourceMappingURL=swi-main.js.map
