@@ -73,6 +73,7 @@ Web Report Designer Security
 
 Dashboard Publication
 -Dashboards Folders: the union of the Dashboards folders published with their highest right
+-Manage Dashboards View: true if one group has a the right to Manage Dashboards View
 -Personal Dashboard Folder: true if one group has a personal Dashboard Folder
 
 Dashboard Designer Security

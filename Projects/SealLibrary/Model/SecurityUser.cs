@@ -135,16 +135,33 @@ namespace Seal.Model
                     _dashboardFolders = new List<SWIDashboardFolder>();
                     if (HasPersonalDashboardFolder)
                     {
-                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateWeb("Personal"), path = SWIDashboardFolder .PersonalPath});
+                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateWeb("Personal"), path = SWIDashboardFolder.PersonalPath });
                     }
 
                     //public
                     foreach (var f in SecurityDashboardFolders.Where(i => i.Right == DashboardFolderRight.Edit))
                     {
-                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateDashboardFolder("\\" + f.FolderPath, f.Name), path = f.FolderPath});
+                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateDashboardFolder("\\" + f.FolderPath, f.Name), path = f.FolderPath });
                     }
                 }
                 return _dashboardFolders;
+            }
+        }
+
+        private bool? _manageDashboards = null;
+        public bool ManageDashboards
+        {
+            get
+            {
+                if (_manageDashboards == null)
+                {
+                    _manageDashboards = false;
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (group.ManageDashboards) _manageDashboards = true;
+                    }
+                }
+                return _manageDashboards.Value;
             }
         }
 
@@ -551,7 +568,7 @@ namespace Seal.Model
         {
             get
             {
-                if (_widgets == null)
+                if (_widgets == null || _widgets.Count == 0)
                 {
                     _widgets = new Dictionary<string, DashboardWidget>();
                     foreach (var widget in DashboardWidgetsPool.Widgets.Values.OrderBy(i => i.Name))
@@ -604,21 +621,26 @@ namespace Seal.Model
                     dashboard.FullName = dashboard.DisplayName;
                 }
                 dashboard.ReinitGroupOrders();
-                //Set display names
+                //Init items and translate labels
                 foreach (var item in dashboard.Items)
                 {
-                    if (!string.IsNullOrEmpty(item.Name))
+                    var widget = DashboardWidgetsPool.Widgets.ContainsKey(item.WidgetGUID) ? DashboardWidgetsPool.Widgets[item.WidgetGUID] : null;
+                    if (widget == null) continue;
+                    if (!string.IsNullOrEmpty(item.Name) && item.Name != widget.Name)
                     {
                         item.DisplayName = Security.Repository.TranslateDashboardItemName(repositoryPath, item.Name);
                     }
                     else
                     {
-                        var widget = Widgets.ContainsKey(item.WidgetGUID) ? Widgets[item.WidgetGUID] : null;
-                        if (widget != null) item.DisplayName = widget.Name;
+                        var instance = widget.ReportPath.Replace(Security.Repository.ReportsFolder, "\\");
+                        item.DisplayName = Security.Repository.TranslateWidgetName(instance, widget.Name);
                     }
+                    item.SetWidget(widget);
 
                     if (!string.IsNullOrEmpty(item.GroupName)) item.DisplayGroupName = Security.Repository.TranslateDashboardItemGroupName(repositoryPath, item.GroupName);
                 }
+                //Remove lost widgets...
+                dashboard.Items.RemoveAll(i => i.Widget == null);
             }
             catch (Exception ex)
             {

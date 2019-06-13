@@ -243,6 +243,8 @@ namespace Seal.Model
                 result.AppendLine();
                 result.AppendFormat("    Dashboard Personal Folder: {0}\r\n", group.PersonalDashboardFolder? "yes" : "no");
                 result.AppendLine();
+                result.AppendFormat("    Manage Dashboards View: {0}\r\n", group.ManageDashboards ? "yes" : "no");
+                result.AppendLine();
                 result.AppendFormat("    SQL Models: {0}\r\n", group.SqlModel ? "yes" : "no");
                 result.AppendLine();
                 foreach (var item in group.Devices)

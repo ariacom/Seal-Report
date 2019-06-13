@@ -56,7 +56,8 @@ namespace SealWebServer.Controllers
                     dashboard = GetCookie(SealLastDashboardCookieName),
                     viewtype = WebUser.ViewType,
                     lastview = view,
-                    dashboardFolders = WebUser.DashboardFolders.ToArray()
+                    dashboardFolders = WebUser.DashboardFolders.ToArray(),
+                    manageDashboards = WebUser.ManageDashboards
                 });
             }
             catch (Exception ex)
@@ -475,7 +476,7 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
 
-                return Json(new SWIUserProfile()
+                return Json(new 
                 {
                     authenticated = true,
                     name = WebUser.Name,
@@ -487,7 +488,7 @@ namespace SealWebServer.Controllers
             catch
             {
                 //not authenticated
-                return Json(new SWIUserProfile() { authenticated = false });
+                return Json(new { authenticated = false });
             }
         }
 
@@ -662,6 +663,8 @@ namespace SealWebServer.Controllers
 
                 if (!CheckAuthentication()) return Content(_loginContent);
 
+                if (!WebUser.ManageDashboards) throw new Exception("No right to add dashboards");
+
                 foreach (var guid in guids) WebUser.Profile.Dashboards.Add(guid);
                 WebUser.Profile.SaveToFile();
 
@@ -683,6 +686,8 @@ namespace SealWebServer.Controllers
 
                 if (!CheckAuthentication()) return Content(_loginContent);
 
+                if (!WebUser.ManageDashboards) throw new Exception("No right to remove dashboard");
+
                 if (WebUser.Profile.Dashboards.Contains(guid)) WebUser.Profile.Dashboards.Remove(guid);
                 WebUser.Profile.SaveToFile();
 
@@ -701,6 +706,9 @@ namespace SealWebServer.Controllers
             try
             {
                 checkSWIAuthentication();
+
+                if (!WebUser.ManageDashboards) throw new Exception("No right to swap  dashboard");
+
                 if (WebUser.Profile.Dashboards.Contains(guid1) && WebUser.Profile.Dashboards.Contains(guid2))
                 {
                     var newDashboards = new List<string>();
@@ -762,9 +770,8 @@ namespace SealWebServer.Controllers
                 var item = dashboard.Items.FirstOrDefault(i => i.GUID == itemguid);
                 if (item == null) throw new Exception("Error: The item does not exist");
 
-                var widget = WebUser.Widgets.ContainsKey(item.WidgetGUID) ? WebUser.Widgets[item.WidgetGUID] : null;
+                var widget = DashboardWidgetsPool.Widgets.ContainsKey(item.WidgetGUID) ? DashboardWidgetsPool.Widgets[item.WidgetGUID] : null;
                 if (widget == null) throw new Exception("Error: the widget does not exist");
-                if (!WebUser.CanSelectWidget(widget)) throw new Exception("Error: no right to view this widget");
 
                 /* No check on exec rights for widgets...
                 SWIFolder folder = getParentFolder(widget.ReportPath);

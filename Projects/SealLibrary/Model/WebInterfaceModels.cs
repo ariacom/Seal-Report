@@ -6,7 +6,6 @@ namespace Seal.Model
 {
     public class SWIUserProfile
     {
-        public bool authenticated = false;
         public string name;
         public string group;
         public string culture;
@@ -15,6 +14,7 @@ namespace Seal.Model
         public string lastview;
         public ViewType viewtype;
         public SWIDashboardFolder[] dashboardFolders;
+        public bool manageDashboards = false;
     }
 
     public class SWIFolder
