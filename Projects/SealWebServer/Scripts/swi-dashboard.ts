@@ -216,6 +216,7 @@ class SWIDashboard {
                 panel.append(panelHeader);
                 panelHeader.append($("<span class='glyphicon glyphicon-" + item.Icon + "'>"));
 
+                if (!item.DisplayName) item.DisplayName = "";
                 var nameLink = $("<a>)").text(" " + item.DisplayName);
                 var panelName = $("<h3 class='panel-title' style='display:inline'>").append(nameLink);
 
@@ -321,23 +322,25 @@ class SWIDashboard {
                 menu.attr("title", dashboard.FullName);
                 var li = $("<li>");
 
-                //Drag and drop for menu
-                li.on("dragstart", function (e) {
-                    _da._lastGUID = $(this).children("a").attr("did");
-                    _da._dragType = "menu";
-                });
-                li.prop("draggable", "true");
-                li.on("dragover", function (e) {
-                    if (_da._dragType == "menu") e.preventDefault();
-                });
-                li.on("drop", function (e) {
-                    _da._dragType = "";
-                    var sourceid = _da._dashboard.GUID;
-                    var did = $(this).children("a").attr("did");
-                    _gateway.SwapDashboardOrder(_da._lastGUID, did, function (data) {
-                        _da.init();
+                if (_main._profile.manageDashboards) {
+                    //Drag and drop for menu
+                    li.on("dragstart", function (e) {
+                        _da._lastGUID = $(this).children("a").attr("did");
+                        _da._dragType = "menu";
                     });
-                });
+                    li.prop("draggable", "true");
+                    li.on("dragover", function (e) {
+                        if (_da._dragType == "menu") e.preventDefault();
+                    });
+                    li.on("drop", function (e) {
+                        _da._dragType = "";
+                        var sourceid = _da._dashboard.GUID;
+                        var did = $(this).children("a").attr("did");
+                        _gateway.SwapDashboardOrder(_da._lastGUID, did, function (data) {
+                            _da.init();
+                        });
+                    });
+                }
 
                 //Spinner menu
                 menu.append($("<i class='fa fa-spinner fa-spin fa-1x fa-fw spinner-menu'></i>"));
@@ -378,10 +381,6 @@ class SWIDashboard {
             if (_da._lastGUID) _da.initDashboardItems(_da._lastGUID);
             for (var i = 0; i < data.length; i++) {
                 if (!_da._lastGUID || data[i].GUID != _da._lastGUID) _da.initDashboardItems(data[i].GUID);
-            }
-
-            if (data.length == 0 && $("#main-dashboard").css("display") == "block") {
-                SWIUtil.ShowMessage("alert-danger", SWIUtil.tr("Please Click on the 'Dashboard' menu to create or add Dashboards to your view..."), 0);
             }
 
             //Manage
@@ -428,7 +427,6 @@ class SWIDashboard {
                     if (hasEditor) {
                         _daEditor.initDashboardMenu();
                     }
-
                     $("#dashboard-dialog").modal();
                 });
             });

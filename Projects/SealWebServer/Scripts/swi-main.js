@@ -102,12 +102,16 @@ var SWIMain = /** @class */ (function () {
         });
         var hasReports = (_main._profile.viewtype == 0 || _main._profile.viewtype == 2);
         var hasDashboard = (_main._profile.viewtype == 1 || _main._profile.viewtype == 2);
-        SWIUtil.ShowHideControl($("#dashboard-toggle"), _main._profile.viewtype == 2 /* reports and dashboards */);
+        SWIUtil.ShowHideControl($("#dashboard-toggle"), _main._profile.viewtype == 2); /* reports and dashboards */
+        SWIUtil.ShowHideControl($("#dashboards-nav-item"), _main._profile.manageDashboards);
         //Dashboard toggle
         $("#dashboard-toggle").unbind('click').on("click", function (e) {
             _main.showDashboard($("#main-dashboard").css("display") != "block");
-            if (!_da._dashboard && $("#main-dashboard").css("display") == "block") {
-                SWIUtil.ShowMessage("alert-danger", SWIUtil.tr("Please Click on the 'Dashboard' menu to create or add Dashboards to your view..."), 0);
+            if ($("#main-dashboard").css("display") == "block") {
+                setTimeout(function () {
+                    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+                    nvd3UpdateCharts();
+                }, 200);
             }
         });
         if (hasReports) {

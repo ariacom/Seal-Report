@@ -588,26 +588,29 @@ $(document).ready(function () {
     if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 
     //back to top
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
-        else $('#back-to-top').fadeOut();
-    });
+    if (!printLayout) {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
+            else $('#back-to-top').fadeOut();
+        });
 
-    $('#back-to-top').click(function () {
-        $('#back-to-top').tooltip('hide');
-        $('body,html').animate({
-            scrollTop: 0
-        }, 800);
-        return false;
-    });
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
 
-    $('#back-to-top-close').click(function () {
-        $('#back-to-top').tooltip('hide');
-        $('#back-to-top').fadeOut();
-        return false;
-    });
+        $('#back-to-top-close').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('#back-to-top').fadeOut();
+            return false;
+        });
 
-    if (!printLayout) $('#back-to-top').tooltip('show');
+        $('#back-to-top').tooltip('show');
+    }
+
     initMessageMenu();
     scrollMessages();
 
