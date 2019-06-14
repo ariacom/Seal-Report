@@ -385,3 +385,4 @@ var SWIDashboard = /** @class */ (function () {
     };
     return SWIDashboard;
 }());
+//# sourceMappingURL=swi-dashboard.js.map

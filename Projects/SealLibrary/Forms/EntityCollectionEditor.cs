@@ -154,6 +154,13 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = (TemplateTextEditor.CurrentEntity is Report);
             }
+            else if (CollectionItemType == typeof(SealServerConfiguration.FileReplacePattern))
+            {
+                frmCollectionEditorForm.Text = "File Patterns Collection Editor";
+                allowAdd = true;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
 
             TableLayoutPanel tlpLayout = frmCollectionEditorForm.Controls[0] as TableLayoutPanel;
 
@@ -260,6 +267,7 @@ namespace Seal.Forms
             else if (value is SubReport) result = ((SubReport)value).Name;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;
             else if (value is CommonScript) result = ((CommonScript)value).Name;
+            else if (value is SealServerConfiguration.FileReplacePattern) result = ((SealServerConfiguration.FileReplacePattern)value).ToString();
             return base.GetDisplayText(string.IsNullOrEmpty(result) ? "<Empty Name>" : result);
         }
     }

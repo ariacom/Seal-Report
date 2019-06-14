@@ -1233,6 +1233,16 @@ namespace Seal.Model
         }
 
 
+        string GetAttachedFileContent(string fileName)
+        {
+            string result = File.ReadAllText(fileName);
+            foreach (var item in Repository.Configuration.FileReplacePatterns.Where(i => i.FileName == Path.GetFileName(fileName)))
+            {
+                result = result.Replace(item.OldValue, item.NewValue);
+            }
+            return result;
+        }
+
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
             string sourceFilePath = Path.Combine(Repository.ViewScriptsFolder, fileName);
@@ -1257,7 +1267,7 @@ namespace Seal.Model
             //generating result file, set the script directly in the result
             string result = "<script type='text/javascript'>\r\n";
 
-            result += File.ReadAllText(sourceFilePath);
+            result += GetAttachedFileContent(sourceFilePath);
             result += "\r\n</script>\r\n";
             return result;
         }
@@ -1285,7 +1295,7 @@ namespace Seal.Model
 
             //generating result file, set the CSS directly in the result
             string result = "<style type='text/css'>\r\n";
-            result += File.ReadAllText(sourceFilePath);
+            result += GetAttachedFileContent(sourceFilePath);
             result += "\r\n</style>\r\n";
             return result;
         }

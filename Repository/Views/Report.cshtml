@@ -17,7 +17,7 @@
         @report.ExecutionName
     </title>
     <!--CSS-->
-    @Raw(report.AttachCSSFile("bootstrap.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"))
+    @Raw(report.AttachCSSFile("bootstrap.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"))
     @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"))
     @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css"))
     @Raw(report.AttachCSSFile("dataTables.bootstrap.min.css", "https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"))
@@ -27,7 +27,7 @@
 
     <!--Scripts-->
     @Raw(report.AttachScriptFile("jquery.min.js", "https://code.jquery.com/jquery-1.12.3.min.js"))
-    @Raw(report.AttachScriptFile("bootstrap.min.js", "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"))
+    @Raw(report.AttachScriptFile("bootstrap.min.js", "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"))
     @Raw(report.AttachScriptFile("bootstrap-select.min.js", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"))
     @Raw(report.AttachScriptFile("moment.min.js"))
     @if (view.CultureInfo.TwoLetterISOLanguageName != "en")
@@ -36,11 +36,13 @@
         @Raw(report.AttachScriptFile("i18n\\selectpicker." + view.CultureInfo.TwoLetterISOLanguageName + ".min.js"))
     }
     @Raw(report.AttachScriptFile("bootstrap-datetimepicker.min.js"))
+
     @Raw(report.AttachScriptFile("jquery.dataTables.min.js", "https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"))
     @Raw(report.AttachScriptFile("dataTables.bootstrap.min.js", "https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"))
     @Raw(report.AttachScriptFile("dataTables.responsive.min.js"))
-    @Raw(report.AttachScriptFile("datetime-moment.js"))
     @Raw(report.AttachScriptFile("responsive.bootstrap.min.js", "https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap.min.js"))
+
+    @Raw(report.AttachScriptFile("datetime-moment.js"))
 
     @if (report.HasChart)
     {
