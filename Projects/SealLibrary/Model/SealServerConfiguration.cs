@@ -50,6 +50,7 @@ namespace Seal.Model
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
+                GetProperty("FileReplacePatterns").SetIsBrowsable(!ForPublication);
 
                 GetProperty("ExcelConverter").SetIsBrowsable(!ForPublication);
                 GetProperty("PdfConverter").SetIsBrowsable(!ForPublication);
@@ -73,32 +74,15 @@ namespace Seal.Model
 
         [XmlIgnore]
         public bool ForPublication = false;
-
-
-        string _defaultConnectionString = "Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;";
         [Category("Server Settings"), DisplayName("Default Connection String"), Description("The OLE DB Default Connection String used when a new Data Source is created. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Id(1, 1)]
-        public string DefaultConnectionString
-        {
-            get { return _defaultConnectionString; }
-            set { _defaultConnectionString = value; }
-        }
+        public string DefaultConnectionString { get; set; } = "Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;";
 
-        string _taskFolderName = Repository.SealRootProductName + " Report";
         [Category("Server Settings"), DisplayName("Task Folder Name"), Description("The name of the Task Scheduler folder containg the schedules of the reports. Warning: Changing this name will affect all existing schedules !"), Id(2, 1)]
-        public string TaskFolderName
-        {
-            get { return _taskFolderName; }
-            set { _taskFolderName = value; }
-        }
+        public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
-        string _logoName = "logo.png";
         [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images' and in the \\Images sub-folder of the Web publication directory. If empty, the Web Product Name is used as prefix."), Id(5, 1)]
         [DefaultValue("logo.png")]
-        public string LogoName
-        {
-            get { return _logoName; }
-            set { _logoName = value; }
-        }
+        public string LogoName { get; set; } = "logo.png";
 
         [XmlIgnore]
         public bool HasLogo
@@ -109,78 +93,40 @@ namespace Seal.Model
             }
         }
 
-        int _logDays = 30;
         [Category("Server Settings"), DisplayName("Log days to keep"), Description("Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled."), Id(6, 1)]
         [DefaultValue(30)]
-        public int LogDays
-        {
-            get { return _logDays; }
-            set { _logDays = value; }
-        }
+        public int LogDays { get; set; } = 30;
 
-        string _webProductName = "Seal Report";
         [Category("Server Settings"), DisplayName("Web Product Name"), Description("The name of the product displayed on the Web site."), Id(7, 1)]
-        public string WebProductName
-        {
-            get { return _webProductName; }
-            set { _webProductName = value; }
-        }
+        public string WebProductName { get; set; } = "Seal Report";
 
-        bool _isLocal = true;
         [Category("Server Settings"), DisplayName("Server is local (No internet)"), Description("If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path)."), Id(8, 1)]
         [DefaultValue(true)]
-        public bool IsLocal
-        {
-            get { return _isLocal; }
-            set { _isLocal = value; }
-        }
+        public bool IsLocal { get; set; } = true;
 
+        [Category("Server Settings"), DisplayName("Patterns to replace in CSS or JScript"), Description("List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS."), Id(9, 1)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<FileReplacePattern> FileReplacePatterns { get; set; } = new List<FileReplacePattern>();
+        public bool ShouldSerializeFileReplacePatterns() { return FileReplacePatterns.Count > 0; }
 
-        string _initScript = "";
         [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string InitScript
-        {
-            get { return _initScript; }
-            set { _initScript = value; }
-        }
+        public string InitScript { get; set; } = "";
 
-        string _reportCreationScript = "";
         [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(5, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string ReportCreationScript
-        {
-            get { return _reportCreationScript; }
-            set { _reportCreationScript = value; }
-        }
+        public string ReportCreationScript { get; set; } = "";
 
-        string _tasksScript = "";
         [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed. This may be useful to defined common functions."), Id(6, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string TasksScript
-        {
-            get { return _tasksScript; }
-            set { _tasksScript = value; }
-        }
+        public string TasksScript { get; set; } = "";
 
-        List<CommonScript> _commonScripts = new List<CommonScript>();
         [Category("Scripts"), DisplayName("Common Scripts"), Description("List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report."), Id(7, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<CommonScript> CommonScripts
-        {
-            get { return _commonScripts; }
-            set { _commonScripts = value; }
-        }
+        public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
 
-        #region PDF and Excel Converters
-
-        private List<string> _pdfConfigurations = new List<string>();
-        public List<string> PdfConfigurations
-        {
-            get { return _pdfConfigurations; }
-            set { _pdfConfigurations = value; }
-        }
-        public bool ShouldSerializePdfConfigurations() { return _pdfConfigurations.Count > 0; }
+        public List<string> PdfConfigurations { get; set; } = new List<string>();
+        public bool ShouldSerializePdfConfigurations() { return PdfConfigurations.Count > 0; }
 
         private SealPdfConverter _pdfConverter = null;
         [XmlIgnore]
@@ -206,13 +152,8 @@ namespace Seal.Model
             get { return _pdfConverter != null; }
         }
 
-        private List<string> _excelConfigurations = new List<string>();
-        public List<string> ExcelConfigurations
-        {
-            get { return _excelConfigurations; }
-            set { _excelConfigurations = value; }
-        }
-        public bool ShouldSerializeExcelConfigurations() { return _excelConfigurations.Count > 0; }
+        public List<string> ExcelConfigurations { get; set; } = new List<string>();
+        public bool ShouldSerializeExcelConfigurations() { return ExcelConfigurations.Count > 0; }
 
         private SealExcelConverter _excelConverter = null;
         [XmlIgnore]
@@ -251,9 +192,7 @@ namespace Seal.Model
         {
             get { return "<Click to reset the Excel configuration values to their default values>"; }
         }
-
-        #endregion
-
+      
 
         [XmlIgnore]
         public string CommonScriptsHeader
@@ -392,11 +331,11 @@ namespace Seal.Model
             //Pdf & Excel
             if (PdfConverterEdited)
             {
-                _pdfConfigurations = PdfConverter.GetConfigurations();
+                PdfConfigurations = PdfConverter.GetConfigurations();
             }
             if (ExcelConverterEdited)
             {
-                _excelConfigurations = ExcelConverter.GetConfigurations();
+                ExcelConfigurations = ExcelConverter.GetConfigurations();
             }
 
 #if !DEBUG
@@ -415,6 +354,21 @@ namespace Seal.Model
             }
             FilePath = path;
             LastModification = File.GetLastWriteTime(path);
+        }
+
+        public class FileReplacePattern
+        {
+            public override string ToString()
+            {
+                return FileName + " " + OldValue;
+            }
+
+            [Category("Pattern Definition"),DisplayName("\tFile Name"), Description("The name of the attached file.")]
+            public string FileName { get; set; } = "filename.css";
+            [Category("Pattern Definition"),DisplayName("\tOld Value"), Description("The pattern to replace.")]
+            public string OldValue { get; set; }
+            [Category("Pattern Definition"),DisplayName("New Value"), Description("The new value.")]
+            public string NewValue { get; set; }
         }
     }
 }
