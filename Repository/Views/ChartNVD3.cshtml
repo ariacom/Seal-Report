@@ -167,7 +167,7 @@
                     if (nvd3Charts != null) nvd3Charts.push(@chartId);
                     nvd3TranslateAll("#@(chartId)");
 
-                    if ((@chartId).pie) {
+                    if ((@chartId).pie && @Helper.ToJS(report.GenerateHTMLDisplay)) {
                         (@chartId).pie.dispatch.on("elementClick", function (e) {
                             var nav = @(chartId).navigations[e.data.x];
                             if (nav) showPopupNavMenu(e.event, nav, true);

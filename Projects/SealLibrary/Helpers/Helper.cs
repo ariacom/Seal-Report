@@ -771,7 +771,7 @@ namespace Seal.Helpers
         public static void RunInAnotherAppDomain(string assemblyFile)
         {
             // RazorEngine cannot clean up from the default appdomain...
-            Console.WriteLine("Switching to secound AppDomain, for RazorEngine...");
+            Console.WriteLine("Switching to second AppDomain, for RazorEngine...");
             AppDomainSetup adSetup = new AppDomainSetup();
             adSetup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             var current = AppDomain.CurrentDomain;

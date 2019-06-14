@@ -867,7 +867,7 @@ namespace SealWebServer.Controllers
                     itemguid = itemguid,
                     path = widget.Exec ? widget.ReportPath : "",
                     lastexec = Translate("Last execution at") + " " + report.ExecutionEndDate.ToString("G", Repository.CultureInfo),
-                    description = widget.Description,
+                    description = Repository.TranslateWidgetDescription(widget.ReportPath.Replace(Repository.ReportsFolder, "\\"), widget.Description),
                     dynamic = item.Dynamic,
                     content = content,
                     refresh = (item.Refresh == -1 ? rootAutoRefresh : item.Refresh)
