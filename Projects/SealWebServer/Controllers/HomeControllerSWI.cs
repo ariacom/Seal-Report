@@ -474,7 +474,7 @@ namespace SealWebServer.Controllers
             WriteDebug("SWIGetUserProfile");
             try
             {
-                checkSWIAuthentication();
+                if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
 
                 return Json(new 
                 {

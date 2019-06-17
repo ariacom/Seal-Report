@@ -12,13 +12,9 @@ namespace Seal.Model
 {
     public class SecurityUserProfile
     {
-        private string _culture;
-        private string _view = "reports";
-        private List<string> _dashboards = new List<string>();
-
-        public string Culture { get => _culture; set => _culture = value; }
-        public string View { get => _view; set => _view = value; }
-        public List<string> Dashboards { get => _dashboards; set => _dashboards = value; }
+        public string Culture { get; set; } = "en";
+        public string View { get; set; } = "reports";
+        public List<string> Dashboards { get; set; } = new List<string>();
 
         static public SecurityUserProfile LoadFromFile(string path)
         {
@@ -48,7 +44,7 @@ namespace Seal.Model
         {
             try
             {
-                _dashboards.RemoveAll(i => string.IsNullOrEmpty(i));
+                Dashboards.RemoveAll(i => string.IsNullOrEmpty(i));
 
                 XmlSerializer serializer = new XmlSerializer(typeof(SecurityUserProfile));
                 XmlWriterSettings ws = new XmlWriterSettings();
