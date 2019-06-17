@@ -568,6 +568,7 @@ var SWIMain = /** @class */ (function () {
             span.addClass("glyphicon-th-large");
             $("#dashboard-toggle").attr("title", SWIUtil.tr2("View dashboards"));
         }
+        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
     };
     return SWIMain;
 }());

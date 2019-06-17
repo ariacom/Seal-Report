@@ -153,7 +153,7 @@ var SWIDashboard = /** @class */ (function () {
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
                 if (currentGroup != item.GroupName || !grid) {
-                    content.append($("<hr style='margin:5px 2px'>"));
+                    content.append($("<hr class='group-name' style='margin:5px 2px'>"));
                     //Add current grid
                     grid = $("<div class='grid grid" + dashboard.GUID + "'>");
                     grid.attr("id", "g" + dashboard.GUID + "-" + item.GroupOrder);
@@ -165,7 +165,7 @@ var SWIDashboard = /** @class */ (function () {
                     }
                     if (item.GroupName != "") {
                         //Group name 
-                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName);
+                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name");
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
                         var groupDrag = $("<h4 style='margin:0px 5px'>").append(groupSpan);
                         groupDrag.attr("group-order", item.GroupOrder);
@@ -192,7 +192,7 @@ var SWIDashboard = /** @class */ (function () {
                 panelHeader.append(panelName);
                 panelHeader.append($("<i class='fa fa-spinner fa-spin fa-sm fa-fw'></i>"));
                 var refreshButton = $("<button class='btn btn-sm btn-info' type='button' style='margin-left:2px;margin-right:0px;padding:0px 6px;'><span class='glyphicon glyphicon-refresh'></span></button>");
-                var panelButtons = $("<div style='display:none;float:right;'>");
+                var panelButtons = $("<div style='display:none;float:right;white-space:nowrap;'>");
                 refreshButton.attr("id", "rb" + item.GUID);
                 panelButtons.append(refreshButton);
                 if (hasEditor && dashboard.Editable) {
@@ -309,15 +309,17 @@ var SWIDashboard = /** @class */ (function () {
                     _da.enableControls();
                     _gateway.SetLastDashboard(_da._lastGUID, null);
                     _main._profile.dashboard = _da._lastGUID;
+                    SWIUtil.ShowHideControl($(".item,.group-name"), false);
                     setTimeout(function () {
                         nvd3UpdateCharts();
-                    }, 250);
+                    }, 200);
                     setTimeout(function () {
                         $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
                     }, 300);
                     setTimeout(function () {
+                        SWIUtil.ShowHideControl($(".item,.group-name"), true);
                         _da.reorderItems(true);
-                    }, 500);
+                    }, 400);
                 });
                 var content = $("<div id='" + dashboard.GUID + "' class='tab-pane fade'>");
                 $("#content-dashboard").append(content);
@@ -385,4 +387,3 @@ var SWIDashboard = /** @class */ (function () {
     };
     return SWIDashboard;
 }());
-//# sourceMappingURL=swi-dashboard.js.map
