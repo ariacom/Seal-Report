@@ -34,7 +34,7 @@ namespace Seal.Forms
             //Special restriction here
         }
     }
-    string result = string.Format(""aColumnName={0}"", Helper.QuoteSingle(restriction));
+    string result = string.Format(""Orders.EmployeeID in (SELECT EmployeeID FROM Employees WHERE LastName={0})"", Helper.QuoteSingle(restriction));
     }
 @Raw(result)";
         const string razorSourceTemplate = "@using Seal.Model\r\n@{\r\nMetaSource source = Model;\r\nstring result = \"update Employees set LastName=LastName\";\r\n}\r\n@Raw(result)";
@@ -158,7 +158,7 @@ namespace Seal.Forms
                     {
                         samples.Add(razorTableWhereTemplate);
                         samples.Add("{CommonRestriction_LastName}");
-                        samples.Add("LastName={CommonValue_LastNameValue}");
+                        samples.Add("Orders.EmployeeID in (SELECT EmployeeID FROM Employees WHERE LastName={CommonValue_LastNameValue})");
                         description = descriptionTemplate2;
                     }
                     else if (context.PropertyDescriptor.Name == "Sql")

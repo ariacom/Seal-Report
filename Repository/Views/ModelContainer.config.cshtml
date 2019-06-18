@@ -4,6 +4,7 @@
 
     //Template Name
     Template.Name = ReportViewTemplate.ModelContainerName;
+    Template.Description = "A grid container for the page result (refer to Bootstrap 3 grid at https://getbootstrap.com/docs/3.4/css/#grid)";
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
@@ -15,7 +16,7 @@
         Type = ViewParameterType.Text,
         TextValue = "",
         DisplayName = "Grid layout",
-        Description = "Defines the rows and the columns used for the child views. It follows the Bootstrap 3 Grid Model (refer to https://getbootstrap.com/docs/3.3/css/#grid). One row is defined per line, columns are separed by semi-column, one child view is used per cell sequentially unless the definition is under brackets '()'.",
+        Description = "Defines the rows and the columns used for the child views. It follows the Bootstrap 3 Grid Model (refer to https://getbootstrap.com/docs/3.4/css/#grid). One row is defined per line, columns are separed by semi-column, one child view is used per cell sequentially unless the definition is under brackets '()'.",
         TextSamples = new string[] {
                 "col-xs-12 col-sm-8;\r\ncol-xs-12 col-sm-8;\r\ncol-sm-12;|Row 1 with 1 column having width 12 for phones or 8 for other devices\r\nRow 2 with 1 column having width 12 for phones or 8 for other devices\r\nRow 3 with 1 column full width",
                 "col-sm-6;col-sm-6;|Row 1 with 2 columns same width",

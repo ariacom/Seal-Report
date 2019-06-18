@@ -55,7 +55,7 @@ if the user has personal folders,
 which columns, data sources, connections or devices can be selected with the Web Report Designer,
 which public dashboards are published,
 if the user has personal dashboards,
-which widgets can be selected with the Dashboard Designer.
+which widgets can be selected with the Dashboard Manager.
 
 The security provider performs the authentication and select the security groups of the user.
 
@@ -76,7 +76,7 @@ Dashboard Publication
 -Manage Dashboards View: true if one group has a the right to Manage Dashboards View
 -Personal Dashboard Folder: true if one group has a personal Dashboard Folder
 
-Dashboard Designer Security
+Dashboard Manager Security
 - Widgets: Cannot be selected if it is specified in one group
 ";
             

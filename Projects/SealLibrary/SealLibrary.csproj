@@ -381,8 +381,10 @@
     <None Include="..\..\Repository\Views\Content\seal.css">
       <Link>Views\Content\seal.css</Link>
     </None>
+    <None Include="CD-Dashboard.cd" />
+    <None Include="CD-Data Source.cd" />
     <None Include="packages.config" />
-    <None Include="Result.cd" />
+    <None Include="CD-Report Model.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\AboutBoxForm.resx">
@@ -461,8 +463,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Overview.cd" />
-    <None Include="Repository.cd" />
+    <None Include="CD-Report.cd" />
+    <None Include="CD-Security.cd" />
     <None Include="Resources\checkedRed.png" />
     <None Include="Resources\checkedGreen.png" />
     <None Include="Resources\helper.png" />
