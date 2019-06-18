@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Seal.Model.Dashboard">
+    <Position X="2.5" Y="2.75" Width="1.5" />
+    <Members>
+      <Method Name="LoadFromFile" Hidden="true" />
+      <Method Name="ReinitGroupOrders" Hidden="true" />
+      <Method Name="ReinitGUIDs" Hidden="true" />
+      <Method Name="SaveToFile" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAFAGAAgAAAQCKIAAAAAAAQAAAAQAAAAAACCgAAAFAA=</HashCode>
+      <FileName>Model\Dashboard.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.DashboardItem">
+    <Position X="5" Y="2.75" Width="1.5" />
+    <Members>
+      <Field Name="_widget" Hidden="true" />
+      <Property Name="DisplayGroupName" Hidden="true" />
+      <Property Name="DisplayName" Hidden="true" />
+      <Method Name="SetWidget" Hidden="true" />
+      <Method Name="ShouldSerializeColor" Hidden="true" />
+      <Method Name="ShouldSerializeDynamic" Hidden="true" />
+      <Method Name="ShouldSerializeHeight" Hidden="true" />
+      <Method Name="ShouldSerializeIcon" Hidden="true" />
+      <Method Name="ShouldSerializeName" Hidden="true" />
+      <Method Name="ShouldSerializeRefresh" Hidden="true" />
+      <Method Name="ShouldSerializeWidth" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAFAFAAABEBMACABACAARESgAACAIgAAAAAAgAEAAAE=</HashCode>
+      <FileName>Model\DashboardItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Widget" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Seal.Model.DashboardWidget">
+    <Position X="7.5" Y="2.75" Width="1.5" />
+    <Members>
+      <Field Name="_name" Hidden="true" />
+      <Method Name="InitEditor" Hidden="true" />
+      <Field Name="LastModification" Hidden="true" />
+      <Field Name="ReportName" Hidden="true" />
+      <Field Name="ReportPath" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="UpdateEditorAttributes" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AABAIAAABABwAAAFIAAAgGQAABAAABAAAAAEgBEAAAA=</HashCode>
+      <FileName>Model\DashboardWidget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.ReportView" Collapsed="true">
+    <Position X="10.5" Y="2.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>I3A1FCbUZMUNCUCGZgRIAWYCRJoDNkYURZxpIIjGAYY=</HashCode>
+      <FileName>Model\ReportView.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="WidgetDefinition" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Seal.Model.Report" Collapsed="true">
+    <Position X="10.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>z1jT9fuu3KKzrK0gV7YHqi5XTOiXIOvItzhdLq90OB4=</HashCode>
+      <FileName>Model\Report.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Views" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

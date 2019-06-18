@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Seal.Model.SealSecurity" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Providers" Type="Seal.Model.SecurityProvider" FixedToPoint="true">
+      <Path>
+        <Point X="7.125" Y="3.941" />
+        <Point X="7.125" Y="5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAEQEMMgIAAUAQAAgAEIAYAABjAAUFACAKDIIAAwEAQ=</HashCode>
+      <FileName>Model\SealSecurity.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Providers" />
+      <Property Name="Groups" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.SecurityProvider" Collapsed="true">
+    <Position X="6.5" Y="5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAEAUAAEAACQAQAAAAAIAAAgIDADAAgAAI=</HashCode>
+      <FileName>Model\SecurityProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.SecurityGroup">
+    <Position X="8.75" Y="3.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Folders" Type="Seal.Model.SecurityFolder">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.258" Y="0.089" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="DashboardFolders" Type="Seal.Model.SecurityDashboardFolder">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.006" Y="0.039" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAACCQYAAYAAAAAAgAAQAQRAQAAIAAwAADChAAAA=</HashCode>
+      <FileName>Model\SecurityGroup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Folders" />
+      <Property Name="DashboardFolders" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.SecurityFolder" Collapsed="true">
+    <Position X="12.25" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAEBggAAAAACAAIAAAAAIEIAABAAAAAAAAMQAAAAAAA=</HashCode>
+      <FileName>Model\SecurityFolder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.SecurityUser" Collapsed="true">
+    <Position X="8.75" Y="7.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AUAIA1STEIAhdUEQSAACIRYgkAEKMYIAHFBOSEIBgIQ=</HashCode>
+      <FileName>Model\SecurityUser.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="SecurityGroups" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.SecurityDashboardFolder" Collapsed="true">
+    <Position X="12.25" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAMAAAAAAAAAAAAAAAACQAABAAAQAAAACAAAAAAAA=</HashCode>
+      <FileName>Model\SecurityDashboardFolder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

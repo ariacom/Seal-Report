@@ -5,6 +5,10 @@
     <Members>
       <Field Name="_models" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
     <AssociationLine Name="Sources" Type="Seal.Model.ReportSource" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="2.75" Y="3.5" />
@@ -34,7 +38,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>BxjztXqkwBKRpKwgM5QHggVTzPoXgMqIcSl9JK0EOBQ=</HashCode>
+      <HashCode>z1jT9fuu3KKzrK0gV7YHqi5XTOiXIOvItzhdLq90OB4=</HashCode>
       <FileName>Model\Report.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -44,15 +48,16 @@
       <Property Name="Sources" />
       <Property Name="Models" />
       <Property Name="Outputs" />
+      <Property Name="Tasks" />
       <Property Name="Views" />
       <Property Name="Schedules" />
-      <Property Name="Tasks" />
     </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Seal.Model.ReportOutput" Collapsed="true">
     <Position X="5.75" Y="5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>SCAEEAwgAAAMAySBQCgMDCAB4FCJoOgAEACKAIxEoBA=</HashCode>
+      <HashCode>SCAFGAwgBAAcIySBQCgMDCAB4FiJoPgGkQKKAIxUoBA=</HashCode>
       <FileName>Model\ReportOutput.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -62,8 +67,18 @@
   </Class>
   <Class Name="Seal.Model.ReportModel" Collapsed="true">
     <Position X="5.75" Y="2.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Seal.Model.ReportModel.JoinPath" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Model\ReportModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>REQIJQEZxtosYak3QAUeiBoAERkNEFQkACihAJgCWAA=</HashCode>
+      <HashCode>VsxIvRHZ1tI8YrlvTSafSpmQOVkZXFhlwCipAhhGeIw=</HashCode>
       <FileName>Model\ReportModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -80,7 +95,7 @@
   <Class Name="Seal.Model.ReportSchedule" Collapsed="true">
     <Position X="5.75" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EAgCAAAQIEAIQACAJAmJCAAExPAAAFBAAEAIAAAAAgA=</HashCode>
+      <HashCode>EAgCAAAQIEQoQACAJAmJCEgExPAECFDAAEAMAAQAAgA=</HashCode>
       <FileName>Model\ReportSchedule.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -88,97 +103,21 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Seal.Model.ReportViewTemplate" Collapsed="true">
-    <Position X="8.5" Y="3.5" Width="1.75" />
+    <Position X="8.5" Y="3.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAcQAAACAeAUGAACBCAAQIAAIAIQAAgIBQDEABFAo=</HashCode>
+      <HashCode>AAQEoAAKgAE8AQCFACQCAAQAAIAAIQCQgIBWDAgAAAo=</HashCode>
       <FileName>Model\ReportViewTemplate.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Seal.Model.Theme" Collapsed="true">
-    <Position X="8.5" Y="4.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAgIQAAAAAAAQAAAAACAEQAAAAAIAAAAABgAABAgCA=</HashCode>
-      <FileName>Model\Theme.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Seal.Model.MetaSource" Collapsed="true">
     <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAMQMgAAJSAQEEFAQCBJEAgBUANHACgEBCAKgBtAA=</HashCode>
+      <HashCode>AQAAcQMkIAJTAQEEFAQCBpFAiJUANPhCgEFCAKhBtAA=</HashCode>
       <FileName>Model\MetaSource.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="MetaData" />
-    </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="Connections" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Seal.Model.MetaTable" Collapsed="true">
-    <Position X="13" Y="1.75" Width="1.5" />
-    <Members>
-      <Field Name="_columns" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AgAgEQEAAtJAAQQAQAQCIBQA4BEAIEAYAQBAAOgQgAA=</HashCode>
-      <FileName>Model\MetaTable.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_columns" />
-    </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="Columns" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Seal.Model.MetaConnection" Collapsed="true">
-    <Position X="10.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>QAYAESAAAgAAAQAAEAAIIAQAABEAIEEKQaKAAIBAAAA=</HashCode>
-      <FileName>Model\MetaConnection.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Seal.Model.MetaData" Collapsed="true">
-    <Position X="10.5" Y="1.75" Width="1.5" />
-    <AssociationLine Name="Enums" Type="Seal.Model.MetaEnum" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="11.812" Y="2.312" />
-        <Point X="11.812" Y="3.096" />
-        <Point X="13" Y="3.096" />
-      </Path>
-    </AssociationLine>
-    <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAAACACACAAQQAAAQAMAAAKAAAAAAAAAAA=</HashCode>
-      <FileName>Model\MetaData.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Tables" />
-      <Property Name="Joins" />
-      <Property Name="Enums" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Seal.Model.MetaEnum" Collapsed="true">
-    <Position X="13" Y="2.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>ADAAGAAAAlAEAQCAQAAAIEYAIBAAIEACAIQgAIgAACA=</HashCode>
-      <FileName>Model\MetaEnum.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Seal.Model.MetaJoin" Collapsed="true">
-    <Position X="13" Y="3.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAgEAgCAkEAQQAAAAgAIAQAABAIIEAgAABAAIiAEIE=</HashCode>
-      <FileName>Model\MetaJoin.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Seal.Model.MetaColumn" Collapsed="true">
-    <Position X="13" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AEECEAAAAkAABVSQACAgAgQAEJgAJEAAAQAAIICAKEA=</HashCode>
-      <FileName>Model\MetaColumn.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Seal.Model.OutputDevice" Collapsed="true">
-    <Position X="10.75" Y="5" Width="1.5" />
+    <Position X="8.5" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgAACAAIAAAgAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
       <FileName>Model\OutputDevice.cs</FileName>
@@ -186,7 +125,7 @@
   </Class>
   <Class Name="Seal.Model.ReportView" Collapsed="true">
     <Position X="5.75" Y="3.75" Width="1.5" />
-    <AssociationLine Name="Views" Type="Seal.Model.ReportView" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="Views" Type="Seal.Model.ReportView" ManuallyRouted="true">
       <Path>
         <Point X="6.688" Y="3.75" />
         <Point X="6.688" Y="3.408" />
@@ -195,29 +134,36 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>I0ClVCbUZMOsCSCUphRJGXZCBDIDIkKUQcwxFJlCEUY=</HashCode>
+      <HashCode>I3A1FCbUZMUNCUCGZgRIAWYCRJoDNkYURZxpIIjGAYY=</HashCode>
       <FileName>Model\ReportView.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Template" />
-      <Property Name="Theme" />
       <Property Name="Model" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="Views" />
+      <Property Name="Parameters" />
     </ShowAsCollectionAssociation>
-    <Lollipop Position="0.1" />
+    <Lollipop Position="0.1" Collapsed="true" />
   </Class>
   <Class Name="Seal.Model.ReportTask" Collapsed="true">
     <Position X="4" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAFAIAQgAAAYUEAAgACJAACRAAMFAUwADAIZggCQA=</HashCode>
+      <HashCode>AAAAFQIAQgAAAYUEAAgACJAACRAAMFAUwADAAZggCQA=</HashCode>
       <FileName>Model\ReportTask.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Source" />
     </ShowAsAssociation>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Seal.Model.Parameter" Collapsed="true">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BBABFECDAAAoAAQkQAEAAAQgARAAAIIMEREgIEIYEBQ=</HashCode>
+      <FileName>Model\Parameter.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

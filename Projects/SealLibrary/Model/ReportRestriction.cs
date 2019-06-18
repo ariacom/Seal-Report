@@ -43,7 +43,6 @@ namespace Seal.Model
                 GetProperty("EnumGUIDRE").SetIsBrowsable(true);
                 GetProperty("ChangeOperator").SetIsBrowsable(!IsTaskRestriction);
                 GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
-                GetProperty("UseAsParameter").SetIsBrowsable(!IsTaskRestriction);
 
                 //Conditional
                 if (IsEnum)
@@ -105,7 +104,6 @@ namespace Seal.Model
                     GetProperty("Date4Keyword").SetIsReadOnly(true);
                 }
 
-                GetProperty("UseAsParameter").SetIsReadOnly(_operator != Operator.ValueOnly);
                 GetProperty("Required").SetIsReadOnly(_prompt == PromptType.None);
                 GetProperty("ChangeOperator").SetIsReadOnly(_prompt == PromptType.None);
 
@@ -264,15 +262,6 @@ namespace Seal.Model
         {
             get { return _enumGUID; }
             set { _enumGUID = value; }
-        }
-
-        private bool _useAsParameter = false;
-        [DefaultValue(false)]
-        [Category("Advanced"), DisplayName("Use as parameter"), Description("If true and the operator is set to Value Only, the restriction is replaced by '(1=1)' and has no impact on the SQL generated. The value can then be used in scripts."), Id(9, 3)]
-        public bool UseAsParameter
-        {
-            get { return _useAsParameter; }
-            set { _useAsParameter = value; }
         }
 
         Operator _operator = Operator.Equal;
@@ -1039,14 +1028,14 @@ namespace Seal.Model
             {
                 if (IsEnum)
                 {
-                    _SQLText = UseAsParameter ? "(1=1)" : string.Format("({0})", (HasValue ? EnumSQLValue : "NULL"));
+                    _SQLText = string.Format("({0})", (HasValue ? EnumSQLValue : "NULL"));
                     _displayText = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue ? EnumDisplayValue : "?");
                     _displayRestriction = _displayText;
                 }
                 else
                 {
-                    if (!UseAsParameter && !HasValue1 && IsText) _SQLText = GetSQLValue("", FinalDate1, _operator);
-                    else _SQLText = UseAsParameter ? "(1=1)" : (HasValue1 ? GetSQLValue(Value1, FinalDate1, _operator) : "NULL");
+                    if (!HasValue1 && IsText) _SQLText = GetSQLValue("", FinalDate1, _operator);
+                    else _SQLText = (HasValue1 ? GetSQLValue(Value1, FinalDate1, _operator) : "NULL");
                     _displayText = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue1 ? GetDisplayValue(Value1, FinalDate1) : "?");
                     _displayRestriction = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue1 ? GetDisplayRestriction(Value1, Date1Keyword, Date1) : "?");
                 }

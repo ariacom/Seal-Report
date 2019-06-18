@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Seal.Model.MetaSource" Collapsed="true">
+    <Position X="2.25" Y="1" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQAAcQMkIAJTAQEEFAQCBpFAiJUANPhCgEFCAKhBtAA=</HashCode>
+      <FileName>Model\MetaSource.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MetaData" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Connections" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.MetaTable" Collapsed="true">
+    <Position X="7.5" Y="2.25" Width="1.5" />
+    <Members>
+      <Field Name="_columns" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>QgAgGQEAC9JgAQQAQCQGOBQI4DsAIEAYQwhABKgQgMg=</HashCode>
+      <FileName>Model\MetaTable.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_columns" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Columns" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Seal.Model.MetaConnection" Collapsed="true">
+    <Position X="5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAYAESAAAkAAAQAAEAAIIAQAABEAYEEKQaKAAIBAAAA=</HashCode>
+      <FileName>Model\MetaConnection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.MetaData" Collapsed="true">
+    <Position X="5" Y="2.25" Width="1.5" />
+    <AssociationLine Name="Enums" Type="Seal.Model.MetaEnum" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.312" Y="2.812" />
+        <Point X="6.312" Y="3.596" />
+        <Point X="7.5" Y="3.596" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>BAAAEAAAAgAAACACACAAQQAAASAMAAAKAAAAAAAAAAA=</HashCode>
+      <FileName>Model\MetaData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Tables" />
+      <Property Name="Joins" />
+      <Property Name="Enums" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Seal.Model.MetaEnum" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADAAGAAAAlAEASCBQAAAICYAMDABIEACEoh1IIgAACA=</HashCode>
+      <FileName>Model\MetaEnum.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.MetaJoin" Collapsed="true">
+    <Position X="7.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgEEgCAkEAYRAAAAgAIAQAABAIIEAgAABAAIiAmIE=</HashCode>
+      <FileName>Model\MetaJoin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seal.Model.MetaColumn" Collapsed="true">
+    <Position X="7.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEESUBBAEkAohVSQACAgAiQAMRgYJEBEAwHBYIKBCUA=</HashCode>
+      <FileName>Model\MetaColumn.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

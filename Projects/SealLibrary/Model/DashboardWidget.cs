@@ -54,7 +54,7 @@ namespace Seal.Model
         [DisplayName("Description"), Description("Description of the widget."), Id(2, 1)]
         public string Description { get; set; }
 
-        [DisplayName("Security tag"), Description("Tag used to define the security of the Dashboard Designer (Widgets of the Security Groups defined in the Web Security)."), Id(3, 1)]
+        [DisplayName("Security tag"), Description("Tag used to define the security of the Dashboard Manager (Widgets of the Security Groups defined in the Web Security)."), Id(3, 1)]
         public string Tag { get; set; }
 
         [DisplayName("Is dynamic"), Description("If true, the widget may modify dynamically the name, icon or color after the execution (e.g. set the color in red if no record in the model)."), Id(4, 1)]

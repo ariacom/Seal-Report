@@ -99,7 +99,7 @@ namespace Seal.Model
         public List<SecurityDashboardFolder> DashboardFolders { get; set; } = new List<SecurityDashboardFolder>();
         public bool ShouldSerializeDashboardFolders() { return DashboardFolders.Count > 0; }
 
-        [Category("Dashboards Security"), DisplayName("Widgets"), Description("For the Dashboard Designer: Widget rights for the group. Set rights to widgets through the security tags or names assigned. By default all widgets can be selected."), Id(4, 3)]
+        [Category("Dashboards Security"), DisplayName("Widgets"), Description("For the Dashboard Manager: Widget rights for the group. Set rights to widgets through the security tags or names assigned. By default all widgets can be selected."), Id(4, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityWidget> Widgets { get; set; } = new List<SecurityWidget>();
         public bool ShouldSerializeWidgets() { return Widgets.Count > 0; }
