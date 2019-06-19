@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>ef57917f-dea4-497a-a36e-bf924d6ea8ad</GUID><Sources><ReportSource><GUID>46cfb40c-d55b-4047-86ca-cf56193d12ae</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>cc6ab3b6-e41d-4913-9443-67d91f488fe7</GUID><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns></MetaTable></Tables><Enums><MetaEnum><GUID>c7e10051-823f-46cb-91a8-971381b5a6ce</GUID><Name>Select Columns</Name><Values><MetaEV><Id>Quantity</Id><Val>Quantity</Val></MetaEV><MetaEV><Id>Amount</Id><Val>Amount</Val></MetaEV><MetaEV><Id>Discount</Id><Val>Discount</Val></MetaEV></Values></MetaEnum></Enums></MetaData><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>d4b58a38-6b84-40e8-8c93-d69610558bf4</GUID><Name>model</Name><SourceGUID>46cfb40c-d55b-4047-86ca-cf56193d12ae</SourceGUID><PreLoadScript>@using Seal.Model
+@using System.Data
+@{
+    ReportModel model = Model;
+	ReportExecutionLog log = model.Report;
+	
+	//Use the model tag to store the original elements for several executions...
+	if (model.Tag == null) 
+	{
+		model.Tag = model.Elements.ToList();
+	}
+	else 
+	{
+		model.Elements = ((List&lt;ReportElement&gt;)model.Tag).ToList();
+	}
+	
+	ReportRestriction restriction = model.Report.GetInputValueByName("Columns Displayed");
+	if (restriction != null &amp;&amp; restriction.EnumValues.Count &gt; 0) 
+	{
+		log.LogMessage("{0} Columns selected. Removing columns not selected", restriction.EnumValues.Count);
+		model.Elements.RemoveAll(i =&gt; !restriction.EnumValues.Contains(i.DisplayNameEl) &amp;&amp; i.DisplayNameEl != "Category");
+	}
+}
+</PreLoadScript><Elements><ReportElement><GUID>ff807682-c72a-4b3f-be81-ace7a0606c36</GUID><Name>Products.CategoryID</Name><Category>Master</Category><Format>N0</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID></ReportElement><ReportElement><GUID>17eb0c5d-0f63-41f6-a6c4-ced2062ea429</GUID><Name>[Order Details].Quantity</Name><Category>Master</Category><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><SerieDefinition>NVD3Serie</SerieDefinition><ChartJSSerie>Scatter</ChartJSSerie><YAxisType>Secondary</YAxisType><MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID></ReportElement><ReportElement><GUID>1b92262c-8af8-474b-9c4b-7322f490c94e</GUID><Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><Category>Master</Category><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><SerieDefinition>NVD3Serie</SerieDefinition><ChartJSSerie>Scatter</ChartJSSerie><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement><ReportElement><GUID>5376bdc7-1376-4f65-95ea-c61ed8f901ec</GUID><Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name><Category>Master</Category><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><SerieDefinition>NVD3Serie</SerieDefinition><ChartJSSerie>Scatter</ChartJSSerie><MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><TasksScript>@using System.Text
+@functions {
+    //During execution, this script will be copied at the end of all task scripts...
+    public string MyConvertString(string input) {
+        return input.Replace("__","_");
+    }
+}
+</TasksScript><InputValues><ReportRestriction><GUID>5b577cee-252d-4c97-9433-74ca1e4020c3</GUID><Type>Text</Type><DisplayName>Columns Displayed</DisplayName><EnumGUID>c7e10051-823f-46cb-91a8-971381b5a6ce</EnumGUID><PivotPosition>Row</PivotPosition><TypeEd>Text</TypeEd><EnumGUIDEL>c7e10051-823f-46cb-91a8-971381b5a6ce</EnumGUIDEL><Prompt>Prompt</Prompt><TypeRe>Text</TypeRe><ChangeOperator>false</ChangeOperator><EnumGUIDRE>c7e10051-823f-46cb-91a8-971381b5a6ce</EnumGUIDRE><EnumValues><string>Quantity</string><string>Amount</string><string>Discount</string></EnumValues></ReportRestriction></InputValues><Views><ReportView><GUID>37a7cecf-0719-4b51-a760-b79835820841</GUID><Name>view</Name><Views><ReportView><GUID>5ca576ba-0ee8-48f2-85db-d4ccb261856c</GUID><Name>Model HTML View</Name><Views><ReportView><GUID>3e144fe3-54c5-4969-9d96-1dcee02701c5</GUID><Name>Model Container</Name><Views><ReportView><GUID>7359b926-7748-4bfd-b8f5-ef81f7264be3</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>e72db7f9-5c09-4acf-ae19-c20da5f53ae4</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>110ad8c3-9342-4399-8c9f-5339100d8932</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>45679d5f-032c-4f15-9c42-384b5503d286</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>9649448a-c2fb-4e91-958e-6605c18c181c</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>d4b58a38-6b84-40e8-8c93-d69610558bf4</ModelGUID><SortOrder>2</SortOrder></ReportView><ReportView><GUID>78634282-ed41-4e6f-b0ee-882f0bd94590</GUID><Name>Highlights</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>&lt;p&gt;&#xD;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;&#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;1 New enumerated list: 'Select Columns'.&lt;/li&gt;&#xD;
+&lt;li&gt;1 Input Value defined in the 'Report Input Values' property of the 'Views' tree node: 'Columns Displayed'.&lt;/li&gt;&#xD;
+&lt;li&gt;1 custom 'Pre Load Script' in the model definition to change its definition.&lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&lt;/p&gt;</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>force_execution</Name><Value>True</Value></Parameter></Parameters><SortOrder>0</SortOrder></ReportView></Views><ViewGUID>37a7cecf-0719-4b51-a760-b79835820841</ViewGUID></Report>
