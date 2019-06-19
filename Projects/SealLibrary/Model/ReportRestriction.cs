@@ -342,7 +342,7 @@ namespace Seal.Model
                 return IsEnum;
             }
         }
-        
+
         [XmlIgnore]
         public bool HasOperator
         {
@@ -357,7 +357,8 @@ namespace Seal.Model
         {
             get
             {
-                if (IsText || IsNumeric) {
+                if (IsText || IsNumeric)
+                {
                     if (InputRows > 0) return InputRows;
                     else if (!string.IsNullOrEmpty(Value1) && Value1.Contains("\n")) return 2;
                 }
@@ -501,6 +502,55 @@ namespace Seal.Model
             }
         }
 
+        public object FirstValue
+        {
+            get
+            {
+                object result = null;
+                if (IsEnum)
+                {
+                    if (EnumValues.Count > 0) result = EnumValues[0];
+                }
+                else if (IsNumeric)
+                {
+                    result = DoubleValue;
+                }
+                else if (IsDateTime)
+                {
+                    result = FinalDate1;
+                }
+                else result = Value1;
+                return result;
+            }
+        }
+
+        public string FirstStringValue
+        {
+            get
+            {
+                var result = FirstValue;
+                if (result != null) return result.ToString();
+                return null;
+            }
+        }
+
+        public double? FirstNumericValue
+        {
+            get
+            {
+                if (IsNumeric) return DoubleValue;
+                return null;
+            }
+        }
+
+        public DateTime? FirstDateValue
+        {
+            get
+            {
+               if (IsDateTime) return FinalDate1;
+                return null;
+            }
+        }
 
         List<string> _enumValues = new List<string>();
         public List<string> EnumValues
@@ -658,7 +708,7 @@ namespace Seal.Model
                 char unit = def;
                 if (index > 0)
                 {
-                    double.TryParse(v.Substring(0,index).Trim(), out vNum);
+                    double.TryParse(v.Substring(0, index).Trim(), out vNum);
                     unit = v[index];
                 }
                 else
@@ -683,16 +733,16 @@ namespace Seal.Model
                         start = start.AddDays(vNum);
                         break;
                     case 'W':
-                        start = start.AddDays(7*vNum);
+                        start = start.AddDays(7 * vNum);
                         break;
                     case 'M':
                         start = start.AddMonths(Convert.ToInt32(vNum));
                         break;
                     case 'Q':
-                        start = start.AddMonths(Convert.ToInt32(3 *vNum));
+                        start = start.AddMonths(Convert.ToInt32(3 * vNum));
                         break;
                     case 'S':
-                        start = start.AddMonths(Convert.ToInt32(6 *vNum));
+                        start = start.AddMonths(Convert.ToInt32(6 * vNum));
                         break;
                     case 'Y':
                         start = start.AddYears(Convert.ToInt32(vNum));
@@ -797,6 +847,38 @@ namespace Seal.Model
                     }
                 }
                 return result;
+            }
+        }
+
+        public string DisplayValue1
+        {
+            get
+            {
+                return GetDisplayValue(Value1, Date1);
+            }
+        }
+
+        public string DisplayValue2
+        {
+            get
+            {
+                return GetDisplayValue(Value2, Date2);
+            }
+        }
+
+        public string DisplayValue3
+        {
+            get
+            {
+                return GetDisplayValue(Value3, Date3);
+            }
+        }
+
+        public string DisplayValue4
+        {
+            get
+            {
+                return GetDisplayValue(Value4, Date4);
             }
         }
 

@@ -108,6 +108,11 @@ namespace Seal.Model
         }
         public bool ShouldSerializeInputValues() { return _inputValues.Count > 0; }
 
+        public ReportRestriction GetInputValueByName(string name)
+        {
+            return InputValues.FirstOrDefault(i => i.DisplayNameEl.ToLower() == name.ToLower());
+        }
+
 
         [XmlIgnore]
         public List<ReportRestriction> ExecutionReportRestrictions

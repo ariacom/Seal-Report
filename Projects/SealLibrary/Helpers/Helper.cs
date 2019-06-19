@@ -690,7 +690,7 @@ namespace Seal.Helpers
         public static string ClearAllSQLKeywords(string sql, ReportModel model = null)
         {
             sql = ClearSQLKeywords(sql, Repository.EnumFilterKeyword, "filter");
-            sql = ClearSQLKeywords(sql, Repository.EnumValuesKeyword, "'1'");
+            sql = ClearSQLKeywords(sql, Repository.EnumValuesKeyword, "NULL");
             if (model != null) sql = model.ParseCommonRestrictions(sql);
             sql = ClearSQLKeywords(sql, Repository.CommonRestrictionKeyword, "1=1");
             return sql;

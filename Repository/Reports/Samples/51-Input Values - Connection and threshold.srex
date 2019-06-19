@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>d99dbe2b-0a9b-4d59-953f-c9ffba40490a</GUID><Sources><ReportSource><GUID>6caded9a-0ac2-4b4d-b07c-03c3eb8aa2b8</GUID><Name>Northwind (Repository)</Name><Connections><MetaConnection><GUID>0e809c82-6f2a-4e1d-b915-dc93d2a079f7</GUID><Name>connection2</Name><DatabaseType>MSAccess</DatabaseType><ConnectionString>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%SEALREPOSITORY%\Databases\Northwind.mdb;Persist Security Info=False</ConnectionString><UserName /></MetaConnection><MetaConnection><GUID>3df81a5a-4dfe-4ee1-af26-ca280d9e2742</GUID><Name>connection3 invalid</Name><DatabaseType>MSAccess</DatabaseType><ConnectionString>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%SEALREPOSITORY%\Databases\Northwind2.mdb;Persist Security Info=False</ConnectionString><UserName /></MetaConnection></Connections><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>2b144e5b-ffcd-46d3-8485-86cb7ac1dfb5</GUID><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns></MetaTable></Tables><Enums><MetaEnum><GUID>4eecd325-19bb-4b64-8938-a0a8edac5666</GUID><Name>Connections</Name><Values><MetaEV><Id>connection</Id><Val>Connection</Val></MetaEV><MetaEV><Id>connection2</Id><Val>Connection 2</Val></MetaEV><MetaEV><Id>connection3 invalid</Id><Val>Invalid connection</Val></MetaEV></Values></MetaEnum></Enums></MetaData><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>f4e4c0e9-3ca9-400e-9ee8-4117004cf148</GUID><Name>model using chosen connection and threshold</Name><SourceGUID>6caded9a-0ac2-4b4d-b07c-03c3eb8aa2b8</SourceGUID><Elements><ReportElement><GUID>7dfb2452-9591-42ea-890f-7537dfe7737f</GUID><Name>Employees.LastName</Name><Category>Master</Category><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement><ReportElement><GUID>ed6a4dd3-1464-4c89-a6e6-3f0a36d201d6</GUID><Name>Employees.BirthDate</Name><Category>Master</Category><Format>d</Format><PivotPosition>Row</PivotPosition><AggregateFunction>Max</AggregateFunction><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>3325cfb8-1eef-489c-bdaa-edfa43c3bcd2</MetaColumnGUID></ReportElement><ReportElement><GUID>394bdded-41ed-4369-8739-f14f75a77c0e</GUID><Name>Employees.Country</Name><Category>Master</Category><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>bd7813ef-4c9e-4cd7-addc-ee58334b791a</MetaColumnGUID></ReportElement><ReportElement><GUID>15d9a07e-c424-4a2d-92c2-e5c1ac79bcbb</GUID><Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><Category>Master</Category><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID><CellScript>@using Seal.Model
+@{
+    ResultCell cell = Model;
+
+    ReportElement element = cell.Element;
+    ReportModel reportModel = element.Model;
+    Report report = reportModel.Report;
+	
+	ReportRestriction restriction = report.GetInputValueByName("Threshold =");
+	if (restriction != null)
+	{
+		if (cell.DoubleValue &lt; restriction.FirstNumericValue) 
+		{
+			cell.FinalCssStyle = "font-weight:bold;text-align:right;";
+			cell.FinalCssClass = "danger";
+		}
+	}
+}
+</CellScript></ReportElement><ReportElement><GUID>49b8feca-b15f-40e9-b7d6-0dd6c3e31994</GUID><PivotPosition>Hidden</PivotPosition><SortOrder>Not sorted</SortOrder><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Outputs><ReportOutput><GUID>795d46d0-8a5e-4699-a65a-fc849b0ecc06</GUID><Name>test output with custom connection</Name><OutputDeviceGUID>c428a6ba-061b-4a47-b9bc-f3f02442ab4b</OutputDeviceGUID><PreScript /><PostScript /><ViewGUID>39efdbbf-396d-4914-8359-04dc78454400</ViewGUID><FolderPath>%SEALREPOSITORY%\Reports\Samples</FolderPath><FileName>51-User input - Connection and threshold_{0:yyyy_MM_dd}</FileName><EmailZipPassword /><UserName /><UserGroups /><UserCulture /></ReportOutput></Outputs><Tasks><ReportTask><GUID>1210b6ab-e02b-4a64-925b-9ded7c223f1b</GUID><Name>Change the connection</Name><CancelReport>false</CancelReport><SourceGUID>6caded9a-0ac2-4b4d-b07c-03c3eb8aa2b8</SourceGUID><Script>@using Seal.Model
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+&#xD;
+    //Get the connection selected by the user&#xD;
+    ReportRestriction restr = report.GetInputValueByName("Connection Name:");&#xD;
+    if (restr != null) {&#xD;
+        var connection = report.Models[0].Source.Connections.FirstOrDefault(i =&gt; i.Name == restr.FirstStringValue);&#xD;
+        if (connection != null) &#xD;
+        {   &#xD;
+            report.LogMessage("Models -&gt; Changing connection to: " + connection.Name);&#xD;
+            foreach (var model in report.Models) {&#xD;
+                model.ConnectionGUID = connection.GUID;&#xD;
+                model.Source.ConnectionGUID = connection.GUID;&#xD;
+            }&#xD;
+        &#xD;
+            report.LogMessage("Tasks -&gt; Changing connection to: " + connection.Name);&#xD;
+            task.ConnectionGUID = connection.GUID;&#xD;
+       }&#xD;
+    }&#xD;
+}
+</Script><SortOrder>0</SortOrder></ReportTask></Tasks><InputValues><ReportRestriction><GUID>a4a9f95b-a9f4-4c9e-b2c7-aa8317600b40</GUID><Type>Text</Type><DisplayName>Connection Name:</DisplayName><EnumGUID>4eecd325-19bb-4b64-8938-a0a8edac5666</EnumGUID><PivotPosition>Row</PivotPosition><TypeEd>Text</TypeEd><EnumGUIDEL>4eecd325-19bb-4b64-8938-a0a8edac5666</EnumGUIDEL><Prompt>PromptOneValue</Prompt><TypeRe>Text</TypeRe><ChangeOperator>false</ChangeOperator><EnumGUIDRE>4eecd325-19bb-4b64-8938-a0a8edac5666</EnumGUIDRE></ReportRestriction><ReportRestriction><GUID>d6eead76-8914-425a-83b8-f08b53269bae</GUID><Type>Numeric</Type><DisplayName>Threshold =</DisplayName><NumericStandardFormat>Numeric0</NumericStandardFormat><Format>N0</Format><PivotPosition>Row</PivotPosition><TypeEd>Numeric</TypeEd><Prompt>PromptOneValue</Prompt><TypeRe>Numeric</TypeRe><NumericStandardFormatRe>Numeric0</NumericStandardFormatRe><FormatRe>N0</FormatRe><ChangeOperator>false</ChangeOperator><Value1>100000</Value1></ReportRestriction></InputValues><Views><ReportView><GUID>39efdbbf-396d-4914-8359-04dc78454400</GUID><Name>view</Name><Views><ReportView><GUID>4e8d2382-8bce-4894-8e17-e606d06d8d82</GUID><Name>Model HTML View</Name><Views><ReportView><GUID>e0b50d7b-6758-4f0b-a043-e8871ffd81c1</GUID><Name>Model Container</Name><Views><ReportView><GUID>8fc9fc55-ac37-482a-9e6e-35e6b2c42381</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>8d6aacb4-3f43-47bd-b4f6-e56bac8049f7</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>73d29e55-ce03-4f6a-88da-ccccc689d741</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>821f313e-71b2-47b6-a216-7fa5af3e43ec</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>1b70b602-b9aa-4a08-a64d-5bf2321df6e1</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>f4e4c0e9-3ca9-400e-9ee8-4117004cf148</ModelGUID><SortOrder>2</SortOrder></ReportView><ReportView><GUID>5c14d1c3-3f99-4318-a6df-e11c7151ec3c</GUID><Name>Highlights</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>&lt;p&gt;&#xD;
+&lt;b&gt;Highlights:&lt;/b&gt;&lt;br&gt;&#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;1 New enumerated list: 'Connection'.&lt;/li&gt;&#xD;
+&lt;li&gt;2 Input Values defined in the 'Report Input Values' property of the 'Views' tree node: 'Connection :' and 'Threshold ='.&lt;/li&gt;&#xD;
+&lt;li&gt;1 Task to change the connections with the value got from input value 'Connection :'.&lt;/li&gt;&#xD;
+&lt;li&gt;1 custom 'Cell Script' on the 'Amount' Data element to change the color if the threshold is not reached.&lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&lt;/p&gt;</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>report_description</Name><Value /></Parameter><Parameter><Name>force_execution</Name><Value>True</Value></Parameter></Parameters><SortOrder>0</SortOrder></ReportView></Views><ViewGUID>39efdbbf-396d-4914-8359-04dc78454400</ViewGUID></Report>
