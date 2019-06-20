@@ -41,6 +41,10 @@
 	{&#xD;
 		user.AddSecurityGroup("Group (Demo)");&#xD;
 	}&#xD;
+	else if (user.WebUserName == "nogroup" &amp;&amp; user.WebPassword == "nogroup")&#xD;
+	{&#xD;
+        throw new Exception("This user has no group");&#xD;
+	}&#xD;
 	else if (string.IsNullOrEmpty(user.WebUserName)) {
 		user.AddDefaultSecurityGroup();
 	}

@@ -474,8 +474,8 @@ namespace Seal.Helpers
                 result.AppendFormat("URL: '{0}'\r\n", request.Url.OriginalString);
                 if (request.RequestContext != null && request.RequestContext.HttpContext != null) result.AppendFormat("Session: '{0}'\r\n", request.RequestContext.HttpContext.Session.SessionID);
                 result.AppendFormat("IP: '{0}'\r\n", GetIPAddress(request));
-                if (request.Form.Count > 0) foreach (string key in request.Form.Keys) result.AppendFormat("{0}={1}\r\n", key, request.Form[key]);
-                if (request.QueryString.Count > 0) foreach (string key in request.QueryString.Keys) result.AppendFormat("{0}={1}\r\n", key, request.QueryString[key]);
+                if (request.Form.Count > 0) foreach (string key in request.Form.Keys) result.AppendFormat("{0}={1}\r\n", key, key.ToLower() == "password" ? "********" : request.Form[key]);
+                if (request.QueryString.Count > 0) foreach (string key in request.QueryString.Keys) result.AppendFormat("{0}={1}\r\n", key, key.ToLower() == "password" ? "********" : request.QueryString[key]);
             }
             return result.ToString();
         }
@@ -693,6 +693,7 @@ namespace Seal.Helpers
             sql = ClearSQLKeywords(sql, Repository.EnumValuesKeyword, "NULL");
             if (model != null) sql = model.ParseCommonRestrictions(sql);
             sql = ClearSQLKeywords(sql, Repository.CommonRestrictionKeyword, "1=1");
+            sql = ClearSQLKeywords(sql, Repository.CommonValueKeyword, "NULL");
             return sql;
         }
 
@@ -768,7 +769,7 @@ namespace Seal.Helpers
             return result;
         }
 
-        public static void RunInAnotherAppDomain(string assemblyFile)
+        public static void RunInAnotherAppDomain(string assemblyFile, string[] args)
         {
             // RazorEngine cannot clean up from the default appdomain...
             Console.WriteLine("Switching to second AppDomain, for RazorEngine...");
@@ -779,10 +780,10 @@ namespace Seal.Helpers
             var strongNames = new System.Security.Policy.StrongName[0];
 
             var domain = AppDomain.CreateDomain(
-                "MyMainDomain", null,
+                Path.GetFileNameWithoutExtension(assemblyFile), null,
                 current.SetupInformation, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted),
                 strongNames);
-            domain.ExecuteAssembly(assemblyFile);
+            domain.ExecuteAssembly(assemblyFile, args);
             // RazorEngine will cleanup. 
             AppDomain.Unload(domain);
         }
