@@ -135,7 +135,7 @@ namespace Seal.Model
 
         //Common Restrictions
         private List<ReportRestriction> _commonRestrictions = new List<ReportRestriction>();
-        [Category("Model Definition"), DisplayName("Common Restrictions"), Description("Definition of the common restrictions involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount'9"), Id(3, 1)]
+        [Category("Model Definition"), DisplayName("Common Restrictions and Values"), Description("Definition of the common restrictions and values involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount')"), Id(3, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<ReportRestriction> CommonRestrictions
         {
@@ -1387,7 +1387,7 @@ namespace Seal.Model
                         if (!string.IsNullOrWhiteSpace(table.WhereSQL))
                         {
                             string where = RazorHelper.CompileExecute(table.WhereSQL, table);
-                            if (!string.IsNullOrEmpty(where))
+                            if (!string.IsNullOrWhiteSpace(where))
                             {
                                 if (execWhereClause.Length != 0) execWhereClause.Append("\r\nAND ");
                                 execWhereClause.AppendFormat("({0})", where);

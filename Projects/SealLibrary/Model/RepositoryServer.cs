@@ -12,7 +12,7 @@ namespace Seal.Model
     public class RepositoryServer
     {
         private static List<ReportViewTemplate> _viewTemplates = null;
-        private static Object _viewLock = new object();
+        private static object _viewLock = new object();
 
         //View templates
         public static List<ReportViewTemplate> ViewTemplates

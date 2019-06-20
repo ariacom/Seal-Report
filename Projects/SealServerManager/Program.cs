@@ -18,25 +18,18 @@ namespace Seal
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            if (AppDomain.CurrentDomain.IsDefaultAppDomain())
-            {
-                Helper.RunInAnotherAppDomain(Assembly.GetExecutingAssembly().Location);
-            }
-            else
-            {
-                // Add the event handler for handling UI thread exceptions to the event.
-                Application.ThreadException += new ThreadExceptionEventHandler(ExceptionHandler);
+            // Add the event handler for handling UI thread exceptions to the event.
+            Application.ThreadException += new ThreadExceptionEventHandler(ExceptionHandler);
 
-                // Set the unhandled exception mode to force all Windows Forms errors to go through 
-                // our handler.
-                Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            // Set the unhandled exception mode to force all Windows Forms errors to go through 
+            // our handler.
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new ServerManager());
-            }
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new ServerManager());
         }
 
         private static void ExceptionHandler(object sender, ThreadExceptionEventArgs t)

@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using System.ServiceModel.Syndication;
 using System.Windows.Forms;
 using Seal.Model;
+using RazorEngine.Configuration;
 
 namespace Seal.Helpers
 {

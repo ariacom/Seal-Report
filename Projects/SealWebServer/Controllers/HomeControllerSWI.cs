@@ -476,7 +476,7 @@ namespace SealWebServer.Controllers
             {
                 if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
 
-                return Json(new 
+                return Json(new
                 {
                     authenticated = true,
                     name = WebUser.Name,
@@ -492,6 +492,27 @@ namespace SealWebServer.Controllers
             }
         }
 
+        static object _culturesLock = new object();
+        static List<SWIItem> _cultures = null;
+        static List<SWIItem> Cultures
+        {
+            get
+            {
+                lock (_culturesLock)
+                {
+                    if (_cultures == null)
+                    {
+                        _cultures = new List<SWIItem>();
+                        foreach (var culture in CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(i => i.EnglishName))
+                        {
+                            _cultures.Add(new SWIItem() { id = culture.EnglishName, val = culture.NativeName });
+                        }
+                    }
+                }
+                return _cultures;
+            }
+        }
+
         [HttpPost]
         public ActionResult SWIGetCultures()
         {
@@ -499,13 +520,7 @@ namespace SealWebServer.Controllers
             try
             {
                 checkSWIAuthentication();
-
-                List<SWIItem> vals = new List<SWIItem>();
-                foreach (var culture in CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(i => i.EnglishName))
-                {
-                    vals.Add(new SWIItem() { id = culture.EnglishName, val = culture.NativeName });
-                }
-                return Json(vals.ToArray());
+                return Json(Cultures.ToArray());
             }
             catch (Exception ex)
             {
@@ -853,7 +868,7 @@ namespace SealWebServer.Controllers
                 lock (report)
                 {
                     report.CurrentModelView = modelView;
-                    if (modelView != null && modelView.Model != null &&  modelView.Model.Pages.Count > 0)
+                    if (modelView != null && modelView.Model != null && modelView.Model.Pages.Count > 0)
                     {
                         report.CurrentPage = modelView.Model.Pages[0];
                         report.CurrentPage.PageId = null; //Reset page id

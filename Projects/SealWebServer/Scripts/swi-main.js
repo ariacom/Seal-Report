@@ -572,3 +572,4 @@ var SWIMain = /** @class */ (function () {
     };
     return SWIMain;
 }());
+//# sourceMappingURL=swi-main.js.map

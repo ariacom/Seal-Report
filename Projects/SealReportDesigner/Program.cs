@@ -21,56 +21,48 @@ namespace Seal
         [STAThread]
         static void Main(string[] args)
         {
-            if (AppDomain.CurrentDomain.IsDefaultAppDomain())
+            // Add the event handler for handling UI thread exceptions to the event.
+            Application.ThreadException += new ThreadExceptionEventHandler(ExceptionHandler);
+
+            // Set the unhandled exception mode to force all Windows Forms errors to go through 
+            // our handler.
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            bool execute = (args.Length >= 1 && args[0].ToLower() == "/e");
+            bool executeOutputOrView = (args.Length >= 1 && args[0].ToLower() == "/x");
+            string reportToOpen = null;
+            if (args.Length >= 2 && File.Exists(args[1])) reportToOpen = args[1];
+
+            if ((execute || executeOutputOrView) && reportToOpen != null)
             {
-                Helper.RunInAnotherAppDomain(Assembly.GetExecutingAssembly().Location);
+                //Execute only
+                var report = Report.LoadFromFile(reportToOpen, Repository.Create());
+                string outputGUID = null, viewGUID = null;
+                if (executeOutputOrView)
+                {
+                    string guid = (args.Length >= 3 ? args[2] : "");
+                    if (!string.IsNullOrEmpty(guid))
+                    {
+                        if (report.Views.Exists(i => i.GUID == guid)) viewGUID = guid;
+                        if (report.Outputs.Exists(i => i.GUID == guid)) outputGUID = guid;
+                    }
+                    else
+                    {
+                        //by default execute first output
+                        if (report.Outputs.Count > 0) outputGUID = report.Outputs[0].GUID;
+                    }
+                }
+                var reportViewer = new ReportViewerForm(true, Properties.Settings.Default.ShowScriptErrors);
+                reportViewer.ViewReport(report, report.Repository, false, viewGUID, outputGUID, report.FilePath);
+
+                Application.Run();
             }
             else
             {
-
-                // Add the event handler for handling UI thread exceptions to the event.
-                Application.ThreadException += new ThreadExceptionEventHandler(ExceptionHandler);
-
-                // Set the unhandled exception mode to force all Windows Forms errors to go through 
-                // our handler.
-                Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-
-                bool execute = (args.Length >= 1 && args[0].ToLower() == "/e");
-                bool executeOutputOrView = (args.Length >= 1 && args[0].ToLower() == "/x");
-                string reportToOpen = null;
-                if (args.Length >= 2 && File.Exists(args[1])) reportToOpen = args[1];
-
-                if ((execute || executeOutputOrView) && reportToOpen != null)
-                {
-                    //Execute only
-                    var report = Report.LoadFromFile(reportToOpen, Repository.Create());
-                    string outputGUID = null, viewGUID = null;
-                    if (executeOutputOrView)
-                    {
-                        string guid = (args.Length >= 3 ? args[2] : "");
-                        if (!string.IsNullOrEmpty(guid))
-                        {
-                            if (report.Views.Exists(i => i.GUID == guid)) viewGUID = guid;
-                            if (report.Outputs.Exists(i => i.GUID == guid)) outputGUID = guid;
-                        }
-                        else
-                        {
-                            //by default execute first output
-                            if (report.Outputs.Count > 0) outputGUID = report.Outputs[0].GUID;
-                        }
-                    }
-                    var reportViewer = new ReportViewerForm(true, Properties.Settings.Default.ShowScriptErrors);
-                    reportViewer.ViewReport(report, report.Repository, false, viewGUID, outputGUID, report.FilePath);
-
-                    Application.Run();
-                }
-                else
-                {
-                    Application.Run(new ReportDesigner());
-                }
+                Application.Run(new ReportDesigner());
             }
         }
 
