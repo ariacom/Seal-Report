@@ -26,6 +26,7 @@ namespace SealWebServer.Controllers
         public const string SessionDashboardExecutions = "SessionDashboardExecutions";
 
         public const string SealCultureCookieName = "SR_Culture_Name";
+        public const string SealLastViewCookieName = "SR_Last_View";
         public const string SealLastFolderCookieName = "SR_Last_Folder";
         public const string SealLastDashboardCookieName = "SR_Last_Dashboard";
 
