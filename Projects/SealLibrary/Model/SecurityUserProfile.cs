@@ -12,7 +12,6 @@ namespace Seal.Model
 {
     public class SecurityUserProfile
     {
-        public string Culture { get; set; } = "English";
         public string View { get; set; } = "reports";
         public List<string> Dashboards { get; set; } = new List<string>();
 

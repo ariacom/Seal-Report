@@ -40,6 +40,13 @@ namespace Seal.Model
             Security = security;
         }
 
+        public void SaveProfile()
+        {
+            //Clean ids not published anymore
+            Profile.Dashboards.RemoveAll(i => !GetDashboards().Exists(j => j.GUID == i));
+            Profile.SaveToFile();
+        }
+
         public void ClearCache()
         {
             //reset pointers of objects having translations
