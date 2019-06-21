@@ -58,6 +58,7 @@ namespace Seal.Model
             result = _viewTemplates.FirstOrDefault(i => i.Name == name);
             if (result == null)
             {
+                System.Diagnostics.Debug.WriteLine("!! Loading all the templates !!");
 
                 lock (_viewLock)
                 {

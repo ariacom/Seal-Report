@@ -35,7 +35,8 @@ namespace SealWebServer.Controllers
                 }
 
                 //Set culture from cookie
-                if (!string.IsNullOrEmpty(WebUser.Profile.Culture)) Repository.SetCultureInfo(WebUser.Profile.Culture);
+                string culture = GetCookie(SealCultureCookieName);
+                if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
 
                 //Set default view
                 string view = WebUser.Profile.View;
@@ -448,16 +449,15 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
                 if (string.IsNullOrEmpty(culture)) throw new Exception("Error: culture must be supplied");
-                if (culture != WebUser.Profile.Culture)
+                if (culture != Repository.CultureInfo.EnglishName)
                 {
                     if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
                     WebUser.ClearCache();
-                    WebUser.Profile.Culture = culture;
                     SetCookie(SealCultureCookieName, culture);
                 }
 
                 if (!string.IsNullOrEmpty(defaultView)) WebUser.Profile.View = defaultView;
-                WebUser.Profile.SaveToFile();
+                WebUser.SaveProfile();
 
                 return Json(new { });
             }
@@ -681,7 +681,7 @@ namespace SealWebServer.Controllers
                 if (!WebUser.ManageDashboards) throw new Exception("No right to add dashboards");
 
                 foreach (var guid in guids) WebUser.Profile.Dashboards.Add(guid);
-                WebUser.Profile.SaveToFile();
+                WebUser.SaveProfile();
 
                 return Json(new object { });
             }
@@ -704,7 +704,7 @@ namespace SealWebServer.Controllers
                 if (!WebUser.ManageDashboards) throw new Exception("No right to remove dashboard");
 
                 if (WebUser.Profile.Dashboards.Contains(guid)) WebUser.Profile.Dashboards.Remove(guid);
-                WebUser.Profile.SaveToFile();
+                WebUser.SaveProfile();
 
                 return Json(new object { });
             }
@@ -734,7 +734,7 @@ namespace SealWebServer.Controllers
                         else newDashboards.Add(guid);
                     }
                     WebUser.Profile.Dashboards = newDashboards;
-                    WebUser.Profile.SaveToFile();
+                    WebUser.SaveProfile();
                 }
                 return Json(new object { });
             }
