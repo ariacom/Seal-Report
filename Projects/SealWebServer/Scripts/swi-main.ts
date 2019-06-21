@@ -212,17 +212,6 @@ class SWIMain {
             $outputPanel.hide();
             $("#profile-user").val(_main._profile.name);
             $("#profile-groups").val(_main._profile.group);
-            var $select = $("#culture-select");
-            if ($select.children("option").length == 0) {
-                _gateway.GetCultures(function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        $select.append(SWIUtil.GetOption(data[i].id, data[i].val, _main._profile.culture));
-                    }
-                    $select.selectpicker('refresh');
-                });
-            }
-            else $select.val(_main._profile.culture).change();
-            $select.selectpicker('refresh');
 
             SWIUtil.ShowHideControl($("#view-select-group"), _main._profile.viewtype == 2);
             if (_main._profile.viewtype == 2 /* reports and dashboards */) {
@@ -240,8 +229,23 @@ class SWIMain {
                 });
             });
 
-            $("#profile-dialog").modal();
-            if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
+            var $select = $("#culture-select");
+            if ($select.children("option").length == 0) {
+                _gateway.GetCultures(function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $select.append(SWIUtil.GetOption(data[i].id, data[i].val, _main._profile.culture));
+                    }
+                    $select.selectpicker('refresh');
+                    $("#profile-dialog").modal();
+                    if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
+                });
+            }
+            else {
+                $select.val(_main._profile.culture).change();
+                $select.selectpicker('refresh');
+                $("#profile-dialog").modal();
+                if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
+            }
         });
 
         //Disconnect

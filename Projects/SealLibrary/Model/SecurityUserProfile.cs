@@ -12,7 +12,6 @@ namespace Seal.Model
 {
     public class SecurityUserProfile
     {
-        public string View { get; set; } = "reports";
         public List<string> Dashboards { get; set; } = new List<string>();
 
         static public SecurityUserProfile LoadFromFile(string path)

@@ -39,7 +39,8 @@ namespace SealWebServer.Controllers
                 if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
 
                 //Set default view
-                string view = WebUser.Profile.View;
+                string view = GetCookie(SealLastViewCookieName);
+                if (string.IsNullOrEmpty(view)) view = "reports";
                 //Check rights
                 if (WebUser.ViewType == Seal.Model.ViewType.Reports && view == "dashboards") view = "reports";
                 else if (WebUser.ViewType == Seal.Model.ViewType.Dashboards && view == "reports") view = "dashboards";
@@ -456,8 +457,7 @@ namespace SealWebServer.Controllers
                     SetCookie(SealCultureCookieName, culture);
                 }
 
-                if (!string.IsNullOrEmpty(defaultView)) WebUser.Profile.View = defaultView;
-                WebUser.SaveProfile();
+                if (!string.IsNullOrEmpty(defaultView)) SetCookie(SealLastViewCookieName, defaultView); 
 
                 return Json(new { });
             }

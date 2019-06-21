@@ -530,8 +530,15 @@ namespace Seal.Model
         {
             get
             {
-                if (_cultureInfo == null && !string.IsNullOrEmpty(_cultureName)) _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == _cultureName).Clone() as CultureInfo;
+                //Culture from the view if specified
+                if (_cultureInfo == null && !string.IsNullOrEmpty(_cultureName))
+                {
+                    var culture = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == _cultureName);
+                    if (culture != null) _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == _cultureName).Clone() as CultureInfo;
+                }
+                //Culture from the execution view
                 if (_cultureInfo == null && Report.ExecutionView != this && Report.ExecutionView != null) _cultureInfo = Report.CultureInfo.Clone() as CultureInfo;
+                //Culture from the repository
                 if (_cultureInfo == null) _cultureInfo = Report.Repository.CultureInfo.Clone() as CultureInfo;
                 return _cultureInfo;
             }
@@ -603,14 +610,22 @@ namespace Seal.Model
         }
         public bool ShouldSerializePdfConfigurations() {
             bool result = false;
-            for (int i = 0; i < _pdfConfigurations.Count && i < Report.Repository.Configuration.PdfConfigurations.Count; i++)
+            if (Report.Repository.Configuration.PdfConfigurations.Count == 0)
             {
-                if (_pdfConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.PdfConfigurations[i].Trim().Replace("\r\n", "\n"))
+                result = _pdfConfigurations.Count > 0;
+            }
+            else
+            {
+                for (int i = 0; i < _pdfConfigurations.Count && i < Report.Repository.Configuration.PdfConfigurations.Count; i++)
                 {
-                    result = true;
-                    break;
+                    if (_pdfConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.PdfConfigurations[i].Trim().Replace("\r\n", "\n"))
+                    {
+                        result = true;
+                        break;
+                    }
                 }
             }
+
             return result;
         }
 
@@ -648,12 +663,20 @@ namespace Seal.Model
         }
         public bool ShouldSerializeExcelConfigurations() {
             bool result = false;
-            for (int i = 0; i <_excelConfigurations.Count && i < Report.Repository.Configuration.ExcelConfigurations.Count; i++)
+
+            if (Report.Repository.Configuration.ExcelConfigurations.Count == 0)
             {
-                if (_excelConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.ExcelConfigurations[i].Trim().Replace("\r\n", "\n"))
+                result = _excelConfigurations.Count > 0;
+            }
+            else
+            {
+                for (int i = 0; i < _excelConfigurations.Count && i < Report.Repository.Configuration.ExcelConfigurations.Count; i++)
                 {
-                    result = true;
-                    break;
+                    if (_excelConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.ExcelConfigurations[i].Trim().Replace("\r\n", "\n"))
+                    {
+                        result = true;
+                        break;
+                    }
                 }
             }
             return result;
