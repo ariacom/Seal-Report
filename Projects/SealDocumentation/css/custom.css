@@ -1,0 +1,299 @@
+/*Docs*/
+
+.body {
+    position: relative;
+}
+
+.sub-title {
+    font-size: 30px;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    padding-bottom: 0;
+}
+
+    .sub-title a {
+        font-size: 16px;
+    }
+
+.section.docs-heading {
+    padding: 30px 0;
+}
+
+.affix {
+    position: static;
+}
+
+@media (min-width: 992px) {
+    .affix,
+    .affix-bottom {
+        width: 213px
+    }
+
+    .affix {
+        position: fixed;
+        top: 20px
+    }
+
+    .affix-bottom {
+        position: absolute
+    }
+
+        .affix .bs-docs-sidenav,
+        .affix-bottom .bs-docs-sidenav {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+}
+
+@media (min-width: 1200px) {
+    .affix,
+    .affix-bottom {
+        width: 263px
+    }
+}
+
+/* SIDEBAR */
+
+@media (min-width: 768px) {
+    .docs-sidebar {
+        padding-top: 40px;
+        padding-left: 20px
+    }
+}
+
+/* all links */
+.docs-sidebar .nav > li > a {
+    color: #111;
+    border-left: 2px solid transparent;
+    padding: 0 20px;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+/* nested links */
+.docs-sidebar .nav .nav > li > a {
+    padding-left: 40px;
+    font-size: 14px;
+}
+
+/* hover links */
+.docs-sidebar .nav > li:not(.active) > a:hover {
+    color: #0E97EE;
+    text-decoration: none;
+    background-color: transparent;
+    border-left-width: 1px;
+    border-left-color: #0E97EE;
+}
+/* focus links */
+.docs-sidebar .nav > li > a:focus {
+    text-decoration: none;
+    background-color: transparent;
+}
+/* active links */
+.docs-sidebar .nav > .active > a {
+    color: #0E97EE;
+    text-decoration: none;
+    background-color: transparent;
+    border-left-color: #0E97EE;
+}
+/* all active links */
+.docs-sidebar .nav > .active > a,
+.docs-sidebar .nav > .active:hover > a,
+.docs-sidebar .nav > .active:focus > a {
+    font-weight: 700;
+}
+/* nested active links */
+.docs-sidebar .nav .nav > .active > a,
+.docs-sidebar .nav .nav > .active:hover > a,
+.docs-sidebar .nav .nav > .active:focus > a {
+    font-weight: 500;
+}
+
+@media (min-width: 992px) {
+    .docs-sidebar .nav ul {
+        display: none;
+        padding-bottom: 10px;
+    }
+
+    .docs-sidebar .nav > .active > ul {
+        display: block
+    }
+}
+/*Syntax Highlighter : Sublime Theme */
+
+.syntaxhighlighter {
+    background-color: #2b303b !important;
+    padding: 15px 0;
+    margin: 5px 0px !important;
+}
+
+    .syntaxhighlighter a,
+    .syntaxhighlighter div,
+    .syntaxhighlighter code,
+    .syntaxhighlighter table,
+    .syntaxhighlighter table td,
+    .syntaxhighlighter table tr,
+    .syntaxhighlighter table tbody,
+    .syntaxhighlighter table thead,
+    .syntaxhighlighter table caption,
+    .syntaxhighlighter textarea {
+        line-height: 1.3em !important;
+    }
+
+    .syntaxhighlighter .line.alt1 {
+        background-color: #2b303b !important;
+    }
+
+    .syntaxhighlighter .line.alt2 {
+        background-color: #2b303b !important;
+    }
+
+    .syntaxhighlighter .string,
+    .syntaxhighlighter .string a {
+        color: #90be8c !important;
+    }
+
+    .syntaxhighlighter .color1,
+    .syntaxhighlighter .color1 a {
+        color: #d08770 !important;
+    }
+
+    .syntaxhighlighter .plain,
+    .syntaxhighlighter .plain a {
+        color: #c0c5ce !important;
+    }
+
+    .syntaxhighlighter .keyword {
+        color: #bf616a !important;
+    }
+
+    .syntaxhighlighter .gutter {
+        color: #757a84 !important;
+    }
+
+    .syntaxhighlighter .line.highlighted.alt1,
+    .syntaxhighlighter .line.highlighted.alt2 {
+        background-color: #333E49 !important;
+    }
+
+    .syntaxhighlighter .gutter .line.highlighted {
+        background-color: #343d46 !important;
+        color: #757a84 !important;
+    }
+
+    .syntaxhighlighter .value {
+        color: #96b5b4 !important;
+    }
+    /*css*/
+    /* .syntaxhighlighter .css.plain,
+.syntaxhighlighter .css.plain a {
+    color: #d08770 !important;
+} 
+
+.syntaxhighlighter .css.keyword {
+    color: #c0c5ce !important;
+}*/
+
+    .syntaxhighlighter .color3,
+    .syntaxhighlighter .color3 a {
+        color: #b48ead !important;
+    }
+    /*js*/
+
+    .syntaxhighlighter .js.keyword {
+        color: #b48ead !important;
+    }
+
+
+/*
+ * Callouts
+ *
+ * Not quite alerts, but custom and helpful notes for folks reading the docs.
+ * Requires a base and modifier class.
+ */
+
+/* Common styles for all types */
+.bs-callout {
+    padding: 5px 5px 10px 10px;
+    margin: 10px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    line-height: 20px;
+}
+
+    .bs-callout h4 {
+        margin-top: 0;
+        margin-bottom: 0px;
+        padding: 0px;
+    }
+
+    .bs-callout p:last-child {
+        margin-bottom: 0;
+    }
+
+    .bs-callout code {
+        border-radius: 3px;
+    }
+
+    /* Tighten up space between multiple callouts */
+    .bs-callout + .bs-callout {
+        margin-top: -5px;
+    }
+
+/* Variations */
+.bs-callout-danger {
+    border-left-color: #ce4844;
+}
+
+    .bs-callout-danger h4 {
+        color: #ce4844;
+    }
+
+.bs-callout-warning {
+    border-left-color: #aa6708;
+}
+
+    .bs-callout-warning h4 {
+        color: #aa6708;
+    }
+
+.bs-callout-info {
+    border-left-color: #1b809e;
+}
+
+    .bs-callout-info h4 {
+        color: #1b809e;
+    }
+
+.bs-callout-demo {
+    border-left-color: #61b916;
+}
+
+    .bs-callout-demo h4 {
+        font-weight: bold;
+        font-size: 16px;
+        font-style: italic;
+        color: #61b916;
+    }
+
+eg {
+    font-size: 100%;
+    color: #3c763d;
+    font-style: italic;
+}
+
+ck {
+    padding: 2px 4px;
+    font-size: 100%;
+    color: #20485b;
+    background-color: #eef8fc;
+    border-radius: 4px;
+}
+
+srmenu {
+    white-space:nowrap;
+    font-weight: bold;
+    color: #1b809e;
+    font-style: italic;
+}

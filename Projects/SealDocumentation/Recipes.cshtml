@@ -1,0 +1,368 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Seal Report | Recipes";
+}
+
+<div id="wrapper">
+    <div class="container">
+        <section id="top" class="section docs-heading"></section>
+        <!-- end section -->
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation" style="padding-left:0">
+                    <ul class="nav">
+                        <li><a href="#lineTranslations" style="padding:0px 2px">Adding translation files</a></li>
+                        <li><a href="#lineDynamicSecurity" style="padding:0px 2px">Filtering records based on security</a></li>
+                        <li><a href="#lineSQLServerSP" style="padding:0px 2px">SQL Server Stored Procedures</a></li>
+                        <li>
+                            <a href="#lineIntegration" style="padding:0px 2px">Integrating Seal Report</a>
+                            <ul class="nav">
+                                <li><a href="#lineIntegration_1">SealLibrary Assembly</a></li>
+                                <li><a href="#lineIntegration_2">Seal Web Interface API</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#lineDynamicChartTitle" style="padding:0px 2px">Dynamic report and chart title</a></li>
+                    </ul>
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <p style="margin-left:20px;">
+                        <strong><a href="#feed">Feed the Seal ?</a></strong><br />
+                        <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <section class="welcome">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Recipes <hr></h2>
+                            <div class="row">
+                                <div class="col-md-12 full">
+                                    <div>
+                                        <p>
+                                            This page is dedicated to list common questions, tricks and solutions (mainly got from the  <a href="https://sealreport.org/forum" target="_blank">Seal Report Forum</a> or from our experience on site).<br />
+                                        </p>
+                                    </div>
+                                    <div class="bs-callout bs-callout-danger">
+                                        We assume that you are familiar with the Seal Report architecture and components (Advanced users are welcomed here !).
+                                    </div>
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h4>Add your Recipe</h4>
+                                        Do you have a new recipe to share ?<br />
+                                        As the site for the documentation is part of the solution, <strong>you are welcome to Pull a Request at <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a>.</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                </section>
+                <section id="lineTranslations" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Adding translation files <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Languages files are located in the <strong>/Settings</strong> Repository sub-folder.<br />
+                                The files have the CSV format and are stored in UTF8 (not ANSI). The column containing the translations has the header with the Two Letter ISO Language Name (<eg>e.g. it for Italy</eg>).<br />
+                                <br />
+                                <strong>Tanslations.csv</strong> contains the public translations for the product (Web Report Server and Report Result).<br />
+
+                                To add a new language, create a new translations file in the directory and name it with the Two Letter ISO Language Name before the extension (<eg>e.g. <strong>Translations.it.csv</strong> for Italy</eg>).<br />
+                                <br />
+                                In addition, you can translate labels specific to your repository (date sources, connections, column names, report names, dashboard names, folder names, etc.) in the <strong>RepositoryTranslations.csv</strong> file.<br />
+                                You can generate working files for your repository translations using the <b>Server Manager</b> application: Use the 2 menus <srmenu>Tools->Export ... in CSV</srmenu>
+                                to generate the files, then copy and paste the records in the  <strong>RepositoryTranslations.csv</strong> file according to your needs.<br />
+
+                                <br />
+
+                                Once the new files saved, you can then specify the default language using the <b>Server Manager</b> application, click on the menu <srmenu>Configuration->Server Configuration...</srmenu>
+                                and specify the default culture of the product.<br />
+                                <br />
+                                In reports, the culture can also be overridden per View (<code>Culture Name</code> property in the root View parameter), thus you can generate the same report in different languages.
+                            </p>
+                            <div class="bs-callout bs-callout-danger">
+                                Make sure that the new file follows the original CSV format and is saved in UTF8.
+                            </div>
+                            <div class="bs-callout bs-callout-warning">
+                                Test your new translations with the Web Report Server, just change your culture in your profile.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineDynamicSecurity" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Filtering records based on security <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                It is sometimes useful to change the result set returned by a report per user logged (<eg>e.g. The salesman can see only his orders).</eg><br />
+
+                                This may be implemented by the use of a Razor Script in the <code>Additional WHERE Clause</code> property of the relevant table in your Data Source.
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Example for Northwind:</h4>
+                                In the <strong>Northwind</strong> Data Source, select the <strong>Orders</strong> table, then use the following <code>Additional WHERE Clause</code>:
+                                <pre class="brush: csharp; highlight: [16]">
+@@using Seal.Model
+@@using Seal.Helpers
+@@{
+    MetaTable table = Model;
+    string restriction = Environment.UserName; //This gives the windows user of the process running the engine
+    if (table.Source.Report != null && table.Source.Report.SecurityContext != null)
+    {
+        var securityContext = table.Source.Report.SecurityContext; //User is logged through a Web Report Servert and has a context
+        restriction = securityContext.Name; //Name of the user set during the login
+        restriction = securityContext.WebUserName; //Name got from the login window
+        //securityContext.SecurityGroups; //List of security groups set for the user
+        if (securityContext.BelongsToGroup("Default Group")) { //Test if the user belongs to a group
+            //Special restriction here
+        }
+    }
+    string result = string.Format("Orders.EmployeeID in (SELECT EmployeeID FROM Employees WHERE LastName={0})", Helper.QuoteSingle(restriction));
+    }
+@@Raw(result)
+                                </pre>
+                                In line 16, a dynamic restriction is set using the name of the user logged.<br />
+                                Thus, when the <strong>Orders</strong> table is involved in a model, the table will be automatically filtered with this restriction.
+                            </div>
+                            <div class="bs-callout bs-callout-warning">
+                                You may adapt this example to fit your requirements. There might be also other ways to implement dynamic security...
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineSQLServerSP" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">SQL Server Stored Procedures <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Using Stored Procedures to generate a report is often requested. However as a SP is not a table, it cannot be directly defined as a table in your Data Source.<br />
+                                The call of a SP depends also on your database engine.<br>
+                                The following sample shows 3 different methods to call a SP in SQL Server, it must be adapted for other database engine.
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>SQL Server Stored Procedures</h4>
+                                Check the report <strong>21-SQL Server Stored Procedure with parameters</strong> in the <strong>/Reports/Samples</strong> Repository sub-folder.<br />
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineIntegration" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Integrating Seal Report <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Here are some recipes if you consider to use SR in your own .Net application (Fat Client, ASP .Net, Console, etc.), there is no simple answer and the integration depends on your requirements and target architecture.
+                            </p>
+                        </div>
+                    </div>
+                    <div id="lineIntegration_1" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>SealLibrary Assembly</h4>
+                            <p>
+                                If you have a project referencing the <b>SealLibrary.dll</b> assembly, you can execute a report with the following code (got from the <strong>TestAndSamples</strong> project of the solution)
+                            </p>
+                            <pre class="brush: csharp; ">
+            Repository repository = Repository.Create();
+            Report report = Report.LoadFromFile(@@"C:\ProgramData\Seal Report Repository\Reports\Search - Orders.srex", repository);
+            ReportExecution execution = new ReportExecution() { Report = report };
+            execution.Execute();
+            while (report.IsExecuting) {
+                System.Threading.Thread.Sleep(100);
+            }
+            string resultPath = execution.GenerateHTMLResult();
+            Process.Start(resultPath); //result contains the file path of the HTML report result
+                                </pre>
+                            <p>
+                                The  <strong>TestAndSamples</strong> project contains also code showing how to create and execute a report from scratch.
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Generating report results on the fly...</h4>
+                                Check the interesting report <strong>34-Task Generate several Report Results</strong> in the <strong>/Reports/Samples</strong> Repository sub-folder.<br />
+                                The reports has a task that generates a report result by country using the <strong>Search - Orders</strong> report.
+                                <pre class="brush: csharp; ">
+@@using Seal.Model
+@@using Seal.Helpers
+@@using System.IO
+@@using System.Data
+@@{
+    ReportTask task = Model;
+	TaskHelper helper = new TaskHelper(task);
+	Repository repository = task.Report.Repository;
+    string result = "1"; //Set result to 0 to cancel the report.
+
+	//Load report to execute
+	Report report = Report.LoadFromFile(Path.Combine(repository.ReportsFolder, "Search - Orders.srex"), repository);
+	task.Report.LogMessage("Load done");
+	//Create an output for a folder
+	var folderDevice = repository.Devices.First(i => i is OutputFolderDevice);
+	var output = report.AddOutput(folderDevice);
+	output.FolderPath = repository.ReportsFolder;
+	
+	//Load list of countries
+	string connectionString = task.Connection.FullConnectionString;
+	string sql = @@"select distinct Country from Customers";
+
+	var toProcess = helper.DatabaseHelper.LoadDataTable(connectionString, sql);
+	foreach (DataRow row in toProcess.Rows)
+	{
+		string country = (string)row[0];
+		//Set the restriction
+		var restriction = report.Models[0].GetRestrictionByName("Customer Country");
+		restriction.Prompt = PromptType.None;
+		restriction.Operator = Operator.Equal;
+		restriction.EnumValues.Clear();
+		restriction.EnumValues.Add(country);
+		
+	    ReportExecution execution = new ReportExecution() { Report = report };
+        report.OutputToExecute = output;
+        report.CurrentViewGUID = output.ViewGUID;
+		
+		//Set result file name and culture
+		output.FileName = "Search - Orders for " + country;		
+		report.ExecutionView.CultureName = "English";
+		
+		task.Report.LogMessage("Executing report for '{0}'", country);
+		execution.Execute();	
+		while (report.Status != ReportStatus.Executed) {
+			System.Threading.Thread.Sleep(1000);
+		}
+		task.Report.LogMessage("File generated in '{0}'", output.FileName);
+	}
+
+}
+@@Raw(result)
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="lineIntegration_2" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Seal Web Interface API</h4>
+                            <p>
+                                You can also install a <b>Seal Web Server</b> and use the  <a href="https://sealreport.org/demo/WebInterfaceAPI.html" target="_blank">Seal Web Interface API</a> to execute reports from JavaScript.<br />
+                                Here is a sample to execute a report in another window from a browser (requires JQuery):
+                            </p>
+                            <pre class="brush: jscript; ">
+function executeReport(path) {
+    var server = "https://sealreport.org/demo/"
+    $.post(server +"SWILogin", {
+        user: "", // The user name
+        password: "" // The password
+    })
+        .done(function (data) {
+            var f = $('&lt;form method="post" target="_blank" />').appendTo('body');
+            f.attr('action', server + "SWExecuteReport");
+            f.append($('<input />').attr('name', 'path').attr('value', path));  //the report path,  e.g. "/Samples/01-Simple list (Products).srex"
+            f.children('input').attr('type', 'hidden');
+            f.submit();            
+        });
+    return false;
+}
+
+executeReport("/Overview - Sales.srex");
+                                </pre>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineDynamicChartTitle" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Dynamic report and chart title <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                This recipe explains how to modify a report or a chart title to display the current restriction or the current page value.<br />
+                                Using the <b>Report Designer</b>, create a report having several pages and a Chart JS.<br />
+                                Add a restriction in the model (<eg>e.g. prompt a value for <strong>Order Year</strong></eg>)<br />
+                                <br />
+                                <b>To modify the report title:</b><br />
+                                Select the root <strong>Views</strong>  node in the main Tree View and edit the <code>DisplayName</code> property.
+                            </p>
+                            <pre class="brush: csharp; highlight: [5]">
+@@using Seal.Model
+@@using System.IO
+@@{
+    Report report = Model;
+    string result = Path.GetFileNameWithoutExtension(report.FilePath) + " " + report.Models[0].GetRestrictionByName("Order Year").DisplayValue1 + ' ' + DateTime.Now.ToShortDateString();
+}
+@@Raw(result)
+                                </pre>
+                            <p>
+                                The report title will contain the restriction chosen by the user and the current date.<br />
+                                <br />
+                                <b>To modify the chart title:</b><br />
+                                Select the Chart JS View, then edit the <code>Custom template</code> property to change the code that defines the chart title (around the line number 70):
+                            </p>
+                            <pre class="brush: csharp; highlight: [3]">
+                title: {
+                    display: true,
+                    text: '@@Raw(Helper.ToJS("Sales for " + page.PageTable[1,0].HTMLValue))', //Value 1 of Page Table
+//HTML for first restriction    Raw(Helper.ToJS("Sales for " + reportModel.GetRestrictionByName("Order Year").DisplayValue1))',               
+//for Enum                      Raw(Helper.ToJS("Sales for " + reportModel.GetRestrictionByName("Category").EnumDisplayValue))', 
+                    position: '@@view.GetValue("chartjs_title_position")'
+                },
+                                </pre>
+                            <p>
+                                <b>page.PageTable[1,0].HTMLValue</b> returns the first value of your current page table, but you can use any relevant value from your model or report (<eg>e.g. <b>reportModel.GetRestrictionByName("Order Year").DisplayValue1</b> for a restriction value</eg>.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                This may be easily adapted for the other chart type.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+            </div>
+            <!-- // end .col -->
+        </div>
+    </div>
+    <!-- // end container -->
+</div>
+<!-- end wrapper -->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#recipes_nav").addClass("active");
+        });
+    </script>}

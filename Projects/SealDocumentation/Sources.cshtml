@@ -1,0 +1,448 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Seal Report | Data Sources";
+}
+
+<div id="wrapper">
+    <div class="container">
+        <section id="top" class="section docs-heading"></section>
+        <!-- end section -->
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation">
+                    <ul class="nav">
+                        <li><a href="#lineConnections">Connections</a></li>
+                        <li>
+                            <a href="#lineTables">Tables and Columns</a>
+                            <ul class="nav">
+                                <li><a href="#lineTables_1">Pre and Post SQL</a></li>
+                                <li><a href="#lineTables_2">WHERE Clause</a></li>
+                                <li><a href="#lineTables_3">Common Restrictions</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#lineColumns">Columns</a>
+                            <ul class="nav">
+                                <li><a href="#lineColumns_1">Drill and Sub-Reports</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#lineJoins">Joins</a></li>
+                        <li>
+                            <a href="#lineEnums">Enumerated Lists</a>
+                            <ul class="nav">
+                                <li><a href="#lineEnums_1">Dynamic enums</a></li>
+                                <li><a href="#lineEnums_2">Dynamic display</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#lineNoSQL">No SQL Data Source</a></li>
+                    </ul>
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <p style="margin-left:20px;">
+                        <strong><a href="#feed">Feed the Seal ?</a></strong><br />
+                        <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+                    </p>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <section class="welcome">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Data Sources<hr></h2>
+                            <div class="row">
+                                <div class="col-md-12 full">
+                                    <div>
+                                        <p>
+                                            A <strong>Data Source</strong> defines the database connections and description (table, catalog and joins).<br>
+                                            Use the <b>Server Manager</b> to create and edit your <strong>Data Sources</strong>.<br>
+                                            A <strong>Repository Data Source</strong> is stored in the <i>/Sources</i> Repository sub-folder in a XML file (*.scfgx).
+                                        </p>
+                                    </div>
+                                    <div class="bs-callout bs-callout-danger">
+                                        You can also define and store a <strong>Data Source</strong> in a report with the same functionalities, however it is a good practice to use <strong>Repository Data Sources</strong> to ease the maintenance and share your configurations
+                                        (<eg>e.g. if you change the display label of a column, all reports referencing the column will inherit from the modification</eg>).
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div class="caption">
+                                <b>Data Source Objects</b>
+                            </div>
+                            <img src="images/CD-Data Source.png" alt="" class="img-thumbnail img-rounded">
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <section id="lineConnections" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Connections <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Setting up a connection is the first thing to do after creating a <strong>Data Source</strong>.<br />
+
+                                A <strong>Connection</strong> defines how to connect to the database to be queried by using an OLEDB or ODBC Driver.<br />
+                                A <strong>Data Source</strong> can have one to many Connections (<eg>e.g. dev, test, production, etc.</eg>).
+                            </p>
+                            <div class="bs-callout bs-callout-danger">
+                                Make sure that your database driver (32bit or 64bit depending on your Seal Report installation) is installed on the machine you are running the <b>Server Manager</b>.<br />
+                            </div>
+                            <p>
+                                Use the <code>Database Type</code> property to define your database type. This type may be used by the engine in different ways (<eg>e.g. using Serial Date for Ms Access</eg>).<br />
+                                Once the connection successfully defined, you can use the Wizard to import tables, columns and joins from the database catalog.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                <i>For specific database type, use the <code>Date Time Format</code> property to specify how the date will be formatted in the dynamic WHERE clause generated by the engine.</i>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineTables" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Tables and Columns <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Tables</h4>
+                            <p>
+                                A table is defined either by its <code>Name</code> or  by a <code>SQL Statement</code> and <code>Table Alias</code> (<eg>e.g. 'Orders' or '(select * from Orders) OrdersAlias'</eg>).<br />
+                                Table columns can be dynamically populated using the database catalog.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                Once columns are created, you can set the <code>Dynamic Columns</code> property to false to rework your column definitions.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineTables_1" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Pre and Post SQL Statement</h4>
+                            <p>
+                                A table can also have a <code>Pre SQL Statement</code> (<code>Post SQL Statement</code>) that is executed before (and after) the select statement is performed for a report model.<br />
+                                It occurs only if the report model involves the table.<br />
+                                These statements can be used for different purposes: Creating/Dropping a temporary table, updating columns, etc.<br /><br />
+                            </p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineTables_2" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Additional WHERE Clause</h4>
+                            <p>
+                                An <code>Additional WHERE Clause</code> can also be defined to filter at run-time the records of the table.<br />
+                                This feature may be interesting to apply filter based on the person logged (<eg>e.g. a saleman can see only the orders he made</eg>).<br /><br />
+                            </p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineTables_3" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Common Restrictions and Values</h4>
+                            <p>
+                                All SQL involved in the table definition (<code>Name</code>, <code>SQL Statement</code>, <code>Pre SQL Statement</code>, etc.) can contain the keywords <b>'{CommonRestriction_&#60;RestrictionName&#62;}'</b> or <b>'{CommonValue_&#60;RestrictionName&#62;}'</b> where <b>&#60;RestrictionName&#62;</b>
+                                is the name of the restriction.<br />
+                                Once defined, the common restriction can be defined in the models involving the table using the <code>Common Restrictions</code> property of the <a href="~/Reports.cshtml#lineModels_1">model definition</a>.<br />
+                                <strong>Common restrictions</strong> are used to inject values prompted by the end-user in the form 'ColumnName=Value' or 'ValueOnly' if the restriction has the operator ValueOnly.<br />
+                                <ck>Check <a href="~/Reports.cshtml#lineModels_3">Restrictions</a> for more information</ck>.<br />
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                Use common restrictions if you have performance issue and you want to filter a huge table defined with sub-select.<br />
+                                Common restriction can also be used to pass parameters to stored procedures.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineColumns" class="section">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Columns</h4>
+                            <p>
+                                A <strong>column</strong> is defined with its SQL (<code>Name</code>), its <code>Data Type</code> and how it is display in the <b>Report Designer</b> (<code>Display Name</code> and <code>Category Name</code> properties) and in the report result (<code>Format</code> property).<br><br>
+
+                                In certain cases, a column can reference an enumerated list with the  <code>Enumerated List</code> property (<eg>e.g. the value 0 will be display with 'No', 1 with 'Yes'</eg>).<br>
+                                <ck>Check <a href="#lineEnums">Enumerated Lists</a> for more information</ck>.
+                            </p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineColumns_1" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Drill and Sub-Reports Navigation</h4>
+                            <p>
+                                Once the column is displayed in the report result, a navigation popup menu can be activated (in the table cells or in charts).<br />
+                            </p>
+                            <p>
+                                Two types of navigation can be done:
+                            </p>
+                            <ul>
+                                <li>
+                                    <strong>Drill</strong> navigation to show the same report with another dimension (<eg>e.g. Country->Region->City, Year->Quarter->Month->Day</eg>).<br>
+                                    When drilling, the same report is executed with a new restriction on parent element value, and the parent element is replaced by its child in the model definition.
+                                </li>
+                                <li>
+                                    <strong>Sub-report</strong> navigation to view another report (<eg>e.g. from Order ID->Show a report detail on the Order</eg>).<br />
+                                    A new report is then executed with the restriction on the element value.
+                                </li>
+                            </ul>
+                            <p>
+                                After a navigation has occurred, a new menu appears on the top left of the report result.
+                            </p>
+                            <p>
+                                One to several drill children can defined using the <code>Drill Children</code> property.<br />
+                                One to several sub-reports can defined using the <code>Sub-Reports</code> property.<br />
+
+                                A sub-report file is often located in the <i>/SubReports</i> Repository sub-folder and must have a restriction prompted for the column.
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Drill Element Samples</h4>
+                                In the <b>Northwind</b> Data Source, select the <strong>Orders.Order Year</strong> column and check that the <code>Drill Children</code> property is set to <strong>Orders.Order Month</strong>.<br />
+                                Then the hierarchy continues to <strong>Orders.Order Year->Orders.Order Month->Orders.Order ID</strong>.<br /><br />
+                                A drill child is also defined for the column <strong>Products.Category->Products Name</strong>.<br />
+                            </div>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Sub-Report Elements Samples</h4>
+                                In the <b>Northwind</b> Data Source, select the <strong>Orders.Order ID</strong> column and check that the <code>Sub Reports</code> property is pointing to the <b>SubReports\Order Detail.srex</b> report.<br><br />
+                                A sub-report is also defined for the columns <strong>Customers.Customer</strong>, <strong>Employees.Employee Name</strong>, <strong>Products.Product Name</strong>.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <section id="lineJoins" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Joins <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                A <strong>join</strong> defines how 2 tables can be joined through a <code>SQL clause</code>.<br />
+                                Joins are used by the Seal engine to build a select involving several tables (<eg>e.g. 'FROM Table1 INNER JOIN Table2 ON'</eg>).
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                When joining two tables, the <code>SQL clause</code> is used by the Seal engine without any transformation, thus it is recommended to use the table names or alias before the column.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineEnums" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Enumerated lists <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                <strong>Enumerated lists</strong> are mainly used to allow the end-user to select a value from a combo-box when a restriction is prompted.<br />
+                                An enum has an <code>Identifier</code> and an optional display <code>Value</code> (<eg>e.g. 0 = False, 1 = True</eg>).<br />
+                                In addition, an enum can have a specific <code>CSS Class</code>, <code>CSS Style</code> to change the display of the result cell in the report result, and <code>Restriction Value</code> to change the display value when the enum is used for a restriction.<br />
+
+                                If the display value if different from the identifier, using an enumerated list for a column can avoid a table join (<eg>e.g. if my enum contains CategoryID and CategoryName, the join with a table Category is not necessary</eg>).<br />
+                                Using enumerated lists allows also to translate the display value in different languages (<eg>e.g. 0 gives 'Yes' or 'Oui' according to the user locale</eg>).<br />
+                                Finally, you can define custom sort that you could not do in SQL (<eg>e.g. having a sort by month with the names like 'January', 'February', etc. but the identifier is the month number</eg>).<br />
+                                <br />
+                                By default, an enumerated list is static, just edit the values using the Collection Editor.<br />
+                            </p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineEnums_1" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Dynamic enums</h4>
+                            <p>
+                                <strong>Enumerated list</strong> can be also loaded from the database using <code>SQL Select Statement</code>.<br />
+                                The select statement can have up to 5 columns to define dynamic enumerated list.<br />
+                                <ul>
+                                    <li>the first column is used for the identifier</li>
+                                    <li>the second optional column is the display value shown in the table result</li>
+                                    <li>the third optional column is the display value shown in the restriction list</li>
+                                    <li>the fourth optional column defines a custom CSS Style applied to the result cell</li>
+                                    <li>the fifth optional column defines a custom CSS Class applied to the result cell</li>
+                                </ul>
+                                Changing the CSS style or class can be useful to change the color depending on the value (<eg>e.g. green if OK, red if KO</eg>).<br /><br />
+                            </p>
+                            <div class="bs-callout bs-callout-danger">
+                                <h4>Performances</h4>
+                                As building the enum list can be time consuming, it a good practice is to schedule a task to update enum values every morning.<br />
+                                Setting <code>List is refreshed upon the database connection</code> to <b>true</b> means the list is always queried when the report is executed. This can be useful is the list depends on the user connected but can be also time consuming.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineEnums_2" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Dynamic display for prompted restrictions</h4>
+                            <p>
+                                For huge list of values or for list having dependencies with other enums, a dynamic display is possible to allow the server to query live the database before showing the values to the user.<br />
+                                In this case, you must define the <code>SQL Select Statement for prompted restriction</code>property.<br />
+                                This dedicated SQL can contain the keyword <b>'{EnumFilter}'</b> to specify the text typed by the user and/or <b>'{EnumValues_&#60;OtherEnumName&#62;}'</b> to use the values checked for another enumerated list.
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Filter on the name of the product</h4>
+                                <pre class="brush: sql">
+                                    SELECT DISTINCT ProductID, ProductName FROM Products 
+                                    WHERE ProductName LIKE '%{EnumFilter}%' 
+                                    ORDER BY 2
+                                </pre>
+                            </div>
+
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>List of customers of selected countries</h4>
+                                Build the list of customers only when countries are selected first.<br>This works only if both Customers and Countries are restrictions in the report.
+                                <pre class="brush: sql">
+                                SELECT DISTINCT City FROM Customers
+                                WHERE Country in ({EnumValues_Country})
+                                ORDER BY 1
+                                </pre>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="bs-callout bs-callout-demo">
+                        <h4>Dynamic Display Sample</h4>
+                        <a class="btn btn-primary live-sample">Live Sample: 09-Enumerated List - Dynamic Display</a><br />
+                        This report shows how the 'Product Name' prompted list depends on the choice of a 'Product Category'.<br />
+                        The report contains also a custom enumerated list named to search the product name with characters.
+                    </div>
+                </section>
+                <!-- end section -->
+                <section id="lineNoSQL" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">No SQL Data Source <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                A <strong>No SQL Data Source</strong> can provide data that cannot be queried from a database engine.<br />
+                                Depending on the data fetched, it may requires advanced C#/.Net skills.
+                            <p>
+                            <p>
+                                The <strong>Data Source</strong> contains the <code>Definition Script</code> to define the main table and the <code>Load Script</code> to load the data.<br>
+                                The table is called <b>SealMasterTable</b>.<br />
+                                Once the table is defined, the columns can be used in report models as normal columns coming from a database. The scripts manage a .Net object DataTable. Restrictions are handled in the server by using filter capacities of the DataTable.
+                            </p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>No SQL Source Sample</h4>
+                                <a class="btn btn-primary live-sample">Live Sample: 41-No SQL Source RSS</a><br />
+                                This report shows how to read RSS BBC Feeds to fill the DataTable.<br />
+                                A simple model is defined with 3 elements and 3 restrictions.<br />
+                                Note that the connection strings are used to store the URL of the feeds.<br><br />
+                                <code>Definition Script</code> property of the SealMasterTable.
+                                <pre class="brush: csharp">
+@@using Seal.Model
+@@using System.Data
+@@{
+    MetaTable metaTable = Model;
+    DataTable table = new DataTable();
+	//Define the table columns 
+	table.Columns.Add(new DataColumn("Id", typeof(string)));
+	table.Columns.Add(new DataColumn("Date", typeof(DateTime)));
+	table.Columns.Add(new DataColumn("Title", typeof(string)));
+	table.Columns.Add(new DataColumn("Summary", typeof(string)));
+	table.Columns.Add(new DataColumn("Link", typeof(string)));
+	table.Columns.Add(new DataColumn("Categories", typeof(string)));
+	table.Columns.Add(new DataColumn("TitleWithLink", typeof(string)));
+	metaTable.NoSQLTable = table;
+}
+</pre><br />
+
+                                <code>Load Script</code> property of the SealMasterTable.
+                                <pre class="brush: csharp">
+@@using Seal.Model
+@@using Seal.Helpers
+@@using System.Data
+@@using System.Text
+@@using System.Collections
+@@using System.Web
+@@using System.Xml
+@@using System.ServiceModel.Syndication
+@@{
+    //Just feed the table from the RSS data
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportExecutionLog log = metaTable;
+
+    log.LogMessage("Loading RSS feed from {0}", Model.Source.Connection.FullConnectionString);
+    var reader = XmlReader.Create(Model.Source.Connection.FullConnectionString);
+    var feed = SyndicationFeed.Load(reader);
+    foreach (var item in feed.Items)
+    {
+        string link = item.Links.Count > 0 ? item.Links[0].Uri.AbsoluteUri : "";
+        string categories = "";
+        foreach (var category in item.Categories)
+        {
+            categories += category.Name + ";";
+        }
+        string titleWithLink = string.Format("<a href='{0}' target=_blank>{1}</a>", link, HttpUtility.HtmlEncode(item.Title.Text));
+        //Values must match the table definition
+        table.Rows.Add(item.Id, item.PublishDate.DateTime, item.Title.Text, item.Summary.Text, link, categories, titleWithLink);
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+                    </pre>
+                            </div>
+                        </div>
+                        <!-- end row -->
+                </section>
+                <!-- end section -->
+
+            </div>
+            <!-- // end .col -->
+        </div>
+    </div>
+    <!-- // end container -->
+</div>
+<!-- end wrapper -->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sources_nav").addClass("active");
+        });
+    </script>}

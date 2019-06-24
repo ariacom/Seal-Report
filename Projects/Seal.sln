@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealWebServer", "SealWebSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsAndSamples", "Test\TestsAndSamples.csproj", "{EA7D99B0-0240-4486-A627-3B1B8D6FBEB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealDocumentation", "SealDocumentation\SealDocumentation.csproj", "{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,8 +73,19 @@ Global
 		{EA7D99B0-0240-4486-A627-3B1B8D6FBEB8}.Release|x64.Build.0 = Release|x64
 		{EA7D99B0-0240-4486-A627-3B1B8D6FBEB8}.Release|x86.ActiveCfg = Release|x86
 		{EA7D99B0-0240-4486-A627-3B1B8D6FBEB8}.Release|x86.Build.0 = Release|x86
+		{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}.Debug|x64.Build.0 = Debug|Any CPU
+		{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}.Debug|x86.Build.0 = Debug|Any CPU
+		{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}.Release|x64.ActiveCfg = Release|Any CPU
+		{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}.Release|x64.Build.0 = Release|Any CPU
+		{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}.Release|x86.ActiveCfg = Release|Any CPU
+		{C0188B0E-7F5E-42F9-848B-6E806C6F4E45}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5805B042-EA0F-4353-8AA3-BD82DF536CDF}
 	EndGlobalSection
 EndGlobal
