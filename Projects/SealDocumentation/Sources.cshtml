@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "~/_SiteLayout.cshtml";
-    Page.Title = "Seal Report | Data Sources";
+    Page.Title = "Data Sources";
 }
 
 <div id="wrapper">
@@ -125,7 +125,7 @@
                                 Table columns can be dynamically populated using the database catalog.
                             </p>
                             <div class="bs-callout bs-callout-warning">
-                                Once columns are created, you can set the <code>Dynamic Columns</code> property to false to rework your column definitions.
+                                Once columns are created, you can set the <code>Dynamic Columns</code> property to <b>false</b> to rework your column definitions.
                             </div>
                         </div>
                         <!-- end col -->
@@ -270,7 +270,7 @@
                                 An enum has an <code>Identifier</code> and an optional display <code>Value</code> (<eg>e.g. 0 = False, 1 = True</eg>).<br />
                                 In addition, an enum can have a specific <code>CSS Class</code>, <code>CSS Style</code> to change the display of the result cell in the report result, and <code>Restriction Value</code> to change the display value when the enum is used for a restriction.<br />
 
-                                If the display value if different from the identifier, using an enumerated list for a column can avoid a table join (<eg>e.g. if my enum contains CategoryID and CategoryName, the join with a table Category is not necessary</eg>).<br />
+                                If the display value is different from the identifier, using an enumerated list for a column can avoid a table join (<eg>e.g. if my enum contains CategoryID and CategoryName, the join with a table Category is not necessary</eg>).<br />
                                 Using enumerated lists allows also to translate the display value in different languages (<eg>e.g. 0 gives 'Yes' or 'Oui' according to the user locale</eg>).<br />
                                 Finally, you can define custom sort that you could not do in SQL (<eg>e.g. having a sort by month with the names like 'January', 'February', etc. but the identifier is the month number</eg>).<br />
                                 <br />
@@ -297,8 +297,8 @@
                             </p>
                             <div class="bs-callout bs-callout-danger">
                                 <h4>Performances</h4>
-                                As building the enum list can be time consuming, it a good practice is to schedule a task to update enum values every morning.<br />
-                                Setting <code>List is refreshed upon the database connection</code> to <b>true</b> means the list is always queried when the report is executed. This can be useful is the list depends on the user connected but can be also time consuming.
+                                As building the enum list can be time consuming, it is a good practice to schedule a task to update enum values every morning.<br />
+                                Setting <code>List is refreshed upon the database connection</code> to <b>true</b> means the list is always queried when the report is executed. This can be useful if the list depends on the user connected but can be also time consuming.
                             </div>
                         </div>
                         <!-- end col -->
@@ -354,7 +354,7 @@
                         <div class="col-md-12">
                             <p>
                                 A <strong>No SQL Data Source</strong> can provide data that cannot be queried from a database engine.<br />
-                                Depending on the data fetched, it may requires advanced C#/.Net skills.
+                                Depending on the data fetched, it may require advanced C#/.Net skills.
                             <p>
                             <p>
                                 The <strong>Data Source</strong> contains the <code>Definition Script</code> to define the main table and the <code>Load Script</code> to load the data.<br>
