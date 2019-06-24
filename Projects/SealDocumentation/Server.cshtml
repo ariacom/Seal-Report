@@ -1,0 +1,378 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Seal Report | Server";
+}
+
+<div id="wrapper">
+    <div class="container">
+        <section id="top" class="section docs-heading"></section>
+        <!-- end section -->
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation">
+                    <ul class="nav">
+                        <li><a href="#lineConfiguration">Server Configuration</a></li>
+                        <li><a href="#lineTools">Server Tools</a></li>
+                        <li><a href="#lineDashboard">Dashboards</a></li>
+                        <li>
+                            <a href="#lineSecurity">Web Security</a>
+                            <ul class="nav">
+                                <li><a href="#lineSecurity_1">Providers</a></li>
+                                <li><a href="#lineSecurity_2">Groups</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#lineSWI">Seal Web Interface</a></li>
+                    </ul>
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <p style="margin-left:20px;">
+                        <strong><a href="#feed">Feed the Seal ?</a></strong><br />
+                        <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <section class="welcome">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Server <hr></h2>
+                            <div class="row">
+                                <div class="col-md-12 full">
+                                    <div>
+                                        <p>
+                                            Seal Report includes a <b>Web Report Server</b> to publish and edit your reports and dashboards on the Web.<br />
+                                            The server must have Internet Information Server (IIS) installed with the option <b>Application Development/ASP.Net 4.5</b> or greater.
+                                        </p>
+                                    </div>
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h4>Web Server Publication Wizard</h4>
+                                        To publish the <b>Web Report Server</b>, run the <b>Server Manager</b> and select the menu <srmenu>Configuration->Publish Web Site on IIS...</srmenu> to execute the Web Server Publisher wizard.<br />
+                                        If the site was previously published, use the button <b>Publish only files</b> to update the current site.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                </section>
+                <section id="lineConfiguration" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Server Configuration <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Use the <srmenu>Configuration->Configure Server...</srmenu> menu of the <strong>Server Manager</strong> to configure global parameters for the product.<br />
+                                The server configuration has various properties (<eg>e.g. you can configure your default culture, formats and CSV separator using the <code>Format</code> properties.</eg>).<br />
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Server Scripts</h4>
+                                Use the <code>Report Creation Script</code> to change the default report object when it is created (<eg>e.g. adding a specific view or changing a default view parameter</eg>), or <code>Report Execution Init Script</code> to modify the report before the execution (<eg>e.g. changing a default format</eg>).<br />
+                                <code>Common Scripts</code> collection can be used to share functions amongst all scripts used in the product.
+                            </div>
+                            <div class="bs-callout bs-callout-info">
+                                Be sure that the <code>Server is local (No internet)</code> property equals <b>true</b> if your server has no access to the internet.<br />
+                                In this case all the Java Scripts and CSS files used in the report result will be loaded from the server.
+                            </div>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>PDF and Excel Converter Configurations</h4>
+                                If you are using the PDF and Excel converter component, the server configuration contains the <code>Default PDF Configuration</code> and the <code>Default Excel Configuration</code> that are used by default when a conversion is done.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineTools" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Server Tools <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                The <b>Server Manager</b> has also <srmenu>Tools</srmenu> menu to check the server <strong>Data Sources</strong> and <strong>Reports</strong>.
+                            </p>
+                            <ul>
+                                <li>
+                                    <b>Check Data Sources</b> checks the current <strong>Data Source</strong> amongst the database (tables, joins and enumerated lists).
+                                </li>
+                                <li>
+                                    <b>Check Report Executions</b> executes all the reports of the repository. During the execution, tasks are skipped and all models are loaded with the restriction 1=0.
+                                </li>
+                                <li>
+                                    <b>List Widgets published in the repository</b> browses all the reports in the repository and shows all the Widget published with their location.
+                                </li>
+                                <li>
+                                    <b>Refresh Enumerated Lists</b> updates all the values of dynamic enumerated lists. The <strong>Data Source</strong> must then be saved.
+                                </li>
+                                <li>
+                                    <b>Synchronize Report Schedules</b> checks all the schedule of the reports in the repository and synchronize them in the Windows Task Scheduler. The schedule is defined with <i>SYSTEM</i> user.
+                                </li>
+                                <li>
+                                    <b>Synchronize Report Schedules with the logged user</b> performs the same but the schedule is defined with the user running the <b>Server Manager</b>.
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineDashboard" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Dashboards <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                The <b>Web Report Server</b> allows the publication and the management of <strong>Dashboards</strong>.<br />
+
+                                A <strong>Dashboard</strong> contains several <strong>Widget Items</strong> that references a published <strong>Widget</strong>.<br />
+                                A <strong>Widget Item</strong> has its own configuration to override the <strong>Widget</strong> properties (<eg>e.g. to change the size, the color, the icons, etc.</eg>).<br /><br />
+                                A <strong>Widget</strong> is a report view published for <strong>Dashboard</strong>.<br />
+                                <ck>Check <a href="~/Reports.cshtml#lineViews_2">Widget Publication for Dashboards</a> for more information on Widget</ck>.<br /><br />
+
+                                <strong>Dashboards</strong> are defined in files (*.sdax) located in the <i>/Dashboards</i> Repository sub-folder.<br />
+                                Using the <b>Dashboard Manager</b>, a user can also create and manage <strong>Personal Dashboards</strong>, in this case the <strong>Dashboards</strong> files are located in his personal folder under the <i>/SpecialFolders/Personal</i> Repository sub-folder.<br />
+                            </p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div class="caption">
+                                <b>Dashboard Objects</b>
+                            </div>
+                            <img src="images/CD-Dashboard.png" alt="" class="img-thumbnail img-rounded">
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <div class="bs-callout bs-callout-danger">
+                        <h4>Web Report Designer and Dashboard Manager</h4>
+                        The <b>Web Report Designer</b> that includes the <b>Dashboard Manager</b> is a commercial component available at <a href="https://ariacom.com/sealweblicense.cshtml" target="_blank">https://ariacom.com</a> and is not part of the Open Source version.<br />
+                        If you are interested in using the designer, please contact <a href="https://ariacom.com/contact.cshtml" target="_blank">Ariacom</a> to request a demonstration login.
+                    </div>
+                </section>
+                <!-- end section -->
+                <section id="lineSecurity" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Web Security <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                The <strong>Web Security</strong> defines the login process to the <b>Web Report Server</b> through <strong>Security Provider</strong> and all the user rights through the <strong>Security Groups</strong>.
+                            </p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineSecurity_1" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Security Provider</h4>
+                            <p>
+                                The <strong>Security Provider</strong> defines how the authentication is done when a user wants to login.<br />
+                                All the default <strong>Security Providers</strong> are defined in *.cshtml files in the <i>/Security/Providers</i> Repository sub-folder.<br />
+
+
+                                A <code>Security Script</code> is executed to define the name and the groups of the user. If the user has no group, the authentication has failed.<br />
+
+                                Depending on his type, a security provider may have parameters (<eg>e.g. to configure the LDAP Server name for the LDAP Authentication Provider</eg>).
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                The following <strong>Security Providers</strong> are available and can be easily modified.<br />
+                                Check the <code>Security Script</code> to have more information.
+                                <ul>
+                                    <li>
+                                        <b>Basic Authentication</b> shows a simple user/password authentication from the user name and password of the login window.
+                                    </li>
+                                    <li>
+                                        <b>Basic Windows Authentication</b> use Windows authentication to validate the user name and password, and define the groups: Windows group names must match group names defined in the security.
+                                    </li>
+                                    <li>
+                                        <b>Database Authentication</b> shows a sample of querying the database to authenticate and get the groups.
+                                    </li>
+                                    <li>
+                                        <b>Integrated Windows Authentication</b> is the same as Basic Windows Authentication but relies on the integrated authentication provided by IIS.
+                                    </li>
+                                    <li>
+                                        <b>LDAP Authentication</b> shows a sample of using the LdapConnection object to authenticate and get the groups.
+                                    </li>
+                                    <li>
+                                        <b>No Security</b> just adds a security group to the user.
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="bs-callout bs-callout-demo">
+                                Script sample for the Basic Authentication Provider, the security group is added to the logged user at line 15:
+                                <pre class="brush: sql; highlight: [9,15]">
+@@using Seal.Model
+@@using Seal.Helpers
+@@{
+    SecurityUser user = Model;
+	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
+	//user.WebUserName -> user name from the login screen
+	//user.WebPassword -> password from the login screen
+
+	user.Name = user.WebUserName; //Display name
+	//user.PersonalFolderName -> may be set to defined the personal folder name
+	
+    //security check can be hardcoded
+	if (user.WebUserName == "userName" && user.WebPassword == "password")
+	{
+		user.AddDefaultSecurityGroup();
+		//user.AddSecurityGroup("aGroupName");
+	}
+	else {
+		throw new Exception("Invalid user name or password");
+	}
+}
+                            </pre>
+                            </div>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Test your security provider</h4>
+                                Once your <strong>Security Provider</strong> configured, user the helper <code>Test a login</code> to fully test a login process with given name and password.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineSecurity_2" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Security Group</h4>
+                            <p>
+                                After a successful authentication process, the user belongs to one or several <code>Security Groups</code>.<br /><br />
+
+                                A <strong>Security Group</strong> allows to configure:<br />
+                                - which repository folders are published for the user,<br />
+                                - if the user can view reports and/or dashboards,<br />
+                                - if the user has personal folders,<br />
+                                - which columns, data sources, connections or devices can be selected with the <b>Web Report Designer</b>,<br />
+                                - which dashboards folders are published,<br />
+                                - if the user has a personal folder for dashboards,<br />
+                                - which widgets can be selected from the <b>Dashboard Manager</b>.<br /><br />
+
+                                A <strong>Security Group</strong> has a collection of repository <code>Folders</code>, each folder has a given relative path and right (from <b>No Right</b> to <b>Edit Reports</b>) and a collection of <code>Dashboard Folders</code>, with a given name and right (from <b>No Right</b> to <b>Edit Dashboards</b>).
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                If a user belongs to several groups, the following rules are applied:<br /><br />
+                                For the <b>Reports</b> folders<br />
+                                <ul>
+                                    <li>
+                                        <b>Folders</b>: the highest right is used (No right, Execute reports / View files, Execute reports and outputs / View files, Edit schedules / View files, Edit reports / Manage files).
+                                    </li>
+                                    <li>
+                                        <b>Personal folder</b>: the highest right is used (No personal folder, Personal folder for files only, Personal folder for reports and files).
+                                    </li>
+                                    <li>
+                                        <b>View type</b>: the union of the views (Reports, Dashboards).
+                                    </li>
+                                </ul>
+
+                                For <b>Web Report Designer</b> security<br />
+                                <ul>
+                                    <li>
+                                        <b>SQL Models</b>: Is true if one group has the right to create SQL Models.
+                                    </li>
+                                    <li>
+                                        <b>Devices</b>, <b>Sources</b>, <b>Connections</b>, <b>Columns</b>: Cannot be selected if it is specified in one group.
+                                    </li>
+                                </ul>
+
+                                For the <b>Dashboards</b> publication<br />
+                                <ul>
+                                    <li>
+                                        <b>Dashboards Folders</b>: the union of the Dashboards folders published with their highest right.
+                                    </li>
+                                    <li>
+                                        <b>Manage Dashboards View</b>: Is true if one group has a the right to Manage Dashboards View.
+                                    </li>
+                                    <li>
+                                        <b>Personal Dashboard Folder</b>: Is true if one group has a personal Dashboard Folder.
+                                    </li>
+                                </ul>
+
+                                For the <b>Dashboard Manager</b> security<br />
+                                <ul>
+                                    <li>
+                                        <b>Widgets</b>: Cannot be selected if it is specified in one group.<br />
+                                    </li>
+                                </ul>
+                            </div>
+                            <p>
+                                A <b>Meta Column</b> or a <b>Widget</b> may have a <code>Security Tag</code> property. This text can be used to define rights for the designers.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>List the current right defintions</h4>
+                                Use the <b>View security groups summary</b> top left button to have a summary the groups and rights defined.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div class="caption">
+                                <b>Security Objects</b>
+                            </div>
+                            <img src="images/CD-Security.png" alt="" class="img-thumbnail img-rounded">
+                        </div>
+                        <!-- end col -->
+                    </div>
+                </section>
+                <!-- end section -->
+                <section id="lineSWI" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Seal Web Interface <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Once installed, the <b>Web Report Server</b> offers a simple interface to ease the integration of <b>Seal Report</b> into existing web sites.<br>
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                Check the API Description and Samples at <a href="https://sealreport.org/demo/WebInterfaceAPI.html" target="_blank">https://sealreport.org/demo/WebInterfaceAPI.html</a>.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+            </div>
+            <!-- // end .col -->
+        </div>
+    </div>
+    <!-- // end container -->
+</div>
+<!-- end wrapper -->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#server_nav").addClass("active");
+        });
+    </script>}

@@ -1,0 +1,517 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Seal Report | Getting Started";
+}
+
+<div id="wrapper">
+    <div class="container">
+        <section id="top" class="section docs-heading"></section>
+        <!-- end section -->
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation">
+                    <ul class="nav">
+                        <li><a href="#lineRequirements">Requirements, License</a></li>
+                        <li><a href="#lineCompilation">Installation, Compilation</a></li>
+                        <li>
+                            <a href="#lineTutorials">Quick Tutorials</a>
+                            <ul class="nav">
+                                <li><a href="#lineTutorials_1">Report from a SQL Select</a></li>
+                                <li><a href="#lineTutorials_2">First Data Source and report</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#lineOverview">Overview</a></li>
+                        <li><a href="#lineEntities">Main Entities</a></li>
+                        <li><a href="#lineComponents">Product Components</a></li>
+                        <li><a href="#lineFolders">Repository Folders</a></li>
+                        <li><a href="#lineSupport">Support</a></li>
+                        <li><a href="#lineCredits">Credits</a></li>
+                    </ul>
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <p style="margin-left:20px;">
+                        <strong><a href="#feed">Feed the Seal ?</a></strong><br />
+                        <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+                    </p>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <section class="welcome">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Welcome to Seal Report<hr></h2>
+                            <div class="row">
+                                <div class="col-md-12 full intro1" style="padding:10px 20px;margin-top:0px">
+                                    <p>
+                                        <strong>Seal Report</strong> offers a complete framework for producing daily reports and dashboards from any database.
+                                        <br>
+                                        The product focuses on easy installation and report design: Once setup, reports can be built and published in a minute.
+                                        <br><br>
+                                        <strong>Seal Report</strong> is an Open Source tool for the Microsoft .Net Framework entirely written in C#.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    <img src="Images/seal2.jpg" class="img-thumbnail img-rounded" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 full">
+                                    <h2>
+                                        Main Features
+                                    </h2>
+                                    <ul>
+                                        <li>
+                                            Dynamic SQL sources: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
+                                        </li>
+                                        <li>
+                                            Native Pivot Tables: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
+                                        </li>
+                                        <li>
+                                            HTML 5 Charts: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3 and Plotly libraries).
+                                        </li>
+                                        <li>
+                                            Fully Responsive and HTML Rendering using Razor engine: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
+                                        </li>
+                                        <li>
+                                            Drill Down navigation and Sub Reports: Navigate in your report result to drill to a detail or to execute another report.
+                                        </li>
+                                        <li>
+                                            Web Report Server: Publish and edit your reports on the web (requires Internet Information Server with ASP.Net).
+                                        </li>
+                                        <li>
+                                            Dashboards View: Display your KPIs or published Widgets in a single view.
+                                        </li>
+                                        <li>
+                                            Task scheduler: Schedule your report executions and generate results in folders or send them by emails (integrated with the Windows Tasks Scheduler).
+                                        </li>
+                                        <li>
+                                            Report Tasks: Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
+                                        </li>
+                                        <li>
+                                            No SQL Data Sources: Fill up your source Data Tables from your own code and display them in a report.
+                                        </li>
+                                        <li>
+                                            Low TCO (total cost of ownership): The product is designed for minimal ongoing maintenance.
+                                        </li>
+                                    </ul>
+                                    <div class="bs-callout bs-callout-danger">
+                                        <h4>Live Demonstration</h4>
+                                        A live demonstration of the <strong>Web Report Server</strong> is available at <a href="https://sealreport.org/demo" target="_blank">SealReport.org/demo</a>.<br />
+                                    </div>
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h4>Seal Report Forum</h4>
+                                        Use the <a href="https://sealreport.org/forum" target="_blank">Seal Report Forum</a> to get free support, information and hints on the product, or read the Wiki for technical documentation.
+                                    </div>
+                                </div>
+                                <!-- end row -->
+                            </div>
+                        </div>
+                </section>
+                <section id="lineRequirements" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Requirements and License <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong>For use:</strong>
+                            <ul>
+                                <li>2003, Windows 7, 2008, Windows 8, 2012, Windows 10 or greater</li>
+                                <li>.Net Framework 4.5</li>
+                                <li>Database OLE DB or ODBC Drivers</li>
+                                <li>For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater</li>
+                                <li>For the Task Scheduler: 7, 2008, 8, 10 or 2012 or greater</li>
+                            </ul>
+                            <strong>For development:</strong>
+                            <ul>
+                                <li>Visual Studio 2017 or greater</li>
+                            </ul>
+                            <p>Seal Report is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a></p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineCompilation" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Installation and Compilation <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Download</h4>
+                                Get the last product releases (including 32bit and a 64bit setup) and source codes at <a href="https://github.com/ariacom/Seal-Report/releases" target="_blank">Github</a>.
+                            </div>
+                            <h2>Installation</h2>
+                            <p>
+                                Just run the setup executable file to install <strong>Seal Report</strong> on your computer.<br />
+                                The setup will install the <b>Report Designer</b>, the <b>Server Manager</b> and the <b>Task Scheduler</b> with a default repository located at <i>"C:\ProgramData\Seal Report Repository"</i>.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                To publish the <b>Web Report Server</b>, run the <b>Server Manager</b> and select the menu <srmenu>Configuration->Publish Web Site on IIS...</srmenu> to execute the Web Server Publisher wizard.
+                            </div>
+                            <h2>Compilation</h2>
+                            <p>
+                                Using <b>Visual Studio</b>, open the solution file <strong>Seal.sln</strong> located at the root directory.<br>
+                                The solution contains the following projects:
+                            </p>
+                            <ul>
+                                <li><b>SealLibrary:</b> Main library shared by all the executables. This library contains the main classes in the <i>Model</i> sub-folder (like Report, MetaTable, Restriction, Task, etc.) plus some helpers.</li>
+                                <li><b>SealReportDesigner:</b> Report Designer executable.</li>
+                                <li><b>SealServerManager:</b> Report Designer executable.</li>
+                                <li><b>SealTaskScheduler:</b> Console application invoked by the Windows Task Scheduler to execute report in batch.</li>
+                                <li><b>SealWebServer:</b> Asp.Net appplication for Web Report Server.</li>
+                                <li><b>TestsAndSamples:</b> Contains unitary tests and basic samples.</li>
+                            </ul>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+
+                <section id="lineTutorials" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Quick Tutorials <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineTutorials_1" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Build a report from a simple SQL statement (2 minutes)</h4>
+                            <div class="row">
+                                <div class="col-md-12 bs-callout bs-callout-info">
+                                    This guide shows how to create and execute a report from a simple SQL statement and a database connection.
+                                </div>
+                            </div>
+                            <ol class="sans">
+                                <li>
+                                    In the Start menu, point to <rmenu>Programs->Seal Report</rmenu> and then click <b>Report Designer</b>.
+                                </li>
+                                <li>
+                                    Click on New (top-left in the toolbar)
+                                </li>
+                                <li>
+                                    In the left tree view, right-click on the root node named "Sources" and select <strong>[Add Data Source]</strong> in the contextual menu.<br />A new source is created and the source connection is displayed.
+                                </li>
+                                <li>
+                                    Edit the <i>Connection String</i> property with the OLE DB Wizard and verify the connection is working using the <strong>[Check Connection]</strong> helper or <strong>[F7]</strong>.
+                                </li>
+                                <li>
+                                    In the left tree view, click on the Model node named "SQL Model". The model is displayed.
+                                </li>
+                                <li>
+                                    In the model definition, select the Data Source called "Data Source" that you have previously created.
+                                </li>
+                                <li>
+                                    Press <strong>[F8]</strong> to edit the SQL Select Statement for the model.<br />The SQL Editor Dialog appears.
+                                </li>
+                                <li>
+                                    In the text box, type your SQL statement (e.g. "select * from products") and click <strong>[OK]</strong>. The Source tree view displays the columns of the Select.
+                                </li>
+                                <li>
+                                    In the elements tree view, drag and drop the elements you want to see in the Row panel.
+                                </li>
+                                <li>
+                                    If necessary, drag and drop elements in the restrictions panel to filter data.
+                                </li>
+                                <li>
+                                    Click <strong>[Execute]</strong> or press <strong>[F5]</strong>.<br />The report is executed.
+                                </li>
+                                <li>
+                                    Click <strong>[Close]</strong> then <strong>[Save]</strong> to save the report in the repository.
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="lineTutorials_2" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Build a first repository Data Source and then Reports based on your database schema (5 minutes)</h4>
+                            <div class="row">
+                                <div class="col-md-12 bs-callout bs-callout-info">
+                                    This guide shows how to create a first Data Source describing your database metadata. Based on this Data Source, reports can be easily built and executed using dynamic SQL generation.
+                                </div>
+                            </div>
+
+                            <h3><strong>Step 1:</strong> Create your first Data Source.</h3>
+                            <ol class="sans">
+                                <li>
+                                    In the Start menu, point to <srmenu>Programs->Seal Report</srmenu> and then click <b>Server Manager</b>.
+                                </li>
+                                <li>
+                                    On the File menu, click <srmenu>New->Data Source</srmenu>.<br />A new Data Source is created and the connection is selected.
+                                </li>
+                                <li>
+                                    Edit the <i>Connection String</i> property with the OLE DB Wizard and check the connection configured using the <strong>[Check Connection]</strong> helper or <strong>[F7]</strong>.
+                                </li>
+                                <li>
+                                    In the left tree view, right-click on the root node called "Tables" and select <strong>[Add Tables from Catalog...]</strong> in the contextual menu.<br />A dialog box appears.
+                                </li>
+                                <li>
+                                    Select the tables in your Data Source and click <strong>[OK]</strong>.<br />Tables, columns and joins have been automatically added.
+                                </li>
+                                <li>
+                                    Click <strong>[Save]</strong> to save the Data Source in the repository.
+                                </li>
+                            </ol>
+                            <h3><strong>Step 2:</strong> Create, execute and store your first reports.</h3>
+                            <ol class="sans">
+                                <li>
+                                    On the Start menu, point to <srmenu>Programs->Seal Report</srmenu> and then click <b>Report Designer</b>.
+                                </li>
+                                <li>
+                                    Click on <strong>[New]</strong> (top-left in the toolbar).
+                                </li>
+                                <li>
+                                    In the left tree view, click on the Model node called "Model".<br />The model is displayed.
+                                </li>
+                                <li>
+                                    In the model definition, select the Data Source you have previously created.
+                                </li>
+                                <li>
+                                    In the elements tree view, expand the nodes with the table names, then drag and drop the elements you want to see in the Row panel.
+                                </li>
+                                <li>
+                                    If necessary, drag and drop elements in the restrictions panel to filter data.
+                                </li>
+                                <li>
+                                    Click <strong>[Execute]</strong> or press <strong>[F5]</strong>.<br />The report is executed.
+                                </li>
+                                <li>
+                                    Click <strong>[Close]</strong> then <strong>[Save]</strong> to save the report in the repository.
+                                </li>
+                            </ol>
+
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineOverview" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Overview <hr></h2>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <img src="images/overViewSeal.png" alt="" class="img-thumbnail img-rounded">
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineEntities" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Main Entities: Repository and Reports <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <p>
+                                The <strong>Seal Repository</strong> stores all the entities managed by Seal Report: Data Sources, Devices, Reports and Dashboards.<br>
+                                In addition, the repository contains extra folders for the Settings (configuration and dictionary for translations), the Views (used to render report result), the Security (configuration and providers).<br>
+                                By default, the repository root folder is located in <i>"C:\ProgramData\Seal Report Repository"</i>.
+                            </p>
+                            <p>
+                                A report is composed of Data Sources, Models, Views and optional Tasks, Outputs and Schedules. The report may also reference Views Templates located in the repository.
+                            </p>
+                            <ul>
+                                <li>
+                                    <strong>Data Sources</strong> contain the descriptions of database connections, tables, joins and columns.
+                                </li>
+                                <li>
+                                    <strong>Models</strong> define how to generate the ResultSet (Data Table) and Series from a single SQL Statement.
+                                </li>
+                                <li>The <strong>Views</strong> are used to generate a HTML document from the <strong>Models</strong> using Razor parsing and rendering.</li>
+                                <li>
+                                    <strong>Output</strong> and <strong>Schedule</strong> can be defined to automate report generation (e.g. Sending an Email every morning).
+                                </li>
+                                <li>
+                                    <strong>Tasks</strong> may be defined to perform SQL or Script tasks.
+                                </li>
+                                <li>
+                                    <strong>Dashboards</strong> offer a view of widgets published in different reports.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <!-- end section -->
+                <section id="lineComponents" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Product Components <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <p>Seal Report is composed of the <b>Server Manager</b> application, the <b>Report Designer</b> application, the <b>Web Report Server</b> and the <b>Task Scheduler</b>.</p>
+                            <ul>
+                                <li>The <strong>Server Manager</strong> (a Windows application) edits repository Data Sources, Devices and is used to perform administrative tasks (checking sources and reports, publishing web site, configuring the server, editing the security, etc.).</li>
+                                <li>The <strong>Report Designer</strong> (a Windows application) creates, edits and executes reports.</li>
+                                <li>The <strong>Web Report Server</strong> (an ASP.Net Web application published on IIS) allows the end-users to edit and execute the reports and dashboards published from the Web.</li>
+                                <li>The <strong>Task Scheduler</strong> (a console application) is invoked by the Windows Task Scheduler to schedule report execution on a Device (folder or email).</li>
+                            </ul>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineFolders" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Repository Folders <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Several sub-folders are located from the Repository Root folder. These folders contain all files necessary to run Seal Report.
+                            </p>
+                            <ul>
+                                <li>
+                                    <strong>Assemblies:</strong> additional DLL (*.dll) that can be referenced in all Razor scripts. You can add your own assemblies in this folder and call them from any script compiled and executed during a report execution (e.g. in a Task).
+                                </li>
+                                <li>
+                                    <strong>Databases:</strong> dedicated folder for local database files (e.g. an MS Access file).
+                                </li>
+                                <li>
+                                    <strong>Devices:</strong> the device configurations (*.scfx) used by the report output. 2 types of devices are available: Folder to generate a report result in a file, or Email to send it to a user by SMTP.
+                                </li>
+                                <li>
+                                    <strong>Logs:</strong> the daily log files (*.txt). All execution messages are logged in a daily file (files are auto-purged).
+                                </li>
+                                <li>
+                                    <strong>Reports:</strong> the reports (*.srex), files and sub-folders published by the Web Report Server. The Reports root folder is the parent of all folders, files and reports published.
+                                </li>
+                                <li>
+                                    <strong>Security:</strong> the security defined for the Web Report Server (Security.xml) and a sub-folder containing the security providers (*.cshtml) available.
+                                </li>
+                                <li>
+                                    <strong>Settings:</strong> the Server configuration (Configuration.xml) and the translation files (*.csv).
+                                </li>
+                                <li>
+                                    <strong>Sources:</strong> the data source files (*.scfx) available for the reports. These data sources are shared amongst all the reports.
+                                </li>
+                                <li>
+                                    <strong>Dashboards:</strong> dashboards files(*.sdax) edited and published by the Web Report Server.
+                                </li>
+                                <li>
+                                    <strong>SpecialFolders\Personal:</strong> dedicated folder to store the personal folders for each user. The folder contains reports, dashboards, files and the user's profile (_profile.xml).
+                                </li>
+                                <li>
+                                    <strong>SubReports:</strong> the sub-reports (*.srex) referenced by an element in a data source. Sub-Reports allow master-detail navigation from a report result.
+                                </li>
+                                <li>
+                                    <strong>Views:</strong> the view templates (*.cshtml) used by the report views with their configuration and their related JavaScript, CSS and image files.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineSupport" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Support: Need help ?<hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                The product aims to be self-documented as a description is displayed for every field edited with the Report Designer or the Server Manager.<br>
+                                Use the <a href="https://sealreport.org/forum" target="_blank">Seal Report Forum</a> to get free support, information and hints for the product.<br>
+
+                                Feel free to post your questions, comments or answers...
+                            </p>
+                        </div>
+                        <div class="col-md-12 bs-callout bs-callout-info">
+                            <h4>Consulting and Components: Get State of the Art Help</h4>
+                            If you need professional consulting, trainings or workshops, please contact <a href="https://ariacom.com" target="_blank">Ariacom</a>.<br>
+                            In addition to the open source version of the Web Report Server, a <a href="https://ariacom.com/sealweblicense.cshtml" target="_blank">Web Report Designer</a> is available to edit and schedule your reports and to design your dashboards from any Web browser.<br>
+                            The company also offers a <a href="https://ariacom.com/sealreportlicense.cshtml" target="_blank">PDF and Excel Converter</a> component to generate PDF Documents and native Excel Workbook directly from your Seal reports.<br>
+                        </div>
+                        <div class="col-md-12 bs-callout bs-callout-danger">
+                            <h4>Pay for a new feature: Become a sponsor forever</h4>
+                            If you need a new feature that could be used by the community and be part of the future product release, please contact us at <a href="https://ariacom.com/contact.cshtml" target="_blank">Ariacom </a>or using <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a>.<br>
+                            Check out the last requested product features at the dedicated forum: <a href="https://sealreport.org/forum" target="_blank">Feature Request</a>.</p>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineCredits" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Credits <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            Here is the list of the major Open Source components (Thank you so much !) used in <strong>Seal Report</strong>:
+                            <ul>
+                                <li> <a href="https://getbootstrap.com/docs/3.4/" target="_blank">Bootstrap 3.4</a> for the Web Report Server and report rendering</li>
+                                <li> <a href="https://github.com/Antaris/RazorEngine" target="_blank">Razor engine</a> for the rendering and dynamic options</li>
+                                <li><a href="http://www.chartjs.org/" target="_blank">ChartJS</a> for the charts JS</li>
+                                <li><a href="http://nvd3.org/" target="_blank">NVD3</a> for the NVD3 charts</li>
+                                <li><a href="https://github.com/plotly/plotly.js/" target="_blank">Plotly</a> for the Plotly charts</li>
+                                <li><a href="https://github.com/jacobslusser/ScintillaNET" target="_blank"> ScintillaNET</a> for the source code editor</li>
+                                <li> <a href="http://www.codeproject.com/Articles/189521/Dynamic-Properties-for-PropertyGrid" target="_blank">Dynamic Properties</a> for PropertyGrid helpers</li>
+                                <li> <a href="https://github.com/dahall/taskscheduler" target="_blank">Scheduler Managed Wrapper</a> for the report schedules editor</li>
+                                <li> <a href="https://datatables.net" target="_blank">Data Tables</a> to enhance HTML tables</li>
+                                <li> <a href="https://github.com/Eonasdan/bootstrap-datetimepicker" target="_blank">Datetime Picker</a> component for the report restrictions</li>
+                                <li> <a href="https://github.com/silviomoreto/bootstrap-select" target="_blank">Multiple Select</a> component for the report restrictions</li>
+                                <li><a href="http://www.jrsoftware.org" target="_blank"> InnoSetup</a> for the setup</li>
+                                <li> <a href="http://yetanotherforum.net" target="_blank">Yet Another Forum</a> (YAF) for the forum</li>
+                                <li> <a href="https://dotnetzip.codeplex.com" target="_blank">DotNetZip</a> to Zip email attachments</li>
+                                <li> <a href="https://github.com/JanKallman/EPPlus" target="_blank">EPPlus</a> for the Excel converter</li>
+                                <li> <a href="https://github.com/haltu/muuri" target="_blank">Muuri</a> for the Dashboard layout</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+            </div>
+            <!-- // end .col -->
+        </div>
+        <!-- // end .row -->
+    </div>
+    <!-- // end container -->
+</div>
+<!-- end wrapper -->
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#default_nav").addClass("active");
+        });
+    </script>
+}

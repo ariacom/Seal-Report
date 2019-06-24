@@ -1,0 +1,378 @@
+/* ----------------------------------------------------
+  
+    File Name: style.css
+    Template Name: Documentation
+    Created By: Surjith S M
+    http://themeforest.net/user/surjithctly
+
+    1. IMPORT
+    2. SKELETON
+    
+------------------------------------------------------- */
+/* ----------------------------------------------------
+    IMPORT  
+------------------------------------------------------- */
+
+@import url(https://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic);
+/* ----------------------------------------------------
+    SKELETON    
+------------------------------------------------------- */
+
+body {
+    background: #fff;
+    color: #565656;
+    font-size: 14px;
+    line-height: 31px;
+    letter-spacing: 0;
+    font-weight: 400;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    letter-spacing: 0px;
+    font-weight: normal;
+    position: relative;
+    padding: 0 0 0px 0;
+    font-weight: normal;
+    line-height: 1.8;
+    color: #242424;
+}
+
+h1 {
+    font-size: 22px;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+h4 {
+    font-size: 21px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+h6 {
+    font-size: 14px;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+    text-decoration: none !important;
+}
+
+p {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0;
+    margin-top: 15px;
+}
+
+img.aligncenter {
+    display: block;
+    text-align: center;
+    display: block;
+    margin: 0 auto 20px auto;
+    padding: 0px;
+    border: 0px;
+    background: none;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+ol li ul li {
+    padding-left: 20px;
+}
+
+li {
+    line-height: 24px;
+}
+
+img.alignleft {
+    float: left;
+    margin: 6px 20px 6px 0;
+    display: inline;
+    border: 0px;
+    background: none;
+    padding: 0;
+    display: block;
+}
+
+img.alignright {
+    padding: 0;
+    float: right;
+    margin: 6px 0 6px 20px;
+    border: 0px;
+    display: block;
+    background: none;
+}
+
+blockquote {
+    font-size: 16px;
+    line-height: 32px;
+    font-family: 'Droid Serif', Georgia, "Times New Roman", serif;
+    font-weight: normal;
+    font-style: italic;
+    position: relative;
+    width: auto;
+}
+
+blockquote small {
+    display: block;
+    margin-top: 20px;
+}
+
+pre {
+    line-height: 18px;
+    margin-bottom: 18px;
+}
+
+.btn,
+a {
+    outline: 0 !important;
+    text-decoration: none !important;
+}
+
+ins {
+    text-decoration: none;
+}
+
+sup {
+    bottom: 1ex;
+}
+
+sub {
+    top: .5ex;
+}
+
+p {
+    padding: 0 0 5px 0;
+}
+
+.check li:before {
+    content: "\f00c";
+    font-family: "FontAwesome";
+    font-size: 16px;
+    left: 0;
+    color: #242424;
+    padding-right: 5px;
+    position: relative;
+    top: 2px;
+}
+
+.check li {
+    font-size: 14px;
+    list-style: none;
+    margin-bottom: 4px;
+}
+
+.check {
+    margin-left: 0;
+    padding-left: 0
+}
+
+.section {
+    padding: 40px 0px 0px 0px;
+    position: relative;
+    display: block;
+}
+
+.white {
+    background-color: #ffffff;
+}
+
+strong {
+    color: #030303;
+}
+
+.grey {
+    background-color: #f3f3f3;
+}
+
+.big-title h1 {
+    font-size: 48px;
+    font-weight: 300;
+    margin-bottom: 0;
+    text-transform: capitalize;
+    padding-bottom: 0;
+}
+
+.dark-text {
+    font-size: 4.125rem;
+    line-height: 4.063rem;
+    font-weight: 300;
+}
+
+h4 a {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.dark-text a {
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 20px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+hr {
+    width: 130px;
+    margin-left: 0;
+    margin-top: 5px;
+    margin-bottom: 1px;
+    border-width: 1px;
+    border-color: #030303;
+    text-align: left;
+}
+
+.intro {
+    padding: 20px;
+}
+
+.intro1 {
+    margin-top: 22px;
+    padding: 30px 0px;
+    background-color: #f3f3f3;
+}
+
+.intro1 li {
+    list-style: none;
+}
+
+.intro1 a {
+    color: #0E97EE !important;
+}
+
+.intro a {
+    color: #030303;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.lead {
+    text-transform: capitalize;
+}
+
+.left-align img {
+    margin-top: 20px;
+}
+
+.drop-caps p:first-child::first-letter {
+    color: #030303;
+    display: block;
+    float: left;
+    font-size: 75px;
+    line-height: 60px;
+    text-transform: uppercase;
+    margin-right: 10px;
+    margin-top: 5px;
+    padding: 4px;
+}
+
+.drop-caps.full p:first-child::first-letter {
+    background: #030303 none repeat scroll 0 0 !important;
+    color: #ffffff;
+    margin-right: 15px;
+    padding: 20px;
+    font-size: 36px;
+    font-family: Georgia;
+    border-radius: 5px;
+}
+
+mark {
+    background-color: #0E97EE;
+    color: #ffffff;
+    padding: 0 10px;
+}
+
+a:focus,
+a:hover {
+    color: #0E97EE;
+}
+
+.intro2 i {
+    padding-right: 10px;
+    font-size: 21px;
+}
+
+.intro2 {
+    background-color: #0E97EE;
+    border: 2px solid #2187BB;
+    border-radius: 5px;
+    color: #ffffff;
+    font-style: italic;
+    padding: 10px 20px;
+}
+
+.intro2 p {
+    padding: 0;
+}
+
+.intro2 a {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.intro1 ul {
+    padding: 0 30px;
+}
+
+.btn-primary {
+    background-color: #0E97EE;
+    border: 1px solid #2187BB;
+}
+
+.btn-primary:hover {
+    background-color: #2187BB;
+    border: 1px solid #0E97EE;
+}
+
+.btn-info {
+    background-color: #545454;
+    border: 1px solid #656565;
+}
+
+.btn-info:hover {
+    background-color: #656565;
+    border: 1px solid #545454;
+}
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+    background-color: #0E97EE;
+    color: #fff;
+}
+
+.navbar-inverse {
+    background-color: #030303;
+    border: 0;
+}
+
+.navbar-inverse li.btn {
+    border-radius: 0 !important;
+    padding: 0;
+}
+
+.navbar-inverse li.btn a {
+    color: #ffffff !important;
+}

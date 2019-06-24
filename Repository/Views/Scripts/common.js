@@ -447,6 +447,7 @@ function mainInit() {
 //Enum select picker
 function requestEnumData(filter, forceNoMessage) {
     var result;
+
     if (urlPrefix != "") {
         $.post(urlPrefix + "ActionGetEnumValues", { execution_guid: $("#execution_guid").val(), enum_id: $("#id_enumload").val(), filter: filter })
             .done(function (data) {
@@ -467,7 +468,6 @@ function requestEnumData(filter, forceNoMessage) {
 
 function fillEnumSelect(data, noMessage) {
     var id = "#" + $("#id_enumload").val();
-    var $enum = $(id);
 
     //Add selected items
     $(id + " option:selected").each(function () {
@@ -484,7 +484,8 @@ function fillEnumSelect(data, noMessage) {
         }
     });
 
-    if (data.length > 0) {
+    var $enum = $(id);
+    if (data.length > 0 || $enum[0].length > 0) {
         $enum.empty();
         for (var i = 0; i < data.length; i++) {
             $enum.append(
@@ -498,7 +499,6 @@ function fillEnumSelect(data, noMessage) {
     if ($message) $message.text("");
     if (!noMessage && $enum.attr("message")) {
         //Add info message
-        var $message = $("#enum-message");
         if ($message.length == 0) {
             $message = $("<li>").attr("id", "enum-message").addClass("no-results");
         }
@@ -536,12 +536,12 @@ function initEnums() {
 
             var data = [];
             if ($(this).attr("dependencies")) requestEnumData("", false);
- 
+
             var filter = "";
             $(".bs-searchbox input").on("input", function (evt) {
-                var $earch = $(evt.target);
-                if ($earch.val() !== filter) { // search value is changed
-                    filter = $earch.val();
+                var $search = $(evt.target);
+                if ($search.val() !== filter) { // search value is changed
+                    filter = $search.val();
                     if (filter.length >= $("#" + $("#id_enumload").val()).attr("filterchars")) { // more than xx characters
                         requestEnumData(filter, true);
                     }
