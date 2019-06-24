@@ -170,7 +170,7 @@
                                     <code>Calculation Options</code> to change the display in % of the row, column or total.
                                 </li>
                                 <li>
-                                    <code>Totals</code> to add extra line or column containg the total of the other cells in the result table.
+                                    <code>Totals</code> to add extra line or column containing the total of the other cells in the result table.
                                 </li>
                             </ul>
 
@@ -210,12 +210,12 @@
                             <h4>Restrictions</h4>
                             <p>
                                 Restrictions are used to filter data displayed in the report result<br>
-                                You can drag and drop the elements into the <b>Restriction text</b> or into the <b>Aggregate Restrictions text</b> to add the restriction to the model.<br />
+                                You can drag and drop the elements into the <b>Restrictions text</b> or into the <b>Aggregate Restrictions text</b> to add the restriction to the model.<br />
 
-                                The <b>Restriction text</b> is then used in the SQL WHERE Clause and the <b>Aggregate Restrictions text</b> in the SQL HAVING Clause.
+                                The <b>Restrictions text</b> is then used in the SQL WHERE Clause and the <b>Aggregate Restrictions text</b> in the SQL HAVING Clause.
                             </p>
                             <div class="bs-callout bs-callout-demo">
-                                In this sample the <b>Restriction text</b> contains the restriction on Country and the <b>Aggregate Restriction text</b> on Amount with the Sum aggregate.
+                                In this sample the <b>Restrictions text</b> contains the restriction on Country and the <b>Aggregate Restrictions text</b> on Amount with the Sum aggregate.
                                 <pre class="brush: sql; highlight: [2,4]">
                                 SELECT Country,SUM(Amount) FROM Orders 
                                 WHERE Country='France' 
@@ -330,7 +330,7 @@
                                 The script and the parameters can be customized per view.<br />
                             </p>
                             <p>
-                                To be executed, a report has a least a root view referencing the <b>Report Template</b>.<br />
+                                To be executed, a report has at least a root view referencing the <b>Report Template</b>.<br />
                                 A view can have children views, the rendering starts from the root view and ends at the last child views (from top to bottom).<br />
                                 After the execution of the view, the HTML or the text generated is appended to the report result.<br />
 
@@ -481,7 +481,7 @@
                     <!-- end row -->
                     <div id="lineOutput_1" class="row" style="padding-top:35px">
                         <div class="col-md-12">
-                            <h4>Device</h4>
+                            <h4>Devices</h4>
                             <p>
                                 A <strong>Device</strong> is used to define a <b>Report Output</b>.<br />
                                 Two types of devices are supported:
@@ -551,7 +551,7 @@
                                 A task references one <strong>Data Source</strong> and on <strong>Connection</strong>.<br />
                                 A report can have several tasks executed sequentially from the top to the bottom.<br />
                                 If a task is a Razor Script, it can stop the report execution by returning the "0" value or by setting the <code>CancelReport</code> flag to true.<br /> Thus, simple workflows can be implemented with tasks (<eg>e.g if a given condition fails, the report is cancelled</eg>).<br />
-                                Using the <code>Execute for each connection</code> property, task can be executed for all connections defined in the <strong>Data Source</strong>.<br /><br />
+                                Using the <code>Execute for each connection</code> property, a task can be executed for all connections defined in the <strong>Data Source</strong>.<br /><br />
 
                                 As Tasks executes a Razor Script, they can reference, instantiate and use objects from any .Net Assemblies located in the <strong>/Assemblies</strong> Repository sub-folder.<br />
                             </p>

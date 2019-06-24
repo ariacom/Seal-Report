@@ -311,13 +311,13 @@ var SWIDashboard = /** @class */ (function () {
                     _main._profile.dashboard = _da._lastGUID;
                     SWIUtil.ShowHideControl($(".item,.group-name"), false);
                     setTimeout(function () {
-                        nvd3UpdateCharts();
-                    }, 200);
-                    setTimeout(function () {
-                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
-                    }, 300);
-                    setTimeout(function () {
                         SWIUtil.ShowHideControl($(".item,.group-name"), true);
+                        setTimeout(function () {
+                            nvd3UpdateCharts();
+                        }, 20);
+                        setTimeout(function () {
+                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+                        }, 40);
                         _da.reorderItems(true);
                     }, 400);
                 });

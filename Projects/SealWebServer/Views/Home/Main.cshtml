@@ -407,7 +407,7 @@
         {
             @foreach (var translation in repository.NVD3Translations)
             {
-            <text>if (text == '@Helper.ToJS(translation.Key)') return '@Helper.ToJS(translation.Value)';</text>
+            <text>if (text == '@Html.Raw(Helper.ToJS(translation.Key))') return '@Html.Raw(Helper.ToJS(translation.Value))';</text>
             }
             return text;
         }
