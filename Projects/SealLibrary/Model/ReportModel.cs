@@ -915,6 +915,8 @@ namespace Seal.Model
                 foreach (var restrictionName in names)
                 {
                     var commonRestriction = CommonRestrictions.FirstOrDefault(i => i.Name == restrictionName);
+                    bool isCommonValue = valueNames.Contains(restrictionName);
+
                     if (commonRestriction == null)
                     {
                         commonRestriction = ReportRestriction.CreateReportRestriction();
@@ -922,19 +924,17 @@ namespace Seal.Model
                         commonRestriction.DisplayName = restrictionName;
                         commonRestriction.TypeRe = ColumnType.Text;
                         CommonRestrictions.Add(commonRestriction);
+
+                        if (isCommonValue)
+                        {
+                            //Common Value: Init Operator and type
+                            commonRestriction.TypeRe = ColumnType.Numeric;
+                            commonRestriction.Operator = Operator.ValueOnly;
+                        }
                     }
+                    commonRestriction.IsCommonValue = isCommonValue;
                 }
 
-                //If not defined, set operator to NULL for Value...
-                foreach (var restrictionName in valueNames)
-                {
-                    var commonRestriction = CommonRestrictions.FirstOrDefault(i => i.Name == restrictionName);
-                    if (commonRestriction != null && commonRestriction.Operator != Operator.ValueOnly)
-                    {
-                        commonRestriction.TypeRe = ColumnType.Numeric;
-                        commonRestriction.Operator = Operator.ValueOnly;
-                    }
-                }
                 //clean restrictions not used
                 CommonRestrictions.RemoveAll(i => !sqlToParse.Contains(Repository.CommonRestrictionKeyword + i.Name + "}") && !sqlToParse.Contains(Repository.CommonValueKeyword + i.Name + "}"));
 
