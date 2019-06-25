@@ -11,6 +11,7 @@ using Seal.Model;
 using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace SealWebServer.Controllers
 {
@@ -457,7 +458,7 @@ namespace SealWebServer.Controllers
                     SetCookie(SealCultureCookieName, culture);
                 }
 
-                if (!string.IsNullOrEmpty(defaultView)) SetCookie(SealLastViewCookieName, defaultView); 
+                if (!string.IsNullOrEmpty(defaultView)) SetCookie(SealLastViewCookieName, defaultView);
 
                 return Json(new { });
             }
@@ -824,6 +825,8 @@ namespace SealWebServer.Controllers
                     report.ExecutionView.SetParameter(Parameter.DrillEnabledParameter, false);
                     report.ExecutionView.SetParameter(Parameter.SubReportsEnabledParameter, false);
                     report.ExecutionView.SetParameter(Parameter.ServerPaginationParameter, false);
+                    //set HTML Format
+                    report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
                     //Force load of all models
                     report.ExecutionView.SetParameter(Parameter.ForceModelsLoad, true);
                 }
@@ -863,7 +866,11 @@ namespace SealWebServer.Controllers
                     execution.Execute();
                     while (report.IsExecuting) Thread.Sleep(100);
                 }
-
+                if (report.HasErrors)
+                {
+                    Helper.WriteWebException(new Exception(report.FilePath + ":\r\n" + report.ExecutionErrors), Request, WebUser);
+                    throw new Exception("Error: the model has errors");
+                }
                 //Reset pointers and parse
                 lock (report)
                 {

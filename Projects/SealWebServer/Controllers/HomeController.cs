@@ -49,6 +49,7 @@ namespace SealWebServer.Controllers
 
         public string Translate(string reference)
         {
+            if (Repository == null) return reference;
             return Repository.TranslateWeb(reference);
         }
 
