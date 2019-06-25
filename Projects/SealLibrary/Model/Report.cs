@@ -1319,8 +1319,8 @@ namespace Seal.Model
                     foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None))
                     {
                         if (
-                            restriction.IsTaskRestriction ||
-                            !_executionCommonRestrictions.Exists(i => (i.IsCommonRestriction && i.Name == restriction.Name) || (!i.IsCommonRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl))
+                            restriction.IsInputValue ||
+                            !_executionCommonRestrictions.Exists(i => (i.IsCommonRestrictionValue && i.Name == restriction.Name) || (!i.IsCommonRestrictionValue && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl))
                             )
                         {
                             restriction.HtmlIndex = index.ToString();
@@ -1334,7 +1334,7 @@ namespace Seal.Model
                     {
                         foreach (ReportRestriction restriction in _executionCommonRestrictions)
                         {
-                            ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions).FirstOrDefault(i => (i.IsCommonRestriction && i.Name == restriction.Name) || (!i.IsCommonRestriction && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl));
+                            ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions).FirstOrDefault(i => (i.IsCommonRestrictionValue && i.Name == restriction.Name) || (!i.IsCommonRestrictionValue && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl));
                             if (modelRestriction != null) modelRestriction.HtmlIndex = restriction.HtmlIndex;
                         }
                     }

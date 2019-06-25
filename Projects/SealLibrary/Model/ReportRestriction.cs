@@ -34,14 +34,14 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("Prompt").SetIsBrowsable(true);
                 GetProperty("Required").SetIsBrowsable(true);
-                GetProperty("Operator").SetIsBrowsable(!IsTaskRestriction);
+                GetProperty("Operator").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("DisplayNameEl").SetIsBrowsable(true);
-                GetProperty("SQL").SetIsBrowsable(!IsTaskRestriction && !IsNoSQL);
-                GetProperty("FormatRe").SetIsBrowsable(!IsTaskRestriction && !IsEnum);
+                GetProperty("SQL").SetIsBrowsable(!IsInputValue && !IsCommonValue && !IsNoSQL);
+                GetProperty("FormatRe").SetIsBrowsable(!IsEnum);
                 GetProperty("TypeRe").SetIsBrowsable(!IsNoSQL);
-                GetProperty("OperatorLabel").SetIsBrowsable(!IsTaskRestriction);
+                GetProperty("OperatorLabel").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("EnumGUIDRE").SetIsBrowsable(true);
-                GetProperty("ChangeOperator").SetIsBrowsable(!IsTaskRestriction);
+                GetProperty("ChangeOperator").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
 
                 //Conditional
@@ -284,7 +284,7 @@ namespace Seal.Model
             get
             {
                 if (Enum != null) return Enum;
-                if (IsCommonRestriction) return null;
+                if (IsCommonRestrictionValue) return null;
                 return MetaColumn.Enum;
             }
         }
@@ -324,7 +324,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public bool IsTaskRestriction
+        public bool IsInputValue
         {
             get
             {
@@ -978,7 +978,7 @@ namespace Seal.Model
                 string result = "";
                 if (IsEnum)
                 {
-                    var type = (IsCommonRestriction ? Type : MetaColumn.Type);
+                    var type = (IsCommonRestrictionValue ? Type : MetaColumn.Type);
                     if (EnumValues.Count == 0) result = (type == ColumnType.Numeric ? "0" : "''");
                     foreach (string enumValue in EnumValues)
                     {

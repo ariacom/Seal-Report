@@ -216,7 +216,7 @@ namespace Seal.Model
         {
             get
             {
-                if (_type == ColumnType.Default && !IsCommonRestriction) return MetaColumn.Type;
+                if (_type == ColumnType.Default && !IsCommonRestrictionValue) return MetaColumn.Type;
                 return _type;
             }
         }
@@ -227,7 +227,7 @@ namespace Seal.Model
             get
             {
                 SetStandardFormat();
-                if (IsCommonRestriction) return Format;
+                if (IsCommonRestrictionValue) return Format;
 
                 string result = Format;
                 if (string.IsNullOrEmpty(result)) result = MetaColumn.Format;
@@ -584,7 +584,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore, Browsable(false)]
-        public bool IsCommonRestriction
+        public bool IsCommonRestrictionValue
         {
             get
             {
@@ -593,12 +593,15 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
+        public bool IsCommonValue = false;
+
+        [XmlIgnore]
         public MetaEnum EnumEL
         {
             get
             {
                 if (Enum != null) return Enum;
-                if (IsCommonRestriction) return null;
+                if (IsCommonRestrictionValue) return null;
                 return MetaColumn.Enum;
             }
         }
@@ -608,7 +611,7 @@ namespace Seal.Model
         {
             get
             {
-                if (IsCommonRestriction) return Name;
+                if (IsCommonRestrictionValue) return Name;
 
                 string result = MetaColumn.Name;
                 if (PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate)
@@ -633,7 +636,7 @@ namespace Seal.Model
         [XmlIgnore, Browsable(false)]
         public string SQLColumnName
         {
-            get { return string.IsNullOrEmpty(_SQLColumnName) && !IsCommonRestriction ? MetaColumn.Name : _SQLColumnName; }
+            get { return string.IsNullOrEmpty(_SQLColumnName) && !IsCommonRestrictionValue ? MetaColumn.Name : _SQLColumnName; }
             set { _SQLColumnName = value; }
         }
 

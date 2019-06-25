@@ -168,6 +168,17 @@
                                 Use common restrictions if you have performance issue and you want to filter a huge table defined with sub-select.<br />
                                 Common restriction can also be used to pass parameters to stored procedures.
                             </div>
+                            <div class="bs-callout bs-callout-info">
+                                Note that the same Common Restriction or Value can be used several times.<br />
+                                e.g. the following SQL can be used to define a table or a SQL Model:
+                                <pre class="brush: sql;">
+                                SELECT 'Type1' type, sum(aColumn1) amount FROM aTableName1 WHERE subType in (3,4) and CommonRestriction_Date
+                                UNION
+                                SELECT 'Type2' type, sum(aColumn2) FROM aTableName2 WHERE CommonRestriction_Date
+                                UNION
+                                SELECT 'Type3' type, sum(aColumn3) FROM aTableName3 WHERE CommonRestriction_Date
+                            </pre>
+                            </div>
                         </div>
                         <!-- end col -->
                     </div>
