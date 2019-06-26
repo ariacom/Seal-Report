@@ -38,6 +38,9 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 ## Web Report Server
 ![Web Report Server](https://ariacom.com/ImagesGITHUB/webServer.png)
 
+## Dashboard View
+![Dashboard](https://ariacom.com/ImagesGITHUB/dashboard.png)
+
 ## Report Result with Responsive Layout
 ![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResultResp.png) 
 
