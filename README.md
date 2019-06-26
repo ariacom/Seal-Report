@@ -22,7 +22,7 @@ A **live demonstration** of the <a href="https://sealreport.org/demo" target=_bl
 
 **Quick start guides**  for building reports are available at the <a href="https://sealreport.org" target=_blank>Seal Report</a> Web site.
 
-Use the <a href="https://sealreport.org/forum" target=_blank>Seal Report Forum</a> to get free support, information and hints on the product, or read the [Wiki](https://github.com/ariacom/Seal-Report/wiki) for technical documentation.
+Use the <a href="https://sealreport.org/forum" target=_blank>Seal Report Forum</a> to get free support, information and hints on the product.
 
 In addition to the Open Source version, **<a href="https://ariacom.com" target=_blank>Ariacom</a>** offers consulting on the product and 2 commercial components:
 * The <a href="https://ariacom.com/sealweblicense.cshtml" target=_blank>Web Report Designer</a> to edit and schedule reports from any web browser.
