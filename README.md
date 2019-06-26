@@ -30,19 +30,19 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 
 # Screen shots
 ## HTML Report Result
-![HTML Report Result](https://sealreport.org/Images/reportResult3.png) 
+![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult.png) 
 
 ## Report Designer
-![Report Designer](https://sealreport.org/Images/reportDesignerShot.png)
+![Report Designer](https://ariacom.com/ImagesGITHUB/reportDesigner.png)
 
 ## Web Report Server
-![Web Report Server](https://sealreport.org/Images/webServer4.png)
+![Web Report Server](https://ariacom.com/ImagesGITHUB/webServer.png)
 
 ## Report Result with Responsive Layout
-![HTML Report Result](https://sealreport.org/Images/reportResultResp2.png) 
+![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResultResp.png) 
 
 ## Web Report Server with Responsive Layout
-![Web Report Server](https://sealreport.org/Images/webServerResp2.png)
+![Web Report Server](https://ariacom.com/ImagesGITHUB/webServerResp.png)
 
 ## System Requirements
 **For use:**
