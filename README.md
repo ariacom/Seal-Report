@@ -28,7 +28,7 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 * The <a href="https://ariacom.com/sealweblicense.cshtml" target=_blank>Web Report Designer</a> to edit and schedule reports from any web browser.
 * The <a href="https://ariacom.com/sealreportlicense.cshtml" target=_blank>PDF and Excel Converter</a> to generate reports in PDF and Excel files.
 
-# Screen shots
+# Screen shots 
 ## HTML Report Result
 ![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult.png) 
 
