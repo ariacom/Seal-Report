@@ -30,7 +30,7 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 
 # Screen shots 
 ## HTML Report Result
-![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult.png) 
+![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult2.png) 
 
 ## Report Designer
 ![Report Designer](https://ariacom.com/ImagesGITHUB/reportDesigner.png)
@@ -39,7 +39,7 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 ![Web Report Server](https://ariacom.com/ImagesGITHUB/webServer.png)
 
 ## Dashboard View
-![Dashboard](https://ariacom.com/ImagesGITHUB/dashboard.png)
+![Dashboard](https://ariacom.com/ImagesGITHUB/dashboard2.png)
 
 ## Report Result with Responsive Layout
 ![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResultResp.png) 
