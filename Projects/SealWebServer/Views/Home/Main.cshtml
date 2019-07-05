@@ -31,46 +31,7 @@
     <input type="text" style="display:none">
     <input type="password" style="display:none">
 
-    <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">@repository.TranslateWeb("Toggle navigation")</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <div>
-                    <a id="brand-id" class="navbar-brand" href="#">@repository.Configuration.WebProductName</a>
-                    <button id="dashboard-toggle" type="button" class="btn btn-sm btn-primary" style="display:none; margin-top:10px;"><span class="glyphicon glyphicon-th-list"></span></button>
-                </div>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">
-                <ul class="nav navbar-nav pull-xs-right navbar-right">
-                    <li class="nav-item"><a id="profile-nav-item">@repository.TranslateWeb("Profile")</a></li>
-                    <li class="nav-item"><a id="disconnect-nav-item">@repository.TranslateWeb("Disconnect")</a></li>
-                </ul>
-                <form class="navbar-form navbar-right folderview" style="display:none;">
-                    <div class="input-group">
-                        <input id="search-pattern" type="text" class="form-control input-sm col-sm-1" placeholder="@repository.TranslateWeb("Search")" />
-                        <span class="input-group-btn">
-                            <button id="search-nav-item" type="button" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-search"></span></button>
-                        </span>
-                    </div>
-                </form>
-                <form class="navbar-form navbar-right hidden-xs dashboardvieweditor" style="display:none;margin-left:-20px;">
-                    <div class="input-group">
-                        <button id="dashboard-add-widget" type="button" class="btn btn-sm btn-primary" title="@repository.TranslateWeb("Add widgets to the dashboard")"><span class="glyphicon glyphicon-plus"></span></button>
-                    </div>
-                </form>
-                <ul class="nav navbar-nav pull-xs-right navbar-right">
-                    <li class="nav-item"><a id="refresh-nav-item">@repository.TranslateWeb("Refresh")<i style="display:none" class='fa fa-spinner fa-spin fa-sm fa-fw'></i></a></li>
-                    <li class="nav-item hidden-xs folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item">@repository.TranslateWeb("Folder")</a></li>
-                    <li class="nav-item hidden-xs dashboardview" style="display:none;" title="@repository.TranslateWeb("Manage Dashboards")"><a id="dashboards-nav-item">@repository.TranslateWeb("Dashboard")</a></li>
-                </ul>
-            </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
-    </nav>
+    @Html.Partial("~/Views/Home/Menu.cshtml")
 
     <!--Reports view -->
     <div id="main-container" class="container-fluid folderview" style="padding-top:62px; display:none;">
@@ -182,7 +143,7 @@
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header" style="background-color: #5cb85c;color:white;text-align: center;font-size: 30px;border-top-left-radius: 6px;border-top-right-radius: 6px;">
+                <div class="modal-header btn-success" style="color:white;text-align:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
                     <h4 style="color:white;"><span class="glyphicon glyphicon-lock"></span> @repository.Configuration.WebProductName @repository.TranslateWeb("Login")</h4>
                 </div>
                 <div class="modal-body">

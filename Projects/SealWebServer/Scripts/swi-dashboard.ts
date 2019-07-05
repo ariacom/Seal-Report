@@ -85,7 +85,7 @@ class SWIDashboard {
 
     private enableControls() {
         var spinnerHidden = !$(".spinner-menu").is(":visible")
-        SWIUtil.EnableButton($("#dashboard-add-widget"), _da._dashboard && _da._dashboard.Editable && spinnerHidden);
+        SWIUtil.ShowHideControl($("#dashboard-add-widget"), _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
     }
 
@@ -156,7 +156,7 @@ class SWIDashboard {
         if (!dashboard) return;
 
         $("[did='" + guid + "']").children(".spinner-menu").show();
-        SWIUtil.EnableButton($("#dashboard-add-widget"), false);
+        SWIUtil.ShowHideControl($("#dashboard-add-widget"), false);
         SWIUtil.EnableButton($("#dashboards-nav-item"), false);
 
         //re-init order

@@ -24,6 +24,9 @@ namespace Seal.Model
         public List<SWIFolder> Folders = new List<SWIFolder>();
         public SecurityUserProfile Profile = new SecurityUserProfile();
 
+        //Custom string got in user profile
+        public string Tag;
+
         //Parameters to authenticate
         public string WebUserName = "";
         public string WebPassword = "";

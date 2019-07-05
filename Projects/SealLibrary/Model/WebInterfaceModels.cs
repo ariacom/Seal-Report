@@ -15,6 +15,7 @@ namespace Seal.Model
         public ViewType viewtype;
         public SWIDashboardFolder[] dashboardFolders;
         public bool manageDashboards = false;
+        public string userTag;
     }
 
     public class SWIFolder

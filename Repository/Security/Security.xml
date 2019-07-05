@@ -45,6 +45,15 @@
 	{&#xD;
         throw new Exception("This user has no group");&#xD;
 	}&#xD;
+	else if (user.WebUserName == "ben" &amp;&amp; user.WebPassword == "ben")&#xD;
+	{&#xD;
+        user.Name = "Benjaminto Seal";&#xD;
+		user.AddDefaultSecurityGroup();&#xD;
+        var imagePath = @"C:\temp\" + user.WebUserName + ".png";&#xD;
+        if (System.IO.File.Exists(imagePath)) {&#xD;
+            user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);&#xD;
+        }&#xD;
+	}&#xD;
 	else if (string.IsNullOrEmpty(user.WebUserName)) {
 		user.AddDefaultSecurityGroup();
 	}
