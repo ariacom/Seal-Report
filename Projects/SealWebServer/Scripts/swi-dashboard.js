@@ -73,7 +73,7 @@ var SWIDashboard = /** @class */ (function () {
     };
     SWIDashboard.prototype.enableControls = function () {
         var spinnerHidden = !$(".spinner-menu").is(":visible");
-        SWIUtil.EnableButton($("#dashboard-add-widget"), _da._dashboard && _da._dashboard.Editable && spinnerHidden);
+        SWIUtil.ShowHideControl($("#dashboard-add-widget"), _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
     };
     SWIDashboard.prototype.handleDashboardResult = function (data) {
@@ -135,7 +135,7 @@ var SWIDashboard = /** @class */ (function () {
         if (!dashboard)
             return;
         $("[did='" + guid + "']").children(".spinner-menu").show();
-        SWIUtil.EnableButton($("#dashboard-add-widget"), false);
+        SWIUtil.ShowHideControl($("#dashboard-add-widget"), false);
         SWIUtil.EnableButton($("#dashboards-nav-item"), false);
         //re-init order
         $('.grid' + guid).each(function (index, element) {
@@ -387,4 +387,3 @@ var SWIDashboard = /** @class */ (function () {
     };
     return SWIDashboard;
 }());
-//# sourceMappingURL=swi-dashboard.js.map

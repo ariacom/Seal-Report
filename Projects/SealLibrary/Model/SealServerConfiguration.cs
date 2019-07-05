@@ -215,7 +215,7 @@ namespace Seal.Model
 
         string _defaultCulture = "";
         [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used when a report is created. If not specified, the current culture of the server is used."), Id(1, 2)]
-        [TypeConverter(typeof(Seal.Converter.CultureInfoConverter))]
+        [TypeConverter(typeof(Converter.CultureInfoConverter))]
         public string DefaultCulture
         {
             get { return _defaultCulture; }

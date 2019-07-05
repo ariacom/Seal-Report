@@ -325,7 +325,7 @@ namespace Seal.Model
 
         string _userCulture;
         [Category("Security and Publication"), DisplayName("Culture"), Description("The culture used to generate the report. If empty, the culture from the groups is used, then the default culture."), Id(3, 6)]
-        [TypeConverter(typeof(Seal.Converter.CultureInfoConverter))]
+        [TypeConverter(typeof(Converter.CultureInfoConverter))]
         public string UserCulture
         {
             get { return _userCulture; }

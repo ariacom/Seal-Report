@@ -117,6 +117,9 @@ var SWIMain = /** @class */ (function () {
         if (hasReports) {
             _main.loadFolderTree();
         }
+        if (_editor) {
+            _editor.brand();
+        }
         if (hasDashboard) {
             setTimeout(function () {
                 _dashboard.init();
@@ -576,4 +579,3 @@ var SWIMain = /** @class */ (function () {
     };
     return SWIMain;
 }());
-//# sourceMappingURL=swi-main.js.map

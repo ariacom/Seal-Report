@@ -124,7 +124,14 @@ namespace Seal.Helpers
             if (!Directory.Exists(destination)) Directory.CreateDirectory(destination);
             foreach (string file in Directory.GetFiles(source))
             {
-                File.Copy(file, Path.Combine(destination, Path.GetFileName(file)), true);
+                try
+                {
+                    File.Copy(file, Path.Combine(destination, Path.GetFileName(file)), true);
+                }
+                catch(Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                }
             }
 
             if (recursive)

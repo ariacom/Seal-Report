@@ -60,7 +60,8 @@ namespace SealWebServer.Controllers
                     viewtype = WebUser.ViewType,
                     lastview = view,
                     dashboardFolders = WebUser.DashboardFolders.ToArray(),
-                    manageDashboards = WebUser.ManageDashboards
+                    manageDashboards = WebUser.ManageDashboards,
+                    userTag = WebUser.Tag
                 });
             }
             catch (Exception ex)

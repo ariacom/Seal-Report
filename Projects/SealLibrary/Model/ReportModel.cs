@@ -1755,7 +1755,7 @@ namespace Seal.Model
 
                     if (ResultTable == null)
                     {
-                        isMaster = true; //This model is the master fro the Result table
+                        isMaster = true; //This model is the master for the Result table
                         DbConnection connection = null;
                         if (_commandMutex.WaitOne(1000))
                         {
