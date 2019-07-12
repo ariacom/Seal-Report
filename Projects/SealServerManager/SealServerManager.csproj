@@ -237,7 +237,6 @@
     <Content Include="Resources\open.png" />
     <Content Include="Resources\print.png" />
     <Content Include="Resources\refresh.png" />
-    <None Include="Resources\reportDesigner.ico" />
     <Content Include="Resources\save.png" />
     <Content Include="Resources\saveas.png" />
     <Content Include="Resources\scroll.png" />
