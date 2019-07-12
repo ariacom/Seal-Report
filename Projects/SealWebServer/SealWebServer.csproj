@@ -122,6 +122,7 @@
     <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\favicon.ico" />
+    <Content Include="Images\faviconWebServer.ico" />
     <Content Include="Images\logo.png" />
     <Content Include="Scripts\bootstrap-select.min.js" />
     <Content Include="Scripts\common.js" />
