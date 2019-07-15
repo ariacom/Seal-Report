@@ -147,14 +147,14 @@ class SWIMain {
             _main.loadFolderTree();
         }
 
-        if (_editor) {
-            _editor.brand();
-        }
-
         if (hasDashboard) {
             setTimeout(function () {
                 _dashboard.init();
             }, 500);
+        }
+
+        if (_editor) {
+            _editor.brand();
         }
 
         if (_main._profile.lastview == "dashboards") {
