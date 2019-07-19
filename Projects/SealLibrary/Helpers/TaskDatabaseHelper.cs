@@ -118,14 +118,16 @@ namespace Seal.Helpers
                 }
                 else
                 {
-                    DbCommand cmd = new OdbcCommand();
                     var connection = Helper.DbConnectionFromConnectionString(connectionString);
                     connection.Open();
+                    DbCommand cmd = null;
                     if (connection is OdbcConnection) cmd = new OdbcCommand(sql, (OdbcConnection)connection);
                     else cmd = new OleDbCommand(sql, (OleDbConnection)connection);
                     cmd.CommandTimeout = 0;
                     cmd.CommandType = CommandType.Text;
+
                     DbDataReader dr = cmd.ExecuteReader();
+
                     DataTable schemaTable = dr.GetSchemaTable();
                     foreach (DataRow dataRow in schemaTable.Rows)
                     {

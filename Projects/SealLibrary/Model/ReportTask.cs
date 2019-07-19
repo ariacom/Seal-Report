@@ -141,7 +141,7 @@ namespace Seal.Model
         }
 
         string _SQL;
-        [Category("Definition"), DisplayName("SQL Statement"), Description("SQL Statement executed for the task. It may be empty if a script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed."), Id(4, 1)]
+        [Category("Definition"), DisplayName("SQL Statement"), Description("SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed."), Id(4, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string SQL
         {
@@ -150,7 +150,7 @@ namespace Seal.Model
         }
 
         string _script;
-        [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL if defined. If the script returns 0, the report is cancelled and the next tasks are not executed."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string Script
         {
