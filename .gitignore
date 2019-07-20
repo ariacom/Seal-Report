@@ -47,6 +47,7 @@ temp/
 Assemblies/
 Logs/
 SpecialFolders/
+ClassDocumentation/Help/
 
 #web report editor files
 SealEditor.sln
