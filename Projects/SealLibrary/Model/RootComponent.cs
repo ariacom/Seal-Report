@@ -5,9 +5,15 @@
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Base class containing a GUID and a Name
+    /// </summary>
     public class RootComponent : RootEditor
     {
         protected string _GUID;
+        /// <summary>
+        /// The unique identifier
+        /// </summary>
         virtual public string GUID
         {
             get { return _GUID; }
@@ -16,6 +22,9 @@ namespace Seal.Model
 
 
         protected string _name;
+        /// <summary>
+        /// The name
+        /// </summary>
         virtual public string Name
         {
             get { return _name; }

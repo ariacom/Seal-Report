@@ -11,6 +11,9 @@ using System.ComponentModel;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Editor component to edit the properties in PropertyGrid
+    /// </summary>
     public class RootEditor
     {
         #region Editor
