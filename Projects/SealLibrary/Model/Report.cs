@@ -18,59 +18,63 @@ using System.Xml;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Interface dedicated to log execution messages
+    /// </summary>
     public interface ReportExecutionLog
     {
+        /// <summary>
+        /// Log a message displayed in the messages panel of the report result
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
         void LogMessage(string message, params object[] args);
     }
 
+    /// <summary>
+    /// The main Report class to store a report definition, plus extra properties for execution 
+    /// </summary>
     public class Report : ReportExecutionLog
     {
-        private string _GUID;
-        public string GUID
-        {
-            get { return _GUID; }
-            set { _GUID = value; }
+        /// <summary>
+        /// Unique identifier of the report
+        /// </summary>
+        public string GUID { get; set; }
+
+        /// <summary>
+        /// List of data sources of the report (either from repository or defined in the report itself)
+        /// </summary>
+        public List<ReportSource> Sources { get; set; } = new List<ReportSource>();
+
+        public bool ShouldSerializeSources() { return Sources.Count > 0; }
+
+        /// <summary>
+        /// List of models of the report
+        /// </summary>
+        public List<ReportModel> Models { get; set; } = new List<ReportModel>();
+
+
+        public bool ShouldSerializeModels() { return Models.Count > 0; }
+
+        /// <summary>
+        /// List of outputs of the report
+        /// </summary>
+        public List<ReportOutput> Outputs { get; set; } = new List<ReportOutput>();
+        public bool ShouldSerializeOutputs() { return Outputs.Count > 0; }
+
+        /// <summary>
+        /// List of tasks of the report
+        /// </summary>
+        public List<ReportTask> Tasks { get; set; } = new List<ReportTask>();
+        public bool ShouldSerializeTasks() { return Tasks.Count > 0;
         }
 
-        private List<ReportSource> _sources = new List<ReportSource>();
-        public List<ReportSource> Sources
-        {
-            get { return _sources; }
-            set { _sources = value; }
-        }
-        public bool ShouldSerializeSources() { return _sources.Count > 0; }
+        /// <summary>
+        /// List of common razor scripts that can be used in the report
+        /// </summary>
+        public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
+        public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
 
-        private List<ReportModel> _models = new List<ReportModel>();
-        public List<ReportModel> Models
-        {
-            get { return _models; }
-            set { _models = value; }
-        }
-        public bool ShouldSerializeModels() { return _models.Count > 0; }
-
-        private List<ReportOutput> _outputs = new List<ReportOutput>();
-        public List<ReportOutput> Outputs
-        {
-            get { return _outputs; }
-            set { _outputs = value; }
-        }
-        public bool ShouldSerializeOutputs() { return _outputs.Count > 0; }
-
-        private List<ReportTask> _taks = new List<ReportTask>();
-        public List<ReportTask> Tasks
-        {
-            get { return _taks; }
-            set { _taks = value; }
-        }
-        public bool ShouldSerializeTasks() { return _taks.Count > 0; }
-
-        List<CommonScript> _commonScripts = new List<CommonScript>();
-        public List<CommonScript> CommonScripts
-        {
-            get { return _commonScripts; }
-            set { _commonScripts = value; }
-        }
-        public bool ShouldSerializeCommonScripts() { return _commonScripts.Count > 0; }
 
         [XmlIgnore]
         public string CommonScriptsHeader
@@ -90,23 +94,17 @@ namespace Seal.Model
             return result;
         }
 
-        private string _tasksScript = "";
-        public string TasksScript
-        {
-            get { return _tasksScript; }
-            set { _tasksScript = value; }
-        }
-        public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(_tasksScript); }
+        /// <summary>
+        /// Main task script included in all tasks
+        /// </summary>
+        public string TasksScript { get; set; } = "";
+        public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(TasksScript); }
 
-
-        //Input Values
-        private List<ReportRestriction> _inputValues = new List<ReportRestriction>();
-        public List<ReportRestriction> InputValues
-        {
-            get { return _inputValues; }
-            set { _inputValues = value; }
-        }
-        public bool ShouldSerializeInputValues() { return _inputValues.Count > 0; }
+        /// <summary>
+        /// List of input values defined for the report
+        /// </summary>
+        public List<ReportRestriction> InputValues { get; set; } = new List<ReportRestriction>();
+        public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
 
         public ReportRestriction GetInputValueByName(string name)
         {
@@ -134,20 +132,16 @@ namespace Seal.Model
             }
         }
 
-        private List<ReportView> _views = new List<ReportView>();
-        public List<ReportView> Views
-        {
-            get { return _views; }
-            set { _views = value; }
-        }
+        /// <summary>
+        /// List of views of the report
+        /// </summary>
+        public List<ReportView> Views { get; set; } = new List<ReportView>();
 
-        private string _displayName = "";
-        public string DisplayName
-        {
-            get { return _displayName; }
-            set { _displayName = value; }
-        }
-        public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(_displayName); }
+        /// <summary>
+        /// Display name of the report
+        /// </summary>
+        public string DisplayName { get; set; } = "";
+        public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(DisplayName); }
 
         private string _displayNameEx = null;
         [XmlIgnore]
@@ -156,11 +150,11 @@ namespace Seal.Model
             get
             {
                 if (!string.IsNullOrEmpty(_displayNameEx)) return _displayNameEx;
-                if (!string.IsNullOrEmpty(_displayName))
+                if (!string.IsNullOrEmpty(DisplayName))
                 {
                     try
                     {
-                        _displayNameEx = RazorHelper.CompileExecute(_displayName, this);
+                        _displayNameEx = RazorHelper.CompileExecute(DisplayName, this);
                     }
                     catch { }
                 }
@@ -172,38 +166,30 @@ namespace Seal.Model
             }
         }
 
-        private string _initScript = "";
-        public string InitScript
-        {
-            get { return _initScript; }
-            set { _initScript = value; }
-        }
-        public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(_initScript); }
+        /// <summary>
+        /// Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions). 
+        /// </summary>
+        public string InitScript { get; set; } = "";
+        public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
 
-        private string _viewGUID;
-        public string ViewGUID
-        {
-            get { return _viewGUID; }
-            set { _viewGUID = value; }
-        }
+        /// <summary>
+        /// GUID of the view to execute by default
+        /// </summary>
+        public string ViewGUID { get; set; }
 
         public string CurrentViewGUID;
 
-        private List<ReportSchedule> _schedules = new List<ReportSchedule>();
-        public List<ReportSchedule> Schedules
-        {
-            get { return _schedules; }
-            set { _schedules = value; }
-        }
-        public bool ShouldSerializeSchedules() { return _schedules.Count > 0; }
+        /// <summary>
+        /// List of schedules of the report
+        /// </summary>
+        public List<ReportSchedule> Schedules { get; set; } = new List<ReportSchedule>();
+        public bool ShouldSerializeSchedules() { return Schedules.Count > 0; }
 
-        private int _widgetCache = 60;
-        public int WidgetCache
-        {
-            get { return _widgetCache; }
-            set { _widgetCache = value; }
-        }
-        public bool ShouldSerializeWidgetCache() { return _widgetCache != 60; }
+        /// <summary>
+        /// Number of seconds the report result is kept when executed for dashboard widgets 
+        /// </summary>
+        public int WidgetCache { get; set; } = 60;
+        public bool ShouldSerializeWidgetCache() { return WidgetCache != 60; }
 
         [XmlIgnore]
         public Repository Repository = null;
@@ -782,7 +768,10 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Load a report from a file
+        /// </summary>
+        /// <returns>the report loaded and initialized</returns>
         static public Report LoadFromFile(string path, Repository repository)
         {
             Report result = null;
@@ -821,6 +810,10 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Create an empty report
+        /// </summary>
+        /// <returns>the new report</returns>
         static public Report Create(Repository repository)
         {
             Report result = new Report() { GUID = Guid.NewGuid().ToString() };
@@ -871,11 +864,17 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Save the current report to its file
+        /// </summary>
         public void SaveToFile()
         {
             SaveToFile(FilePath);
         }
 
+        /// <summary>
+        /// Synchronize all report schedules defined in the report with the Windows Task Scehduler.
+        /// </summary>
         public void SynchronizeTasks()
         {
             try
@@ -907,7 +906,9 @@ namespace Seal.Model
             catch { }
         }
 
-
+        /// <summary>
+        /// Save report to a given file
+        /// </summary>
         public void SaveToFile(string path)
         {
             //Check last modification
@@ -933,6 +934,7 @@ namespace Seal.Model
             SchedulesModified = false;
         }
 
+
         public Report Clone()
         {
             foreach (var view in Views)
@@ -947,7 +949,7 @@ namespace Seal.Model
             return report;
         }
 
-        public void Serialize(string path)
+        private void Serialize(string path)
         {
             try
             {
@@ -1547,6 +1549,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
         [XmlIgnore]
         public Object Tag;
 
@@ -1678,12 +1683,12 @@ namespace Seal.Model
 
         public ReportSource GetReportSource(string sourceName)
         {
-            return _sources.FirstOrDefault(i => i.Name == sourceName);
+            return Sources.FirstOrDefault(i => i.Name == sourceName);
         }
 
         public ReportModel GetReportModel(string modelName)
         {
-            return _models.FirstOrDefault(i => i.Name == modelName);
+            return Models.FirstOrDefault(i => i.Name == modelName);
         }
 
         #region Translation Helpers

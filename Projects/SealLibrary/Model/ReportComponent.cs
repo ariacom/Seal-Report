@@ -6,9 +6,15 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Component of the report having a reference to a Report object
+    /// </summary>
     public class ReportComponent : RootComponent
     {
         protected Report _report;
+        /// <summary>
+        /// The current report
+        /// </summary>
         [XmlIgnore]
         public Report Report
         {
