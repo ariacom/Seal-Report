@@ -16,6 +16,13 @@ using System.Globalization;
 
 namespace SealWebServer.Controllers
 {
+    /// <summary>
+    /// Seal Web Server Controllers Objects
+    /// </summary>
+    internal class NamespaceDoc
+    {
+    }
+
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
     public partial class HomeController : Controller
     {

@@ -9,6 +9,13 @@ using System.Globalization;
 
 namespace Seal.Converter
 {
+    /// <summary>
+    /// Converter Objects user for the Property Grid Editor
+    /// </summary>
+    internal class NamespaceDoc
+    {
+    }
+
     public class CultureInfoConverter : StringConverter
     {
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
