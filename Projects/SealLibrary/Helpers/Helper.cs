@@ -24,6 +24,13 @@ using System.Globalization;
 
 namespace Seal.Helpers
 {
+    /// <summary>
+    /// Helper Objects
+    /// </summary>
+    internal class NamespaceDoc
+    {
+    }
+
     public class Helper
     {
         public static string GetEnumDescription(Type type, Object value)

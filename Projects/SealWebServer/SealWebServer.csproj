@@ -212,6 +212,7 @@
     <TypeScriptSourceMap>False</TypeScriptSourceMap>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
+    <DocumentationFile>bin\SealWebServer.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release</OutputPath>
