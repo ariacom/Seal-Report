@@ -25,10 +25,12 @@ using System.IO;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A model defines how to generate the Result Set (Data Table) and Series from the database.
+    /// </summary>
     public class ReportModel : ReportComponent
     {
-        public static string DefaultClause = "<Default Clause>";
-
+        const string DefaultClause = "<Default Clause>";
 
         #region Editor
         protected override void UpdateEditorAttributes()
@@ -84,22 +86,27 @@ namespace Seal.Model
         }
         #endregion
 
+        /// <summary>
+        /// Creates a default report model
+        /// </summary>
+        /// <returns></returns>
         public static ReportModel Create()
         {
             return new ReportModel() { GUID = Guid.NewGuid().ToString() };
         }
 
-        string _sourceGUID;
+        /// <summary>
+        /// The source used to build the model
+        /// </summary>
         [DefaultValue(null)]
         [Category("Model Definition"), DisplayName("Source"), Description("The source used to build the model."), Id(1, 1)]
         [TypeConverter(typeof(MetaSourceConverter))]
-        public string SourceGUID
-        {
-            get { return _sourceGUID; }
-            set { _sourceGUID = value; }
-        }
+        public string SourceGUID { get; set; }
 
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
+        /// <summary>
+        /// The connection used to build the model
+        /// </summary>
         [DefaultValue(ReportSource.DefaultReportConnectionGUID)]
         [DisplayName("Connection"), Description("The connection used to build the model."), Category("Model Definition"), Id(2, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
@@ -116,6 +123,9 @@ namespace Seal.Model
             set { _connectionGUID = value; }
         }
 
+        /// <summary>
+        /// The current MetaConnection of the model
+        /// </summary>
         [XmlIgnore]
         public MetaConnection Connection
         {
@@ -133,57 +143,48 @@ namespace Seal.Model
             }
         }
 
-        //Common Restrictions
-        private List<ReportRestriction> _commonRestrictions = new List<ReportRestriction>();
-        [Category("Model Definition"), DisplayName("Common Restrictions and Values"), Description("Definition of the common restrictions and values involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount')"), Id(3, 1)]
+        /// <summary>
+        /// List of common restrictions and values involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount')
+        /// </summary>
+        [Category("Model Definition"), DisplayName("Common Restrictions and Values"), Description("List of common restrictions and values involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount')"), Id(3, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<ReportRestriction> CommonRestrictions
-        {
-            get { return _commonRestrictions; }
-            set { _commonRestrictions = value; }
-        }
-        public bool ShouldSerializeCommonRestrictions() { return _commonRestrictions.Count > 0; }
+        public List<ReportRestriction> CommonRestrictions { get; set; } = new List<ReportRestriction>();
+        public bool ShouldSerializeCommonRestrictions() { return CommonRestrictions.Count > 0; }
 
-
-        string _preLoadScript;
+        /// <summary>
+        /// Optional Razor Script to modify the result table of the model just before the database load
+        /// </summary>
         [Category("Model Definition"), DisplayName("Pre Load Script"), Description("Optional Razor Script to modify the result table of the model just before the database load."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
-        public string PreLoadScript
-        {
-            get { return _preLoadScript; }
-            set { _preLoadScript = value; }
-        }
+        public string PreLoadScript { get; set; }
 
-        string _loadScript;
+        /// <summary>
+        /// The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used.
+        /// </summary>
         [Category("Model Definition"), DisplayName("Load Script"), Description("The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
-        public string LoadScript
-        {
-            get { return _loadScript; }
-            set { _loadScript = value; }
-        }
+        public string LoadScript { get; set; }
 
-        string _finalScript;
+        /// <summary>
+        /// Optional Razor Script to modify the model after its generation
+        /// </summary>
         [Category("Model Definition"), DisplayName("Final Script"), Description("Optional Razor Script to modify the model after its generation."), Id(6, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
-        public string FinalScript
-        {
-            get { return _finalScript; }
-            set { _finalScript = value; }
-        }
+        public string FinalScript { get; set; }
 
-        bool _showFirstLine = true;
+        /// <summary>
+        /// If true and the table has column values, the first line used for titles is generated in the table header
+        /// </summary>
         [Category("Model Definition"), DisplayName("Show First Header Line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(7, 1)]
         [DefaultValue(true)]
-        public bool ShowFirstLine
-        {
-            get { return _showFirstLine; }
-            set { _showFirstLine = value; }
-        }
+        public bool ShowFirstLine { get; set; } = true;
 
+        /// <summary>
+        /// Alias name used for the table defining the select
+        /// </summary>
         [Category("SQL Model Options"), DisplayName("Alias name"), Description("Alias name used for the table defining the select."), Id(1, 2)]
         public string Alias
         {
@@ -192,6 +193,9 @@ namespace Seal.Model
         }
         public bool ShouldSerializeAlias() { return IsSQLModel; }
 
+        /// <summary>
+        /// If true, the column names of the source a kept when building the metadata columns
+        /// </summary>
         [Category("SQL Model Options"), DisplayName("Keep column names"), Description("If true, the column names of the source a kept when building the metadata columns."), Id(2, 2)]
         [DefaultValue(false)]
         public bool KeepColNames
@@ -201,17 +205,18 @@ namespace Seal.Model
         }
         public bool ShouldSerializeKeepColNames() { return IsSQLModel; }
 
-        bool _useRawSQL = false;
-        [Category("SQL Model Options"), DisplayName("Use raw SQL"), Description("If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied"), Id(3, 2)]
+        /// <summary>
+        /// If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied
+        /// </summary>
+        [Category("SQL Model Options"), DisplayName("Use raw SQL"), Description("If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied."), Id(3, 2)]
         [DefaultValue(false)]
-        public bool UseRawSQL
-        {
-            get { return _useRawSQL; }
-            set { _useRawSQL = value; }
-        }
+        public bool UseRawSQL { get; set; } = false;
         public bool ShouldSerializeUseRawSQL() { return IsSQLModel; }
 
         string _sqlSelect;
+        /// <summary>
+        /// If not empty, overwrite the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')
+        /// </summary>
         [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')."), Id(3, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
@@ -222,6 +227,9 @@ namespace Seal.Model
         }
 
         string _sqlFrom;
+        /// <summary>
+        /// If not empty, overwrite the FROM clause in the generated SQL statement
+        /// </summary>
         [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrite the FROM clause in the generated SQL statement."), Id(4, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
@@ -232,6 +240,9 @@ namespace Seal.Model
         }
 
         string _sqlGroupBy;
+        /// <summary>
+        /// If not empty, overwrite the GROUP BY clause in the generated SQL statement
+        /// </summary>
         [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrite the GROUP BY clause in the generated SQL statement."), Id(5, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
@@ -242,6 +253,9 @@ namespace Seal.Model
         }
 
         string _sqlOrderBy;
+        /// <summary>
+        /// If not empty, overwrite the ORDER BY clause in the generated SQL statement
+        /// </summary>
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrite the ORDER BY clause in the generated SQL statement."), Id(6, 3)]
         [DefaultValue("")]
@@ -252,6 +266,9 @@ namespace Seal.Model
         }
 
         string _sqlCTE;
+        /// <summary>
+        /// If not empty, overwrite the CTE (Common Table Expressions) clause in the generated SQL statement
+        /// </summary>
         [Category("SQL"), DisplayName("Common Table Expressions Clause"), Description("If not empty, overwrite the CTE (Common Table Expressions) clause in the generated SQL statement."), Id(7, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
@@ -261,54 +278,45 @@ namespace Seal.Model
             set { _sqlCTE = value; }
         }
 
-
-        string _preSQL;
+        /// <summary>
+        /// SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'.
+        /// </summary>
         [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'."), Id(8, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
-        public string PreSQL
-        {
-            get { return _preSQL; }
-            set { _preSQL = value; }
-        }
+        public string PreSQL { get; set; }
 
-        string _postSQL;
+        /// <summary>
+        /// SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'.
+        /// </summary>
         [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'."), Id(9, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
-        public string PostSQL
-        {
-            get { return _postSQL; }
-            set { _postSQL = value; }
-        }
+        public string PostSQL { get; set; }
 
-        bool _ignorePrePostError = false;
+        /// <summary>
+        /// If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues
+        /// </summary>
         [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(10, 3)]
         [DefaultValue(false)]
-        public bool IgnorePrePostError
-        {
-            get { return _ignorePrePostError; }
-            set { _ignorePrePostError = value; }
-        }
+        public bool IgnorePrePostError { get; set; } = false;
 
-        int _buildTimout = 2000;
+        /// <summary>
+        /// Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
+        /// </summary>
         [DefaultValue(2000)]
         [Category("SQL"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)."), Id(11, 3)]
-        public int BuildTimeout
-        {
-            get { return _buildTimout; }
-            set { _buildTimout = value; }
-        }
+        public int BuildTimeout { get; set; } = 2000;
 
+        /// <summary>
+        /// List of Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used.
+        /// </summary>
+        public List<string> JoinsToUse { get; set; } = new List<string>();
+        public bool ShouldSerializeJoinsToUse() { return JoinsToUse.Count > 0; }
 
-        private List<string> _joinsToUse = new List<string>();
-        public List<string> JoinsToUse
-        {
-            get { return _joinsToUse; }
-            set { _joinsToUse = value; }
-        }
-        public bool ShouldSerializeJoinsToUse() { return _joinsToUse.Count > 0; }
-
+        /// <summary>
+        /// Helper to select Join Preferences
+        /// </summary>
         [Category("Join Preferences"), DisplayName("Joins to use"), Description("If specified, Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used."), Id(2, 4)]
         [Editor(typeof(JoinsValuesEditor), typeof(UITypeEditor))]
         [XmlIgnore]
@@ -319,6 +327,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Helper to view joins evaluated for the model
+        /// </summary>
         [Category("Join Preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(4,4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperViewJoins
@@ -326,22 +337,28 @@ namespace Seal.Model
             get { return "<Click to view the joins evaluated for the model>"; }
         }
 
+        /// <summary>
+        /// Current report source
+        /// </summary>
         [XmlIgnore]
         public ReportSource Source
         {
             get
             {
-                ReportSource result = _report.Sources.FirstOrDefault(i => i.GUID == _sourceGUID);
+                ReportSource result = _report.Sources.FirstOrDefault(i => i.GUID == SourceGUID);
                 if (result == null)
                 {
                     if (_report.Sources.Count == 0) throw new Exception("This report has no source defined");
                     result = _report.Sources[0];
-                    _sourceGUID = result.GUID;
+                    SourceGUID = result.GUID;
                 }
                 return result;
             }
         }
 
+        /// <summary>
+        /// True if the model has series defined
+        /// </summary>
         [XmlIgnore]
         public bool HasSerie
         {
@@ -351,6 +368,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the model has subtotals
+        /// </summary>
         [XmlIgnore]
         public bool HasSubTotals
         {
@@ -360,6 +380,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the model has a primary axis for a serie
+        /// </summary>
         [XmlIgnore]
         public bool HasPrimaryYAxis
         {
@@ -369,6 +392,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the model has a secondary axis for a serie
+        /// </summary>
         [XmlIgnore]
         public bool HasSecondaryYAxis
         {
@@ -378,6 +404,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the model has a NVD3 serie
+        /// </summary>
         [XmlIgnore]
         public bool HasNVD3Serie
         {
@@ -387,6 +416,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the model has a Chart JS serie
+        /// </summary>
         [XmlIgnore]
         public bool HasChartJSSerie
         {
@@ -396,6 +428,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the model has a Plotly serie
+        /// </summary>
         [XmlIgnore]
         public bool HasPlotlySerie
         {
@@ -405,6 +440,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the model has totals
+        /// </summary>
         [XmlIgnore]
         public bool HasTotals
         {
@@ -414,6 +452,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the model has cell script defined for one of its element
+        /// </summary>
         [XmlIgnore]
         public bool HasCellScript
         {
@@ -422,33 +463,42 @@ namespace Seal.Model
                 return Elements.Exists(i => !string.IsNullOrWhiteSpace(i.CellScript));
             }
         }
-        //Elements selected
-        private List<ReportElement> _elements = new List<ReportElement>();
-        public List<ReportElement> Elements
-        {
-            get { return _elements; }
-            set { _elements = value; }
-        }
-        public bool ShouldSerializeElements() { return _elements.Count > 0; }
 
+        /// <summary>
+        /// Elements selected for the model
+        /// </summary>
+        public List<ReportElement> Elements { get; set; } = new List<ReportElement>();
+        public bool ShouldSerializeElements() { return Elements.Count > 0; }
+
+        /// <summary>
+        /// List of elements per position
+        /// </summary>
         public IEnumerable<ReportElement> GetElements(PivotPosition position)
         {
             return Elements.Where(i => i.PivotPosition == position);
         }
 
+        /// <summary>
+        /// List of elements per type of axis
+        /// </summary>
         public IEnumerable<ReportElement> GetXElements(AxisType xAxisType)
         {
             return Elements.Where(i => i.XAxisType == xAxisType && (i.PivotPosition == PivotPosition.Row || i.PivotPosition == PivotPosition.Column) && (i.SerieDefinition == SerieDefinition.Axis));
         }
 
+        /// <summary>
+        /// List of splitter elements per axis type
+        /// </summary>
         public IEnumerable<ReportElement> GetSplitterElements(AxisType xAxisType)
         {
             return Elements.Where(i => ((i.XAxisType == xAxisType && i.SerieDefinition == SerieDefinition.Splitter) || i.SerieDefinition == SerieDefinition.SplitterBoth) && (i.PivotPosition == PivotPosition.Row || i.PivotPosition == PivotPosition.Column));
         }
 
+        /// <summary>
+        /// Force sort orders on Page elements
+        /// </summary>
         public void CheckSortOrders()
         {
-            //Force sort orders on Page elements
             for (int i = 0; i < GetElements(PivotPosition.Page).Count(); i++)
             {
                 var element = GetElements(PivotPosition.Page).ElementAt(i);
@@ -458,6 +508,9 @@ namespace Seal.Model
 
         //Restrictions
         private string _restriction;
+        /// <summary>
+        /// The restriction text of the model
+        /// </summary>
         public string Restriction
         {
             get { return string.IsNullOrEmpty(_restriction) ? "" : _restriction; }
@@ -465,17 +518,18 @@ namespace Seal.Model
         }
         public bool ShouldSerializeRestriction() { return !string.IsNullOrEmpty(_restriction); }
 
-        private List<ReportRestriction> _restrictions = new List<ReportRestriction>();
-        public List<ReportRestriction> Restrictions
-        {
-            get { return _restrictions; }
-            set { _restrictions = value; }
-        }
-        public bool ShouldSerializeRestrictions() { return _restrictions.Count > 0; }
+        /// <summary>
+        /// List of restrictions of the model
+        /// </summary>
+        public List<ReportRestriction> Restrictions { get; set; } = new List<ReportRestriction>();
+        public bool ShouldSerializeRestrictions() { return Restrictions.Count > 0; }
 
 
         //Aggregate Restrictions
         private string _aggregateRestriction;
+        /// <summary>
+        /// The aggregate restriction text of the model
+        /// </summary>
         public string AggregateRestriction
         {
             get { return string.IsNullOrEmpty(_aggregateRestriction) ? "" : _aggregateRestriction; }
@@ -483,41 +537,39 @@ namespace Seal.Model
         }
         public bool ShouldSerializeAggregateRestriction() { return!string.IsNullOrEmpty(_aggregateRestriction); }
 
-        private List<ReportRestriction> _aggregateRestrictions = new List<ReportRestriction>();
-        public List<ReportRestriction> AggregateRestrictions
-        {
-            get { return _aggregateRestrictions; }
-            set { _aggregateRestrictions = value; }
-        }
-        public bool ShouldSerializeAggregateRestrictions() { return _aggregateRestrictions.Count > 0; }
+        /// <summary>
+        /// List of aggregate restrictions of the model
+        /// </summary>
+        public List<ReportRestriction> AggregateRestrictions { get; set; } = new List<ReportRestriction>();
+        public bool ShouldSerializeAggregateRestrictions() { return AggregateRestrictions.Count > 0; }
 
-        //SQL Model
-        private MetaTable _table = null;
+        /// <summary>
+        /// Table definition for a SQL Model
+        /// </summary>
         [Browsable(false)]
-        public MetaTable Table
-        {
-            get { return _table; }
-            set { _table = value; }
-        }
+        public MetaTable Table { get; set; } = null;
         public bool ShouldSerializeTable() { return IsSQLModel; }
 
+        /// <summary>
+        /// Initialize the MetaTable for a SQL Model 
+        /// </summary>
         public void RefreshMetaTable(bool init)
         {
-            if (_table == null)
+            if (Table == null)
             {
-                _table = MetaTable.Create();
-                _table.DynamicColumns = true;
+                Table = MetaTable.Create();
+                Table.DynamicColumns = true;
             }
 
-            if (string.IsNullOrEmpty(_table.Alias)) _table.Alias = "Master";
+            if (string.IsNullOrEmpty(Table.Alias)) Table.Alias = "Master";
 
-            _table.Source = Source;
-            if (!string.IsNullOrEmpty(_table.Sql))
+            Table.Source = Source;
+            if (!string.IsNullOrEmpty(Table.Sql))
             {
-                _table.Model = this;
-                _table.Refresh();
+                Table.Model = this;
+                Table.Refresh();
 
-                foreach (var col in _table.Columns)
+                foreach (var col in Table.Columns)
                 {
                     col.Category = Name;
                     col.DisplayName = (Table.KeepColumnNames ? col.Name.Trim() : Helper.DBNameToDisplayName(col.Name.Trim()));
@@ -526,14 +578,20 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True is it is a SQL Model (not standard based on the metadata)
+        /// </summary>
         public bool IsSQLModel
         {
-            get { return _table != null; }
+            get { return Table != null; }
         }
 
 
         //Execution
         private string _sql;
+        /// <summary>
+        /// SELECT Sql used for the model
+        /// </summary>
         [XmlIgnore]
         public string Sql
         {
@@ -542,57 +600,130 @@ namespace Seal.Model
         }
         public bool ShouldSerializeSql() { return IsSQLModel; }
 
-        List<MetaTable> _fromTables;
+        /// <summary>
+        /// List of tables involved in the model
+        /// </summary>
         [XmlIgnore]
-        public List<MetaTable> FromTables
-        {
-            get { return _fromTables; }
-        }
+        public List<MetaTable> FromTables { get; private set; }
 
+        /// <summary>
+        /// Display text for the restrictions of the model
+        /// </summary>
         [XmlIgnore]
         public string RestrictionText;
 
+        /// <summary>
+        /// Excution date of the model
+        /// </summary>
         [XmlIgnore]
         public DateTime ExecutionDate;
+
+        /// <summary>
+        /// Execution duration of the model
+        /// </summary>
         [XmlIgnore]
         public int ExecutionDuration;
+
+        /// <summary>
+        /// Result DataTable got from the SQL query
+        /// </summary>
         [XmlIgnore]
         public DataTable ResultTable;
 
+        /// <summary>
+        /// Progression in percentage of the model processing
+        /// </summary>
         [XmlIgnore]
         public int Progression = 0;
 
+        /// <summary>
+        /// Summary Table generated after the model execution (only if Page element are defined in the model)
+        /// </summary>
         [XmlIgnore]
         public ResultTable SummaryTable;
+
+        /// <summary>
+        /// List of Pages generated after the model execution (one page per Page element values)
+        /// </summary>
         [XmlIgnore]
         public List<ResultPage> Pages = new List<ResultPage>();
+
+        /// <summary>
+        /// Error messages during execution
+        /// </summary>
         [XmlIgnore]
         public string ExecutionError = "";
 
         //Execution for charts
+        /// <summary>
+        /// True if chart is numeric axis
+        /// </summary>
         [XmlIgnore]
         public bool ExecChartIsNumericAxis;
+        
+        /// <summary>
+        /// True if chart is date time axis
+        /// </summary>
         [XmlIgnore]
         public bool ExecChartIsDateTimeAxis;
+
+        /// <summary>
+        /// True if chart primary axis is date time
+        /// </summary>
         [XmlIgnore]
         public bool ExecAxisPrimaryYIsDateTime;
+
+        /// <summary>
+        /// True if chart secondary axis is date time
+        /// </summary>
         [XmlIgnore]
         public bool ExecAxisSecondaryYIsDateTime;
+
+        /// <summary>
+        /// Format for D3 primary chart axis
+        /// </summary>
         [XmlIgnore]
         public string ExecD3PrimaryYAxisFormat;
+
+        /// <summary>
+        /// Format for D3 secondary chart axis
+        /// </summary>
         [XmlIgnore]
         public string ExecD3SecondaryYAxisFormat;
+
+        /// <summary>
+        /// Format for D3 chart X axis
+        /// </summary>
         [XmlIgnore]
         public string ExecD3XAxisFormat;
+
+        /// <summary>
+        /// Format for Moment JS chart X axis
+        /// </summary>
         [XmlIgnore]
         public string ExecMomentJSXAxisFormat;
+
+        /// <summary>
+        /// NVD3 chart type
+        /// </summary>
         [XmlIgnore]
         public string ExecNVD3ChartType;
+
+        /// <summary>
+        /// Plotly chart type
+        /// </summary>
         [XmlIgnore]
         public string ExecPlotlyChartType;
+
+        /// <summary>
+        /// Chart JS type
+        /// </summary>
         [XmlIgnore]
         public string ExecChartJSType;
 
+        /// <summary>
+        /// Check NVD3 Chart and set the ExecNVD3ChartType property
+        /// </summary>
         public void CheckNVD3ChartIntegrity()
         {
             if (string.IsNullOrEmpty(ExecNVD3ChartType) && HasNVD3Serie)
@@ -670,6 +801,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Check Plotly Chart and set the ExecPlotlyChartType property
+        /// </summary>
         public void CheckPlotlyChartIntegrity()
         {
             //Check and choose the right chart
@@ -688,6 +822,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Check ChartJS and set the ExecChartJSType property
+        /// </summary>
         public void CheckChartJSIntegrity()
         {
             //Check and choose the right chart
@@ -721,6 +858,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// List of restrictions of the model
+        /// </summary>
         [XmlIgnore]
         public List<ReportRestriction> ExecutionRestrictions
         {
@@ -741,6 +881,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// List of aggregate restrictions of the model
+        /// </summary>
         [XmlIgnore]
         public List<ReportRestriction> ExecutionAggregateRestrictions
         {
@@ -761,6 +904,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// List of Common Restrictions of the model
+        /// </summary>
         [XmlIgnore]
         public List<ReportRestriction> ExecutionCommonRestrictions
         {
@@ -781,29 +927,69 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Full SQL Select generated at execution
+        /// </summary>
         [XmlIgnore]
         public string execSelect = "";
+
+        /// <summary>
+        /// SELECT Clause generated at execution
+        /// </summary>
         [XmlIgnore]
         public StringBuilder execSelectClause = new StringBuilder();
+
+        /// <summary>
+        /// CTE Clause generated at execution
+        /// </summary>
         [XmlIgnore]
         public string execCTEClause = "";
+
+        /// <summary>
+        /// FROM Clause generated at execution
+        /// </summary>
         [XmlIgnore]
         public StringBuilder execFromClause = new StringBuilder();
+
+        /// <summary>
+        /// WHERE Clause generated at execution
+        /// </summary>
         [XmlIgnore]
         public StringBuilder execWhereClause = new StringBuilder();
+
+        /// <summary>
+        /// ORDER BY Clause generated at execution
+        /// </summary>
         [XmlIgnore]
         public StringBuilder execOrderByClause = new StringBuilder();
+
+        /// <summary>
+        /// ORDER BY NAME Clause generated at execution (used for No SQL Source)
+        /// </summary>
         [XmlIgnore]
         public StringBuilder execOrderByNameClause = new StringBuilder();
+
+        /// <summary>
+        /// GROUP BY Clause generated at execution
+        /// </summary>
         [XmlIgnore]
         public StringBuilder execGroupByClause = new StringBuilder();
+
+        /// <summary>
+        /// HAVING Clause generated at execution
+        /// </summary>
         [XmlIgnore]
         public StringBuilder execHavingClause = new StringBuilder();
 
+        /// <summary>
+        /// Custom Tag the can be used at execution time to store any object
+        /// </summary>
         [XmlIgnore]
         public Object Tag;
 
+        /// <summary>
+        /// Init all model references: Elements, Restrictions, etc.
+        /// </summary>
         public void InitReferences()
         {
             if (Source.MetaData == null) return;
@@ -845,6 +1031,9 @@ namespace Seal.Model
             InitCommonRestrictions();
         }
 
+        /// <summary>
+        /// Parse and replace Common Restrictions in SQL by their values
+        /// </summary>
         public string ParseCommonRestrictions(string sql)
         {
             if (string.IsNullOrEmpty(sql)) return "";
@@ -857,6 +1046,9 @@ namespace Seal.Model
             return ClearCommonRestrictions(sql);
         }
 
+        /// <summary>
+        /// Clear Common Restrictions from a SQL
+        /// </summary>
         public static string ClearCommonRestrictions(string sql)
         {
             if (string.IsNullOrEmpty(sql)) return "";
@@ -866,6 +1058,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Init all Common Restrictions of the model and build the CommonRestrictions property
+        /// </summary>
         public void InitCommonRestrictions()
         {
             //Get common restrictions
@@ -952,6 +1147,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Delete elements and restrictions with no source reference
+        /// </summary>
         public void ClearLostElements()
         {
             if (Source.MetaData == null) return;
@@ -985,12 +1183,18 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Set column names for the elements before building the SQL
+        /// </summary>
         public void SetColumnsName()
         {
             int colIndex = 0;
             foreach (ReportElement element in Elements) element.SQLColumnName = Source.IsNoSQL || UseRawSQL ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
         }
 
+        /// <summary>
+        /// Add Sub-Reports elements to the SQL
+        /// </summary>
         void AddSubReportsElements()
         {
             //Add elements for sub-reports
@@ -1027,9 +1231,15 @@ namespace Seal.Model
         [XmlIgnore]
         int _indirectCount = 0;
 
+        /// <summary>
+        /// Description of the joins chosen to build the SQL
+        /// </summary>
         [XmlIgnore]
         public StringBuilder JoinPaths = null;
 
+        /// <summary>
+        /// Build the SQL for the model
+        /// </summary>
         public void BuildSQL(bool forConversion = false)
         {
             try
@@ -1084,7 +1294,7 @@ namespace Seal.Model
 
                 if (Elements.Count > 0)
                 {
-                    _fromTables = new List<MetaTable>();
+                    FromTables = new List<MetaTable>();
                     List<MetaJoin> joins = new List<MetaJoin>();
                     List<string> selectColumns = new List<string>();
                     List<string> groupByColumns = new List<string>();
@@ -1099,7 +1309,7 @@ namespace Seal.Model
                         }
 
                         MetaTable table = element.MetaColumn.MetaTable;
-                        if (table != null && !_fromTables.Contains(table)) _fromTables.Add(table);
+                        if (table != null && !FromTables.Contains(table)) FromTables.Add(table);
 
                         if (element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl && !groupByColumns.Contains(element.SQLColumn))
                         {
@@ -1111,7 +1321,7 @@ namespace Seal.Model
                     foreach (ReportRestriction restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions))
                     {
                         MetaTable table = restriction.MetaColumn.MetaTable;
-                        if (table != null && !_fromTables.Contains(table) && restriction.HasValue && restriction.Operator != Operator.ValueOnly) _fromTables.Add(table);
+                        if (table != null && !FromTables.Contains(table) && restriction.HasValue && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
                     }
 
                     //Clear group by clause if not necessary
@@ -1124,11 +1334,11 @@ namespace Seal.Model
                     buildOrderClause(GetElements(PivotPosition.Column), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
                     buildOrderClause(GetElements(PivotPosition.Data), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
 
-                    List<MetaTable> extraWhereTables = _fromTables.Where(i => !string.IsNullOrEmpty(i.WhereSQL)).ToList();
-                    if (_fromTables.Count == 1)
+                    List<MetaTable> extraWhereTables = FromTables.Where(i => !string.IsNullOrEmpty(i.WhereSQL)).ToList();
+                    if (FromTables.Count == 1)
                     {
                         string CTE = "", name = "";
-                        _fromTables[0].GetExecSQLName(ref CTE, ref name);
+                        FromTables[0].GetExecSQLName(ref CTE, ref name);
                         execCTEClause = Helper.AddCTE(execCTEClause, CTE);
                         execFromClause.Append(name + "\r\n");
                         if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
@@ -1136,7 +1346,7 @@ namespace Seal.Model
                     else
                     {
                         //multiple tables, find joins...
-                        List<MetaTable> tablesToUse = _fromTables.ToList();
+                        List<MetaTable> tablesToUse = FromTables.ToList();
                         List<JoinPath> resultPaths = new List<JoinPath>();
                         JoinPath bestPath = null;
 
@@ -1185,7 +1395,7 @@ namespace Seal.Model
                         _indirectCount = 0;
                         _bestJoinsCount = joinsToUse.Count;
 
-                        foreach (var leftTable in _fromTables)
+                        foreach (var leftTable in FromTables)
                         {
                             JoinPath rootPath = new JoinPath() { currentTable = leftTable, joinsToUse = new Dictionary<string, MetaJoin[]>() };
                             //Copy the list of joins to use from the reference
@@ -1194,7 +1404,7 @@ namespace Seal.Model
                                 rootPath.joinsToUse.Add(key, joinsToUse[key].Where(i => i.RightTableGUID != leftTable.GUID).ToArray());
                             }
 
-                            rootPath.tablesToUse = new List<MetaTable>(_fromTables.Where(i => i.GUID != leftTable.GUID));
+                            rootPath.tablesToUse = new List<MetaTable>(FromTables.Where(i => i.GUID != leftTable.GUID));
                             JoinTables(rootPath, resultPaths);
                         }
                         Debug.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
@@ -1515,7 +1725,7 @@ namespace Seal.Model
                 }
             }
 
-            if (path.joins.Count > 0 && _fromTables.Contains(path.joins.Last().RightTable))
+            if (path.joins.Count > 0 && FromTables.Contains(path.joins.Last().RightTable))
             {
                 path.startTable = path.joins.First().LeftTable;
                 path.finalTable = path.joins.Last().RightTable;
@@ -1528,6 +1738,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Update the final sort orders
+        /// </summary>
         public void UpdateFinalSortOrders()
         {
             updateFinalSortOrder(GetElements(PivotPosition.Page));
@@ -1565,6 +1778,9 @@ namespace Seal.Model
         }
 
         DbCommand _command;
+        /// <summary>
+        /// Cancel the model execution
+        /// </summary>
         public void CancelCommand()
         {
             if (_commandMutex.WaitOne(1000))
@@ -1609,14 +1825,17 @@ namespace Seal.Model
         }
         void executePrePostStatements(bool isPre)
         {
-            if (_fromTables == null) return;
+            if (FromTables == null) return;
 
-            foreach (var table in _fromTables)
+            foreach (var table in FromTables)
             {
                 executePrePostStatement(isPre ? table.PreSQL : table.PostSQL, isPre ? "Pre" : "Post", table.Name, table.IgnorePrePostError, table);
             }
         }
 
+        /// <summary>
+        /// Execute custom Razor script for the model: Pre Load, Post Load and Final
+        /// </summary>
         public void ExecuteLoadScript(string script, string name, object model)
         {
             if (!string.IsNullOrEmpty(script))
@@ -1632,7 +1851,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// List of models being executed
+        /// </summary>
         public static Dictionary<string, ReportModel> RunningModels = new Dictionary<string, ReportModel>();
         void checkRunningModels(string key)
         {
@@ -1680,6 +1901,9 @@ namespace Seal.Model
         [XmlIgnore]
         private bool _resultTableAvailable = false;
 
+        /// <summary>
+        /// Build the ResultTable for the model
+        /// </summary>
         public void FillResultTable()
         {
             bool isMaster = false;
@@ -1860,7 +2084,9 @@ namespace Seal.Model
             _resultTableAvailable = true;
         }
 
-
+        /// <summary>
+        /// Invert the rows and the columns of all DataTables of the pages generated
+        /// </summary>
         public void InvertDataTables()
         {
             foreach (ResultPage page in Pages)
@@ -1894,12 +2120,18 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Returns a model restriction from its name
+        /// </summary>
         public ReportRestriction GetRestrictionByName(string name)
         {
             return Restrictions.FirstOrDefault(i => i.DisplayNameEl.ToLower() == name.ToLower());
         }
 
 
+        /// <summary>
+        /// HTML Navigation for the report result
+        /// </summary>
         public string GetNavigation(ResultCell cell, bool serverSide = false)
         {
             string navigation = "";
@@ -1915,57 +2147,6 @@ namespace Seal.Model
                 navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation=\"{0}\"", navigation));
             }
             return navigation;
-        }
-
-
-        //SANDBOX !
-        //Just use this to code, compile and debug your Razor Script using Visual Studio...
-        //When OK, just cut and paste it into the Load Script of your Model using the Report Designer
-        public void DesignLoadScript()
-        {
-            var model = this;
-            DataTable table = model.ResultTable;
-
-            table.Columns.Clear();
-            //Just replace model.DesignLoadScript(); with the code below
-            table.Columns.Add(new DataColumn("Name", typeof(string)));
-            table.Columns.Add(new DataColumn("RootDirectory", typeof(string)));
-            table.Columns.Add(new DataColumn("AvailableFreeSpace", typeof(int)));
-            table.Columns.Add(new DataColumn("DriveType", typeof(string)));
-            table.Columns.Add(new DataColumn("TotalFreeSpace", typeof(int)));
-            table.Columns.Add(new DataColumn("TotalSize", typeof(int)));
-            table.Columns.Add(new DataColumn("VolumeLabel", typeof(string)));
-
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
-            {
-                table.Rows.Add(drive.Name, drive.RootDirectory.Name, drive.AvailableFreeSpace / (1024 * 1024), drive.DriveType.ToString(), drive.TotalFreeSpace / (1024 * 1024), drive.TotalSize / (1024 * 1024), drive.VolumeLabel);
-            }
-
-            table.Columns.Clear();
-            table.Columns.Add(new DataColumn("travel_mode", typeof(string)));
-            table.Columns.Add(new DataColumn("duration", typeof(int)));
-            table.Columns.Add(new DataColumn("duration_text", typeof(string)));
-            table.Columns.Add(new DataColumn("html_instructions", typeof(string)));
-            table.Columns.Add(new DataColumn("distance", typeof(int)));
-            table.Columns.Add(new DataColumn("distance_text", typeof(string)));
-
-
-            string url = "https://maps.googleapis.com/maps/api/directions/xml?origin=Toronto&destination=Montreal";
-
-            var webRequest = System.Net.WebRequest.Create(url);
-            var responseStream = webRequest.GetResponse().GetResponseStream();
-            var reader = new StreamReader(responseStream);
-            var xmlResponse = System.Xml.Linq.XElement.Parse(reader.ReadToEnd());
-            var status = xmlResponse.Element("status").Value;
-            if (status.ToLower() == "ok")
-            {
-                foreach (var step in xmlResponse.Element("route").Elements("leg").First().Elements("step"))
-                {
-                    var duration = int.Parse(step.Element("duration").Element("value").Value);
-                    var distance = int.Parse(step.Element("distance").Element("value").Value);
-                    table.Rows.Add(step.Element("travel_mode").Value, duration, step.Element("duration").Element("text").Value, step.Element("travel_mode").Value, distance, step.Element("distance").Element("text").Value);
-                }
-            }
         }
     }
 }

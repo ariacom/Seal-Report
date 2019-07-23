@@ -19,12 +19,16 @@ using Seal.Forms;
 
 namespace Seal.Model
 {
-
-
+    /// <summary>
+    /// A report restriction is an restriction applied to a report model. A report restriction is a child of a ReportElement.
+    /// </summary>
     [ClassResource(BaseName = "DynamicTypeDescriptorApp.Properties.Resources", KeyPrefix = "ReportRestriction_")]
     public class ReportRestriction : ReportElement
     {
         #region Editor
+        /// <summary>
+        /// Update editor attributes in the property grid
+        /// </summary>
         protected override void UpdateEditorAttributes()
         {
             if (_dctd != null)
@@ -104,8 +108,8 @@ namespace Seal.Model
                     GetProperty("Date4Keyword").SetIsReadOnly(true);
                 }
 
-                GetProperty("Required").SetIsReadOnly(_prompt == PromptType.None);
-                GetProperty("ChangeOperator").SetIsReadOnly(_prompt == PromptType.None);
+                GetProperty("Required").SetIsReadOnly(Prompt == PromptType.None);
+                GetProperty("ChangeOperator").SetIsReadOnly(Prompt == PromptType.None);
 
                 //Aggregate restriction
                 if (PivotPosition == PivotPosition.Data && !(MetaColumn != null && MetaColumn.IsAggregate)) GetProperty("AggregateFunction").SetIsBrowsable(true);
@@ -120,38 +124,50 @@ namespace Seal.Model
         }
         #endregion
 
+        /// <summary>
+        /// Name of the restriction
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return Name;
         }
 
+        /// <summary>
+        /// Start character of a restriction
+        /// </summary>
         public const char kStartRestrictionChar = '[';
+        /// <summary>
+        /// Stop character of a restriction
+        /// </summary>
         public const char kStopRestrictionChar = ']';
 
+        /// <summary>
+        /// Create a default report restriction
+        /// </summary>
         public static ReportRestriction CreateReportRestriction()
         {
             return new ReportRestriction() { GUID = Guid.NewGuid().ToString(), _type = ColumnType.Default, _numericStandardFormat = NumericStandardFormat.Default, _datetimeStandardFormat = DateTimeStandardFormat.Default };
         }
 
-        private PromptType _prompt = PromptType.None;
+        /// <summary>
+        /// Define if the value of the restriction is prompted to the user when the report is executed
+        /// </summary>
         [DefaultValue(PromptType.None)]
         [Category("Definition"), DisplayName("\tPrompt restriction"), Description("Define if the value of the restriction is prompted to the user when the report is executed."), Id(5, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
-        public PromptType Prompt
-        {
-            get { return _prompt; }
-            set { _prompt = value; }
-        }
+        public PromptType Prompt { get; set; } = PromptType.None;
 
-        private bool _required = false;
+        /// <summary>
+        /// If true and the restriction is prompted, a value is required to execute the report
+        /// </summary>
         [DefaultValue(false)]
         [Category("Definition"), DisplayName("Is required"), Description("If true and the restriction is prompted, a value is required to execute the report."), Id(6, 1)]
-        public bool Required
-        {
-            get { return _required; }
-            set { _required = value; }
-        }
+        public bool Required { get; set; } = false;
 
+        /// <summary>
+        /// If not empty, overwrite the default SQL used for the restriction in the WHERE clause
+        /// </summary>
         [Category("Advanced"), DisplayName("Custom SQL"), Description("If not empty, overwrite the default SQL used for the restriction in the WHERE clause."), Id(1, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public new string SQL
@@ -163,6 +179,9 @@ namespace Seal.Model
             set { _SQL = value; }
         }
 
+        /// <summary>
+        /// Data type of the restriction
+        /// </summary>
         [DefaultValue(ColumnType.Default)]
         [Category("Advanced"), DisplayName("Data Type"), Description("Data type of the restriction."), Id(2, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
@@ -176,6 +195,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Standard display format applied to the restriction display value
+        /// </summary>
         [DefaultValue(DateTimeStandardFormat.Default)]
         [Category("Advanced"), DisplayName("Format"), Description("Standard display format applied to the restriction display value."), Id(3, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
@@ -194,6 +216,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Standard display format applied to the restriction display value
+        /// </summary>
         [DefaultValue(NumericStandardFormat.Default)]
         [Category("Advanced"), DisplayName("Format"), Description("Standard display format applied to the restriction display value."), Id(3, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
@@ -212,6 +237,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// If not empty, specify the format of the restriction display values (.Net Format Strings)
+        /// </summary>
         [Category("Advanced"), DisplayName("Custom Format"), Description("If not empty, specify the format of the restriction display values (.Net Format Strings)."), Id(4, 3)]
         [TypeConverter(typeof(CustomFormatConverter))]
         public string FormatRe
@@ -228,33 +256,29 @@ namespace Seal.Model
         }
         public bool ShouldSerializeFormatRe() { return !string.IsNullOrEmpty(_format); }
 
-        private string _operatorLabel;
+        /// <summary>
+        /// If not empty, overwrite the operator display text
+        /// </summary>
         [Category("Advanced"), DisplayName("Operator Label"), Description("If not empty, overwrite the operator display text."), Id(5, 3)]
-        public string OperatorLabel
-        {
-            get { return _operatorLabel; }
-            set { _operatorLabel = value; }
-        }
+        public string OperatorLabel { get; set; }
 
-        private int _inputRows = 0;
+        /// <summary>
+        /// If greater than 0, specifies the number of lines available to edit the first restriction value (only valid for text or numeric when the restriction is prompted)
+        /// </summary>
         [DefaultValue(0)]
         [Category("Advanced"), DisplayName("Input lines for first value"), Description("If greater than 0, specifies the number of lines available to edit the first restriction value (only valid for text or numeric when the restriction is prompted)."), Id(6, 3)]
-        public int InputRows
-        {
-            get { return _inputRows; }
-            set { _inputRows = value; }
-        }
+        public int InputRows { get; set; } = 0;
 
-        private bool _changeOperator = true;
+        /// <summary>
+        /// If true, the operator can be changed when the restriction is prompted
+        /// </summary>
         [DefaultValue(true)]
         [Category("Advanced"), DisplayName("Can Change Operator"), Description("If true, the operator can be changed when the restriction is prompted."), Id(7, 3)]
-        public bool ChangeOperator
-        {
-            get { return _changeOperator; }
-            set { _changeOperator = value; }
-        }
+        public bool ChangeOperator { get; set; } = true;
 
-
+        /// <summary>
+        /// If defined, the restriction values are selected using the enumerated list
+        /// </summary>
         [DefaultValue(null)]
         [Category("Advanced"), DisplayName("Custom Enumerated List"), Description("If defined, the restriction values are selected using the enumerated list."), Id(8, 3)]
         [TypeConverter(typeof(MetaEnumConverter))]
@@ -265,6 +289,9 @@ namespace Seal.Model
         }
 
         Operator _operator = Operator.Equal;
+        /// <summary>
+        /// The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator).
+        /// </summary>
         [DefaultValue(Operator.Equal)]
         [TypeConverter(typeof(RestrictionOperatorConverter))]
         [Category("Definition"), DisplayName("\tOperator"), Description("The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator)."), Id(2, 1)]
@@ -278,6 +305,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// The final enumerated list of the restriction
+        /// </summary>
         [XmlIgnore]
         public MetaEnum EnumRE
         {
@@ -289,6 +319,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// List of prompted enum values
+        /// </summary>
         [XmlIgnore]
         public List<MetaEV> PromptedEnumValues
         {
@@ -314,6 +347,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the source is No SQL
+        /// </summary>
         [XmlIgnore]
         public bool IsNoSQL
         {
@@ -323,6 +359,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the restriction is an input value
+        /// </summary>
         [XmlIgnore]
         public bool IsInputValue
         {
@@ -332,7 +371,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// True is the restriction is an enumerated list
+        /// </summary>
         [XmlIgnore]
         public bool IsEnumRE
         {
@@ -343,6 +384,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the restriction has an operator
+        /// </summary>
         [XmlIgnore]
         public bool HasOperator
         {
@@ -352,6 +396,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Number of lines for the first input
+        /// </summary>
         [XmlIgnore]
         public int InputRows1
         {
@@ -366,14 +413,19 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Operator label translated
+        /// </summary>
         public string GetOperatorLabel(Operator op)
         {
             if (Operator == Operator.ValueOnly || Model == null) return OperatorLabel;
             return Report.Translate(Helper.GetEnumDescription(typeof(Operator), op));
         }
 
-
-
+        /// <summary>
+        /// Check an input value, throw an exception in case of error
+        /// </summary>
+        /// <param name="value"></param>
         void CheckInputValue(string value)
         {
             if (Source == null) return;
@@ -390,6 +442,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Set a restriction value for navigation
+        /// </summary>
         public void SetNavigationValue(string val)
         {
             if (IsEnum) EnumValues.Add(val);
@@ -397,6 +452,9 @@ namespace Seal.Model
             else Value1 = val;
         }
 
+        /// <summary>
+        /// List of allowed operators for this restriction
+        /// </summary>
         [XmlIgnore]
         public List<Operator> AllowedOperators
         {
@@ -430,6 +488,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// List of operators to display
+        /// </summary>
         [XmlIgnore]
         public List<Operator> AllowedDisplayOperators
         {
@@ -443,7 +504,10 @@ namespace Seal.Model
 
 
         string _value1;
-        [Category("Restriction Values"), DisplayName("Value 1"), Description("Value used for the restriction. Multiple values can be set (one per line)"), Id(1, 2)]
+        /// <summary>
+        /// Value used for the restriction. Multiple values can be set (one per line).
+        /// </summary>
+        [Category("Restriction Values"), DisplayName("Value 1"), Description("Value used for the restriction. Multiple values can be set (one per line)."), Id(1, 2)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string Value1
         {
@@ -456,6 +520,9 @@ namespace Seal.Model
         }
 
         string _value2;
+        /// <summary>
+        /// Second value used for the restriction
+        /// </summary>
         [Category("Restriction Values"), DisplayName("Value 2"), Description("Second value used for the restriction."), Id(3, 2)]
         public string Value2
         {
@@ -468,6 +535,9 @@ namespace Seal.Model
         }
 
         string _value3;
+        /// <summary>
+        /// Third value used for the restriction
+        /// </summary>
         [Category("Restriction Values"), DisplayName("Value 3"), Description("Third value used for the restriction."), Id(5, 2)]
         public string Value3
         {
@@ -480,6 +550,9 @@ namespace Seal.Model
         }
 
         string _value4;
+        /// <summary>
+        /// Fourth value used for the restriction
+        /// </summary>
         [Category("Restriction Values"), DisplayName("Value 4"), Description("Fourth value used for the restriction."), Id(7, 2)]
         public string Value4
         {
@@ -491,6 +564,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Value as a double?
+        /// </summary>
         public double? DoubleValue
         {
             get
@@ -502,6 +578,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// First restriction value
+        /// </summary>
         public object FirstValue
         {
             get
@@ -524,6 +603,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// First string value
+        /// </summary>
         public string FirstStringValue
         {
             get
@@ -534,6 +616,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// First numeric value
+        /// </summary>
         public double? FirstNumericValue
         {
             get
@@ -543,6 +628,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// First Date Time value
+        /// </summary>
         public DateTime? FirstDateValue
         {
             get
@@ -552,14 +640,15 @@ namespace Seal.Model
             }
         }
 
-        List<string> _enumValues = new List<string>();
-        public List<string> EnumValues
-        {
-            get { return _enumValues; }
-            set { _enumValues = value; }
-        }
-        public bool ShouldSerializeEnumValues() { return _enumValues.Count > 0; }
+        /// <summary>
+        /// Enumerated values chosen by default for the restriction
+        /// </summary>
+        public List<string> EnumValues { get; set; } = new List<string>();
+        public bool ShouldSerializeEnumValues() { return EnumValues.Count > 0; }
 
+        /// <summary>
+        /// Helper to edit the enumerated values
+        /// </summary>
         [Category("Restriction Values"), DisplayName("Value"), Description("Value used for the restriction."), Id(1, 2)]
         [Editor(typeof(RestrictionEnumValuesEditor), typeof(UITypeEditor))]
         [XmlIgnore]
@@ -569,47 +658,71 @@ namespace Seal.Model
             set { } //keep set for modification handler
         }
 
-
-
+        /// <summary>
+        /// Value used for the restriction (DateTime)
+        /// </summary>
         [CategoryAttribute("Restriction Values"), DisplayName("Value 1"), Description("Value used for the restriction."), Id(1, 2)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date1 { get; set; }
         public bool ShouldSerializeDate1() { return Date1 != DateTime.MinValue; }
 
+        /// <summary>
+        /// Second value used for the restriction (DateTime)
+        /// </summary>
         [CategoryAttribute("Restriction Values"), DisplayName("Value 2"), Description("Second value used for the restriction."), Id(3, 2)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date2 { get; set; }
         public bool ShouldSerializeDate2() { return Date2 != DateTime.MinValue; }
 
+        /// <summary>
+        /// Third value used for the restriction (DateTime)
+        /// </summary>
         [CategoryAttribute("Restriction Values"), DisplayName("Value 3"), Description("Third value used for the restriction."), Id(5, 2)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date3 { get; set; }
         public bool ShouldSerializeDate3() { return Date3 != DateTime.MinValue; }
 
+        /// <summary>
+        /// Fourth value used for the restriction (DateTime)
+        /// </summary>
         [CategoryAttribute("Restriction Values"), DisplayName("Value 4"), Description("Fourth value used for the restriction."), Id(7, 2)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date4 { get; set; }
         public bool ShouldSerializeDate4() { return Date4 != DateTime.MinValue; }
 
         const string DateKeywordDescription = "Date keyword can be used to specify relative date and time for the restriction value. From the chosen keyword, operations +/- are allowed with the following units: Y(Year), S(Semester), Q(Quarter), M(Month), D(Day), h(hour), m(minute), s(second)";
+        /// <summary>
+        /// Date1 Keyword value
+        /// </summary>
         [Category("Restriction Values"), DisplayName("Value 1 Keyword"), Description(DateKeywordDescription), Id(2, 2)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date1Keyword { get; set; }
 
+        /// <summary>
+        /// Date2 Keyword value
+        /// </summary>
         [CategoryAttribute("Restriction Values"), DisplayName("Value 2 Keyword"), Description(DateKeywordDescription), Id(4, 2)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date2Keyword { get; set; }
 
+        /// <summary>
+        /// Date3 Keyword value
+        /// </summary>
         [CategoryAttribute("Restriction Values"), DisplayName("Value 3 Keyword"), Description(DateKeywordDescription), Id(6, 2)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date3Keyword { get; set; }
 
+        /// <summary>
+        /// Date4 Keyword value
+        /// </summary>
         [CategoryAttribute("Restriction Values"), DisplayName("Value 4 Keyword"), Description(DateKeywordDescription), Id(8, 2)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date4Keyword { get; set; }
 
 
-
+        /// <summary>
+        /// True if the restriction has a value
+        /// </summary>
         public bool HasValue
         {
             get
@@ -626,6 +739,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the restriction has a value 1
+        /// </summary>
         public bool HasValue1
         {
             get
@@ -639,6 +755,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the restriction has a value 2
+        /// </summary>
         public bool HasValue2
         {
             get
@@ -652,6 +771,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the restriction has a value 3
+        /// </summary>
         public bool HasValue3
         {
             get
@@ -665,6 +787,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the restriction has a value 4
+        /// </summary>
         public bool HasValue4
         {
             get
@@ -678,6 +803,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Helper to find if a string has a date keyword
+        /// </summary>
         static public bool HasDateKeyword(string keyword)
         {
             if (string.IsNullOrEmpty(keyword)) return false;
@@ -802,6 +930,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Final Date Time value 1
+        /// </summary>
         public DateTime FinalDate1
         {
             get
@@ -810,6 +941,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Final Date Time value 2
+        /// </summary>
         public DateTime FinalDate2
         {
             get
@@ -818,6 +952,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Final Date Time value 3
+        /// </summary>
         public DateTime FinalDate3
         {
             get
@@ -826,6 +963,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Final Date Time value 4
+        /// </summary>
         public DateTime FinalDate4
         {
             get
@@ -834,6 +974,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// String containing all the enumerated values with their display labels
+        /// </summary>
         public string EnumDisplayValue
         {
             get
@@ -850,6 +993,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Final display value 1
+        /// </summary>
         public string DisplayValue1
         {
             get
@@ -858,6 +1004,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Final display value 2
+        /// </summary>
         public string DisplayValue2
         {
             get
@@ -866,6 +1015,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Final display value 3
+        /// </summary>
         public string DisplayValue3
         {
             get
@@ -874,6 +1026,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Final display value 4
+        /// </summary>
         public string DisplayValue4
         {
             get
@@ -882,6 +1037,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Helper to return the display value
+        /// </summary>
         string GetDisplayValue(string value, DateTime date)
         {
             string result = "";
@@ -922,6 +1080,10 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Display value for navigation
+        /// </summary>
+        /// <returns></returns>
         public string GeNavigationDisplayValue()
         {
             var result = IsEnum ? EnumDisplayValue : GetDisplayValue(Value1, Date1);
@@ -944,32 +1106,50 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Helper to return the display value of an enum from its id
+        /// </summary>
         public string GetEnumDisplayValue(string id)
         {
             return Report.EnumDisplayValue(EnumRE, id, true);
         }
 
-
+        /// <summary>
+        /// Enum message defined in the MetaData
+        /// </summary>
+        /// <returns></returns>
         public string GetEnumMessage()
         {
             return Report.EnumMessage(EnumRE);
         }
 
+        /// <summary>
+        /// True is the operastor is Greater or Smaller
+        /// </summary>
         public bool IsGreaterSmallerOperator
         {
             get { return _operator == Operator.Greater || _operator == Operator.GreaterEqual || _operator == Operator.Smaller || _operator == Operator.SmallerEqual; }
         }
 
+        /// <summary>
+        /// True is the operastor is Contain (or Not),Starts, Ends
+        /// </summary>
         public bool IsContainOperator
         {
             get { return _operator == Operator.Contains || _operator == Operator.StartsWith || _operator == Operator.EndsWith || _operator == Operator.NotContains; }
         }
 
+        /// <summary>
+        /// True is the operator is Between (or Not)
+        /// </summary>
         public bool IsBetweenOperator
         {
             get { return _operator == Operator.Between || _operator == Operator.NotBetween; }
         }
 
+        /// <summary>
+        /// String containing the SQL values of the enum values
+        /// </summary>
         public string EnumSQLValue
         {
             get
@@ -1065,6 +1245,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Array of string from a value having CR/LF
+        /// </summary>
         static public string[] GetVals(string value)
         {
             if (string.IsNullOrEmpty(value)) return new string[0];
@@ -1240,6 +1423,9 @@ namespace Seal.Model
 
         [XmlIgnore]
         string _displayRestriction;
+        /// <summary>
+        /// Display text of the restriction (value only)
+        /// </summary>
         public string DisplayRestriction
         {
             get
@@ -1249,6 +1435,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Display text of the restriction (for editor)
+        /// </summary>
         [XmlIgnore]
         public string DisplayRestrictionForEditor
         {
@@ -1259,9 +1448,11 @@ namespace Seal.Model
             }
         }
 
-
         [XmlIgnore]
         string _displayText;
+        /// <summary>
+        /// Display text of the full restriction (label and value)
+        /// </summary>
         public string DisplayText
         {
             get
@@ -1273,6 +1464,9 @@ namespace Seal.Model
 
         [XmlIgnore]
         string _SQLText;
+        /// <summary>
+        /// SQL of the restriction 
+        /// </summary>
         public string SQLText
         {
             get
@@ -1282,6 +1476,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Html identifier for the restriction operator
+        /// </summary>
         [XmlIgnore]
         public string OperatorHtmlId
         {
@@ -1291,6 +1488,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Html identifier for the restriction value
+        /// </summary>
         [XmlIgnore]
         public string ValueHtmlId
         {
@@ -1300,6 +1500,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Html identifier for the restriction option value (for enumerated list)
+        /// </summary>
         [XmlIgnore]
         public string OptionValueHtmlId
         {
@@ -1309,6 +1512,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Html identifier for the restriction option (for enumerated list)
+        /// </summary>
         [XmlIgnore]
         public string OptionHtmlId
         {
@@ -1318,14 +1524,15 @@ namespace Seal.Model
             }
         }
 
-        string _htmlIndex;
+        /// <summary>
+        /// Helper to build the HTML index
+        /// </summary>
         [XmlIgnore]
-        public string HtmlIndex
-        {
-            get { return _htmlIndex; }
-            set { _htmlIndex = value; }
-        }
+        public string HtmlIndex { get; set; }
 
+        /// <summary>
+        /// True if the restriction has time
+        /// </summary>
         [XmlIgnore]
         public bool HasTimeRe
         {
@@ -1336,7 +1543,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Input date time format for the restriction
+        /// </summary>
         [XmlIgnore]
         public string InputDateFormat
         {
@@ -1382,6 +1591,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// HTML value of the restriction for index 1,2,3 or 4
+        /// </summary>
         public string GetHtmlValue(int index, bool forEdition = false)
         {
             if (index == 2) return GetHtmlValue(Value2, Date2Keyword, Date2, forEdition);
