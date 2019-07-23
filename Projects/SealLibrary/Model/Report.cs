@@ -120,6 +120,9 @@ namespace Seal.Model
         public List<ReportRestriction> InputValues { get; set; } = new List<ReportRestriction>();
         public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
 
+        /// <summary>
+        /// Returns an input value (Report Restriction) from a given name
+        /// </summary>
         public ReportRestriction GetInputValueByName(string name)
         {
             return InputValues.FirstOrDefault(i => i.DisplayNameEl.ToLower() == name.ToLower());
@@ -521,6 +524,9 @@ namespace Seal.Model
         [XmlIgnore]
         public string LoadErrors = "";
 
+        /// <summary>
+        /// Warning messages in case of product upgrade
+        /// </summary>
         [XmlIgnore]
         public string UpgradeWarnings = "";
 
@@ -530,6 +536,9 @@ namespace Seal.Model
         [XmlIgnore]
         public string TemplateParsingErrors;
 
+        /// <summary>
+        /// Execution status of the report
+        /// </summary>
         [XmlIgnore]
         public ReportStatus Status = ReportStatus.NotExecuted;
 
