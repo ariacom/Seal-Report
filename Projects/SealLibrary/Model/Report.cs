@@ -164,7 +164,7 @@ namespace Seal.Model
 
         private string _displayNameEx = null;
         /// <summary>
-        /// The final display name of the report. It may include script execution defined in DispalyName
+        /// The final display name of the report. It may include script execution defined in DisplayName
         /// </summary>
         [XmlIgnore]
         public string DisplayNameEx
@@ -744,7 +744,7 @@ namespace Seal.Model
         public ReportOutput OutputToExecute = null;
 
         /// <summary>
-        /// True if the excution is for a report output
+        /// True if the execution is for a report output
         /// </summary>
         [XmlIgnore]
         public bool ForOutput
@@ -835,7 +835,7 @@ namespace Seal.Model
         public Dictionary<string, string> InputRestrictions = new Dictionary<string, string>();
 
         /// <summary>
-        /// Input restroiction value for a given key
+        /// Input restriction value for a given key
         /// </summary>
         public string GetInputRestriction(string key)
         {
@@ -1103,7 +1103,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Synchronize all report schedules defined in the report with the Windows Task Scehduler.
+        /// Synchronize all report schedules defined in the report with the Windows Task Scheduler.
         /// </summary>
         public void SynchronizeTasks()
         {

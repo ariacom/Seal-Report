@@ -613,7 +613,7 @@ namespace Seal.Model
         public string RestrictionText;
 
         /// <summary>
-        /// Excution date of the model
+        /// Execution date of the model
         /// </summary>
         [XmlIgnore]
         public DateTime ExecutionDate;

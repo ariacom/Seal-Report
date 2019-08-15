@@ -9,8 +9,15 @@ using System.Drawing.Design;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Common script that are added at the end of all scripts executed
+    /// </summary>
     public class CommonScript : RootEditor
     {
+
+        /// <summary>
+        /// Sample
+        /// </summary>
         public const string RazorTemplate = @"@using System.Text
 @functions {
     //Before execution, this script will be added at the end of all scripts executed...
@@ -36,22 +43,20 @@ namespace Seal.Model
         }
         #endregion
 
-        string _name = "name";
+        /// <summary>
+        /// The script name
+        /// </summary>
         [Category("Definition"), DisplayName("Name"), Description("The script name."), Id(1, 1)]
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; } = "name";
 
-        string _script = RazorTemplate;
-        [Category("Definition"), DisplayName("Script"), Description("A Razor script that will be included in all executed script."), Id(2, 1)]
+        /// <summary>
+        /// A Razor script that will be included in all executed scripts
+        /// </summary>
+        [Category("Definition"), DisplayName("Script"), Description("A Razor script that will be included in all executed scripts."), Id(2, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string Script
-        {
-            get { return _script; }
-            set { _script = value; }
-        }
+        public string Script { get; set; } = RazorTemplate;
 
     }
+
+
 }
