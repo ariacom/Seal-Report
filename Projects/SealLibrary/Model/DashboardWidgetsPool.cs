@@ -10,17 +10,26 @@ using System.Linq;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Static object dedicated to manage the list of Widgets published in the repository
+    /// </summary>
     public class DashboardWidgetsPool
     {
         static Dictionary<string, DashboardWidget> _widgets;
         static Dictionary<string, DateTime> _reports;
 
         static bool _forceReload = false;
+        /// <summary>
+        /// Force a browsing of all reports to relaod the Widgets 
+        /// </summary>
         public static void ForceReload()
         {
             _forceReload = true;
         }
 
+        /// <summary>
+        /// Dictionary containing the Widgets published in the repository
+        /// </summary>
         public static Dictionary<string, DashboardWidget> Widgets
         {
             get

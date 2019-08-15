@@ -15,6 +15,9 @@ using Seal.Helpers;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A MetaJoin defines how to join 2 MetaTables
+    /// </summary>
     public class MetaJoin : RootComponent
     {
         #region Editor
@@ -47,6 +50,9 @@ namespace Seal.Model
         }
         #endregion
 
+        /// <summary>
+        /// Basic creation
+        /// </summary>
         public static MetaJoin Create()
         {
             return new MetaJoin() { GUID = Guid.NewGuid().ToString() };
@@ -60,6 +66,9 @@ namespace Seal.Model
             return Repository.JoinAutoName;
         }
 
+        /// <summary>
+        /// Name of the join. If reset to an Empty String, the name is built using the table names.
+        /// </summary>
         [DefaultValue(null)]
         [Category("Definition"), DisplayName("Name"), Description("Name of the join. If reset to an Empty String, the name is built using the table names."), Id(1, 1)]
         public override string Name
@@ -75,6 +84,9 @@ namespace Seal.Model
         }
 
         private string _leftTableGUID;
+        /// <summary>
+        /// Left table GUID for the join definition
+        /// </summary>
         [DefaultValue(null)]
         [Category("Definition"), DisplayName("Left Table"), Description("Left table for the join definition."), Id(4, 1)]
         [TypeConverter(typeof(SourceTableConverter))]
@@ -94,6 +106,9 @@ namespace Seal.Model
 
 
         MetaTable _leftTable = null;
+        /// <summary>
+        /// Left table for the join definition
+        /// </summary>
         [XmlIgnore]
         public MetaTable LeftTable
         {
@@ -105,6 +120,9 @@ namespace Seal.Model
         }
 
         private string _rightTableGUID;
+        /// <summary>
+        /// Right table GUID for the join definition
+        /// </summary>
         [DefaultValue(null)]
         [Category("Definition"), DisplayName("Right Table"), Description("Right table for the join definition."), Id(5, 1)]
         [TypeConverter(typeof(SourceTableConverter))]
@@ -123,6 +141,9 @@ namespace Seal.Model
         }
 
         MetaTable _rightTable = null;
+        /// <summary>
+        /// Right table GUID for the join definition
+        /// </summary>
         [XmlIgnore]
         public MetaTable RightTable
         {
@@ -134,6 +155,9 @@ namespace Seal.Model
         }
 
         private string _clause;
+        /// <summary>
+        /// SQL Clause used to define the join between the 2 tables
+        /// </summary>
         [Category("Definition"), DisplayName("SQL Clause"), Description("SQL Clause used to define the join between the 2 tables."), Id(6, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string Clause
@@ -144,6 +168,9 @@ namespace Seal.Model
         public bool ShouldSerializeClause() { return !string.IsNullOrEmpty(_clause); }
 
         private JoinType _joinType = JoinType.Inner;
+        /// <summary>
+        /// The type of join used to link the 2 tables
+        /// </summary>
         [DefaultValue(JoinType.Inner)]
         [Category("Definition"), DisplayName("Join Type"), Description("The type of join used to link the 2 tables."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
@@ -153,15 +180,16 @@ namespace Seal.Model
             set { _joinType = value; UpdateEditorAttributes(); }
         }
 
-        private bool _isBiDirectional = true;
+        /// <summary>
+        /// Indicates if the join can also be used in the other direction (left-right or right-left)
+        /// </summary>
         [DefaultValue(true)]
         [Category("Definition"), DisplayName("Is Bi-Directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left)."), Id(3, 1)]
-        public bool IsBiDirectional
-        {
-            get { return _isBiDirectional; }
-            set { _isBiDirectional = value; }
-        }
+        public bool IsBiDirectional { get; set; } = true;
 
+        /// <summary>
+        /// SQL generated for the join type
+        /// </summary>
         [XmlIgnore]
         public string SQLJoinType
         {
@@ -174,10 +202,13 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Helper to check the join
+        /// </summary>
         public void CheckJoin()
         {
-            _error = "";
-            _information = "";
+            Error = "";
+            Information = "";
             try
             {
                 if (LeftTable == null) throw new Exception("Please select a Left table for the join");
@@ -194,23 +225,29 @@ namespace Seal.Model
                 if (_joinType != JoinType.Cross) sql += string.Format("{0} {1} ON {2}\r\n", SQLJoinType, name2, Clause.Trim());
                 else sql += string.Format("{0} {1}\r\n", SQLJoinType, name2);
                 sql += "WHERE 0=1";
-                _error = Source.CheckSQL(sql, new List<MetaTable>() { LeftTable, RightTable }, null, false);
-                if (!string.IsNullOrEmpty(_error)) _information = "Error got when checking join. Please check the SQL:\r\n" + sql;
-                else _information = "Join checked successfully.";
+                Error = Source.CheckSQL(sql, new List<MetaTable>() { LeftTable, RightTable }, null, false);
+                if (!string.IsNullOrEmpty(Error)) Information = "Error got when checking join. Please check the SQL:\r\n" + sql;
+                else Information = "Join checked successfully.";
             }
             catch (Exception ex)
             {
-                _error = ex.Message;
-                _information = "Error got when checking the join.";
+                Error = ex.Message;
+                Information = "Error got when checking the join.";
             }
-            _information = Helper.FormatMessage(_information);
+            Information = Helper.FormatMessage(Information);
             UpdateEditorAttributes();
         }
 
+        /// <summary>
+        /// True if the join is editable
+        /// </summary>
         [XmlIgnore]
         public bool IsEditable = true;
 
         protected MetaSource _source;
+        /// <summary>
+        /// Current MetaSource
+        /// </summary>
         [XmlIgnore, Browsable(false)]
         public MetaSource Source
         {
@@ -224,7 +261,9 @@ namespace Seal.Model
 
         #region Helpers
 
-
+        /// <summary>
+        /// Editor Helper: Check the join in the database
+        /// </summary>
         [Category("Helpers"), DisplayName("Check join"), Description("Check the join in the database."), Id(1, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCheckJoin
@@ -232,23 +271,19 @@ namespace Seal.Model
             get { return "<Click to check the join in the database>"; }
         }
 
-        string _information;
+        /// <summary>
+        /// Last information message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(2, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
-        public string Information
-        {
-            get { return _information; }
-            set { _information = value; }
-        }
+        public string Information { get; set; }
 
-        string _error;
+        /// <summary>
+        /// Last error message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(3, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
-        public string Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public string Error { get; set; }
 
         #endregion
 

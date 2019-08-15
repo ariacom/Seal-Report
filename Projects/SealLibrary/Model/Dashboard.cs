@@ -11,12 +11,25 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Dashboard definition. A Dashboard contains a list of Dashboard Items.
+    /// </summary>
     public class Dashboard
     {
+        /// <summary>
+        /// Unique identifier
+        /// </summary>
         public string GUID { get; set; }
+
+        /// <summary>
+        /// Name of the dashboard
+        /// </summary>
         public string Name { get; set; }
         public List<DashboardItem> Items { get; set; } = new List<DashboardItem>();
 
+        /// <summary>
+        /// Load a Dashboard from a file
+        /// </summary>
         static public Dashboard LoadFromFile(string path)
         {
             Dashboard result = null;
@@ -37,6 +50,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Re-init all GUIDs of the dashboard
+        /// </summary>
         public void ReinitGUIDs()
         {
             GUID = Guid.NewGuid().ToString();
@@ -46,6 +62,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Re-init the group orders of the items
+        /// </summary>
         public void ReinitGroupOrders()
         {
             int groupOrder = 1;
@@ -58,11 +77,17 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Save the dashboard to its file
+        /// </summary>
         public void SaveToFile()
         {
             SaveToFile(Path);
         }
 
+        /// <summary>
+        /// Save the dashboard to a file
+        /// </summary>
         public void SaveToFile(string path)
         {
             try
@@ -82,25 +107,62 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Order of the dashboard
+        /// </summary>
         [XmlIgnore]
         public int Order = 0;
+
+        /// <summary>
+        /// True if the dashboard is editable
+        /// </summary>
         [XmlIgnore]
         public bool Editable = false;
+
+        /// <summary>
+        /// True if the dashboard is personal
+        /// </summary>
         [XmlIgnore]
         public bool IsPersonal = false;
+
+        /// <summary>
+        /// Current dashboard path
+        /// </summary>
         [XmlIgnore]
         public string Path;
+
+        /// <summary>
+        /// Current dashboard security folder
+        /// </summary>
         [XmlIgnore]
         public string Folder;
+
+        /// <summary>
+        /// Display name
+        /// </summary>
         [XmlIgnore]
         public string DisplayName;
+
+        /// <summary>
+        /// Full name
+        /// </summary>
         [XmlIgnore]
         public string FullName;
+
+        /// <summary>
+        /// Last modification date time
+        /// </summary>
         [XmlIgnore]
         public DateTime LastModification;
 
+        /// <summary>
+        /// Colors available for the widgets
+        /// </summary>
         public static string[] Colors = new string[] { "", "default", "primary", "success", "info", "warning", "danger" };
 
+        /// <summary>
+        /// Icons available for the widgets
+        /// </summary>
         public static string[] Icons = new string[] {
                     "info-sign",
                     "warning-sign",

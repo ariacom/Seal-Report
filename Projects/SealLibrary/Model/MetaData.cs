@@ -9,37 +9,40 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A MetaData contains the list of MetaTable, MetaJoin and MetaEnum of a data source
+    /// </summary>
     public class MetaData
     {
+        /// <summary>
+        /// Master Table Name
+        /// </summary>
         public static string MasterTableName = "SealMasterTable";
 
-        private List<MetaTable> _tables = new List<MetaTable>();
+        /// <summary>
+        /// List of Tables
+        /// </summary>
         [Browsable(false)]
-        public List<MetaTable> Tables
-        {
-            get { return _tables; }
-            set { _tables = value; }
-        }
-        public bool ShouldSerializeTables() { return _tables.Count > 0; }
+        public List<MetaTable> Tables { get; set; } = new List<MetaTable>();
+        public bool ShouldSerializeTables() { return Tables.Count > 0; }
 
-        private List<MetaJoin> _joins = new List<MetaJoin>();
+        /// <summary>
+        /// List of Joins
+        /// </summary>
         [Browsable(false)]
-        public List<MetaJoin> Joins
-        {
-            get { return _joins; }
-            set { _joins = value; }
-        }
-        public bool ShouldSerializeJoins() { return _joins.Count > 0; }
+        public List<MetaJoin> Joins { get; set; } = new List<MetaJoin>();
+        public bool ShouldSerializeJoins() { return Joins.Count > 0; }
 
-        private List<MetaEnum> _enums = new List<MetaEnum>();
+        /// <summary>
+        /// List of Enumerated Lists
+        /// </summary>
         [Browsable(false)]
-        public List<MetaEnum> Enums
-        {
-            get { return _enums; }
-            set { _enums = value; }
-        }
-        public bool ShouldSerializeEnums() { return _enums.Count > 0; }
+        public List<MetaEnum> Enums { get; set; } = new List<MetaEnum>();
+        public bool ShouldSerializeEnums() { return Enums.Count > 0; }
 
+        /// <summary>
+        /// Returns a column from its GUID
+        /// </summary>
         public MetaColumn GetColumnFromGUID(string guid)
         {
             MetaColumn result = null;
@@ -51,6 +54,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Returns a column from its name
+        /// </summary>
         public MetaColumn GetColumnFromName(string tableName, string columnName)
         {
             MetaColumn result = null;
@@ -59,6 +65,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Returns a column from its display path
+        /// </summary>
         public MetaColumn GetColumnFromDisplayPath(string displayPath)
         {
             MetaColumn result = null;
@@ -70,6 +79,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// The master table of the MetaData.
+        /// </summary>
         [XmlIgnore]
         public MetaTable MasterTable
         {

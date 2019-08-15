@@ -16,6 +16,9 @@ using Seal.Forms;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Helper to change the category folder of elements
+    /// </summary>
     public class CategoryFolder : RootComponent
     {
         #region Editor
@@ -36,29 +39,20 @@ namespace Seal.Model
                 TypeDescriptor.Refresh(this);
             }
         }
-        #endregion
 
-        string _path;
-        [DisplayName("Path"), Description("The full path of the of the category. This can be modified to change globally all the category names of the columns. The category path can be specified using the '/' character (e.g. '/Master/Name1/Name2')"), Category("Helpers"), Id(1,1)]
-        public string Path
-        {
-            get { return _path; }
-            set { _path = value; }
-        }
+        /// <summary>
+        /// The full path of the of the category. This can be modified to change globally all the category names of the columns. The category path can be specified using the '/' character (e.g. '/Master/Name1/Name2')
+        /// </summary>
+        [DisplayName("Path"), Description("The full path of the of the category. This can be modified to change globally all the category names of the columns. The category path can be specified using the '/' character (e.g. '/Master/Name1/Name2')"), Category("Helpers"), Id(1, 1)]
+        public string Path { get; set; }
 
-        #region Helpers
-        string _information;
         [DisplayName("Information"), Description("Last information"), Category("Helpers"), Id(2, 1)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
-        public string Information
-        {
-            get { return _information; }
-            set { _information = value; }
-        }
+        public string Information { get; set; }
 
         public void SetInformation(string information)
         {
-            _information = information;
+            Information = information;
             UpdateEditorAttributes();
         }
 

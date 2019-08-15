@@ -16,6 +16,9 @@ using Seal.Forms;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A MetaColumn is part of a MetaTable and defines an element that can be selected in a report
+    /// </summary>
     public class MetaColumn : RootComponent, ITreeSort
     {
         #region Editor
@@ -37,10 +40,10 @@ namespace Seal.Model
                 GetProperty("Format").SetIsBrowsable(true);
                 GetProperty("EnumGUID").SetIsBrowsable(true);
                 GetProperty("DrillChildren").SetIsBrowsable(true);
-                GetProperty("DrillChildren").SetDisplayName("Drill Children: " + (_drillChildren.Count == 0 ? "None" : _drillChildren.Count.ToString() + " Items(s)"));
+                GetProperty("DrillChildren").SetDisplayName("Drill Children: " + (DrillChildren.Count == 0 ? "None" : DrillChildren.Count.ToString() + " Items(s)"));
                 GetProperty("DrillUpOnlyIfDD").SetIsBrowsable(true);
                 GetProperty("SubReports").SetIsBrowsable(true);
-                GetProperty("SubReports").SetDisplayName("Sub-Reports: " + (_subReports.Count == 0 ? "None" : _subReports.Count.ToString() + " Items(s)"));
+                GetProperty("SubReports").SetDisplayName("Sub-Reports: " + (SubReports.Count == 0 ? "None" : SubReports.Count.ToString() + " Items(s)"));
 
                 GetProperty("HelperCreateSubReport").SetIsBrowsable(IsSQL);
                 GetProperty("HelperAddSubReport").SetIsBrowsable(IsSQL);
@@ -93,6 +96,9 @@ namespace Seal.Model
         }
         #endregion
 
+        /// <summary>
+        /// Create a basic column
+        /// </summary>
         public static MetaColumn Create(string name)
         {
             MetaColumn result = new MetaColumn() { Name = name, DisplayName = name, Type = ColumnType.Text, Category = "Default" };
@@ -100,7 +106,9 @@ namespace Seal.Model
             return result;
         }
 
-
+        /// <summary>
+        /// The name of the column in the table or the SQL Statement used for the column
+        /// </summary>
         [DefaultValue(null)]
         [DisplayName("Name"), Description("The name of the column in the table or the SQL Statement used for the column."), Category("Definition"), Id(1, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
@@ -110,6 +118,9 @@ namespace Seal.Model
             set { _name = value; }
         }
 
+        /// <summary>
+        /// Data type of the column
+        /// </summary>
         protected ColumnType _type = ColumnType.Default;
         [DefaultValue(ColumnType.Default)]
         [Category("Definition"), DisplayName("Data Type"), Description("Data type of the column."), Id(2, 1)]
@@ -124,26 +135,24 @@ namespace Seal.Model
             }
         }
 
-        private bool _isAggregate = false;
+        /// <summary>
+        /// Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG
+        /// </summary>
         [DefaultValue(false)]
         [Category("Definition"), DisplayName("Is Aggregate"), Description("Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG."), Id(3, 1)]
-        public bool IsAggregate
-        {
-            get { return _isAggregate; }
-            set { _isAggregate = value; }
-        }
-        public bool ShouldSerializeIsAggregate() { return _isAggregate; }
+        public bool IsAggregate { get; set; } = false;
+        public bool ShouldSerializeIsAggregate() { return IsAggregate; }
 
-
-        private string _category;
-        [Category("Display"), DisplayName("Category Name"), Description("Category used to display the column in the Report Designer tree view. Category hierarchy can be defined using the '/' character (e.g. 'Master/Name1/Name2')"), Id(2, 2)]
-        public string Category
-        {
-            get { return _category; }
-            set { _category = value; }
-        }
+        /// <summary>
+        /// Category used to display the column in the Report Designer tree view. Category hierarchy can be defined using the '/' character (e.g. 'Master/Name1/Name2').
+        /// </summary>
+        [Category("Display"), DisplayName("Category Name"), Description("Category used to display the column in the Report Designer tree view. Category hierarchy can be defined using the '/' character (e.g. 'Master/Name1/Name2')."), Id(2, 2)]
+        public string Category { get; set; }
 
         private string _tag;
+        /// <summary>
+        /// Tag used to define the security of the Web Report Designer (Columns of the Security Groups defined in the Web Security)
+        /// </summary>
         [Category("Security"), DisplayName("Security Tag"), Description("Tag used to define the security of the Web Report Designer (Columns of the Security Groups defined in the Web Security)."), Id(2, 2)]
         public string Tag
         {
@@ -153,6 +162,9 @@ namespace Seal.Model
         public bool ShouldSerializeTag() { return !string.IsNullOrEmpty(_tag); }
 
         protected string _displayName;
+        /// <summary>
+        /// Name used to display the column in the Report Designer tree view and in the report results
+        /// </summary>
         [Category("Display"), DisplayName("Display Name"), Description("Name used to display the column in the Report Designer tree view and in the report results."), Id(3, 2)]
         public string DisplayName
         {
@@ -160,23 +172,27 @@ namespace Seal.Model
             set { _displayName = value; }
         }
 
-        int _displayOrder = 0;
+        /// <summary>
+        /// The order number used to sort the column in the tree view (by table and by category)
+        /// </summary>
         [DefaultValue(0)]
         [Category("Display"), DisplayName("Display Order"), Description("The order number used to sort the column in the tree view (by table and by category)."), Id(4, 2)]
-        public int DisplayOrder
-        {
-            get { return _displayOrder; }
-            set { _displayOrder = value; }
-        }
-        public bool ShouldSerializeDisplayOrder() { return _displayOrder != 0; }
+        public int DisplayOrder { get; set; } = 0;
+        public bool ShouldSerializeDisplayOrder() { return DisplayOrder != 0; }
 
+        /// <summary>
+        /// The display order
+        /// </summary>
         public int GetSort()
         {
-            return _displayOrder;
+            return DisplayOrder;
         }
 
 
         protected NumericStandardFormat _numericStandardFormat = NumericStandardFormat.Default;
+        /// <summary>
+        /// Standard display format applied to the element
+        /// </summary>
         [DefaultValue(NumericStandardFormat.Default)]
         [Category("Options"), DisplayName("Format"), Description("Standard display format applied to the element."), Id(2, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
@@ -197,6 +213,9 @@ namespace Seal.Model
         public bool ShouldSerializeNumericStandardFormat() { return _numericStandardFormat != NumericStandardFormat.Default; }
 
         protected DateTimeStandardFormat _datetimeStandardFormat = DateTimeStandardFormat.Default;
+        /// <summary>
+        /// Standard display format applied to the element
+        /// </summary>
         [DefaultValue(DateTimeStandardFormat.Default)]
         [Category("Options"), DisplayName("Format"), Description("Standard display format applied to the element."), Id(2, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
@@ -217,6 +236,9 @@ namespace Seal.Model
         public bool ShouldSerializeDateTimeStandardFormat() { return _datetimeStandardFormat != DateTimeStandardFormat.Default; }
 
         protected string _format = "";
+        /// <summary>
+        /// If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)
+        /// </summary>
         [Category("Options"), DisplayName("Custom Format"), Description("If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)."), Id(3, 3)]
         [TypeConverter(typeof(CustomFormatConverter))]
         public string Format
@@ -231,6 +253,9 @@ namespace Seal.Model
         }
         public bool ShouldSerializeFormat() { return !string.IsNullOrEmpty(_format); }
 
+        /// <summary>
+        /// True if the column is a DateTime displaying time
+        /// </summary>
         [XmlIgnore]
         public bool HasTime
         {
@@ -241,6 +266,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Helper 
+        /// </summary>
         static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
         {
             if (formatType.ToString().Contains("Time")) return true;
@@ -248,6 +276,9 @@ namespace Seal.Model
                 && (format.ToLower().Contains("t") || format.Contains("H") || format.Contains("m") || format.Contains("s")));
         }
 
+        /// <summary>
+        /// Set standard format accroding to the type
+        /// </summary>
         public void SetStandardFormat()
         {
             ColumnType type = Type;
@@ -270,6 +301,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Set default format defined in the repository configuration accroding to the type
+        /// </summary>
         protected void SetDefaultFormat()
         {
             if (this is ReportElement)
@@ -296,6 +330,9 @@ namespace Seal.Model
         }
 
         protected string _enumGUID;
+        /// <summary>
+        /// If defined, a list of values is proposed when the column is used for restrictions
+        /// </summary>
         [DefaultValue(null)]
         [Category("Options"), DisplayName("Enumerated List"), Description("If defined, a list of values is proposed when the column is used for restrictions."), Id(4, 3)]
         [TypeConverter(typeof(MetaEnumConverter))]
@@ -306,6 +343,9 @@ namespace Seal.Model
         }
         public bool ShouldSerializeEnumGUID() { return !string.IsNullOrEmpty(_enumGUID); }
 
+        /// <summary>
+        /// Enumerated list if the column has an EnumGUID
+        /// </summary>
         [XmlIgnore]
         public MetaEnum Enum
         {
@@ -330,6 +370,9 @@ namespace Seal.Model
         }
 
         protected MetaSource _source;
+        /// <summary>
+        /// Current MetaSource
+        /// </summary>
         [XmlIgnore, Browsable(false)]
         public MetaSource Source
         {
@@ -340,6 +383,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the source is a standard SQL source
+        /// </summary>
         [XmlIgnore]
         public bool IsSQL
         {
@@ -347,6 +393,9 @@ namespace Seal.Model
         }
 
         MetaTable _metaTable = null;
+        /// <summary>
+        /// Current MetaTable of the column
+        /// </summary>
         [XmlIgnore, Browsable(false)]
         public MetaTable MetaTable
         {
@@ -371,7 +420,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Full display name
+        /// </summary>
         [XmlIgnore]
         public string FullDisplayName
         {
@@ -381,6 +432,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Display name used to sort the TreeView
+        /// </summary>
         [XmlIgnore]
         public string DisplayName2
         {
@@ -390,26 +444,24 @@ namespace Seal.Model
             }
         }
 
-        List<string> _drillChildren = new List<string>();
+        /// <summary>
+        /// Defines the child columns to navigate from this column with the drill feature
+        /// </summary>
         [Category("Drill"), DisplayName("Drill Children"), Description("Defines the child columns to navigate from this column with the drill feature."), Id(1, 4)]
         [Editor(typeof(ColumnsSelector), typeof(UITypeEditor))]
-        public List<string> DrillChildren
-        {
-            get { return _drillChildren; }
-            set { _drillChildren = value; }
-        }
-        public bool ShouldSerializeDrillChildren() { return _drillChildren.Count > 0; }
+        public List<string> DrillChildren { get; set; } = new List<string>();
+        public bool ShouldSerializeDrillChildren() { return DrillChildren.Count > 0; }
 
-        bool _drillUpOnlyIfDD = false;
+        /// <summary>
+        /// If true, Drill Up is activated only if a drill down occured
+        /// </summary>
         [DefaultValue(false)]
         [Category("Drill"), DisplayName("Drill Up only if drill down occured."), Description("If true, Drill Up is activated only if a drill down occured."), Id(2, 4)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public bool DrillUpOnlyIfDD
-        {
-            get { return _drillUpOnlyIfDD; }
-            set { _drillUpOnlyIfDD = value; }
-        }
+        public bool DrillUpOnlyIfDD { get; set; } = false;
 
+        /// <summary>
+        /// Editor Helper: Create automatically a 'Year' column and a 'Month' column to drill down to the date
+        /// </summary>
         [Category("Drill"), DisplayName("Create Date Columns for Drill"), Description("Create automatically a 'Year' column and a 'Month' column to drill down to the date."), Id(3, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCreateDrillDates
@@ -417,16 +469,17 @@ namespace Seal.Model
             get { return "<Click to create a 'Year' and a 'Month' column having Drill navigation>"; }
         }
 
-        List<SubReport> _subReports = new List<SubReport>();
+        /// <summary>
+        /// Defines sub-reports to navigate from this column
+        /// </summary>
         [Category("Sub-Reports"), DisplayName("Sub Reports"), Description("Defines sub-reports to navigate from this column."), Id(1, 5)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<SubReport> SubReports
-        {
-            get { return _subReports; }
-            set { _subReports = value; }
-        }
-        public bool ShouldSerializeSubReports() { return _subReports.Count > 0; }
+        public List<SubReport> SubReports { get; set; } = new List<SubReport>();
+        public bool ShouldSerializeSubReports() { return SubReports.Count > 0; }
 
+        /// <summary>
+        /// Editor Helper: Create a Sub-Report to display the detail of this table
+        /// </summary>
         [Category("Sub-Reports"), DisplayName("Create a Sub-Report"), Description("Create a Sub-Report to display the detail of this table."), Id(2, 5)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCreateSubReport
@@ -434,6 +487,9 @@ namespace Seal.Model
             get { return "<Click to create a Sub-Report to display the detail of this table>"; }
         }
 
+        /// <summary>
+        /// Editor Helper: Add an existing Sub-Report to this column
+        /// </summary>
         [Category("Sub-Reports"), DisplayName("Add an existing Sub-Report"), Description("Add an existing Sub-Report to this column."), Id(2, 5)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperAddSubReport
@@ -441,6 +497,9 @@ namespace Seal.Model
             get { return "<Click to add an existing Sub-Report to this column>"; }
         }
 
+        /// <summary>
+        /// Editor Helper: Open the Sub-Report folder in Windows Explorer
+        /// </summary>
         [Category("Sub-Reports"), DisplayName("Open Sub-Report folder"), Description("Open the Sub-Report folder in Windows Explorer."), Id(3, 5)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperOpenSubReportFolder
@@ -450,6 +509,9 @@ namespace Seal.Model
 
         #region Helpers
 
+        /// <summary>
+        /// Editor Helper: Check the column SQL statement in the database
+        /// </summary>
         [Category("Helpers"), DisplayName("Check column SQL syntax"), Description("Check the column SQL statement in the database."), Id(1, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCheckColumn
@@ -457,6 +519,9 @@ namespace Seal.Model
             get { return "<Click to check the column SQL syntax>"; }
         }
 
+        /// <summary>
+        /// Editor Helper:  Click to create an enumerated list from this table column
+        /// </summary>
         [Category("Helpers"), DisplayName("Create enumerated list from this column"), Description("Click to create an enumerated list from this table column."), Id(2, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCreateEnum
@@ -464,6 +529,9 @@ namespace Seal.Model
             get { return "<Click to create an enum from the column>"; }
         }
 
+        /// <summary>
+        /// Editor Helper:  Show the first 1000 values of the column
+        /// </summary>
         [Category("Helpers"), DisplayName("Show column values"), Description("Show the first 1000 values of the column."), Id(3, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperShowValues
@@ -471,23 +539,19 @@ namespace Seal.Model
             get { return "<Click to show the column values>"; }
         }
 
-        string _information;
+        /// <summary>
+        /// Last information message ther column has been checked
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message ther column has been checked."), Id(5, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
-        public string Information
-        {
-            get { return _information; }
-            set { _information = value; }
-        }
+        public string Information { get; set; }
 
-        string _error;
+        /// <summary>
+        /// Last error message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(6, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
-        public string Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public string Error { get; set; }
 
         #endregion
 

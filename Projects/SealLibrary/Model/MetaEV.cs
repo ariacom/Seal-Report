@@ -7,61 +7,62 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A MetaEV define a value of an enumerated list
+    /// </summary>
     public class MetaEV
     {
-        string _identifier;
+        /// <summary>
+        /// The database value of the enumerated value
+        /// </summary>
         [Category("Definition"), DisplayName("\tIdentifier"), Description("The database value of the enumerated value")]
-        public string Id
-        {
-            get { return _identifier; }
-            set { _identifier = value; }
-        }
+        public string Id { get; set; }
 
-        string _value;
+        /// <summary>
+        /// The optional display value
+        /// </summary>
         [Category("Definition"), DisplayName("\tValue"), Description("The optional display value")]
-        public string Val
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
+        public string Val { get; set; }
 
-        string _restrictionValue;
+        /// <summary>
+        /// The optional display value for the restriction list
+        /// </summary>
         [Category("Definition"), DisplayName("Restriction Value"), Description("The optional display value for the restriction list")]
-        public string ValR
-        {
-            get { return _restrictionValue; }
-            set { _restrictionValue = value; }
-        }
+        public string ValR { get; set; }
 
-        string _css;
+        /// <summary>
+        /// The optional CSS Style applied to the cell displayed
+        /// </summary>
         [Category("Definition"), DisplayName("CSS Style"), Description("The optional CSS Style applied to the cell displayed")]
-        public string Css
-        {
-            get { return _css; }
-            set { _css = value; }
-        }
+        public string Css { get; set; }
 
-        string _class;
+        /// <summary>
+        /// The optional CSS Class applied to the cell displayed
+        /// </summary>
         [Category("Definition"), DisplayName("CSS Class"), Description("The optional CSS Class applied to the cell displayed")]
-        public string Class
-        {
-            get { return _class; }
-            set { _class = value; }
-        }
+        public string Class { get; set; }
 
+        /// <summary>
+        /// The final value displayed in the report
+        /// </summary>
         [Category("Display"), DisplayName("\tValue"), Description("The final value displayed in the report")]
         public string DisplayValue
         {
-            get { return !string.IsNullOrEmpty(_value) ? _value : _identifier; }
+            get { return !string.IsNullOrEmpty(Val) ? Val : Id; }
         }
 
+        /// <summary>
+        /// The final value displayed for the restriction
+        /// </summary>
         [Category("Display"), DisplayName("Restriction"), Description("The final value displayed for the restriction")]
         public string DisplayRestriction
         {
-            get { return !string.IsNullOrEmpty(_restrictionValue) ? _restrictionValue : DisplayValue; }
+            get { return !string.IsNullOrEmpty(ValR) ? ValR : DisplayValue; }
         }
 
-        //For execution
+        /// <summary>
+        /// Id used for execution
+        /// </summary>
         [XmlIgnore]
         public string HtmlId;
     }

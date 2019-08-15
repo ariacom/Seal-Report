@@ -20,11 +20,20 @@ using System.Xml;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A MetaSource contains a list of MetaConnection and a MetaData
+    /// </summary>
     public class MetaSource : ReportComponent
     {
+        /// <summary>
+        /// Current file path of the source
+        /// </summary>
         [XmlIgnore]
         public string FilePath;
 
+        /// <summary>
+        /// Current repository
+        /// </summary>
         [XmlIgnore]
         public Repository Repository = null;
 
@@ -68,19 +77,19 @@ namespace Seal.Model
         public JoinFolder JoinFolder = new JoinFolder();
         [XmlIgnore]
         public EnumFolder EnumFolder = new EnumFolder();
-
         #endregion
 
-        List<MetaConnection> _connections = new List<MetaConnection>();
-        public List<MetaConnection> Connections
-        {
-            get { return _connections; }
-            set { _connections = value; }
-        }
-        public bool ShouldSerializeConnections() { return _connections.Count > 0; }
+        /// <summary>
+        /// List of MetaConnection
+        /// </summary>
+        public List<MetaConnection> Connections { get; set; } = new List<MetaConnection>();
+        public bool ShouldSerializeConnections() { return Connections.Count > 0; }
 
 
         protected string _connectionGUID;
+        /// <summary>
+        /// The connection currently used for this data source
+        /// </summary>
         [DefaultValue(null)]
         [Category("General"), DisplayName("Current Connection"), Description("The connection currently used for this data source"), Id(1, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
@@ -90,77 +99,68 @@ namespace Seal.Model
             set { _connectionGUID = value; }
         }
 
-        bool _isDefault = false;
+        /// <summary>
+        /// If true, this source is used as default when a new model is created in a report
+        /// </summary>
         [DefaultValue(false)]
         [Category("General"), DisplayName("Is Default"), Description("If true, this source is used as default when a new model is created in a report."), Id(2, 1)]
-        public bool IsDefault
-        {
-            get { return _isDefault; }
-            set { _isDefault = value; }
-        }
+        public bool IsDefault { get; set; } = false;
 
-        bool _isNoSQL =false;
+        /// <summary>
+        /// If true, this source contains only a table built from a Razor script. The SQL engine will not be used to fill the models.
+        /// </summary>
         [DefaultValue(false)]
         [Category("General"), DisplayName("Is No SQL"), Description("If true, this source contains only a table built from a Razor script. The SQL engine will not be used to fill the models."), Id(3, 1)]
-        public bool IsNoSQL
-        {
-            get { return _isNoSQL; }
-            set { _isNoSQL = value; }
-        }
-        
-        string _initScript = "";
+        public bool IsNoSQL { get; set; } = false;
+
+        /// <summary>
+        /// If set, the script is executed when a report is initialized for an execution. This may be useful to change dynamically components of the source (e.g. modifying connections, tables, columns, enums, etc.).
+        /// </summary>
         [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. This may be useful to change dynamically components of the source (e.g. modifying connections, tables, columns, enums, etc.)."), Id(4, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string InitScript
-        {
-            get { return _initScript; }
-            set { _initScript = value; }
-        }
-        public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(_initScript); }
+        public string InitScript { get; set; } = "";
+        public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
 
-        string _tasksScript = "";
+        /// <summary>
+        /// If set, the script is added to all task scripts executed with this source. This may be useful to defined common functions for the source.
+        /// </summary>
         [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed with this source. This may be useful to defined common functions for the source."), Id(5, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string TasksScript
-        {
-            get { return _tasksScript; }
-            set { _tasksScript = value; }
-        }
-        public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(_tasksScript); }
+        public string TasksScript { get; set; } = "";
+        public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(TasksScript); }
 
-        string _preSQL;
+        /// <summary>
+        /// SQL Statement executed after the connection is open and before the query is executed. The statement may contain Razor script if it starts with '@'.
+        /// </summary>
         [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed after the connection is open and before the query is executed. The statement may contain Razor script if it starts with '@'."), Id(5, 4)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        public string PreSQL
-        {
-            get { return _preSQL; }
-            set { _preSQL = value; }
-        }
-        public bool ShouldSerializePreSQL() { return !string.IsNullOrEmpty(_preSQL); }
+        public string PreSQL { get; set; }
+        public bool ShouldSerializePreSQL() { return !string.IsNullOrEmpty(PreSQL); }
 
-        string _postSQL;
+        /// <summary>
+        /// SQL Statement executed before the connection is closed and after the query is executed. The statement may contain Razor script if it starts with '@'.
+        /// </summary>
         [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed before the connection is closed and after the query is executed. The statement may contain Razor script if it starts with '@'."), Id(6, 4)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        public string PostSQL
-        {
-            get { return _postSQL; }
-            set { _postSQL = value; }
-        }
-        public bool ShouldSerializePostSQL() { return !string.IsNullOrEmpty(_postSQL); }
+        public string PostSQL { get; set; }
+        public bool ShouldSerializePostSQL() { return !string.IsNullOrEmpty(PostSQL); }
 
-        bool _ignorePrePostError = false;
+        /// <summary>
+        /// If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues
+        /// </summary>
         [DefaultValue(false)]
         [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(7, 4)]
-        public bool IgnorePrePostError
-        {
-            get { return _ignorePrePostError; }
-            set { _ignorePrePostError = value; }
-        }
+        public bool IgnorePrePostError { get; set; } = false;
 
+        /// <summary>
+        /// Last modification Date Time
+        /// </summary>
         [XmlIgnore]
         public DateTime LastModification;
 
-
+        /// <summary>
+        /// Current MetaConnection
+        /// </summary>
         [XmlIgnore]
         public virtual MetaConnection Connection
         {
@@ -183,6 +183,9 @@ namespace Seal.Model
         }
 
         MetaData _metaData = null;
+        /// <summary>
+        /// MetaData contained in the source 
+        /// </summary>
         public MetaData MetaData
         {
             get
@@ -193,7 +196,9 @@ namespace Seal.Model
             set { _metaData = value; }
         }
 
-
+        /// <summary>
+        /// Create a MetaConnection in the source 
+        /// </summary>
         public MetaConnection AddConnection()
         {
             MetaConnection result = MetaConnection.Create(this);
@@ -205,12 +210,18 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Remove a MetaConnection from the source
+        /// </summary>
         public void RemoveConnection(MetaConnection item)
         {
             if (Connection == item) throw new Exception("This connection is used as the current connection and cannot be removed.");
             Connections.Remove(item);
         }
 
+        /// <summary>
+        /// Add a MetaTable in the source
+        /// </summary>
         public MetaTable AddTable(bool forReport)
         {
             MetaTable result = MetaTable.Create();
@@ -222,6 +233,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Remove a MetaTable from the source
+        /// </summary>
         public void RemoveTable(MetaTable item)
         {
             //remove joins related
@@ -229,6 +243,9 @@ namespace Seal.Model
             MetaData.Tables.Remove(item);
         }
 
+        /// <summary>
+        /// Add a MetaColumn in a MetaTable
+        /// </summary>
         public MetaColumn AddColumn(MetaTable table)
         {
             MetaColumn result = MetaColumn.Create("ColumnName");
@@ -241,6 +258,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Add a MetaJoin to the MetaData
+        /// </summary>
         public MetaJoin AddJoin()
         {
             MetaJoin result = MetaJoin.Create();
@@ -251,11 +271,17 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Remove a MetaJoin from the MetaData
+        /// </summary>
         public void RemoveJoin(MetaJoin item)
         {
             MetaData.Joins.Remove(item);
         }
 
+        /// <summary>
+        /// Add a MetaEnum to the MetaData
+        /// </summary>
         public MetaEnum AddEnum()
         {
             MetaEnum result = MetaEnum.Create();
@@ -266,6 +292,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Helper to create a MetaEnum for a given MetaColumn
+        /// </summary>
         public MetaEnum CreateEnumFromColumn(MetaColumn column)
         {
             MetaEnum result = AddEnum();
@@ -289,6 +318,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Remove a MetaEnum from the MetaData
+        /// </summary>
         public void RemoveEnum(MetaEnum item)
         {
             //Clean up enum references from columns
@@ -302,6 +334,9 @@ namespace Seal.Model
             MetaData.Enums.Remove(item);
         }
 
+        /// <summary>
+        /// Init all object references
+        /// </summary>
         public void InitReferences(Repository repository)
         {
             Repository = repository;
@@ -329,7 +364,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Add a default MetaConnection to the source
+        /// </summary>
         public void AddDefaultConnection(Repository repository)
         {
             if (Connections.Count == 0)
@@ -342,6 +379,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Create a basic MetaSource
+        /// </summary>
         static public MetaSource Create(Repository repository)
         {
             MetaSource result = new MetaSource() { GUID = Guid.NewGuid().ToString(), Name = "Data Source", Repository = repository };
@@ -349,6 +389,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Load the MetaSource from a file
+        /// </summary>
         static public MetaSource LoadFromFile(string path, Repository repository)
         {
             MetaSource result = null;
@@ -359,7 +402,7 @@ namespace Seal.Model
                 {
                     result = (MetaSource)serializer.Deserialize(xr);
                 }
-                result.Name = Path.GetFileNameWithoutExtension(path); 
+                result.Name = Path.GetFileNameWithoutExtension(path);
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);
                 result.InitReferences(repository);
@@ -371,11 +414,18 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Save to the current file
+        /// </summary>
         public void SaveToFile()
         {
             SaveToFile(FilePath);
         }
 
+        /// <summary>
+        /// Save to a file
+        /// </summary>
+        /// <param name="path"></param>
         public void SaveToFile(string path)
         {
             //Check last modification
@@ -398,13 +448,10 @@ namespace Seal.Model
             LastModification = File.GetLastWriteTime(path);
         }
 
-        public static string RefreshEnums(string path, Repository repository)
-        {
-            string result = "";
 
-            return result;
-        }
-
+        /// <summary>
+        /// Refresh all tables having dynamic columns and needed a refresh 
+        /// </summary>
         public void Refresh()
         {
             if (_metaData == null) _metaData = new MetaData();
@@ -414,7 +461,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Check a SQL statement, the check includes also all the Pre/Post SQL statements defined.
+        /// </summary>
         public string CheckSQL(string sql, List<MetaTable> tables, ReportModel model, bool isPrePost)
         {
             string result = "", finalSQL = "";
@@ -423,7 +472,7 @@ namespace Seal.Model
                 try
                 {
                     DbConnection connection = (model != null ? model.Connection.GetOpenConnection() : GetOpenConnection());
-                    Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(PreSQL, model), this, this.IgnorePrePostError); 
+                    Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(PreSQL, model), this, this.IgnorePrePostError);
                     if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(table.PreSQL, model), table, table.IgnorePrePostError);
                     if (!isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PreSQL, model), model, model.IgnorePrePostError);
                     var command = connection.CreateCommand();
@@ -445,12 +494,18 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Returns an open DbConnection
+        /// </summary>
         public DbConnection GetOpenConnection()
         {
             if (Connection == null) throw new Exception("No connection defined for this source. Please configure the database connection");
             return Connection.GetOpenConnection();
         }
 
+        /// <summary>
+        /// Fill a list of columns from a table catalog
+        /// </summary>
         public void AddColumnsFromCatalog(List<MetaColumn> columns, DbConnection connection, MetaTable table)
         {
             if (table.Name == null) throw new Exception("No table name has been defined...");
@@ -469,7 +524,7 @@ namespace Seal.Model
             foreach (DataRow row in schemaColumns.Rows)
             {
                 try
-                {                    
+                {
                     string tableName = (!string.IsNullOrEmpty(table.AliasName) ? table.AliasName : Helper.DBNameToDisplayName(row["TABLE_NAME"].ToString().Trim()));
                     MetaColumn column = MetaColumn.Create(tableName + "." + GetColumnName(row["COLUMN_NAME"].ToString()));
                     column.DisplayName = table.KeepColumnNames ? row["COLUMN_NAME"].ToString().Trim() : Helper.DBNameToDisplayName(row["COLUMN_NAME"].ToString().Trim());
@@ -506,16 +561,22 @@ namespace Seal.Model
             return new string[] { "" };
         }
 
+        /// <summary>
+        /// Returns a full table name from a raw name
+        /// </summary>
         public string GetTableName(string rawName)
         {
             string delimiters = getDelimiters(Connection.DatabaseType);
             var keywords = getKeywords(Connection.DatabaseType);
-            if ( (!rawName.StartsWith(delimiters[0].ToString()) && !rawName.EndsWith(delimiters[1].ToString()) && rawName.IndexOfAny(" '\"-$-".ToCharArray()) != -1) 
+            if ((!rawName.StartsWith(delimiters[0].ToString()) && !rawName.EndsWith(delimiters[1].ToString()) && rawName.IndexOfAny(" '\"-$-".ToCharArray()) != -1)
                 || keywords.Contains(rawName.ToUpper()))
                 return string.Format("{0}{1}{2}", delimiters[0], rawName, delimiters[1]);
             return rawName;
         }
 
+        /// <summary>
+        /// Returns a full column name from a raw name
+        /// </summary>
         public string GetColumnName(string rawName)
         {
             string delimiters = getDelimiters(Connection.DatabaseType);
@@ -528,23 +589,19 @@ namespace Seal.Model
 
         #region Helpers
 
-        string _information;
+        /// <summary>
+        /// Last information message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(8, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
-        public string Information
-        {
-            get { return _information; }
-            set { _information = value; }
-        }
+        public string Information { get; set; }
 
-        string _error;
+        /// <summary>
+        /// Last error message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(9, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
-        public string Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public string Error { get; set; }
 
         #endregion
 

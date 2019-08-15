@@ -630,7 +630,7 @@ namespace Seal.Forms
         
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
-            if (context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
+            if (context != null && context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
             return UITypeEditorEditStyle.Modal;
         }
 

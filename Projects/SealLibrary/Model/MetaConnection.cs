@@ -21,9 +21,14 @@ using System.Data;
 
 namespace Seal.Model
 {
-
+    /// <summary>
+    /// A MetaConnection defines a connection to a database
+    /// </summary>
     public class MetaConnection : RootComponent
     {
+        /// <summary>
+        /// Current MetaSource
+        /// </summary>
         [XmlIgnore]
         public MetaSource Source = null;
 
@@ -56,18 +61,24 @@ namespace Seal.Model
                 GetProperty("HelperCheckConnection").SetIsReadOnly(true);
                 if (IsEditable) GetProperty("HelperCreateFromExcelAccess").SetIsReadOnly(true);
 
-                GetProperty("DateTimeFormat").SetIsReadOnly(!IsEditable || _databaseType == DatabaseType.MSAccess || _databaseType == DatabaseType.MSExcel);
+                GetProperty("DateTimeFormat").SetIsReadOnly(!IsEditable || DatabaseType == DatabaseType.MSAccess || DatabaseType == DatabaseType.MSExcel);
 
                 TypeDescriptor.Refresh(this);
             }
         }
         #endregion
 
+        /// <summary>
+        /// Create a basic connection into a source
+        /// </summary>
         public static MetaConnection Create(MetaSource source)
         {
             return new MetaConnection() { Name = "connection", GUID = Guid.NewGuid().ToString(), Source = source };
         }
 
+        /// <summary>
+        /// The name of the connection
+        /// </summary>
         [DefaultValue(null)]
         [DisplayName("Name"), Description("The name of the connection."), Category("Definition"), Id(1, 1)]
         public override string Name
@@ -76,52 +87,56 @@ namespace Seal.Model
             set { _name = value; }
         }
 
-        private DatabaseType _databaseType = DatabaseType.Standard;
+        /// <summary>
+        /// The type of the source database
+        /// </summary>
         [DefaultValue(DatabaseType.Standard)]
         [DisplayName("Database type"), Description("The type of the source database."), Category("Definition"), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
-        public DatabaseType DatabaseType
-        {
-            get { return _databaseType; }
-            set { _databaseType = value; }
-        }
+        public DatabaseType DatabaseType { get; set; } = DatabaseType.Standard;
 
-        private string _connectionString;
+        /// <summary>
+        /// OLEDB Connection string used to connect to the database
+        /// </summary>
         [DefaultValue(null)]
         [DisplayName("Connection string"), Description("OLEDB Connection string used to connect to the database. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(3, 1)]
         [Editor(typeof(ConnectionStringEditor), typeof(UITypeEditor))]
-        public string ConnectionString
-        {
-            get { return _connectionString; }
-            set { _connectionString = value; }
-        }
+        public string ConnectionString { get; set; }
 
+
+        /// <summary>
+        /// Property Helper for editor
+        /// </summary>
         [DefaultValue(null)]
         [DisplayName("Connection string"), Description("OLEDB Connection string used to connect to the database."), Category("Definition"), Id(3, 1)]
         [XmlIgnore]
         public string ConnectionString2
         {
-            get { return _connectionString; }
+            get { return ConnectionString; }
         }
 
-        private string _dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        /// <summary>
+        /// The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates).
+        /// </summary>
         [DefaultValue("yyyy-MM-dd HH:mm:ss")]
         [DisplayName("Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(4, 1)]
-        public string DateTimeFormat
-        {
-            get { return _dateTimeFormat; }
-            set { _dateTimeFormat = value; }
-        }
+        public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
 
+        /// <summary>
+        /// Full Connection String with user name and password
+        /// </summary>
         [Browsable(false)]
         public string FullConnectionString
         {
             get {
-                string result = Helper.GetOleDbConnectionString(_connectionString, _userName, ClearPassword);
+                string result = Helper.GetOleDbConnectionString(ConnectionString, UserName, ClearPassword);
                 return Source.Repository.ReplaceRepositoryKeyword(result); 
             }
         }
 
+        /// <summary>
+        /// SQLServer Connection String
+        /// </summary>
         public string SQLServerConnectionString
         {
             get
@@ -133,22 +148,21 @@ namespace Seal.Model
             }
         }
 
-        private string _userName;
+        /// <summary>
+        /// User name used to connect to the database
+        /// </summary>
         [DisplayName("User name"), Description("User name used to connect to the database."), Category("Security"), Id(1, 2)]
-        public string UserName
-        {
-            get { return _userName; }
-            set { _userName = value; }
-        }
+        public string UserName { get; set; }
 
-        private string _password;
-        public string Password
-        {
-            get { return _password; }
-            set { _password = value; }
-        }
-        public bool ShouldSerializePassword() { return !string.IsNullOrEmpty(_password); }
+        /// <summary>
+        /// Password
+        /// </summary>
+        public string Password { get; set; }
+        public bool ShouldSerializePassword() { return !string.IsNullOrEmpty(Password); }
 
+        /// <summary>
+        /// Password in clear text
+        /// </summary>
         [DisplayName("User password"), PasswordPropertyText(true), Description("Password used to connect to the database."), Category("Security"), Id(2, 2)]
         [XmlIgnore]
         public string ClearPassword
@@ -156,30 +170,32 @@ namespace Seal.Model
             get {
                 try
                 {
-                    return CryptoHelper.DecryptTripleDES(_password, PasswordKey);
+                    return CryptoHelper.DecryptTripleDES(Password, PasswordKey);
                 }
                 catch (Exception ex)
                 {
-                    _error = "Error during password decryption:" + ex.Message;
+                    Error = "Error during password decryption:" + ex.Message;
                     TypeDescriptor.Refresh(this);
-                    return _password;
+                    return Password;
                 }
             }
             set {
                 try
                 {
-                    _password = CryptoHelper.EncryptTripleDES(value, PasswordKey);
+                    Password = CryptoHelper.EncryptTripleDES(value, PasswordKey);
                 }
                 catch(Exception ex)
                 {
-                    _error = "Error during password encryption:" + ex.Message;
+                    Error = "Error during password encryption:" + ex.Message;
                     TypeDescriptor.Refresh(this);
-                    _password = value;
+                    Password = value;
                 }
             }
         }
 
-        
+        /// <summary>
+        /// True if the connection is editable
+        /// </summary>
         [XmlIgnore]
         public bool IsEditable = true;
 
@@ -192,6 +208,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Returns an open DbConnection object
+        /// </summary>
         public DbConnection GetOpenConnection()
         {
             try
@@ -217,30 +236,35 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Check the current connection
+        /// </summary>
         public void CheckConnection()
         {
             Cursor.Current = Cursors.WaitCursor;
-            _error = "";
-            _information = "";
+            Error = "";
+            Information = "";
             try
             {
                 DbConnection connection = DbConnection;
                 connection.Open();
                 connection.Close();
-                _information = "Database connection checked successfully.";
+                Information = "Database connection checked successfully.";
             }
             catch (Exception ex)
             {
-                _error = ex.Message;
-                _information = "Error got when checking the connection.";
+                Error = ex.Message;
+                Information = "Error got when checking the connection.";
             }
-            _information = Helper.FormatMessage(_information);
+            Information = Helper.FormatMessage(Information);
             UpdateEditorAttributes();
             Cursor.Current = Cursors.Default;
         }
 
         #region Helpers
-
+        /// <summary>
+        /// Editor Helper: Check the database connection
+        /// </summary>
         [Category("Helpers"), DisplayName("Check connection"), Description("Check the database connection."), Id(1, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCheckConnection
@@ -248,29 +272,29 @@ namespace Seal.Model
             get { return "<Click to check database connection>"; }
         }
 
+        /// <summary>
+        /// Editor Helper: Helper to create a connection string to query an Excel workbook or a MS Access database
+        /// </summary>
         [Category("Helpers"), DisplayName("Create connection from Excel or MS Access"), Description("Helper to create a connection string to query an Excel workbook or a MS Access database."), Id(1, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCreateFromExcelAccess
         {
             get { return "<Click to create a connection from an Excel or a MS Access file>"; }
         }
-        string _information;
+
+        /// <summary>
+        /// Last information message when the enum list has been refreshed
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message when the enum list has been refreshed."), Id(2, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
-        public string Information
-        {
-            get { return _information; }
-            set { _information = value; }
-        }
+        public string Information { get; set; }
 
-        string _error;
+        /// <summary>
+        /// Last error message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(3, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
-        public string Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public string Error { get; set; }
 
         #endregion
     }
