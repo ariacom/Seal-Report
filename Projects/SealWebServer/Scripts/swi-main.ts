@@ -629,6 +629,15 @@ class SWIMain {
         $(".report-checkbox").on("click", function () {
             _main.enableControls();
         });
+        
+        $('#file-table').on('page.dt', function () {
+            setTimeout(function () {
+                $(".report-checkbox").on("click", function () {
+                    _main.enableControls();
+                });
+            }, 200);
+        });
+
 
         _main.enableControls();
     }
