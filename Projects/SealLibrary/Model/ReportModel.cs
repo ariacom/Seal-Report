@@ -26,7 +26,7 @@ using System.IO;
 namespace Seal.Model
 {
     /// <summary>
-    /// A model defines how to generate the Result Set (Data Table) and Series from the database.
+    /// A ReportModel defines how to generate the Result Set (Data Table) and Series from the database.
     /// </summary>
     public class ReportModel : ReportComponent
     {

@@ -16,6 +16,9 @@ using System.ComponentModel.Design;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A ReportOutput defines the execution of a report on an OutputDevice (Folder or Email)
+    /// </summary>
     public class ReportOutput : ReportComponent
     {
         #region Editor
@@ -77,16 +80,21 @@ namespace Seal.Model
         }
         #endregion
 
-
+        /// <summary>
+        /// Basic creation
+        /// </summary>
         public static ReportOutput Create()
         {
             return new ReportOutput() { GUID = Guid.NewGuid().ToString() };
         }
 
+        /// <summary>
+        /// Init all references
+        /// </summary>
         public void InitReferences()
         {
-            var initialParameters  = _viewParameters.Where(i=>i.CustomValue).ToList();
-            _viewParameters.Clear();
+            var initialParameters  = ViewParameters.Where(i=>i.CustomValue).ToList();
+            ViewParameters.Clear();
             if (Report != null && View != null)
             {
                 foreach (var configParameter in View.Template.Parameters)
@@ -94,7 +102,7 @@ namespace Seal.Model
                     OutputParameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
                     if (parameter == null) parameter = new OutputParameter() { Name = configParameter.Name, Value = configParameter.Value };
                     else parameter.CustomValue = true;
-                    _viewParameters.Add(parameter);
+                    ViewParameters.Add(parameter);
                     parameter.Enums = configParameter.Enums;
                     parameter.Description = configParameter.Description;
                     parameter.Type = configParameter.Type;
@@ -108,6 +116,9 @@ namespace Seal.Model
         }
 
         private string _outputDeviceGUID;
+        /// <summary>
+        /// Identifier of the output device used by the output
+        /// </summary>
         public string OutputDeviceGUID
         {
             get
@@ -119,6 +130,9 @@ namespace Seal.Model
             set { _outputDeviceGUID = value; }
         }
 
+        /// <summary>
+        /// The device used by this output
+        /// </summary>
         [XmlIgnore]
         [Category("Definition"), DisplayName("Output device"), Description("The device used by this output."), Id(1, 1)]
         public string DeviceName
@@ -129,131 +143,101 @@ namespace Seal.Model
             }
         }
 
-        bool _cancelIfNoRecords = false;
+        /// <summary>
+        /// If the models of the report do not have any record, the output generation is cancelled
+        /// </summary>
         [DefaultValue(false)]
         [Category("Definition"), DisplayName("Cancel generation if no records"), Description("If the models of the report do not have any record, the output generation is cancelled."), Id(3, 1)]
-        public bool CancelIfNoRecords
-        {
-            get { return _cancelIfNoRecords; }
-            set { _cancelIfNoRecords = value; }
-        }
+        public bool CancelIfNoRecords { get; set; } = false;
 
-
-        string _preScript;
+        /// <summary>
+        /// Optional Razor script executed before the generation. If the script returns 0, the generation is aborted.
+        /// </summary>
         [Category("Definition"), DisplayName("Pre-generation script"), Description("Optional Razor script executed before the generation. If the script returns 0, the generation is aborted."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string PreScript
-        {
-            get { return _preScript; }
-            set { _preScript = value; }
-        }
+        public string PreScript { get; set; }
 
-        string _postScript;
+        /// <summary>
+        /// Optional Razor script executed after the generation
+        /// </summary>
         [Category("Definition"), DisplayName("Post-generation script"), Description("Optional Razor script executed after the generation."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string PostScript
-        {
-            get { return _postScript; }
-            set { _postScript = value; }
-        }
+        public string PostScript { get; set; }
 
-        List<OutputParameter> _viewParameters = new List<OutputParameter>();
+        /// <summary>
+        /// Custom parameters used for the Root View when the output is executed
+        /// </summary>
         [Category("Definition"), DisplayName("Custom view parameters"), Description("Custom parameters used for the Root View when the output is executed."), Id(6, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<OutputParameter> ViewParameters
-        {
-            get {
-                return _viewParameters;
-            }
-            set {
-                _viewParameters = value;
-            }
-        }
-        public bool ShouldSerializeViewParameters() { return _viewParameters.Count > 0; }
+        public List<OutputParameter> ViewParameters { get; set; } = new List<OutputParameter>();
+        public bool ShouldSerializeViewParameters() { return ViewParameters.Count > 0; }
 
-        private string _viewGUID;
+        /// <summary>
+        /// The view used to execute the report output
+        /// </summary>
         [Category("Definition"), DisplayName("View name"), Description("The view used to execute the report output."), Id(2, 1)]
         [TypeConverter(typeof(ReportViewConverter))]
-        public string ViewGUID
-        {
-            get { return _viewGUID; }
-            set { _viewGUID = value; }
-        }
+        public string ViewGUID { get; set; }
 
-
-        string _folderPath;
+        /// <summary>
+        /// Path of the folder used to generate the report result.
+        /// </summary>
         [Category("Folder"), DisplayName("Folder path"), Description("Path of the folder used to generate the report result. The path can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Id(2, 2)]
         [TypeConverter(typeof(RepositoryFolderConverter))]
-        public string FolderPath
-        {
-            get { return _folderPath; }
-            set { _folderPath = value; }
-        }
+        public string FolderPath { get; set; }
 
-
-        private string _fileName;
+        /// <summary>
+        /// The name of the file used to generate the report result
+        /// </summary>
         [Category("Folder"), DisplayName("File name"), Description("The name of the file used to generate the report result. The file name can be formatted with the execution date time and can contain the keyword " + Repository.SealReportDisplayNameKeyword + " to specify the current report display name."), Id(3, 2)]
         [TypeConverter(typeof(CustomFormatConverter))]
-        public string FileName
-        {
-            get { return _fileName; }
-            set { _fileName = value; }
-        }
+        public string FileName { get; set; }
 
-        private string _emailTo;
+        /// <summary>
+        /// The destination (To) email addresses used for the email. One per line or separated by semi-column.
+        /// </summary>
         [Category("Email Addresses"), DisplayName("TO"), Description("The destination (To) email addresses used for the email. One per line or separated by semi-column."), Id(2, 2)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string EmailTo
-        {
-            get { return _emailTo; }
-            set { _emailTo = value; }
-        }
+        public string EmailTo { get; set; }
 
-        private string _emailCC;
+        /// <summary>
+        /// The email CC (Carbon Copy) addresses used for the email. One per line or separated by semi-column.
+        /// </summary>
         [Category("Email Addresses"), DisplayName("CC"), Description("The email CC (Carbon Copy) addresses used for the email. One per line or separated by semi-column."), Id(3, 2)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string EmailCC
-        {
-            get { return _emailCC; }
-            set { _emailCC = value; }
-        }
+        public string EmailCC { get; set; }
 
-        private string _emailBCC;
+        /// <summary>
+        /// The email BCC (Blind Carbon Copy) addresses used for the email. One per line or separated by semi-column.
+        /// </summary>
         [Category("Email Addresses"), DisplayName("BCC"), Description("The email BCC (Blind Carbon Copy) addresses used for the email. One per line or separated by semi-column."), Id(4, 2)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string EmailBCC
-        {
-            get { return _emailBCC; }
-            set { _emailBCC = value; }
-        }
+        public string EmailBCC { get; set; }
 
-        private string _emailFrom;
+        /// <summary>
+        /// The email address of the sender (From). If empty, the sender email address defined in the device is used. Make sure that the SMTP server allows the new address.
+        /// </summary>
         [Category("Email Addresses"), DisplayName("Sender"), Description("The email address of the sender (From). If empty, the sender email address defined in the device is used. Make sure that the SMTP server allows the new address."), Id(11, 2)]
-        public string EmailFrom
-        {
-            get { return _emailFrom; }
-            set { _emailFrom = value; }
-        }
+        public string EmailFrom { get; set; }
 
-        private string _emailReplyTo;
+        /// <summary>
+        /// The reply addresses used for the email. One per line or separated by semi-column. If empty, the reply addresses defined in the device are used.
+        /// </summary>
         [Category("Email Addresses"), DisplayName("Reply"), Description("The reply addresses used for the email. One per line or separated by semi-column. If empty, the reply addresses defined in the device are used."), Id(12, 2)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string EmailReplyTo
-        {
-            get { return _emailReplyTo; }
-            set { _emailReplyTo = value; }
-        }
+        public string EmailReplyTo { get; set; }
 
-        private string _emailSubject;
+        /// <summary>
+        /// The subject of the email sent. If empty, the report name is used.
+        /// </summary>
         [Category("Email Subject"), DisplayName("Subject"), Description("The subject of the email sent. If empty, the report name is used."), Id(2, 3)]
-        public string EmailSubject
-        {
-            get { return _emailSubject; }
-            set { _emailSubject = value; }
-        }
+        public string EmailSubject { get; set; }
 
 
         private bool _emailHtmlBody = false;
+        /// <summary>
+        /// If true, the report result is copied in the email body message
+        /// </summary>
         [DefaultValue(false)]
         [Category("Email Body"), DisplayName("Use HTML result for email body"), Description("If true, the report result is copied in the email body message."), Id(2, 4)]
         public bool EmailHtmlBody
@@ -263,6 +247,9 @@ namespace Seal.Model
         }
 
         private bool _emailMessagesInBody = false;
+        /// <summary>
+        /// If true, the report execution messages are copied in the email body message
+        /// </summary>
         [DefaultValue(false)]
         [Category("Email Body"), DisplayName("Use execution messages for email body"), Description("If true, the report execution messages are copied in the email body message."), Id(3, 4)]
         public bool EmailMessagesInBody
@@ -271,16 +258,17 @@ namespace Seal.Model
             set { _emailMessagesInBody = value; UpdateEditorAttributes(); }
         }
 
-        private string _emailBody;
+        /// <summary>
+        /// The body message of the email sent. If empty, a default text is used.
+        /// </summary>
         [Category("Email Body"), DisplayName("Body message"), Description("The body message of the email sent. If empty, a default text is used."), Id(4, 4)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string EmailBody
-        {
-            get { return _emailBody; }
-            set { _emailBody = value; }
-        }
+        public string EmailBody { get; set; }
 
         private bool _emailZipAttachments = false;
+        /// <summary>
+        /// If true, the email sent will have an attachement with all files zipped.
+        /// </summary>
         [DefaultValue(false)]
         [Category("Email Attachments"), DisplayName("Zip attachements"), Description("If true, the email sent will have an attachement with all files zipped."), Id(2, 5)]
         public bool EmailZipAttachments
@@ -289,15 +277,16 @@ namespace Seal.Model
             set { _emailZipAttachments = value; UpdateEditorAttributes(); }
         }
 
-        private string _emailZipPassword;
+        /// <summary>
+        /// If not empty, the Zip file attached will be protected with the password
+        /// </summary>
         [Category("Email Attachments"), DisplayName("Zip password"), Description("If not empty, the Zip file attached will be protected with the password."), Id(3, 5)]
-        public string EmailZipPassword
-        {
-            get { return _emailZipPassword; }
-            set { _emailZipPassword = value; }
-        }
+        public string EmailZipPassword { get; set; }
 
         private bool _emailSkipAttachments = false;
+        /// <summary>
+        /// If true, the email sent will have no attachement. This may be useful if the report has only tasks.
+        /// </summary>
         [DefaultValue(false)]
         [Category("Email Attachments"), DisplayName("Skip attachements"), Description("If true, the email sent will have no attachement. This may be useful if the report has only tasks."), Id(4, 5)]
         public bool EmailSkipAttachments
@@ -306,51 +295,43 @@ namespace Seal.Model
             set { _emailSkipAttachments = value; UpdateEditorAttributes(); }
         }
 
-        private string _userName;
+        /// <summary>
+        /// If not empty, the output is generated with a security context having the name specified.
+        /// </summary>
         [Category("Security and Publication"), DisplayName("User name"), Description("If not empty, the output is generated with a security context having the name specified."), Id(1, 6)]
-        public string UserName
-        {
-            get { return _userName; }
-            set { _userName = value; }
-        }
+        public string UserName { get; set; }
 
-        private string _userGroups;
+        /// <summary>
+        /// If not empty, the output is generated with a security context having the groups specified. One group name per line or separated by semi-column.
+        /// </summary>
         [Category("Security and Publication"), DisplayName("User groups"), Description("If not empty, the output is generated with a security context having the groups specified. One group name per line or separated by semi-column."), Id(2, 6)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string UserGroups
-        {
-            get { return _userGroups; }
-            set { _userGroups = value; }
-        }
+        public string UserGroups { get; set; }
 
-        string _userCulture;
+        /// <summary>
+        /// The culture used to generate the report. If empty, the culture from the groups is used, then the default culture.
+        /// </summary>
         [Category("Security and Publication"), DisplayName("Culture"), Description("The culture used to generate the report. If empty, the culture from the groups is used, then the default culture."), Id(3, 6)]
         [TypeConverter(typeof(Converter.CultureInfoConverter))]
-        public string UserCulture
-        {
-            get { return _userCulture; }
-            set { _userCulture = value; }
-        }
+        public string UserCulture { get; set; }
 
-        private bool _publicExec = true;
+        /// <summary>
+        /// For the Web Report Server: If true, the output can be executed by all users having the execute right on the report. If false, only the user owner can execute the schedule.
+        /// </summary>
         [DefaultValue(true)]
         [Category("Security and Publication"), DisplayName("Public Execution"), Description("For the Web Report Server: If true, the output can be executed by all users having the execute right on the report. If false, only the user owner can execute the schedule."), Id(4, 6)]
-        public bool PublicExec
-        {
-            get { return _publicExec; }
-            set { _publicExec = value; }
-        }
+        public bool PublicExec { get; set; } = true;
 
-        private bool _publicEdit = true;
+        /// <summary>
+        /// For the Web Report Server Designer: If true, the output and shedule can be edited by all users having the schedule right on the report. If false, only the user owner can edit the schedule.
+        /// </summary>
         [DefaultValue(true)]
         [Category("Security and Publication"), DisplayName("Public Edit"), Description("For the Web Report Server Designer: If true, the output and shedule can be edited by all users having the schedule right on the report. If false, only the user owner can edit the schedule."), Id(4, 6)]
-        public bool PublicEdit
-        {
-            get { return _publicEdit; }
-            set { _publicEdit = value; }
-        }
+        public bool PublicEdit { get; set; } = true;
 
-
+        /// <summary>
+        /// Format of the output
+        /// </summary>
         [XmlIgnore]
         public ReportFormat Format
         {
@@ -368,6 +349,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Current OutputDevice
+        /// </summary>
         [XmlIgnore]
         public OutputDevice Device
         {
@@ -377,12 +361,15 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Current View to execute
+        /// </summary>
         [XmlIgnore]
         public ReportView View
         {
             get
             {
-                if (Report != null) return Report.FindView(Report.Views, _viewGUID);
+                if (Report != null) return Report.FindView(Report.Views, ViewGUID);
                 return null;
             }
         }
@@ -422,6 +409,9 @@ namespace Seal.Model
         }
 
         bool _useCustomRestrictions = false;
+        /// <summary>
+        /// If true, custom restrictions can be defined for this output
+        /// </summary>
         [DefaultValue(false)]
         [Category("Restrictions"), DisplayName("Use Custom restrictions"), Description("If true, custom restrictions can be defined for this output."), Id(2, 6)]
         public bool UseCustomRestrictions
@@ -435,6 +425,9 @@ namespace Seal.Model
         }
 
         List<ReportRestriction> _restrictions = new List<ReportRestriction>();
+        /// <summary>
+        /// Custom restrictions applied to this output
+        /// </summary>
         [Category("Restrictions"), DisplayName("Custom restrictions"), Description("Custom restrictions applied to this output."), Id(3, 6)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<ReportRestriction> Restrictions
@@ -449,35 +442,37 @@ namespace Seal.Model
         public bool ShouldSerializeRestrictions() { return _restrictions.Count > 0; }
 
         #region Helpers
-        string _information;
+        /// <summary>
+        /// Last information message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(2, 20)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
-        public string Information
-        {
-            get { return _information; }
-            set { _information = value; }
-        }
+        public string Information { get; set; }
 
-        string _error;
+        /// <summary>
+        /// Last error message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(3, 20)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
-        public string Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public string Error { get; set; }
 
 
         //Temporary variables to help for report serialization...
         private List<OutputParameter> _tempParameters;
 
+        /// <summary>
+        /// Function called before the serialization
+        /// </summary>
         public void BeforeSerialization()
         {
-            _tempParameters = _viewParameters.ToList();
+            _tempParameters = ViewParameters.ToList();
             //Remove parameters not used
-            _viewParameters.RemoveAll(i => !i.CustomValue);
+            ViewParameters.RemoveAll(i => !i.CustomValue);
         }
 
+        /// <summary>
+        /// Copy the cirrent parameter values to a paramter list
+        /// </summary>
         public void CopyParameters(List<Parameter> destination)
         {
             foreach (var parameter in ViewParameters.Where(i => i.CustomValue))
@@ -487,10 +482,12 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Function called after the serialization
+        /// </summary>
         public void AfterSerialization()
         {
-            _viewParameters = _tempParameters;
+            ViewParameters = _tempParameters;
         }
 
 

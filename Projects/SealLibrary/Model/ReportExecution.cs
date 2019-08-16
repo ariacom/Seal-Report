@@ -18,6 +18,9 @@ using System.Text;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Main worker class that handles a report execution and rendering.
+    /// </summary>
     public class ReportExecution
     {
         //Actions Keywords...
@@ -62,11 +65,21 @@ namespace Seal.Model
         public const string HtmlId_filter_enumload = "filter_enumload";
         public const string HtmlId_parameter_enumload = "parameter_enumload";
 
+        /// <summary>
+        /// Current report being executed
+        /// </summary>
         public Report Report = null;
+
+        /// <summary>
+        /// Root report when navigation has occured
+        /// </summary>
         public Report RootReport = null;
 
         Thread _executeThread;
 
+        /// <summary>
+        /// Render the report and returns the result
+        /// </summary>
         public string Render()
         {
             //Render report
@@ -91,6 +104,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Render the report result and convert it if necessary in Excel or PDF format
+        /// </summary>
         public void RenderResult()
         {
             string result = "";
@@ -166,7 +182,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Render only the HTML result for display 
+        /// </summary>
         public void RenderHTMLDisplay()
         {
             Report.Status = ReportStatus.RenderingDisplay;
@@ -180,6 +198,9 @@ namespace Seal.Model
             File.WriteAllText(Report.HTMLDisplayFilePath, result, Encoding.UTF8);
         }
 
+        /// <summary>
+        /// Render the HTML display for the Web Server
+        /// </summary>
         public void RenderHTMLDisplayForViewer()
         {
             string result = Render();
@@ -188,7 +209,9 @@ namespace Seal.Model
             File.WriteAllText(Report.HTMLDisplayFilePath, result, Encoding.UTF8);
         }
 
-
+        /// <summary>
+        /// Execute the current report
+        /// </summary>
         public void Execute()
         {
             Report.ExecutionMessages = "";
@@ -286,6 +309,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Add an execution error
+        /// </summary>
         public void SetError(string error, params object[] args)
         {
             //strings are supposed to be thread-safe...
@@ -321,7 +347,7 @@ namespace Seal.Model
         }
 
 
-        public static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired)
+        private static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired)
         {
             string dateMessage = report.Translate("Use the date format '{0}' or one of the following keywords:", report.CultureInfo.DateTimeFormat.ShortDatePattern) + " " + report.DateKeywordsList;
 
@@ -463,7 +489,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Check the current input restriction values
+        /// </summary>
         public void CheckInputRestrictions()
         {
             try

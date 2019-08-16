@@ -7,10 +7,19 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// OutputFolderDevice is an implementation of device that save the report result to a file. 
+    /// </summary>
     public class OutputFolderDevice : OutputDevice
     {
+        /// <summary>
+        /// Default device identifier
+        /// </summary>
         public static string DefaultGUID = "c428a6ba-061b-4a47-b9bc-f3f02442ab4b";
 
+        /// <summary>
+        /// Create a basic OutputFolderDevice
+        /// </summary>
         static public OutputFolderDevice Create()
         {
             OutputFolderDevice result = new OutputFolderDevice() { GUID = DefaultGUID };
@@ -18,13 +27,18 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Full name
+        /// </summary>
         [XmlIgnore]
         public override string FullName
         {
             get { return "Folder Device"; }
         }
 
-
+        /// <summary>
+        /// Check that the report result has been saved and set information
+        /// </summary>
         public override string Process(Report report)
         {
             ReportOutput output = report.OutputToExecute;
@@ -34,21 +48,27 @@ namespace Seal.Model
             return string.Format("Report result generated in '{0}'", report.DisplayResultFilePath);
         }
 
-
+        /// <summary>
+        /// Dummy function
+        /// </summary>
         public override void SaveToFile()
         {
             throw new Exception("No need so far...");
         }
 
+        /// <summary>
+        /// Dummy function
+        /// </summary>
         public override void SaveToFile(string path)
         {
             throw new Exception("No need so far...");
         }
 
-
+        /// <summary>
+        /// Dummy function
+        /// </summary>
         public override void Validate()
         {
         }
-
     }
 }

@@ -12,6 +12,9 @@ using System.Linq;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Parameters are used to configure report templates, outputs and repository security
+    /// </summary>
     public class Parameter : RootComponent
     {
         public const string ReportFormatParameter = "report_format";
@@ -61,98 +64,91 @@ namespace Seal.Model
         }
         #endregion
 
-        ViewParameterType _type;
+        /// <summary>
+        /// Paramter type
+        /// </summary>
         [XmlIgnore]
-        public ViewParameterType Type
-        {
-            get { return _type; }
-            set { _type = value; }
-        }
+        public ViewParameterType Type { get; set; }
 
-        bool _useOnlyEnumValues = true;
+        /// <summary>
+        /// If true and the parameter is an enum, only the enum values defined can be selected
+        /// </summary>
         [XmlIgnore]
-        public bool UseOnlyEnumValues
-        {
-            get { return _useOnlyEnumValues; }
-            set { _useOnlyEnumValues = value; }
-        }
+        public bool UseOnlyEnumValues { get; set; } = true;
 
-        string _displayName;
+        /// <summary>
+        /// The parameter display name
+        /// </summary>
         [DisplayName("Name"), Description("The parameter display name."), Category("Definition")]
         [XmlIgnore]
-        public string DisplayName
-        {
-            get { return _displayName; }
-            set { _displayName = value; }
-        }
+        public string DisplayName { get; set; }
 
-        string _description;
+        /// <summary>
+        /// The parameter description
+        /// </summary>
         [DisplayName("Description"), Description("The parameter description."), Category("Helpers")]
         [XmlIgnore]
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
-        }
+        public string Description { get; set; }
 
-        string _value;
+        /// <summary>
+        /// The parameter value
+        /// </summary>
         [DisplayName("Value"), Description("The parameter value."), Category("Definition")]
-        public string Value
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
+        public string Value { get; set; }
 
-        string _editorLanguage = "";
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlIgnore]
-        public string EditorLanguage
-        {
-            get { return _editorLanguage; }
-            set { _editorLanguage = value; }
-        }
+        public string EditorLanguage { get; set; } = "";
 
-
-        string[] _textSamples = null;
+        /// <summary>
+        /// 
+        /// </summary>
         [XmlIgnore]
-        public string[] TextSamples
-        {
-            get { return _textSamples; }
-            set { _textSamples = value; }
-        }
+        public string[] TextSamples { get; set; } = null;
 
+        /// <summary>
+        /// The boolean parameter value
+        /// </summary>
         [DisplayName("Value"), Description("The boolean parameter value."), Category("Definition")]
         [XmlIgnore]
         public bool BoolValue
         {
             get
             {
-                if (string.IsNullOrEmpty(_value) || _type != ViewParameterType.Boolean) return false;
-                return bool.Parse(_value);
+                if (string.IsNullOrEmpty(Value) || Type != ViewParameterType.Boolean) return false;
+                return bool.Parse(Value);
             }
             set
             {
-                _type = ViewParameterType.Boolean;
-                _value = value.ToString();
+                Type = ViewParameterType.Boolean;
+                Value = value.ToString();
             }
         }
 
-
+        /// <summary>
+        /// The numeric parameter value
+        /// </summary>
         [DisplayName("Value"), Description("The numeric parameter value."), Category("Definition")]
         [XmlIgnore]
         public int NumericValue
         {
             get
             {
-                if (string.IsNullOrEmpty(_value) || _type != ViewParameterType.Numeric) return 0;
-                return int.Parse(_value);
+                if (string.IsNullOrEmpty(Value) || Type != ViewParameterType.Numeric) return 0;
+                return int.Parse(Value);
             }
             set
             {
-                _type = ViewParameterType.Numeric;
-                _value = value.ToString();
+                Type = ViewParameterType.Numeric;
+                Value = value.ToString();
             }
         }
 
+        /// <summary>
+        /// The text parameter value
+        /// </summary>
         [XmlIgnore]
         [DisplayName("Value"), Description("The text parameter value."), Category("Definition")]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
@@ -160,28 +156,34 @@ namespace Seal.Model
         {
             get
             {
-                return _value;
+                return Value;
             }
             set
             {
-                _type = ViewParameterType.Text;
-                _value = value;
+                Type = ViewParameterType.Text;
+                Value = value;
             }
         }
 
 
         private string[] _enums = null;
+        /// <summary>
+        /// List of string values if the parameter is an enum. Each enum can have an id and an optional display. 
+        /// </summary>
         [XmlIgnore]
         public string[] Enums
         {
             get { return _enums; }
             set
             {
-                if (value != null) _type = ViewParameterType.Enum;
+                if (value != null) Type = ViewParameterType.Enum;
                 _enums = value;
             }
         }
 
+        /// <summary>
+        /// List of enum values if the parameter is an enum
+        /// </summary>
         [XmlIgnore]
         public string[] EnumValues
         {
@@ -195,6 +197,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// List of enum display values if the parameter is an enum
+        /// </summary>
         [XmlIgnore]
         public string[] EnumDisplays
         {
@@ -208,6 +213,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// The enum parameter value
+        /// </summary>
         [DisplayName("Value"), Description("The parameter value."), Category("Definition")]
         [XmlIgnore]
         [TypeConverter(typeof(ViewParameterEnumConverter))]
@@ -215,17 +223,23 @@ namespace Seal.Model
         {
             get
             {
-                return _value != null && _value.Contains("|") ? _value.Split('|')[0] : _value;
+                return Value != null && Value.Contains("|") ? Value.Split('|')[0] : Value;
             }
             set
             {
-                _value = value;
+                Value = value;
             }
         }
 
+        /// <summary>
+        /// String to store the default configuration value
+        /// </summary>
         [XmlIgnore]
         public string ConfigValue = "";
 
+        /// <summary>
+        /// Default configuration value
+        /// </summary>
         [XmlIgnore]
         public object ConfigObject
         {
@@ -245,6 +259,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Editor Helper: Reset parameter to its default value
+        /// </summary>
         [Category("Helpers"), DisplayName("Reset value"), Description("Reset parameter to its default value.")]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetParameterValue
@@ -252,12 +269,19 @@ namespace Seal.Model
             get { return "<Click to reset to the default value>"; }
         }
 
+        /// <summary>
+        /// For an enum, returns the display text from the value
+        /// </summary>
         public string EnumGetDisplayFromValue(string value)
         {
             int index= EnumValues.ToList().FindIndex(i => i == value);
             if (index >= 0 && index < EnumDisplays.Length) return EnumDisplays[index];
             return value;
         }
+
+        /// <summary>
+        /// For an enum, returns the value from the display text
+        /// </summary>
         public string EnumGetValueFromDisplay(string display)
         {
             int index = EnumDisplays.ToList().FindIndex(i => i == display);
@@ -266,9 +290,15 @@ namespace Seal.Model
         }
     }
 
+    /// <summary>
+    /// OutputParameter are Parameter used for report output
+    /// </summary>
     public class OutputParameter : Parameter
     {
         bool _customValue = false;
+        /// <summary>
+        /// If true, a custom parameter value is used when the report is executed for the output
+        /// </summary>
         [DisplayName("Use custom value"), Description("If true, a custom parameter value is used when the report is executed for the output."), Category("Definition")]
         [DefaultValue(false)]
         public bool CustomValue
@@ -285,8 +315,10 @@ namespace Seal.Model
         }
     }
 
+    /// <summary>
+    /// SecurityParameter are Parameter used to define the security
+    /// </summary>
     public class SecurityParameter : Parameter
     {
     }
-
 }
