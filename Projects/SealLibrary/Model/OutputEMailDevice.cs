@@ -17,6 +17,9 @@ using System.Xml;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// OutputEmailDevice is an implementation of a SMTP Server device to send report result by emails. 
+    /// </summary>
     public class OutputEmailDevice : OutputDevice
     {
         static string PasswordKey = "qdeferlwien?,édl+25.()à,";
@@ -54,6 +57,9 @@ namespace Seal.Model
 
         #endregion
 
+        /// <summary>
+        /// Create a basic OutputEmailDevice
+        /// </summary>
         static public OutputEmailDevice Create()
         {
             OutputEmailDevice result = new OutputEmailDevice() { GUID = Guid.NewGuid().ToString() };
@@ -61,47 +67,48 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Full name
+        /// </summary>
         [XmlIgnore]
         public override string FullName
         {
             get { return string.Format("{0} (EMail)", Name); }
         }
 
+        /// <summary>
+        /// Last modification date time
+        /// </summary>
         [XmlIgnore]
         public DateTime LastModification;
 
-        string _server;
+        /// <summary>
+        /// SMTP Email Server name
+        /// </summary>
         [Category("Definition"), DisplayName("SMTP Server"), Description("SMTP Email Server name."), Id(1, 1)]
-        public string Server
-        {
-            get { return _server; }
-            set { _server = value; }
-        }
+        public string Server { get; set; }
 
-        int _port = 25;
+        /// <summary>
+        /// SMTP Port used to connect to the server
+        /// </summary>
         [Category("Definition"), DisplayName("SMTP Port"), Description("SMTP Port used to connect to the server."), Id(2, 1)]
         [DefaultValue(25)]
-        public int Port
-        {
-            get { return _port; }
-            set { _port = value; }
-        }
+        public int Port { get; set; } = 25;
 
-        string _userName;
+        /// <summary>
+        /// The user name used to connect to the SMTP server
+        /// </summary>
         [Category("Definition"), DisplayName("SMTP User name"), Description("The user name used to connect to the SMTP server"), Id(3, 1)]
-        public string UserName
-        {
-            get { return _userName; }
-            set { _userName = value; }
-        }
+        public string UserName { get; set; }
 
-        private string _password;
-        public string Password
-        {
-            get { return _password; }
-            set { _password = value; }
-        }
+        /// <summary>
+        /// The password
+        /// </summary>
+        public string Password { get; set; }
 
+        /// <summary>
+        /// The clear password used to connect to the SMTP server
+        /// </summary>
         [Category("Definition"), DisplayName("SMTP Password"), Description("The password used to connect to the SMTP server"), PasswordPropertyText(true), Id(4, 1)]
         [XmlIgnore]
         public string ClearPassword
@@ -110,109 +117,94 @@ namespace Seal.Model
             {
                 try
                 {
-                    return CryptoHelper.DecryptTripleDES(_password, PasswordKey);
+                    return CryptoHelper.DecryptTripleDES(Password, PasswordKey);
                 }
                 catch (Exception ex)
                 {
-                    _error = "Error during password decryption:" + ex.Message;
+                    Error = "Error during password decryption:" + ex.Message;
                     TypeDescriptor.Refresh(this);
-                    return _password;
+                    return Password;
                 }
             }
             set
             {
                 try
                 {
-                    _password = CryptoHelper.EncryptTripleDES(value, PasswordKey);
+                    Password = CryptoHelper.EncryptTripleDES(value, PasswordKey);
                 }
                 catch (Exception ex)
                 {
-                    _error = "Error during password encryption:" + ex.Message;
-                    _password = value;
+                    Error = "Error during password encryption:" + ex.Message;
+                    Password = value;
                     TypeDescriptor.Refresh(this);
                 }
             }
         }
 
-        string _senderEmail;
+        /// <summary>
+        /// The sender email address used to send the email
+        /// </summary>
         [Category("Definition"), DisplayName("Sender Email"), Description("The sender email address used to send the email."), Id(5, 1)]
-        public string SenderEmail
-        {
-            get { return _senderEmail; }
-            set { _senderEmail = value; }
-        }
+        public string SenderEmail { get; set; }
 
-        string _replyTo;
+        /// <summary>
+        /// The reply addresses used for the email
+        /// </summary>
         [Category("Definition"), DisplayName("Reply addresses"), Description("The reply addresses used for the email."), Id(6, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string ReplyTo
-        {
-            get { return _replyTo; }
-            set { _replyTo = value; }
-        }
+        public string ReplyTo { get; set; }
 
-
-        SmtpDeliveryMethod _deliveryMethod = SmtpDeliveryMethod.Network;
+        /// <summary>
+        /// Specifies how outgoing email messages will be handled
+        /// </summary>
         [Category("Advanced"), DisplayName("Delivery Method"), Description("Specifies how outgoing email messages will be handled."), Id(1, 2)]
         [DefaultValue(SmtpDeliveryMethod.Network)]
-        public SmtpDeliveryMethod DeliveryMethod
-        {
-            get { return _deliveryMethod; }
-            set { _deliveryMethod = value; }
-        }
+        public SmtpDeliveryMethod DeliveryMethod { get; set; } = SmtpDeliveryMethod.Network;
 
-        bool _enableSsl = false;
+        /// <summary>
+        /// If true, the client uses Secure Socket Layer
+        /// </summary>
         [Category("Advanced"), DisplayName("Enable SSL"), Description("If true, the client uses Secure Socket Layer."), Id(2, 2)]
         [DefaultValue(false)]
-        public bool EnableSsl
-        {
-            get { return _enableSsl; }
-            set { _enableSsl = value; }
-        }
+        public bool EnableSsl { get; set; } = false;
 
-        int _timeout = 100000;
+        /// <summary>
+        /// Amount of time in milli-seconds after which the email is not sent
+        /// </summary>
         [Category("Advanced"), DisplayName("Time out"), Description("Amount of time in milli-seconds after which the email is not sent."), Id(3, 2)]
         [DefaultValue(100000)]
-        public int Timeout
-        {
-            get { return _timeout; }
-            set { _timeout = value; }
-        }
-        bool _useDefaultCredentials = false;
+        public int Timeout { get; set; } = 100000;
+
+        /// <summary>
+        /// If true, the default credentials are used
+        /// </summary>
         [Category("Advanced"), DisplayName("Use Default Credentials"), Description("If true, the default credentials are used."), Id(4, 2)]
         [DefaultValue(false)]
-        public bool UseDefaultCredentials
-        {
-            get { return _useDefaultCredentials; }
-            set { _useDefaultCredentials = value; }
-        }
+        public bool UseDefaultCredentials { get; set; } = false;
 
-        bool _usedForNotification = false;
+        /// <summary>
+        /// If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule)
+        /// </summary>
         [Category("Advanced"), DisplayName("Used for notification"), Description("If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule)"), Id(5, 2)]
         [DefaultValue(false)]
-        public bool UsedForNotification
-        {
-            get { return _usedForNotification; }
-            set { _usedForNotification = value; }
-        }
+        public bool UsedForNotification { get; set; } = false;
 
-        bool _changeSender = true;
+        /// <summary>
+        /// If true, the Email Sender or Reply address can be changed in the Report Designer or the Web Report Designer
+        /// </summary>
         [Category("Advanced"), DisplayName("Allow to change Email Sender or Reply Address"), Description("If true, the Email Sender or Reply address can be changed in the Report Designer or the Web Report Designer."), Id(6, 2)]
         [DefaultValue(true)]
-        public bool ChangeSender
-        {
-            get { return _changeSender; }
-            set { _changeSender = value; }
-        }
+        public bool ChangeSender { get; set; } = true;
 
-        string _emailTo;
+        /// <summary>
+        /// The destination email address used to send the test email
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Email adress for the test"), Description("The destination email address used to send the test email."), Id(1, 10)]
-        public string TestEmailTo
-        {
-            get { return _emailTo; }
-            set { _emailTo = value; }
-        }
+        public string TestEmailTo { get; set; }
 
+        /// <summary>
+        /// Editor Helper: Send a test email with the current configuration
+        /// </summary>
         [Category("Helpers"), DisplayName("Send test Email"), Description("Send a test email with the current configuration."), Id(2, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperTestEmail
@@ -220,25 +212,23 @@ namespace Seal.Model
             get { return "<Click to send a test Email>"; }
         }
 
-        string _information;
-        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message ther column has been checked."), Id(4, 10)]
+        /// <summary>
+        /// Last information message
+        /// </summary>
+        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(4, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
-        public string Information
-        {
-            get { return _information; }
-            set { _information = value; }
-        }
+        public string Information { get; set; }
 
-        string _error;
+        /// <summary>
+        /// Last error message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(5, 10)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
-        public string Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public string Error { get; set; }
 
-
+        /// <summary>
+        /// Load an OutputEmailDevice from a file
+        /// </summary>
         static public OutputDevice LoadFromFile(string path, bool ignoreException)
         {
             OutputEmailDevice result = null;
@@ -260,12 +250,17 @@ namespace Seal.Model
             return result;
         }
 
-
+        /// <summary>
+        /// Save to current file
+        /// </summary>
         public override void SaveToFile()
         {
             SaveToFile(FilePath);
         }
 
+        /// <summary>
+        /// Save to a file
+        /// </summary>
         public override void SaveToFile(string path)
         {
             //Check last modification
@@ -290,13 +285,18 @@ namespace Seal.Model
             LastModification = File.GetLastWriteTime(path);
         }
 
-
+        /// <summary>
+        /// Validate the device
+        /// </summary>
         public override void Validate()
         {
             if (string.IsNullOrEmpty(Server)) throw new Exception("The SMTP Server cannot be empty for an Email device.");
             if (string.IsNullOrEmpty(SenderEmail)) throw new Exception("The Email Sender cannot be empty for an Email device.");
         }
 
+        /// <summary>
+        /// Add email address to a MailAddressCollection
+        /// </summary>
         public void AddEmailAddresses(MailAddressCollection collection, string input)
         {
             if (!string.IsNullOrEmpty(input))
@@ -309,6 +309,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Send the report result by email using the device configuration
+        /// </summary>
         public override string Process(Report report)
         {
             ReportOutput output = report.OutputToExecute;
@@ -367,6 +370,9 @@ namespace Seal.Model
             return string.Format("Email sent to '{0}'", output.EmailTo);
         }
 
+        /// <summary>
+        /// Current SmtpClient
+        /// </summary>
         public SmtpClient SmtpClient
         {
             get
@@ -377,12 +383,15 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Helper to send a test email
+        /// </summary>
         public void SendTestEmail()
         {
             try
             {
-                _error = "";
-                _information = "";
+                Error = "";
+                Information = "";
 
                 if (string.IsNullOrEmpty(TestEmailTo)) throw new Exception("No email address has been specified in the destination email.");
                 if (string.IsNullOrEmpty(SenderEmail)) throw new Exception("No sender email address has been specified.");
@@ -395,13 +404,13 @@ namespace Seal.Model
                 message.Body = "This is a test message.";
                 SmtpClient.Send(message);
 
-                _information = string.Format("A test email has been sent successfully to '{0}'. Please check your inbox...", TestEmailTo);
+                Information = string.Format("A test email has been sent successfully to '{0}'. Please check your inbox...", TestEmailTo);
             }
             catch (Exception ex)
             {
-                _error = ex.Message;
-                if (ex.InnerException != null) _error += " " + ex.InnerException.Message.Trim();
-                _information = "Error got when sending the test Email.";
+                Error = ex.Message;
+                if (ex.InnerException != null) Error += " " + ex.InnerException.Message.Trim();
+                Information = "Error got when sending the test Email.";
             }
         }
     }

@@ -20,7 +20,7 @@ using Seal.Forms;
 namespace Seal.Model
 {
     /// <summary>
-    /// A report restriction is an restriction applied to a report model. A report restriction is a child of a ReportElement.
+    /// A ReportRestriction defines a restriction applied to a report model. A report restriction is a child of a ReportElement.
     /// </summary>
     [ClassResource(BaseName = "DynamicTypeDescriptorApp.Properties.Resources", KeyPrefix = "ReportRestriction_")]
     public class ReportRestriction : ReportElement

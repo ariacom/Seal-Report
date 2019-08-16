@@ -17,7 +17,7 @@ using System.Drawing.Design;
 namespace Seal.Model
 {
     /// <summary>
-    /// A report element is an element to display in a report. A report element is a child of a MetaColumn.
+    /// A report element is a column to display in a report. A report element is a child of a MetaColumn.
     /// </summary>
     [ClassResource(BaseName = "DynamicTypeDescriptorApp.Properties.Resources", KeyPrefix = "ReportElement_")]
     public class ReportElement : MetaColumn
