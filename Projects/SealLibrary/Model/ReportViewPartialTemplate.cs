@@ -11,6 +11,9 @@ using System.Drawing.Design;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A ReportViewPartialTemplate is a partial template of a report view template.
+    /// </summary>
     public class ReportViewPartialTemplate : ReportComponent
     {
         #region Editor
@@ -40,6 +43,9 @@ namespace Seal.Model
         #endregion
 
         bool _useCustom = false;
+        /// <summary>
+        /// If true, the partial template text for can be modified
+        /// </summary>
         [DisplayName("\tUse custom template text"), Description("If true, the partial template text for can be modified."), Category("Definition"), Id(2, 1)]
         [DefaultValue(false)]
         public bool UseCustom
@@ -52,6 +58,9 @@ namespace Seal.Model
         }
 
         string _text;
+        /// <summary>
+        /// The custom template text used instead of the template defined by the partial template
+        /// </summary>
         [DisplayName("Custom template"), Description("The custom template text used instead of the template defined by the partial template."), Category("Definition"), Id(1, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string Text
@@ -63,8 +72,15 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Last modification date time
+        /// </summary>
         [XmlIgnore]
         public DateTime LastTemplateModification = DateTime.Now;
+
+        /// <summary>
+        /// Current view
+        /// </summary>
         [XmlIgnore]
         public ReportView View = null;
     }

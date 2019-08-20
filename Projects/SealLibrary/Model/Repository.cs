@@ -16,6 +16,9 @@ using System.Drawing;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// The Repository class defines all the default values, configurations and security of the application and contains the current MetaSource and OutputDevice objects .
+    /// </summary>
     public class Repository
     {
         public const string SealRootProductName = "Seal";
@@ -39,24 +42,31 @@ namespace Seal.Model
 
         public const string SealWebPublishTemp = "temp";
 
-        string _path;
-        public string RepositoryPath
-        {
-            get { return _path; }
-        }
+        /// <summary>
+        /// Current path
+        /// </summary>
+        public string RepositoryPath { get; private set; }
 
-
+        /// <summary>
+        /// Product version
+        /// </summary>
         public static string ProductVersion
         {
             get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
         }
 
+        /// <summary>
+        /// Product icon
+        /// </summary>
         public static Icon ProductIcon
         {
             get { return Path.GetFileName(Application.ExecutablePath).ToLower() == SealServerManager.ToLower() ? Properties.Resources.serverManager : Properties.Resources.reportDesigner; }
         }
 
         private string _licenseText = null;
+        /// <summary>
+        /// License text
+        /// </summary>
         public string LicenseText
         {
             get
@@ -72,21 +82,21 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// List of MetaSource in the repository
+        /// </summary>
+        public List<MetaSource> Sources { get; private set; } = new List<MetaSource>();
 
-        List<MetaSource> _sources = new List<MetaSource>();
-        public List<MetaSource> Sources
-        {
-            get { return _sources; }
-        }
-
-        List<OutputDevice> _devices = new List<OutputDevice>();
-        public List<OutputDevice> Devices
-        {
-            get { return _devices; }
-        }
+        /// <summary>
+        /// List of OutputDevice in the repository
+        /// </summary>
+        public List<OutputDevice> Devices { get; private set; } = new List<OutputDevice>();
 
 
         CultureInfo _cultureInfo = null;
+        /// <summary>
+        /// Default CultureInfo
+        /// </summary>
         public CultureInfo CultureInfo
         {
             get
@@ -99,6 +109,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Short Date format for MomentJS
+        /// </summary>
         public string MomentJSShortDateFormat
         {
             get
@@ -107,6 +120,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Short Date Time format for MomentJS
+        /// </summary>
         public string MomentJSShortDateTimeFormat
         {
             get
@@ -115,6 +131,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Set culture from a name, returns true if the change is done.
+        /// </summary>
         public bool SetCultureInfo(string cultureName)
         {
             bool result = false;
@@ -136,6 +155,9 @@ namespace Seal.Model
         }
 
         SealServerConfiguration _configuration = null;
+        /// <summary>
+        /// Current configuration
+        /// </summary>
         public SealServerConfiguration Configuration
         {
             get
@@ -157,12 +179,18 @@ namespace Seal.Model
             set { _configuration = value; }
         }
 
+        /// <summary>
+        /// Forces a configuration relaod
+        /// </summary>
         public void ReloadConfiguration()
         {
             _configuration = null;
         }
 
         SealSecurity _security = null;
+        /// <summary>
+        /// Current security
+        /// </summary>
         public SealSecurity Security
         {
             get
@@ -178,12 +206,15 @@ namespace Seal.Model
             set { _security = value; }
         }
 
+        /// <summary>
+        /// Forces a security reload
+        /// </summary>
         public void ReloadSecurity()
         {
             _security = null;
         }
 
-        public static string FindDebugRepository(string path)
+        static string FindDebugRepository(string path)
         {
             string result = Path.Combine(Path.GetDirectoryName(path), "Repository");
             if (Directory.Exists(result)) return result;
@@ -191,6 +222,10 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Find the current repository path (normally defined in the .config file)
+        /// </summary>
+        /// <returns></returns>
         public static string FindRepository()
         {
             string path = Properties.Settings.Default.RepositoryPath;
@@ -222,8 +257,10 @@ namespace Seal.Model
         }
 
 
-        //The general static instance...
         static Repository _instance = null;
+        /// <summary>
+        /// A general static instance of the repository
+        /// </summary>
         public static Repository Instance
         {
             get
@@ -236,6 +273,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Creates a basic repository from a given path
+        /// </summary>
         public static Repository Create(string path)
         {
             Repository result = null;
@@ -251,6 +291,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Creates a basic repository
+        /// </summary>
         public static Repository Create()
         {
             Repository result = null;
@@ -266,8 +309,9 @@ namespace Seal.Model
             return result;
         }
 
-
-        //Same as create but we shared or clone properties for performance reasons...
+        /// <summary>
+        /// Creates a basic repository: properties are shared or cloned for performance reasons
+        /// </summary>
         public Repository CreateFast()
         {
             //check if some files have changed, in this case -> full reload
@@ -280,13 +324,13 @@ namespace Seal.Model
             {
                 result = new Repository();
                 //Just clone the sources as connections and enums can be updated
-                result._sources = (List<MetaSource>)Helper.Clone(Sources);
+                result.Sources = (List<MetaSource>)Helper.Clone(Sources);
                 foreach (var source in result.Sources) source.InitReferences(result);
                 //Others collections should remain static/unchanged an can be shared...
                 result._translations = Translations;
-                result._devices = Devices;
+                result.Devices = Devices;
                 result._configuration = Configuration;
-                result._path = path;
+                result.RepositoryPath = path;
                 //plus defaults...
                 result._cultureInfo = CultureInfo;
             }
@@ -294,19 +338,22 @@ namespace Seal.Model
         }
 
         static bool _assembliesLoaded = false;
+        /// <summary>
+        /// Init the repository from a given path
+        /// </summary>
         public void Init(string path)
         {
-            _path = path;
+            RepositoryPath = path;
             CheckFolders();
             //Data sources
-            if (_sources.Count == 0)
+            if (Sources.Count == 0)
             {
                 foreach (var file in Directory.GetFiles(SourcesFolder, "*." + SealConfigurationFileExtension))
                 {
                     try
                     {
                         var source = MetaSource.LoadFromFile(file, this);
-                        _sources.Add(source);
+                        Sources.Add(source);
                     }
                     catch (Exception ex)
                     {
@@ -315,16 +362,16 @@ namespace Seal.Model
                 }
             }
 
-            if (_devices.Count == 0)
+            if (Devices.Count == 0)
             {
                 //Devices, add a default folder device, then the other devices
-                _devices.Add(OutputFolderDevice.Create());
+                Devices.Add(OutputFolderDevice.Create());
                 foreach (var file in Directory.GetFiles(DevicesEmailFolder, "*." + SealConfigurationFileExtension))
                 {
                     try
                     {
                         var device = OutputEmailDevice.LoadFromFile(file, true);
-                        _devices.Add(device);
+                        Devices.Add(device);
                     }
                     catch (Exception ex)
                     {
@@ -366,7 +413,10 @@ namespace Seal.Model
         }
 
 
-
+        /// <summary>
+        /// True if the configuration or security file has been modified
+        /// </summary>
+        /// <returns></returns>
         public bool MustReload()
         {
             if (Configuration.FilePath != null && File.GetLastWriteTime(Configuration.FilePath) != Configuration.LastModification) return true;
@@ -376,6 +426,9 @@ namespace Seal.Model
             return false;
         }
 
+        /// <summary>
+        /// Check repository folders and create them if necessary
+        /// </summary>
         public void CheckFolders()
         {
             try
@@ -397,86 +450,137 @@ namespace Seal.Model
             catch { }
         }
 
+        /// <summary>
+        /// Views folder
+        /// </summary>
         public string ViewsFolder
         {
-            get { return Path.Combine(_path, "Views"); }
+            get { return Path.Combine(RepositoryPath, "Views"); }
         }
 
+        /// <summary>
+        /// Sources folder
+        /// </summary>
         public string SourcesFolder
         {
-            get { return Path.Combine(_path, "Sources"); }
+            get { return Path.Combine(RepositoryPath, "Sources"); }
         }
 
+        /// <summary>
+        /// Devices folder
+        /// </summary>
         public string DevicesFolder
         {
-            get { return Path.Combine(_path, "Devices"); }
+            get { return Path.Combine(RepositoryPath, "Devices"); }
         }
 
+        /// <summary>
+        /// Devices Email folder
+        /// </summary>
         public string DevicesEmailFolder
         {
-            get { return Path.Combine(_path, "Devices\\Email"); }
+            get { return Path.Combine(RepositoryPath, "Devices\\Email"); }
         }
 
+        /// <summary>
+        /// Settings folder
+        /// </summary>
         public string SettingsFolder
         {
-            get { return Path.Combine(_path, "Settings"); }
+            get { return Path.Combine(RepositoryPath, "Settings"); }
         }
 
+        /// <summary>
+        /// Security folder
+        /// </summary>
         public string SecurityFolder
         {
-            get { return Path.Combine(_path, "Security"); }
+            get { return Path.Combine(RepositoryPath, "Security"); }
         }
 
+        /// <summary>
+        /// Security Providers folder
+        /// </summary>
         public string SecurityProvidersFolder
         {
             get { return Path.Combine(SecurityFolder, "Providers"); }
         }
 
+        /// <summary>
+        /// Reports folder
+        /// </summary>
         public string ReportsFolder
         {
-            get { return Path.Combine(_path, "Reports"); }
+            get { return Path.Combine(RepositoryPath, "Reports"); }
         }
 
+        /// <summary>
+        /// Logs folder
+        /// </summary>
         public string LogsFolder
         {
-            get { return Path.Combine(_path, "Logs"); }
+            get { return Path.Combine(RepositoryPath, "Logs"); }
         }
 
+        /// <summary>
+        /// View Images folder
+        /// </summary>
         public string ViewImagesFolder
         {
             get { return Path.Combine(ViewsFolder, "Images"); }
         }
 
+        /// <summary>
+        /// View Scripts folder
+        /// </summary>
         public string ViewScriptsFolder
         {
             get { return Path.Combine(ViewsFolder, "Scripts"); }
         }
 
+        /// <summary>
+        /// View Content folder
+        /// </summary>
         public string ViewContentFolder
         {
             get { return Path.Combine(ViewsFolder, "Content"); }
         }
 
+        /// <summary>
+        /// Assemblies folder
+        /// </summary>
         public string AssembliesFolder
         {
-            get { return Path.Combine(_path, "Assemblies"); }
+            get { return Path.Combine(RepositoryPath, "Assemblies"); }
         }
 
+        /// <summary>
+        /// SubReports folder
+        /// </summary>
         public string SubReportsFolder
         {
-            get { return Path.Combine(_path, "SubReports"); }
+            get { return Path.Combine(RepositoryPath, "SubReports"); }
         }
 
+        /// <summary>
+        /// SpecialFolders folder
+        /// </summary>
         public string SpecialsFolder
         {
-            get { return Path.Combine(_path, "SpecialFolders"); }
+            get { return Path.Combine(RepositoryPath, "SpecialFolders"); }
         }
 
+        /// <summary>
+        /// SpecialsFolder Personal folder
+        /// </summary>
         public string PersonalFolder
         {
             get { return Path.Combine(SpecialsFolder, "Personal"); }
         }
 
+        /// <summary>
+        /// Returns the personal folder path of a user
+        /// </summary>
         public string GetPersonalFolder(SecurityUser user)
         {
             //add hash to the end of the name
@@ -487,51 +591,78 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Returns the personal folder name of a user
+        /// </summary>
         public string GetPersonalFolderName(SecurityUser user)
         {
             return TranslateWeb("Personal") + string.Format(" ({0})", user.GetPersonalFolderName()); ;
         }
 
+        /// <summary>
+        /// Returns the dashboard personal folder path of a user
+        /// </summary>
         public string GetDashboardPersonalFolder(SecurityUser user)
         {
             return Path.Combine(GetPersonalFolderName(user), "Dashboards");
         }
 
+        /// <summary>
+        /// Returns the dashboard public folder path
+        /// </summary>
         public string DashboardPublicFolder
         {
-            get { return Path.Combine(_path, "Dashboards"); }
+            get { return Path.Combine(RepositoryPath, "Dashboards"); }
         }
 
+        /// <summary>
+        /// Translations file name pattern
+        /// </summary>
         public string TranslationsPattern
         {
             get { return "Translations*.csv"; }
         }
 
+        /// <summary>
+        /// Repository translations file name
+        /// </summary>
         public string RepositoryTranslationsPath
         {
             get { return Path.Combine(SettingsFolder, "RepositoryTranslations.csv"); }
         }
 
+        /// <summary>
+        /// Configuration file path
+        /// </summary>
         public string ConfigurationPath
         {
             get { return Path.Combine(SettingsFolder, "Configuration.xml"); }
         }
 
+        /// <summary>
+        /// Security file path
+        /// </summary>
         public string SecurityPath
         {
             get { return Path.Combine(SecurityFolder, "Security.xml"); }
         }
 
+        /// <summary>
+        /// Replace the repository keywords in a string
+        /// </summary>
         public string ReplaceRepositoryKeyword(string inputFolder)
         {
             if (string.IsNullOrEmpty(inputFolder)) return "";
-            return inputFolder.Replace(Repository.SealRepositoryKeyword, _path).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
+            return inputFolder.Replace(Repository.SealRepositoryKeyword, RepositoryPath).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
         }
 
         #region Translations
 
         //Translations, one dictionary per context
         Dictionary<string, RepositoryTranslation> _translations = null;
+        /// <summary>
+        /// Current translations
+        /// </summary>
         public Dictionary<string, RepositoryTranslation> Translations
         {
             get
@@ -552,6 +683,9 @@ namespace Seal.Model
         }
 
         Dictionary<string, string> _jsTranslations = null;
+        /// <summary>
+        /// Current JavaScript translations
+        /// </summary>
         public Dictionary<string, string> JSTranslations
         {
             get
@@ -578,6 +712,9 @@ namespace Seal.Model
         }
 
         Dictionary<string, string> _nvd3Translations = null;
+        /// <summary>
+        /// Current NVD3 translations (for NVD3 charts)
+        /// </summary>
         public Dictionary<string, string> NVD3Translations
         {
             get
@@ -603,28 +740,42 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Translate a reference text in a context
+        /// </summary>
         public string Translate(string context, string reference)
         {
             return Translate(CultureInfo.TwoLetterISOLanguageName, context, reference);
         }
 
+        /// <summary>
+        /// Translate a reference text in a Web context
+        /// </summary>
         public string TranslateWeb(string reference)
         {
             return Translate(CultureInfo.TwoLetterISOLanguageName, "Web", reference);
         }
 
+        /// <summary>
+        /// Translate a reference text in a WebJS context
+        /// </summary>
         public string TranslateWebJS(string reference)
         {
             return Translate(CultureInfo.TwoLetterISOLanguageName, "WebJS", reference);
         }
 
+        /// <summary>
+        /// Translate a reference text in a Report context
+        /// </summary>
         public string TranslateReport(string reference)
         {
             return Translate(CultureInfo.TwoLetterISOLanguageName, "Report", reference);
         }
 
-
         Dictionary<string, RepositoryTranslation> _repositoryTranslations = null;
+        /// <summary>
+        /// Current repository translations
+        /// </summary>
         public Dictionary<string, RepositoryTranslation> RepositoryTranslations
         {
             get
@@ -641,6 +792,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Translate a reference text in a repository context
+        /// </summary>
         public string RepositoryTranslate(string culture, string context, string instance, string reference)
         {
             if (string.IsNullOrEmpty(reference)) return "";
@@ -666,56 +820,89 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Translate a reference text in a repository context with the current culture
+        /// </summary>
         public string RepositoryTranslate(string context, string instance, string reference)
         {
             return RepositoryTranslate(CultureInfo.TwoLetterISOLanguageName, context, instance, reference);
         }
 
+        /// <summary>
+        /// Translate an Element
+        /// </summary>
         public string TranslateColumn(MetaColumn col)
         {
             return RepositoryTranslate("Element", col.Category + '.' + col.DisplayName, col.DisplayName);
         }
 
+        /// <summary>
+        /// Translate a Category
+        /// </summary>
         public string TranslateCategory(string instance, string reference)
         {
             return RepositoryTranslate("Category", instance, reference);
         }
 
+        /// <summary>
+        /// Translate a Device
+        /// </summary>
         public string TranslateDevice(string instance, string reference)
         {
             return RepositoryTranslate("Device", instance, reference);
         }
 
+        /// <summary>
+        /// Translate a Dashboard Folder
+        /// </summary>
         public string TranslateDashboardFolder(string instance, string reference)
         {
             return RepositoryTranslate("DashboardFolder", instance, reference);
         }
 
+        /// <summary>
+        /// Translate a Dashboard Name
+        /// </summary>
         public string TranslateDashboardName(string instance, string reference)
         {
             return RepositoryTranslate("DashboardName", instance, reference);
         }
 
+        /// <summary>
+        /// Translate a Dashboard Item Name
+        /// </summary>
         public string TranslateDashboardItemName(string instance, string reference)
         {
             return RepositoryTranslate("DashboardItemName", instance, reference);
         }
 
+        /// <summary>
+        /// Translate a Dashboard Item Group Name
+        /// </summary>
         public string TranslateDashboardItemGroupName(string instance, string reference)
         {
             return RepositoryTranslate("DashboardItemGroupName", instance, reference);
         }
 
+        /// <summary>
+        /// Translate a Widget Name
+        /// </summary>
         public string TranslateWidgetName(string instance, string reference)
         {
             return RepositoryTranslate("WidgetName", instance, reference);
         }
 
+        /// <summary>
+        /// Translate a Widget Description
+        /// </summary>
         public string TranslateWidgetDescription(string instance, string reference)
         {
             return RepositoryTranslate("WidgetDescription", instance, reference);
         }
 
+        /// <summary>
+        /// Translate a full Folder Path
+        /// </summary>
         public string TranslateFolderPath(string path)
         {
             if (path == "\\") return path;
@@ -730,11 +917,17 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Translate a Folder^Name
+        /// </summary>
         public string TranslateFolderName(string path)
         {
             return RepositoryTranslate("FolderName", path.StartsWith(ReportsFolder) ? path.Substring(ReportsFolder.Length) : path, Path.GetFileName(path));
         }
 
+        /// <summary>
+        /// Translate a column name
+        /// </summary>
         public string TranslateFileName(string path)
         {
             return RepositoryTranslate("FileName", path.StartsWith(ReportsFolder) ? path.Substring(ReportsFolder.Length) : path, Path.GetFileNameWithoutExtension(path));
@@ -767,6 +960,9 @@ namespace Seal.Model
         }
 #endif
 
+        /// <summary>
+        /// Translate a reference text
+        /// </summary>
         public string Translate(string culture, string context, string reference)
         {
             string result = reference;
@@ -802,8 +998,14 @@ namespace Seal.Model
         #endregion
 
         #region Web publishing
-        //Web publishing
+        /// <summary>
+        /// Current web application apth
+        /// </summary>
         public string WebApplicationPath;
+
+        /// <summary>
+        /// Current application path
+        /// </summary>
         public string ApplicationPath
         {
             get
@@ -816,6 +1018,9 @@ namespace Seal.Model
 
         #region Helpers
         //Helpers
+        /// <summary>
+        /// Find and load report form its identifier
+        /// </summary>
         public Report FindReport(string folder, string GUID)
         {
             Report result = null;

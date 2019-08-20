@@ -19,6 +19,9 @@ using System.Data.OleDb;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A ReportTask defines the exection of a task: SQL statement or Razor script
+    /// </summary>
     public class ReportTask : ReportComponent, ITreeSort
     {
         #region Editor
@@ -50,26 +53,35 @@ namespace Seal.Model
         #endregion
 
 
+        /// <summary>
+        /// Creates a basic ReportTask
+        /// </summary>
         public static ReportTask Create()
         {
             return new ReportTask() { GUID = Guid.NewGuid().ToString() };
         }
 
+        
+        /// <summary>
+        /// Init all references of the task
+        /// </summary>
         public void InitReferences()
         {
         }
 
-        string _sourceGUID;
+        /// <summary>
+        /// Identifier of the current report source
+        /// </summary>
         [DefaultValue(null)]
         [Category("Definition"), DisplayName("Source"), Description("The source used by the task."), Id(1, 1)]
         [TypeConverter(typeof(MetaSourceConverter))]
-        public string SourceGUID
-        {
-            get { return _sourceGUID; }
-            set { _sourceGUID = value; }
-        }
+        public string SourceGUID { get; set; }
 
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
+
+        /// <summary>
+        /// The connection identifier used by the task
+        /// </summary>
         [DefaultValue(ReportSource.DefaultReportConnectionGUID)]
         [DisplayName("Connection"), Description("The connection used by the task."), Category("Definition"), Id(2, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
@@ -87,16 +99,16 @@ namespace Seal.Model
             set { _connectionGUID = value; }
         }
 
-
-        bool _enabled = true;
+        /// <summary>
+        /// If false, the task is ignorred and not executed
+        /// </summary>
         [DefaultValue(true)]
         [Category("Definition"), DisplayName("Is Enabled"), Description("If false, the task is ignorred and not executed."), Id(3, 1)]
-        public bool Enabled
-        {
-            get { return _enabled; }
-            set { _enabled = value; }
-        }
+        public bool Enabled { get; set; } = true;
 
+        /// <summary>
+        /// Current MetaConnection
+        /// </summary>
         [XmlIgnore]
         public MetaConnection Connection
         {
@@ -114,22 +126,28 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Current ReportSource
+        /// </summary>
         [XmlIgnore]
         public ReportSource Source
         {
             get
             {
-                ReportSource result = _report.Sources.FirstOrDefault(i => i.GUID == _sourceGUID);
+                ReportSource result = _report.Sources.FirstOrDefault(i => i.GUID == SourceGUID);
                 if (result == null)
                 {
                     if (_report.Sources.Count == 0) throw new Exception("This report has no source defined");
                     result = _report.Sources[0];
-                    _sourceGUID = result.GUID;
+                    SourceGUID = result.GUID;
                 }
                 return result;
             }
         }
 
+        /// <summary>
+        /// Current Repository
+        /// </summary>
         [XmlIgnore]
         public Repository Repository
         {
@@ -140,76 +158,68 @@ namespace Seal.Model
             }
         }
 
-        string _SQL;
+        /// <summary>
+        /// SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed.
+        /// </summary>
         [Category("Definition"), DisplayName("SQL Statement"), Description("SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed."), Id(4, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        public string SQL
-        {
-            get { return _SQL; }
-            set { _SQL = value; }
-        }
+        public string SQL { get; set; }
 
-        string _script;
+        /// <summary>
+        /// Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed.
+        /// </summary>
         [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string Script
-        {
-            get { return _script; }
-            set { _script = value; }
-        }
+        public string Script { get; set; }
 
-
-        bool _ignoreError = false;
+        /// <summary>
+        /// If true, errors occuring during the task execution are ignored and the report execution continues
+        /// </summary>
         [DefaultValue(false)]
         [Category("Options"), DisplayName("Ignore Errors"), Description("If true, errors occuring during the task execution are ignored and the report execution continues."), Id(2, 2)]
-        public bool IgnoreError
-        {
-            get { return _ignoreError; }
-            set { _ignoreError = value; }
-        }
+        public bool IgnoreError { get; set; } = false;
 
-        bool _executeForEachConnection = false;
+        /// <summary>
+        /// If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used.
+        /// </summary>
         [DefaultValue(false)]
         [Category("Options"), DisplayName("Execute for each connection"), Description("If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used."), Id(3, 2)]
-        public bool ExecuteForEachConnection
-        {
-            get { return _executeForEachConnection; }
-            set { _executeForEachConnection = value; }
-        }
+        public bool ExecuteForEachConnection { get; set; } = false;
 
-        int _sortOrder = 0;
-        public int SortOrder
-        {
-            get { return _sortOrder; }
-            set { _sortOrder = value; }
-        }
+        /// <summary>
+        /// Order of the task amongst the tasks of the report
+        /// </summary>
+        public int SortOrder { get; set; } = 0;
 
+        /// <summary>
+        /// Retruns the order of the task
+        /// </summary>
         public int GetSort()
         {
-            return _sortOrder;
+            return SortOrder;
         }
 
+        /// <summary>
+        /// Current progression of the task in percentage
+        /// </summary>
         [XmlIgnore]
         public int Progression = 0;
 
         #region Helpers
-        string _information;
+
+        /// <summary>
+        /// Last information message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(20, 20)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
-        public string Information
-        {
-            get { return _information; }
-            set { _information = value; }
-        }
+        public string Information { get; set; }
 
-        string _error;
+        /// <summary>
+        /// Last error message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(20, 20)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
-        public string Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public string Error { get; set; }
         public bool CancelReport = false;
 
         #endregion
@@ -218,15 +228,24 @@ namespace Seal.Model
 
         DbCommand _command = null;
         Mutex _commandMutex = new Mutex();
+
+        /// <summary>
+        /// Information message for database
+        /// </summary>
         [XmlIgnore]
         public StringBuilder DbInfoMessage = new StringBuilder();
 
-        //Log Interface implementation
+        /// <summary>
+        /// Log Interface implementation
+        /// </summary>
         public void LogMessage(string message, params object[] args)
         {
             Report.LogMessage(message, args);
         }
 
+        /// <summary>
+        /// Cancel the task
+        /// </summary>
         public void Cancel()
         {
             CancelReport = true;
@@ -247,6 +266,10 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Returns a DbCommand from a MetaConnection
+        /// </summary>
+        /// <param name="metaConnection"></param>
         public DbCommand GetDbCommand(MetaConnection metaConnection)
         {
             DbCommand result = null;
@@ -279,6 +302,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Executes the task
+        /// </summary>
         public void Execute()
         {
             CancelReport = false;
@@ -291,6 +317,10 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Executes the task with a given connection
+        /// </summary>
+        /// <param name="currentConnection"></param>
         public void Execute(MetaConnection currentConnection)
         {
             LogMessage("Starting task with connection '{0}'", currentConnection.Name);
