@@ -10,6 +10,9 @@ using RazorEngine.Templating;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A ReportViewTemplate defines how a view is parsed and rendered.
+    /// </summary>
     public class ReportViewTemplate
     {
         public const string ReportName = "Report";
@@ -22,55 +25,44 @@ namespace Seal.Model
         public const string ChartPlotlyName = "Chart Plotly";
         public const string ModelContainerName = "Model Container";
 
-        string _name = "";
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        /// <summary>
+        /// Name of the view template
+        /// </summary>
+        public string Name { get; set; } = "";
 
-        string _description = "";
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
-        }
+        /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; } = "";
 
-        string _filePath;
-        public string FilePath
-        {
-            get { return _filePath; }
-            set { _filePath = value; }
-        }
+        /// <summary>
+        /// Current file path of the template
+        /// </summary>
+        public string FilePath { get; set; }
 
-        string _configurationPath;
-        public string ConfigurationPath
-        {
-            get { return _configurationPath; }
-            set { _configurationPath = value; }
-        }
+        /// <summary>
+        /// Path of the configuration file for the template
+        /// </summary>
+        public string ConfigurationPath { get; set; }
 
-        List<Parameter> _parameters = new List<Parameter>();
-        public List<Parameter> Parameters
-        {
-            get { return _parameters; }
-            set { _parameters = value; }
-        }
+        /// <summary>
+        /// Parameters defined for the template 
+        /// </summary>
+        public List<Parameter> Parameters { get; set; } = new List<Parameter>();
 
-        List<string> _parentNames = new List<string>();
-        public List<string> ParentNames
-        {
-            get { return _parentNames; }
-            set { _parentNames = value; }
-        }
+        /// <summary>
+        /// Allowed parent template names
+        /// </summary>
+        public List<string> ParentNames { get; set; } = new List<string>();
 
-        bool _forReportModel = false;
-        public bool ForReportModel
-        {
-            get { return _forReportModel; }
-            set { _forReportModel = value; }
-        }
+        /// <summary>
+        /// True if the template is for a report model
+        /// </summary>
+        public bool ForReportModel { get; set; } = false;
 
+        /// <summary>
+        /// Text of the template
+        /// </summary>
         public string Text
         {
             get
@@ -84,38 +76,46 @@ namespace Seal.Model
                 }
                 catch (Exception ex)
                 {
-                    _error = ex.Message;
+                    Error = ex.Message;
                 }
                 return result;
             }
         }
 
+        /// <summary>
+        /// Current template configuration text
+        /// </summary>
         public string Configuration = "";
 
-        string _error = "";
-        public string Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        /// <summary>
+        /// Current errors
+        /// </summary>
+        public string Error { get; set; } = "";
 
-        List<string> _partialTemplates = new List<string>();
-        public List<string> PartialTemplatesPath
-        {
-            get { return _partialTemplates; }
-            set { _partialTemplates = value; }
-        }
+        /// <summary>
+        /// List of partial templates path
+        /// </summary>
+        public List<string> PartialTemplatesPath { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Returns a partial template path from a given name
+        /// </summary>
         public string GetPartialTemplatePath(string name)
         {
             return Path.Combine(Path.GetDirectoryName(FilePath), name + ".partial.cshtml");
         }
 
+        /// <summary>
+        /// Returns a partial template text from a given name
+        /// </summary>
         public string GetPartialTemplateText(string name)
         {
             return File.ReadAllText(GetPartialTemplatePath(name));
         }
 
+        /// <summary>
+        /// Initialize the template from a file
+        /// </summary>
         public bool Init(string path)
         {
             FilePath = path;
@@ -137,6 +137,9 @@ namespace Seal.Model
             return true;
         }
 
+        /// <summary>
+        /// Returns a list of ReportViewTemplate from a given folder
+        /// </summary>
         public static List<ReportViewTemplate> LoadTemplates(string templateFolder)
         {
             List<ReportViewTemplate> viewTemplates = new List<ReportViewTemplate>();
@@ -150,17 +153,34 @@ namespace Seal.Model
             return viewTemplates;
         }
 
+        /// <summary>
+        /// Clear the template configuration
+        /// </summary>
         public void ClearConfiguration()
         {
-            _parameters.Clear();
-            _parentNames.Clear();
-            _forReportModel = false;
+            Parameters.Clear();
+            ParentNames.Clear();
+            ForReportModel = false;
         }
 
-        public bool IsParsed = false; //Flag for optimization, by default the template is not parsed...until it is used
+        /// <summary>
+        /// Flag for optimization, by default the template is not parsed...until it is used
+        /// </summary>
+        public bool IsParsed = false; 
+
+        /// <summary>
+        /// Last modification date time
+        /// </summary>
         public DateTime LastModification;
+
+        /// <summary>
+        /// Last modfication of the configuration file
+        /// </summary>
         public DateTime LastConfigModification;
 
+        /// <summary>
+        /// True if the template or its configuration is modified
+        /// </summary>
         public bool IsModified
         {
             get
@@ -169,24 +189,27 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Parse the current configuration and initialize the parameters
+        /// </summary>
         public void ParseConfiguration()
         {
             //Parse the configuration file to init the view template
             try
             {
                 string key = key = string.Format("TPLCFG:{0}_{1}", ConfigurationPath, File.GetLastWriteTime(ConfigurationPath).ToString("s"));
-                _error = "";
+                Error = "";
                 ClearConfiguration();
                 RazorHelper.CompileExecute(Configuration, this);
                 IsParsed = true;
             }
             catch (TemplateCompilationException ex)
             {
-                _error = Helper.GetExceptionMessage(ex);
+                Error = Helper.GetExceptionMessage(ex);
             }
             catch (Exception ex)
             {
-                _error = string.Format("Unexpected error got when parsing template configuration.\r\n{0}", ex.Message);
+                Error = string.Format("Unexpected error got when parsing template configuration.\r\n{0}", ex.Message);
             }
         }
     }
