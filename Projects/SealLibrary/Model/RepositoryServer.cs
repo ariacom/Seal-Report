@@ -9,12 +9,17 @@ using System.Data;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// The RepositoryServer is used to maintain a static list of ReportViewTemplate for performances purpose
+    /// </summary>
     public class RepositoryServer
     {
         private static List<ReportViewTemplate> _viewTemplates = null;
         private static object _viewLock = new object();
 
-        //View templates
+        /// <summary>
+        /// Current list of ReportViewTemplate
+        /// </summary>
         public static List<ReportViewTemplate> ViewTemplates
         {
             get
@@ -29,6 +34,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Retruns a ReportViewTemplate from a given name
+        /// </summary>
         public static ReportViewTemplate GetViewTemplate(string name)
         {
             lock (_viewLock)

@@ -5,11 +5,26 @@
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Arrays of ResultCell stored in the ResultPage generated after a report model execution
+    /// </summary>
     public class ResultData
     {
+        /// <summary>
+        /// Array of ResultCell for Row
+        /// </summary>
         public ResultCell[] Row;
+        /// <summary>
+        /// Array of ResultCell for Column
+        /// </summary>
         public ResultCell[] Column;
+        /// <summary>
+        /// Array of ResultCell for Data
+        /// </summary>
         public ResultCell[] Data;
+        /// <summary>
+        /// Array of ResultCell for Hidden cells (for navigation)
+        /// </summary>
         public ResultCell[] Hidden;
     }
 }

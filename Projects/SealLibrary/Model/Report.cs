@@ -1740,7 +1740,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Translate a reference text from the Report context with args paramter
+        /// Translate a reference text from the Report context with args parameter
         /// </summary>
         public string Translate(string reference, params object[] args)
         {

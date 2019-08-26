@@ -11,14 +11,39 @@ using System;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A RepositoryTranslation defines a translation got from the repository
+    /// </summary>
     public class RepositoryTranslation
     {
+        /// <summary>
+        /// The context of the translation
+        /// </summary>
         public string Context = "";
+
+        /// <summary>
+        /// The instance of the translation
+        /// </summary>
         public string Instance = "";
+
+        /// <summary>
+        /// The reference text
+        /// </summary>
         public string Reference = "";
+
+        /// <summary>
+        /// List of translation texts per language
+        /// </summary>
         public Dictionary<string, string> Translations = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Usgae counter for debug purpose
+        /// </summary>
         public int Usage;
 
+        /// <summary>
+        /// Init the list of RepositoryTranslation from the CSV file
+        /// </summary>
         static public void InitFromCSV(Dictionary<string, RepositoryTranslation> translations, string path, bool hasInstance)
         {
             try

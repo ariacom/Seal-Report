@@ -359,7 +359,7 @@ namespace Seal.Forms
                                 }
                             }
 
-                            if (!tableOk) throw new Exception("Unable to add this Sub-Report:\r\nThe report does no contain any prompted restriction...");
+                            if (!tableOk) throw new Exception("Unable to add this Sub-Report:\r\nThe report does not contain any prompted restriction...");
 
                             _metaColumn.SubReports.Add(sr);
                             MessageBox.Show(string.Format("The Sub-Report named '{0}' has been added with {1} restriction(s).", Path.GetFileName(dlg.FileName), sr.Restrictions.Count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -12,21 +12,66 @@ using System.Globalization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A ResultCell defines a cell generated in a table after the execution of a report model
+    /// </summary>
     public class ResultCell
     {
+        /// <summary>
+        /// The object value of the cell
+        /// </summary>
         public object Value;
+
+        /// <summary>
+        /// The ReportElement of the element model
+        /// </summary>
         public ReportElement Element;
+
+        /// <summary>
+        /// True if the cell is for a total
+        /// </summary>
         public bool IsTotal = false;
+
+        /// <summary>
+        /// True if the cell is for a title
+        /// </summary>
         public bool IsTitle = false;
+
+        /// <summary>
+        /// True if the cell is for a sub total
+        /// </summary>
         public bool IsSubTotal = false;
+
+        /// <summary>
+        /// True if the cell is for the total of totals
+        /// </summary>
         public bool IsTotalTotal = false;
+
+        /// <summary>
+        /// True if the cell is for a serie
+        /// </summary>
         public bool IsSerie = false;
 
         //Final Values and CSS, Class if set in the cell script
+
+        /// <summary>
+        /// If not empty, the value is used for the cell
+        /// </summary>
         public string FinalValue = "";
+
+        /// <summary>
+        /// If not empty, the css style is used for the cell
+        /// </summary>
         public string FinalCssStyle = "";
+
+        /// <summary>
+        /// If not empty, the css class is used for the cell
+        /// </summary>
         public string FinalCssClass = "";
 
+        /// <summary>
+        /// HTML value of the cell
+        /// </summary>
         public string HTMLValue
         {
             get
@@ -36,12 +81,18 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// CSV value of the cell
+        /// </summary>
         public string CSVValue(bool useFormat, string separator)
         {
             string result = ExcelHelper.ToCsv(useFormat ? DisplayValue : RawDisplayValue, separator);
             return result;
         }
 
+        /// <summary>
+        /// Display value of the cell
+        /// </summary>
         public string DisplayValue
         {
             get
@@ -58,7 +109,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Display value of the cell without applying the format or translation
+        /// </summary>
         public string RawDisplayValue
         {
             get
@@ -69,6 +122,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Deprecated: Kept for compatibility
+        /// </summary>
         public string ValueNoHTML //Kept for compatibility
         {
             get
@@ -76,6 +132,10 @@ namespace Seal.Model
                 return DisplayValue;
             }
         }
+
+        /// <summary>
+        /// Double value of the cell if possible
+        /// </summary>
         public double? DoubleValue
         {
             get
@@ -87,6 +147,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Value used for navigation
+        /// </summary>
         public string NavigationValue
         {
             get
@@ -107,8 +170,14 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Values used for sub report navigation
+        /// </summary>
         public List<ResultCell> SubReportValues = new List<ResultCell>();
 
+        /// <summary>
+        /// Date time value of the cell if possible
+        /// </summary>
         public DateTime? DateTimeValue
         {
             get
@@ -118,6 +187,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Css cell class
+        /// </summary>
         public string CellCssClass
         {
             get
@@ -139,6 +211,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Css cell style
+        /// </summary>
         public string CellCssStyle
         {
             get
@@ -159,7 +234,7 @@ namespace Seal.Model
             if (a.Length == 0 || a.Length != b.Length) return 0;
             ReportModel model = a[0].Element.Model;
 
-            foreach (ReportElement element in model.Elements.Where(i=>!string.IsNullOrEmpty(i.FinalSortOrder)).OrderBy(i => i.FinalSortOrder))
+            foreach (ReportElement element in model.Elements.Where(i => !string.IsNullOrEmpty(i.FinalSortOrder)).OrderBy(i => i.FinalSortOrder))
             {
                 ResultCell aCell = a.FirstOrDefault(i => i.Element == element);
                 ResultCell bCell = b.FirstOrDefault(i => i.Element == element);
@@ -172,6 +247,9 @@ namespace Seal.Model
             return 0;
         }
 
+        /// <summary>
+        /// Compares 2 cells arrays
+        /// </summary>
         public static int CompareCellsForTableLoad(ResultCell[] a, ResultCell[] b)
         {
             if (a.Length == 0 || a.Length != b.Length) return 0;
@@ -198,6 +276,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Compares 2 cells
+        /// </summary>
         public static int CompareCell(ResultCell a, ResultCell b)
         {
             if (a.Value == DBNull.Value && b.Value == DBNull.Value) return 0;
@@ -230,6 +311,9 @@ namespace Seal.Model
         }
 
         List<NavigationLink> _links = null;
+        /// <summary>
+        /// List of NavigationLink for the cell
+        /// </summary>
         public List<NavigationLink> Links
         {
             get
@@ -271,7 +355,7 @@ namespace Seal.Model
                             //Element.MetaColumn.DillUpOnlyIfDD
                             foreach (MetaTable table in Element.Source.MetaData.Tables)
                             {
-                                foreach(MetaColumn parentColumn in table.Columns.Where(i => i.DrillChildren.Contains(Element.MetaColumnGUID)))
+                                foreach (MetaColumn parentColumn in table.Columns.Where(i => i.DrillChildren.Contains(Element.MetaColumnGUID)))
                                 {
                                     //Check that the element is not already in the model
                                     if (Element.Model.Elements.Exists(i => i.MetaColumnGUID == parentColumn.GUID && i.PivotPosition == Element.PivotPosition)) continue;
@@ -329,22 +413,46 @@ namespace Seal.Model
 
 
         //Context to be used for cell script...
+        /// <summary>
+        /// For cell script execution: current ReportModel
+        /// </summary>
         public ReportModel ContextModel;
+        /// <summary>
+        /// For cell script execution: current ResultPage
+        /// </summary>
         public ResultPage ContextPage;
+        /// <summary>
+        /// For cell script execution: current ResultTable
+        /// </summary>
         public ResultTable ContextTable;
+        /// <summary>
+        /// For cell script execution: current ResultTable
+        /// </summary>
         public int ContextRow = -1;
+        /// <summary>
+        /// For cell script execution: current ResultTable
+        /// </summary>
         public int ContextCol = -1;
 
+        /// <summary>
+        /// For cell script execution: current line of the table (array of cell)
+        /// </summary>
         public ResultCell[] ContextCurrentLine
         {
             get { return ContextTable != null && ContextRow != -1 ? ContextTable.Lines[ContextRow] : null; }
         }
 
+        /// <summary>
+        /// For cell script execution: true if the cell is in a page table
+        /// </summary>
         public bool ContextIsPageTable
         {
             get { return ContextPage != null && ContextTable != null && ContextPage.PageTable == ContextTable; }
         }
 
+        /// <summary>
+        /// For cell script execution: true if the cell is in a summary table
+        /// </summary>
         public bool ContextIsSummaryTable
         {
             get { return ContextPage == null; }
