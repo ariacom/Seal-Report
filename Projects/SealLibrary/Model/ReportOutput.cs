@@ -471,7 +471,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Copy the cirrent parameter values to a paramter list
+        /// Copy the current parameter values to a parameter list
         /// </summary>
         public void CopyParameters(List<Parameter> destination)
         {

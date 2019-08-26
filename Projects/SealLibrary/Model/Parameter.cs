@@ -65,7 +65,7 @@ namespace Seal.Model
         #endregion
 
         /// <summary>
-        /// Paramter type
+        /// Parameter type
         /// </summary>
         [XmlIgnore]
         public ViewParameterType Type { get; set; }
