@@ -339,10 +339,16 @@ namespace Seal.Model
         [EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor))]
         public string WebPublicationDirectory { get; set; } = "";
 
+        //Set by the server manager...
+        string _installationDirectory = "";
         /// <summary>
         /// Installation directory
         /// </summary>
-        public string InstallationDirectory { get; set; } = "";
+        public string InstallationDirectory
+        {
+            get { return _installationDirectory; }
+            set { _installationDirectory = value; }
+        }
 
         /// <summary>
         /// Last modifcation date time
@@ -416,7 +422,7 @@ namespace Seal.Model
             //Set installation path, used by, to define schedules
             if (Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealServerManager.ToLower() || Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealReportDesigner.ToLower())
             {
-                _installationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+                _installationDirectory = Path.GetDirectoryName(Application.ExecutablePath); 
             }
 #endif
             XmlSerializer serializer = new XmlSerializer(typeof(SealServerConfiguration), xmlOverrides);

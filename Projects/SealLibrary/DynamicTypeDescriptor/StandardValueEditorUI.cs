@@ -223,8 +223,7 @@ namespace DynamicTypeDescriptor
 
     private bool DoBitsExist( Type enumDataType, object value, object bits )
     {
-
-      /// zero needs special treatment, because you cannot do bitwise operations using zeros
+      //zero needs special treatment, because you cannot do bitwise operations using zeros
       bool valueIsZero = IsZero(enumDataType, value);
       bool bitsIsZero = IsZero(enumDataType, bits);
 
