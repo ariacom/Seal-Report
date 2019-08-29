@@ -9,6 +9,9 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A SecurityConnection defines the security applied to a connection for the Web Report Designer
+    /// </summary>
     public class SecurityConnection : RootEditor
     {
         #region Editor
@@ -28,34 +31,29 @@ namespace Seal.Model
         }
         #endregion
 
-        string _source;
+        /// <summary>
+        /// The name of the data source containing the connection (optional)
+        /// </summary>
         [Category("Definition"), DisplayName("Source Name"), Description("The name of the data source containing the connection (optional)."), Id(1, 1)]
-        public string Source
-        {
-            get { return _source; }
-            set { _source = value; }
-        }
+        public string Source { get; set; }
 
-        string _name = "";
-        [Category("Definition"), DisplayName("\tName"), Description("The name of the connection."), Id(2,1)]
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        /// <summary>
+        /// The name of the connection
+        /// </summary>
+        [Category("Definition"), DisplayName("\tName"), Description("The name of the connection."), Id(2, 1)]
+        public string Name { get; set; } = "";
 
-        EditorRight _right = EditorRight.NoSelection;
+        /// <summary>
+        /// /The right applied for the connection having this name
+        /// </summary>
         [Category("Rights"), DisplayName("Connection Right"), Description("The right applied for the connection having this name."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(EditorRight.NoSelection)]
-        public EditorRight Right
-        {
-            get { return _right; }
-            set {
-                _right = value;
-            }
-        }
+        public EditorRight Right { get; set; } = EditorRight.NoSelection;
 
+        /// <summary>
+        /// Display name
+        /// </summary>
         [XmlIgnore]
         public string DisplayName
         {

@@ -13,36 +13,95 @@ using System.Security.Principal;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A SecurityUser defines a logged user with all security objects
+    /// </summary>
     public class SecurityUser
     {
+        /// <summary>
+        /// Name of the user
+        /// </summary>
         public string Name = "";
+
+        /// <summary>
+        /// Personal folder name
+        /// </summary>
         public string PersonalFolderName = "";
+
+        /// <summary>
+        /// List of SecurityGroup of the users
+        /// </summary>
         public List<SecurityGroup> SecurityGroups = new List<SecurityGroup>();
+
+        /// <summary>
+        /// Current SealSecurity
+        /// </summary>
         public SealSecurity Security;
+
+        /// <summary>
+        /// Last error
+        /// </summary>
         public string Error = "";
+
+        /// <summary>
+        /// Last warning
+        /// </summary>
         public string Warning = "";
+
+        /// <summary>
+        /// List of SWIFolder
+        /// </summary>
         public List<SWIFolder> Folders = new List<SWIFolder>();
+
+        /// <summary>
+        /// Current SecurityUserProfile
+        /// </summary>
         public SecurityUserProfile Profile = new SecurityUserProfile();
 
-        //Custom string got in user profile
+        /// <summary>
+        /// Custom string got in user profile
+        /// </summary>
         public string Tag;
 
-        //Parameters to authenticate
+        /// <summary>
+        /// Parameters for authentication: User name 
+        /// </summary>
         public string WebUserName = "";
+
+        /// <summary>
+        /// Parameters for authentication: Pasaword
+        /// </summary>
         public string WebPassword = "";
+
+        /// <summary>
+        /// The current Windows IPrincipal
+        /// </summary>
         public IPrincipal WebPrincipal = null;
+
+        /// <summary>
+        /// The current Windows Identity
+        /// </summary>
         public WindowsIdentity Identity = null;
 
+        /// <summary>
+        /// True if the user is authenticated and part of a group
+        /// </summary>
         public bool IsAuthenticated
         {
             get { return SecurityGroups.Count > 0; }
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public SecurityUser(SealSecurity security)
         {
             Security = security;
         }
 
+        /// <summary>
+        /// Save the user profile
+        /// </summary>
         public void SaveProfile()
         {
             //Clean ids not published anymore
@@ -50,6 +109,9 @@ namespace Seal.Model
             Profile.SaveToFile();
         }
 
+        /// <summary>
+        /// Clear the current cache for Dashboards and Widgets 
+        /// </summary>
         public void ClearCache()
         {
             //reset pointers of objects having translations
@@ -58,6 +120,9 @@ namespace Seal.Model
         }
 
         private List<SecurityDashboardFolder> _securityDashboardFolders = null;
+        /// <summary>
+        /// List of folder for dashboard publication
+        /// </summary>
         public List<SecurityDashboardFolder> SecurityDashboardFolders
         {
             get
@@ -87,6 +152,9 @@ namespace Seal.Model
 
 
         private PersonalFolderRight? _persFolderRight = null;
+        /// <summary>
+        /// Right for the personal folder
+        /// </summary>
         public PersonalFolderRight PersonalFolderRight
         {
             get
@@ -103,6 +171,9 @@ namespace Seal.Model
         }
 
         private bool? _sqlModel = null;
+        /// <summary>
+        /// True if the user has right to edit SQL models
+        /// </summary>
         public bool SqlModel
         {
             get
@@ -120,6 +191,9 @@ namespace Seal.Model
         }
 
         private ViewType? _viewType = null;
+        /// <summary>
+        /// Views allowed for the user: reports and/or dashboards
+        /// </summary>
         public ViewType ViewType
         {
             get
@@ -136,6 +210,9 @@ namespace Seal.Model
         }
 
         List<SWIDashboardFolder> _dashboardFolders;
+        /// <summary>
+        /// List of SWIDashboardFolder for the Web Report Server
+        /// </summary>
         public List<SWIDashboardFolder> DashboardFolders
         {
             get
@@ -159,6 +236,9 @@ namespace Seal.Model
         }
 
         private bool? _manageDashboards = null;
+        /// <summary>
+        /// True if the usercan manage dashboards
+        /// </summary>
         public bool ManageDashboards
         {
             get
@@ -176,6 +256,9 @@ namespace Seal.Model
         }
 
         private bool? _hasPersonalDashboardFolder = null;
+        /// <summary>
+        /// True if the user has a personal folder for dashboards
+        /// </summary>
         public bool HasPersonalDashboardFolder
         {
             get
@@ -193,6 +276,9 @@ namespace Seal.Model
         }
 
         bool _tryAgain = true; //Try again to get rid of Load Assemblies exceptions...
+        /// <summary>
+        /// Authenticate the user using the current security script
+        /// </summary>
         public void Authenticate()
         {
             Error = "";
@@ -228,13 +314,18 @@ namespace Seal.Model
             SealSecurity.AddLoggedUsed(this);
         }
 
+        /// <summary>
+        /// Logout the user
+        /// </summary>
         public void Logout()
         {
             SecurityGroups.Clear();
             SealSecurity.RemoveLoggedUsed(this);
         }
 
-
+        /// <summary>
+        /// Set the default user's culture
+        /// </summary>
         public void SetDefaultCulture(string culture)
         {
             if (!string.IsNullOrEmpty(culture))
@@ -243,6 +334,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Set the default logo name
+        /// </summary>
         public void SetDefaultLogoName(string logoName)
         {
             if (!string.IsNullOrEmpty(logoName))
@@ -251,6 +345,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Set defaults from a security group 
+        /// </summary>
         public void SetGroupConfiguration(SecurityGroup group)
         {
             //set defaults from the group
@@ -258,6 +355,9 @@ namespace Seal.Model
             SetDefaultLogoName(group.LogoName);
         }
 
+        /// <summary>
+        /// Find a security folder from a given name
+        /// </summary>
         public SecurityFolder FindSecurityFolder(string folder)
         {
             if (Security == null) return null;
@@ -266,6 +366,9 @@ namespace Seal.Model
 
 
         private List<SecurityColumn> _securityColumns = null;
+        /// <summary>
+        /// List of columns that cannot be edited with the Web Report Designer
+        /// </summary>
         public List<SecurityColumn> ForbiddenColumns
         {
             get
@@ -275,6 +378,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the column can be selected 
+        /// </summary>
         public bool CanSelectColumn(MetaColumn column)
         {
             var sourceName = column.Source.Name;
@@ -288,6 +394,9 @@ namespace Seal.Model
 
 
         private List<SecuritySource> _securitySources = null;
+        /// <summary>
+        /// List of data source that cannot be edited with the Web Report Designer
+        /// </summary>
         public List<SecuritySource> ForbiddenSources
         {
             get
@@ -297,6 +406,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the data source can be selected 
+        /// </summary>
         public bool CanSelectSource(MetaSource item)
         {
             var sourceName = item.Name;
@@ -308,6 +420,9 @@ namespace Seal.Model
 
 
         private List<SecurityDevice> _securityDevices = null;
+        /// <summary>
+        /// List of devices that cannot be edited with the Web Report Designer
+        /// </summary>
         public List<SecurityDevice> ForbiddenDevices
         {
             get
@@ -317,6 +432,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the device can be selected 
+        /// </summary>
         public bool CanSelectDevice(OutputDevice item)
         {
             return !ForbiddenDevices.Exists(i =>
@@ -326,6 +444,9 @@ namespace Seal.Model
 
 
         private List<SecurityConnection> _securityConnections = null;
+        /// <summary>
+        /// List of connections that cannot be edited with the Web Report Designer
+        /// </summary>
         public List<SecurityConnection> ForbiddenConnections
         {
             get
@@ -335,6 +456,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the connection can be selected 
+        /// </summary>
         public bool CanSelectConnection(MetaConnection item)
         {
             var sourceName = item.Source.Name;
@@ -347,6 +471,9 @@ namespace Seal.Model
 
 
         private List<SecurityWidget> _securityWidgets = null;
+        /// <summary>
+        /// List of widgets that cannot be edited with the Web Report Designer
+        /// </summary>
         public List<SecurityWidget> ForbiddenWidgets
         {
             get
@@ -356,6 +483,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the widget can be selected 
+        /// </summary>
         public bool CanSelectWidget(DashboardWidget item)
         {
             return !ForbiddenWidgets.Exists(i =>
@@ -383,6 +513,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Add default security groups
+        /// </summary>
         public void AddDefaultSecurityGroup()
         {
             if (Security.Groups.Count > 0)
@@ -396,6 +529,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Add a security group from a given name
+        /// </summary>
         public void AddSecurityGroup(string name)
         {
             var newGroup = Security.Groups.FirstOrDefault(i => i.Name == name);
@@ -410,6 +546,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Add security groups from the current Windows group of the logged user
+        /// </summary>
         public void AddWindowsGroupToSecurityGroup(bool skipDomainName, string ADcontextType)
         {
             if (_windowsGroups == null)
@@ -513,6 +652,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Summary of the authentication
+        /// </summary>
         public string AuthenticationSummary
         {
             get
@@ -531,6 +673,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// List if security group names in a string
+        /// </summary>
         public string SecurityGroupsDisplay
         {
             get
@@ -545,11 +690,17 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Returns true if the user belongs to a group given by a name
+        /// </summary>
         public bool BelongsToGroup(string groupName)
         {
             return SecurityGroups.Exists(i => i.Name == groupName);
         }
 
+        /// <summary>
+        /// Returns the personal folder name
+        /// </summary>
         public string GetPersonalFolderName()
         {
             var result = Name;
@@ -559,6 +710,9 @@ namespace Seal.Model
         }
 
         private string _profilePath;
+        /// <summary>
+        /// Profile file path
+        /// </summary>
         public string ProfilePath
         {
             get
@@ -574,6 +728,9 @@ namespace Seal.Model
 
         #region Dashboard
         private Dictionary<string, DashboardWidget> _widgets = null;
+        /// <summary>
+        /// List of widgets available
+        /// </summary>
         public Dictionary<string, DashboardWidget> Widgets
         {
             get
@@ -598,7 +755,6 @@ namespace Seal.Model
                 return _widgets;
             }
         }
-
 
         void LoadDashboard(string path, string folderPath, string folderName, bool editable, bool isPersonal)
         {
@@ -659,6 +815,9 @@ namespace Seal.Model
         }
 
         private string _dashboardPersonalFolder;
+        /// <summary>
+        /// Path of the dashboard personal folder
+        /// </summary>
         public string DashboardPersonalFolder
         {
             get
@@ -672,6 +831,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// List of loaded dashboards
+        /// </summary>
         public List<Dashboard> UserDashboards
         {
             get
@@ -694,6 +856,9 @@ namespace Seal.Model
         }
 
         private List<Dashboard> _dashboards = null;
+        /// <summary>
+        /// Load all dashboards for the user
+        /// </summary>
         public List<Dashboard> GetDashboards()
         {
             try

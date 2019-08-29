@@ -19,11 +19,20 @@ using System.Xml;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// SealSecurity defines all the repository security
+    /// </summary>
     public class SealSecurity : RootEditor
     {
+        /// <summary>
+        /// Current file path
+        /// </summary>
         [XmlIgnore]
         public string FilePath;
 
+        /// <summary>
+        /// Current repository
+        /// </summary>
         [XmlIgnore]
         public Repository Repository;
 
@@ -58,6 +67,9 @@ namespace Seal.Model
         #endregion
 
         string _providerName;
+        /// <summary>
+        /// The security provider used for the authentication
+        /// </summary>
         [DisplayName("Security Provider"), Description("The security provider used for the authentication. Security providers are defined in the repository Security\\Providers folder."), Category("Security Provider Definition"), Id(1, 1)]
         [TypeConverter(typeof(SecurityProviderConverter))]
         public string ProviderName
@@ -70,6 +82,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// The script executed to login and find the security group used to published reports
+        /// </summary>
         [Category("Security Provider Definition"), DisplayName("Provider Security Script"), Description("The script executed to login and find the security group used to published reports."), Id(3, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [XmlIgnore]
@@ -79,6 +94,9 @@ namespace Seal.Model
         }
 
         bool _useCustomScript = false;
+        /// <summary>
+        /// If true, a custom script can be used for the authentication process
+        /// </summary>
         [Category("Security Provider Configuration"), DisplayName("Use custom Security Script"), Description("If true, a custom script can be used for the authentication process."), Id(1, 2)]
         [DefaultValue(false)]
         public bool UseCustomScript
@@ -91,16 +109,16 @@ namespace Seal.Model
             }
         }
 
-        string _script;
+        /// <summary>
+        /// The script executed to login and find the security group used to published reports. If the script is empty, the publication is done using the first security group defined.
+        /// </summary>
         [Category("Security Provider Configuration"), DisplayName("Custom Security Script"), Description("The script executed to login and find the security group used to published reports. If the script is empty, the publication is done using the first security group defined."), Id(2, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string Script
-        {
-            get { return _script; }
-            set { _script = value; }
-        }
+        public string Script { get; set; }
 
-
+        /// <summary>
+        /// Current SecurityProvider
+        /// </summary>
         public SecurityProvider Provider
         {
             get
@@ -116,6 +134,9 @@ namespace Seal.Model
 
 
         List<SecurityProvider> _providers = null;
+        /// <summary>
+        /// List of SecurityProviders available in the repository
+        /// </summary>
         [XmlIgnore]
         public List<SecurityProvider> Providers
         {
@@ -129,14 +150,15 @@ namespace Seal.Model
             }
         }
 
-        List<SecurityParameter> _parameters = new List<SecurityParameter>();
-        public List<SecurityParameter> Parameters
-        {
-            get { return _parameters; }
-            set { _parameters = value; }
-        }
-        public bool ShouldSerializeParameters() { return _parameters.Count > 0; }
+        /// <summary>
+        /// List of SecurityParameter used by the provider
+        /// </summary>
+        public List<SecurityParameter> Parameters { get; set; } = new List<SecurityParameter>();
+        public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
+        /// <summary>
+        /// Parameter values used in the script
+        /// </summary>
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         [Category("Security Provider Configuration"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(3, 2)]
         [XmlIgnore]
@@ -145,30 +167,30 @@ namespace Seal.Model
             get
             {
                 //Copy existing parameter values
-                for (int i = 0; i < _parameters.Count; i++)
+                for (int i = 0; i < Parameters.Count; i++)
                 {
-                    var param = _parameters[i];
+                    var param = Parameters[i];
                     var paramProvider = Provider.Parameters.FirstOrDefault(j => j.Name == param.Name);
                     if (paramProvider != null) paramProvider.Value = param.Value;
                 }
                 //Then use the parameters of the provider
-                _parameters.AddRange(Provider.Parameters.Where(i => !_parameters.Exists(j => j.Name == i.Name)));
+                Parameters.AddRange(Provider.Parameters.Where(i => !Parameters.Exists(j => j.Name == i.Name)));
                 return Provider.Parameters;
             }
-            set { _parameters = value; }
+            set { Parameters = value; }
         }
 
-
-        List<SecurityGroup> _groups = new List<SecurityGroup>();
+        /// <summary>
+        /// The groups defines how are published folders and reports in the Web Report Server. At least one group must exist.
+        /// </summary>
         [Category("Groups"), DisplayName("Security Groups"), Description("The groups defines how are published folders and reports in the Web Report Server. At least one group must exist."), Id(1, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<SecurityGroup> Groups
-        {
-            get { return _groups; }
-            set { _groups = value; }
-        }
-        public bool ShouldSerializeGroups() { return _groups.Count > 0; }
+        public List<SecurityGroup> Groups { get; set; } = new List<SecurityGroup>();
+        public bool ShouldSerializeGroups() { return Groups.Count > 0; }
 
+        /// <summary>
+        /// Returns a SecurityFolder form a given name
+        /// </summary>
         public SecurityFolder FindSecurityFolder(List<SecurityGroup> groups, string folder)
         {
             SecurityFolder result = null;
@@ -229,12 +251,15 @@ namespace Seal.Model
             return result.ToString();
         }
 
+        /// <summary>
+        /// Security summary
+        /// </summary>
         public string GetSecuritySummary()
         {
             StringBuilder result = new StringBuilder();
 
             initSecurity();
-            foreach (var group in _groups)
+            foreach (var group in Groups)
             {
                 result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
                 result.AppendFormat("    View Type: {0}\r\n", Helper.GetEnumDescription(group.ViewType.GetType(), group.ViewType));
@@ -281,16 +306,23 @@ namespace Seal.Model
         void initSecurity()
         {
             //init at least a security group
-            if (_groups.Count == 0)
+            if (Groups.Count == 0)
             {
                 SecurityGroup group = new SecurityGroup() { Name = "Default Group" };
-                _groups.Add(group);
+                Groups.Add(group);
                 group.Folders.Add(new SecurityFolder());
             }
         }
 
+        /// <summary>
+        /// Last modification date time
+        /// </summary>
         [XmlIgnore]
         public DateTime LastModification;
+
+        /// <summary>
+        /// Load a SealSecurity from a file
+        /// </summary>
         static public SealSecurity LoadFromFile(string path, bool ignoreException)
         {
             SealSecurity result = null;
@@ -315,11 +347,18 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Save to the current file
+        /// </summary>
         public void SaveToFile()
         {
             SaveToFile(FilePath);
         }
 
+        /// <summary>
+        /// Save to a destination file path
+        /// </summary>
+        /// <param name="path"></param>
         public void SaveToFile(string path)
         {
             //Check last modification
@@ -342,6 +381,9 @@ namespace Seal.Model
             LastModification = File.GetLastWriteTime(path);
         }
 
+        /// <summary>
+        /// Last error message
+        /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(7, 11)]
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
         public string Error
@@ -357,20 +399,27 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Editor Helper: User name to test a login
+        /// </summary>
         [XmlIgnore, Category("Test a login"), DisplayName("User name for test"), Description("User name to test a login."), Id(8, 10)]
         public string TestUserName { get; set; }
 
+        /// <summary>
+        /// Editor Helper: Password to test a login
+        /// </summary>
         [XmlIgnore, Category("Test a login"), PasswordPropertyText(true), DisplayName("Password for test"), Description("Password to test a login."), Id(9, 10)]
         public string TestPassword { get; set; }
 
-        bool _testCurrentWindowsUser = true;
+        /// <summary>
+        /// Editor Helper: If true, the current user will be use as IPrincipal to test the Integrated Windows authentication
+        /// </summary>
         [XmlIgnore, Category("Test a login"), DisplayName("Use current Windows User to test authentication"), Description("If true, the current user will be use as IPrincipal to test the Integrated Windows authentication."), Id(10, 10)]
-        public bool TestCurrentWindowsUser
-        {
-            get { return _testCurrentWindowsUser; }
-            set { _testCurrentWindowsUser = value; }
-        }
+        public bool TestCurrentWindowsUser { get; set; } = true;
 
+        /// <summary>
+        /// Editor Helper: Test a login using the test user name and password or the current windows user
+        /// </summary>
         [Category("Test a login"), DisplayName("Test a login"), Description("Test a login using the test user name and password or the current windows user."), Id(11, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperSimulateLogin
@@ -378,31 +427,49 @@ namespace Seal.Model
             get { return "<Click to test a login>"; }
         }
 
+        /// <summary>
+        /// True if a parameter with a given name has a value
+        /// </summary>
         public bool HasValue(string name)
         {
             return !string.IsNullOrEmpty(GetValue(name));
         }
 
+        /// <summary>
+        /// Parameter value of a given name
+        /// </summary>
         public string GetValue(string name)
         {
             SecurityParameter parameter = CurrentParameters.FirstOrDefault(i => i.Name == name);
             return parameter == null ? "" : parameter.Value;
         }
 
+        /// <summary>
+        /// Parameter boolean value of a given name
+        /// </summary>
         public bool GetBoolValue(string name)
         {
             SecurityParameter parameter = CurrentParameters.FirstOrDefault(i => i.Name == name);
             return parameter == null ? false : parameter.BoolValue;
         }
 
+        /// <summary>
+        /// Parameter numeric value of a given name
+        /// </summary>
         public int GetNumericValue(string name)
         {
             SecurityParameter parameter = CurrentParameters.FirstOrDefault(i => i.Name == name);
             return parameter == null ? 0 : parameter.NumericValue;
         }
 
+        /// <summary>
+        /// List of logged users
+        /// </summary>
         static public List<SecurityUser> LoggedUsers = new List<SecurityUser>();
 
+        /// <summary>
+        /// Add a logged user
+        /// </summary>
         static public void AddLoggedUsed(SecurityUser user)
         {
             lock (LoggedUsers)
@@ -411,6 +478,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Remove a logged user
+        /// </summary>
         static public void RemoveLoggedUsed(SecurityUser user)
         {
             lock (LoggedUsers)

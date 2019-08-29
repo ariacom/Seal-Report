@@ -10,10 +10,19 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A SecurityUserProfile stores the dashboards viewed by a user
+    /// </summary>
     public class SecurityUserProfile
     {
+        /// <summary>
+        /// List of dashboard identifers to display to the user
+        /// </summary>
         public List<string> Dashboards { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Load the profile from a file path
+        /// </summary>
         static public SecurityUserProfile LoadFromFile(string path)
         {
             SecurityUserProfile result = null;
@@ -33,11 +42,17 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Save to current file
+        /// </summary>
         public void SaveToFile()
         {
             SaveToFile(Path);
         }
 
+        /// <summary>
+        /// Save to a file path
+        /// </summary>
         public void SaveToFile(string path)
         {
             try
@@ -58,6 +73,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Current file path
+        /// </summary>
         [XmlIgnore]
         public string Path;
 

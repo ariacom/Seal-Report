@@ -13,20 +13,47 @@ using System.Web;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// ResultTable are generated after a model execution. It stores list of arrays of ResultCell.
+    /// </summary>
     public class ResultTable
     {
+        /// <summary>
+        /// Start row of the body of the table
+        /// </summary>
         public int BodyStartRow = 0;
+
+        /// <summary>
+        /// End row of the body of the table
+        /// </summary>
         public int BodyEndRow = 0;
+
+        /// <summary>
+        /// Strat column of the body
+        /// </summary>
         public int BodyStartColumn = 0;
+
+        /// <summary>
+        /// List of the ResultTotalCell of the table
+        /// </summary>
         public List<ResultTotalCell> TotalCells = new List<ResultTotalCell>();
 
+        /// <summary>
+        /// List of a arrays of ResultCell
+        /// </summary>
         public List<ResultCell[]> Lines = new List<ResultCell[]>();
 
+        /// <summary>
+        /// True if the table has been inverted
+        /// </summary>
         public bool InvertDone = false;
 
         private string _lastSearch = "";
         private List<ResultCell[]> _filteredLines = null;
 
+        /// <summary>
+        /// Function to return partial table data to the report result
+        /// </summary>
         public string GetLoadTableData(ReportView view, string parameter)
         {
             var model = view.Model;
@@ -148,12 +175,18 @@ namespace Seal.Model
         }
 
         List<int> _columnsHidden = null;
+        /// <summary>
+        /// Set a column as hidden
+        /// </summary>
         public void SetColumnHidden(int col)
         {
             if (_columnsHidden == null) _columnsHidden = new List<int>();
             if (!_columnsHidden.Contains(col)) _columnsHidden.Add(col);
         }
 
+        /// <summary>
+        /// True if the column is hidden
+        /// </summary>
         public bool IsColumnHidden(int col)
         {
             if (_columnsHidden != null) return _columnsHidden.Contains(col);
@@ -161,15 +194,25 @@ namespace Seal.Model
         }
 
         //Helpers
+        /// <summary>
+        /// Row count of the table
+        /// </summary>
         public int RowCount
         {
             get { return Lines.Count; }
         }
+
+        /// <summary>
+        /// Column count of the table
+        /// </summary>
         public int ColumnCount
         {
             get { return Lines.Count > 0 ? Lines[0].Length : 0; }
         }
 
+        /// <summary>
+        /// Helper to access a ResultCell of the table
+        /// </summary>
         public ResultCell this[int row, int column]
         {
             get
@@ -178,11 +221,17 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the row is a sub-total
+        /// </summary>
         public bool IsSubTotalRow(int row)
         {
             return (row < RowCount && ColumnCount > 0 && Lines[row][0].IsSubTotal);
         }
 
+        /// <summary>
+        /// Returns the ResultTable as a DataTable
+        /// </summary>
         public DataTable GetDataTable()
         {
             var result = new DataTable();

@@ -12,6 +12,9 @@ using System.Windows.Forms;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Base class for the Excel Converter
+    /// </summary>
     public class SealExcelConverter : RootEditor
     {
         #region Editor
@@ -33,6 +36,9 @@ namespace Seal.Model
 
         #endregion
 
+        /// <summary>
+        /// Creates a basic SealExcelConverter
+        /// </summary>
         public static SealExcelConverter Create(string assemblyDirectory)
         {
             SealExcelConverter result = null;
@@ -56,13 +62,22 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Not implemented
+        /// </summary>
         public override string ToString() {
             //PlaceHolder1
             return "Not implemented in the open source version. A commercial component is available at www.ariacom.com"; 
         }
 
+        /// <summary>
+        /// Current application path
+        /// </summary>
         public string ApplicationPath = Path.GetDirectoryName(Application.ExecutablePath);
 
+        /// <summary>
+        /// Convert to Excel and save the result to a destination path
+        /// </summary>
         public virtual string ConvertToExcel(string destination)
         {
             //PlaceHolder2

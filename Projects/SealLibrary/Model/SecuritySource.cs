@@ -9,6 +9,10 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A SecuritySource defines the security applied to a data source for the Web Report Designer
+    /// </summary>
+
     public class SecuritySource : RootEditor
     {
         #region Editor
@@ -27,26 +31,23 @@ namespace Seal.Model
         }
         #endregion
 
-        string _name = "";
-        [Category("Definition"), DisplayName("Name"), Description("The name of the data source."), Id(2,1)]
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        /// <summary>
+        /// The name of the data source
+        /// </summary>
+        [Category("Definition"), DisplayName("Name"), Description("The name of the data source."), Id(2, 1)]
+        public string Name { get; set; } = "";
 
-        EditorRight _right = EditorRight.NoSelection;
+        /// <summary>
+        /// The right applied for the data source having this name
+        /// </summary>
         [Category("Rights"), DisplayName("Data Source Right"), Description("The right applied for the data source having this name."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(EditorRight.NoSelection)]
-        public EditorRight Right
-        {
-            get { return _right; }
-            set {
-                _right = value;
-            }
-        }
+        public EditorRight Right { get; set; } = EditorRight.NoSelection;
 
+        /// <summary>
+        /// Display name
+        /// </summary>
         [XmlIgnore]
         public string DisplayName
         {

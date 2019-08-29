@@ -10,6 +10,9 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A SecurityDashboardFolder defines the security applied to a dashboard folder for the Dashboard Manager
+    /// </summary>
     public class SecurityDashboardFolder : RootEditor
     {
         #region Editor
@@ -28,17 +31,17 @@ namespace Seal.Model
         }
         #endregion
 
-
-        string _name = "Folder Name";
-        [Category("Definition"), DisplayName("\tDashboard Folder Name"), Description("The name of the public dashboard folder. The physical path on the disk of the dashboard folder is relative from the repository folder '\\Dashboards'"), Id(1, 1)]
+        /// <summary>
+        /// The name of the public dashboard folder. The physical path on the disk of the dashboard folder is relative from the repository folder '\\Dashboards'
+        /// </summary>
+        [Category("Definition"), DisplayName("\tDashboard Folder Name"), Description("The name of the public dashboard folder. The physical path on the disk of the dashboard folder is relative from the repository folder '\\Dashboards'."), Id(1, 1)]
         [TypeConverter(typeof(DashboardFolderConverter))]
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; } = "Folder Name";
 
         DashboardFolderRight _right = DashboardFolderRight.Edit;
+        /// <summary>
+        /// The right applied on the dashboards of the folder
+        /// </summary>
         [Category("Definition"), DisplayName("Right"), Description("The right applied on the dashboards of the folder"), Id(3, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(DashboardFolderRight.Edit)]
@@ -52,6 +55,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Folder path
+        /// </summary>
         [XmlIgnore]
         public string FolderPath
         {
@@ -61,6 +67,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Display name
+        /// </summary>
         [XmlIgnore]
         public string DisplayName
         {

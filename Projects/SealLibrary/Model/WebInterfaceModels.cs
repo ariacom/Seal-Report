@@ -4,6 +4,9 @@
 //
 namespace Seal.Model
 {
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
     public class SWIUserProfile
     {
         public string name;
@@ -18,6 +21,9 @@ namespace Seal.Model
         public string userTag;
     }
 
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
     public class SWIFolder
     {
         private static string PersonalPrefix = ":";
@@ -77,6 +83,9 @@ namespace Seal.Model
         }
     }
 
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
     public class SWIDashboardFolder
     {
         public static string PersonalPath = ":";
@@ -86,6 +95,9 @@ namespace Seal.Model
     }
 
 
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
     public class SWIFile
     {
         public string path;
@@ -95,12 +107,18 @@ namespace Seal.Model
         public int right;
     }
 
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
     public class SWIFolderDetail
     {
         public SWIFolder folder = null;
         public SWIFile[] files = null;
     }
 
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
     public class SWIView
     {
         public string guid;
@@ -108,6 +126,9 @@ namespace Seal.Model
         public string displayName;
     }
 
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
     public class SWIOutput
     {
         public string guid;
@@ -115,12 +136,18 @@ namespace Seal.Model
         public string displayName;
     }
 
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
     public class SWIReportDetail
     {
         public SWIView[] views;
         public SWIOutput[] outputs;
     }
 
+    /// <summary>
+    /// Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+    /// </summary>
     public class SWIItem
     {
         public string id;
