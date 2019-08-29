@@ -183,7 +183,7 @@ namespace Seal.Model
 
         private SealPdfConverter _pdfConverter = null;
         /// <summary>
-        /// Helper Editor: All the default options applied to the PDF conversion from the HTML result.
+        /// Editor Helper: All the default options applied to the PDF conversion from the HTML result.
         /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -219,7 +219,7 @@ namespace Seal.Model
 
         private SealExcelConverter _excelConverter = null;
         /// <summary>
-        /// Helper Editor: All the default options applied to the Excel conversion from the view
+        /// Editor Helper: All the default options applied to the Excel conversion from the view
         /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -248,7 +248,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Helper Editor: Reset PDF configuration values to their default values
+        /// Editor Helper: Reset PDF configuration values to their default values
         /// </summary>
         [Category("PDF and Excel Converter"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(3, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
@@ -258,7 +258,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Helper Editor: Reset Excel configuration values to their default values
+        /// Editor Helper: Reset Excel configuration values to their default values
         /// </summary>
         [Category("PDF and Excel Converter"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(4, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]

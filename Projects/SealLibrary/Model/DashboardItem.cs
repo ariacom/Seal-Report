@@ -12,7 +12,7 @@ namespace Seal.Model
     public class DashboardItem
     {
         /// <summary>
-        /// Ubique identifier
+        /// Unique identifier
         /// </summary>
         public string GUID { get; set; }
 
