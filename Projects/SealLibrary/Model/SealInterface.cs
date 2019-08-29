@@ -9,6 +9,9 @@ using System.Windows.Forms;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Virtual class for SealInterface implementation
+    /// </summary>
     public class SealInterface
     {
         public static SealInterface Create(Repository repository)

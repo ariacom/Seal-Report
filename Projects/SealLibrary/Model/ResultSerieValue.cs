@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Class to sort the result series when rendering in the view
+    /// </summary>
     public class ResultSerieComparer : IComparer<ResultSerie>
     {
         int IComparer<ResultSerie>.Compare(ResultSerie x, ResultSerie y)
@@ -29,13 +32,34 @@ namespace Seal.Model
         }
     }
 
+    /// <summary>
+    /// ResultSerie is a serie result got after a model execution
+    /// </summary>
     public class ResultSerie
     {
+        /// <summary>
+        /// Splitter values as a string
+        /// </summary>
         public string SplitterValues;
+
+        /// <summary>
+        /// Result cells used for splitting 
+        /// </summary>
         public ResultCell[] SplitterCells;
+
+        /// <summary>
+        /// Current element
+        /// </summary>
         public ReportElement Element = null;
+
+        /// <summary>
+        /// List of ResultSerieValue
+        /// </summary>
         public List<ResultSerieValue> Values = new List<ResultSerieValue>();
 
+        /// <summary>
+        /// Display name
+        /// </summary>
         public string SerieDisplayName
         {
             get
@@ -47,7 +71,9 @@ namespace Seal.Model
         }
 
 
-        //True is the splitted element is sort ASC, false for DESC
+        /// <summary>
+        /// True is the splitted element is sort ASC, false for DESC 
+        /// </summary>
         public bool SortAscending
         {
             get
@@ -61,6 +87,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// For NVD3 serie, returns the chart type
+        /// </summary>
         public string NVD3MultiChartType
         {
             get
@@ -80,6 +109,9 @@ namespace Seal.Model
         public string ChartYSerieValues;
         public string ChartYDateSerieValues;
 
+        /// <summary>
+        /// Compares 2 ResultSerie objects
+        /// </summary>
         public static int CompareSeries(ResultSerie a, ResultSerie b)
         {
             if (a.SplitterCells == null || b.SplitterCells == null) return 0;
@@ -88,9 +120,19 @@ namespace Seal.Model
 
     }
 
+    /// <summary>
+    /// Defines a serie value (One to several X values, one Y value)
+    /// </summary>
     public class ResultSerieValue
     {
+        /// <summary>
+        /// X Values
+        /// </summary>
         public ResultCell[] XDimensionValues;
+
+        /// <summary>
+        /// Y Value
+        /// </summary>
         public ResultTotalCell Yvalue;
     }
 }

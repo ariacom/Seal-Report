@@ -13,6 +13,9 @@ using System.Windows.Forms;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Base class for the Pdf Converter
+    /// </summary>
     public class SealPdfConverter : RootEditor
     {
         #region Editor

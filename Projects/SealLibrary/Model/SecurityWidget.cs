@@ -9,6 +9,9 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A SecurityWidget defines the security applied to a widget for the Dashboard Manager
+    /// </summary>
     public class SecurityWidget : RootEditor
     {
         #region Editor
@@ -26,46 +29,38 @@ namespace Seal.Model
 
                 TypeDescriptor.Refresh(this);
             }
-        }
+            }
         #endregion
 
-
-        string _reportName;
+        /// <summary>
+        /// The name of the report containing the widget (optional)
+        /// </summary>
         [Category("Definition"), DisplayName("\tReport Name"), Description("The name of the report containing the widget (optional)."), Id(1, 1)]
-        public string ReportName
-        {
-            get { return _reportName; }
-            set { _reportName = value; }
-        }
+        public string ReportName { get; set; }
 
-        string _tag;
-        [Category("Definition"), DisplayName("Security Tag"), Description("The name of the security tag (optional, must match with the tags defined in the widget)."), Id(2,1)]
-        public string Tag
-        {
-            get { return _tag; }
-            set { _tag = value; }
-        }
+        /// <summary>
+        /// The name of the security tag (optional, must match with the tags defined in the widget)
+        /// </summary>
+        [Category("Definition"), DisplayName("Security Tag"), Description("The name of the security tag (optional, must match with the tags defined in the widget)."), Id(2, 1)]
+        public string Tag { get; set; }
 
-        string _name;
+        /// <summary>
+        /// The name of the widget (optional, must match with name defined in the widget)
+        /// </summary>
         [Category("Definition"), DisplayName("Name"), Description("The name of the widget (optional, must match with name defined in the widget)."), Id(3, 1)]
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; }
 
-        EditorRight _right = EditorRight.NoSelection;
+        /// <summary>
+        /// The right applied for the widget having this security tag or this name
+        /// </summary>
         [Category("Rights"), DisplayName("Widget Right"), Description("The right applied for the widget having this security tag or this name."), Id(1, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(EditorRight.NoSelection)]
-        public EditorRight Right
-        {
-            get { return _right; }
-            set {
-                _right = value;
-            }
-        }
+        public EditorRight Right { get; set; } = EditorRight.NoSelection;
 
+        /// <summary>
+        /// Display name
+        /// </summary>
         [XmlIgnore]
         public string DisplayName
         {

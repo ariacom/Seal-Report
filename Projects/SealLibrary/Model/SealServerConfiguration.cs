@@ -18,11 +18,20 @@ using System.Xml;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Main configuration of the Seal Server
+    /// </summary>
     public class SealServerConfiguration : RootComponent
     {
+        /// <summary>
+        /// Current file path
+        /// </summary>
         [XmlIgnore]
         public string FilePath;
 
+        /// <summary>
+        /// Current repository
+        /// </summary>
         [XmlIgnore]
         public Repository Repository;
 
@@ -72,63 +81,110 @@ namespace Seal.Model
 
         #endregion
 
+        /// <summary>
+        /// True if the configuration is used for Web Site publication on IIS
+        /// </summary>
         [XmlIgnore]
         public bool ForPublication = false;
+
+        /// <summary>
+        /// The OLE DB Default Connection String used when a new Data Source is created
+        /// </summary>
         [Category("Server Settings"), DisplayName("Default Connection String"), Description("The OLE DB Default Connection String used when a new Data Source is created. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Id(1, 1)]
         public string DefaultConnectionString { get; set; } = "Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;";
 
+        /// <summary>
+        /// The name of the Task Scheduler folder containg the schedules of the reports
+        /// </summary>
         [Category("Server Settings"), DisplayName("Task Folder Name"), Description("The name of the Task Scheduler folder containg the schedules of the reports. Warning: Changing this name will affect all existing schedules !"), Id(2, 1)]
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
+        /// <summary>
+        /// The logo file name used by the report templates
+        /// </summary>
         [Category("Server Settings"), DisplayName("Logo file name"), Description("The logo file name used by the report templates. The file must be located in the Repository folder '<Repository Path>\\Views\\Images' and in the \\Images sub-folder of the Web publication directory. If empty, the Web Product Name is used as prefix."), Id(5, 1)]
         [DefaultValue("logo.png")]
         public string LogoName { get; set; } = "logo.png";
 
+        /// <summary>
+        /// True if a logo is defined and exists
+        /// </summary>
         [XmlIgnore]
         public bool HasLogo
         {
-            get {
+            get
+            {
                 if (string.IsNullOrEmpty(LogoName)) return false;
                 return File.Exists(Path.Combine(Repository.ViewImagesFolder, LogoName));
             }
         }
 
+        /// <summary>
+        /// Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled.
+        /// </summary>
         [Category("Server Settings"), DisplayName("Log days to keep"), Description("Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled."), Id(6, 1)]
         [DefaultValue(30)]
         public int LogDays { get; set; } = 30;
 
+        /// <summary>
+        /// The name of the product displayed on the Web site
+        /// </summary>
         [Category("Server Settings"), DisplayName("Web Product Name"), Description("The name of the product displayed on the Web site."), Id(7, 1)]
         public string WebProductName { get; set; } = "Seal Report";
 
+        /// <summary>
+        /// If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path).
+        /// </summary>
         [Category("Server Settings"), DisplayName("Server is local (No internet)"), Description("If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path)."), Id(8, 1)]
         [DefaultValue(true)]
         public bool IsLocal { get; set; } = true;
 
+        /// <summary>
+        /// List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS.
+        /// </summary>
         [Category("Server Settings"), DisplayName("Patterns to replace in CSS or JScript"), Description("List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS."), Id(9, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<FileReplacePattern> FileReplacePatterns { get; set; } = new List<FileReplacePattern>();
         public bool ShouldSerializeFileReplacePatterns() { return FileReplacePatterns.Count > 0; }
 
+        /// <summary>
+        /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.
+        /// </summary>
         [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string InitScript { get; set; } = "";
 
+        /// <summary>
+        /// If set, the script is executed when a new report is created. Default values for report creation can be set here.
+        /// </summary>
         [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(5, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string ReportCreationScript { get; set; } = "";
 
+        /// <summary>
+        /// If set, the script is added to all task scripts executed. This may be useful to defined common functions.
+        /// </summary>
         [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed. This may be useful to defined common functions."), Id(6, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string TasksScript { get; set; } = "";
 
+        /// <summary>
+        /// List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report.
+        /// </summary>
         [Category("Scripts"), DisplayName("Common Scripts"), Description("List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report."), Id(7, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
 
+        /// <summary>
+        /// Current default configuration values for Pdf converter
+        /// </summary>
         public List<string> PdfConfigurations { get; set; } = new List<string>();
         public bool ShouldSerializePdfConfigurations() { return PdfConfigurations.Count > 0; }
 
         private SealPdfConverter _pdfConverter = null;
+        /// <summary>
+        /// Helper Editor: All the default options applied to the PDF conversion from the HTML result.
+        /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [DisplayName("Default PDF Configuration"), Description("All the default options applied to the PDF conversion from the HTML result."), Category("PDF and Excel Converter"), Id(1, 4)]
@@ -147,15 +203,24 @@ namespace Seal.Model
             set { _pdfConverter = value; }
         }
 
+        /// <summary>
+        /// True if the Pdf configurations were edited
+        /// </summary>
         public bool PdfConverterEdited
         {
             get { return _pdfConverter != null; }
         }
 
+        /// <summary>
+        /// Current default configuration values for Excel converter
+        /// </summary>
         public List<string> ExcelConfigurations { get; set; } = new List<string>();
         public bool ShouldSerializeExcelConfigurations() { return ExcelConfigurations.Count > 0; }
 
         private SealExcelConverter _excelConverter = null;
+        /// <summary>
+        /// Helper Editor: All the default options applied to the Excel conversion from the view
+        /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [DisplayName("Default Excel Configuration"), Description("All the default options applied to the Excel conversion from the view."), Category("PDF and Excel Converter"), Id(2, 4)]
@@ -174,11 +239,17 @@ namespace Seal.Model
             set { _excelConverter = value; }
         }
 
+        /// <summary>
+        /// True if the Excel configurations were edited
+        /// </summary>
         public bool ExcelConverterEdited
         {
             get { return _excelConverter != null; }
         }
 
+        /// <summary>
+        /// Helper Editor: Reset PDF configuration values to their default values
+        /// </summary>
         [Category("PDF and Excel Converter"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(3, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetPDFConfigurations
@@ -186,14 +257,19 @@ namespace Seal.Model
             get { return "<Click to reset the PDF configuration values to their default values>"; }
         }
 
+        /// <summary>
+        /// Helper Editor: Reset Excel configuration values to their default values
+        /// </summary>
         [Category("PDF and Excel Converter"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(4, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetExcelConfigurations
         {
             get { return "<Click to reset the Excel configuration values to their default values>"; }
         }
-      
 
+        /// <summary>
+        /// All common scripts
+        /// </summary>
         [XmlIgnore]
         public string CommonScriptsHeader
         {
@@ -205,6 +281,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Returns all common scripts not being edited
+        /// </summary>
         public string GetCommonScriptsHeader(CommonScript scriptBeingEdited)
         {
             var result = "";
@@ -212,79 +291,68 @@ namespace Seal.Model
             return result;
         }
 
-
-        string _defaultCulture = "";
+        /// <summary>
+        /// The name of the culture used when a report is created. If not specified, the current culture of the server is used.
+        /// </summary>
         [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used when a report is created. If not specified, the current culture of the server is used."), Id(1, 2)]
         [TypeConverter(typeof(Converter.CultureInfoConverter))]
-        public string DefaultCulture
-        {
-            get { return _defaultCulture; }
-            set { _defaultCulture = value; }
-        }
- 
-        string _numericFormat = "N0";
-        [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format"), Id(2, 2)]
+        public string DefaultCulture { get; set; } = "";
+
+        /// <summary>
+        /// The numeric format used for numeric column having the default format
+        /// </summary>
+        [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format."), Id(2, 2)]
         [TypeConverter(typeof(CustomFormatConverter))]
         [DefaultValue("N0")]
-        public string NumericFormat
-        {
-            get { return _numericFormat; }
-            set { _numericFormat = value; }
-        }
+        public string NumericFormat { get; set; } = "N0";
 
-        string _dateFormat = "d";
-        [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format"), Id(3, 2)]
+        /// <summary>
+        /// The date time format used for date time column having the default format
+        /// </summary>
+        [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format."), Id(3, 2)]
         [TypeConverter(typeof(CustomFormatConverter))]
         [DefaultValue("d")]
-        public string DateTimeFormat
-        {
-            get { return _dateFormat; }
-            set { _dateFormat = value; }
-        }
+        public string DateTimeFormat { get; set; } = "d";
 
-        string _csvSeparator = "";
+        /// <summary>
+        /// If not specified in the report, separator used for the CSV template
+        /// </summary>
         [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(4, 2)]
-        public string CsvSeparator
-        {
-            get { return _csvSeparator; }
-            set { _csvSeparator = value; }
-        }
+        public string CsvSeparator { get; set; } = "";
 
-        string _webApplicationPoolName = Repository.SealRootProductName + " Application Pool";
+        /// <summary>
+        /// The name of the IIS Application pool used by the web application
+        /// </summary>
         [Category("Web Server IIS Publication"), DisplayName("Application Pool Name"), Description("The name of the IIS Application pool used by the web application."), Id(2, 1)]
-        public string WebApplicationPoolName
-        {
-            get { return _webApplicationPoolName; }
-            set { _webApplicationPoolName = value; }
-        }
+        public string WebApplicationPoolName { get; set; } = Repository.SealRootProductName + " Application Pool";
 
-        string _webApplicationName = "/Seal";
-        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application. Use '/' to publish on 'Default Web Site'"), Id(1, 1)]
-        public string WebApplicationName
-        {
-            get { return _webApplicationName; }
-            set { _webApplicationName = value; }
-        }
+        /// <summary>
+        /// The name of the IIS Web application. Use '/' to publish on 'Default Web Site'
+        /// </summary>
+        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application. Use '/' to publish on 'Default Web Site'."), Id(1, 1)]
+        public string WebApplicationName { get; set; } = "/Seal";
 
-        string _webPublicationDirectory = "";
+        /// <summary>
+        /// The directory were the web site files are published
+        /// </summary>
         [Category("Web Server IIS Publication"), DisplayName("Publication directory"), Description("The directory were the web site files are published."), Id(3, 1)]
         [EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor))]
-        public string WebPublicationDirectory
-        {
-            get { return _webPublicationDirectory; }
-            set { _webPublicationDirectory = value; }
-        }
+        public string WebPublicationDirectory { get; set; } = "";
 
-        //Set by the server manager...
-        string _installationDirectory = "";
-        public string InstallationDirectory
-        {
-            get { return _installationDirectory;}
-            set {_installationDirectory = value;}
-        }
+        /// <summary>
+        /// Installation directory
+        /// </summary>
+        public string InstallationDirectory { get; set; } = "";
 
+        /// <summary>
+        /// Last modifcation date time
+        /// </summary>
         [XmlIgnore]
         public DateTime LastModification;
+
+        /// <summary>
+        /// Load configuration from a file
+        /// </summary>
         static public SealServerConfiguration LoadFromFile(string path, bool ignoreException)
         {
             SealServerConfiguration result = null;
@@ -305,12 +373,18 @@ namespace Seal.Model
             return result;
         }
 
-
+        /// <summary>
+        /// Save to current file
+        /// </summary>
         public void SaveToFile()
         {
             SaveToFile(FilePath);
         }
 
+        /// <summary>
+        /// Save to a given file path
+        /// </summary>
+        /// <param name="path"></param>
         public void SaveToFile(string path)
         {
             //Check last modification
@@ -356,6 +430,9 @@ namespace Seal.Model
             LastModification = File.GetLastWriteTime(path);
         }
 
+        /// <summary>
+        /// Defines a pattern to replace in a file 
+        /// </summary>
         public class FileReplacePattern
         {
             public override string ToString()
@@ -363,11 +440,11 @@ namespace Seal.Model
                 return FileName + " " + OldValue;
             }
 
-            [Category("Pattern Definition"),DisplayName("\tFile Name"), Description("The name of the attached file.")]
+            [Category("Pattern Definition"), DisplayName("\tFile Name"), Description("The name of the attached file.")]
             public string FileName { get; set; } = "filename.css";
-            [Category("Pattern Definition"),DisplayName("\tOld Value"), Description("The pattern to replace.")]
+            [Category("Pattern Definition"), DisplayName("\tOld Value"), Description("The pattern to replace.")]
             public string OldValue { get; set; }
-            [Category("Pattern Definition"),DisplayName("New Value"), Description("The new value.")]
+            [Category("Pattern Definition"), DisplayName("New Value"), Description("The new value.")]
             public string NewValue { get; set; }
         }
     }

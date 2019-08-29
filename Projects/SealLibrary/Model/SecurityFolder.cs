@@ -9,6 +9,9 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// A SecurityFolder defines the security applied to a published folder
+    /// </summary>
     public class SecurityFolder : RootEditor
     {
         #region Editor
@@ -34,17 +37,18 @@ namespace Seal.Model
         }
         #endregion
 
-        string _path = "\\";
-        [Category("Definition"), DisplayName("\tPath"), Description("The folder path containing the reports to publish. The path is relative to the repository 'Reports' folder and should be unique in the security group."), Id(1,1)]
+        /// <summary>
+        /// The folder path containing the reports to publish. The path is relative to the repository 'Reports' folder and should be unique in the security group.
+        /// </summary>
+        [Category("Definition"), DisplayName("\tPath"), Description("The folder path containing the reports to publish. The path is relative to the repository 'Reports' folder and should be unique in the security group."), Id(1, 1)]
         [TypeConverter(typeof(RepositoryFolderConverter))]
         [DefaultValue("\\")]
-        public string Path
-        {
-            get { return _path; }
-            set { _path = value; }
-        }
+        public string Path { get; set; } = "\\";
 
         bool _useSubFolders = true;
+        /// <summary>
+        /// If true, sub-folders are also published with the same definition
+        /// </summary>
         [Category("Definition"), DisplayName("\tShow sub-folders"), Description("If true, sub-folders are also published with the same definition."), Id(2, 1)]
         [DefaultValue(true)]
         public bool UseSubFolders
@@ -56,16 +60,17 @@ namespace Seal.Model
             }
         }
 
-        bool _manageFolder = true;
+        /// <summary>
+        /// If true, the user can Create, Rename or Delete sub-folders in this folder. This flag is only used if Sub-folders are shown.
+        /// </summary>
         [Category("Definition"), DisplayName("Manage sub-folder"), Description("If true, the user can Create, Rename or Delete sub-folders in this folder. This flag is only used if Sub-folders are shown."), Id(3, 1)]
         [DefaultValue(true)]
-        public bool ManageFolder
-        {
-            get { return _manageFolder; }
-            set { _manageFolder = value; }
-        }
+        public bool ManageFolder { get; set; } = true;
 
         FolderRight _folderRight = FolderRight.Edit;
+        /// <summary>
+        /// The right applied on the reports and files of the folder
+        /// </summary>
         [Category("Definition"), DisplayName("\tRight"), Description("The right applied on the reports and files of the folder"), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(FolderRight.Edit)]
@@ -79,26 +84,23 @@ namespace Seal.Model
             }
         }
 
-        bool _expandSubFolders = true;
+        /// <summary>
+        /// If true, all the Sub-folders displayed in the Tree View are expanded by default
+        /// </summary>
         [Category("Options"), DisplayName("Expand Tree View Sub-folders"), Description("If true, all the Sub-folders displayed in the Tree View are expanded by default."), Id(2, 2)]
         [DefaultValue(true)]
-        public bool ExpandSubFolders
-        {
-            get { return _expandSubFolders; }
-            set { _expandSubFolders = value; }
-        }
+        public bool ExpandSubFolders { get; set; } = true;
 
-
-        bool _filesOnly = false;
+        /// <summary>
+        /// If true, only files can be viewed or managed in the folder (reports are not shown and can not be created)
+        /// </summary>
         [Category("Options"), DisplayName("Files only (no reports)"), Description("If true, only files can be viewed or managed in the folder (reports are not shown and can not be created)."), Id(3, 2)]
         [DefaultValue(false)]
-        public bool FilesOnly
-        {
-            get { return _filesOnly; }
-            set { _filesOnly = value; }
-        }
+        public bool FilesOnly { get; set; } = false;
 
-        //Helper, set to true if defined in a group
+        /// <summary>
+        /// Helper: is true if defined in a group 
+        /// </summary>
         [XmlIgnore]
         public bool IsDefined = false;
     }
