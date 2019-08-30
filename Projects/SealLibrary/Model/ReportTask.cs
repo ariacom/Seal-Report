@@ -192,7 +192,7 @@ namespace Seal.Model
         public int SortOrder { get; set; } = 0;
 
         /// <summary>
-        /// Retruns the order of the task
+        /// Returns the order of the task
         /// </summary>
         public int GetSort()
         {

@@ -35,7 +35,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Retruns a ReportViewTemplate from a given name
+        /// Returns a ReportViewTemplate from a given name
         /// </summary>
         public static ReportViewTemplate GetViewTemplate(string name)
         {
