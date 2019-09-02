@@ -346,8 +346,10 @@ namespace Seal.Model
             return true;
         }
 
-
-        private static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired)
+        /// <summary>
+        /// Set restriction values from input 1,2,3,4
+        /// </summary>
+        public static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired)
         {
             string dateMessage = report.Translate("Use the date format '{0}' or one of the following keywords:", report.CultureInfo.DateTimeFormat.ShortDatePattern) + " " + report.DateKeywordsList;
 
