@@ -11,13 +11,6 @@ using Seal.Model;
 
 namespace Seal.Forms
 {
-    /// <summary>
-    /// Windows Forms Objects and Helpers
-    /// </summary>
-    internal class NamespaceDoc
-    {
-    }
-
     public partial class ExecutionForm : Form, ExecutionLogInterface
     {
         public ExecutionForm(Thread thread)
