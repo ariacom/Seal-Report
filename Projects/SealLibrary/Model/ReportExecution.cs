@@ -376,7 +376,7 @@ namespace Seal.Model
             else restriction.Value1 = val;
 
             //check required flag
-            if (string.IsNullOrEmpty(val) && restriction.Required)
+            if (checkRequired && string.IsNullOrEmpty(val) && restriction.Required)
             {
                 report.HasValidationErrors = true;
                 report.ExecutionErrors += string.Format("{0} '{1}'\r\n", report.Translate("A value is required for"), restriction.DisplayNameElTranslated);

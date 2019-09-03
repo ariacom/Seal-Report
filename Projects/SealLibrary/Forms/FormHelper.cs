@@ -5,14 +5,19 @@ using Seal.Model;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Seal.Forms
 {
     class FormHelper
     {
+        /// <summary>
+        /// Windows Forms Objects and Helpers
+        /// </summary>
+        internal class NamespaceDoc
+        {
+        }
+
+
         public static void CheckRazorSyntax(Scintilla textBox, string header, object objectForCheckSyntax, Dictionary<int, string> compilationErrors)
         {
             string error = "";
