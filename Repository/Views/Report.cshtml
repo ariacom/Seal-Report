@@ -221,6 +221,9 @@
     <script>
         @Raw(view.GetValue("additional_js"))
     </script>
+    <style>
+        @Raw(view.GetValue("additional_css"))
+    </style>
 </head>
 <body>
     @Include(view.GetPartialTemplateKey("Report.iHeader", view), view)
