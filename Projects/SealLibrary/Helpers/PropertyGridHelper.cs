@@ -21,27 +21,34 @@ namespace Seal.Helpers
             grid.ContextMenuStrip.Opening += new CancelEventHandler(delegate (object sender, CancelEventArgs e)
             {
                 GridItem item = grid.SelectedGridItem;
-                if (
-                item.PropertyDescriptor == null ||
-                item.PropertyDescriptor.IsReadOnly ||
-                (!(item.PropertyDescriptor is CustomPropertyDescriptor)) ||
-                (item.PropertyDescriptor is CustomPropertyDescriptor && ((CustomPropertyDescriptor)item.PropertyDescriptor).DefaultValue == null) ||
-                !item.PropertyDescriptor.CanResetValue(grid.SelectedObject)
-                )
+                if (item != null)
                 {
-                    e.Cancel = true;
+                    if (
+                    item.PropertyDescriptor == null ||
+                    item.PropertyDescriptor.IsReadOnly ||
+                    (!(item.PropertyDescriptor is CustomPropertyDescriptor)) ||
+                    (item.PropertyDescriptor is CustomPropertyDescriptor && ((CustomPropertyDescriptor)item.PropertyDescriptor).DefaultValue == null) ||
+                    !item.PropertyDescriptor.CanResetValue(grid.SelectedObject)
+                    )
+                    {
+                        e.Cancel = true;
+                    }
                 }
+                else e.Cancel = true;
             });
 
             var resetToolStripMenuItem = new ToolStripMenuItem() { Text = "Reset to default value" };
             resetToolStripMenuItem.Click += new EventHandler(delegate (object sender, EventArgs e)
             {
                 GridItem item = grid.SelectedGridItem;
-                if (item.PropertyDescriptor != null && item.PropertyDescriptor.CanResetValue(grid.SelectedObject))
+                if (item != null)
                 {
-                    grid.ResetSelectedProperty();
-                    if (grid.SelectedObject is RootEditor) ((RootEditor)grid.SelectedObject).UpdateEditor();
-                    if (HelperEditor.HandlerInterface != null) HelperEditor.HandlerInterface.SetModified();
+                    if (item.PropertyDescriptor != null && item.PropertyDescriptor.CanResetValue(grid.SelectedObject))
+                    {
+                        grid.ResetSelectedProperty();
+                        if (grid.SelectedObject is RootEditor) ((RootEditor)grid.SelectedObject).UpdateEditor();
+                        if (HelperEditor.HandlerInterface != null) HelperEditor.HandlerInterface.SetModified();
+                    }
                 }
             });
             grid.ContextMenuStrip.Items.Add(resetToolStripMenuItem);

@@ -496,7 +496,11 @@ namespace Seal.Helpers
                 message.AppendFormat("\r\n{0}\r\n({1})\r\n", currentEx.Message, currentEx.StackTrace);
                 currentEx = currentEx.InnerException;
             }
-            message.Append(GetContextDetail(request, user));
+            try
+            {
+                message.Append(GetContextDetail(request, user));
+            }
+            catch { }
             WriteLogEntry("Seal Web Server", EventLogEntryType.Error, message.ToString());
         }
 
