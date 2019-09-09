@@ -84,7 +84,10 @@ namespace Seal.Forms
         {
             Show();
             Text = Path.GetFileNameWithoutExtension(originalFilePath) + " - " + Repository.SealRootProductName + " Report Viewer";
+            WindowState = FormWindowState.Normal;
             BringToFront();
+            TopLevel = true;
+            Focus();
 
             Report previousReport = _report;
 
@@ -107,7 +110,7 @@ namespace Seal.Forms
                 _report.ExecutionContext = ReportExecutionContext.DesignerOutput;
                 if (_report.OutputToExecute != null) _report.CurrentViewGUID = _report.OutputToExecute.ViewGUID;
             }
-
+            
             //execute with custom view
             if (!string.IsNullOrEmpty(viewGUID)) _report.CurrentViewGUID = viewGUID;
 
