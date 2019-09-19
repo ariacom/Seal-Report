@@ -97,6 +97,7 @@
     <Compile Include="Converter\ReportViewConverter.cs" />
     <Compile Include="Converter\ViewParameterEnumConverter.cs" />
     <Compile Include="Converter\CultureNameConverter.cs" />
+    <Compile Include="Model\EditorTableDefinition.cs" />
     <Compile Include="Forms\AboutBoxForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -16,17 +16,20 @@
     <title>
         @report.ExecutionName
     </title>
+
     <!--CSS-->
     @Raw(report.AttachCSSFile("bootstrap.min.css", report.GenerateHTMLDisplay && report.ExecutionContext == ReportExecutionContext.DesignerReport ? "" : "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"))
     @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"))
     @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css"))
-    @Raw(report.AttachCSSFile("dataTables.bootstrap.min.css", "https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"))
-    @Raw(report.AttachCSSFile("responsive.bootstrap.min.css", "https://cdn.datatables.net/responsive/2.2.1/css/responsive.bootstrap.min.css"))
+    <!-- CSS DataTables-->
+    @Raw(report.AttachCSSFile("dataTables.bootstrap.min.css", "https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css"))
+    @Raw(report.AttachCSSFile("responsive.bootstrap.min.css", "https://cdn.datatables.net/responsive/2.2.2/css/responsive.bootstrap.min.css"))
+
+    @Raw(report.AttachCSSFiles(repository.Configuration.CssFiles))
     @Raw(report.AttachCSSFile("seal.css"))
-    @Raw(report.AttachCSSFile("custom.css"))
 
     <!--Scripts-->
-    @Raw(report.AttachScriptFile("jquery.min.js", "https://code.jquery.com/jquery-1.12.3.min.js"))
+    @Raw(report.AttachScriptFile("jquery.min.js", "https://code.jquery.com/jquery-1.12.4.min.js"))
     @Raw(report.AttachScriptFile("bootstrap.min.js", "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"))
     @Raw(report.AttachScriptFile("bootstrap-select.min.js", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"))
     @Raw(report.AttachScriptFile("moment.min.js"))
@@ -37,13 +40,13 @@
     }
     @Raw(report.AttachScriptFile("bootstrap-datetimepicker.min.js"))
 
-    @Raw(report.AttachScriptFile("jquery.dataTables.min.js", "https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"))
-    @Raw(report.AttachScriptFile("dataTables.bootstrap.min.js", "https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"))
+    <!--Scripts Datatables-->
+    @Raw(report.AttachScriptFile("jquery.dataTables.min.js", "https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"))
+    @Raw(report.AttachScriptFile("dataTables.bootstrap.min.js", "https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap.min.js"))
     @Raw(report.AttachScriptFile("dataTables.responsive.min.js"))
-    @Raw(report.AttachScriptFile("responsive.bootstrap.min.js", "https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap.min.js"))
+    @Raw(report.AttachScriptFile("responsive.bootstrap.min.js", "https://cdn.datatables.net/responsive/2.2.2/js/responsive.bootstrap.min.js"))
 
     @Raw(report.AttachScriptFile("datetime-moment.js"))
-
     @if (report.HasChart)
     {
         @Raw(report.AttachScriptFile("d3.min.js"))
@@ -64,165 +67,173 @@
         @Raw(report.AttachScriptFile("nv.d3.min.js"))
         @Raw(report.AttachCSSFile("nv.d3.min.css"))
         <script>
-            function nvd3TranslateText(text)
-            {
-                @foreach (var translation in repository.NVD3Translations)
+                function nvd3TranslateText(text)
                 {
-                <text>if (text == '@Raw(Helper.ToJS(translation.Key))') return '@Raw(Helper.ToJS(translation.Value))';</text>
+                    @foreach (var translation in repository.NVD3Translations)
+                    {
+                    <text>if (text == '@Raw(Helper.ToJS(translation.Key))') return '@Raw(Helper.ToJS(translation.Value))';</text>
+                    }
+                    return text;
                 }
-                return text;
-            }
         </script>
         @Raw(report.AttachScriptFile("chartNVD3.js"))
     }
+    @Raw(report.AttachScriptFiles(repository.Configuration.ScriptFiles))
 
     <script type="text/javascript">
-        var generateHTMLDisplay =  @Helper.ToJS(report.GenerateHTMLDisplay);
+            var generateHTMLDisplay =  @Helper.ToJS(report.GenerateHTMLDisplay);
 
-        var urlPrefix = "@report.WebUrl";
-        var executionTimer = null;
-        var refreshTimer = null;
-        var refreshRate = @view.GetNumericValue("refresh_rate");
-        var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
-        var showRestrictions = @Helper.ToJS(report.HasRestrictions && view.GetBoolValue("restriction_button"));
-        var hasNavigation = @Helper.ToJS(report.HasNavigation && (report.IsNavigating || report.GenerateHTMLDisplay));/*SRKW do not modify*/
-        var forceExecution = @Helper.ToJS(view.GetBoolValue("force_execution") || report.HasNavigation);
-        var isExecuting = @Helper.ToJS(report.IsExecuting);
-        var isCancel = @Helper.ToJS(report.Cancel);
-        var printLayout = @Helper.ToJS(report.PrintLayout);
-        var autoscroll = false;
+            var urlPrefix = "@report.WebUrl";
+            var executionTimer = null;
+            var refreshTimer = null;
+            var refreshRate = @view.GetNumericValue("refresh_rate");
+            var hasRestrictions = @Helper.ToJS(report.HasRestrictions);
+            var showRestrictions = @Helper.ToJS(report.HasRestrictions && view.GetBoolValue("restriction_button"));
+            var hasNavigation = @Helper.ToJS(report.HasNavigation && (report.IsNavigating || report.GenerateHTMLDisplay));/*SRKW do not modify*/
+            var forceExecution = @Helper.ToJS(view.GetBoolValue("force_execution") || report.HasNavigation);
+            var isExecuting = @Helper.ToJS(report.IsExecuting);
+            var isCancel = @Helper.ToJS(report.Cancel);
+            var printLayout = @Helper.ToJS(report.PrintLayout);
+            var autoscroll = false;
 
-        var rootViewId = '@view.ViewId';
+            var rootViewId = '@view.ViewId';
 
-        //text
-        var messagesText = '@report.Translate("Messages")';
-        var startingExecText = '@report.Translate("Starting execution...")';
-        var cancelText = '@report.Translate("Cancel")';
+            //text
+            var messagesText = '@report.Translate("Messages")';
+            var startingExecText = '@report.Translate("Starting execution...")';
+            var cancelText = '@report.Translate("Cancel")';
 
-        //formats
-        var languageName = '@view.CultureInfo.TwoLetterISOLanguageName';
-        var decimalSeparator = '@Raw(view.CultureInfo.NumberFormat.NumberDecimalSeparator)';
-        var shortDateFormat = '@Raw(repository.MomentJSShortDateFormat)';
-        var shortDateTimeFormat = '@Raw(repository.MomentJSShortDateTimeFormat)';
-        var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
-        var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
+            //formats
+            var languageName = '@view.CultureInfo.TwoLetterISOLanguageName';
+            var decimalSeparator = '@Raw(view.CultureInfo.NumberFormat.NumberDecimalSeparator)';
+            var shortDateFormat = '@Raw(repository.MomentJSShortDateFormat)';
+            var shortDateTimeFormat = '@Raw(repository.MomentJSShortDateTimeFormat)';
+            var thousandSeparator = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.NumberGroupSeparator))';
+            var currencySymbol = '@Raw(Helper.ToJS(view.CultureInfo.NumberFormat.CurrencySymbol))';
 
-        var dtTooltips = {
-            today: '@Raw(report.TranslateToJS("Go to today")))',
-            clear: '@Raw(report.TranslateToJS("Clear selection"))',
-            close: '@Raw(report.TranslateToJS("Close"))',
-            selectMonth: '@Raw(report.TranslateToJS("Select Month"))',
-            prevMonth: '@Raw(report.TranslateToJS("Previous Month"))',
-            nextMonth: '@Raw(report.TranslateToJS("Next Month"))',
-            selectYear: '@Raw(report.TranslateToJS("Select Year"))',
-            prevYear: '@Raw(report.TranslateToJS("Previous Year"))',
-            nextYear: '@Raw(report.TranslateToJS("Next Year"))',
-            selectDecade: '@Raw(report.TranslateToJS("Select Decade"))',
-            prevDecade: '@Raw(report.TranslateToJS("Previous Decade"))',
-            nextDecade: '@Raw(report.TranslateToJS("Next Decade"))',
-            prevCentury: '@Raw(report.TranslateToJS("Previous Century"))',
-            nextCentury: '@Raw(report.TranslateToJS("Next Century"))',
-            pickHour: '@Raw(report.TranslateToJS("Pick Hour"))',
-            incrementHour: '@Raw(report.TranslateToJS("Increment"))',
-            decrementHour: '@Raw(report.TranslateToJS("Decrement"))',
-            pickMinute: '@Raw(report.TranslateToJS("Pick Minute"))',
-            incrementMinute: '@Raw(report.TranslateToJS("Increment"))',
-            decrementMinute: '@Raw(report.TranslateToJS("Decrement"))',
-            pickSecond: '@Raw(report.TranslateToJS("Pick Second"))',
-            incrementSecond: '@Raw(report.TranslateToJS("Increment"))',
-            decrementSecond: '@Raw(report.TranslateToJS("Decrement"))',
-            togglePeriod: '@Raw(report.TranslateToJS("Toggle Period"))',
-            selectTime: '@Raw(report.TranslateToJS("Select Time"))'
-        }
-        $.fn.dataTable.moment(shortDateFormat);
-        $.fn.dataTable.moment(shortDateTimeFormat);
-        $.extend( true, $.fn.dataTable.defaults, {
-            responsive: {
-                details: {
-                    renderer: function (api, rowIdx, columns) {
-                        var data = $.map(columns, function (col, i) {
-                            var cellDatas = col.data.split('§', 6);
-                            return col.hidden ?
-                                '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
-                                '<th>' + col.title + (col.title != '' ? ':' : '') + '</th> ' +
-                                (cellDatas.length == 1 ? '<td>' + col.data : '<td style="' + cellDatas[3] + '" class="' + cellDatas[4] + '">' + cellDatas[5]) + '</td>' +
-                                '</tr>' :
-                                '';
-                        }).join('');
+            var dtTooltips = {
+                today: '@Raw(report.TranslateToJS("Go to today")))',
+                clear: '@Raw(report.TranslateToJS("Clear selection"))',
+                close: '@Raw(report.TranslateToJS("Close"))',
+                selectMonth: '@Raw(report.TranslateToJS("Select Month"))',
+                prevMonth: '@Raw(report.TranslateToJS("Previous Month"))',
+                nextMonth: '@Raw(report.TranslateToJS("Next Month"))',
+                selectYear: '@Raw(report.TranslateToJS("Select Year"))',
+                prevYear: '@Raw(report.TranslateToJS("Previous Year"))',
+                nextYear: '@Raw(report.TranslateToJS("Next Year"))',
+                selectDecade: '@Raw(report.TranslateToJS("Select Decade"))',
+                prevDecade: '@Raw(report.TranslateToJS("Previous Decade"))',
+                nextDecade: '@Raw(report.TranslateToJS("Next Decade"))',
+                prevCentury: '@Raw(report.TranslateToJS("Previous Century"))',
+                nextCentury: '@Raw(report.TranslateToJS("Next Century"))',
+                pickHour: '@Raw(report.TranslateToJS("Pick Hour"))',
+                incrementHour: '@Raw(report.TranslateToJS("Increment"))',
+                decrementHour: '@Raw(report.TranslateToJS("Decrement"))',
+                pickMinute: '@Raw(report.TranslateToJS("Pick Minute"))',
+                incrementMinute: '@Raw(report.TranslateToJS("Increment"))',
+                decrementMinute: '@Raw(report.TranslateToJS("Decrement"))',
+                pickSecond: '@Raw(report.TranslateToJS("Pick Second"))',
+                incrementSecond: '@Raw(report.TranslateToJS("Increment"))',
+                decrementSecond: '@Raw(report.TranslateToJS("Decrement"))',
+                togglePeriod: '@Raw(report.TranslateToJS("Toggle Period"))',
+                selectTime: '@Raw(report.TranslateToJS("Select Time"))'
+            }
+            $.fn.dataTable.moment(shortDateFormat);
+            $.fn.dataTable.moment(shortDateTimeFormat);
+            $.extend( true, $.fn.dataTable.defaults, {
+                responsive: {
+                    details: {
+                        renderer: function (api, rowIdx, columns) {
+                            var data = $.map(columns, function (col, i) {
+                                var cellDatas = col.data.split('§', 6);
+                                return col.hidden ?
+                                    '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                                    '<th>' + col.title + (col.title != '' ? ':' : '') + '</th> ' +
+                                    (cellDatas.length == 1 ? '<td>' + col.data : '<td style="' + cellDatas[3] + '" class="' + cellDatas[4] + '">' + cellDatas[5]) + '</td>' +
+                                    '</tr>' :
+                                    '';
+                            }).join('');
 
-                        return data ?
-                            $('<table/>').append(data) :
-                            false;
-                    }
-                }
-            },
-            columnDefs: [
-                { orderable: false, targets: ["firstcell"]}
-                @if (report.IsServerPaginationEnabled)
-                {
-                    <text>,
-                    {
-                        targets: "_all",
-                        createdCell: function(td, cellData, rowData, row, col) {
-                            var cellDatas = cellData.split('§', 6);
-                            $(td).html(cellDatas[5]);
-                            $(td).attr("class", cellDatas[4]);
-                            $(td).attr("style", cellDatas[3]);
-                            $(td).attr("navigation", cellDatas[2]);
-                            $(td).parent().attr("class", cellDatas[1]);
-                            $(td).parent().attr("style", cellDatas[0]);
+                            return data ?
+                                $('<table/>').append(data) :
+                                false;
                         }
                     }
-                    </text>
+                },
+                columnDefs: [
+                    { orderable: false, targets: ["firstcell"]}
+                    @if (report.IsServerPaginationEnabled)
+                    {
+                        <text>,
+                        {
+                            targets: "_all",
+                            createdCell: function(td, cellData, rowData, row, col) {
+                                var cellDatas = cellData.split('§', 6);
+                                $(td).html(cellDatas[5]);
+                                $(td).attr("class", cellDatas[4]);
+                                $(td).attr("style", cellDatas[3]);
+                                $(td).attr("navigation", cellDatas[2]);
+                                $(td).parent().attr("class", cellDatas[1]);
+                                $(td).parent().attr("style", cellDatas[0]);
+                            }
+                        }
+                        </text>
+                    }
+                ],
+                language: {
+                    decimal: decimalSeparator,
+                    thousands: thousandSeparator,
+                    processing: "@report.Translate("Processing...")",
+                    lengthMenu: "@report.Translate("Show _MENU_ rows")",
+                    zeroRecords: "@report.Translate("No rows")",
+                    emptyTable: "@report.Translate("No records")",
+                    info: "@report.Translate("Showing _START_ to _END_ of _TOTAL_")",
+                    infoEmpty: "@report.Translate("Showing 0 to 0 of 0")",
+                    infoFiltered: "@report.Translate("(filtered from _MAX_)")",
+                    infoPostFix: "",
+                    search: "@report.Translate("Filter:")",
+                    paginate: {
+                        first: "|&lt;",
+                        previous: "&lt;&lt;",
+                        next: ">>",
+                        last: ">|"
+                    },
+                    select: {
+                        rows: {
+                            _: "@report.Translate("%d rows selected")",
+                            0: "",
+                            1: "@report.Translate("1 row selected")"
+                        }
+                    }
+                },
+                pagingType: "full_numbers",
+                autoWidth: false,
+                stateSave: @Helper.ToJS(!string.IsNullOrEmpty(report.WebUrl)),
+                stateSaveCallback: function(settings,data) {
+                    try {
+                        (settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
+                            'DataTables_'+settings.sInstance+'_Result',
+                            JSON.stringify( data ));
+                    } catch (e) {}
+                },
+                stateLoadCallback: function(settings) {
+                    try {
+                        return JSON.parse(
+                            (settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(
+                                'DataTables_'+settings.sInstance+'_Result'
+                            ));
+                    } catch (e) {}
                 }
-            ],
-            language: {
-                decimal: decimalSeparator,
-                thousands: thousandSeparator,
-                processing: "@report.Translate("Processing...")",
-                lengthMenu: "@report.Translate("Show _MENU_ rows")",
-                zeroRecords: "@report.Translate("No rows")",
-                emptyTable: "@report.Translate("No records")",
-                info: "@report.Translate("Showing _START_ to _END_ of _TOTAL_")",
-                infoEmpty: "@report.Translate("Showing 0 to 0 of 0")",
-                infoFiltered: "@report.Translate("(filtered from _MAX_)")",
-                infoPostFix: "",
-                search: "@report.Translate("Filter:")",
-                paginate: {
-                    first: "|&lt;",
-                    previous: "&lt;&lt;",
-                    next: ">>",
-                    last: ">|"
-                }
-            },
-            pagingType: "full_numbers",
-            autoWidth: false,
-            stateSave: @Helper.ToJS(!string.IsNullOrEmpty(report.WebUrl)),
-            stateSaveCallback: function(settings,data) {
-                try {
-                    (settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
-                        'DataTables_'+settings.sInstance+'_Result',
-                        JSON.stringify( data ));
-                } catch (e) {}
-            },
-            stateLoadCallback: function(settings) {
-                try {
-                    return JSON.parse(
-                        (settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(
-                            'DataTables_'+settings.sInstance+'_Result'
-                        ));
-                } catch (e) {}
-            }
-        } );
+        });
     </script>
     @Raw(report.AttachScriptFile("helpers.js"))
     @Raw(report.AttachScriptFile("common.js"))
     @Raw(report.AttachScriptFile("custom.js"))
     <script>
-        @Raw(view.GetValue("additional_js"))
+            @Raw(view.GetValue("additional_js"))
     </script>
     <style>
-        @Raw(view.GetValue("additional_css"))
+            @Raw(view.GetValue("additional_css"))
     </style>
 </head>
 <body>

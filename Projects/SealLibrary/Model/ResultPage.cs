@@ -122,5 +122,10 @@ namespace Seal.Model
         /// Max length to adjust Y secondary axis margins 
         /// </summary>
         public int AxisYSecondaryMaxLen = 0;
+
+        /// <summary>
+        /// Custom Tag the can be used at execution time to store any object
+        /// </summary>
+        public object Tag;
     }
 }

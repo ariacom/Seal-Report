@@ -23,6 +23,10 @@
     <link rel="stylesheet" href="~/Content/responsive.bootstrap.min.css" />
     <link rel="stylesheet" href="~/Content/SealWeb.css" />
     <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
+    @foreach (var fileName in Helper.GetStringList(repository.Configuration.CssFiles))
+    {
+        <text>@Html.Raw(string.Format("<link rel='stylesheet' href='./Content/{0}' />", fileName))</text>
+    }
 
     <link rel="stylesheet" href="~/Content/seal.css" />
 </head>
@@ -295,6 +299,10 @@
     <script src="~/Scripts/chartNVD3.js"></script>
     <script src="~/Scripts/Chart.min.js"></script>
     <script src="~/Scripts/plotly-latest.min.js"></script>
+    @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
+    {
+        <text>@Html.Raw(string.Format("<script type='text/javascript' src='./Scripts/{0}'></script>", fileName))</text>
+    }
 
     <script type="text/javascript">
         //server
@@ -362,7 +370,6 @@
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
 
         var hasEditor = @Helper.ToJS(ServerOptions.HasEditor());
-
         //specific for widget execution
         function nvd3TranslateText(text)
         {

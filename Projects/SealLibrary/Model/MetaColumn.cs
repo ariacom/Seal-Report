@@ -445,6 +445,15 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Returns the SQL column name without prefix
+        /// </summary>
+        [XmlIgnore]
+        public string ColumnName
+        {
+            get { return Name.ToLower().Split('.').Last(); }
+        }
+
+        /// <summary>
         /// Defines the child columns to navigate from this column with the drill feature
         /// </summary>
         [Category("Drill"), DisplayName("Drill Children"), Description("Defines the child columns to navigate from this column with the drill feature."), Id(1, 4)]

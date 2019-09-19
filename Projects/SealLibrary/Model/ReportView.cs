@@ -944,7 +944,10 @@ namespace Seal.Model
         {
             var path = Template.GetPartialTemplatePath(name);
             var partial = PartialTemplates.FirstOrDefault(i => i.Name == name);
-            if (!File.Exists(path) || partial == null) throw new Exception(string.Format("Unable to find partial template named '{0}'. Check the name and the file (.partial.cshtml) in the Views folder...", name));
+            if (!File.Exists(path) || partial == null)
+            {
+                throw new Exception(string.Format("Unable to find partial template named '{0}'. Check the name and the file (.partial.cshtml) in the Views folder...", name));
+            }
 
             string key, text = null;
             if (partial.UseCustom && !string.IsNullOrWhiteSpace(partial.Text))

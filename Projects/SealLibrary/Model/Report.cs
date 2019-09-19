@@ -774,7 +774,7 @@ namespace Seal.Model
         /// True if the report is not for an output and has no external viewer
         /// </summary>
         [XmlIgnore]
-        public bool IsBasicHTMLWithNoOutput 
+        public bool IsBasicHTMLWithNoOutput
         {
             get
             {
@@ -1543,7 +1543,20 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// For a JavaScript, the attached file name or content of the HTML result according to execution context 
+        /// For Script Files, insert the attached file names or their contents according to execution context 
+        /// </summary>
+        public string AttachScriptFiles(string fileNames)
+        {
+            string result = "";
+            foreach (var fileName in Helper.GetStringList(fileNames))
+            {
+                if (!string.IsNullOrEmpty(fileName)) result += AttachScriptFile(fileName) + "\r\n";
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// For a Script File, insert the attached script file name or it content according to execution context 
         /// </summary>
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
@@ -1575,7 +1588,20 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// For a CSS File, the attached file name or content of the HTML result according to execution context 
+        /// For CSS Files, insert the attached file names or their contents according to execution context 
+        /// </summary>
+        public string AttachCSSFiles(string fileNames)
+        {
+            string result = "";
+            foreach (var fileName in Helper.GetStringList(fileNames))
+            {
+                if (!string.IsNullOrEmpty(fileName)) result += AttachCSSFile(fileName) + "\r\n";
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// For a CSS File, insert the attached file name or its content according to execution context 
         /// </summary>
         public string AttachCSSFile(string fileName, string cdnPath = "")
         {
@@ -1699,7 +1725,7 @@ namespace Seal.Model
         /// Current view used when parsing
         /// </summary>
         [XmlIgnore]
-        public ReportView CurrentView; 
+        public ReportView CurrentView;
 
         /// <summary>
         /// Current model view used when parsing
@@ -1925,7 +1951,7 @@ namespace Seal.Model
         public Object Tag;
 
         /// <summary>
-        /// Helper to find a view
+        /// Helper to find a view from its identifier
         /// </summary>
         public ReportView FindView(List<ReportView> views, string guid)
         {
@@ -1945,6 +1971,27 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Helper to find a view from its name
+        /// </summary>
+        public ReportView FindViewFromName(List<ReportView> views, string name)
+        {
+            ReportView result = null;
+            foreach (var view in views)
+            {
+                if (view.Name == name)
+                {
+                    result = view;
+                    break;
+                }
+                result = FindViewFromName(view.Views, name);
+
+                if (result != null) break;
+            }
+            return result;
+        }
+
+
+        /// <summary>
         /// Helper to get the root view from a child view
         /// </summary>
         public ReportView GetRootView(ReportView child)
@@ -1960,6 +2007,21 @@ namespace Seal.Model
             }
             return result;
         }
+
+        /// <summary>
+        /// Helper to get the a view from its execution id
+        /// </summary>
+        public ReportView GetViewFromExecId(string viewId)
+        {
+            ReportView result = null;
+            foreach (var view in Views)
+            {
+                result = view.GetView(viewId);
+                if (result != null) break;
+            }
+            return result;
+        }
+
 
         /// <summary>
         /// Get the widget view from the widgetGUID
