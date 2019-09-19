@@ -59,6 +59,19 @@ namespace Seal.Forms
             }
         }
 
+        SealInterface _interface = null;
+        SealInterface Interface
+        {
+            get
+            {
+                if (_interface == null)
+                {
+                    _interface = SealInterface.Create(Repository.Instance);
+                }
+                return _interface;
+            }
+        }
+
         string GetFormValue(string id)
         {
             string result = "";
@@ -110,7 +123,7 @@ namespace Seal.Forms
                 _report.ExecutionContext = ReportExecutionContext.DesignerOutput;
                 if (_report.OutputToExecute != null) _report.CurrentViewGUID = _report.OutputToExecute.ViewGUID;
             }
-            
+
             //execute with custom view
             if (!string.IsNullOrEmpty(viewGUID)) _report.CurrentViewGUID = viewGUID;
 
@@ -321,7 +334,7 @@ namespace Seal.Forms
                             _execution.UpdateEnumValues(enumId, values);
                         }
                         break;
-                        
+
                     case ReportExecution.ActionGetEnumValues:
                         {
                             cancelNavigation = true;
@@ -331,6 +344,15 @@ namespace Seal.Forms
                             enumValues.InnerText = _execution.GetEnumValues(enumId, filter);
                         }
                         break;
+
+                    default:
+                        {
+                            if (Interface.ProcessAction(action, webBrowser, _navigation))
+                            {
+                                cancelNavigation = true;
+                            }
+                            break;
+                        }
                 }
             }
             catch (Exception ex)

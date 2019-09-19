@@ -13,6 +13,8 @@ Report;<=;;<=
 Report;=;;=
 Report;>;;>
 Report;>=;;>=
+Report;%d rows selected;;%d lignes sélectionnées
+Report;1 row selected;;1 ligne sélectionnée
 Report;A value is required for;;Une valeur est requise pour
 Report;All selected;;Tout est sélectionné
 Report;and;;et
@@ -135,6 +137,7 @@ Report;Pick Minute;;Minute
 Report;Pick Second;;Seconde
 Report;Toggle Period;;Changer la période
 Report;Select Time;;Sélectionner l'heure
+Report;Subtotal;;Sous-total
 Web;Actions;;Actions
 Web;Add;;Ajouter
 Web;Add dashboards;;Ajouter des Dashboards

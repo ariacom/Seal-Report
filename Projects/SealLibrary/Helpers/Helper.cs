@@ -107,6 +107,19 @@ namespace Seal.Helpers
             else input = new StringBuilder(value);
         }
 
+        static public List<string> GetStringList(string listInput)
+        {
+            var result = new List<string>();
+            if (!string.IsNullOrEmpty(listInput))
+            {
+                foreach (var input in listInput.Replace("\r\n", ";").Split(';'))
+                {
+                    if (!string.IsNullOrEmpty(input)) result.Add(input);
+                }
+            }
+            return result;
+        }
+
         static public bool ValidateNumeric(string value, out Double d)
         {
             bool result = false;

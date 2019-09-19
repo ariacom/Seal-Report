@@ -148,7 +148,7 @@
             this.mainPropertyGrid.Location = new System.Drawing.Point(0, 0);
             this.mainPropertyGrid.Name = "mainPropertyGrid";
             this.mainPropertyGrid.Size = new System.Drawing.Size(932, 434);
-            this.mainPropertyGrid.TabIndex = 5;
+            this.mainPropertyGrid.TabIndex = 1;
             // 
             // panel2
             // 

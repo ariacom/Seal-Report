@@ -45,6 +45,11 @@ namespace Seal.Model
             return "";
         }
 
+        public virtual bool ProcessAction(string action, WebBrowser webBrowser, NavigationContext navigation)
+        {
+            return false;
+        }
+
         protected Repository _repository = null;
     }
 }

@@ -830,6 +830,8 @@ namespace SealWebServer.Controllers
                     report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
                     //Force load of all models
                     report.ExecutionView.SetParameter(Parameter.ForceModelsLoad, true);
+                    //set url
+                    report.WebUrl = GetWebUrl(Request, Response);
                 }
 
                 string content = "";

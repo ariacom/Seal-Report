@@ -57,7 +57,7 @@ namespace Seal.Model
         public string GetLoadTableData(ReportView view, string parameter)
         {
             var model = view.Model;
-            var parameters = parameter.Replace("&lt;", "<").Replace("&gt;",">").Split('§');
+            var parameters = parameter.Replace("&lt;", "<").Replace("&gt;", ">").Split('§');
 
             int echo = 1, len = 50, start = 0;
             string sort = "", search = "";
@@ -140,6 +140,7 @@ namespace Seal.Model
             }
 
             var dataTableView = view.Report.FindViewFromTemplate(view.Views, ReportViewTemplate.DataTableName);
+            if (dataTableView == null) dataTableView = view.Report.FindViewFromTemplate(view.Views, "Data Table Editor");
             var rowBodyClass = dataTableView.GetValue("data_table_body_class");
             var rowBodyStyle = dataTableView.GetValue("data_table_body_css");
             var rowSubClass = dataTableView.GetValue("data_table_subtotal_class");
@@ -254,6 +255,29 @@ namespace Seal.Model
             }
             return result;
         }
+
+        /// <summary>
+        /// Returns the column number from the element column name. -1 if not found.
+        /// </summary>
+        public int GetCol(string elementName)
+        {
+            int result = -1;
+                for (int col = 0; col < ColumnCount && BodyStartRow < RowCount; col++)
+            {
+                ResultCell cell = this[BodyStartRow, col];
+                if (cell != null)
+                {
+                    if (cell.Element.MetaColumn.ColumnName == elementName)
+                    {
+                        result = col;
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
     }
 
 }

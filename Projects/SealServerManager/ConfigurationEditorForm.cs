@@ -33,9 +33,9 @@ namespace Seal.Forms
 
             configuration.InitEditor();
             mainPropertyGrid.ToolbarVisible = false;
-            mainPropertyGrid.SelectedObject = configuration;
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
+            mainPropertyGrid.SelectedObject = configuration;
 
             publish1ToolStripButton.Visible = configuration.ForPublication;
             publish2ToolStripButton.Visible = configuration.ForPublication;

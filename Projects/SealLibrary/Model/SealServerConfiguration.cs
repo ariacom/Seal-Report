@@ -15,6 +15,7 @@ using System.Windows.Forms.Design;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using System.ComponentModel.Design;
 
 namespace Seal.Model
 {
@@ -60,7 +61,9 @@ namespace Seal.Model
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
                 GetProperty("FileReplacePatterns").SetIsBrowsable(!ForPublication);
-
+                GetProperty("CssFiles").SetIsBrowsable(!ForPublication);
+                GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
+                
                 GetProperty("ExcelConverter").SetIsBrowsable(!ForPublication);
                 GetProperty("PdfConverter").SetIsBrowsable(!ForPublication);
                 GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(!ForPublication);
@@ -148,6 +151,22 @@ namespace Seal.Model
         public bool ShouldSerializeFileReplacePatterns() { return FileReplacePatterns.Count > 0; }
 
         /// <summary>
+        /// Additional CSS files to be included in the HTML report result. One per line or separated by semi-column.
+        /// </summary>
+        [Category("Server Settings"), DisplayName("CSS Files"), Description("Additional CSS files to be included in the HTML report result. One per line or separated by semi-column."), Id(10, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+        public string CssFiles { get; set; } = null;
+        public bool ShouldSerializeCssFiles() { return !string.IsNullOrEmpty(CssFiles); }
+
+        /// <summary>
+        /// Additional JavaScript files to be included in the HTML report result. One per line or separated by semi-column.
+        /// </summary>
+        [Category("Server Settings"), DisplayName("Script Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(11, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+        public string ScriptFiles { get; set; } = "";
+        public bool ShouldSerializeScriptFiles() { return !string.IsNullOrEmpty(ScriptFiles); }
+
+        /// <summary>
         /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.
         /// </summary>
         [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 3)]
@@ -171,7 +190,7 @@ namespace Seal.Model
         /// <summary>
         /// List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report.
         /// </summary>
-        [Category("Scripts"), DisplayName("Common Scripts"), Description("List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report."), Id(7, 3)]
+        [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report."), Id(7, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
 
