@@ -60,6 +60,8 @@ swi-dashboard-editor.*
 swi-button-group.*
 swi.js
 MainEditor.cshtml
+_ed.*.css
+_ed.*.js
 
 # =========================
 # Operating System Files
