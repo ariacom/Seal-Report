@@ -60,6 +60,7 @@ swi-dashboard-editor.*
 swi-button-group.*
 swi.js
 MainEditor.cshtml
+DataTableEditor*.cshtml
 _ed.*.css
 _ed.*.js
 
