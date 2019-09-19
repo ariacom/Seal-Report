@@ -7,6 +7,7 @@
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     ResultTable table = page.DataTable;
+    bool enabled = view.GetBoolValue("data_tables_enabled");
     if (view.GetBoolValue("invert_data_tables") && modelView.GetBoolValue("show_data_tables") && !report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter))
     {
         reportModel.InvertDataTables();
@@ -19,9 +20,9 @@
     $(document).ready(function () {
         var dt = $('#@("dt_" + view.ViewId+page.PageId)');
         try {
-            if (dt != null && @Helper.ToJS(view.GetBoolValue("data_tables_enabled")) && !@Helper.ToJS(report.PrintLayout))
+            if (dt != null && @Helper.ToJS(enabled) && !@Helper.ToJS(report.PrintLayout))
             {
-                var dto = dt.dataTable({
+                var dto = dt.DataTable({
                 responsive: @Helper.ToJS(view.GetBoolValue("data_tables_responsive")),
                 ordering: @Helper.ToJS(view.GetBoolValue("data_tables_sort_enabled")),
                 paging: @Helper.ToJS(view.GetBoolValue("data_tables_pagination_enabled")),
@@ -31,8 +32,8 @@
                 searching: @Helper.ToJS(view.GetBoolValue("data_tables_filter_enabled")),
                 processing: @Helper.ToJS(view.GetBoolValue("data_tables_show_processing")),
                 order: [@Raw(view.GetValue("data_tables_sort_configuration"))],
-                serverSide: @Helper.ToJS(report.IsServerPaginationEnabled && view.GetBoolValue("data_tables_enabled")),
-                @if (report.IsServerPaginationEnabled && view.GetBoolValue("data_tables_enabled"))
+                serverSide: @Helper.ToJS(report.IsServerPaginationEnabled && enabled),
+                @if (report.IsServerPaginationEnabled && enabled)
                 {<text>
                         ajax: function(data, callback, settings) {
                             getTableData($(this), "@report.ExecutionGUID", $(this).attr("viewid"), $(this).attr("pageid"), data, callback, settings);
@@ -67,7 +68,7 @@
                 </tr>
             }
         </thead>
-        @if (!report.IsServerPaginationEnabled || !view.GetBoolValue("data_tables_enabled"))
+        @if (!report.IsServerPaginationEnabled || !enabled)
         {
             <text>
                 <tbody>

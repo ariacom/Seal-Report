@@ -450,7 +450,7 @@ namespace Seal.Model
         [XmlIgnore]
         public string ColumnName
         {
-            get { return Name.ToLower().Split('.').Last(); }
+            get { return Name.Split('.').Last(); }
         }
 
         /// <summary>
