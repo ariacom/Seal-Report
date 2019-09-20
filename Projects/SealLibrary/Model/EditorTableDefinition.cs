@@ -11,11 +11,15 @@ namespace Seal.Model
         public string Name = "";
         public bool IsHidden = false;
         public bool IsReadOnly = false;
+        public bool CanBeEmpty = true;
         public string ChildViewName = "";
     }
 
     public class EditorTableDefinition
     {
+        public delegate void CustomFieldValidator(dynamic editor, ReportElement element, object value);
+        public delegate void CustomMainValidator(dynamic editor);
+
         public string PkName = "";
         public string PkDisplayName = "";
         public string TableDisplayName = "";
@@ -31,5 +35,36 @@ namespace Seal.Model
 
         public List<EditorColumnDefinition> Cols = new List<EditorColumnDefinition>();
         public Dictionary<string, Tuple<string, string>> Navs = new Dictionary<string, Tuple<string, string>>();
+
+        public EditorColumnDefinition GetColumnDefinition(string colName)
+        {
+            var result = Cols.FirstOrDefault(i => i.Name == colName);
+            if (result == null)
+            {
+                result = new EditorColumnDefinition() { IsReadOnly = ReadOnlyByDefault };
+                Cols.Add(result);
+            }
+            return result;
+        }
+
+        public CustomFieldValidator FieldValidator = null;
+        public CustomMainValidator MainValidator = null;
+
+        void initValidator()
+        {
+            FieldValidator = new CustomFieldValidator(delegate (dynamic editor, ReportElement element, object value)
+            {
+                if (element.MetaColumn.ColumnName == "aColName")
+                {
+                    double? d = value as double?;
+                    if (d == null || d <= 0) editor.AddError(element.MetaColumn.ColumnName, "Value must be > 0");
+                }
+            });
+
+            MainValidator = new CustomMainValidator(delegate(dynamic editor)
+            {
+            });
+
+        }
     }
 }
