@@ -13,8 +13,6 @@ Report;<=;;<=
 Report;=;;=
 Report;>;;>
 Report;>=;;>=
-Report;%d rows selected;;%d lignes sélectionnées
-Report;1 row selected;;1 ligne sélectionnée
 Report;A value is required for;;Une valeur est requise pour
 Report;All selected;;Tout est sélectionné
 Report;and;;et
@@ -75,6 +73,7 @@ Report;"Page &p; of &P;";;"Page &p; de &P;"
 Report;Pages;;Pages
 Report;Processing;;En cours
 Report;Processing...;;En cours…
+Report;Please enter a value;;Veuillez entrer une valeur
 Report;Records;;Enregistrements
 Report;Report;;Rapport
 Report;Report has been cancelled;;Le rapport a été annulé

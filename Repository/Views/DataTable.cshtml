@@ -8,6 +8,8 @@
     ResultPage page = report.CurrentPage;
     ResultTable table = page.DataTable;
     bool enabled = view.GetBoolValue("data_tables_enabled");
+    string idSuffix = (view.ViewId + page.PageId).Replace("-", "");
+
     if (view.GetBoolValue("invert_data_tables") && modelView.GetBoolValue("show_data_tables") && !report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter))
     {
         reportModel.InvertDataTables();
@@ -18,7 +20,7 @@
 {
     <script type="text/javascript">
     $(document).ready(function () {
-        var dt = $('#@("dt_" + view.ViewId+page.PageId)');
+        var dt = $('#@("dt_" + idSuffix)');
         try {
             if (dt != null && @Helper.ToJS(enabled) && !@Helper.ToJS(report.PrintLayout))
             {
@@ -50,7 +52,7 @@
     });
     </script>
 
-    <table id='@("dt_" + view.ViewId+page.PageId)' viewid='@modelView.ViewId' pageid='@page.PageId' @Raw(view.AddAttribute("class", "data_table_class")) @Raw(view.AddAttribute("style", "data_table_css"))>
+    <table id='@("dt_" + idSuffix)' viewid='@modelView.ViewId' pageid='@page.PageId' @Raw(view.AddAttribute("class", "data_table_class")) @Raw(view.AddAttribute("style", "data_table_css"))>
         @if (view.HasValue("data_table_caption"))
         {
             <caption @Raw(view.AddAttribute("style", "data_table_caption_css"))>@Raw(view.GetHtmlValue("data_table_caption"))</caption>
