@@ -196,6 +196,8 @@ namespace Seal.Helpers
             result = string.Join(" ", Regex.Split(result, @"([A-Z][a-z]+)"));
             result = result.Replace('_', ' ').Trim();
             result = result.Replace("  ", " ");
+            result = result.Replace("  ", " ");
+            result = result.Replace("  ", " ");
             if (result.Length > 0) result = result.Substring(0, 1).ToUpper() + result.Substring(1);
             return result.Trim();
         }

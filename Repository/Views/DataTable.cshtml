@@ -89,7 +89,7 @@
             </text>
         }
         <tfoot>
-            @for (int row = table.BodyEndRow; row < table.Lines.Count; row++)
+            @for (int row = table.BodyEndRow; row < table.RowCount; row++)
                 {
                 <tr @Raw(view.AddAttribute("class", "data_table_footer_class")) @Raw(view.AddAttribute("style", "data_table_footer_css"))>
                     @for (int col = 0; col < table.ColumnCount; col++)

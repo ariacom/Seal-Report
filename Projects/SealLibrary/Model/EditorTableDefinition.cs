@@ -35,6 +35,7 @@ namespace Seal.Model
 
         public List<EditorColumnDefinition> Cols = new List<EditorColumnDefinition>();
         public Dictionary<string, Tuple<string, string>> Navs = new Dictionary<string, Tuple<string, string>>();
+        public Dictionary<string, string> ExtraColumnValues = new Dictionary<string, string>();
 
         public EditorColumnDefinition GetColumnDefinition(string colName)
         {
