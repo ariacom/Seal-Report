@@ -140,7 +140,7 @@ namespace Seal.Model
             }
 
             var dataTableView = view.Report.FindViewFromTemplate(view.Views, ReportViewTemplate.DataTableName);
-            if (dataTableView == null) dataTableView = view.Report.FindViewFromTemplate(view.Views, "Data Table Editor");
+            if (dataTableView == null) dataTableView = view.Report.FindViewFromTemplate(view.Views, ReportViewTemplate.DataTableEditorName);
             var rowBodyClass = dataTableView.GetValue("data_table_body_class");
             var rowBodyStyle = dataTableView.GetValue("data_table_body_css");
             var rowSubClass = dataTableView.GetValue("data_table_subtotal_class");

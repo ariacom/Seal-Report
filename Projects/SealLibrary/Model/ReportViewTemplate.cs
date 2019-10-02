@@ -19,6 +19,7 @@ namespace Seal.Model
         public const string ModelName = "Model";
         public const string ModelDetailName = "Model Detail";
         public const string DataTableName = "Data Table";
+        public const string DataTableEditorName = "Data Table Editor";
         public const string PageTableName = "Page Table";
         public const string ChartNVD3Name = "Chart NVD3";
         public const string ChartJSName = "Chart JS";
