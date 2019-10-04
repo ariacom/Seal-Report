@@ -18,7 +18,7 @@ namespace Seal.Model
     public class EditorTableDefinition
     {
         public delegate void CustomFieldValidator(dynamic editor, ReportElement element, object value);
-        public delegate void CustomMainValidator(dynamic editor);
+        public delegate void CustomMainValidator(dynamic editor, dynamic record);
 
         public string PkName = "";
         public string PkDisplayName = "";
@@ -62,7 +62,7 @@ namespace Seal.Model
                 }
             });
 
-            MainValidator = new CustomMainValidator(delegate(dynamic editor)
+            MainValidator = new CustomMainValidator(delegate(dynamic editor, dynamic record)
             {
             });
 

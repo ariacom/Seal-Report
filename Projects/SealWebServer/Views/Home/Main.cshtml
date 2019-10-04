@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.CssFiles))
     {
-        <text>@Html.Raw(string.Format("<link rel='stylesheet' href='./Content/{0}' />", fileName))</text>
+        <link rel="stylesheet" href="~/Content/@fileName" />
     }
 
     <link rel="stylesheet" href="~/Content/seal.css" />
@@ -301,7 +301,7 @@
     <script src="~/Scripts/plotly-latest.min.js"></script>
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
     {
-        <text>@Html.Raw(string.Format("<script type='text/javascript' src='./Scripts/{0}'></script>", fileName))</text>
+        <script type='text/javascript' src='~/Scripts/@fileName'></script>
     }
 
     <script type="text/javascript">

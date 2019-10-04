@@ -1382,6 +1382,23 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Returns the first ancestor view having a model
+        /// </summary>
+        public ReportView ModelView
+        {
+            get
+            {
+                ReportView result = this;
+                while (result.ParentView != null)
+                {
+                    if (result.Model != null) return result;
+                    result = result.ParentView;
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Reset children identifiers
         /// </summary>
         public void ReinitGUIDChildren()
