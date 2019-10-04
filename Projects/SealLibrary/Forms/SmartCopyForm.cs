@@ -124,7 +124,7 @@ namespace Seal.Forms
                         if (displayAtt.DisplayName.ToLower() == "view name") continue;
                     }
 
-                    properties.Add(new PropertyItem() { Name = string.Format("[{0}] {1}", catAtt.Category, displayAtt.DisplayName), Object = property });
+                    properties.Add(new PropertyItem() { Name = string.Format("[{0}] {1}", catAtt.Category, displayAtt.DisplayName.Replace("\t","")), Object = property });
                 }
             }
 

@@ -262,9 +262,9 @@ namespace Seal.Model
         public int GetCol(string elementName)
         {
             int result = -1;
-                for (int col = 0; col < ColumnCount && BodyStartRow < RowCount; col++)
+            for (int col = 0; col < ColumnCount && RowCount > 0; col++)
             {
-                ResultCell cell = this[BodyStartRow, col];
+                ResultCell cell = this[0, col];
                 if (cell != null)
                 {
                     if (cell.Element.MetaColumn.ColumnName == elementName)
