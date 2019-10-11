@@ -1103,6 +1103,22 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Init view GUIDs and clear schedule before a report Copy
+        /// </summary>
+        public void InitGUIDAndSchedules()
+        {
+            GUID = Guid.NewGuid().ToString();
+            foreach (var view in Views)
+            {
+                var newGUID = Guid.NewGuid().ToString();
+                if (view.GUID == CurrentViewGUID) CurrentViewGUID = newGUID;
+                view.GUID = newGUID;
+                view.ReinitGUIDChildren();
+            }
+             Schedules.Clear();
+        }
+
+        /// <summary>
         /// Synchronize all report schedules defined in the report with the Windows Task Scheduler.
         /// </summary>
         public void SynchronizeTasks()
@@ -1630,6 +1646,7 @@ namespace Seal.Model
             result += "\r\n</style>\r\n";
             return result;
         }
+
 
         private List<ReportRestriction> _executionCommonRestrictions = null;
         /// <summary>

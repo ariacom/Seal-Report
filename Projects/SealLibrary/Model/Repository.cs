@@ -274,6 +274,18 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Force a reload of the repository Instance
+        /// </summary>
+        public static Repository ReloadInstance()
+        {
+            {
+                _instance = Create();
+                return Instance;
+            }
+        }
+
+
+        /// <summary>
         /// Creates a basic repository from a given path
         /// </summary>
         public static Repository Create(string path)
@@ -315,7 +327,7 @@ namespace Seal.Model
         public Repository CreateFast()
         {
             //check if some files have changed, in this case -> full reload
-            if (MustReload()) return Repository.Create();
+            if (MustReload()) return Create();
 
             //Fast load
             Repository result = null;
@@ -357,7 +369,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        Debug.WriteLine(ex.Message);
                     }
                 }
             }
@@ -375,7 +387,7 @@ namespace Seal.Model
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        Debug.WriteLine(ex.Message);
                     }
                 }
             }
@@ -416,13 +428,22 @@ namespace Seal.Model
         /// <summary>
         /// True if the configuration or security file has been modified
         /// </summary>
-        /// <returns></returns>
         public bool MustReload()
         {
             if (Configuration.FilePath != null && File.GetLastWriteTime(Configuration.FilePath) != Configuration.LastModification) return true;
             if (Security.FilePath != null && File.GetLastWriteTime(Security.FilePath) != Security.LastModification) return true;
             foreach (var item in Sources) if (File.GetLastWriteTime(item.FilePath) != item.LastModification) return true;
             foreach (var item in Devices.Where(i => i is OutputEmailDevice)) if (item.FilePath != null && File.GetLastWriteTime(item.FilePath) != ((OutputEmailDevice)item).LastModification) return true;
+            //Check for new files
+            foreach (var file in Directory.GetFiles(SourcesFolder, "*." + SealConfigurationFileExtension))
+            {
+                if (!Sources.Exists(i => i.FilePath == file)) return true;
+            }
+            foreach (var file in Directory.GetFiles(DevicesEmailFolder, "*." + SealConfigurationFileExtension))
+            {
+                if (!Devices.Exists(i => i.FilePath == file)) return true;
+            }
+
             return false;
         }
 

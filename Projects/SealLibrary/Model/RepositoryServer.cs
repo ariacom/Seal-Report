@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using Seal.Helpers;
 
 namespace Seal.Model
 {
@@ -16,6 +17,28 @@ namespace Seal.Model
     {
         private static List<ReportViewTemplate> _viewTemplates = null;
         private static object _viewLock = new object();
+
+        public static void PreLoadTemplates()
+        {
+            lock (_viewLock)
+            {
+                var templates = ViewTemplates;
+                foreach (var template in templates)
+                {
+                    if (!template.IsParsed) template.ParseConfiguration();
+                    RazorHelper.Compile(template.Text, typeof(Report), template.CompilationKey);
+
+                    //Create a view to compile partial templates
+                    ReportView view = ReportView.Create(template);
+                    view.InitPartialTemplates();
+                    foreach (var partialTemplate in view.PartialTemplates)
+                    {
+                        view.GetPartialTemplateKey(partialTemplate.Name, view);
+                    }
+
+                }
+            }
+        }
 
         /// <summary>
         /// Current list of ReportViewTemplate

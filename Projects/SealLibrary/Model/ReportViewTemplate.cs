@@ -191,6 +191,17 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Compilation key for the template
+        /// </summary>
+        public string CompilationKey
+        {
+            get
+            {
+                return string.Format("TPL:{0}_{1}", FilePath, File.GetLastWriteTime(FilePath).ToString("s"));
+            }
+        }
+
+        /// <summary>
         /// Parse the current configuration and initialize the parameters
         /// </summary>
         public void ParseConfiguration()
@@ -198,7 +209,6 @@ namespace Seal.Model
             //Parse the configuration file to init the view template
             try
             {
-                string key = key = string.Format("TPLCFG:{0}_{1}", ConfigurationPath, File.GetLastWriteTime(ConfigurationPath).ToString("s"));
                 Error = "";
                 ClearConfiguration();
                 RazorHelper.CompileExecute(Configuration, this);

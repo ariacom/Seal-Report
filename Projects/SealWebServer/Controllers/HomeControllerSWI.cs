@@ -316,7 +316,7 @@ namespace SealWebServer.Controllers
                     if (copy)
                     {
                         //remove schedules
-                        report.Schedules.Clear();
+                        report.InitGUIDAndSchedules();
                         report.SaveToFile();
                     }
                     report.SchedulesWithCurrentUser = false;
@@ -821,6 +821,7 @@ namespace SealWebServer.Controllers
                     report = Report.LoadFromFile(filePath, repository);
 
                     report.ExecutionContext = ReportExecutionContext.WebReport;
+                    report.SecurityContext = WebUser;
                     //Disable basics
                     report.ExecutionView.InitParameters(false);
                     report.ExecutionView.SetParameter(Parameter.DrillEnabledParameter, false);

@@ -33,17 +33,17 @@
                     var chartType = '@reportModel.ExecNVD3ChartType';
                     var xLabels = [@Raw(page.ChartXLabels)];
                     var XValueFormatter = function (value) {
-                        if (@Helper.ToJS(reportModel.ExecChartIsNumericAxis)) return d3.format('@reportModel.ExecD3XAxisFormat')(value).valueFormat();
-                        if (@Helper.ToJS(reportModel.ExecChartIsDateTimeAxis)) return d3.time.format('@reportModel.ExecD3XAxisFormat')(new Date(value));
+                        if (@Helper.ToJS(reportModel.ExecChartIsNumericAxis)) return d3.format('@Raw(Helper.ToJS(reportModel.ExecD3XAxisFormat))')(value).valueFormat();
+                        if (@Helper.ToJS(reportModel.ExecChartIsDateTimeAxis)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3XAxisFormat))')(new Date(value));
                         return xLabels[value];
                     }
                     var YPrimaryValueFormatter = function (value) {
-                        if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) return d3.time.format('@reportModel.ExecD3PrimaryYAxisFormat')(new Date(value));
-                        return d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(value).valueFormat();
+                        if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(new Date(value));
+                        return d3.format('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(value).valueFormat();
                     }
                     var YSecondaryValueFormatter = function (value) {
-                        if (@Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime)) return d3.time.format('@reportModel.ExecD3SecondaryYAxisFormat')(new Date(value));
-                        return d3.format('@reportModel.ExecD3SecondaryYAxisFormat')(value).valueFormat();
+                        if (@Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))')(new Date(value));
+                        return d3.format('@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))')(value).valueFormat();
                     }
                     var @chartId = nv.models.@(reportModel.ExecNVD3ChartType)();
                     var svg = d3.select('#@chartId svg');

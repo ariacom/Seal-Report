@@ -295,10 +295,21 @@
     <!-- libraries for widgets execution -->
     <script src="~/Scripts/helpers.js"></script>
     <script src="~/Scripts/d3.min.js"></script>
+    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
+    {
+        <script src="~/Scripts/d3-time.v1.min.js"></script>
+        <script src="~/Scripts/d3-time-format.v2.min.js"></script>
+        <script src="~/Scripts/@("d3/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+    }
     <script src="~/Scripts/nv.d3.min.js"></script>
     <script src="~/Scripts/chartNVD3.js"></script>
     <script src="~/Scripts/Chart.min.js"></script>
     <script src="~/Scripts/plotly-latest.min.js"></script>
+    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
+    {
+        <script src="~/Scripts/plotly/@("plotly-locale-" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+    }
+
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
     {
         <script type='text/javascript' src='~/Scripts/@fileName'></script>

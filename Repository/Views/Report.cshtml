@@ -50,6 +50,9 @@
     @if (report.HasChart)
     {
         @Raw(report.AttachScriptFile("d3.min.js"))
+        @Raw(report.AttachScriptFile("d3-time.v1.min.js", "https://d3js.org/d3-time.v1.min.js"))
+        @Raw(report.AttachScriptFile("d3-time-format.v2.min.js", "https://d3js.org/d3-time-format.v2.min.js"))
+        @Raw(report.AttachScriptFile("d3\\" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
     }
 
     @if (report.HasChartJSChart)
@@ -60,6 +63,7 @@
     @if (report.HasPlotlyChart)
     {
         @Raw(report.AttachScriptFile("plotly-latest.min.js", "https://cdn.plot.ly/plotly-1.48.1.min.js"))
+        @Raw(report.AttachScriptFile("plotly\\plotly-locale-" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
     }
 
     @if (report.HasNVD3Chart)

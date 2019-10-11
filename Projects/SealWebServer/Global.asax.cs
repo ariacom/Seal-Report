@@ -6,6 +6,8 @@ using Seal.Helpers;
 using Seal.Model;
 using SealWebServer.Controllers;
 using System.Configuration;
+using System.Threading;
+using System;
 
 namespace SealWebServer
 {
@@ -26,6 +28,32 @@ namespace SealWebServer
             Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
 
             DebugMode = (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["DebugMode"]) && ConfigurationManager.AppSettings["DebugMode"].ToLower() == "true");
+
+            var preload = ConfigurationManager.AppSettings["PreLoad"];
+            if (preload == null || preload.ToLower() == "true")
+            {
+                //Preload templates and dashboard widgets
+                var preloadThread = new Thread(PreLoadThread);
+                preloadThread.Start();
+            }
+        }
+
+        private void PreLoadThread()
+        {
+            try
+            {
+                Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Preload Templates");
+                RepositoryServer.PreLoadTemplates();
+
+                Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Preload Widgets");
+                var widgets = DashboardWidgetsPool.Widgets;
+
+                Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Preload");
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntryWeb(EventLogEntryType.Error, ex.Message);
+            }
         }
 
         protected void Application_End()

@@ -68,8 +68,8 @@
                     var total = data[0].values.reduce(function (a, b) { return a + b; });
                     var text = data[0].values.map(function (v, i) {
                         var valStr = "";
-                        if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) valStr = d3.time.format('@reportModel.ExecD3PrimaryYAxisFormat')(new Date(v));
-                        else valStr = d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(v).valueFormat() + '<br>' + d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(v / total * 100).valueFormat() + '%';
+                        if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) valStr = d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(new Date(v));
+                        else valStr = d3.format('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(v).valueFormat() + '<br>' + d3.format('Raw(Helper.ToJS(@reportModel.ExecD3PrimaryYAxisFormat))')(v / total * 100).valueFormat() + '%';
                         return data[0].labels[i] + '<br>' + valStr;
                     });
                     data[0].text = text;
@@ -82,15 +82,15 @@
                     title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("plotly_title"))))',
                     xaxis: {
                         title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("plotly_xaxis_title"))))',
-                        tickformat: '@(reportModel.ExecPlotlyChartType == "bar" && @view.GetValue("plotly_bar_orientation") == "h" ? reportModel.ExecD3PrimaryYAxisFormat : reportModel.ExecD3XAxisFormat)',
+                        tickformat: '@Raw(Helper.ToJS((reportModel.ExecPlotlyChartType == "bar" && @view.GetValue("plotly_bar_orientation") == "h" ? reportModel.ExecD3PrimaryYAxisFormat : reportModel.ExecD3XAxisFormat)))',
                     },
                     yaxis: {
                         title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("plotly_yaxis_title"))))',
-                        tickformat: '@(reportModel.ExecPlotlyChartType == "bar" && @view.GetValue("plotly_bar_orientation") == "h" ? reportModel.ExecD3XAxisFormat : reportModel.ExecD3PrimaryYAxisFormat)',
+                        tickformat: '@Raw(Helper.ToJS((reportModel.ExecPlotlyChartType == "bar" && @view.GetValue("plotly_bar_orientation") == "h" ? reportModel.ExecD3XAxisFormat : reportModel.ExecD3PrimaryYAxisFormat)))',
                     },
                     yaxis2: {
                         title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("plotly_yaxis2_title"))))',
-                        tickformat: '@reportModel.ExecD3SecondaryYAxisFormat',
+                        tickformat: '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))',
                         overlaying: 'y',
                         side:'right',
                     },
@@ -122,7 +122,8 @@
 
                 Plotly.plot(@chartId,
                     data,
-                    layout
+                    layout,
+                    { locale: 'fr' }
                     );
 
                 if (@Helper.ToJS(report.GenerateHTMLDisplay)) {

@@ -13,6 +13,18 @@ namespace Seal.Model
         public bool IsReadOnly = false;
         public bool CanBeEmpty = true;
         public string ChildViewName = "";
+        public string Type = "";
+
+        public string GetType(ReportElement element)
+        {
+            var result = Type;
+            if (string.IsNullOrEmpty(result))
+            {
+                if (element.IsDateTime) result = "datetime";
+                else if (element.IsNumeric) result = "";
+            }
+            return result;
+        }
     }
 
     public class EditorTableDefinition

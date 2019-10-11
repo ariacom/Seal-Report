@@ -45,6 +45,11 @@ namespace Seal.Model
                     lock (_widgets)
                     {
                         var repository = Repository.Instance;
+                        if (repository.MustReload())
+                        {
+                            repository = Repository.ReloadInstance();
+                        }
+
                         getWidgets(_widgets, _reports, repository.ReportsFolder, repository);
                         //Remove reports deleted
                         var keys = _widgets.Keys.ToList();

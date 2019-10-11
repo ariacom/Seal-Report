@@ -786,16 +786,28 @@ namespace Seal.Model
                 else if (format == "N2" || format == "D2" || format == "G2") return ",.2f";
                 else if (format == "N3" || format == "D3" || format == "G3") return ",.3f";
                 else if (format == "N4" || format == "D4" || format == "G4") return ",.4f";
+                else if (format == "N5" || format == "D5" || format == "G5") return ",.5f";
+                else if (format == "N6" || format == "D6" || format == "G6") return ",.6f";
+                else if (format == "N7" || format == "D7" || format == "G7") return ",.7f";
+                else if (format == "N8" || format == "D8" || format == "G8") return ",.8f";
                 else if (format == "P0") return ",.0%";
                 else if (format == "P1") return ",.1%";
                 else if (format == "P2") return ",.2%";
                 else if (format == "P3") return ",.3%";
                 else if (format == "P4") return ",.4%";
+                else if (format == "P5") return ",.5%";
+                else if (format == "P6") return ",.6%";
+                else if (format == "P7") return ",.7%";
+                else if (format == "P8") return ",.8%";
                 else if (format == "C0") return "$,.0f";
                 else if (format == "C1") return "$,.1f";
                 else if (format == "C2") return "$,.2f";
                 else if (format == "C3") return "$,.3f";
                 else if (format == "C4") return "$,.4f";
+                else if (format == "C5") return "$,.5f";
+                else if (format == "C6") return "$,.6f";
+                else if (format == "C7") return "$,.7f";
+                else if (format == "C8") return "$,.8f";
             }
             else if (IsDateTime)
             {
@@ -867,16 +879,28 @@ namespace Seal.Model
                 else if (format == "N2" || format == "D2") return "#,##0.00";
                 else if (format == "N3" || format == "D3") return "#,##0.000";
                 else if (format == "N4" || format == "D4") return "#,##0.0000";
+                else if (format == "N5" || format == "D5") return "#,##0.00000";
+                else if (format == "N6" || format == "D6") return "#,##0.000000";
+                else if (format == "N7" || format == "D7") return "#,##0.0000000";
+                else if (format == "N8" || format == "D8") return "#,##0.00000000";
                 else if (format.StartsWith("N") || format.StartsWith("D")) return "#,##0";
                 else if (format == "P1") return "0.0%";
                 else if (format == "P2") return "0.00%";
                 else if (format == "P3") return "0.00%";
                 else if (format == "P4") return "0.0000%";
+                else if (format == "P5") return "0.00000%";
+                else if (format == "P6") return "0.000000%";
+                else if (format == "P7") return "0.0000000%";
+                else if (format == "P8") return "0.00000000%";
                 else if (format.StartsWith("P")) return "0%";
                 else if (format == "C1") return "$ #,##0.0";
                 else if (format == "C2") return "$ #,##0.00";
                 else if (format == "C3") return "$ #,##0.000";
                 else if (format == "C4") return "$ #,##0.0000";
+                else if (format == "C5") return "$ #,##0.00000";
+                else if (format == "C6") return "$ #,##0.000000";
+                else if (format == "C7") return "$ #,##0.0000000";
+                else if (format == "C8") return "$ #,##0.00000000";
                 else if (format.StartsWith("C")) return "$ #,##0";
                 else if (format.StartsWith("N") || format.StartsWith("D") || format.StartsWith("E") || format.StartsWith("F") || format.StartsWith("G") || format.StartsWith("H")) return "";
             }
