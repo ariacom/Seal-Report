@@ -123,10 +123,10 @@ namespace Seal.Model
         {
             get
             {
-                var result = Helper.CleanFileName(string.Format("[{0}] {1} '{2}' {3}", Path.GetFileNameWithoutExtension(Report.FilePath), Report.DisplayNameEx, Name, GUID));
-                if (result.Length > 120) result = Helper.CleanFileName(string.Format("[{0}] '{1}' {2}", Path.GetFileNameWithoutExtension(Report.FilePath), Name, GUID));
+                var result = Helper.CleanFileName(string.Format("[{0}] {1} {2} {3}", Path.GetFileNameWithoutExtension(Report.FilePath), Report.DisplayNameEx, Name, GUID));
+                if (result.Length > 120) result = Helper.CleanFileName(string.Format("[{0}] {1} {2}", Path.GetFileNameWithoutExtension(Report.FilePath), Name, GUID));
                 if (result.Length > 120) result = Helper.CleanFileName(string.Format("[{0}] {1}", Path.GetFileNameWithoutExtension(Report.FilePath), GUID));
-                return result;
+                return result.Replace("'","");
             }
         }
 

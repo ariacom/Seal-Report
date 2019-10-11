@@ -993,7 +993,7 @@ namespace Seal.Model
                 if (!UseCustomTemplate || string.IsNullOrWhiteSpace(CustomTemplate))
                 {
                     //template -> file path + last modification
-                    key = string.Format("TPL:{0}_{1}", Template.FilePath, File.GetLastWriteTime(Template.FilePath).ToString("s"));
+                    key = Template.CompilationKey;
                 }
                 else
                 {

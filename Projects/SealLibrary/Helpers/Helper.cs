@@ -168,7 +168,17 @@ namespace Seal.Helpers
 
         static public string ToMomentJSFormat(CultureInfo culture, string datetimeFormat)
         {
-            return datetimeFormat.Replace("y", "Y").Replace("d", "D").Replace("tt", "A").Replace("z", "Z").Replace("/", culture.DateTimeFormat.DateSeparator);
+            string format = datetimeFormat;
+            if (datetimeFormat == "d") format = culture.DateTimeFormat.ShortDatePattern;
+            else if (datetimeFormat == "D") format = culture.DateTimeFormat.LongDatePattern;
+            else if (datetimeFormat == "t") format = culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "T") format = culture.DateTimeFormat.LongTimePattern;
+            else if (datetimeFormat == "g") format = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "G") format = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+            else if (datetimeFormat == "f") format = culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
+            else if (datetimeFormat == "F") format = culture.DateTimeFormat.LongDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
+
+            return format.Replace("y", "Y").Replace("d", "D").Replace("tt", "A").Replace("z", "Z").Replace("/", culture.DateTimeFormat.DateSeparator);
         }
 
         static public string RemoveHTMLTags(string value)

@@ -1,0 +1,468 @@
+﻿Context;Reference;es
+NVD3;(right axis);(eje derecho)
+NVD3;Expanded;Expandido
+NVD3;Grouped;Agrupado
+NVD3;Re-scale y-axis;Reescalar eje y
+NVD3;Stacked;Apilado
+NVD3;Stream;Flujo
+Report;!=;!=
+Report;# of % selected;# de % seleccionado
+Report;(filtered from _MAX_);(filtrado desde _MAX_)
+Report;<;<
+Report;<=;<=
+Report;=;=
+Report;>;>
+Report;>=;>=
+Report;A value is required for;Se requiere un valor para
+Report;All selected;Todo seleccionado
+Report;and;y
+Report;Auto Scroll enabled;Auto Scroll habilitado
+Report;Average of;Promedio de
+Report;Back to top;Volve arriba
+Report;Between;Entre
+Report;Cancel;Cancelar
+Report;Cancelling report...;Cancelando informe
+Report;Charts;Gráficas
+Report;Contains;Contiene
+Report;Count of;Cantidad de
+Report;Description;Descripción
+Report;Does not contain;No Contiene
+Report;Drill <;Drill<
+Report;Drill >;Drill>
+Report;Duration (seconds);Duración (segundos)
+Report;Ends with;Termina en
+Report;Equals;Igual
+Report;Execute;Ejecuta
+Report;Executing report...;Ejecutando informe…
+Report;Execution date;Fecha ejecución
+Report;Execution duration;Duración ejecución
+Report;execution messages;mensajes ejecución
+Report;Export messages...;Exportar mensajes
+Report;Filter:;Filtro:
+Report;Hide;Oculta
+Report;Invalid date;Fecha inválida
+Report;Invalid numeric value;Valor numérico inválido
+Report;Is between;Es entre
+Report;Is different from;Es diferente de
+Report;Is empty;Es vacío
+Report;Is greater or equal than;Es mayor o igual a
+Report;Is greater than;Es mayor a
+Report;Is not between;No es entre
+Report;Is not empty;No es vacío
+Report;Is not Null;No es Null
+Report;Is Null;Es Null
+Report;Is smaller or equal than;Es menor o igual a
+Report;Is smaller than;Es menor a
+Report;Maximum of;Maximo de
+Report;Minimum of;Mínimo de
+Report;Model;Modelo
+Report;Model loaded...;Modelo cargado
+Report;Models loaded...;Modelos cargados
+Report;New report;Nuevo informe
+Report;No records;Sin registros
+Report;No records. The report output generation has been cancelled.;Sin registros. La generación de salida del informe ha sido cancelada.
+Report;No reports;Sin informes
+Report;No rows;Sin filas
+Report;Not Between;No Entre
+Report;Not Contains;No Contiene
+Report;Now;Ahora
+Report;Page;Página
+Report;"Page &p; of &P;";"Página &p; de &P;"
+Report;Pages;Páginas
+Report;Processing;Procesando
+Report;Processing...;Procesando…
+Report;Records;Registros
+Report;Report;Informe
+Report;Report has been cancelled;El informe ha sido cancelado
+Report;report information;información del informe
+Report;report restrictions;restricciones del informe
+Report;Report result generated in '{0}';Resultado del informe generado en '{0}'
+Report;report result panel;panel de resultado
+Report;Restrictions;Reestricciones
+Report;Results;Resultado
+Report;second;segundo
+Report;seconds;segundos
+Report;Select all;Selecciona todo
+Report;Show;Muestra
+Report;Show _MENU_ reports;Muestra _MENU_reports
+Report;Show _MENU_ rows;Muestra _MENU_rows
+Report;Showing _START_ to _END_ of _TOTAL_;Mostrando _START_ a _END_ de _TOTAL_
+Report;Showing 0 to 0 of 0;Mostrando 0 a 0 de 0
+Report;Starting execution...;Iniciando ejecución
+Report;Starts with;Inicia con
+Report;Sum of;Suma de
+Report;Summary;Resumen
+Report;Task executed...;Tarea ejecutada
+Report;Tasks executed...;Tareas ejecutadas
+Report;The report has been generated.;El informe ha sido generado.
+Report;This report has execution errors. Please check details in the Windows Event Viewer...;El informe tiene errores de ejecución.
+Report;ThisMonth;EsteMes
+Report;ThisWeek;EstaSemana
+Report;ThisYear;EsteAnyo
+Report;Today;Hoy
+Report;Total;Total
+Report;Use the date format '{0}' or one of the following keywords:;Usa el formato de fecha '{0}' o uno de las siguientes palabras clave:
+Report;View CSV Result;Ver Resultado CSV
+Report;View Excel Result;Ver Resultado Excel
+Report;View HTML Result;Ver Resultado HTML
+Report;View PDF Result;Ver Resultado PDF
+Report;View Print Result;Ver Resultado Impreso
+Report;View report result file;Ver fichero resultado
+Web;Actions;Acciones
+Web;Add;Añadir
+Web;Add dashboards;Añadir dashboard
+Web;Add widgets to the dashboard;Añadir widget al dashboard
+Web;Aggregate;Agregar
+Web;Auto-Refresh (seconds);Auto-Refresca (segundos)
+Web;BCC;BC
+Web;Body;Body
+Web;Cancel;Cancelar
+Web;Cancel if empty;Cancelar si vacío
+Web;CC;CC
+Web;Chart axis;Ejes chart
+Web;Chart height;Altura chart
+Web;Chart JS;Chart JS
+Web;Chart NVD3;Chart NVD3
+Web;Chart Plotly;Chart Plotly
+Web;Chart sort;Ordenación chart
+Web;Chart title;Título chart
+Web;Chart width;Anchura chart
+Web;Check SQL;Check SQL
+Web;Close;Cerrar
+Web;Color;Color
+Web;Connection;Conexión
+Web;Copy;Copiar
+Web;Create a new dashboard;Crear un nuevo dashboard
+Web;Create in folder;Crear en carpeta
+Web;Create new folder;Crear nueva carpeta
+Web;Culture;Cultura
+Web;Custom SQL;SQL personalizado
+Web;Custom;Personalizado
+Web;Cut;Cortar
+Web;Dashboard name;Nombre Dashboard
+Web;Days;Días
+Web;Days of the week;Días de la semana
+Web;Default body;Mensaje por defecto
+Web;Default sender address;Dirección remitente por defecto
+Web;Default subject;Asunto por defecto
+Web;Default view;Vista por defecto
+Web;Delete;Eliminar
+Web;Delete folder;Eliminar carpeta
+Web;Description;Descripción
+Web;Device;Dispositivo
+Web;Disconnect;Desconectar
+Web;Display options;Opciones de visualización 
+Web;Edit the widget properties;Editar propiedades widget
+Web;Edition;Edición
+Web;Elements;Elementos
+Web;End date;Fecha fin
+Web;End date is before start date;Fecha fin es anterior a fecha inicio
+Web;Enter a password to protect the Zip file;Introduce password para proteger el fichero ZIP
+Web;"Enter addresses separated by ;";"Introduce direcciones separadas por ;"
+Web;Enter password;Introduce password
+Web;Enter the file name without extension;Introduce el nombre del fichero sin extensión
+Web;Enter user name;Introduce el nombre del usuario
+Web;Enter your new file name;Introduce el nombre nuevo del fichero
+Web;Error;Error
+Web;Error: only files (and not reports) can be copied to this folder.;Error: solo ficheros (y no informes) se pueden copiar a esta carpeta.
+Web;Error: This report name exists already.;Error: Este nombre de informe ya existe.
+Web;Execute;Ejecutar ahora
+Web;Execute now;Ejecutar ahora
+Web;Execution;Ejecución
+Web;File name;Nombre de fichero
+Web;Folder;Carpeta
+Web;Folders;Carpetas
+Web;for a duration of;para una duración de
+Web;Format;Formato
+Web;From;De
+Web;Grid mode;Modo rejilla
+Web;Group name;Nombre grupo
+Web;Height;Altura
+Web;Icon;Icono
+Web;Inconsistent duration or interval for the schedule. Check your entries.;Duración o intervalo inconsistente del calendario. Verifica tus entradas.
+Web;Invalid user name or password;Password o nombre de usuario inválido
+Web;Is dynamic;Dinámico
+Web;Is enabled;Habilitado
+Web;Is Multiline;Multilínea
+Web;Is required;Obligado
+Web;Last;Último
+Web;Last execution at;Última ejecución
+Web;Last modification;Última modificación
+Web;Licensed to;Licenciado para
+Web;Login;Iniciar sesión
+Web;Logout;Cerrar sesión
+Web;Logout the user;Inicia sesión el usuario
+Web;Manage Dashboards;Gestionar dashboards
+Web;Manage folders;Gestionar carpetas
+Web;Months;Meses
+Web;Name;Nombre
+Web;New;Nuevo informe
+Web;New dashboard name;Nuevo nombre dashboard
+Web;New folder name;Nuevo nombre carpeta
+Web;No Email destination specified in the schedule;Ninguna dirección de email especificada en el calendario
+Web;No file name specified in the schedule;Ningún nombre de archivo especificado en el calendario
+Web;OK;OK
+Web;Operator;Operador
+Web;"Optional addresses separated by ;";"Direcciones opcionales separadas por ;"
+Web;Optional title chart;Título chart opcional
+Web;Options;Opciones
+Web;Output;Salida
+Web;Password;Contraseña
+Web;Paste;Pegar
+Web;Personal;Personal
+Web;Pivot mode;Modo Pivot
+Web;Please wait;Por favor espere
+Web;Profile;Perfil
+Web;Profile information;Información del perfil
+Web;Prompt;Prompt
+Web;Prompt at run-time;Prompt en ejecución
+Web;Recur every;Repite cada
+Web;Refresh;Refrescar
+Web;Remove;Eliminar
+Web;Remove all;Eliminar todo
+Web;Rename;Renombrar
+Web;Rename folder;Renombrar carpeta
+Web;Rename, move or copy;Renombrar, mover o copiar
+Web;Rename, move or copy dashboard;Renombrar, mover o copiar el dashboard
+Web;Repeat every;Repite cada
+Web;Report;Informe
+Web;Report name;Nombre del informe
+Web;Report title;Título del informe
+Web;Report title if different from report name;Título del informe si diferente del nombre
+Web;Reports;Informes
+Web;Result as body;Resultado HTML
+Web;Rights;Derechos
+Web;Save;Salvar
+Web;Schedule;Calendario
+Web;Search;Buscar
+Web;Select the widgets to add to the dashboard;Selecciona los widgets a añadir al dashboard
+Web;Show sub-totals;Muestra sub-totales
+Web;Show totals;Muestra totales
+Web;Sort;Ordena
+Web;SQL;SQL
+Web;SQL Select Statement;SQL Select
+Web;Start date;Fecha inicio
+Web;Subject;Asunto por defecto
+Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;El número máximo de usuarios para tu licencia ha sido alcanzado. Por favor, pruebe a iniciar sesión después.
+Web;To;Destinatario
+Web;Total aggr.;Agreg. total
+Web;Type;Tipo
+Web;Update the dashboards view;Actualiza la vista del dashboard
+Web;User groups;Grupos de usuario
+Web;User name;Nombre de usuario
+Web;Users;Usuarios
+Web;Value;Valor
+Web;Values for axis;Valores de ejes
+Web;Values;Valores
+Web;Widget name;Nombre del widget
+Web;Widget group name;Nombre de grupo del widget
+Web;Width;Ancho
+Web;Zip attachments;Adjuntos Zip
+Web;Zip password;Contraseña Zip
+WebJS;# of % selected;# de % seleccionado
+WebJS;% of the column;% de la columna
+WebJS;% of the row;% de la fila
+WebJS;% of the total;% del total
+WebJS;(filtered from _MAX_);(filtrado de _MAX_)
+WebJS;1 Decimal;1 Decimal
+WebJS;2 Decimals;2 Decimales
+WebJS;3 Decimals;3 Decimales
+WebJS;4 Decimals;4 Decimales
+WebJS;All selected;Todo seleccionado
+WebJS;and;y
+WebJS;Ascendant;Ascendente
+WebJS;Automatic ascendant;Ascendente automático
+WebJS;Automatic descendant;Descendente automático
+WebJS;Average;Promedio
+WebJS;Average of;Promedio de
+WebJS;Axis;Ejes
+WebJS;Bar;Barra
+WebJS;By axis label ascending;Por etiqueta de eje ascendente
+WebJS;By axis label descending;Por etiqueta de eje descendente
+WebJS;By point ascending;Por punto ascendente
+WebJS;By point descending;Por punto descendente
+WebJS;Contains;Contiene
+WebJS;Copy to;Copiar a
+WebJS;Count;Cuenta
+WebJS;Count of;Cuenta de
+WebJS;Create in;Crear en
+WebJS;CSV;CSV
+WebJS;CSV: Use element format;CSV: Usar formato de elemento
+WebJS;Daily;Diario
+WebJS;Data tables responsive;Datatables responsive
+WebJS;day;día
+WebJS;days;días
+WebJS;Decimal;Decimal
+WebJS;Default;Por defecto
+WebJS;Custom;Personalizado
+WebJS;Default report connection;Conexión de informe por defecto
+WebJS;Default repository connection;Conexión de repositorio por defecto
+WebJS;Delete the dashboard;Borrar dashboard
+WebJS;Descendant;Descendente
+WebJS;Do you really want to delete the dashboard ?;Desea eliminar realmente el dashboard?
+WebJS;Do you really want to delete the reports or files selected ?;Desea eliminar realmente el informe o los archivos seleccionados?
+WebJS;Please select first the type of report you want to create...;Por favor, seleccione primero el tipo de informe que desea crear
+WebJS;Public edition;Edición pública
+WebJS;Public execution;Ejecución pública
+WebJS;Dashboards;Dashboards
+WebJS;Does not contain;No contiene
+WebJS;Drop your Column elements;Inserta los elementos Columna
+WebJS;Drop your Data;Inserta los datos
+WebJS;Drop your Data elements;Inserta los elementos Dato
+WebJS;Drop your Elements;Inserta los elementos
+WebJS;Drop your Page elements;Inserta los elementos Página
+WebJS;Drop your Restrictions;Inserta las restricciones
+WebJS;Drop your Row elements;Inserta los elementos Fila
+WebJS;Edit report;Editar informe
+WebJS;Edit widget properties;Editar propiedades widget
+WebJS;Email;Email
+WebJS;Ends with;Termina en
+WebJS;Equals;Igual a
+WebJS;Error;Error
+WebJS;Error : Unable to connect to the server;Error: Imposible conectar con el servidor
+WebJS;Excel;Excel
+WebJS;Filter;Filtro
+WebJS;Folder;Carpeta
+WebJS;For columns;Para columnas
+WebJS;For rows;Para filas
+WebJS;For rows (total only);Para filas (solo total)
+WebJS;For rows and columns;Para filas y columnas
+WebJS;For rows and columns (total only);Para filas y columnas (solo total)
+WebJS;Force execution;Forzar ejecución
+WebJS;General;General
+WebJS;General date long time;Fecha hora largo general
+WebJS;General date short time;Fecha hora corto general
+WebJS;Horizontal Bar;Barra horizontal
+WebJS;hour;hora
+WebJS;hours;horas
+WebJS;HTML;HTML
+WebJS;HTML Print;Impresión HTML
+WebJS;Indefinitely;Indefinidamente
+WebJS;Is between;Está entre
+WebJS;Is different from;Es diferente de
+WebJS;Is empty;Es vacío
+WebJS;Is greater or equal than;Es mayor o igual a
+WebJS;Is greater than;Es mayor a
+WebJS;Is not between;No está entre
+WebJS;Is not empty;No está vacío
+WebJS;Is not Null;No es Null
+WebJS;Is Null;Es Null
+WebJS;Is smaller or equal than;Es menor o igual a
+WebJS;Is smaller than;Es menor a
+WebJS;Line;Linea
+WebJS;Long date;Fecha larga
+WebJS;Maximum;Máximo
+WebJS;Maximum of;Máximo de
+WebJS;Minimum;Mínimo
+WebJS;Minimum of;Mínimo de
+WebJS;minute;minuto
+WebJS;minutes;minutos
+WebJS;Model updated;Modelo actualizado
+WebJS;Modified;Modificado
+WebJS;Monthly;Mensual
+WebJS;Move to;Mover a
+WebJS;New Output for;Nueva Salida para
+WebJS;New report;Nuevo informe
+WebJS;New Schedule;Nuevo Calendario
+WebJS;No;No
+WebJS;No (axis values are linear);No (valores de ejes son lineales)
+WebJS;No calculation option;No opción de cálculo
+WebJS;No Output;Sin salida
+WebJS;No prompt;No solicitar
+WebJS;No report;Sin informe
+WebJS;No Schedule;Sin Calendario
+WebJS;No schedule;Ningún calendario
+WebJS;No Sort;No ordenar
+WebJS;No total;No total
+WebJS;No widget;No widget
+WebJS;Create a Standard report;Crear un informe estándar
+WebJS;Create a SQL report;Crear un informe SQL
+WebJS;None;Nínguno
+WebJS;Not sorted;No ordenado
+WebJS;Number;Número
+WebJS;Number 1 dec.;Número 1 dec.
+WebJS;Number 2 dec.;Número 2 dec.
+WebJS;Number 3 dec.;Número 3 dec.
+WebJS;Number 4 dec.;Número 4 dec.
+WebJS;One time;Una vez
+WebJS;Options;Opciones
+WebJS;Output;Salida
+WebJS;PDF;PDF
+WebJS;PDF Print;Impresión PDF
+WebJS;Percentage;Porcentaje
+WebJS;Percentage 1 Dec.;Porcentaje 1 Dec.
+WebJS;Percentage 2 Dec.;Porcentaje 2 Dec.
+WebJS;Pie;Tarta
+WebJS;Please note that only schedules can be edited for this report.;Solo los calendarios pueden ser editados en este informe.
+WebJS;Please wait;Por favor espere
+WebJS;Polar Area;Polar Area
+WebJS;Private (The output cannot be edited by other users);Privado (la salida no puede ser editada por otro usuario)
+WebJS;Private (The output cannot be executed by other users);Privado (la salida no puede ser ejecutada por otro usuario)
+WebJS;Processing;Procesando
+WebJS;Prompt at execution;Solicitar en la ejecución
+WebJS;Prompt only one value;Solicitar solo un valor
+WebJS;Public;Público
+WebJS;Radar;Radar
+WebJS;Remove;Borrar
+WebJS;Remove the dashboard from your view;Borrar el dashboard de la vista
+WebJS;Remove widget from dashboard;Borrar el widget del dashboard
+WebJS;Rename;Renombrar
+WebJS;Reports;Informes
+WebJS;Report has been modified, do you really want to close ?;El informe ha sido eliminado, seguro que quieres cerrar?
+WebJS;Report saved;Informe guardado
+WebJS;report(s) or file(s) cut in the clipboard;informe(s) o archivo(s) cortados en el portapapeles
+WebJS;report(s) or file(s) have been deleted;informe(s) o archivo(s) han sido eliminados
+WebJS;report(s) or file(s) processed;informe(s) o archivo(s) procesados
+WebJS;report(s) or files(s) copied in the clipboard;informe(s) o archivo(s) copiados en el portapapeles
+WebJS;Scatter;Scatter
+WebJS;Schedule;Calendario
+WebJS;Select all;Selecciona todo
+WebJS;Server Version;Versión del servidor
+WebJS;Short date;Fecha corta
+WebJS;Show _MENU_ reports;Mostrar _MENU_ informes
+WebJS;Show _MENU_ widgets;Mostrar _MENU_ widgets
+WebJS;Show data tables;Mostrar la tabla de datos
+WebJS;Show execution message panel;Mostrar el panel de mensajes de ejecución
+WebJS;Show first header line;Mostrar la primera línea de cabecera
+WebJS;Show information panel;Mostrar panel de información
+WebJS;Show page tables;Mostrar tabla de páginas
+WebJS;Show report result panel;Mostrar panel de resultado del informe
+WebJS;Show restrictions panel;Mostrar panel de restricciones
+WebJS;Show summary table;Mostrar tabla resumen
+WebJS;Showing _START_ to _END_ of _TOTAL_;Mostrando _START_ a _END_ de _TOTAL_
+WebJS;Showing 0 to 0 of 0;Mostrando 0 a 0 de 0
+WebJS;Splitter;Separador
+WebJS;Stacked Area;Area apilada
+WebJS;Starts with;Empieza con
+WebJS;Sum;Suma
+WebJS;The dashboard has been created;El dashboard ha sido creado
+WebJS;The dashboard has been copied;El dashboard ha sido copiado
+WebJS;The dashboard has been deleted;El dashboard ha sido eliminado
+WebJS;The dashboard has been moved;El dashboard ha sido movido
+WebJS;The dashboard has been renamed;El dashboard ha sido renombrado
+WebJS;The folder has been created;La carpeta ha sido creada
+WebJS;The folder has been deleted;La carpeta ha sido eliminada
+WebJS;The folder has been renamed;La carpeta ha sido renombrada
+WebJS;The folder has been updated;La carpeta ha sido actualizada
+WebJS;The report or file has been renamed;La informe o archivo ha sido renombrado
+WebJS;The widget has been deleted;El widget ha sido eliminado
+WebJS;Use data tables;Usar tabla de datos
+WebJS;Use full screen width;Usar ancho de pantalla completa
+WebJS;Excel: Use element format;Excel: Usar formato del elemento
+WebJS;View;Vista
+WebJS;View dashboards;Vista dashboard
+WebJS;View reports;Vista informe
+WebJS;Views and outputs;Vistas y salidas
+WebJS;Warning;Advertencia
+WebJS;Warning: Check the new dashboard name;Advertencia: comprueba el nombre del nuevo dashboard
+WebJS;Web Interface Version;Versión de la interfaz web
+WebJS;Weekly;Semanal
+WebJS;weeks;semanas
+WebJS;The dashboard has been updated;El dashboard ha sido actualizado
+WebJS;Yes;Sí
+WebJS;Yes (a new line with sub-totals is added when the value changes);Sí (una nueva línea con sub-totales se añade cuando el valor cambia)
+WebJS;Yes (element values are used for the axis);Sí (los valores de los elementos se usan para los ejes)
+WebJS;Yes (the attachments are zipped);Sí (los adjuntos son comprimidos en zip)
+WebJS;Yes (the HTML result is the body);Sí (el resultado del HTML es el cuerpo)
+WebJS;Yes, name, color and icon may change after execution;Sí, el nombre, color y el icono pueden cambiar tras las ejecución
+WebJS;Yes (The output is not generated if the result set is empty);Sí (La salida no se genear si el resultado está vacío)

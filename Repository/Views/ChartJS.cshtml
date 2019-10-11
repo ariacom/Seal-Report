@@ -81,11 +81,11 @@
                             var allData = data.datasets[tooltipItem.datasetIndex].data;
                             var tooltipLabel = data.labels[tooltipItem.index];
                             var tooltipData = allData[tooltipItem.index];
-                            var format = (data.datasets[tooltipItem.datasetIndex].yAxisID == 'yaxis-2' ? '@reportModel.ExecD3SecondaryYAxisFormat' : '@reportModel.ExecD3PrimaryYAxisFormat');
+                            var format = (data.datasets[tooltipItem.datasetIndex].yAxisID == 'yaxis-2' ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
                             var isDate = (data.datasets[tooltipItem.datasetIndex].yAxisID == 'yaxis-2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
                             var val = tooltipItem.@(chartType == "horizontalBar" ? "x" : "y")Label;
                             var valStr = "";
-                            if (isDate) valStr = d3.time.format(format)(new Date(val));
+                            if (isDate) valStr = d3.timeFormat(format)(new Date(val));
                             else valStr = d3.format(format)(Number(val)).valueFormat();
 
                             @if (reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea")
@@ -93,7 +93,7 @@
                                 <text>
                                 var total = 0;
                                 for (var i in allData) total += allData[i];
-                                if (isDate) valStr = d3.time.format(format)(new Date(tooltipData));
+                                if (isDate) valStr = d3.timeFormat(format)(new Date(tooltipData));
                                 else {
                                     var tooltipPercentage = Math.round((tooltipData / total) * 100);
                                     valStr = d3.format(format)(Number(tooltipData)).valueFormat() + ' (' + tooltipPercentage + '%)';
@@ -128,19 +128,19 @@
                             <text>
                                     type: 'time',
                                     time: {
-                                        format: '@reportModel.ExecMomentJSXAxisFormat',
-                                        tooltipFormat: '@reportModel.ExecMomentJSXAxisFormat',
+                                        format: '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
+                                        tooltipFormat: '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
                                         unit: '@view.GetValue("chartjs_unit")',
                                         stepSize: '@view.GetValue("chartjs_step_size")',
                                         displayFormats: {
-                                            'second': '@reportModel.ExecMomentJSXAxisFormat',
-                                            'minute': '@reportModel.ExecMomentJSXAxisFormat',
-                                            'hour': '@reportModel.ExecMomentJSXAxisFormat',
-                                            'day': '@reportModel.ExecMomentJSXAxisFormat',
-                                            'week': '@reportModel.ExecMomentJSXAxisFormat',
-                                            'month': '@reportModel.ExecMomentJSXAxisFormat',
-                                            'quarter': '@reportModel.ExecMomentJSXAxisFormat',
-                                            'year': '@reportModel.ExecMomentJSXAxisFormat',
+                                            'second': '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
+                                            'minute': '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
+                                            'hour': '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
+                                            'day': '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
+                                            'week': '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
+                                            'month': '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
+                                            'quarter': '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
+                                            'year': '@Raw(Helper.ToJS(reportModel.ExecMomentJSXAxisFormat))',
                                         }
                                     }
                             </text>
@@ -149,32 +149,32 @@
                     @(chartType != "horizontalBar" ? "y" : "x")Axes: [
                         @if (reportModel.HasPrimaryYAxis) {
                             <text>
-                                {
+                            {
                                 id: 'yaxis-1',
                                 display: @Helper.ToJS(view.GetBoolValue("chartjs_show_yaxis")),
                                 stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                                 ticks: {
                                     callback: function (label, index, labels) {
-                                        if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) return d3.time.format('@reportModel.ExecD3PrimaryYAxisFormat')(new Date(label));
-                                        return d3.format('@reportModel.ExecD3PrimaryYAxisFormat')(label).valueFormat();
-                                        }
+                                        if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(new Date(label));
+                                        return d3.format('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(label).valueFormat();
                                     }
-                                },
+                                }
+                            },
                             </text>
                         }
                         @if (reportModel.HasSecondaryYAxis) {
                             <text>
-                                {
+                            {
                                 id: 'yaxis-2',
                                 display: @Helper.ToJS(view.GetBoolValue("chartjs_show_yaxis")),
                                 position: 'right',
                                 ticks: {
                                     callback: function(label, index, labels) {
-                                        if (@Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime)) return d3.time.format('@reportModel.ExecD3SecondaryYAxisFormat')(new Date(label));
-                                        return d3.format('@reportModel.ExecD3SecondaryYAxisFormat')(label).valueFormat();
-                                        }
+                                        if (@Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))')(new Date(label));
+                                        return d3.format('@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))')(label).valueFormat();
                                     }
-                                },
+                                }
+                            },
                             </text>
                         }
                     ]
@@ -183,24 +183,25 @@
                 }
             };
 
-                var @chartId = new Chart(ctx, {
-                    type: '@chartType',
-                    data: data,
-                    options: options
+            var @chartId = new Chart(ctx, {
+
+                type: '@chartType',
+                data: data,
+                options: options
                 });
                 // Navigation
                 if (@Helper.ToJS(report.GenerateHTMLDisplay)) {
                     $("#@chartId").click(
                         function (evt) {
-                            var points = @(chartId).getElementsAtEvent(evt);
-                            if (points && points.length > 0) {
-                                var index = points[0]["_index"];
-                                var label = @(chartId).data.labels[index];
-                                var value = @(chartId).data.datasets[0].data[index];
-                                var nav = @(chartId).data.navigations[index];
-                                if (nav) showPopupNavMenu(evt, nav, true);
-                            }
-                        }
+                                            var points = @(chartId).getElementsAtEvent(evt);
+                                            if (points && points.length > 0) {
+                                                var index = points[0]["_index"];
+                                                var label = @(chartId).data.labels[index];
+                                                var value = @(chartId).data.datasets[0].data[index];
+                                                var nav = @(chartId).data.navigations[index];
+                                                if (nav) showPopupNavMenu(evt, nav, true);
+                                            }
+                                        }
                     );
                 }
             });//document.ready
