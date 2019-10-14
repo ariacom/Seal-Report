@@ -873,7 +873,7 @@ namespace SealWebServer.Controllers
                 if (report.HasErrors)
                 {
                     Helper.WriteWebException(new Exception(report.FilePath + ":\r\n" + report.ExecutionErrors), Request, WebUser);
-                    throw new Exception("Error: the model has errors");
+                    throw new Exception("Error: the widget has errors");
                 }
                 //Reset pointers and parse
                 lock (report)

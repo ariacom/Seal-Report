@@ -14,13 +14,15 @@ namespace Seal.Model
         public bool CanBeEmpty = true;
         public string ChildViewName = "";
         public string Type = "";
+        public string BlobColumnName = "";
 
         public string GetType(ReportElement element)
         {
             var result = Type;
             if (string.IsNullOrEmpty(result))
             {
-                if (element.IsDateTime) result = "datetime";
+                if (!string.IsNullOrEmpty(BlobColumnName)) result = "upload";
+                else if (element.IsDateTime) result = "datetime";
                 else if (element.IsNumeric) result = "";
             }
             return result;

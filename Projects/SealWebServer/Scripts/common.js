@@ -442,6 +442,8 @@ function mainInit() {
 
         $("#nav_badge").removeClass("hidden");
     }
+    initNavCells();
+
 }
 
 //Enum select picker

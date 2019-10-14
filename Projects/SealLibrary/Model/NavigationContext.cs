@@ -16,7 +16,8 @@ namespace Seal.Model
 
         public ReportExecution Navigate(string navigation, Report rootReport)
         {
-            string reportPath = HttpUtility.ParseQueryString(navigation).Get("rpa");
+            var parameters = HttpUtility.ParseQueryString(navigation);
+            string reportPath = parameters.Get("rpa");
             string destLabel = "", srcRestriction = "", srcGUID = "";
             Report newReport = null;
 
@@ -41,8 +42,8 @@ namespace Seal.Model
                 int index = 1;
                 while (true)
                 {
-                    string res = HttpUtility.ParseQueryString(navigation).Get("res" + index.ToString());
-                    string val = HttpUtility.ParseQueryString(navigation).Get("val" + index.ToString());
+                    string res = parameters.Get("res" + index.ToString());
+                    string val = parameters.Get("val" + index.ToString());
                     if (string.IsNullOrEmpty(res) || string.IsNullOrEmpty(val)) break;
                     foreach (var model in newReport.Models)
                     {
@@ -55,19 +56,19 @@ namespace Seal.Model
                     index++;
                 }
                 //Get display value
-                string dis = HttpUtility.ParseQueryString(navigation).Get("dis");
-                if (!string.IsNullOrEmpty(dis)) srcRestriction = HttpUtility.ParseQueryString(navigation).Get("dis");
+                string dis = parameters.Get("dis");
+                if (!string.IsNullOrEmpty(dis)) srcRestriction = parameters.Get("dis");
             }
             else
             {
                 //Drill
-                string executionGuid = HttpUtility.ParseQueryString(navigation).Get("exe");
+                string executionGuid = parameters.Get("exe");
                 if (!Navigations.ContainsKey(executionGuid)) throw new Exception("Missing execution GUID");
                 newReport = Navigations[executionGuid].Execution.Report.Clone();
                 newReport.ExecutionGUID = Guid.NewGuid().ToString();
-                string src = HttpUtility.ParseQueryString(navigation).Get("src");
-                string dst = HttpUtility.ParseQueryString(navigation).Get("dst");
-                string val = HttpUtility.ParseQueryString(navigation).Get("val");
+                string src = parameters.Get("src");
+                string dst = parameters.Get("dst");
+                string val = parameters.Get("val");
                 newReport.DrillParents.Add(src);
 
                 foreach (var model in newReport.Models)
