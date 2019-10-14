@@ -15,6 +15,7 @@ using System.Threading;
 using System.Text;
 using System.Diagnostics;
 using System.Xml;
+using RazorEngine.Templating;
 
 namespace Seal.Model
 {
@@ -107,6 +108,37 @@ namespace Seal.Model
             foreach (var script in CommonScripts.Where(i => i != scriptBeingEdited)) result += script.Script + "\r\n";
             return result;
         }
+
+
+
+        /// <summary>
+        /// Returns a common script key form a given name and model
+        /// </summary>
+        /*
+        public string GetReportCommonScriptKey(string name, object model)
+        {
+            var script = CommonScripts.FirstOrDefault(i => i.Name == name); 
+
+            if (script == null)
+            {
+                throw new Exception(string.Format("Unable to find a common script  named '{0}'...", name));
+            }
+
+            string key = string.Format("REP:{0}_{1}_{2}_{3}", FilePath, GUID, name, File.GetLastWriteTime(FilePath).ToString("s"));
+
+            try
+            {
+                RazorHelper.Compile(script.Script, model.GetType(), key);
+            }
+            catch (Exception ex)
+            {
+                var message = (ex is TemplateCompilationException ? Helper.GetExceptionMessage((TemplateCompilationException)ex) : ex.Message);
+                ExecutionErrors += string.Format("Execution error when compiling the common script '{0}':\r\n{1}\r\n", name, message);
+                if (ex.InnerException != null) ExecutionErrors += "\r\n" + ex.InnerException.Message;
+                throw ex;
+            }
+            return key;
+        }*/
 
         /// <summary>
         /// Main task script included in all tasks

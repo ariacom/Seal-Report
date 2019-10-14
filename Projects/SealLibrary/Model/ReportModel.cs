@@ -2139,7 +2139,9 @@ namespace Seal.Model
             {
                 foreach (var link in cell.Links)
                 {
-                    if ((link.Href.StartsWith("exe=") && Report.ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter)) || (link.Href.StartsWith("rpa=") && Report.ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter)))
+                    if ((link.Href.StartsWith("exe=") && Report.ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter)) 
+                        || (link.Href.StartsWith("rpa=") && Report.ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter))
+                        )
                     {
                         navigation += string.Format("<li nav='{0}'><a href='#'>{1}</a></li>", link.Href, link.Text);
                     }

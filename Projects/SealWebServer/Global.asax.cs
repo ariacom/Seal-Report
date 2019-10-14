@@ -8,6 +8,7 @@ using SealWebServer.Controllers;
 using System.Configuration;
 using System.Threading;
 using System;
+using System.Collections.Generic;
 
 namespace SealWebServer
 {
@@ -47,6 +48,41 @@ namespace SealWebServer
 
                 Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Preload Widgets");
                 var widgets = DashboardWidgetsPool.Widgets;
+
+                List<string> reportList = new List<string>();
+                foreach (var widget in widgets.Values)
+                {
+                    var filePath = Repository.Instance.ReportsFolder + widget.ReportPath;
+                    if (System.IO.File.Exists(filePath) && !reportList.Contains(filePath)) reportList.Add(filePath);
+                }
+
+                Helper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Starting Preload of {0} Widget Reports", reportList.Count));
+                foreach (var reportPath in reportList)
+                {
+                    try {
+                        var repository = Repository.Instance.CreateFast();
+                        var report = Report.LoadFromFile(reportPath, repository);
+
+                        report.ExecutionContext = ReportExecutionContext.TaskScheduler;
+                        //Disable basics
+                        report.ExecutionView.InitParameters(false);
+                        report.ExecutionView.SetParameter(Parameter.DrillEnabledParameter, false);
+                        report.ExecutionView.SetParameter(Parameter.SubReportsEnabledParameter, false);
+                        report.ExecutionView.SetParameter(Parameter.ServerPaginationParameter, false);
+                        //set HTML Format
+                        report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
+                        //Force load of all models
+                        report.ExecutionView.SetParameter(Parameter.ForceModelsLoad, true);
+
+                        var execution = new ReportExecution() { Report = report };
+                        execution.Execute();
+                        while (report.IsExecuting) Thread.Sleep(100);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helper.WriteLogEntryWeb(EventLogEntryType.Error, string.Format("Pre Load: Error executing '{0}\r\n{1}", reportPath, ex.Message));
+                    }
+                }
 
                 Helper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Preload");
             }
