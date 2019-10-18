@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using Seal.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +18,11 @@ namespace Seal.Model
         public ReportExecution Navigate(string navigation, Report rootReport)
         {
             var parameters = HttpUtility.ParseQueryString(navigation);
-            string reportPath = parameters.Get("rpa");
+            string reportPath = parameters.Get("rpa"); //For subreports
+            string executionGuid = parameters.Get("exe"); //For drill
+            bool isSubReport = !string.IsNullOrEmpty(reportPath);
+            bool isDrill = !string.IsNullOrEmpty(executionGuid);
+
             string destLabel = "", srcRestriction = "", srcGUID = "";
             Report newReport = null;
 
@@ -59,10 +64,9 @@ namespace Seal.Model
                 string dis = parameters.Get("dis");
                 if (!string.IsNullOrEmpty(dis)) srcRestriction = parameters.Get("dis");
             }
-            else
+            else if (!string.IsNullOrEmpty(executionGuid))
             {
                 //Drill
-                string executionGuid = parameters.Get("exe");
                 if (!Navigations.ContainsKey(executionGuid)) throw new Exception("Missing execution GUID");
                 newReport = Navigations[executionGuid].Execution.Report.Clone();
                 newReport.ExecutionGUID = Guid.NewGuid().ToString();
@@ -130,7 +134,20 @@ namespace Seal.Model
             return new ReportExecution() { Report = newReport, RootReport = rootReport };
         }
 
-        public void SetNavigation(ReportExecution execution)
+        public string NavigateScript(string navigation, Report rootReport)
+        {
+            var linkGUID = navigation.Replace(NavigationLink.FileDownloadPrefix, "");
+            var result = "";
+            if (rootReport.NavigationLinks.ContainsKey(linkGUID))
+            {
+                var link = rootReport.NavigationLinks[linkGUID];
+                RazorHelper.CompileExecute(link.Cell.ContextModel.NavigationScript, link);
+                result = link.ScriptResult;
+            }
+            return result;
+        }
+
+            public void SetNavigation(ReportExecution execution)
         {
             Navigation navigation = null;
             if (!Navigations.ContainsKey(execution.Report.ExecutionGUID))
@@ -142,8 +159,11 @@ namespace Seal.Model
             {
                 navigation = Navigations[execution.Report.ExecutionGUID];
             }
-            //navigation.Origin = 
-            navigation.Link = new NavigationLink() { Text = execution.Report.ExecutionName };
+
+            navigation.Link = new NavigationLink() {
+                Type = NavigationType.SubReport,
+                Text = execution.Report.ExecutionName
+            };
             navigation.Link.Href = !string.IsNullOrEmpty(execution.Report.WebUrl) ? ReportExecution.ActionViewHtmlResultFile + "?execution_guid=" + execution.Report.ExecutionGUID : execution.Report.ResultFilePath;
 
             //set root report here

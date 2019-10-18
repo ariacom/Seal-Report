@@ -66,7 +66,8 @@ namespace Seal.Forms
 
 	To customize your calculation and cell display, you can assign
 	cell.Value (type = object) is the cell value: string, double or DateTime
-	cell.FinalValue (type = string) is the final string used for the table cell
+	cell.FinalValue (type = string) is the final string used for the table cell, can contain HTML tag, 
+    e.g. cell.FinalValue = string.Format(""<a href='{0}' target=_blank>{0}</a>"", cell.DisplayValue);
 	cell.FinalCssStyle (type = string) is the final CSS style used for the table cell
 	cell.FinalCssClass (type = string) is the final CSS classes used for the table cell, could be one or many Bootstrap classes
 	*/
@@ -167,6 +168,15 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
+                "Add Hyperlink or File Download navigation",
+@"cell.AddNavigationHyperLink(""https://www.google.com"", ""Visit Google"");
+    cell.AddNavigationHyperLink(cell.Value.ToString(), cell.DisplayValue);
+
+    //File download: this requires an implementation in the 'Navigation Script' of the model
+    cell.AddNavigationFileDownload(""Download "" + cell.DisplayValue);
+"
+                ),
+            new Tuple<string, string>(
                 "Display the cell context",
 @"cell.FinalValue = string.Format(""Row={0} Col={1} Title={2} Summary={3}"", cell.ContextRow, cell.ContextCol, cell.IsTitle, cell.ContextIsSummaryTable);
 "
@@ -199,7 +209,7 @@ namespace Seal.Forms
 	ReportExecutionLog log = metaTable;
     ReportModel reportModel = metaTable.NoSQLModel;
     Report report = (reportModel != null ? reportModel.Report : null);
-    List<ReportRestriction> restrictions = (report != null ? report.ReportRestrictions : null);
+    List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
 
     //Default Script executed to fill the model result table from a non SQL source (if the model 'Load Script' is empty)
     //Insert values in the table, values must match the table columns defined in 'Definition Script'
@@ -272,7 +282,7 @@ namespace Seal.Forms
 ";
 
 
-        const string razorTableFinalScriptTemplate = @"@using Seal.Model
+        const string razorModelFinalScriptTemplate = @"@using Seal.Model
 @using System.Data
 @{
     ReportModel model = Model;
@@ -300,6 +310,36 @@ namespace Seal.Forms
 }
 ";
 
+        const string razorModelNavigationScriptTemplate = @"@using Seal.Model
+@using Seal.Helpers
+@using System.Data
+@using System.IO
+@{
+    NavigationLink link = Model;
+    ResultCell cell = link.Cell;
+    ReportModel model = cell.ContextModel;
+
+    //Script executed for a script navigation...
+    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+
+    //Sample to return a file contained in a blob
+    var helper = new TaskDatabaseHelper();
+    var command = helper.GetDbCommand(model.Connection.GetOpenConnection());
+    var blobname = link.Cell.Value.ToString();
+    command.CommandText = string.Format(""select ablob from aTableName where blobname={0}"", Helper.QuoteSingle(blobname));
+    using (var reader = command.ExecuteReader())
+    {
+        if (reader.Read())
+        {
+            link.ScriptResult = FileHelper.GetTempUniqueFileName(blobname);
+            File.WriteAllBytes(link.ScriptResult, (byte[]) reader[""ablob""]);
+        }
+    }
+
+    //The script will be executed for cell having the following initialization in a Cell Script: 
+    //cell.AddNavigationFileDownload(""Download "" + cell.DisplayValue);
+}
+";
         const string razorTasksTemplate = @"@using System.Text
 @functions {
     //Before execution, this script will be added at the end of all task scripts...
@@ -323,9 +363,10 @@ namespace Seal.Forms
 
     //report.DisplayName = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + ""-"" + DateTime.Now.ToShortDateString();
     
-    //Set the first value of an enum
-    //var enums = report.Models[0].Source.MetaData.Enums.FirstOrDefault(i=>i.Name == ""Category"");
-    //report.Models[0].GetRestrictionByName(""Category"").EnumValues.Add(enums.Values[0].Id);
+    //Set the last value of an enum
+    //var restr = report.Models[0].GetRestrictionByName(""Category"");
+    //restr.EnumValues.Clear();
+    //restr.EnumValues.Add(restr.EnumRE.Values[restr.EnumRE.Values.Count-1].Id);
 
     //Change view parameter to display the information Tab
     //report.ExecutionView.GetParameter(""information_button"").BoolValue = true;
@@ -827,9 +868,16 @@ namespace Seal.Forms
                     }
                     else if (context.PropertyDescriptor.Name == "FinalScript")
                     {
-                        template = razorTableFinalScriptTemplate;
+                        template = razorModelFinalScriptTemplate;
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the final script executed for the model";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "NavigationScript")
+                    {
+                        template = razorModelNavigationScriptTemplate;
+                        frm.ObjectForCheckSyntax = new NavigationLink();
+                        frm.Text = "Edit the navigation script executed for the model";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                     else if (context.PropertyDescriptor.Name == "LoadScript")

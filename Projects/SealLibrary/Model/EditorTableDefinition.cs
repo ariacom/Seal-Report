@@ -37,6 +37,7 @@ namespace Seal.Model
         public string PkName = "";
         public string PkDisplayName = "";
         public string TableDisplayName = "";
+        public string AddWhereClause = "";
 
         public string SPInsert = "";
         public string SPUpdate = "";

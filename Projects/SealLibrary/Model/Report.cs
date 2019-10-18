@@ -112,20 +112,14 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// Returns a common script key form a given name and model
-        /// </summary>
-        /*
+        /// Returns a common script key from a given name and model
+        /// </summary>      
         public string GetReportCommonScriptKey(string name, object model)
         {
             var script = CommonScripts.FirstOrDefault(i => i.Name == name); 
+            if (script == null) throw new Exception(string.Format("Unable to find a report common script  named '{0}'...", name));            
 
-            if (script == null)
-            {
-                throw new Exception(string.Format("Unable to find a common script  named '{0}'...", name));
-            }
-
-            string key = string.Format("REP:{0}_{1}_{2}_{3}", FilePath, GUID, name, File.GetLastWriteTime(FilePath).ToString("s"));
-
+            string key = string.Format("REPCS:{0}_{1}_{2}_{3}", FilePath, GUID, name, File.GetLastWriteTime(FilePath).ToString("s"));
             try
             {
                 RazorHelper.Compile(script.Script, model.GetType(), key);
@@ -138,7 +132,7 @@ namespace Seal.Model
                 throw ex;
             }
             return key;
-        }*/
+        }
 
         /// <summary>
         /// Main task script included in all tasks
@@ -1147,7 +1141,7 @@ namespace Seal.Model
                 view.GUID = newGUID;
                 view.ReinitGUIDChildren();
             }
-             Schedules.Clear();
+            Schedules.Clear();
         }
 
         /// <summary>
@@ -1976,6 +1970,14 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public List<string> DrillParents = new List<string>();
+
+
+        /// <summary>
+        /// List of links used for Script navigation
+        /// </summary>
+        [XmlIgnore]
+        public Dictionary<string, NavigationLink> NavigationLinks = new Dictionary<string, NavigationLink>();
+
 
         /// <summary>
         /// Helper to update a view parameter

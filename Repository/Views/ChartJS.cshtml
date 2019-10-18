@@ -31,10 +31,15 @@
         </div>
         <script>
             $(document).ready(function () {
-            var ctx = $("#@chartId");
-            var colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
-            colors = @Raw(view.GetValue("chartjs_colors") != "d3" ? view.GetValue("chartjs_colors") : "colors");
-            var data = {
+                var ctx = $("#@chartId");
+                var colorsDef = "@view.GetValue("chartjs_colors")";
+                var colors = null;
+                if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+                else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
+                else if (colorsDef == "d3c") colors = d3.scale.category20c().range(); 
+                else colors = @Raw(view.GetValue("chartjs_colors"));
+
+                var data = {
                 labels: [@Raw(page.ChartXLabels)],
                 navigations: [@Raw(page.ChartNavigations)],
                 datasets: [

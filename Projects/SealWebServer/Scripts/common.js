@@ -248,6 +248,18 @@ function setProgressBarMessage(selector, progression, message, classname) {
 }
 
 function executeReport(nav) {
+    if (nav != null && nav.startsWith("HL:")) {
+        window.open(nav.replace("HL:",""), '_blank');
+        return;
+    }
+
+    $("#navigation_id").val(nav);
+    if (nav != null && nav.startsWith("FD:")) {
+        $("#header_form").attr("action", urlPrefix + "ActionNavigate");
+        $("#header_form").submit();
+        return;
+    }
+
     if (refreshTimer) clearInterval(refreshTimer);
 
     var url = "";
@@ -271,13 +283,12 @@ function executeReport(nav) {
         setProgressBarMessage("#progress_bar", 5, startingExecText, "progress-bar-success");
 
         url = urlPrefix + (nav == null ? "ActionExecuteReport" : "ActionNavigate");
-        if (nav == null || urlPrefix == "") executionTimer = setInterval(function () { executeTimer() }, 1200);
+        if (nav == null || urlPrefix == "") executionTimer = setInterval(function () { executeTimer(); }, 1200);
     }
     else {
         url = urlPrefix + "ActionCancelReport";
     }
 
-    $("#navigation_id").val(nav);
     $("#header_form").attr("target", "");
     if (urlPrefix != "") {
         $.post(url, $("#header_form").serialize()).done(function (data) {

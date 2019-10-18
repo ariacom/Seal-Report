@@ -344,6 +344,7 @@ namespace Seal.Model
                                 if (child != null)
                                 {
                                     NavigationLink link = new NavigationLink();
+                                    link.Type = NavigationType.Drill;
                                     link.Href = string.Format("exe={0}&src={1}&dst={2}&val={3}", report.ExecutionGUID, Element.MetaColumnGUID, childGUID, HttpUtility.UrlEncode(NavigationValue));
                                     link.Text = HttpUtility.HtmlEncode(report.Translate("Drill >") + " " + report.Repository.RepositoryTranslate("Element", child.Category + '.' + child.DisplayName, child.DisplayName));
 
@@ -367,6 +368,7 @@ namespace Seal.Model
                                     }
 
                                     NavigationLink link = new NavigationLink();
+                                    link.Type = NavigationType.Drill;
                                     link.Href = string.Format("exe={0}&src={1}&dst={2}", report.ExecutionGUID, Element.MetaColumnGUID, parentColumn.GUID);
                                     link.Text = HttpUtility.HtmlEncode(report.Translate("Drill <") + " " + report.Repository.RepositoryTranslate("Element", parentColumn.Category + '.' + parentColumn.DisplayName, parentColumn.DisplayName));
                                     _links.Add(link);
@@ -393,6 +395,7 @@ namespace Seal.Model
                                 if (!string.IsNullOrEmpty(subReportRestrictions))
                                 {
                                     NavigationLink link = new NavigationLink();
+                                    link.Type = NavigationType.SubReport;
                                     link.Href = string.Format("rpa={0}", HttpUtility.UrlEncode(subreport.Path));
                                     if (subreport.Restrictions.Count > 1 || !subreport.Restrictions.Contains(Element.MetaColumn.GUID))
                                     {
@@ -411,6 +414,24 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Add a navigation link from this cell to download a file. The file will be loaded in the Navigation Script of the model.
+        /// </summary>
+        public void AddNavigationFileDownload(string text)
+        {
+            var guid = Guid.NewGuid().ToString();
+            var link = new NavigationLink() { Type = NavigationType.FileDownload, Href = guid, Text = text, Cell = this };
+            Links.Add(link);
+            ContextModel.Report.NavigationLinks.Add(guid, link);
+        }
+
+        /// <summary>
+        /// Add a navigation link from this cell to open a new page on a web site
+        /// </summary>
+        public void AddNavigationHyperLink(string href, string text)
+        {
+            Links.Add(new NavigationLink() { Type = NavigationType.Hyperlink, Href = href, Text = text });
+        }
 
         //Context to be used for cell script...
         /// <summary>
