@@ -26,6 +26,9 @@ namespace Seal.Model
         public const string ChartPlotlyName = "Chart Plotly";
         public const string ModelContainerName = "Model Container";
 
+        public const string D3Colors = "['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']";
+        public const string GoogleColors = "['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#329262', '#5574a6', '#3b3eac']";
+
         /// <summary>
         /// Name of the view template
         /// </summary>

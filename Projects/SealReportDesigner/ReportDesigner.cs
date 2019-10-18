@@ -660,8 +660,6 @@ namespace Seal
                 if (selectedEntity is MetaJoin && !((MetaJoin)selectedEntity).IsEditable) entity.SetReadOnly();
                 if (selectedEntity is MetaColumn && !((MetaColumn)selectedEntity).MetaTable.IsEditable) entity.SetReadOnly();
                 if (selectedEntity is MetaEnum && !((MetaEnum)selectedEntity).IsEditable) entity.SetReadOnly();
-
-                if (selectedEntity is MetaColumn) ((MetaColumn)selectedEntity).HideSubReports();
             }
             //Set default expanded
             entry = Helper.GetGridEntry(mainPropertyGrid, "pdf configuration");

@@ -86,14 +86,6 @@ namespace Seal.Model
             TypeDescriptor.Refresh(this);
         }
 
-        public void HideSubReports()
-        {
-            GetProperty("SubReports").SetIsBrowsable(false);
-            GetProperty("HelperOpenSubReportFolder").SetIsBrowsable(false);
-            GetProperty("HelperCreateSubReport").SetIsBrowsable(false);
-            GetProperty("HelperAddSubReport").SetIsBrowsable(false);
-            TypeDescriptor.Refresh(this);
-        }
         #endregion
 
         /// <summary>

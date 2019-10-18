@@ -19,8 +19,12 @@
 
         <script>
             $(document).ready(function () {
-                var colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
-                colors = @Raw(view.GetValue("plotly_colors") != "d3" ? view.GetValue("plotly_colors") : "colors");
+                var colorsDef = "@view.GetValue("plotly_colors")";
+                var colors = null;
+                if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+                else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
+                else if (colorsDef == "d3c") colors = d3.scale.category20c().range(); 
+                else colors = @Raw(view.GetValue("plotly_colors"));
 
                 var @chartId = $("#@chartId")[0];
                 var data = [

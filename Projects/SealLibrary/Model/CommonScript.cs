@@ -19,6 +19,8 @@ namespace Seal.Model
         /// Sample
         /// </summary>
         public const string RazorTemplate = @"@using System.Text
+@using Seal.Model
+
 @functions {
     //Before execution, this script will be added at the end of all scripts executed...
     public string MyConvertString(string input) {

@@ -51,8 +51,13 @@
                     var chartTitle = '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("nvd3_chart_title"))))';
 
                     //Root Script
-                    var colors = d3.scale.category@((reportModel.ExecNVD3ChartType == "pieChart" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
-                    colors = @Raw(view.GetValue("nvd3_colors") != "d3" ? view.GetValue("nvd3_colors") : "colors");
+                    var colorsDef = "@view.GetValue("nvd3_colors")";
+                    var colors = null;
+                    if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
+                    else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
+                    else if (colorsDef == "d3c") colors = d3.scale.category20c().range(); 
+                    else colors = @Raw(view.GetValue("nvd3_colors"));
+
                     (@chartId).color(colors);
                     //Axis format
                     if ((@chartId).xAxis != null && (@chartId).xAxis.tickFormat != null) (@chartId).xAxis.tickFormat(XValueFormatter);

@@ -7,8 +7,26 @@ namespace Seal.Model
 {
     public class NavigationLink
     {
-        public string Href = "";
-        public string Text = "";
-    }
+        public const string HyperLinkPrefix = "HL:";
+        public const string FileDownloadPrefix = "FD:";
 
+        public NavigationType Type;
+        public string Href = "";
+        public string FullHref {
+            get
+            {
+                if (Type == NavigationType.Hyperlink) return HyperLinkPrefix + Href;
+                if (Type == NavigationType.FileDownload) return FileDownloadPrefix + Href;
+                return Href;
+            }
+        }
+        public string Text = "";
+        public ResultCell Cell;
+
+        /// <summary>
+        /// The result expected after the navigation script is executed
+        /// For File Download: the file path 
+        /// </summary>
+        public string ScriptResult;
+    }
 }

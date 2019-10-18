@@ -57,10 +57,10 @@ namespace SealWebServer
                 }
 
                 Helper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Starting Preload of {0} Widget Reports", reportList.Count));
+                var repository = Repository.Instance.CreateFast();
                 foreach (var reportPath in reportList)
                 {
                     try {
-                        var repository = Repository.Instance.CreateFast();
                         var report = Report.LoadFromFile(reportPath, repository);
 
                         report.ExecutionContext = ReportExecutionContext.TaskScheduler;

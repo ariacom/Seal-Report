@@ -16,6 +16,8 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using System.ComponentModel.Design;
+using Seal.Helpers;
+using RazorEngine.Templating;
 
 namespace Seal.Model
 {
@@ -193,6 +195,21 @@ namespace Seal.Model
         [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report."), Id(7, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
+
+        /// <summary>
+        /// Returns a common script key form a given name and model
+        /// </summary>      
+        public string GetConfigurationCommonScriptKey(string name, object model)
+        {
+            var script = CommonScripts.FirstOrDefault(i => i.Name == name);
+
+            if (script == null) throw new Exception(string.Format("Unable to find a configuration common script  named '{0}'...", name));
+           
+            string key = string.Format("CFGCS:{0}_{1}_{2}_{3}", FilePath, GUID, name, File.GetLastWriteTime(FilePath).ToString("s"));
+            RazorHelper.Compile(script.Script, model.GetType(), key);
+
+            return key;
+        }
 
         /// <summary>
         /// Current default configuration values for Pdf converter

@@ -467,4 +467,11 @@ namespace Seal.Model
         No,
     }
 
+    public enum NavigationType
+    {
+        Drill,
+        SubReport,
+        Hyperlink,
+        FileDownload
+    }
 }

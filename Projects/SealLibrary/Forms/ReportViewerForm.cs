@@ -290,13 +290,21 @@ namespace Seal.Forms
 
                     case ReportExecution.ActionNavigate:
                         string nav = webBrowser.Document.All[ReportExecution.HtmlId_navigation_id].GetAttribute("value");
-                        _execution = _navigation.Navigate(nav, _execution.RootReport);
-                        _report = _execution.Report;
+                        if (nav.StartsWith(NavigationLink.FileDownloadPrefix))
+                        {
+                            var filePath = _navigation.NavigateScript(nav, _execution.RootReport);
+                            if (!string.IsNullOrEmpty(filePath)) Process.Start(filePath);
+                        }
+                        else
+                        {
+                            _execution = _navigation.Navigate(nav, _execution.RootReport);
+                            _report = _execution.Report;
 
-                        _canRender = false;
-                        cancelNavigation = true;
-                        _reportDone = false;
-                        Execute();
+                            _canRender = false;
+                            cancelNavigation = true;
+                            _reportDone = false;
+                            Execute();
+                        }
                         break;
 
                     case ReportExecution.ActionGetNavigationLinks:
