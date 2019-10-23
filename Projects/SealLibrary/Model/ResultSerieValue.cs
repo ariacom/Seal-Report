@@ -21,18 +21,8 @@ namespace Seal.Model
             //Priority to element sort order
             if (sx.Element != sy.Element)
             {
-                int sxo = 9999;
-                if (sx.Element.FinalSortOrder != null && sx.Element.FinalSortOrder.Contains(" "))
-                {
-                    sxo = int.Parse(sx.Element.FinalSortOrder.Split(' ')[0]);
-                }
-                int syo = 9999;
-                if (sy.Element.FinalSortOrder != null && sy.Element.FinalSortOrder.Contains(" "))
-                {
-                    syo = int.Parse(sy.Element.FinalSortOrder.Split(' ')[0]);
-                }
-                if (sxo > syo) return 1;
-                else if (sxo < syo) return -1;
+                if (sx.Element.FinalSort > sy.Element.FinalSort) return 1;
+                else if (sx.Element.FinalSort < sy.Element.FinalSort) return -1;
                 return 0;
             }
             else
