@@ -229,6 +229,27 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Retruns true if at least a Sort is specified
+        /// </summary>
+        public static bool ShouldSort(List<ResultCell[]> values)
+        {
+            if (values.Count > 0) return ShouldSort(values[0]);
+            return false;
+        }
+
+        /// <summary>
+        /// Retruns true if at least a Sort is specified
+        /// </summary>
+        public static bool ShouldSort(ResultCell[] values)
+        {
+            if (values != null) return values.FirstOrDefault(i => i.Element.FinalSortOrder != null) != null;
+            return false;
+        }
+
+        /// <summary>
+        /// Compares 2 cells arrays
+        /// </summary>
         public static int CompareCells(ResultCell[] a, ResultCell[] b)
         {
             if (a.Length == 0 || a.Length != b.Length) return 0;

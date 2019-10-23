@@ -844,8 +844,8 @@ namespace Seal.Model
                 //If we have rows and columns OR if there are cell scripts, we have to resort the rows and columns as the SQL cannot do that directly...
                 if ((page.Rows.Count > 0 && page.Columns.Count > 0) || model.Elements.Count(e => !string.IsNullOrEmpty(e.CellScript) && e.IsSorted) > 0)
                 {
-                    page.Rows.Sort(ResultCell.CompareCells);
-                    page.Columns.Sort(ResultCell.CompareCells);
+                    if (ResultCell.ShouldSort(page.Rows)) page.Rows.Sort(ResultCell.CompareCells);
+                    if (ResultCell.ShouldSort(page.Columns)) page.Columns.Sort(ResultCell.CompareCells);
                 }
 
                 //Summary table values
@@ -1450,8 +1450,8 @@ namespace Seal.Model
                 //If we have rows and columns ...
                 if (page.Rows.Count > 0 && page.Columns.Count > 0)
                 {
-                    page.Rows.Sort(ResultCell.CompareCells);
-                    page.Columns.Sort(ResultCell.CompareCells);
+                    if (ResultCell.ShouldSort(page.Rows)) page.Rows.Sort(ResultCell.CompareCells);
+                    if (ResultCell.ShouldSort(page.Columns)) page.Columns.Sort(ResultCell.CompareCells);
                 }
             }
         }
@@ -1465,14 +1465,16 @@ namespace Seal.Model
                 //Sort also series axis
                 if (model.HasSerie)
                 {
-                    page.PrimaryXDimensions.Sort(ResultCell.CompareCells);
-                    page.SecondaryXDimensions.Sort(ResultCell.CompareCells);
+                    if (ResultCell.ShouldSort(page.PrimaryXDimensions)) page.PrimaryXDimensions.Sort(ResultCell.CompareCells);
+                    if (ResultCell.ShouldSort(page.SecondaryXDimensions)) page.SecondaryXDimensions.Sort(ResultCell.CompareCells);
 
-                    page.Series.Sort(ResultSerie.CompareSeries);
+                    if (page.Series.Count > 0 && page.Series[0].SplitterCells != null)
+                    {
+                        if (ResultCell.ShouldSort(page.Series[0].SplitterCells)) page.Series.Sort(ResultSerie.CompareSeries);
+                    }
                 }
             }
         }
-
 
         int FindDimension(ResultCell[] valuesToFind, List<ResultCell[]> valuesList)
         {

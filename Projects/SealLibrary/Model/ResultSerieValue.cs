@@ -3,6 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using Seal.Converter;
+using System;
 using System.Collections.Generic;
 
 namespace Seal.Model
@@ -18,7 +19,22 @@ namespace Seal.Model
             ResultSerie sy = y as ResultSerie;
 
             //Priority to element sort order
-            if (sx.Element != sy.Element) return string.Compare(sx.Element.FinalSortOrder, sy.Element.FinalSortOrder);
+            if (sx.Element != sy.Element)
+            {
+                int sxo = 9999;
+                if (sx.Element.FinalSortOrder != null && sx.Element.FinalSortOrder.Contains(" "))
+                {
+                    sxo = int.Parse(sx.Element.FinalSortOrder.Split(' ')[0]);
+                }
+                int syo = 9999;
+                if (sy.Element.FinalSortOrder != null && sy.Element.FinalSortOrder.Contains(" "))
+                {
+                    syo = int.Parse(sy.Element.FinalSortOrder.Split(' ')[0]);
+                }
+                if (sxo > syo) return 1;
+                else if (sxo < syo) return -1;
+                return 0;
+            }
             else
             {
                 //Then by splitter values descending or ascending
