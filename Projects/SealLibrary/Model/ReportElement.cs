@@ -352,6 +352,19 @@ namespace Seal.Model
         [XmlIgnore]
         public string FinalSortOrder { get; set; }
 
+        /// <summary>
+        /// Final sort as integer (without ASC or DESC)
+        /// </summary>
+        [XmlIgnore]
+        public int FinalSort {
+            get
+            {
+                int result = 99999;
+                if (FinalSortOrder != null && FinalSortOrder.Contains(" ")) result = int.Parse(FinalSortOrder.Split(' ')[0]);
+                return result;
+            }
+        }
+
         AggregateFunction _aggregateFunction = AggregateFunction.Sum;
         /// <summary>
         /// Aggregate function applied to the Data element
