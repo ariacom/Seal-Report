@@ -129,7 +129,7 @@ namespace Seal.Model
                         }
                     }
                 }
-                _filteredLines.Sort(ResultCell.CompareCellsForTableLoad);
+                if (ResultCell.ShouldSort(_filteredLines)) _filteredLines.Sort(ResultCell.CompareCellsForTableLoad);
             }
 
             //build the json result

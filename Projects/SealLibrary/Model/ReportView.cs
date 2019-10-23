@@ -1207,9 +1207,12 @@ namespace Seal.Model
                             //Classic calculation
                             serieValue.Yvalue.Calculate();
                         }
-                        page.PrimaryXDimensions.Sort(CompareXDimensionsWithSeries);
+                        if (ResultCell.ShouldSort(page.PrimaryXDimensions)) page.PrimaryXDimensions.Sort(CompareXDimensionsWithSeries);
                     }
-                    else page.PrimaryXDimensions.Sort(CompareXDimensionsWithAxis);
+                    else
+                    {
+                        if (ResultCell.ShouldSort(page.PrimaryXDimensions)) page.PrimaryXDimensions.Sort(CompareXDimensionsWithAxis);
+                    }
                 }
             }
             initChartXValues(page);
