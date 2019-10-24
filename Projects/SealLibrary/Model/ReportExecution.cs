@@ -1933,7 +1933,7 @@ namespace Seal.Model
             if (restriction != null && restriction.EnumRE != null)
             {
                 //Set current restrictions
-                foreach (var r in Report.AllRestrictions.Where(i => i.EnumRE != null))
+                foreach (var r in Report.ExecutionCommonRestrictions.Where(i => i.EnumRE != null))
                 {
                     if (!CurrentEnumValues.ContainsKey(r.EnumRE)) CurrentEnumValues.Add(r.EnumRE, null);
                     CurrentEnumValues[r.EnumRE] = r.EnumSQLValue;
