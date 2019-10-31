@@ -15,6 +15,7 @@ namespace Seal.Model
         public string ChildViewName = "";
         public string Type = "";
         public string BlobColumnName = "";
+        public string DefaultValue = "";
 
         public string GetType(ReportElement element)
         {

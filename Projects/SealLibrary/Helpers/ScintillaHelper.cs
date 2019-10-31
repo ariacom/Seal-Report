@@ -32,7 +32,7 @@ namespace Seal.Helpers
             if (showLineNumber)
             {
                 // Show line numbers
-                scintilla.Margins[0].Width = 20;
+                scintilla.Margins[0].Width = 25;
                 scintilla.Styles[Style.LineNumber].ForeColor = Color.FromArgb(255, 128, 128, 128);  //Dark Gray
                 scintilla.Styles[Style.LineNumber].BackColor = Color.FromArgb(255, 228, 228, 228);  //Light Gray
             }

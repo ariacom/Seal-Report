@@ -1080,7 +1080,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the layourt column is for a model
+        /// True if the layout column is for a model
         /// </summary>
         public bool IsGridLayoutColumnForModel(string column)
         {

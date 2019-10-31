@@ -124,6 +124,8 @@ namespace Seal.Model
                 }
             }
 
+            if (newReport == null) throw new Exception("Invalid Navigation");
+
             newReport.WebUrl = rootReport.WebUrl;
             newReport.IsNavigating = true;
             newReport.HasNavigation = true;

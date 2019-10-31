@@ -325,19 +325,22 @@ namespace Seal.Forms
     //Sample to return a file contained in a blob
     var helper = new TaskDatabaseHelper();
     var command = helper.GetDbCommand(model.Connection.GetOpenConnection());
-    var blobname = link.Cell.Value.ToString();
-    command.CommandText = string.Format(""select ablob from aTableName where blobname={0}"", Helper.QuoteSingle(blobname));
+
+    //Here we assume here that the id is in the first column
+    var blobId = link.Cell.ContextCurrentLine[0].Value;
+    command.CommandText = string.Format(""select blob_value from blob_table where blob_id = {0}"", blobId);
     using (var reader = command.ExecuteReader())
     {
         if (reader.Read())
         {
-            link.ScriptResult = FileHelper.GetTempUniqueFileName(blobname);
-            File.WriteAllBytes(link.ScriptResult, (byte[]) reader[""ablob""]);
+            var blobName = link.Cell.Value.ToString(); //Name of the file containing the extension
+            link.ScriptResult = FileHelper.GetTempUniqueFileName(blobName);
+            File.WriteAllBytes(link.ScriptResult, (byte[]) reader[""blob_value""]);
         }
     }
 
     //The script will be executed for cell having the following initialization in a Cell Script: 
-    //cell.AddNavigationFileDownload(""Download "" + cell.DisplayValue);
+    //cell.AddNavigationFileDownload(""Download"" + cell.DisplayValue);
 }
 ";
         const string razorTasksTemplate = @"@using System.Text
