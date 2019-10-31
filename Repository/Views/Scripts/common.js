@@ -327,7 +327,7 @@ function submitViewParameter(viewId, parameterName, parameterValue) {
 
 function getTableData(datatable, guid, viewid, pageid, data, callback, settings) {
     try {
-        var params = data.draw + "§" + settings.aaSorting + "§" + settings.oPreviousSearch.sSearch.replace("<", "&lt;").replace(">", "&gt;") + "§" + settings._iDisplayLength + "§" + settings._iDisplayStart
+        var params = data.draw + "§" + settings.aaSorting + "§" + settings.oPreviousSearch.sSearch.replace("<", "&lt;").replace(">", "&gt;") + "§" + settings._iDisplayLength + "§" + settings._iDisplayStart;
         if (urlPrefix != "") {
             $.post(urlPrefix + "ActionGetTableData", { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
                 .done(function (data) {

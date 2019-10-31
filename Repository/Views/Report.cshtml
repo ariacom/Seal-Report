@@ -171,14 +171,16 @@
                         <text>,
                         {
                             targets: "_all",
-                            createdCell: function(td, cellData, rowData, row, col) {
-                                var cellDatas = cellData.split('§', 6);
-                                $(td).html(cellDatas[5]);
-                                $(td).attr("class", cellDatas[4]);
-                                $(td).attr("style", cellDatas[3]);
-                                $(td).attr("navigation", cellDatas[2]);
-                                $(td).parent().attr("class", cellDatas[1]);
-                                $(td).parent().attr("style", cellDatas[0]);
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                if (cellData) {
+                                    var cellDatas = cellData.split('§', 6);
+                                    $(td).html(cellDatas[5]);
+                                    $(td).attr("class", cellDatas[4]);
+                                    $(td).attr("style", cellDatas[3]);
+                                    $(td).attr("navigation", cellDatas[2]);
+                                    $(td).parent().attr("class", cellDatas[1]);
+                                    $(td).parent().attr("style", cellDatas[0]);
+                                }
                             }
                         }
                         </text>

@@ -474,4 +474,12 @@ namespace Seal.Model
         Hyperlink,
         FileDownload
     }
+
+    public enum AuditType
+    {
+        Login,
+        Logout,
+        ReportSave,
+        ReportExecution,
+    }
 }

@@ -107,7 +107,7 @@ namespace Seal.Helpers
 
         static public string CompileExecute(string script, object model, string key = null)
         {
-            if (model != null && script != null && script.StartsWith("@"))
+            if (model != null && script != null && script.Trim().StartsWith("@"))
             {
                 string result = "";
                 LoadRazorAssemblies();

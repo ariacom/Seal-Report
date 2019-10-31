@@ -158,36 +158,34 @@ namespace Seal.Model
         [Category("Server Settings"), DisplayName("CSS Files"), Description("Additional CSS files to be included in the HTML report result. One per line or separated by semi-column."), Id(10, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string CssFiles { get; set; } = null;
-        public bool ShouldSerializeCssFiles() { return !string.IsNullOrEmpty(CssFiles); }
 
         /// <summary>
         /// Additional JavaScript files to be included in the HTML report result. One per line or separated by semi-column.
         /// </summary>
-        [Category("Server Settings"), DisplayName("Script Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(11, 1)]
+        [Category("Server Settings"), DisplayName("JavaScript Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(11, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string ScriptFiles { get; set; } = "";
-        public bool ShouldSerializeScriptFiles() { return !string.IsNullOrEmpty(ScriptFiles); }
+        public string ScriptFiles { get; set; } = null;
 
         /// <summary>
         /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.
         /// </summary>
         [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string InitScript { get; set; } = "";
+        public string InitScript { get; set; } = null;
 
         /// <summary>
         /// If set, the script is executed when a new report is created. Default values for report creation can be set here.
         /// </summary>
         [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(5, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string ReportCreationScript { get; set; } = "";
+        public string ReportCreationScript { get; set; } = null;
 
         /// <summary>
         /// If set, the script is added to all task scripts executed. This may be useful to defined common functions.
         /// </summary>
         [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed. This may be useful to defined common functions."), Id(6, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string TasksScript { get; set; } = "";
+        public string TasksScript { get; set; } = null;
 
         /// <summary>
         /// List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report.
@@ -195,6 +193,7 @@ namespace Seal.Model
         [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report."), Id(7, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
+        public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
 
         /// <summary>
         /// Returns a common script key form a given name and model

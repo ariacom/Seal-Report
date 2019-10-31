@@ -8,35 +8,35 @@ AND [3dbbc2a7-6e96-495a-9393-70344a13d921]</Restriction><Restrictions><ReportRes
 &lt;/div&gt;</CustomTemplate><SortOrder>4</SortOrder></ReportView><ReportView><GUID>d19764eb-66a7-47c5-8d66-95e02d94a0a1</GUID><Name>Title</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>&lt;div class="text-center" style="width:250px"&gt;
 &lt;h4&gt;A title sample !&lt;/h4&gt;
 &lt;/div&gt;
-</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><CustomTemplate /><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>571d29f3-c500-44a8-84a8-e82ca9d75406</ModelGUID><Parameters><Parameter><Name>show_summary_table</Name><Value>False</Value></Parameter></Parameters><SortOrder>6</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model
-@{
-    Report report = Model;
-    ReportView view = report.CurrentView;
-    int index = 0;
-    var views = view.Views.OrderBy(i =&gt; i.SortOrder).ToList();
-    foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout").Trim()))
-    {
-        &lt;div class="row"&gt;
-            @foreach (string col in view.GetGridLayoutColumns(row))
-            {
-                &lt;div class="@view.GetGridLayoutColumnClass(col) text-center"&gt;
-                    @if (index &lt; view.Views.Count &amp;&amp; view.IsGridLayoutColumnForModel(col))
-                    {
-                        @Raw(views[index++].Parse())
-                    }
-                &lt;/div&gt;
-            }
-        &lt;/div&gt;
-        &lt;hr&gt;
-    }
-    //Remaining views
-    while (index &lt; views.Count)
-    {
-        &lt;div class="row"&gt;
-            @Raw(views[index++].Parse())
-        &lt;/div&gt;
-    }
-}
-</CustomTemplate><Parameters><Parameter><Name>grid_layout</Name><Value>col-sm-4;col-sm-4;col-sm-4;
+</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><CustomTemplate /><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>571d29f3-c500-44a8-84a8-e82ca9d75406</ModelGUID><Parameters><Parameter><Name>show_summary_table</Name><Value>False</Value></Parameter></Parameters><SortOrder>6</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model&#xD;
+@{&#xD;
+    Report report = Model;&#xD;
+    ReportView view = report.CurrentView;&#xD;
+    int index = 0;&#xD;
+    var views = view.Views.OrderBy(i =&gt; i.SortOrder).ToList();&#xD;
+}&#xD;
+&lt;div class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")"&gt;&#xD;
+    @foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout").Trim()))&#xD;
+    {&#xD;
+        &lt;div class="row"&gt;&#xD;
+            @foreach (string col in view.GetGridLayoutColumns(row))&#xD;
+            {&#xD;
+                &lt;div class="@view.GetGridLayoutColumnClass(col) text-center"&gt;&#xD;
+                    @if (index &lt; view.Views.Count &amp;&amp; view.IsGridLayoutColumnForModel(col))&#xD;
+                    {&#xD;
+                        @Raw(views[index++].Parse())&#xD;
+                    }&#xD;
+                &lt;/div&gt;&#xD;
+            }&#xD;
+        &lt;/div&gt;&#xD;
+    }&#xD;
+    @while (index &lt; views.Count)&#xD;
+    {&#xD;
+        //Remaining views&#xD;
+        &lt;div class="row"&gt;&#xD;
+            @Raw(views[index++].Parse())&#xD;
+        &lt;/div&gt;&#xD;
+    }&#xD;
+&lt;/div&gt;</CustomTemplate><Parameters><Parameter><Name>grid_layout</Name><Value>col-sm-4;col-sm-4;col-sm-4;
 col-sm-4;col-sm-4;col-sm-4;
 col-sm-12</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>1</SortOrder></ReportView></Views><ViewGUID>8c4c00e5-e212-41f9-a64d-ff93225d73b1</ViewGUID></Report>

@@ -4,25 +4,27 @@
     ReportView view = report.CurrentView;
     int index = 0;
     var views = view.Views.OrderBy(i => i.SortOrder).ToList();
-    foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout").Trim()))
+}
+<div class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
+    @foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout").Trim()))
     {
         <div class="row">
             @foreach (string col in view.GetGridLayoutColumns(row))
             {
-                <div class="@view.GetGridLayoutColumnClass(col)">
+                <div class="@view.GetGridLayoutColumnClass(col) @view.GetValue("grid_cell_class")" @Raw(view.AddAttribute("style", "grid_cell_css"))>
                     @if (index < view.Views.Count && view.IsGridLayoutColumnForModel(col))
-                {
+                    {
                         @Raw(views[index++].Parse())
-                }
+                    }
                 </div>
             }
         </div>
     }
-    //Remaining views
-    while (index < views.Count)
+    @while (index < views.Count)
     {
+        //Remaining views
         <div class="row">
             @Raw(views[index++].Parse())
         </div>
     }
-}
+</div>
