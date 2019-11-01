@@ -85,6 +85,7 @@
     @Raw(report.AttachScriptFiles(repository.Configuration.ScriptFiles))
 
     <script type="text/javascript">
+            var inReport = true;
             var generateHTMLDisplay =  @Helper.ToJS(report.GenerateHTMLDisplay);
 
             var urlPrefix = "@report.WebUrl";

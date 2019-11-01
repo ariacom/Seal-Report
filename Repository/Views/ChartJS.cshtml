@@ -198,15 +198,15 @@
                 if (@Helper.ToJS(report.GenerateHTMLDisplay)) {
                     $("#@chartId").click(
                         function (evt) {
-                                            var points = @(chartId).getElementsAtEvent(evt);
-                                            if (points && points.length > 0) {
-                                                var index = points[0]["_index"];
-                                                var label = @(chartId).data.labels[index];
-                                                var value = @(chartId).data.datasets[0].data[index];
-                                                var nav = @(chartId).data.navigations[index];
-                                                if (nav) showPopupNavMenu(evt, nav, true);
-                                            }
-                                        }
+                            var points = @(chartId).getElementsAtEvent(evt);
+                            if (points && points.length > 0) {
+                                var index = points[0]["_index"];
+                                var label = @(chartId).data.labels[index];
+                                var value = @(chartId).data.datasets[0].data[index];
+                                var nav = @(chartId).data.navigations[index];
+                                if (nav) showPopupNavMenu(evt, nav, true, '@report.ExecutionGUID');
+                            }
+                        }
                     );
                 }
             });//document.ready

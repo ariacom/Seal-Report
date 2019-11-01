@@ -1231,11 +1231,11 @@ namespace Seal.Model
                 result.Append(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(xval)));
                 if (xval.Length > page.AxisXLabelMaxLen) page.AxisXLabelMaxLen = xval.Length;
 
-                var navigation = Model.GetNavigation(((ResultCell[])key)[0]);
+                var navigation = Model.GetNavigation(((ResultCell[])key)[0], true);
                 if (!string.IsNullOrEmpty(navigation))
                 {
                     if (navs.Length != 0) navs.Append(",");
-                    navs.Append(navigation);
+                    navs.AppendFormat("\"{0}\"", navigation);
                 }
             }
 

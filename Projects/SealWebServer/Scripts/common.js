@@ -102,64 +102,11 @@ function realMouseCoords(event) {
         totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
         totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
     }
-    while (currentElement = currentElement.offsetParent)
+    while (currentElement = currentElement.offsetParent);
 
     canvasX = event.pageX - totalOffsetX;
     canvasY = event.pageY - totalOffsetY;
     return { x: canvasX, y: canvasY }
-}
-
-//navigation menu
-var popupNavMenuTimeout = -1;
-function showPopupNavMenu(source, content, forChart) {
-    var $popup = $('#nav_popupmenu');
-    if (!$popup.length) {
-        $popup = $("<ul id='nav_popupmenu' class='dropdown-menu' role='menu'/>");
-        $("body").append($popup);
-        $popup
-            .mouseenter(function () {
-                $popup.show();
-            })
-            .mouseleave(function () {
-                $popup.hide();
-            });
-    }
-    $popup.html(content);
-    $('#nav_popupmenu li').click(function (e) {
-        executeReport($(this).attr("nav"));
-        $popup.hide();
-    });
-
-    var scrollLeft = document.body.scrollLeft + document.documentElement.scrollLeft;
-    var scrollTop = document.body.scrollTop + document.documentElement.scrollTop;
-    var posLeft = forChart ? source.clientX + scrollLeft : source.offset().left;
-    var posTop = forChart ? source.clientY + scrollTop : source.offset().top + source.height() + 3;
-    posLeft += Math.min(0, window.innerWidth + scrollLeft - $popup.width() - posLeft);
-    posTop += Math.min(0, window.innerHeight + scrollTop - $popup.height() - posTop - 50);
-
-    $popup
-        .show()
-        .css({
-            position: "absolute",
-            left: posLeft,
-            top: posTop
-        });
-
-    if (popupNavMenuTimeout != -1) clearTimeout(popupNavMenuTimeout);
-    popupNavMenuTimeout = setTimeout(function () { $popup.hide(); }, 3000);
-}
-
-
-function initNavCells() {
-    $("td:not([navigation=''])")
-        .mouseenter(function (e) {
-            if ($(this).attr("navigation")) {
-                showPopupNavMenu($(this), $(this).attr("navigation"), false);
-            }
-        })
-        .mouseleave(function () {
-            $("#nav_popupmenu").hide();
-        });
 }
 
 //message menu
@@ -334,7 +281,7 @@ function getTableData(datatable, guid, viewid, pageid, data, callback, settings)
                     try {
                         var json = jQuery.parseJSON(data);
                         callback(json);
-                        initNavCells();
+                        initNavCells(executeReport);
                     }
                     catch (ex) {
                         datatable[0].innerHTML = "Error loading data..." + "<br>" + ex.message;
@@ -350,7 +297,7 @@ function getTableData(datatable, guid, viewid, pageid, data, callback, settings)
             var json = jQuery.parseJSON($("#parameter_tableload").text());
             callback(json);
             $("#parameter_tableload").html("");
-            initNavCells();
+            initNavCells(executeReport);
         }
     }
     catch (ex2) {
@@ -453,8 +400,7 @@ function mainInit() {
 
         $("#nav_badge").removeClass("hidden");
     }
-    initNavCells();
-
+    initNavCells(executeReport);
 }
 
 //Enum select picker

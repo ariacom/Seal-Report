@@ -175,7 +175,7 @@
                     if ((@chartId).pie && @Helper.ToJS(report.GenerateHTMLDisplay)) {
                         (@chartId).pie.dispatch.on("elementClick", function (e) {
                             var nav = @(chartId).navigations[e.data.x];
-                            if (nav) showPopupNavMenu(e.event, nav, true);
+                            if (nav) showPopupNavMenu(e.event, nav, true, '@report.ExecutionGUID');
                         });
                     }
                     return @chartId;

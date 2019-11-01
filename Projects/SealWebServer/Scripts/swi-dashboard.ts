@@ -9,6 +9,7 @@ var hasEditor: boolean;
 declare var Muuri: any;
 declare function nvd3UpdateCharts();
 declare function getTopLeft(item: any);
+declare function initNavCells(reportPath: string, itenGUID: string);
 
 //Muuri layout
 function loadLayout(grid, serializedLayout) {
@@ -142,6 +143,8 @@ class SWIDashboard {
         for (var i = 0; i < _da._grids.length; i++) {
             _da._grids[i].refreshItems().layout(); 
         }
+
+        initNavCells(data.executionguid, data.itemguid);
     }
 
     private refreshDashboardItem(guid: string, itemguid: string, force : boolean) {

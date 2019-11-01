@@ -137,7 +137,7 @@
                             if (!idx) idx = (@chartId).data[0].x.indexOf(data.points[0].x);
                             if (idx && idx != -1) {
                                 var nav = @(chartId).layout.navigations[idx];
-                                if (nav) showPopupNavMenu(data.event, nav, true);
+                                if (nav) showPopupNavMenu(data.event, nav, true, '@report.ExecutionGUID');
                             }
                         }
                     });
