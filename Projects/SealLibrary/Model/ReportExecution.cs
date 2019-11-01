@@ -75,6 +75,11 @@ namespace Seal.Model
         /// </summary>
         public Report RootReport = null;
 
+        /// <summary>
+        /// The parameter used if the execution was for a navigation
+        /// </summary>
+        public string NavigationParameter = null;
+
         Thread _executeThread;
 
         /// <summary>

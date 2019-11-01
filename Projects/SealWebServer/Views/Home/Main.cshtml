@@ -318,6 +318,7 @@
     <script type="text/javascript">
         //server
         var WebApplicationName = '@HomeController.GetWebUrl(Request, Response)';
+        var inReport = false;
 
         //formats
         var dateSeparator = '@Html.Raw(repository.CultureInfo.DateTimeFormat.DateSeparator)';
@@ -390,9 +391,6 @@
             }
             return text;
         }
-
-        function showPopupNavMenu(source, content, forChart) { }
-
     </script>
 
     @if (!ServerOptions.HasMinifiedScripts())

@@ -93,6 +93,10 @@ namespace SealWebServer.Controllers
             user.Profile.Path = user.ProfilePath;
 
             Session[SessionUser] = user;
+            //Clear previous Session variables
+            Session[SessionNavigationContext] = null;
+            Session[SessionDashboardExecutions] = null;
+
             return user;
         }
 
@@ -232,24 +236,45 @@ namespace SealWebServer.Controllers
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
 
+                ReportExecution execution = null;
                 if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
                 {
-                    ReportExecution execution = Session[execution_guid] as ReportExecution;
+                    execution = Session[execution_guid] as ReportExecution;
+                }
+                else
+                {
+                    //Navigation from dashboard, set the root report in the session
+                    execution = DashboardExecutions.FirstOrDefault(i => i.Report.ExecutionGUID == execution_guid);
+                    Session[execution_guid] = execution;
+                }
+
+                if (execution != null)
+                {
+                    if (execution.RootReport == null) execution.RootReport = execution.Report;
 
                     string nav = Request.Form[ReportExecution.HtmlId_navigation_id];
-                    execution = NavigationContext.Navigate(nav, execution.RootReport);
-                    Report report = execution.Report;
-                    Session[report.ExecutionGUID] = execution;
+                    if (nav.StartsWith(NavigationLink.FileDownloadPrefix))
+                    {
+                        var filePath = NavigationContext.NavigateScript(nav, execution.RootReport);
+                        if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath)) Process.Start(filePath);
+                        return getFileResult(filePath, execution.Report);
+                    }
+                    else
+                    {
+                        execution = NavigationContext.Navigate(nav, execution.RootReport);
+                        Report report = execution.Report;
+                        Session[report.ExecutionGUID] = execution;
 
-                    Helper.WriteLogEntryWeb(EventLogEntryType.Information, Request, WebUser, "Navigation report '{0}'", report.FilePath);
+                        Helper.WriteLogEntryWeb(EventLogEntryType.Information, Request, WebUser, "Navigation report '{0}'", report.FilePath);
 
-                    report.ExecutionContext = ReportExecutionContext.WebReport;
-                    report.SecurityContext = WebUser;
-                    report.CurrentViewGUID = report.ViewGUID;
+                        report.ExecutionContext = ReportExecutionContext.WebReport;
+                        report.SecurityContext = WebUser;
+                        report.CurrentViewGUID = report.ViewGUID;
 
-                    report.InitForExecution();
-                    execution.RenderHTMLDisplayForViewer();
-                    return getFileResult(report.HTMLDisplayFilePath, report);
+                        report.InitForExecution();
+                        execution.RenderHTMLDisplayForViewer();
+                        return getFileResult(report.HTMLDisplayFilePath, report);
+                    }
                 }
                 else throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
             }
@@ -279,7 +304,7 @@ namespace SealWebServer.Controllers
                 return HandleException(ex);
             }
 
-            return null ;
+            return null;
         }
 
         public ActionResult ActionRefreshReport(string execution_guid)
@@ -299,21 +324,25 @@ namespace SealWebServer.Controllers
                     Debug.WriteLine(string.Format("Report Status {0}", report.Status));
                     if (report.IsExecuting)
                     {
-                        return Json(new {
+                        return Json(new
+                        {
                             progression = report.ExecutionProgression,
                             progression_message = Helper.ToHtml(report.ExecutionProgressionMessage),
                             progression_models = report.ExecutionProgressionModels,
                             progression_models_message = Helper.ToHtml(report.ExecutionProgressionModelsMessage),
                             progression_tasks = report.ExecutionProgressionTasks,
                             progression_tasks_message = Helper.ToHtml(report.ExecutionProgressionTasksMessage),
-                            execution_messages = report.ExecutionView.GetValue("messages_mode") != "disabled" ? Helper.ToHtml(report.ExecutionMessages) : null });
+                            execution_messages = report.ExecutionView.GetValue("messages_mode") != "disabled" ? Helper.ToHtml(report.ExecutionMessages) : null
+                        });
                     }
                     else if (execution.IsConvertingToExcel)
                     {
-                        return Json(new {
+                        return Json(new
+                        {
                             progression = report.ExecutionProgression,
                             progression_message = Helper.ToHtml(report.Translate("Executing report...")),
-                            execution_messages = Helper.ToHtml(report.ExecutionMessages) });
+                            execution_messages = Helper.ToHtml(report.ExecutionMessages)
+                        });
                     }
                     else if (report.Status == ReportStatus.Executed)
                     {
@@ -772,6 +801,10 @@ namespace SealWebServer.Controllers
         void initInputRestrictions(Report report)
         {
             report.InputRestrictions.Clear();
+
+            //Do not use input restrictions for navigation...
+            if (report.IsNavigating) return;
+
             if (report.PreInputRestrictions.Count > 0)
             {
                 int i = 0;
@@ -942,7 +975,7 @@ namespace SealWebServer.Controllers
 
         private FilePathResult getFileResult(string path, Report report)
         {
-            var contentType = MimeMapping.GetMimeMapping(path); 
+            var contentType = MimeMapping.GetMimeMapping(path);
             var result = new FilePathResult(path, contentType);
             if (contentType != "text/html")
             {
@@ -961,6 +994,6 @@ namespace SealWebServer.Controllers
             return response.ApplyAppPathModifier(appPath);
         }
 
-#endregion
+        #endregion
     }
 }

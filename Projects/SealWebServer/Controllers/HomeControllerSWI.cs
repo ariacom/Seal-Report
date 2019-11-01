@@ -824,13 +824,9 @@ namespace SealWebServer.Controllers
                     report.SecurityContext = WebUser;
                     //Disable basics
                     report.ExecutionView.InitParameters(false);
-                    report.ExecutionView.SetParameter(Parameter.DrillEnabledParameter, false);
-                    report.ExecutionView.SetParameter(Parameter.SubReportsEnabledParameter, false);
                     report.ExecutionView.SetParameter(Parameter.ServerPaginationParameter, false);
                     //set HTML Format
                     report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
-                    //Force load of all models
-                    report.ExecutionView.SetParameter(Parameter.ForceModelsLoad, true);
                     //set url
                     report.WebUrl = GetWebUrl(Request, Response);
                 }
@@ -878,19 +874,32 @@ namespace SealWebServer.Controllers
                 //Reset pointers and parse
                 lock (report)
                 {
-                    report.CurrentModelView = modelView;
-                    if (modelView != null && modelView.Model != null && modelView.Model.Pages.Count > 0)
+                    try
                     {
-                        report.CurrentPage = modelView.Model.Pages[0];
-                        report.CurrentPage.PageId = null; //Reset page id
+                        report.Status = ReportStatus.RenderingDisplay;
+                        report.CurrentModelView = modelView;
+                        if (modelView != null && modelView.Model != null && modelView.Model.Pages.Count > 0)
+                        {
+                            report.CurrentPage = modelView.Model.Pages[0];
+                            report.CurrentPage.PageId = null; //Reset page id
+                        }
+                        content = view.Parse();
                     }
-                    content = view.Parse();
+                    finally
+                    {
+                        report.Status = ReportStatus.Executed;
+                    }
                 }
+                //Set context for navigation, remove previous, keep root
+                var keys = NavigationContext.Navigations.Where(i => i.Value.Execution.RootReport.ExecutionGUID == report.ExecutionGUID && i.Value.Execution.RootReport != i.Value.Execution.Report).ToArray();
+                foreach (var key in keys) NavigationContext.Navigations.Remove(key.Key);
+                NavigationContext.SetNavigation(execution);
 
                 var result = new
                 {
                     dashboardguid = guid,
                     itemguid = itemguid,
+                    executionguid = execution.Report.ExecutionGUID,
                     path = widget.Exec ? widget.ReportPath : "",
                     lastexec = Translate("Last execution at") + " " + report.ExecutionEndDate.ToString("G", Repository.CultureInfo),
                     description = Repository.TranslateWidgetDescription(widget.ReportPath.Replace(Repository.ReportsFolder, "\\"), widget.Description),

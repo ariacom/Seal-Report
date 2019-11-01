@@ -123,6 +123,7 @@ var SWIDashboard = /** @class */ (function () {
         for (var i = 0; i < _da._grids.length; i++) {
             _da._grids[i].refreshItems().layout();
         }
+        initNavCells(data.executionguid, data.itemguid);
     };
     SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force) {
         clearTimeout(_da._refreshTimers[itemguid]);

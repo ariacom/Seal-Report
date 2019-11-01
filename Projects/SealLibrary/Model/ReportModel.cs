@@ -2150,9 +2150,9 @@ namespace Seal.Model
                 {
                     if (link.Type == NavigationType.Drill && !Report.ExecutionView.GetBoolValue(Parameter.DrillEnabledParameter)) continue;
                     if (link.Type == NavigationType.SubReport && !Report.ExecutionView.GetBoolValue(Parameter.SubReportsEnabledParameter)) continue;
-                    navigation += string.Format("<li nav='{0}'><a href='#'>{1}</a></li>", link.FullHref, link.Text);
+                    navigation += string.Format("<li nav='{0}'><a href='#'>{1}</a></li>", link.FullHref, link.Text /* Helper.ToHtml(link.Text) TODO for chart labels */);
                 }
-                navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation=\"{0}\"", Helper.ToHtml(navigation)));
+                navigation = string.IsNullOrEmpty(navigation) ? "" : (serverSide ? navigation : string.Format(" navigation=\"{0}\"", navigation));
             }
             return navigation;
         }

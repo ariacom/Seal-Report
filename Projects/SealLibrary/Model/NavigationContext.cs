@@ -23,10 +23,14 @@ namespace Seal.Model
             bool isSubReport = !string.IsNullOrEmpty(reportPath);
             bool isDrill = !string.IsNullOrEmpty(executionGuid);
 
-            string destLabel = "", srcRestriction = "", srcGUID = "";
             Report newReport = null;
 
-            if (Navigations.Count(i => i.Value.Execution.RootReport == rootReport) == 1)
+            //Check if the same navigation with the same execution GUID occured
+            var previousNav = Navigations.Values.FirstOrDefault(i => i.Execution.NavigationParameter == navigation && i.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID);
+            if (previousNav != null) newReport = previousNav.Execution.Report;
+
+            string destLabel = "", srcRestriction = "", srcGUID = "";
+            if (Navigations.Count(i => i.Value.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID) == 1)
             {
                 //For the first navigation, we update the JS file in the result to show up the button
                 string html = File.ReadAllText(rootReport.ResultFilePath);
@@ -35,89 +39,99 @@ namespace Seal.Model
                 File.WriteAllText(rootReport.ResultFilePath, html, System.Text.Encoding.UTF8);
                 rootReport.IsNavigating = true;
                 rootReport.HasNavigation = true;
-                Navigations.First(i => i.Value.Execution.RootReport == rootReport).Value.Link.Href = !string.IsNullOrEmpty(rootReport.WebUrl) ? ReportExecution.ActionViewHtmlResultFile + "?execution_guid=" + rootReport.ExecutionGUID : rootReport.ResultFilePath;
+                Navigations.First(i => i.Value.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID).Value.Link.Href = !string.IsNullOrEmpty(rootReport.WebUrl) ? ReportExecution.ActionViewHtmlResultFile + "?execution_guid=" + rootReport.ExecutionGUID : rootReport.ResultFilePath;
             }
 
             if (!string.IsNullOrEmpty(reportPath))
             {
                 //Sub-Report
-                string path = reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath);
-                newReport = Report.LoadFromFile(path, rootReport.Repository);
-
-                int index = 1;
-                while (true)
+                if (newReport == null)
                 {
-                    string res = parameters.Get("res" + index.ToString());
-                    string val = parameters.Get("val" + index.ToString());
-                    if (string.IsNullOrEmpty(res) || string.IsNullOrEmpty(val)) break;
-                    foreach (var model in newReport.Models)
+                    string path = reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath);
+                    newReport = Report.LoadFromFile(path, rootReport.Repository);
+
+                    int index = 1;
+                    while (true)
                     {
-                        foreach (var restriction in model.Restrictions.Where(i => i.MetaColumnGUID == res && i.Prompt != PromptType.None))
+                        string res = parameters.Get("res" + index.ToString());
+                        string val = parameters.Get("val" + index.ToString());
+                        if (string.IsNullOrEmpty(res) || string.IsNullOrEmpty(val)) break;
+                        foreach (var model in newReport.Models)
                         {
-                            restriction.SetNavigationValue(val);
-                            srcRestriction = restriction.GeNavigationDisplayValue();
+                            foreach (var restriction in model.Restrictions.Where(i => i.MetaColumnGUID == res && i.Prompt != PromptType.None))
+                            {
+                                restriction.SetNavigationValue(val);
+                                srcRestriction = restriction.GeNavigationDisplayValue();
+                            }
                         }
+                        index++;
                     }
-                    index++;
+                    //Get display value
+                    string dis = parameters.Get("dis");
+                    if (!string.IsNullOrEmpty(dis)) srcRestriction = HttpUtility.HtmlDecode(dis);
                 }
-                //Get display value
-                string dis = parameters.Get("dis");
-                if (!string.IsNullOrEmpty(dis)) srcRestriction = parameters.Get("dis");
             }
             else if (!string.IsNullOrEmpty(executionGuid))
             {
                 //Drill
-                if (!Navigations.ContainsKey(executionGuid)) throw new Exception("Missing execution GUID");
-                newReport = Navigations[executionGuid].Execution.Report.Clone();
-                newReport.ExecutionGUID = Guid.NewGuid().ToString();
-                string src = parameters.Get("src");
-                string dst = parameters.Get("dst");
-                string val = parameters.Get("val");
-                newReport.DrillParents.Add(src);
-
-                foreach (var model in newReport.Models)
+                if (newReport == null)
                 {
-                    ReportElement element = model.Elements.FirstOrDefault(i => i.MetaColumnGUID == src);
-                    //Has already restriction ? if down check src, if up check dest
-                    bool hasAlreadyRestriction = model.Restrictions.Exists(i => i.MetaColumnGUID == (val != null ? src : dst));
-                    if (element != null || hasAlreadyRestriction)
+                    if (Navigations.ContainsKey(executionGuid)) newReport = Navigations[executionGuid].Execution.Report.Clone();
+                    else
                     {
-                        if (element != null)
-                        {
-                            string initialLabel = element.DisplayNameEl;
-                            element.ChangeColumnGUID(dst);
-                            destLabel = element.DisplayNameElTranslated;
-                            newReport.ExecutionView.ReplaceInParameterValues("nvd3_chart_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
-                        }
+                        //Drill from dashboard
+                        newReport = rootReport.Clone();
+                    }
+                    newReport.ExecutionGUID = Guid.NewGuid().ToString();
+                    string src = parameters.Get("src");
+                    string dst = parameters.Get("dst");
+                    string val = parameters.Get("val");
+                    newReport.DrillParents.Add(src);
 
-                        if (val != null)
+                    foreach (var model in newReport.Models)
+                    {
+                        ReportElement element = model.Elements.FirstOrDefault(i => i.MetaColumnGUID == src);
+                        //Has already restriction ? if down check src, if up check dest
+                        bool hasAlreadyRestriction = model.Restrictions.Exists(i => i.MetaColumnGUID == (val != null ? src : dst));
+                        if (element != null || hasAlreadyRestriction)
                         {
-                            //Drill Down: Add restriction 
-                            ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
-                            restriction.Source = model.Source;
-                            restriction.Report = newReport;
-                            restriction.Model = model;
-                            restriction.MetaColumnGUID = src;
-                            restriction.SetDefaults();
-                            restriction.Operator = Operator.Equal;
-                            if (val == "") restriction.Operator = Operator.IsEmpty;
-                            else if (val == null) restriction.Operator = Operator.IsNull;
-                            restriction.SetNavigationValue(val);
-                            model.Restrictions.Add(restriction);
-                            if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) AND ", model.Restriction);
-                            model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
-
-                            srcRestriction = restriction.GeNavigationDisplayValue();
-                            srcGUID = restriction.MetaColumnGUID;
-                        }
-                        else
-                        {
-                            //Drill Down: Remove restrictions 
-                            var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
-                            foreach (var restr in restrictions)
+                            if (element != null)
                             {
-                                model.Restrictions.Remove(restr);
-                                model.Restriction = model.Restriction.Replace(ReportRestriction.kStartRestrictionChar + restr.GUID + ReportRestriction.kStopRestrictionChar, "1=1");
+                                string initialLabel = element.DisplayNameEl;
+                                element.ChangeColumnGUID(dst);
+                                destLabel = element.DisplayNameElTranslated;
+                                newReport.ExecutionView.ReplaceInParameterValues("nvd3_chart_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
+                            }
+
+                            if (val != null)
+                            {
+                                //Drill Down: Add restriction 
+                                ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
+                                restriction.Source = model.Source;
+                                restriction.Report = newReport;
+                                restriction.Model = model;
+                                restriction.MetaColumnGUID = src;
+                                restriction.SetDefaults();
+                                restriction.Operator = Operator.Equal;
+                                if (val == "") restriction.Operator = Operator.IsEmpty;
+                                else if (val == null) restriction.Operator = Operator.IsNull;
+                                restriction.SetNavigationValue(val);
+                                model.Restrictions.Add(restriction);
+                                if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) AND ", model.Restriction);
+                                model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+
+                                srcRestriction = restriction.GeNavigationDisplayValue();
+                                srcGUID = restriction.MetaColumnGUID;
+                            }
+                            else
+                            {
+                                //Drill Up: Remove restrictions 
+                                var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
+                                foreach (var restr in restrictions)
+                                {
+                                    model.Restrictions.Remove(restr);
+                                    model.Restriction = model.Restriction.Replace(ReportRestriction.kStartRestrictionChar + restr.GUID + ReportRestriction.kStopRestrictionChar, "1=1");
+                                }
                             }
                         }
                     }
@@ -130,10 +144,12 @@ namespace Seal.Model
             newReport.IsNavigating = true;
             newReport.HasNavigation = true;
 
-            if (!string.IsNullOrEmpty(srcRestriction)) newReport.DisplayName = string.Format("{0} > {1}", newReport.ExecutionName, srcRestriction);
-            else newReport.DisplayName = string.Format("{0} < {1}", newReport.ExecutionName, destLabel);
-
-            return new ReportExecution() { Report = newReport, RootReport = rootReport };
+            if (previousNav == null)
+            {
+                if (!string.IsNullOrEmpty(srcRestriction)) newReport.DisplayName = string.Format("{0} > {1}", newReport.ExecutionName, srcRestriction);
+                else newReport.DisplayName = string.Format("{0} < {1}", newReport.ExecutionName, destLabel);
+            }
+            return new ReportExecution() { NavigationParameter = navigation, Report = newReport, RootReport = rootReport };
         }
 
         public string NavigateScript(string navigation, Report rootReport)
@@ -149,7 +165,7 @@ namespace Seal.Model
             return result;
         }
 
-            public void SetNavigation(ReportExecution execution)
+        public void SetNavigation(ReportExecution execution)
         {
             Navigation navigation = null;
             if (!Navigations.ContainsKey(execution.Report.ExecutionGUID))
@@ -162,7 +178,8 @@ namespace Seal.Model
                 navigation = Navigations[execution.Report.ExecutionGUID];
             }
 
-            navigation.Link = new NavigationLink() {
+            navigation.Link = new NavigationLink()
+            {
                 Type = NavigationType.SubReport,
                 Text = execution.Report.ExecutionName
             };
@@ -175,7 +192,7 @@ namespace Seal.Model
         public string GetNavigationLinksHTML(Report rootReport)
         {
             string links = "";
-            foreach (var navigation in Navigations.Values.Where(i => i.Execution.RootReport == rootReport))
+            foreach (var navigation in Navigations.Values.Where(i => i.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID))
             {
                 links += string.Format("<li><a href='{0}'>{1}</a></li>", HttpUtility.HtmlEncode(navigation.Link.Href), HttpUtility.HtmlEncode(navigation.Link.Text));
             }

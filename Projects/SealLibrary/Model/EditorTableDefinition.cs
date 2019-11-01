@@ -12,7 +12,6 @@ namespace Seal.Model
         public bool IsHidden = false;
         public bool IsReadOnly = false;
         public bool CanBeEmpty = true;
-        public string ChildViewName = "";
         public string Type = "";
         public string BlobColumnName = "";
         public string DefaultValue = "";
