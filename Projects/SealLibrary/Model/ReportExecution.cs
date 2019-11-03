@@ -257,9 +257,17 @@ namespace Seal.Model
                         CheckInputRestrictions();
                     }
 
-                    executeTasks();
+                    //Init taks progression
+                    foreach (var task in Report.Tasks) task.Progression = 0;
+
+                    //Tasks before model
+                    executeTasks(ExecutionStep.BeforeModel);
+
                     //Build models
                     if (!Report.Cancel) buildModels();
+
+                    //Tasks before rendering
+                    executeTasks(ExecutionStep.BeforeRendering);
                 }
                 catch (Exception ex)
                 {
@@ -278,6 +286,9 @@ namespace Seal.Model
                 {
                     if (!Report.HasErrors)
                     {
+                        //Tasks before output
+                        executeTasks(ExecutionStep.BeforeOutput);
+
                         ProcessOutput();
                     }
                     else
@@ -293,6 +304,9 @@ namespace Seal.Model
                     //Generate Display HTML
                     RenderHTMLDisplay();
                 }
+
+                //Tasks after execution
+                executeTasks(ExecutionStep.AfterExecution);
 
                 //Open external result viewer
                 if (!Report.HasErrors && !Report.ForOutput && Report.ExecutionContext == ReportExecutionContext.DesignerReport && !Report.CheckingExecution && Report.HasExternalViewer)
@@ -618,17 +632,15 @@ namespace Seal.Model
             }
         }
 
-        void executeTasks()
+        void executeTasks(ExecutionStep step)
         {
             if (Report.CheckingExecution) return;
 
             Report.LogMessage("Executing report tasks...");
 
-            var tasks = Report.ExecutionTasks;
-            foreach (var task in tasks) task.Progression = 0;
-
+            var tasks = Report.ExecutionTasks.Where(i => i.Step == step).OrderBy(i => i.SortOrder);
             //Temp list to avoid dynamic changes during the task
-            foreach (var task in tasks.OrderBy(i => i.SortOrder))
+            foreach (var task in tasks)
             {
                 try
                 {

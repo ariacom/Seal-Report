@@ -40,6 +40,7 @@ namespace Seal.Model
                 GetProperty("IgnoreError").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
                 GetProperty("ExecuteForEachConnection").SetIsBrowsable(true);
+                GetProperty("Step").SetIsBrowsable(true);
 
                 //Helpers
                 //GetProperty("Information").SetIsBrowsable(true);
@@ -100,11 +101,19 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// If false, the task is ignorred and not executed
+        /// If false, the task is ignored and not executed
         /// </summary>
         [DefaultValue(true)]
-        [Category("Definition"), DisplayName("Is Enabled"), Description("If false, the task is ignorred and not executed."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Is Enabled"), Description("If false, the task is ignored and not executed."), Id(3, 1)]
         public bool Enabled { get; set; } = true;
+
+        /// <summary>
+        /// The Report Execution Step to execute the task. By default, tasks are executed before the models generation.
+        /// </summary>
+        [DefaultValue(ExecutionStep.BeforeModel)]
+        [Category("Definition"), DisplayName("Execution Step"), Description("The Report Execution Step to execute the task. By default, tasks are executed before the models generation."), Id(4, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        public ExecutionStep Step { get; set; } = ExecutionStep.BeforeModel;
 
         /// <summary>
         /// Current MetaConnection
@@ -161,14 +170,14 @@ namespace Seal.Model
         /// <summary>
         /// SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed.
         /// </summary>
-        [Category("Definition"), DisplayName("SQL Statement"), Description("SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed."), Id(4, 1)]
+        [Category("Definition"), DisplayName("SQL Statement"), Description("SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'. If the SQL result returns 0, the report is cancelled and the next tasks are not executed."), Id(5, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string SQL { get; set; }
 
         /// <summary>
         /// Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed.
         /// </summary>
-        [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined. If the script returns 0, the report is cancelled and the next tasks are not executed."), Id(6, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string Script { get; set; }
 
