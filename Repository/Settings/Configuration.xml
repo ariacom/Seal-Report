@@ -10,8 +10,22 @@ _ed.common.js</ScriptFiles><InitScript /><ReportCreationScript /><TasksScript />
 @functions {&#xD;
     //Before execution, this script will be added at the end of all scripts executed...&#xD;
     public void SetNegativeValuesInRed(Report report) {&#xD;
-        //foreach (var model &#xD;
         report.LogMessage("SetNegativeValuesInRed");&#xD;
+        foreach (var model in report.Models) &#xD;
+        {&#xD;
+            foreach (var page in model.Pages) &#xD;
+            {&#xD;
+                foreach (var line in page.DataTable.Lines) &#xD;
+                {&#xD;
+                    foreach (var cell in line) &#xD;
+                    {&#xD;
+                        if (cell.Element != null &amp;&amp; cell.Element.IsNumeric &amp;&amp; cell.DoubleValue &lt; 0) {&#xD;
+                            cell.FinalCssStyle = "font-weight:bold;color:red;";&#xD;
+                        }&#xD;
+                    }&#xD;
+                }&#xD;
+            }&#xD;
+        }&#xD;
     }&#xD;
 }&#xD;
 </Script></CommonScript></CommonScripts><DefaultCulture /><CsvSeparator /><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebApplicationName>/seal</WebApplicationName><WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>

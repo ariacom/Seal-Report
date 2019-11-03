@@ -40,7 +40,7 @@ namespace Seal.Helpers
                 if (dummy4 == null) dummy4 = new LdapConnection("");
                 if (dummy5 == null) dummy5 = new SyndicationFeed();
                 if (dummy6 == null) dummy6 = new XDocument();
-                if (dummy7 == null) dummy7 = new Control(); 
+                if (dummy7 == null) dummy7 = new Control();
                 _loadDone = true;
             }
         }
@@ -60,7 +60,7 @@ namespace Seal.Helpers
                 var ob = (Report)model;
                 report = ob;
                 if (ob.Repository != null) configuration = ob.Repository.Configuration;
-                else if (ob.Tag != null && ob.Tag is SealServerConfiguration) configuration = (SealServerConfiguration) ob.Tag;
+                else if (ob.Tag != null && ob.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Tag;
             }
             else if (model is ReportComponent)
             {
@@ -93,7 +93,11 @@ namespace Seal.Helpers
 
             if (configuration != null)
             {
-                if (!string.IsNullOrEmpty(configuration.CommonScriptsHeader)) result += configuration.CommonScriptsHeader + "\r\n";
+                foreach (var script in configuration.CommonScripts)
+                {
+                    result = result.Replace(string.Format("@Include(\"{0}\")", script.Name), script.Script);
+                }
+                //if (!string.IsNullOrEmpty(configuration.CommonScriptsHeader)) result += configuration.CommonScriptsHeader + "\r\n";
                 if (model is ReportTask && !string.IsNullOrEmpty(configuration.TasksScript)) result += configuration.TasksScript + "\r\n";
             }
 
@@ -105,6 +109,68 @@ namespace Seal.Helpers
             return result;
         }
 
+        static public string GetFullScript(string script, object model)
+        {
+            var result = "";
+            Report report = null;
+            SealServerConfiguration configuration = null;
+            if (model is SealServerConfiguration)
+            {
+                configuration = (SealServerConfiguration)model;
+            }
+            else if (model is Report)
+            {
+                var ob = (Report)model;
+                report = ob;
+                if (ob.Repository != null) configuration = ob.Repository.Configuration;
+                else if (ob.Tag != null && ob.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Tag;
+            }
+            else if (model is ReportComponent)
+            {
+                var ob = (ReportComponent)model;
+                if (ob.Report != null)
+                {
+                    report = ob.Report;
+                    if (ob.Report.Repository != null) configuration = ob.Report.Repository.Configuration;
+                    else if (ob.Report.Tag != null && ob.Report.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Report.Tag;
+                }
+            }
+            else if (model is MetaEnum)
+            {
+                var ob = (MetaEnum)model;
+                report = ob.Source.Report;
+                configuration = ob.Source.Repository.Configuration;
+            }
+            else if (model is MetaTable)
+            {
+                var ob = (MetaTable)model;
+                report = ob.Source.Report;
+                configuration = ob.Source.Repository.Configuration;
+            }
+            else if (model is MetaConnection)
+            {
+                var ob = (MetaConnection)model;
+                report = ob.Source.Report;
+                configuration = ob.Source.Repository.Configuration;
+            }
+
+            if (configuration != null)
+            {
+                foreach (var cs in configuration.CommonScripts)
+                {
+                    script = script.Replace(string.Format("@Include(\"{0}\")", cs.Name), cs.Script);
+                }
+                if (model is ReportTask && !string.IsNullOrEmpty(configuration.TasksScript)) result += configuration.TasksScript + "\r\n";
+            }
+
+            if (report != null)
+            {
+                if (!string.IsNullOrEmpty(report.CommonScriptsHeader)) result += report.CommonScriptsHeader + "\r\n";
+                if (model is ReportTask && !string.IsNullOrEmpty(report.TasksScript)) result += report.TasksScript + "\r\n";
+            }
+            return result + "\r\n" + script;
+        }
+
         static public string CompileExecute(string script, object model, string key = null)
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
@@ -113,8 +179,9 @@ namespace Seal.Helpers
                 LoadRazorAssemblies();
                 if (string.IsNullOrEmpty(key))
                 {
-                    if (model != null) {
-                        key = model.GetType().ToString() + "_" + GetScriptHeader(model) +"_" + script;
+                    if (model != null)
+                    {
+                        key = model.GetType().ToString() + "_" + GetFullScript(script, model);
                     }
                     else
                     {
@@ -127,7 +194,7 @@ namespace Seal.Helpers
                 }
                 else
                 {
-                    result = Engine.Razor.RunCompile(GetScriptHeader(model) + script, key, model.GetType(), model);
+                    result = Engine.Razor.RunCompile(GetFullScript(script, model), key, model.GetType(), model);
                 }
                 return string.IsNullOrEmpty(result) ? "" : result;
             }

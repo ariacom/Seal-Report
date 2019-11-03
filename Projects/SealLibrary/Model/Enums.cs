@@ -475,6 +475,18 @@ namespace Seal.Model
         FileDownload
     }
 
+    public enum ExecutionStep
+    {
+        [Description("Before models generation")]
+        BeforeModel,
+        [Description("Models generated, before rendering")]
+        BeforeRendering,
+        [Description("Rendering is done, before output execution")]
+        BeforeOutput,
+        [Description("After execution")]
+        AfterExecution
+    }
+
     public enum AuditType
     {
         Login,
