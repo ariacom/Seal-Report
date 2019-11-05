@@ -797,17 +797,26 @@ namespace SealWebServer.Controllers
                 var filePath = Repository.ReportsFolder + widget.ReportPath;
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: the report does not exist");
 
+
+                string content = "";
+                ReportView view = null, modelView = null;
+
                 var executions = DashboardExecutions;
                 lock (executions)
                 {
                     //remove executions older than 2 hours
                     executions.RemoveAll(i => i.Report.ExecutionEndDate < DateTime.Now.AddHours(-2));
+                    var lastDateTime = System.IO.File.GetLastWriteTime(filePath);
+                    executions.RemoveAll(i => i.Report.FilePath == filePath && i.Report.LastModification != lastDateTime);
 
-                    execution = executions.FirstOrDefault(i => i.Report.FilePath == filePath);
-                    if (execution != null && execution.Report.LastModification != System.IO.File.GetLastWriteTime(filePath))
+                    foreach (var exec in executions.Where(i => i.Report.FilePath == filePath))
                     {
-                        executions.RemoveAll(i => i.Report.FilePath == filePath);
-                        execution = null;
+                        exec.Report.GetWidgetViewToParse(exec.Report.ExecutionView.Views, widget.GUID, ref view, ref modelView);
+                        if (view != null)
+                        {
+                            execution = exec;
+                            break;
+                        }
                     }
                 }
 
@@ -822,38 +831,35 @@ namespace SealWebServer.Controllers
 
                     report.ExecutionContext = ReportExecutionContext.WebReport;
                     report.SecurityContext = WebUser;
-                    //Disable basics
-                    report.ExecutionView.InitParameters(false);
-                    report.ExecutionView.SetParameter(Parameter.ServerPaginationParameter, false);
-                    //set HTML Format
-                    report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
-                    //set url
+                    //Force load of all models
+                    //report.ExecutionView.SetParameter(Parameter.ForceModelsLoad, true);
+                    //Set url
                     report.WebUrl = GetWebUrl(Request, Response);
                 }
 
-                string content = "";
-                ReportView view = null, modelView = null;
-                report.GetWidgetViewToParse(report.Views, widget.GUID, ref view, ref modelView);
-                var rootAutoRefresh = 0;
+                if (view == null) {
+                    report.GetWidgetViewToParse(report.Views, widget.GUID, ref view, ref modelView);
+                }
 
                 if (view == null) throw new Exception("Error: the widget does not exist");
 
-                //Init parameters if the root view is different from the one executed...
-                var rootView = report.GetRootView(view);
-                if (rootView != null && rootView != report.ExecutionView)
-                {
-                    string templateErrors = "";
-                    rootView.InitTemplates(rootView, ref templateErrors);
-                    rootAutoRefresh = rootView.GetNumericValue("refresh_rate");
-                }
-                else rootAutoRefresh = report.ExecutionView.GetNumericValue("refresh_rate");
+                //Set execution view from the new root...
+                report.CurrentViewGUID = report.GetRootView(view).GUID;
 
                 if (execution != null)
                 {
-                    if (!report.IsExecuting && (force || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
+                    lock (execution)
                     {
-                        execution.Execute();
-                        while (report.IsExecuting) Thread.Sleep(100);
+                        if (!report.IsExecuting && (force || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
+                        {
+                            //Disable basics
+                            report.ExecutionView.InitParameters(false);
+                            //Set HTML Format
+                            report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
+
+                            execution.Execute();
+                            while (report.IsExecuting) Thread.Sleep(100);
+                        }
                     }
                 }
                 else
@@ -872,11 +878,13 @@ namespace SealWebServer.Controllers
                     throw new Exception("Error: the widget has errors");
                 }
                 //Reset pointers and parse
-                lock (report)
+                lock (execution)
                 {
                     try
                     {
                         report.Status = ReportStatus.RenderingDisplay;
+                        report.ExecutionView.SetParameter(Parameter.ServerPaginationParameter, false);
+
                         report.CurrentModelView = modelView;
                         if (modelView != null && modelView.Model != null && modelView.Model.Pages.Count > 0)
                         {
@@ -890,6 +898,7 @@ namespace SealWebServer.Controllers
                         report.Status = ReportStatus.Executed;
                     }
                 }
+
                 //Set context for navigation, remove previous, keep root
                 var keys = NavigationContext.Navigations.Where(i => i.Value.Execution.RootReport.ExecutionGUID == report.ExecutionGUID && i.Value.Execution.RootReport != i.Value.Execution.Report).ToArray();
                 foreach (var key in keys) NavigationContext.Navigations.Remove(key.Key);
@@ -905,7 +914,7 @@ namespace SealWebServer.Controllers
                     description = Repository.TranslateWidgetDescription(widget.ReportPath.Replace(Repository.ReportsFolder, "\\"), widget.Description),
                     dynamic = item.Dynamic,
                     content = content,
-                    refresh = (item.Refresh == -1 ? rootAutoRefresh : item.Refresh)
+                    refresh = (item.Refresh == -1 ? report.ExecutionView.GetNumericValue("refresh_rate") : item.Refresh)
                 };
 
                 return Json(result);

@@ -35,8 +35,6 @@ namespace Seal.Model
         public delegate void CustomMainValidator(dynamic editor, dynamic record);
 
         public string PkName = "";
-        public string PkDisplayName = "";
-        public string TableDisplayName = "";
         public string AddWhereClause = "";
 
         public string SPInsert = "";
@@ -49,7 +47,6 @@ namespace Seal.Model
         public bool ReadOnlyByDefault = true;
 
         public List<EditorColumnDefinition> Cols = new List<EditorColumnDefinition>();
-        public Dictionary<string, Tuple<string, string>> Navs = new Dictionary<string, Tuple<string, string>>();
         public Dictionary<string, string> ExtraColumnValues = new Dictionary<string, string>();
 
         public EditorColumnDefinition GetColumnDefinition(string colName)

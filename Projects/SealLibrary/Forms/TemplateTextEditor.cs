@@ -906,22 +906,6 @@ namespace Seal.Forms
                     frm.Text = "Edit the init script of the source";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
-                else if (context.Instance is TasksFolder)
-                {
-                    if (context.PropertyDescriptor.Name == "TasksScript")
-                    {
-                        template = razorTasksTemplate;
-                        frm.ObjectForCheckSyntax = new ReportTask();
-                        if (CurrentEntity is Report)
-                        {
-                            frm.ScriptHeader = ((Report)CurrentEntity).Repository.Configuration.CommonScriptsHeader;
-                            frm.ScriptHeader += ((Report)CurrentEntity).Repository.Configuration.TasksScript;
-                            frm.ScriptHeader += ((Report)CurrentEntity).CommonScriptsHeader;
-                        }
-                        frm.Text = "Edit the script that will be added to all task scripts";
-                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                    }
-                }
                 else if (context.Instance is CommonScript)
                 {
                     template = CommonScript.RazorTemplate;
@@ -951,14 +935,6 @@ namespace Seal.Forms
                         template = razorConfigurationInitScriptTemplate;
                         frm.ObjectForCheckSyntax = report;
                         frm.Text = "Edit the root init script";
-                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                    }
-                    else if (context.PropertyDescriptor.Name == "TasksScript")
-                    {
-                        template = razorTasksTemplate;
-                        frm.ScriptHeader = ((SealServerConfiguration)context.Instance).CommonScriptsHeader;
-                        frm.ObjectForCheckSyntax = new ReportTask();
-                        frm.Text = "Edit the script that will be added to all task scripts";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                     else if (context.PropertyDescriptor.Name == "ReportCreationScript")

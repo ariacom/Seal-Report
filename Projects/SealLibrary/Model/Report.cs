@@ -109,8 +109,6 @@ namespace Seal.Model
             return result;
         }
 
-
-
         /// <summary>
         /// Returns a common script key from a given name and model
         /// </summary>      
@@ -133,12 +131,6 @@ namespace Seal.Model
             }
             return key;
         }
-
-        /// <summary>
-        /// Main task script included in all tasks
-        /// </summary>
-        public string TasksScript { get; set; } = "";
-        public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(TasksScript); }
 
         /// <summary>
         /// List of input values defined for the report

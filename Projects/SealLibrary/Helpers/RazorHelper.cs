@@ -97,14 +97,11 @@ namespace Seal.Helpers
                 {
                     result = result.Replace(string.Format("@Include(\"{0}\")", script.Name), script.Script);
                 }
-                //if (!string.IsNullOrEmpty(configuration.CommonScriptsHeader)) result += configuration.CommonScriptsHeader + "\r\n";
-                if (model is ReportTask && !string.IsNullOrEmpty(configuration.TasksScript)) result += configuration.TasksScript + "\r\n";
             }
 
             if (report != null)
             {
                 if (!string.IsNullOrEmpty(report.CommonScriptsHeader)) result += report.CommonScriptsHeader + "\r\n";
-                if (model is ReportTask && !string.IsNullOrEmpty(report.TasksScript)) result += report.TasksScript + "\r\n";
             }
             return result;
         }
@@ -160,13 +157,11 @@ namespace Seal.Helpers
                 {
                     script = script.Replace(string.Format("@Include(\"{0}\")", cs.Name), cs.Script);
                 }
-                if (model is ReportTask && !string.IsNullOrEmpty(configuration.TasksScript)) result += configuration.TasksScript + "\r\n";
             }
 
             if (report != null)
             {
                 if (!string.IsNullOrEmpty(report.CommonScriptsHeader)) result += report.CommonScriptsHeader + "\r\n";
-                if (model is ReportTask && !string.IsNullOrEmpty(report.TasksScript)) result += report.TasksScript + "\r\n";
             }
             return result + "\r\n" + script;
         }

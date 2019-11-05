@@ -229,22 +229,22 @@ namespace Seal.Model
         public static string FindRepository()
         {
             string path = Properties.Settings.Default.RepositoryPath;
-            if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
-            {
 #if DEBUG
-                //Try to get the Repository from the dev env.
-                path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", ""));
-                while (Path.GetPathRoot(path) != path)
+            //Try to get the Repository from the dev env.
+            path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", ""));
+            while (Path.GetPathRoot(path) != path)
+            {
+                string newPath = FindDebugRepository(path);
+                if (newPath != null)
                 {
-                    string newPath = FindDebugRepository(path);
-                    if (newPath != null)
-                    {
-                        path = newPath;
-                        break;
-                    }
-                    path = Path.GetDirectoryName(path);
+                    path = newPath;
+                    break;
                 }
+                path = Path.GetDirectoryName(path);
+            }
 #endif
+            if (string.IsNullOrEmpty(path))
+            {
                 if (!Directory.Exists(path) || path == Path.GetPathRoot(path))
                 {
                     if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData))) Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));

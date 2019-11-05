@@ -57,7 +57,6 @@ namespace Seal.Model
                 GetProperty("NumericFormat").SetIsBrowsable(!ForPublication);
                 GetProperty("DateTimeFormat").SetIsBrowsable(!ForPublication);
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
-                GetProperty("TasksScript").SetIsBrowsable(!ForPublication);
                 GetProperty("CommonScripts").SetIsBrowsable(!ForPublication);
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
@@ -181,16 +180,9 @@ namespace Seal.Model
         public string ReportCreationScript { get; set; } = null;
 
         /// <summary>
-        /// If set, the script is added to all task scripts executed. This may be useful to defined common functions.
+        /// List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the report.
         /// </summary>
-        [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed. This may be useful to defined common functions."), Id(6, 3)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string TasksScript { get; set; } = null;
-
-        /// <summary>
-        /// List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report.
-        /// </summary>
-        [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (not only for tasks). This may be useful to defined common functions for the report."), Id(7, 3)]
+        [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the report."), Id(7, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
         public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
