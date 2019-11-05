@@ -5,7 +5,7 @@ _ed.buttons.bootstrap.min.js&#xD;
 _ed.dataTables.select.min.js&#xD;
 _ed.dataTables.editor.min.js&#xD;
 _ed.editor.bootstrap.min.js&#xD;
-_ed.common.js</ScriptFiles><InitScript /><ReportCreationScript /><TasksScript /><CommonScripts><CommonScript><Name>SetNegativeValuesInRed</Name><Script>@using System.Text&#xD;
+_ed.common.js</ScriptFiles><InitScript /><ReportCreationScript /><CommonScripts><CommonScript><Name>SetNegativeValuesInRed</Name><Script>@using System.Text&#xD;
 @using Seal.Model&#xD;
 @functions {&#xD;
     //Before execution, this script will be added at the end of all scripts executed...&#xD;

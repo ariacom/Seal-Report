@@ -852,7 +852,6 @@ namespace Seal
             {
                 addAddItem("Add a Task", null);
                 addRemoveItem("Remove Tasks...");
-                addSmartCopyItem("Smart copy...", entity);
             }
             else if (entity is OutputFolder)
             {

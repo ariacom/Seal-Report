@@ -900,15 +900,6 @@ namespace Seal.Forms
                         }
                     }
                 }
-
-                //Source is Report TasksFolder
-                else if (_source is TasksFolder)
-                {
-                    //Update report tasksScript
-                    Report reportDestination = destinationObject.Object as Report;
-                    if (!reportsToSave.Contains(reportDestination)) reportsToSave.Add(reportDestination);
-                    reportDestination.TasksScript = _report.TasksScript;
-                }
             }
 
             foreach (var report in reportsToSave)

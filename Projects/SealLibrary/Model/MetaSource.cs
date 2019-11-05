@@ -54,7 +54,6 @@ namespace Seal.Model
                 GetProperty("IsNoSQL").SetIsBrowsable(true);
 
                 GetProperty("InitScript").SetIsBrowsable(true);
-                GetProperty("TasksScript").SetIsBrowsable(true);
 
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
@@ -120,14 +119,6 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string InitScript { get; set; } = "";
         public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
-
-        /// <summary>
-        /// If set, the script is added to all task scripts executed with this source. This may be useful to defined common functions for the source.
-        /// </summary>
-        [Category("Scripts"), DisplayName("Tasks Script"), Description("If set, the script is added to all task scripts executed with this source. This may be useful to defined common functions for the source."), Id(5, 3)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string TasksScript { get; set; } = "";
-        public bool ShouldSerializeTasksScript() { return !string.IsNullOrEmpty(TasksScript); }
 
         /// <summary>
         /// SQL Statement executed after the connection is open and before the query is executed. The statement may contain Razor script if it starts with '@'.
