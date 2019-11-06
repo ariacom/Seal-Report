@@ -636,9 +636,12 @@ namespace Seal.Model
         {
             if (Report.CheckingExecution) return;
 
-            Report.LogMessage("Executing report tasks...");
+            var tasks = Report.ExecutionTasks.Where(i => i.Step == step).OrderBy(i => i.SortOrder).ToList();
+            if (tasks.Count > 0)
+            {
+                Report.LogMessage("Executing report tasks for step '{0}'...", Helper.GetEnumDescription(typeof(ExecutionStep), step));
+            }
 
-            var tasks = Report.ExecutionTasks.Where(i => i.Step == step).OrderBy(i => i.SortOrder);
             //Temp list to avoid dynamic changes during the task
             foreach (var task in tasks)
             {

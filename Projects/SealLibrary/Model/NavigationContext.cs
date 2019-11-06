@@ -152,13 +152,13 @@ namespace Seal.Model
             return new ReportExecution() { NavigationParameter = navigation, Report = newReport, RootReport = rootReport };
         }
 
-        public string NavigateScript(string navigation, Report rootReport)
+        public string NavigateScript(string navigation, Report report)
         {
             var linkGUID = navigation.Replace(NavigationLink.FileDownloadPrefix, "");
             var result = "";
-            if (rootReport.NavigationLinks.ContainsKey(linkGUID))
+            if (report.NavigationLinks.ContainsKey(linkGUID))
             {
-                var link = rootReport.NavigationLinks[linkGUID];
+                var link = report.NavigationLinks[linkGUID];
                 RazorHelper.CompileExecute(link.Cell.ContextModel.NavigationScript, link);
                 result = link.ScriptResult;
             }
