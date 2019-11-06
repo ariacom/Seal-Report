@@ -255,7 +255,7 @@ namespace SealWebServer.Controllers
                     string nav = Request.Form[ReportExecution.HtmlId_navigation_id];
                     if (nav.StartsWith(NavigationLink.FileDownloadPrefix))
                     {
-                        var filePath = NavigationContext.NavigateScript(nav, execution.RootReport);
+                        var filePath = NavigationContext.NavigateScript(nav, execution.Report);
                         if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath)) Process.Start(filePath);
                         return getFileResult(filePath, execution.Report);
                     }

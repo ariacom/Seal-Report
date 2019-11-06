@@ -292,7 +292,7 @@ namespace Seal.Forms
                         string nav = webBrowser.Document.All[ReportExecution.HtmlId_navigation_id].GetAttribute("value");
                         if (nav.StartsWith(NavigationLink.FileDownloadPrefix))
                         {
-                            var filePath = _navigation.NavigateScript(nav, _execution.RootReport);
+                            var filePath = _navigation.NavigateScript(nav, _execution.Report);
                             if (!string.IsNullOrEmpty(filePath)) Process.Start(filePath);
                         }
                         else
