@@ -74,6 +74,8 @@ Element;Order Details.Amount;Amount;;Montant
 Element;Order Details.Discount;Discount;;Rabais
 Element;Order Details.Orders Amount;Orders Amount;;Montant Commandes
 Element;Orders.Orders Count;Orders Count;;Nombre de Commandes
+EnumMessage;Product Name;Please select a Category first;;Veuillez sélectionner une catégorie de produit
+EnumMessage;Product Name Search By Char;Please type 2 characters;;Veuillez entrer 2 caractères
 Enum;Category;Beverages;;Boissons
 Enum;Category;Condiments;;Condiments
 Enum;Category;Confections;;Confections
@@ -148,3 +150,5 @@ WidgetName;\Samples\13-KPI Published.srex;Sales per employee;;Ventes par employ�
 WidgetName;\Samples\13-KPI Published.srex;KPI Orders;;KPI Commandes
 WidgetName;\Samples\13-KPI Published.srex;KPI Products;;KPI Produits
 WidgetName;\Samples\13-KPI Published.srex;Last Amount;;Dernier Montant
+GeneralText;CellScript;Download;;Télécharger
+GeneralText;CellScript;Visit;;Visiter

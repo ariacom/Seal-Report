@@ -24,7 +24,7 @@ Employees.Country
 FROM Employees 
 ORDER BY 1</Sql><Values><MetaEV><Id>UK</Id></MetaEV><MetaEV><Id>USA</Id></MetaEV></Values></MetaEnum><MetaEnum><GUID>b9126304-1091-45e0-93e6-c2f028c02f8f</GUID><Name>Product Name</Name><IsDynamic>true</IsDynamic><IsDbRefresh>true</IsDbRefresh><Sql>SELECT ProductID, ProductName &#xD;
 FROM Products&#xD;
-ORDER BY ProductName</Sql><SqlDisplay>SELECT ProductID, ProductName &#xD;
+ORDER BY ProductName</Sql><Translate>true</Translate><SqlDisplay>SELECT ProductID, ProductName &#xD;
 FROM Products&#xD;
 WHERE CategoryID IN ({EnumValues_Category})&#xD;
 ORDER BY ProductName</SqlDisplay><Message>Please select a Category first</Message></MetaEnum></Enums></MetaData></MetaSource>

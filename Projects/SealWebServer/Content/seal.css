@@ -26,6 +26,10 @@ body {
     margin-top: 4px;
 }
 
+.dataTables_empty {
+    display: none;
+}
+
 .tr-totals {
     font-weight: bold;
 }
@@ -43,6 +47,10 @@ body {
     display: none;
 }
 
+.navigation_icon {
+    font-size: 10px;
+    margin-left: 2px;
+}
 
 @media print {
     .navbar {
@@ -53,8 +61,13 @@ body {
     .navbar-toggle, .navbar-nav, #back-to-top {
         display: none;
     }
+
+    .navigation_icon {
+        display: none;
+    }
 }
 
+/*Spinning*/
 .glyphicon.spinning {
     animation: spin 1s infinite linear;
     -webkit-animation: spin2 1s infinite linear;

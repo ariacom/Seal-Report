@@ -293,7 +293,15 @@ namespace Seal.Forms
                         if (nav.StartsWith(NavigationLink.FileDownloadPrefix))
                         {
                             var filePath = _navigation.NavigateScript(nav, _execution.Report);
-                            if (!string.IsNullOrEmpty(filePath)) Process.Start(filePath);
+                            if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
+                            {
+                                Process.Start(filePath);
+                            }
+                            else
+                            {
+                                throw new Exception(string.Format("Invalid file path got from the navigation script: '{0}'", filePath));
+                            }
+                            cancelNavigation = true;
                         }
                         else
                         {

@@ -256,8 +256,14 @@ namespace SealWebServer.Controllers
                     if (nav.StartsWith(NavigationLink.FileDownloadPrefix))
                     {
                         var filePath = NavigationContext.NavigateScript(nav, execution.Report);
-                        if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath)) Process.Start(filePath);
-                        return getFileResult(filePath, execution.Report);
+                        if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
+                        {
+                            return getFileResult(filePath, null);
+                        }
+                        else
+                        {
+                            throw new Exception(string.Format("Invalid file path got from the navigation script: '{0}'", filePath));
+                        }
                     }
                     else
                     {
@@ -276,7 +282,10 @@ namespace SealWebServer.Controllers
                         return getFileResult(report.HTMLDisplayFilePath, report);
                     }
                 }
-                else throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
+                else
+                {
+                    throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
+                }
             }
             catch (Exception ex)
             {

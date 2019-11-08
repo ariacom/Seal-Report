@@ -1129,7 +1129,15 @@ namespace Seal.Model
             foreach (var view in Views)
             {
                 var newGUID = Guid.NewGuid().ToString();
-                if (view.GUID == CurrentViewGUID) CurrentViewGUID = newGUID;
+                if (view.GUID == ViewGUID)
+                {
+                    ViewGUID = newGUID;
+                    CurrentViewGUID = newGUID;
+                }
+                foreach (var output in Outputs.Where(i => i.ViewGUID == view.GUID))
+                {
+                    output.ViewGUID = newGUID;
+                }
                 view.GUID = newGUID;
                 view.ReinitGUIDChildren();
             }
@@ -2201,7 +2209,16 @@ namespace Seal.Model
             }
         }
 
+
         //Helpers for translations
+
+        /// <summary>
+        /// Repository Translate using the ReportViewName context
+        /// </summary>
+        public string TranslateRepository(string context, string instance, string reference)
+        {
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, context, instance, reference);
+        }
 
         /// <summary>
         /// Translate using the ReportDisplayName context

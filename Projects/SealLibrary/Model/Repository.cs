@@ -345,6 +345,7 @@ namespace Seal.Model
                 result.RepositoryPath = path;
                 //plus defaults...
                 result._cultureInfo = CultureInfo;
+                result.WebApplicationPath = WebApplicationPath;
             }
             return result;
         }
