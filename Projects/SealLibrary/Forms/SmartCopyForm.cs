@@ -104,9 +104,9 @@ namespace Seal.Forms
             List<PropertyItem> properties = new List<PropertyItem>();
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(_source))
             {
-                if (_source is ReportView && property.Name == "ChartConfigurationXml")
+                if (_source is ReportView && property.Name == "WidgetDefinition")
                 {
-                    properties.Add(new PropertyItem() { Name = "[View parameters] MS Chart Configuration", Object = property });
+                    properties.Add(new PropertyItem() { Name = "[View parameters] Widget Definition", Object = property });
                     continue;
                 }
 
@@ -809,6 +809,13 @@ namespace Seal.Forms
                                 {
                                     view.ExcelConverter = null;
                                     view.ExcelConfigurations = viewSource.ExcelConfigurations.ToList();
+                                }
+                                else if (descriptor.Name == "WidgetDefinition")
+                                {
+                                    //Keep previous widget GUID
+                                    var guid = view.WidgetDefinition.GUID;
+                                    view.WidgetDefinition = (DashboardWidget) Helper.Clone(descriptor.GetValue(_source));
+                                    view.WidgetDefinition.GUID = guid;
                                 }
                                 else
                                 {

@@ -450,10 +450,11 @@ namespace Seal.Model
 
                 DataTable defTable = GetDefinitionTable(sql);
 
+                int position = 1;
                 foreach (DataColumn column in defTable.Columns)
                 {
                     string fullColumnName = (IsSQL && !IsForSQLModel ? Source.GetTableName(AliasName) + "." : "") + Source.GetColumnName(column.ColumnName);
-                    MetaColumn newColumn = Columns.FirstOrDefault(i => i.Name == fullColumnName);
+                    MetaColumn newColumn = Columns.FirstOrDefault(i => i.Name.ToLower() == fullColumnName.ToLower());
                     column.ColumnName = fullColumnName; //Set it here to clear the columns later
                     ColumnType type = Helper.NetTypeConverter(column.DataType);
                     if (newColumn == null)
@@ -473,6 +474,7 @@ namespace Seal.Model
                         newColumn.Type = type;
                         newColumn.SetStandardFormat();
                     }
+                    newColumn.DisplayOrder = position++;
                 }
 
                 //Clear columns for No SQL or SQL Model

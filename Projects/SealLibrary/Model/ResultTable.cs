@@ -278,6 +278,18 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// True if the column has cells with navigation links
+        /// </summary>
+        public bool HasNavigation(int col)
+        {
+            for (int row = BodyStartRow; row < BodyEndRow && col < ColumnCount; row++)
+            {
+                if (this[row, col].Links.Count > 0) return true;
+            }
+            return false;
+        }
+
     }
 
 }

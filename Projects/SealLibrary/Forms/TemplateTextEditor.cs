@@ -169,11 +169,13 @@ namespace Seal.Forms
                 ),
             new Tuple<string, string>(
                 "Add Hyperlink or File Download navigation",
-@"cell.AddNavigationHyperLink(""https://www.google.com"", ""Visit Google"");
+@"cell.AddNavigationHyperLink(""https://www.google.com"", report.TranslateRepository(""GeneralText"",""CellScript"",""Visit"") + "" Google"");
     cell.AddNavigationHyperLink(cell.Value.ToString(), cell.DisplayValue);
 
     //File download: this requires an implementation in the 'Navigation Script' of the model
-    cell.AddNavigationFileDownload(""Download "" + cell.DisplayValue);
+    if (!string.IsNullOrEmpty(cell.DisplayValue)) {
+        cell.AddNavigationFileDownload(""Download "" + cell.DisplayValue);
+    }
 "
                 ),
             new Tuple<string, string>(

@@ -47,7 +47,8 @@ namespace Seal.Model
         public bool ReadOnlyByDefault = true;
 
         public List<EditorColumnDefinition> Cols = new List<EditorColumnDefinition>();
-        public Dictionary<string, string> ExtraColumnValues = new Dictionary<string, string>();
+        public Dictionary<string, string> InsertExtraColumnValues = new Dictionary<string, string>();
+        public Dictionary<string, string> UpdateExtraColumnValues = new Dictionary<string, string>();
 
         public EditorColumnDefinition GetColumnDefinition(string colName)
         {

@@ -65,7 +65,7 @@
                     {
                         if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
                         ResultCell cell = table[row, col];
-                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</th>
+                    <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)@Raw(view.GetBoolValue("data_tables_show_navigation") && table.HasNavigation(col) ? "<span class='navigation_icon glyphicon glyphicon-share'></span>" : "")</th>
                     }
                 </tr>
             }
@@ -81,7 +81,7 @@
                             {
                                 if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
                                 ResultCell cell = table[row, col];
-                                <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
+                            <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))>@Raw(cell.HTMLValue)</td>
                             }
                         </tr>
                     }

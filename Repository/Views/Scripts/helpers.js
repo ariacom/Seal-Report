@@ -93,5 +93,5 @@ function initNavCells(executionguid, parentId) {
         })
         .mouseleave(function () {
             $("#nav_popupmenu").hide();
-        });
+        })
 }

@@ -697,7 +697,6 @@ namespace Seal.Model
         [DisplayName("Widget definition"), Description("Settings to publish the view as a dashboard widget. If a name is specified, the widget can be selected to build dashboards from the Web Report Server."), Category("Web Report Server and Dashboard"), Id(3, 6)]
         public DashboardWidget WidgetDefinition { get; set; } = new DashboardWidget();
 
-
         #endregion
 
 

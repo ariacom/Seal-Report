@@ -456,6 +456,15 @@ namespace Seal.Forms
                     }
                 }
 
+                log.Log("Adding enum messages in context: EnumMessage\r\n");
+                foreach (var enumList in Source.MetaData.Enums.Where(i => i.Translate))
+                {
+                    if (!string.IsNullOrEmpty(enumList.Message))
+                    {
+                        translations.AppendFormat("EnumMessage{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(enumList.Name), Helper.QuoteDouble(enumList.Message), extraSeparators);
+                    }
+                }
+
                 log.Log("Adding enum values in context: Enum\r\n");
                 foreach (var enumList in Source.MetaData.Enums.Where(i => i.Translate))
                 {
