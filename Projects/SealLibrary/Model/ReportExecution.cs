@@ -517,7 +517,7 @@ namespace Seal.Model
         {
             try
             {
-                foreach (ReportRestriction restriction in Report.ExecutionReportRestrictions.Where(i => i.Prompt != PromptType.None))
+                foreach (ReportRestriction restriction in Report.ExecutionInputValues.Where(i => i.Prompt != PromptType.None))
                 {
                     setRestriction(restriction);
                 }
@@ -1718,7 +1718,7 @@ namespace Seal.Model
                 {
                     MailMessage message = new MailMessage();
                     message.From = new MailAddress(Helper.IfNullOrEmpty(from, device.SenderEmail));
-                    device.AddEmailAddresses(message.To, to);
+                    Helper.AddEmailAddresses(message.To, to);
                     message.Subject = subject;
                     message.Body = body;
                     SmtpClient client = device.SmtpClient;

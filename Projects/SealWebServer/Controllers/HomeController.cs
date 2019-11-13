@@ -212,7 +212,6 @@ namespace SealWebServer.Controllers
                 {
                     ReportExecution execution = Session[execution_guid] as ReportExecution;
                     Report report = execution.Report;
-                    report.IsMobileDevice = Request.Browser.IsMobileDevice;
 
                     Helper.WriteLogEntryWeb(EventLogEntryType.Information, Request, WebUser, "Starting report '{0}'", report.FilePath);
                     initInputRestrictions(report);

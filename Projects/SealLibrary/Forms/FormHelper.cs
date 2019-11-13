@@ -30,11 +30,7 @@ namespace Seal.Forms
             compilationErrors.Clear();
             try
             {
-                string script = RazorHelper.GetFullScript(textBox.Text, objectForCheckSyntax);
-//                string scriptHeader = header;
-//                if (scriptHeader == null) scriptHeader = RazorHelper.GetScriptHeader(objectForCheckSyntax);
-//                if (!string.IsNullOrEmpty(scriptHeader)) script += "\r\n" + scriptHeader;
-                
+                var script = RazorHelper.GetFullScript(textBox.Text, objectForCheckSyntax, header);
                 RazorHelper.Compile(script, objectForCheckSyntax.GetType(), Guid.NewGuid().ToString());
             }
             catch (TemplateCompilationException ex)

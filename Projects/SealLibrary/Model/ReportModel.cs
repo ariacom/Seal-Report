@@ -48,7 +48,6 @@ namespace Seal.Model
                 GetProperty("PreLoadScript").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("LoadScript").SetIsBrowsable(true);
                 GetProperty("FinalScript").SetIsBrowsable(true);
-                GetProperty("NavigationScript").SetIsBrowsable(true);
                 if (Source.IsNoSQL)
                 {
                     GetProperty("LoadScript").SetDisplayName("Load Script");
@@ -175,14 +174,6 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string FinalScript { get; set; }
-
-        /// <summary>
-        /// Optional Razor Script to modify the model after its generation
-        /// </summary>
-        [Category("Model Definition"), DisplayName("Navigation Script"), Description("Optional Razor Script executed if script navigation links have been added in the CellScript ."), Id(6, 1)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        [DefaultValue("")]
-        public string NavigationScript { get; set; }
 
         /// <summary>
         /// If true and the table has column values, the first line used for titles is generated in the table header

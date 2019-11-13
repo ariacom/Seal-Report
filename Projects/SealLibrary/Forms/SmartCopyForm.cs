@@ -104,12 +104,6 @@ namespace Seal.Forms
             List<PropertyItem> properties = new List<PropertyItem>();
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(_source))
             {
-                if (_source is ReportView && property.Name == "WidgetDefinition")
-                {
-                    properties.Add(new PropertyItem() { Name = "[View parameters] Widget Definition", Object = property });
-                    continue;
-                }
-
                 if (!property.IsBrowsable || property.IsReadOnly) continue;
                 DisplayNameAttribute displayAtt = property.Attributes.OfType<DisplayNameAttribute>().FirstOrDefault();
                 CategoryAttribute catAtt = property.Attributes.OfType<CategoryAttribute>().FirstOrDefault();
@@ -156,8 +150,7 @@ namespace Seal.Forms
             else if (_source is ReportView)
             {
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Definition]")));
-                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Custom template configuration]")));
-                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Custom template text]")));
+                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Custom template texts]")));
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[View parameters]")));
             }
             else if (_source is ReportTask)
@@ -175,6 +168,8 @@ namespace Seal.Forms
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Folder]")));
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Restrictions]")));
             }
+            //Add unsorted...
+            sortedProperties.AddRange(properties.Where(i => !sortedProperties.Exists(j => j == i)));
 
             propertiesCheckedListBox.DataSource = sortedProperties;
             propertiesCheckedListBox.DisplayMember = "Name";
@@ -813,9 +808,18 @@ namespace Seal.Forms
                                 else if (descriptor.Name == "WidgetDefinition")
                                 {
                                     //Keep previous widget GUID
+                                    if (string.IsNullOrEmpty(view.WidgetDefinition.GUID)) view.WidgetDefinition.GUID = Guid.NewGuid().ToString();
                                     var guid = view.WidgetDefinition.GUID;
                                     view.WidgetDefinition = (DashboardWidget) Helper.Clone(descriptor.GetValue(_source));
                                     view.WidgetDefinition.GUID = guid;
+                                }
+                                else if (descriptor.Name == "PartialTemplates")
+                                {
+                                    view.PartialTemplates.Clear();
+                                    foreach (var pt in (List<ReportViewPartialTemplate>)descriptor.GetValue(_source))
+                                    {
+                                        view.PartialTemplates.Add((ReportViewPartialTemplate) Helper.Clone(pt));
+                                    }
                                 }
                                 else
                                 {

@@ -45,10 +45,9 @@ namespace Seal.Helpers
             }
         }
 
-
-        static public string GetScriptHeader(object model)
+        static public string GetFullScript(string script, object model, string header = null)
         {
-            var result = "";
+            var result = script;
             Report report = null;
             SealServerConfiguration configuration = null;
             if (model is SealServerConfiguration)
@@ -68,9 +67,24 @@ namespace Seal.Helpers
                 if (ob.Report != null)
                 {
                     report = ob.Report;
-                    if (ob.Report.Repository != null) configuration = ob.Report.Repository.Configuration;
-                    else if (ob.Report.Tag != null && ob.Report.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Report.Tag;
+                    if (report.Repository != null) configuration = report.Repository.Configuration;
+                    else if (report.Tag != null && report.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Report.Tag;
                 }
+            }
+            else if (model is NavigationLink)
+            {
+                var ob = (NavigationLink)model;
+                if (ob.Cell != null)
+                {
+                    report = ob.Cell.Element.Report;
+                    if (report.Repository != null) configuration = report.Repository.Configuration;
+                }
+            }
+            else if (model is ResultCell)
+            {
+                var ob = (ResultCell)model;
+                report = ob.Element.Report;
+                if (report.Repository != null) configuration = report.Repository.Configuration;
             }
             else if (model is MetaEnum)
             {
@@ -91,79 +105,19 @@ namespace Seal.Helpers
                 configuration = ob.Source.Repository.Configuration;
             }
 
-            if (configuration != null)
-            {
-                foreach (var script in configuration.CommonScripts)
-                {
-                    result = result.Replace(string.Format("@Include(\"{0}\")", script.Name), script.Script);
-                }
-            }
+            if (!string.IsNullOrEmpty(header)) result += "\r\n" + header;
 
-            if (report != null)
+            if (report != null && header == null)
             {
                 if (!string.IsNullOrEmpty(report.CommonScriptsHeader)) result += report.CommonScriptsHeader + "\r\n";
             }
+
+            if (configuration != null)
+            {
+                result = configuration.SetConfigurationCommonScripts(result);
+            }
+
             return result;
-        }
-
-        static public string GetFullScript(string script, object model)
-        {
-            var result = "";
-            Report report = null;
-            SealServerConfiguration configuration = null;
-            if (model is SealServerConfiguration)
-            {
-                configuration = (SealServerConfiguration)model;
-            }
-            else if (model is Report)
-            {
-                var ob = (Report)model;
-                report = ob;
-                if (ob.Repository != null) configuration = ob.Repository.Configuration;
-                else if (ob.Tag != null && ob.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Tag;
-            }
-            else if (model is ReportComponent)
-            {
-                var ob = (ReportComponent)model;
-                if (ob.Report != null)
-                {
-                    report = ob.Report;
-                    if (ob.Report.Repository != null) configuration = ob.Report.Repository.Configuration;
-                    else if (ob.Report.Tag != null && ob.Report.Tag is SealServerConfiguration) configuration = (SealServerConfiguration)ob.Report.Tag;
-                }
-            }
-            else if (model is MetaEnum)
-            {
-                var ob = (MetaEnum)model;
-                report = ob.Source.Report;
-                configuration = ob.Source.Repository.Configuration;
-            }
-            else if (model is MetaTable)
-            {
-                var ob = (MetaTable)model;
-                report = ob.Source.Report;
-                configuration = ob.Source.Repository.Configuration;
-            }
-            else if (model is MetaConnection)
-            {
-                var ob = (MetaConnection)model;
-                report = ob.Source.Report;
-                configuration = ob.Source.Repository.Configuration;
-            }
-
-            if (configuration != null)
-            {
-                foreach (var cs in configuration.CommonScripts)
-                {
-                    script = script.Replace(string.Format("@Include(\"{0}\")", cs.Name), cs.Script);
-                }
-            }
-
-            if (report != null)
-            {
-                if (!string.IsNullOrEmpty(report.CommonScriptsHeader)) result += report.CommonScriptsHeader + "\r\n";
-            }
-            return result + "\r\n" + script;
         }
 
         static public string CompileExecute(string script, object model, string key = null)

@@ -254,18 +254,8 @@ namespace Seal.Model
             get
             {
                 if (Type != ColumnType.DateTime) return false;
-                return HasTimeFormat(DateTimeStandardFormat, Format);
+                return Helper.HasTimeFormat(DateTimeStandardFormat, Format);
             }
-        }
-
-        /// <summary>
-        /// Helper 
-        /// </summary>
-        static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
-        {
-            if (formatType.ToString().Contains("Time")) return true;
-            return ((formatType == DateTimeStandardFormat.Custom || formatType == DateTimeStandardFormat.Default)  
-                && (format.ToLower().Contains("t") || format.Contains("H") || format.Contains("m") || format.Contains("s")));
         }
 
         /// <summary>

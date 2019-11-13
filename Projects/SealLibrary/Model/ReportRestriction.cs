@@ -1539,7 +1539,7 @@ namespace Seal.Model
             get
             {
                 if (!IsDateTime) return false;
-                return HasTimeFormat(DateTimeStandardFormatRe, FormatRe);
+                return Helper.HasTimeFormat(DateTimeStandardFormatRe, FormatRe);
             }
         }
 

@@ -18,11 +18,29 @@ namespace Seal.Model
         /// <summary>
         /// Sample
         /// </summary>
-        public const string RazorTemplate = @"@using System.Text
-@using Seal.Model
+        public const string RazorTemplate = @"@using Seal.Model
 
 @functions {
     //Before execution, this script will be added at the end of all scripts executed...
+    public void SetNegativeValuesInRed(Report report) {
+        report.LogMessage(""SetNegativeValuesInRed"");
+        foreach (var model in report.Models) 
+        {
+            foreach (var page in model.Pages) 
+            {
+                foreach (var line in page.DataTable.Lines) 
+                {
+                    foreach (var cell in line) 
+                    {
+                        if (cell.Element != null && cell.Element.IsNumeric && cell.DoubleValue< 0) {
+                            cell.FinalCssStyle = ""font-weight:bold;color:red;"";
+                        }
+                    }
+                }       
+            }
+        }
+    }
+
     public string MyConvertString(string input) {
         return input.Replace(""__"",""_"");
     }

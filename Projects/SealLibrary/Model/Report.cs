@@ -150,7 +150,7 @@ namespace Seal.Model
         /// The current list of input values restrictions of the report at execution time
         /// </summary>
         [XmlIgnore]
-        public List<ReportRestriction> ExecutionReportRestrictions
+        public List<ReportRestriction> ExecutionInputValues
         {
             get
             {
@@ -324,12 +324,6 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public string WebUrl = "";
-
-        /// <summary>
-        /// Indicates if the report is for a mobile device
-        /// </summary>
-        [XmlIgnore]
-        public bool IsMobileDevice = false;
 
         /// <summary>
         /// Current identifier of the report's execution
@@ -1746,7 +1740,7 @@ namespace Seal.Model
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
-                result.AddRange(ExecutionReportRestrictions);
+                result.AddRange(ExecutionInputValues);
                 foreach (ReportModel model in ExecutionModels)
                 {
                     result.AddRange(model.ExecutionRestrictions.Union(model.ExecutionAggregateRestrictions).Union(model.ExecutionCommonRestrictions));
