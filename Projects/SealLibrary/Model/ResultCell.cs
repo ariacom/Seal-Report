@@ -438,10 +438,10 @@ namespace Seal.Model
         /// <summary>
         /// Add a navigation link from this cell to download a file. The file will be loaded in the Navigation Script of the model.
         /// </summary>
-        public void AddNavigationFileDownload(string text)
+        public void AddNavigationFileDownload(string text, string linkTag = "")
         {
             var guid = Guid.NewGuid().ToString();
-            var link = new NavigationLink() { Type = NavigationType.FileDownload, Href = guid, Text = text, Cell = this };
+            var link = new NavigationLink() { Type = NavigationType.FileDownload, Href = guid, Text = text, Cell = this, Tag = linkTag };
             Links.Add(link);
             ContextModel.Report.NavigationLinks.Add(guid, link);
         }

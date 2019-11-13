@@ -84,6 +84,11 @@ namespace Seal.Model
         public WindowsIdentity Identity = null;
 
         /// <summary>
+        /// The current UserPrincipal if connected with the AD
+        /// </summary>
+        public UserPrincipal UserPrincipal = null;
+
+        /// <summary>
         /// True if the user is authenticated and part of a group
         /// </summary>
         public bool IsAuthenticated
@@ -614,6 +619,7 @@ namespace Seal.Model
             try
             {
                 // set up domain context
+                UserPrincipal = null;
                 PrincipalContext context = new PrincipalContext((ContextType)Enum.Parse(typeof(ContextType), contextType));
                 string name = WebUserName;
                 if (WebPrincipal != null) name = WebPrincipal.Identity.Name;
@@ -627,6 +633,7 @@ namespace Seal.Model
 
                 if (user != null)
                 {
+                    UserPrincipal = user;
                     // find the roles....
                     var roles = user.GetGroups();
                     // enumerate over them

@@ -21,6 +21,7 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.Xml.Serialization;
 using System.Globalization;
+using System.Net.Mail;
 
 namespace Seal.Helpers
 {
@@ -721,6 +722,28 @@ namespace Seal.Helpers
             return "data:image/" + type + ";base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
         }
 
+
+        static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
+        {
+            if (formatType.ToString().Contains("Time")) return true;
+            return ((formatType == DateTimeStandardFormat.Custom || formatType == DateTimeStandardFormat.Default)
+                && (format.ToLower().Contains("t") || format.Contains("H") || format.Contains("m") || format.Contains("s")));
+        }
+
+        /// <summary>
+        /// Add email address to a MailAddressCollection
+        /// </summary>
+        static public void AddEmailAddresses(MailAddressCollection collection, string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                string[] addresses = input.Replace(";", "\r\n").Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+                foreach (string address in addresses)
+                {
+                    if (!string.IsNullOrWhiteSpace(address)) collection.Add(address);
+                }
+            }
+        }
 
         //SQL Keywords management
         public static string ClearAllSQLKeywords(string sql, ReportModel model = null)

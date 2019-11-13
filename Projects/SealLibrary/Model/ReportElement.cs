@@ -45,6 +45,7 @@ namespace Seal.Model
                 GetProperty("TotalAggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("ShowTotal").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("CellScript").SetIsBrowsable(true);
+                GetProperty("NavigationScript").SetIsBrowsable(true);
                 GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("EnumGUIDEL").SetIsBrowsable(true);
                 GetProperty("ForceAggregate").SetIsBrowsable(true);
@@ -288,7 +289,7 @@ namespace Seal.Model
             get
             {
                 if (!IsDateTime) return false;
-                return HasTimeFormat(DateTimeStandardFormat, FormatEl);
+                return Helper.HasTimeFormat(DateTimeStandardFormat, FormatEl);
             }
         }
 
@@ -641,10 +642,18 @@ namespace Seal.Model
         public string CellScript { get; set; }
 
         /// <summary>
+        /// Optional Razor Script executed if script navigation links have been added in the CellScript
+        /// </summary>
+        [Category("Advanced"), DisplayName("Cell Navigation Script"), Description("Optional Razor Script executed if script navigation links have been added in the 'Cell Script'."), Id(4, 5)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
+        public string NavigationScript { get; set; }
+
+        /// <summary>
         /// If defined, the enumerated list is used for the display and for sorting
         /// </summary>
         [DefaultValue(null)]
-        [Category("Advanced"), DisplayName("Custom Enumerated List"), Description("If defined, the enumerated list is used for the display and for sorting."), Id(4, 5)]
+        [Category("Advanced"), DisplayName("Custom Enumerated List"), Description("If defined, the enumerated list is used for the display and for sorting."), Id(5, 5)]
         [TypeConverter(typeof(MetaEnumConverter))]
         public string EnumGUIDEL
         {
@@ -656,7 +665,7 @@ namespace Seal.Model
         /// If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause.
         /// </summary>
         [DefaultValue(YesNoDefault.Default)]
-        [Category("Advanced"), DisplayName("Force aggregrate"), Description("If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause."), Id(5, 5)]
+        [Category("Advanced"), DisplayName("Force aggregrate"), Description("If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause."), Id(6, 5)]
         public YesNoDefault ForceAggregate { get; set; } = YesNoDefault.Default;
         public bool ShouldSerializeHasAggregate() { return ForceAggregate != YesNoDefault.Default; }
 

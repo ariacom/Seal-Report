@@ -24,6 +24,11 @@ namespace Seal.Model
         public ResultCell Cell;
 
         /// <summary>
+        /// User defined tag that may be used in the Navigation Script to identify the link
+        /// </summary>
+        public string Tag = "";
+
+        /// <summary>
         /// The result expected after the navigation script is executed
         /// For File Download: the file path 
         /// </summary>

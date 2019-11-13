@@ -159,8 +159,11 @@ namespace Seal.Model
             if (report.NavigationLinks.ContainsKey(linkGUID))
             {
                 var link = report.NavigationLinks[linkGUID];
-                RazorHelper.CompileExecute(link.Cell.ContextModel.NavigationScript, link);
-                result = link.ScriptResult;
+                if (link.Cell.Element != null)
+                {
+                    RazorHelper.CompileExecute(link.Cell.Element.NavigationScript, link);
+                    result = link.ScriptResult;
+                }
             }
             return result;
         }

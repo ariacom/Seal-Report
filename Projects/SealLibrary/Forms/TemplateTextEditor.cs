@@ -175,6 +175,8 @@ namespace Seal.Forms
     //File download: this requires an implementation in the 'Navigation Script' of the model
     if (!string.IsNullOrEmpty(cell.DisplayValue)) {
         cell.AddNavigationFileDownload(""Download "" + cell.DisplayValue);
+        //A tag value can be set to identify the lin in the 'Navigation Script'
+        cell.AddNavigationFileDownload(""Download 2 "" + cell.DisplayValue, ""2"");
     }
 "
                 ),
@@ -321,14 +323,20 @@ namespace Seal.Forms
     ResultCell cell = link.Cell;
     ReportModel model = cell.ContextModel;
 
-    //Script executed for a script navigation...
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    //Script executed for a cell navigation...
 
-    //Sample to return a file contained in a blob
+    //Sample to return a file from a disk path
+
+    //We assume here that path is in the first column of the model
+    link.ScriptResult = link.Cell.ContextCurrentLine[0].Value.ToString();
+    //Or in the link tag set in the Cell Script
+    link.ScriptResult = link.Tag;
+
+    //Sample to return a file contained in a blob (to be adapted)
     var helper = new TaskDatabaseHelper();
     var command = helper.GetDbCommand(model.Connection.GetOpenConnection());
 
-    //Here we assume here that the id is in the first column
+    //We assume here that the id is in the first column of the model
     var blobId = link.Cell.ContextCurrentLine[0].Value;
     command.CommandText = string.Format(""select blob_value from blob_table where blob_id = {0}"", blobId);
     using (var reader = command.ExecuteReader())
@@ -341,18 +349,11 @@ namespace Seal.Forms
         }
     }
 
-    //The script will be executed for cell having the following initialization in a Cell Script: 
+    //The script will be executed for cell having the following initialization in a 'Cell Script': 
     //cell.AddNavigationFileDownload(""Download"" + cell.DisplayValue);
 }
 ";
-        const string razorTasksTemplate = @"@using System.Text
-@functions {
-    //Before execution, this script will be added at the end of all task scripts...
-    public string MyConvertString(string input) {
-        return input.Replace(""__"",""_"");
-    }
-}
-";
+
 
         const string razorInitScriptTemplate = @"@using Seal.Model
 @{
@@ -796,7 +797,14 @@ namespace Seal.Forms
                         }
                         frm.SetSamples(samples);
 
-                        frm.ObjectForCheckSyntax = new ResultCell();
+                        frm.ObjectForCheckSyntax = new ResultCell() { Element = element };
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "NavigationScript")
+                    {
+                        template = razorModelNavigationScriptTemplate;
+                        frm.ObjectForCheckSyntax = new NavigationLink() { Cell = new ResultCell() { Element = element } };
+                        frm.Text = "Edit the navigation script executed for the model";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                     else if (context.PropertyDescriptor.Name == "SQL")
@@ -878,13 +886,6 @@ namespace Seal.Forms
                         frm.Text = "Edit the final script executed for the model";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
-                    else if (context.PropertyDescriptor.Name == "NavigationScript")
-                    {
-                        template = razorModelNavigationScriptTemplate;
-                        frm.ObjectForCheckSyntax = new NavigationLink();
-                        frm.Text = "Edit the navigation script executed for the model";
-                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                    }
                     else if (context.PropertyDescriptor.Name == "LoadScript")
                     {
                         if (((ReportModel)context.Instance).Source.IsNoSQL)
@@ -914,15 +915,12 @@ namespace Seal.Forms
                     frm.Text = "Edit the script that will be added to all scripts executed for the report.";
                     if (CurrentEntity is SealServerConfiguration)
                     {
-                        //common script from configuration
-                        frm.ScriptHeader = ((SealServerConfiguration)CurrentEntity).GetCommonScriptsHeader((CommonScript)context.Instance);
+                        //common script from configuration, nothing to include, we rely on @Include
                     }
                     if (CurrentEntity is Report)
                     {
                         //common script from report
-                        frm.ScriptHeader = ((Report)CurrentEntity).Repository.Configuration.CommonScriptsHeader;
-                        frm.ScriptHeader += ((Report)CurrentEntity).GetCommonScriptsHeader((CommonScript)context.Instance);
-
+                        frm.ScriptHeader = ((Report)CurrentEntity).GetCommonScriptsHeader((CommonScript)context.Instance);
                     }
                     frm.ObjectForCheckSyntax = CurrentEntity;
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);

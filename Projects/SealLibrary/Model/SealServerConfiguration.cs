@@ -64,7 +64,7 @@ namespace Seal.Model
                 GetProperty("FileReplacePatterns").SetIsBrowsable(!ForPublication);
                 GetProperty("CssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
-                
+
                 GetProperty("ExcelConverter").SetIsBrowsable(!ForPublication);
                 GetProperty("PdfConverter").SetIsBrowsable(!ForPublication);
                 GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(!ForPublication);
@@ -188,6 +188,27 @@ namespace Seal.Model
         public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
 
         /// <summary>
+        /// Replace the @Include by the common script in the current script
+        /// </summary>
+        public string SetConfigurationCommonScripts(string script)
+        {
+            var result = script;
+            foreach (var cs in CommonScripts)
+            {
+                var pattern = string.Format("@Include(\"{0}\")", cs.Name);
+                var index = result.IndexOf(pattern);
+                if (index >= 0)
+                {
+                    //Replace the first pattern and set empty string for the others
+                    var newResult = result.Substring(0, index + pattern.Length).Replace(pattern, cs.Script);
+                    newResult += result.Substring(index + pattern.Length).Replace(pattern, "");
+                    result = newResult;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Returns a common script key form a given name and model
         /// </summary>      
         public string GetConfigurationCommonScriptKey(string name, object model)
@@ -195,7 +216,7 @@ namespace Seal.Model
             var script = CommonScripts.FirstOrDefault(i => i.Name == name);
 
             if (script == null) throw new Exception(string.Format("Unable to find a configuration common script  named '{0}'...", name));
-           
+
             string key = string.Format("CFGCS:{0}_{1}_{2}_{3}", FilePath, GUID, name, File.GetLastWriteTime(FilePath).ToString("s"));
             RazorHelper.Compile(script.Script, model.GetType(), key);
 

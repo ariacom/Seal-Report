@@ -294,20 +294,6 @@ namespace Seal.Model
             if (string.IsNullOrEmpty(SenderEmail)) throw new Exception("The Email Sender cannot be empty for an Email device.");
         }
 
-        /// <summary>
-        /// Add email address to a MailAddressCollection
-        /// </summary>
-        public void AddEmailAddresses(MailAddressCollection collection, string input)
-        {
-            if (!string.IsNullOrEmpty(input))
-            {
-                string[] addresses = input.Replace(";", "\r\n").Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
-                foreach (string address in addresses)
-                {
-                    if (!string.IsNullOrWhiteSpace(address)) collection.Add(address);
-                }
-            }
-        }
 
         /// <summary>
         /// Send the report result by email using the device configuration
@@ -322,12 +308,12 @@ namespace Seal.Model
             var email = SenderEmail;
             if (ChangeSender && !string.IsNullOrEmpty(output.EmailFrom)) email = output.EmailFrom;
             message.From = new MailAddress(email);
-            AddEmailAddresses(message.To, output.EmailTo);
-            AddEmailAddresses(message.CC, output.EmailCC);
-            AddEmailAddresses(message.Bcc, output.EmailBCC);
+            Helper.AddEmailAddresses(message.To, output.EmailTo);
+            Helper.AddEmailAddresses(message.CC, output.EmailCC);
+            Helper.AddEmailAddresses(message.Bcc, output.EmailBCC);
             email = ReplyTo;
             if (ChangeSender && !string.IsNullOrEmpty(output.EmailReplyTo)) email = output.EmailReplyTo;
-            AddEmailAddresses(message.ReplyToList, email);
+            Helper.AddEmailAddresses(message.ReplyToList, email);
             message.Subject = Helper.IfNullOrEmpty(output.EmailSubject, report.ExecutionName);
             if (output.EmailHtmlBody && (output.Format == ReportFormat.html || output.Format == ReportFormat.print))
             {
@@ -399,7 +385,7 @@ namespace Seal.Model
                 MailMessage message = new MailMessage();
                 message.To.Add(TestEmailTo);
                 message.From = new MailAddress(SenderEmail);
-                AddEmailAddresses(message.ReplyToList, ReplyTo);
+                Helper.AddEmailAddresses(message.ReplyToList, ReplyTo);
                 message.Subject = "Test email";
                 message.Body = "This is a test message.";
                 SmtpClient.Send(message);

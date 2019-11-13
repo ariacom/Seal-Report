@@ -15,6 +15,9 @@ namespace Seal.Model
         public string Type = "";
         public string BlobColumnName = "";
         public string DefaultValue = "";
+        public bool SkipSQL = false;
+        public string FinalEditorCol = ""; 
+        public string FinalTableCol = "";
 
         public string GetType(ReportElement element)
         {
@@ -44,6 +47,9 @@ namespace Seal.Model
         public bool CanInsert = true;
         public bool CanUpdate = true;
         public bool CanDelete = true;
+
+        public string TemplateName = "";
+
         public bool ReadOnlyByDefault = true;
 
         public List<EditorColumnDefinition> Cols = new List<EditorColumnDefinition>();
