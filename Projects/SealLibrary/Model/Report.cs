@@ -377,6 +377,13 @@ namespace Seal.Model
         public void InitForExecution()
         {
             string fileName = "", fileFolder = "";
+
+            //Copy values from reference views
+            foreach (var view in FullViewList.Where(i => i.ReferenceView != null))
+            {
+                view.InitFromReferenceView();
+            }
+
             if (ForOutput)
             {
                 //Check custom Output Parameters 
@@ -1120,21 +1127,35 @@ namespace Seal.Model
         public void InitGUIDAndSchedules()
         {
             GUID = Guid.NewGuid().ToString();
-            foreach (var view in Views)
+
+            var newValues = new Dictionary<string, string>();
+
+            foreach (var view in FullViewList)
             {
                 var newGUID = Guid.NewGuid().ToString();
-                if (view.GUID == ViewGUID)
-                {
-                    ViewGUID = newGUID;
-                    CurrentViewGUID = newGUID;
-                }
-                foreach (var output in Outputs.Where(i => i.ViewGUID == view.GUID))
-                {
-                    output.ViewGUID = newGUID;
-                }
+                newValues.Add(view.GUID, newGUID);
+                //Set new GUIDs
                 view.GUID = newGUID;
-                view.ReinitGUIDChildren();
+                if (!string.IsNullOrEmpty(view.WidgetDefinition.GUID)) view.WidgetDefinition.GUID = Guid.NewGuid().ToString();
             }
+
+            //Reference views
+            foreach (var view in FullViewList.Where(i => !string.IsNullOrEmpty(i.ReferenceViewGUID)))
+            {
+                view.ReferenceViewGUID = newValues[view.ReferenceViewGUID];
+            }
+
+            //Current view of the report
+            ViewGUID = newValues[ViewGUID];
+            CurrentViewGUID = ViewGUID;
+
+            //Output views
+            foreach (var output in Outputs)
+            {
+                output.ViewGUID = newValues[output.ViewGUID];
+            }
+            
+            //No schedule
             Schedules.Clear();
         }
 
@@ -2036,6 +2057,28 @@ namespace Seal.Model
         }
 
 
+        void fillFullViewList(List<ReportView> views, List<ReportView> result)
+        {
+            foreach (var view in views)
+            {
+                result.Add(view);
+                fillFullViewList(view.Views, result);
+            }
+        }
+
+        /// <summary>
+        /// Helper to list of all the views of the report
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportView> FullViewList
+        {
+            get
+            {
+                var result = new List<ReportView>();
+                fillFullViewList(Views, result);
+                return result;
+            }
+        }
         /// <summary>
         /// Helper to get the root view from a child view
         /// </summary>

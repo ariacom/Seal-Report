@@ -36,6 +36,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("ModelGUID").SetIsBrowsable(Template.ForReportModel);
+                GetProperty("ReferenceViewGUID").SetIsBrowsable(true);
                 GetProperty("TemplateName").SetIsBrowsable(true);
                 GetProperty("TemplateDescription").SetIsBrowsable(true);
 
@@ -465,6 +466,7 @@ namespace Seal.Model
         /// <summary>
         /// The data model identifier used for the view
         /// </summary>
+        [DefaultValue(null)]
         [DisplayName("Model"), Description("The data model used for the view."), Category("Definition"), Id(3, 1)]
         [TypeConverter(typeof(ReportModelConverter))]
         public string ModelGUID
@@ -477,6 +479,15 @@ namespace Seal.Model
             }
         }
         public bool ShouldSerializeModelGUID() { return !string.IsNullOrEmpty(_modelGUID); }
+        /// <summary>
+        /// If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
+        /// </summary>
+        [DefaultValue(null)]
+        [DisplayName("Reference View"), Description("If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'."), Category("Definition"), Id(4, 1)]
+        [TypeConverter(typeof(ReportViewConverter))]
+        public string ReferenceViewGUID { get; set; }
+        public bool ShouldSerializeReferenceViewGUID() { return !string.IsNullOrEmpty(ReferenceViewGUID); }
+
 
         /// <summary>
         /// Init the partial templates of the view
@@ -699,9 +710,8 @@ namespace Seal.Model
 
         #endregion
 
-
         /// <summary>
-        /// Current ReportModel if any
+        /// Current report model if any
         /// </summary>
         [XmlIgnore]
         public ReportModel Model
@@ -710,6 +720,19 @@ namespace Seal.Model
             {
                 if (string.IsNullOrEmpty(_modelGUID)) return null;
                 return _report.Models.FirstOrDefault(i => i.GUID == _modelGUID);
+            }
+        }
+
+        /// <summary>
+        /// Current reference view if any
+        /// </summary>
+        [XmlIgnore]
+        public ReportView ReferenceView
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(ReferenceViewGUID)) return null;
+                return _report.FindView(_report.Views, ReferenceViewGUID);
             }
         }
 
@@ -1096,6 +1119,57 @@ namespace Seal.Model
             foreach (var child in view.Views) InitTemplates(child, ref errors);
         }
 
+        /// <summary>
+        /// Initializes the view properties from its reference view
+        /// </summary>
+        public void InitFromReferenceView()
+        {
+            var refView = ReferenceView;
+            if (refView != null)
+            {
+                //Templates
+                if (!UseCustomTemplate)
+                {
+                    UseCustomTemplate = refView.UseCustomTemplate;
+                    CustomTemplate = refView.CustomTemplate;
+                }
+
+                foreach (var pt in PartialTemplates)
+                {
+                    if (!pt.UseCustom)
+                    {
+                        var refTemplate = refView.PartialTemplates.FirstOrDefault(i => i.Name == pt.Name);
+                        if (refTemplate != null)
+                        {
+                            pt.UseCustom = refTemplate.UseCustom;
+                            pt.Text = refTemplate.Text;
+                        }
+                    }
+                }
+
+                //Parameters that have a default value
+                foreach (var parameter in Parameters.Where(i => i.Value == i.ConfigValue))
+                {
+                    var refParameter = refView.Parameters.FirstOrDefault(i => i.Name == parameter.Name);
+                    if (refParameter != null)
+                    {
+                        parameter.Value = refParameter.Value;
+                    }
+                }
+
+                //Excel
+                if (ExcelConverter != null && refView.ExcelConverter != null)
+                {
+                    ExcelConverter.InitFromReferenceView(refView);
+                }
+
+                //Pdf
+                if (PdfConverter != null && refView.PdfConverter != null)
+                {
+                    PdfConverter.InitFromReferenceView(refView);
+                }
+            }
+        }
         private void initAxisProperties(ResultPage page, List<ResultCell[]> XDimensions)
         {
             bool hasPie = Model.Elements.Exists(i => (i.Nvd3Serie == NVD3SerieDefinition.PieChart || i.ChartJSSerie == ChartJSSerieDefinition.Pie || i.ChartJSSerie == ChartJSSerieDefinition.PolarArea || i.PlotlySerie == PlotlySerieDefinition.Pie) && i.PivotPosition == PivotPosition.Data);

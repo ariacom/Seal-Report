@@ -7,11 +7,21 @@ using System.Linq;
 using System.ComponentModel;
 using Seal.Model;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace Seal.Converter
 {
     public class ReportViewConverter : StringConverter
     {
+        List<ReportView> getViewList(PropertyDescriptor descriptor, ReportComponent component) 
+        {
+
+            List<ReportView> result = null;
+            if (descriptor.Name == "ReferenceViewGUID") result = component.Report.FullViewList.Where(i => i.GUID != component.GUID).ToList();
+            else result = component.Report.Views;
+            return result;
+        }
+
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {
             return true; //true means show a combobox
@@ -23,14 +33,19 @@ namespace Seal.Converter
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            string[] choices = new string[] { "No View" };
+            List<string> choices = new List<string>();
             ReportComponent component = context.Instance as ReportComponent;
             if (component != null)
             {
-                choices = (from s in component.Report.Views select s.Name).ToArray();
+                var list = getViewList(context.PropertyDescriptor, component);
+                choices = (from s in list select s.Name).ToList();
+                if (context.PropertyDescriptor.Name == "ReferenceViewGUID")
+                {
+                    choices.Insert(0, "");
+                }
             }
 
-            return new StandardValuesCollection(choices);
+            return new StandardValuesCollection(choices.OrderBy(i => i).ToList());
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destType)
@@ -45,7 +60,8 @@ namespace Seal.Converter
                 ReportComponent component = context.Instance as ReportComponent;
                 if (component != null && value != null)
                 {
-                    ReportView view = component.Report.Views.FirstOrDefault(i => i.GUID == value.ToString());
+                    var list = getViewList(context.PropertyDescriptor, component);
+                    ReportView view = list.FirstOrDefault(i => i.GUID == value.ToString());
                     if (view != null) return view.Name;
                 }
             }
@@ -62,7 +78,8 @@ namespace Seal.Converter
             ReportComponent component = context.Instance as ReportComponent;
             if (component != null && value != null)
             {
-                ReportView view = component.Report.Views.FirstOrDefault(i => i.Name == value.ToString());
+                var list = getViewList(context.PropertyDescriptor, component);
+                ReportView view = list.FirstOrDefault(i => i.Name == value.ToString());
                 if (view != null) return view.GUID;
             }
             return base.ConvertFrom(context, culture, value);
