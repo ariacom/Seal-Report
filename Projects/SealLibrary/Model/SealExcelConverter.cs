@@ -53,6 +53,9 @@ namespace Seal.Model
                     Object[] args = new Object[] { };
                     result = (SealExcelConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);
                     result.ApplicationPath = applicationPath;
+                    //Load related DLLs
+                    Assembly.LoadFrom(Path.Combine(applicationPath, "DocumentFormat.OpenXml.dll"));
+                    Assembly.LoadFrom(Path.Combine(applicationPath, "EPPlus.dll"));
                 }
                 catch { }
             }
@@ -100,6 +103,10 @@ namespace Seal.Model
         public virtual string GetLicenseText()
         {
             return "";
+        }
+
+        public virtual void InitFromReferenceView(ReportView referenceView)
+        {
         }
     }
 }

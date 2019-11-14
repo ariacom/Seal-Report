@@ -51,6 +51,9 @@ namespace Seal.Model
                     Object[] args = new Object[] { };
                     result = (SealPdfConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);
                     result.ApplicationPath = applicationPath;
+                    //Load related DLLs
+                    Assembly.LoadFrom(Path.Combine(applicationPath, "wnvhtmltopdf.dll"));
+
                 }
                 catch (Exception ex) {
                     Debug.WriteLine(ex.Message);
@@ -92,6 +95,10 @@ namespace Seal.Model
         public virtual string GetLicenseText()
         {
             return "";
+        }
+
+        public virtual void InitFromReferenceView(ReportView referenceView)
+        {
         }
     }
 }
