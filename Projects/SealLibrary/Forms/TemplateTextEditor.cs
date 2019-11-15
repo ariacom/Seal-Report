@@ -19,9 +19,24 @@ namespace Seal.Forms
     {
         public static object CurrentEntity = null; //Hack to get the current entity
 
-        const string razorPreOutputTemplate = "@using Seal.Model\r\n@{\r\nReportOutput output = Model;\r\nstring result = \"1\"; //Set result to 0 to cancel the report.\r\n}\r\n@Raw(result)";
-        const string razorPostOutputTemplate = "@using Seal.Model\r\n@{\r\nReportOutput output = Model;\r\n}";
-        const string displayNameTemplate = "@using Seal.Model\r\n@{\r\nReport report = Model;\r\nstring result = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + \" \" + DateTime.Now.ToShortDateString();\r\n}\r\n@Raw(result)";
+        const string razorPreOutputTemplate = @"@using Seal.Model
+@{
+    ReportOutput output = Model;
+    string result = ""1""; //Set result to 0 to cancel the report.
+}
+@Raw(result)";
+
+        const string razorPostOutputTemplate = @"@using Seal.Model
+@{
+    ReportOutput output = Model;
+}";
+
+        const string displayNameTemplate = @"@using Seal.Model
+@{
+    Report report = Model;
+    string result = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + "" "" + DateTime.Now.ToShortDateString();
+}
+@Raw(result)";
 
         const string razorTaskTemplate = @"@using Seal.Model
 @{
@@ -710,9 +725,9 @@ namespace Seal.Forms
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }
-                else if (context.Instance is ReportViewPartialTemplate)
+                else if (context.Instance is ReportViewPartialTemplate || context.Instance is PartialTemplatesEditor)
                 {
-                    var pt = context.Instance as ReportViewPartialTemplate;
+                    var pt = context.Instance is ReportViewPartialTemplate ? context.Instance as ReportViewPartialTemplate : ((PartialTemplatesEditor)context.Instance).GetPartialTemplate(context.PropertyDescriptor.Name);
                     var templateText = pt.View.Template.GetPartialTemplateText(pt.Name);
                     if (string.IsNullOrEmpty(valueToEdit)) valueToEdit = templateText;
                     template = templateText;

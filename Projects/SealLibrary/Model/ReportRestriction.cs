@@ -320,6 +320,18 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Initialize the Html Ids of the enum values of the restriction
+        /// </summary>
+        public void SetEnumHtmlIds()
+        {
+            if (IsEnum)
+            {
+                int i = 0;
+                foreach (var enumDef in EnumRE.Values) enumDef.HtmlId = (i++).ToString();
+            }
+        }
+
+        /// <summary>
         /// List of prompted enum values
         /// </summary>
         [XmlIgnore]
@@ -328,8 +340,8 @@ namespace Seal.Model
             get
             {
                 if (EnumRE == null) return new List<MetaEV>();
-                int i = 0;
-                foreach (var enumDef in EnumRE.Values) enumDef.HtmlId = (i++).ToString();
+
+                SetEnumHtmlIds();
 
                 if (!EnumRE.HasDynamicDisplay) return EnumRE.Values;
 

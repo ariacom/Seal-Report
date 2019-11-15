@@ -45,8 +45,11 @@ namespace Seal.Model
                 GetProperty("UseCustomTemplate").SetIsBrowsable(true);
                 GetProperty("CustomTemplate").SetIsBrowsable(true);
                 GetProperty("PartialTemplates").SetIsBrowsable(PartialTemplates.Count > 0);
+                GetProperty("PartialTemplatesConfiguration").SetIsBrowsable(PartialTemplates.Count(i => i.UseCustom) > 0);
 
                 GetProperty("TemplateConfiguration").SetIsBrowsable(Parameters.Count > 0);
+
+
                 GetProperty("PdfConverter").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
                 PdfConverter.InitEditor();
 
@@ -578,12 +581,29 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// The custom partial template texts for the view
+        /// The custom partial template list for the view
         /// </summary>
-        [DisplayName("Custom Partial Templates"), Description("The custom partial template texts for the view."), Category("Custom template texts"), Id(4, 3)]
+        [DisplayName("Custom partial templates list"), Description("The custom partial template list for the view."), Category("Custom template texts"), Id(4, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<ReportViewPartialTemplate> PartialTemplates { get; set; } = new List<ReportViewPartialTemplate>();
         public bool ShouldSerializePartialTemplates() { return PartialTemplates.Count > 0; }
+
+
+        /// <summary>
+        /// The custom partial template texts for the view
+        /// </summary>
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Custom partial template Texts"), Description("The custom partial template texts for the view."), Category("Custom template texts"), Id(5, 3)]
+        [XmlIgnore]
+        public PartialTemplatesEditor PartialTemplatesConfiguration
+        {
+            get
+            {
+                var editor = new PartialTemplatesEditor();
+                editor.Init(PartialTemplates.ToList());
+                return editor;
+            }
+        }
 
         /// <summary>
         /// The view parameters
@@ -610,7 +630,7 @@ namespace Seal.Model
         public bool ShouldSerializeCultureName() { return !string.IsNullOrEmpty(_cultureName); }
 
         /// <summary>
-        /// The view configuration values
+        /// The view configuration values for edition.
         /// </summary>
         [TypeConverter(typeof(ExpandableObjectConverter))]
         [DisplayName("Template configuration"), Description("The view configuration values."), Category("View parameters"), Id(3, 4)]
@@ -697,7 +717,8 @@ namespace Seal.Model
         public bool WebExec { get; set; } = true;
 
 
-        public bool ShouldSerializeWidgetDefinition() {
+        public bool ShouldSerializeWidgetDefinition()
+        {
             return WidgetDefinition.IsPublished || !string.IsNullOrEmpty(WidgetDefinition.GUID);
         }
 
@@ -748,7 +769,8 @@ namespace Seal.Model
         /// The PDF configuration of the view
         /// </summary>
         public List<string> PdfConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializePdfConfigurations() {
+        public bool ShouldSerializePdfConfigurations()
+        {
             bool result = false;
             if (Report.Repository.Configuration.PdfConfigurations.Count == 0)
             {
@@ -805,7 +827,8 @@ namespace Seal.Model
         /// The Excel configuration of the view
         /// </summary>
         public List<string> ExcelConfigurations { get; set; } = new List<string>();
-        public bool ShouldSerializeExcelConfigurations() {
+        public bool ShouldSerializeExcelConfigurations()
+        {
             bool result = false;
 
             if (Report.Repository.Configuration.ExcelConfigurations.Count == 0)
@@ -1032,7 +1055,8 @@ namespace Seal.Model
                 result = RazorHelper.CompileExecute(ViewTemplateText, Report, key);
 
                 //For CSV, add just one new line
-                if (Report.Format == ReportFormat.csv) {
+                if (Report.Format == ReportFormat.csv)
+                {
                     result = result.Trim() + "\r\n" + (result.EndsWith("\r\n") ? "\r\n" : "");
                 }
             }
@@ -1489,6 +1513,7 @@ namespace Seal.Model
 
 
         List<string> _columnsHidden = null;
+
         /// <summary>
         /// True if the column is hidden
         /// </summary>

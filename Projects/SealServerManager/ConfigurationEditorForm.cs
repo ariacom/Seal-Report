@@ -46,6 +46,8 @@ namespace Seal.Forms
 
             ShowIcon = true;
             Icon = Properties.Resources.serverManager;
+
+  //          PropertyGridHelper.AddResetMenu(mainPropertyGrid);
         }
 
         private void ConfigurationEditorForm_Load(object sender, EventArgs e)
