@@ -510,12 +510,11 @@ class SWIMain {
     private buildReportsTable(data: any) {
         var $tableHead = $("#file-table-head");
         var $tableBody = $("#file-table-body");
-
         if (!$("#file-table-head").is(':empty')) $('#file-table').dataTable().fnDestroy();
-
         $tableHead.empty();
         $tableBody.empty();
 
+        //Header
         var $tr = $("<tr>");
         $tableHead.append($tr);
         if (_main._canEdit) $tr.append($("<th style='width:22px;' class='nosort hidden-xs'><input id='selectall-checkbox' type='checkbox'/></th>"));
@@ -523,6 +522,7 @@ class SWIMain {
         $tr.append($("<th id='action-tableheader' class='nosort'>").text(SWIUtil.tr("Actions")));
         $tr.append($("<th style='width:170px;min-width:170px;' class='hidden-xs'>").text(SWIUtil.tr("Last modification")));
 
+        //Body
         for (var i = 0; i < data.files.length; i++) {
             var file = data.files[i];
             $tr = $("<tr>");

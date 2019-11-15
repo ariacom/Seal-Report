@@ -450,6 +450,7 @@ var SWIMain = /** @class */ (function () {
             $('#file-table').dataTable().fnDestroy();
         $tableHead.empty();
         $tableBody.empty();
+        //Header
         var $tr = $("<tr>");
         $tableHead.append($tr);
         if (_main._canEdit)
@@ -457,6 +458,7 @@ var SWIMain = /** @class */ (function () {
         $tr.append($("<th>").text(SWIUtil.tr("Report")));
         $tr.append($("<th id='action-tableheader' class='nosort'>").text(SWIUtil.tr("Actions")));
         $tr.append($("<th style='width:170px;min-width:170px;' class='hidden-xs'>").text(SWIUtil.tr("Last modification")));
+        //Body
         for (var i = 0; i < data.files.length; i++) {
             var file = data.files[i];
             $tr = $("<tr>");
