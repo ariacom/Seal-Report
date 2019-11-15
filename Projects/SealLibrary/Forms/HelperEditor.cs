@@ -339,7 +339,7 @@ namespace Seal.Forms
                         dlg.InitialDirectory = _metaColumn.Source.Repository.SubReportsFolder;
                         if (dlg.ShowDialog() == DialogResult.OK)
                         {
-                            Report report = Report.LoadFromFile(dlg.FileName, _metaColumn.Source.Repository);
+                            Report report = Report.LoadFromFile(dlg.FileName, _metaColumn.Source.Repository, false);
                             var sr = new SubReport() { Path = report.FilePath.Replace(_metaColumn.Source.Repository.RepositoryPath, Repository.SealRepositoryKeyword), Name = Path.GetFileNameWithoutExtension(dlg.FileName) };
 
                             bool tableOk = false;

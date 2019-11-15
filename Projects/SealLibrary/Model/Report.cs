@@ -1021,7 +1021,7 @@ namespace Seal.Model
         /// Load a report from a file
         /// </summary>
         /// <returns>the report loaded and initialized</returns>
-        static public Report LoadFromFile(string path, Repository repository)
+        static public Report LoadFromFile(string path, Repository repository, bool refreshEnums = true)
         {
             Report result = null;
             try
@@ -1050,7 +1050,10 @@ namespace Seal.Model
                 result.InitReferences();
 
                 //Refresh enums
-                foreach (ReportSource source in result.Sources) source.RefreshEnumsOnDbConnection();
+                if (refreshEnums)
+                {
+                    foreach (ReportSource source in result.Sources) source.RefreshEnumsOnDbConnection();
+                }
             }
             catch (Exception ex)
             {
