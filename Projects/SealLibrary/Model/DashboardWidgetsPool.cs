@@ -96,7 +96,7 @@ namespace Seal.Model
                     var reportStr = File.ReadAllText(reportPath);
                     if (!reportStr.Contains("<WidgetDefinition>")) continue;
 
-                    Report report = Report.LoadFromFile(reportPath, repository);
+                    Report report = Report.LoadFromFile(reportPath, repository, false);
                     if (string.IsNullOrEmpty(report.LoadErrors))
                     {
                         foreach (ReportView view in report.Views) getWidgets(widgets, reports, view, repository);

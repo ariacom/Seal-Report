@@ -645,7 +645,7 @@ namespace Seal.Forms
                 {
                     if (log.IsJobCancelled()) return;
                     count++;
-                    Report report = Report.LoadFromFile(reportPath, repository);
+                    Report report = Report.LoadFromFile(reportPath, repository, false);
                     report.SchedulesWithCurrentUser = useCurrentUser;
                     if (report.Schedules.Count > 0)
                     {
@@ -800,7 +800,7 @@ namespace Seal.Forms
                 {
                     if (log.IsJobCancelled()) return;
 
-                    Report report = Report.LoadFromFile(repository.ReportsFolder + path, repository);
+                    Report report = Report.LoadFromFile(repository.ReportsFolder + path, repository, false);
                     StringBuilder summary = new StringBuilder();
                     foreach (var view in report.GetWidgetViews())
                     {

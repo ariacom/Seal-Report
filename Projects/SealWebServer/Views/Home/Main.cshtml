@@ -56,14 +56,7 @@
                 </div>
                 <div id="file-table-view" style="overflow:auto;">
                     <table id="file-table" class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th style="width:22px;" class="hidden-xs"><input id="selectall-checkbox" type="checkbox" /></th>
-                                <th>@repository.TranslateWeb("Report")</th>
-                                <th id="action-tableheader">@repository.TranslateWeb("Actions")</th>
-                                <th style="width: 170px; min-width:170px;" class="hidden-xs">@repository.TranslateWeb("Last modification")</th>
-                            </tr>
-                        </thead>
+                        <thead id="file-table-head"></thead>
                         <tbody id="file-table-body"></tbody>
                     </table>
                 </div>

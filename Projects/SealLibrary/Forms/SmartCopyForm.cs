@@ -516,7 +516,7 @@ namespace Seal.Forms
                     {
                         try
                         {
-                            Report report = Report.LoadFromFile(fileName, _report.Repository);
+                            Report report = Report.LoadFromFile(fileName, _report.Repository, false);
                             filterTextBox_TextChanged(null, null);
                             reportsListBox.Items.Add(new PropertyItem() { Name = newFileName, Object = report });
                             buildDestinationList();

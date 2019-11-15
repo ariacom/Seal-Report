@@ -133,6 +133,7 @@ class SWIMain {
 
         //Dashboard toggle
         $("#dashboard-toggle").unbind('click').on("click", function (e) {
+            $outputPanel.hide();
             _main.showDashboard($("#main-dashboard").css("display") != "block");
 
             if ($("#main-dashboard").css("display") == "block") {
@@ -507,15 +508,26 @@ class SWIMain {
     }
 
     private buildReportsTable(data: any) {
-        $('#file-table').dataTable().fnDestroy();
-
+        var $tableHead = $("#file-table-head");
         var $tableBody = $("#file-table-body");
+
+        if (!$("#file-table-head").is(':empty')) $('#file-table').dataTable().fnDestroy();
+
+        $tableHead.empty();
         $tableBody.empty();
+
+        var $tr = $("<tr>");
+        $tableHead.append($tr);
+        if (_main._canEdit) $tr.append($("<th style='width:22px;' class='nosort hidden-xs'><input id='selectall-checkbox' type='checkbox'/></th>"));
+        $tr.append($("<th>").text(SWIUtil.tr("Report")));
+        $tr.append($("<th id='action-tableheader' class='nosort'>").text(SWIUtil.tr("Actions")));
+        $tr.append($("<th style='width:170px;min-width:170px;' class='hidden-xs'>").text(SWIUtil.tr("Last modification")));
+
         for (var i = 0; i < data.files.length; i++) {
-            var $tr = $("<tr>");
             var file = data.files[i];
+            $tr = $("<tr>");
             $tableBody.append($tr);
-            $tr.append($("<td>").addClass("hidden-xs").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
+            if (_main._canEdit) $tr.append($("<td class='hidden-xs'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
             $tr.append($("<td>").append($("<a>").addClass("report-name").data("path", file.path).data("isReport", file.isReport).text(file.name)));
             var $td = $("<td>").css("text-align", "center").data("path", file.path);
             $tr.append($td);
@@ -526,15 +538,17 @@ class SWIMain {
             $tr.append($("<td>").css("text-align", "right").addClass("hidden-xs").text(file.last));
         }
 
-        var $cb = $("#selectall-checkbox");
-        $cb.prop("checked", false);
-        $cb.unbind("click").bind("click", function () {
-            $(".report-checkbox").each(function (key, value) {
-                var isChecked = $cb.is(':checked');
-                $(value).prop("checked", isChecked);
+        if (_main._canEdit) {
+            var $cb = $("#selectall-checkbox");
+            $cb.prop("checked", false);
+            $cb.unbind("click").bind("click", function () {
+                $(".report-checkbox").each(function (key, value) {
+                    var isChecked = $cb.is(':checked');
+                    $(value).prop("checked", isChecked);
+                });
+                _main.enableControls();
             });
-            _main.enableControls();
-        });
+        }
 
         $(".report-name").on("click", function (e) {
             $outputPanel.hide();
@@ -623,7 +637,10 @@ class SWIMain {
                 sLengthMenu: SWIUtil.tr("Show _MENU_ reports"),
                 sInfoPostFix: "",
             },
-            aoColumnDefs: [{ "bSortable": false, "aTargets": [0, 2] }]
+            columnDefs: [{
+                targets: 'nosort',
+                orderable: false
+            }]
         });
 
         $(".report-checkbox").on("click", function () {
