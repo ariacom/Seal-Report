@@ -670,7 +670,9 @@ namespace Seal
             if (entry != null) entry.Expanded = _configurationExpanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "widget definition");
             if (entry != null) entry.Expanded = _widgetExpanded;
-            
+            entry = Helper.GetGridEntry(mainPropertyGrid, "custom partial template texts");
+            if (entry != null) entry.Expanded = true;
+
             toolStripHelper.SetHelperButtons(selectedEntity);
             enableControls();
         }

@@ -109,7 +109,7 @@ namespace Seal.Helpers
 
             if (report != null && header == null)
             {
-                if (!string.IsNullOrEmpty(report.CommonScriptsHeader)) result += report.CommonScriptsHeader + "\r\n";
+                if (!string.IsNullOrEmpty(report.CommonScriptsHeader)) result = result + "\r\n" + report.CommonScriptsHeader;
             }
 
             if (configuration != null)

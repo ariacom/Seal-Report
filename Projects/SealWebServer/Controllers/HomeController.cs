@@ -833,6 +833,8 @@ namespace SealWebServer.Controllers
                                 report.InputRestrictions.Add(restriction.OperatorHtmlId, report.PreInputRestrictions[key]);
                                 if (restriction.IsEnumRE)
                                 {
+                                    restriction.SetEnumHtmlIds();
+
                                     //options
                                     key = prefix + "_enum_values";
                                     if (report.PreInputRestrictions.ContainsKey(key))

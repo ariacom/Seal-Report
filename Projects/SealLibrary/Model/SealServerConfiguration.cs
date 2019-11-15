@@ -180,9 +180,9 @@ namespace Seal.Model
         public string ReportCreationScript { get; set; } = null;
 
         /// <summary>
-        /// List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the report.
+        /// List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the reports. To include the script, an @Include("common script name") directive must be inserted at the beginning of the script.
         /// </summary>
-        [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the report."), Id(7, 3)]
+        [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the reports. To include the script, an @Include(\"< script name >\") directive must be inserted at the beginning of the script."), Id(7, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
         public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
@@ -193,16 +193,20 @@ namespace Seal.Model
         public string SetConfigurationCommonScripts(string script)
         {
             var result = script;
-            foreach (var cs in CommonScripts)
+            bool checkResult = true;
+            while (checkResult)
             {
-                var pattern = string.Format("@Include(\"{0}\")", cs.Name);
-                var index = result.IndexOf(pattern);
-                if (index >= 0)
+                checkResult = false;
+                foreach (var cs in CommonScripts)
                 {
-                    //Replace the first pattern and set empty string for the others
-                    var newResult = result.Substring(0, index + pattern.Length).Replace(pattern, cs.Script);
-                    newResult += result.Substring(index + pattern.Length).Replace(pattern, "");
-                    result = newResult;
+                    var pattern = string.Format("@Include(\"{0}\")", cs.Name);
+                    var index = result.IndexOf(pattern);
+                    if (index >= 0)
+                    {
+                        checkResult = true;
+                        result = result.Replace(pattern, "");
+                        result = result + "\r\n" + cs.Script;
+                    }
                 }
             }
             return result;
