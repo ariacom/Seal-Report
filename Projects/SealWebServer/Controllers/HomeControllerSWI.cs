@@ -35,6 +35,9 @@ namespace SealWebServer.Controllers
                     if (!WebUser.IsAuthenticated) throw new Exception(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
                 }
 
+                //Audit
+                Audit.LogAudit(AuditType.Login, WebUser, null, null);
+
                 //Set culture from cookie
                 string culture = GetCookie(SealCultureCookieName);
                 if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
@@ -431,6 +434,10 @@ namespace SealWebServer.Controllers
         public ActionResult SWILogout()
         {
             WriteDebug("SWILogout");
+
+            //Audit
+            Audit.LogAudit(AuditType.Logout, WebUser, null, null);
+
             try
             {
                 if (WebUser != null) WebUser.Logout();

@@ -380,7 +380,7 @@ namespace Seal.Model
                         taskDefinition.Triggers.Add(new DailyTrigger() { StartBoundary = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 0, 0), Enabled = false });
                         string schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory, Repository.SealTaskScheduler);
 #if DEBUG
-                        schedulerPath = Path.Combine(Report.Repository.Configuration.InstallationDirectory + @"\..\..\..\SealTaskScheduler\bin\Debug", Repository.SealTaskScheduler);
+                        schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\x86\Debug", Repository.SealTaskScheduler);
 #endif
                         taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Application.StartupPath));
                         RegisterTaskDefinition(taskDefinition);

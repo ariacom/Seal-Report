@@ -281,11 +281,14 @@ namespace Seal.Model
         /// <summary>
         /// True if the column has cells with navigation links
         /// </summary>
-        public bool HasNavigation(int col)
+        public bool HasNavigation(int sourceRow, int col)
         {
-            for (int row = BodyStartRow; row < BodyEndRow && col < ColumnCount; row++)
+            if (sourceRow == BodyStartRow - 1)
             {
-                if (this[row, col].Links.Count > 0) return true;
+                for (int row = BodyStartRow; row < BodyEndRow && col < ColumnCount; row++)
+                {
+                    if (this[row, col].Links.Count > 0) return true;
+                }
             }
             return false;
         }

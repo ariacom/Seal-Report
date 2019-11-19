@@ -491,7 +491,8 @@ namespace Seal.Model
     {
         Login,
         Logout,
-        ReportSave,
         ReportExecution,
+        ReportDelete,
+        ReportSave,
     }
 }
