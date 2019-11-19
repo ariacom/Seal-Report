@@ -227,6 +227,9 @@ namespace Seal.Model
             if (Report.HasErrors)
             {
                 Report.Cancel = true;
+                //Audit
+                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogAudit(AuditType.ReportExecution, Report.SecurityContext, Report, null);
+                //Log files
                 Report.LogExecution();
             }
             else
@@ -324,6 +327,9 @@ namespace Seal.Model
                 Debug.WriteLine(string.Format("ExecuteThread {0} {1}", Report.Status, Report.ExecutionGUID));
                 Report.ExecutionEndDate = DateTime.Now;
 
+                //Audit
+                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogAudit(AuditType.ReportExecution, Report.SecurityContext, Report, null);
+                //Log files
                 Report.LogExecution();
             }
         }
@@ -1768,6 +1774,10 @@ namespace Seal.Model
                     {
                         Thread.Sleep(100);
                     }
+
+                    //Audit
+                    Audit.LogAudit(AuditType.ReportExecution, report.SecurityContext, report, schedule);
+
                     if (report.HasErrors)
                     {
                         string errorMessage = string.Format("Error: Schedule '{0}' has been executed with errors.\r\nReport '{1}'\r\n{2}\r\n", schedule.Name, report.FilePath, report.ExecutionErrors);
@@ -1804,6 +1814,7 @@ namespace Seal.Model
                     else
                     {
                         Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Schedule '{0}' has been executed\r\nReport '{1}\r\n{2}", schedule.Name, report.FilePath, report.ExecutionMessages);
+
                         if (!string.IsNullOrEmpty(schedule.NotificationEmailTo) && !report.Cancel)
                         {
                             //information email

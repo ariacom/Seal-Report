@@ -167,12 +167,6 @@ namespace Seal.Model
                     _configuration = SealServerConfiguration.LoadFromFile(ConfigurationPath, true);
                     if (_configuration == null) _configuration = new SealServerConfiguration();
                     _configuration.Repository = this;
-                    try
-                    {
-                        //save install directory if necessary
-                        if (string.IsNullOrEmpty(_configuration.InstallationDirectory)) _configuration.SaveToFile();
-                    }
-                    catch { }
                 }
                 return _configuration;
             }

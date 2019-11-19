@@ -56,6 +56,7 @@ namespace Seal.Model
                 GetProperty("CsvSeparator").SetIsBrowsable(!ForPublication);
                 GetProperty("NumericFormat").SetIsBrowsable(!ForPublication);
                 GetProperty("DateTimeFormat").SetIsBrowsable(!ForPublication);
+                GetProperty("AuditScript").SetIsBrowsable(!ForPublication);
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("CommonScripts").SetIsBrowsable(!ForPublication);
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
@@ -164,6 +165,13 @@ namespace Seal.Model
         [Category("Server Settings"), DisplayName("JavaScript Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(11, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string ScriptFiles { get; set; } = null;
+
+        /// <summary>
+        /// If set, the script is executed to log events (login, logut, report execution, etc.). The common implementation is to insert a record into a database table.
+        /// </summary>
+        [Category("Scripts"), DisplayName("Audit Script"), Description("If set, the script is executed to log events (login, logut, report execution, etc.). The common implementation is to insert a record into a database table."), Id(1, 3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string AuditScript { get; set; } = null;
 
         /// <summary>
         /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.

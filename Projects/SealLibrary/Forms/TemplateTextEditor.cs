@@ -414,6 +414,79 @@ namespace Seal.Forms
 }
 ";
 
+        const string razorConfigurationAuditScriptTemplate = @"@using Seal.Model
+@using Seal.Helpers
+@using System.Data
+@using System.Data.Common
+
+@{
+    Audit audit = Model;
+
+    //Sample script to log events into the Audit database, this script may be modified and adapted
+    var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name == ""Audit"");
+    if (auditSource != null) {
+        var helper = new TaskDatabaseHelper();
+        var command = helper.GetDbCommand(auditSource.Connection.GetOpenConnection());
+
+        //Create audit table if necessary
+        checkTableCreation(command);
+        command.CommandText = @""insert into sr_audit(event_date,event_type,user_name,user_groups,report_name,report_path,execution_context,execution_view,execution_duration,execution_error,output_type,output_name,output_information,output_error,schedule_name)
+                                values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"";
+        
+        addParameter(command, DbType.DateTime, DateTime.Now); //event_date,
+        addParameter(command, DbType.AnsiString, audit.Type.ToString()); //event_type,
+        addParameter(command, DbType.AnsiString, audit.User != null ? audit.User.Name : (object) DBNull.Value); //user_name,
+        addParameter(command, DbType.AnsiString, audit.User != null ? audit.User.SecurityGroupsDisplay : (object) DBNull.Value); //user_groups,
+        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionName : (object) DBNull.Value); //report_name,
+        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.FilePath : (object) DBNull.Value); //report_path,
+        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionContext.ToString() : (object) DBNull.Value); //execution_context,
+        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionView.Name : (object) DBNull.Value); //execution_view,
+        addParameter(command, DbType.Int32, audit.Report != null ? Convert.ToInt32(audit.Report.ExecutionFullDuration.TotalSeconds) : (object) DBNull.Value); //execution_duration,
+        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionErrors : (object) DBNull.Value); //execution_error,
+        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.DeviceName : (object) DBNull.Value); //output_type,
+        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Name : (object) DBNull.Value);//output_name,
+        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null && audit.Report.OutputToExecute.Information != null ? audit.Report.OutputToExecute.Information : (object) DBNull.Value);//output_information,
+        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null && audit.Report.OutputToExecute.Error != null ? audit.Report.OutputToExecute.Error : (object) DBNull.Value);//output_error,
+        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Schedule != null ? audit.Schedule.Name : (object) DBNull.Value);//schedule_name
+        command.ExecuteNonQuery();                
+    }
+
+}
+
+@functions {
+    void checkTableCreation(DbCommand command)
+    {
+        if (Audit.CheckTableCreation)
+        {
+            //Check table creation
+            Audit.CheckTableCreation = false;
+            try
+            {
+                command.CommandText = ""select 1 from sr_audit where 1=0"";
+                command.ExecuteNonQuery();
+            }
+            catch
+            {
+                //Create the table (to be adapted for your database type, e.g. ident identity(1,1), execution_error varchar(max) for SQLServer)
+                command.CommandText = @""create table sr_audit (
+                        event_date datetime,event_type varchar(20),event_detail varchar(250),user_name varchar(250),user_groups varchar(250),report_name varchar(250),report_path varchar(250),execution_context varchar(250),execution_view varchar(250),execution_status varchar(50),execution_duration int null,execution_locale varchar(50),execution_error varchar(250),output_type varchar(50),output_name varchar(250),output_information varchar(250),output_error varchar(250),schedule_name varchar(250)
+                    )"";
+                command.ExecuteNonQuery();
+            }
+        }
+    }
+
+    void addParameter(DbCommand command, DbType type, Object value)
+    {
+        var parameter = command.CreateParameter();
+        parameter.DbType = type;
+        parameter.Value = value;
+        if (value is string && ((string)value).Length >= 250) value = ((string)value).Substring(0, 249);
+        command.Parameters.Add(parameter);
+    }
+}
+";
+
 
         const string razorSourceInitScriptTemplate = @"@using Seal.Model
 @using System.Data
@@ -957,6 +1030,13 @@ namespace Seal.Forms
                         template = razorConfigurationReportCreationScriptTemplate;
                         frm.ObjectForCheckSyntax = report;
                         frm.Text = "Edit the script executed when a new report is created";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "AuditScript")
+                    {
+                        template = razorConfigurationAuditScriptTemplate;
+                        frm.ObjectForCheckSyntax = new Audit();
+                        frm.Text = "Edit the script executed when a an audit event occurs";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }
