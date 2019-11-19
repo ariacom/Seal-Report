@@ -49,11 +49,10 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 
 ## System Requirements
 **For use:**
-* Windows 7, 2008, Windows 8, 2012, Windows 10 or later
+* Windows 7, 2008, Windows 8, 2012, Windows 10 or greater
 * .Net Framework 4.5
 * Database OLE DB or ODBC Drivers
 * For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater
-* For the Task Scheduler: Windows 7, 2008, 8, 10 or 2012 or later
 
 **For development:**
 * Visual Studio 2017
