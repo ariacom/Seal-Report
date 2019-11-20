@@ -23,13 +23,17 @@ namespace SealWebServer.Controllers
             WriteDebug("SWILogin");
             try
             {
-                if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user))
+                // We extract the token from the header and clean it
+                string AuthorizationHeader = (Request.ServerVariables.Get("HTTP_AUTHORIZATION") != null ? (Request.ServerVariables.Get("HTTP_AUTHORIZATION").Contains("Bearer") ? Request.ServerVariables.Get("HTTP_AUTHORIZATION").Replace("Bearer ", "") : null) : null);
+
+                if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user) || (!string.IsNullOrEmpty(AuthorizationHeader) && WebUser.WebAuthorizationHeader != AuthorizationHeader))
                 {
                     CreateRepository();
                     CreateWebUser(true);
                     WebUser.WebPrincipal = User;
                     WebUser.WebUserName = user;
                     WebUser.WebPassword = password;
+                    WebUser.WebAuthorizationHeader = AuthorizationHeader;
                     Authenticate();
 
                     if (!WebUser.IsAuthenticated) throw new Exception(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
