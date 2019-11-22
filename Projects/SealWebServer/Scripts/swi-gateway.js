@@ -36,7 +36,7 @@ var SWIGateway = /** @class */ (function () {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.Login = function (user, password, callback, errorcb) {
-        $.post(_server + "SWILogin", {
+        $.post(_server + "SWILoginWeb", {
             user: user, password: password
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
@@ -341,3 +341,4 @@ var SWIGateway = /** @class */ (function () {
     };
     return SWIGateway;
 }());
+//# sourceMappingURL=swi-gateway.js.map
