@@ -19,9 +19,8 @@ namespace Seal.Model
         /// Sample
         /// </summary>
         public const string RazorTemplate = @"@using Seal.Model
-
+//Before execution, this code will be added at the end of all scripts executed...
 @functions {
-    //Before execution, this script will be added at the end of all scripts executed...
     public void SetNegativeValuesInRed(Report report) {
         report.LogMessage(""SetNegativeValuesInRed"");
         foreach (var model in report.Models) 
