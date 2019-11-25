@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>f519ae4f-e032-4ada-9e2f-c89fd61abab3</GUID>
+  <Sources>
+    <ReportSource>
+      <GUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</GUID>
+      <Name>Northwind (Repository)</Name>
+      <Connections />
+      <ConnectionGUID>1</ConnectionGUID>
+      <InitScript />
+      <TasksScript />
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>509563f6-f3fd-4dcf-9be8-8e53e5c92496</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+            <MustRefresh>false</MustRefresh>
+            <Columns />
+          </MetaTable>
+        </Tables>
+        <Joins />
+        <Enums />
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>6c0f99ec-acaf-4e1c-ab7c-1c57af205a1a</GUID>
+      <Name>model</Name>
+      <SourceGUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</SourceGUID>
+      <IgnorePrePostError>false</IgnorePrePostError>
+      <ForceJoinTableGUID />
+      <AvoidJoinTableGUID />
+      <Elements />
+      <Restriction />
+      <Restrictions />
+      <AggregateRestriction />
+      <AggregateRestrictions />
+    </ReportModel>
+  </Models>
+  <Outputs />
+  <Tasks>
+    <ReportTask>
+      <GUID>27bcb127-6bb1-431a-a9aa-f8ff5d319473</GUID>
+      <Name>Refresh enumerated lists</Name>
+      <CancelReport>false</CancelReport>
+      <DbInfoMessage>
+        <Capacity>16</Capacity>
+        <Length>0</Length>
+      </DbInfoMessage>
+      <SourceGUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</SourceGUID>
+      <Script>@using Seal.Model
+@using Seal.Helpers
+@{
+	//Refresh Data Sources enumerated lists
+	//Useful to schedule this task (for example once a day) if your enumerated values have changed.. 
+	ReportTask task = Model;
+	var helper = new TaskHelper(task);
+	helper.RefreshRepositoryEnums("Northwind"/* optional data source name*/);
+}</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <TasksScript />
+  <Views>
+    <ReportView>
+      <GUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</GUID>
+      <Name>view</Name>
+      <Views />
+      <ModelGUID />
+      <TemplateName>Report</TemplateName>
+      <PartialTemplates />
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <CultureName />
+      <SortOrder>0</SortOrder>
+      <WebExec>true</WebExec>
+      <PdfConfigurations />
+      <ExcelConfigurations />
+    </ReportView>
+  </Views>
+  <DisplayName />
+  <InitScript />
+  <ViewGUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</ViewGUID>
+  <Schedules>
+    <ReportSchedule>
+      <GUID>fc056480-31c1-41bc-afc0-2baefecc1024</GUID>
+      <Name>schedule for Tasks</Name>
+      <OutputGUID />
+      <ErrorEmailSendMode>All</ErrorEmailSendMode>
+    </ReportSchedule>
+  </Schedules>
+</Report>

@@ -1066,19 +1066,19 @@ namespace Seal.Model
             //Get common restrictions
             try
             {
-                var sqlToParse = "";
-                if (!string.IsNullOrEmpty(Restriction)) sqlToParse += "\r\n" + Restriction;
-                if (!string.IsNullOrEmpty(AggregateRestriction)) sqlToParse += "\r\n" + AggregateRestriction;
-                if (!string.IsNullOrEmpty(SqlSelect)) sqlToParse += "\r\n" + SqlSelect;
-                if (!string.IsNullOrEmpty(SqlFrom)) sqlToParse += "\r\n" + SqlFrom;
-                if (!string.IsNullOrEmpty(SqlGroupBy)) sqlToParse += "\r\n" + SqlGroupBy;
-                if (!string.IsNullOrEmpty(SqlOrderBy)) sqlToParse += "\r\n" + SqlOrderBy;
-                if (!string.IsNullOrEmpty(SqlCTE)) sqlToParse += "\r\n" + SqlCTE;
+                var sqlToParse = new StringBuilder("\r\n");
+                if (!string.IsNullOrEmpty(Restriction)) sqlToParse.AppendLine(Restriction);
+                if (!string.IsNullOrEmpty(AggregateRestriction)) sqlToParse.AppendLine(AggregateRestriction);
+                if (!string.IsNullOrEmpty(SqlSelect)) sqlToParse.AppendLine(SqlSelect);
+                if (!string.IsNullOrEmpty(SqlFrom)) sqlToParse.AppendLine(SqlFrom);
+                if (!string.IsNullOrEmpty(SqlGroupBy)) sqlToParse.AppendLine(SqlGroupBy);
+                if (!string.IsNullOrEmpty(SqlOrderBy)) sqlToParse.AppendLine(SqlOrderBy);
+                if (!string.IsNullOrEmpty(SqlCTE)) sqlToParse.AppendLine(SqlCTE);
 
-                if (!string.IsNullOrEmpty(Source.PreSQL)) sqlToParse += "\r\n" + Source.PreSQL;
-                if (!string.IsNullOrEmpty(Source.PostSQL)) sqlToParse += "\r\n" + Source.PostSQL;
-                if (!string.IsNullOrEmpty(PreSQL)) sqlToParse += "\r\n" + PreSQL;
-                if (!string.IsNullOrEmpty(PostSQL)) sqlToParse += "\r\n" + PostSQL;
+                if (!string.IsNullOrEmpty(Source.PreSQL)) sqlToParse.AppendLine(Source.PreSQL);
+                if (!string.IsNullOrEmpty(Source.PostSQL)) sqlToParse.AppendLine(Source.PostSQL);
+                if (!string.IsNullOrEmpty(PreSQL)) sqlToParse.AppendLine(PreSQL);
+                if (!string.IsNullOrEmpty(PostSQL)) sqlToParse.AppendLine(PostSQL);
 
                 //Keywords in tables
                 var fromTables = new List<MetaTable>();
@@ -1086,26 +1086,31 @@ namespace Seal.Model
                 {
                     MetaTable table = element.MetaColumn.MetaTable;
                     if (table != null && !fromTables.Contains(table)) fromTables.Add(table);
+                    //Add column SQL
+                    sqlToParse.AppendLine(element.SQLColumn);
                 }
                 foreach (ReportRestriction restriction in Restrictions.Union(AggregateRestrictions))
                 {
                     MetaTable table = restriction.MetaColumn.MetaTable;
                     if (table != null && !fromTables.Contains(table)) fromTables.Add(table);
+                    //Add column SQL
+                    sqlToParse.AppendLine(restriction.SQLColumn);
                 }
 
                 if (IsSQLModel) fromTables.Add(Table);
 
                 foreach (var table in fromTables)
                 {
-                    if (!string.IsNullOrEmpty(table.Name)) sqlToParse += "\r\n" + table.Name;
-                    if (!string.IsNullOrEmpty(table.PreSQL)) sqlToParse += "\r\n" + table.PreSQL;
-                    if (!string.IsNullOrEmpty(table.PostSQL)) sqlToParse += "\r\n" + table.PostSQL;
-                    if (!string.IsNullOrEmpty(table.Sql)) sqlToParse += "\r\n" + table.Sql;
-                    if (!string.IsNullOrEmpty(table.WhereSQL)) sqlToParse += "\r\n" + table.WhereSQL;
+                    if (!string.IsNullOrEmpty(table.Name)) sqlToParse.AppendLine(table.Name);
+                    if (!string.IsNullOrEmpty(table.PreSQL)) sqlToParse.AppendLine(table.PreSQL);
+                    if (!string.IsNullOrEmpty(table.PostSQL)) sqlToParse.AppendLine(table.PostSQL);
+                    if (!string.IsNullOrEmpty(table.Sql)) sqlToParse.AppendLine(table.Sql);
+                    if (!string.IsNullOrEmpty(table.WhereSQL)) sqlToParse.AppendLine(table.WhereSQL);
                 }
 
-                var names = Helper.GetSQLKeywordNames(sqlToParse, Repository.CommonRestrictionKeyword);
-                var valueNames = Helper.GetSQLKeywordNames(sqlToParse, Repository.CommonValueKeyword);
+                var finalSql = sqlToParse.ToString();
+                var names = Helper.GetSQLKeywordNames(finalSql, Repository.CommonRestrictionKeyword);
+                var valueNames = Helper.GetSQLKeywordNames(finalSql, Repository.CommonValueKeyword);
                 names.AddRange(valueNames);
                 foreach (var restrictionName in names)
                 {
@@ -1131,7 +1136,7 @@ namespace Seal.Model
                 }
 
                 //clean restrictions not used
-                CommonRestrictions.RemoveAll(i => !sqlToParse.Contains(Repository.CommonRestrictionKeyword + i.Name + "}") && !sqlToParse.Contains(Repository.CommonValueKeyword + i.Name + "}"));
+                CommonRestrictions.RemoveAll(i => !finalSql.Contains(Repository.CommonRestrictionKeyword + i.Name + "}") && !finalSql.Contains(Repository.CommonValueKeyword + i.Name + "}"));
 
                 //Set references
                 foreach (var restriction in CommonRestrictions)

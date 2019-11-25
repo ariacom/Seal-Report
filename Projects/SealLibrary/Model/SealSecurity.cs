@@ -189,7 +189,7 @@ namespace Seal.Model
         public bool ShouldSerializeGroups() { return Groups.Count > 0; }
 
         /// <summary>
-        /// Returns a SecurityFolder form a given name
+        /// Returns a SecurityFolder from a given name
         /// </summary>
         public SecurityFolder FindSecurityFolder(List<SecurityGroup> groups, string folder)
         {

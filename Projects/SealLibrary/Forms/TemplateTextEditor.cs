@@ -190,7 +190,7 @@ namespace Seal.Forms
     //File download: this requires an implementation in the 'Navigation Script' of the model
     if (!string.IsNullOrEmpty(cell.DisplayValue)) {
         cell.AddNavigationFileDownload(""Download "" + cell.DisplayValue);
-        //A tag value can be set to identify the lin in the 'Navigation Script'
+        //An optional tag value (second parameter) can be set to identify the link in the 'Navigation Script', here we set ""2"" in NavigationLink.Tag
         cell.AddNavigationFileDownload(""Download 2 "" + cell.DisplayValue, ""2"");
     }
 "
@@ -339,15 +339,17 @@ namespace Seal.Forms
     ReportModel model = cell.ContextModel;
 
     //Script executed for a cell navigation...
+    
+    //link.ScriptResult must contain the final file path to be downloaded
 
-    //Sample to return a file from a disk path
-
-    //We assume here that path is in the first column of the model
+    //Sample 1 to return a file from a disk path
+    //We assume here that path is in the first column of the model (the column can be hidden using 'Options: Columns to hide' in the Data Table View)
     link.ScriptResult = link.Cell.ContextCurrentLine[0].Value.ToString();
     //Or in the link tag set in the Cell Script
     link.ScriptResult = link.Tag;
 
-    //Sample to return a file contained in a blob (to be adapted)
+
+    //Sample 2 to return a file contained in a blob (to be adapted)
     var helper = new TaskDatabaseHelper();
     var command = helper.GetDbCommand(model.Connection.GetOpenConnection());
 
@@ -423,7 +425,7 @@ namespace Seal.Forms
     Audit audit = Model;
 
     //Sample script to log events into the Audit database, this script may be modified and adapted
-    var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name == ""Audit"");
+    var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith(""Audit""));
     if (auditSource != null) {
         var helper = new TaskDatabaseHelper();
         var command = helper.GetDbCommand(auditSource.Connection.GetOpenConnection());
@@ -433,7 +435,9 @@ namespace Seal.Forms
         command.CommandText = @""insert into sr_audit(event_date,event_type,user_name,user_groups,report_name,report_path,execution_context,execution_view,execution_duration,execution_error,output_type,output_name,output_information,output_error,schedule_name)
                                 values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"";
         
-        addParameter(command, DbType.DateTime, DateTime.Now); //event_date,
+        var date = DateTime.Now;
+        date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+        addParameter(command, DbType.DateTime, date); //event_date,
         addParameter(command, DbType.AnsiString, audit.Type.ToString()); //event_type,
         addParameter(command, DbType.AnsiString, audit.User != null ? audit.User.Name : (object) DBNull.Value); //user_name,
         addParameter(command, DbType.AnsiString, audit.User != null ? audit.User.SecurityGroupsDisplay : (object) DBNull.Value); //user_groups,
@@ -467,7 +471,7 @@ namespace Seal.Forms
             }
             catch
             {
-                //Create the table (to be adapted for your database type, e.g. ident identity(1,1), execution_error varchar(max) for SQLServer)
+                //Create the table (to be adapted for your database type, e.g. ident identity(1,1), datetime2, execution_error varchar(max) for SQLServer)
                 command.CommandText = @""create table sr_audit (
                         event_date datetime,event_type varchar(20),event_detail varchar(250),user_name varchar(250),user_groups varchar(250),report_name varchar(250),report_path varchar(250),execution_context varchar(250),execution_view varchar(250),execution_status varchar(50),execution_duration int null,execution_locale varchar(50),execution_error varchar(250),output_type varchar(50),output_name varchar(250),output_information varchar(250),output_error varchar(250),schedule_name varchar(250)
                     )"";

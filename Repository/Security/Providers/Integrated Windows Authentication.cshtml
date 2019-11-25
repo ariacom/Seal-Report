@@ -19,7 +19,7 @@
     {
         user.Name = user.WebPrincipal.Identity.Name;
         user.WebUserName = user.WebPrincipal.Identity.Name;
-		//user.PersonalFolderName -> may be set to defined the personal folder name
+		//user.PersonalFolderName -> may be set to define the personal folder name
 		if (user.Security.GetBoolValue(""add_windows_groups""))
 		{
 			user.AddWindowsGroupToSecurityGroup(user.Security.GetBoolValue(""windows_groups_skip_domain""), user.Security.GetValue(""windows_groups_ad_context""));
@@ -33,6 +33,9 @@
 		{
 			user.Error = ""The user is authenticated but he does not belong to any security group."";        
 		}
+		
+		//if not null, user.UserPrincipal contains all information got from the Active Directory (System.DirectoryServices.AccountManagement.UserPrincipal)
+		//var ADName = user.UserPrincipal.Name; 
 
         //User default culture, theme and logo can be also overwritten with
         //user.SetDefaultCulture(group.Culture);

@@ -13,7 +13,7 @@ using System.Xml.Linq;
 using System.ServiceModel.Syndication;
 using System.Windows.Forms;
 using Seal.Model;
-using RazorEngine.Configuration;
+using System.DirectoryServices.AccountManagement;
 
 namespace Seal.Helpers
 {
@@ -27,20 +27,26 @@ namespace Seal.Helpers
         static SyndicationFeed dummy5 = null;
         static XDocument dummy6 = null;
         static Control dummy7 = null;
+        static PrincipalContext dummy8 = null;
 
         static bool _loadDone = false;
         static public void LoadRazorAssemblies()
         {
             if (!_loadDone)
             {
-                //Force the load of the assemblies
-                if (dummy == null) dummy = new HtmlString("");
-                if (dummy2 == null) dummy2 = new DataTable();
-                if (dummy3 == null) dummy3 = new OleDbConnection();
-                if (dummy4 == null) dummy4 = new LdapConnection("");
-                if (dummy5 == null) dummy5 = new SyndicationFeed();
-                if (dummy6 == null) dummy6 = new XDocument();
-                if (dummy7 == null) dummy7 = new Control();
+                try
+                {
+                    //Force the load of the assemblies
+                    if (dummy == null) dummy = new HtmlString("");
+                    if (dummy2 == null) dummy2 = new DataTable();
+                    if (dummy3 == null) dummy3 = new OleDbConnection();
+                    if (dummy4 == null) dummy4 = new LdapConnection("");
+                    if (dummy5 == null) dummy5 = new SyndicationFeed();
+                    if (dummy6 == null) dummy6 = new XDocument();
+                    if (dummy7 == null) dummy7 = new Control();
+                    if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
+                }
+                catch { }
                 _loadDone = true;
             }
         }
