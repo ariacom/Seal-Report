@@ -47,6 +47,7 @@ namespace Seal.Model
                 GetProperty("EnumGUIDRE").SetIsBrowsable(true);
                 GetProperty("ChangeOperator").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
+                GetProperty("SortOrderRe").SetIsBrowsable(true);
 
                 //Conditional
                 if (IsEnum)
@@ -147,7 +148,7 @@ namespace Seal.Model
         /// </summary>
         public static ReportRestriction CreateReportRestriction()
         {
-            return new ReportRestriction() { GUID = Guid.NewGuid().ToString(), _type = ColumnType.Default, _numericStandardFormat = NumericStandardFormat.Default, _datetimeStandardFormat = DateTimeStandardFormat.Default };
+            return new ReportRestriction() { GUID = Guid.NewGuid().ToString(), _type = ColumnType.Default, _numericStandardFormat = NumericStandardFormat.Default, _datetimeStandardFormat = DateTimeStandardFormat.Default, SortOrder="1" };
         }
 
         /// <summary>
@@ -286,6 +287,23 @@ namespace Seal.Model
         {
             get { return _enumGUID; }
             set { _enumGUID = value; }
+        }
+
+        /// <summary>
+        /// Sort order used for the display of the prompted restrictions when the report is executed.
+        /// </summary>
+        [DefaultValue("1")]
+        [Category("Advanced"), DisplayName("Display Order"), Description("Order used for the display of the prompted restrictions when the report is executed."), Id(9, 3)]
+        public string SortOrderRe
+        {
+            get
+            {
+                return SortOrder;
+            }
+            set
+            {
+                SortOrder = value;
+            }
         }
 
         Operator _operator = Operator.Equal;
@@ -647,7 +665,7 @@ namespace Seal.Model
         {
             get
             {
-               if (IsDateTime) return FinalDate1;
+                if (IsDateTime) return FinalDate1;
                 return null;
             }
         }

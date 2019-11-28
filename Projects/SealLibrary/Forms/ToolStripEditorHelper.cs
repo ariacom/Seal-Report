@@ -93,7 +93,7 @@ namespace Seal.Forms
             {
                 if (((ReportView)SelectedEntity).UseCustomTemplate) AddHelperButton("Edit Custom Template", "Edit the custom template texts", Keys.F8);
             }
-            else if (SelectedEntity is ViewFolder)
+            else if (SelectedEntity is Report)
             {
                 AddHelperButton("Edit Report Input Values", "Edit the Report Input Values", Keys.F8);
             }
@@ -278,7 +278,7 @@ namespace Seal.Forms
                     {
                         if (key == Keys.F8) EditProperty("Custom template");
                     }
-                    else if (SelectedEntity is ViewFolder)
+                    else if (SelectedEntity is Report)
                     {
                         if (key == Keys.F8) EditProperty("Report Input Values");
                     }

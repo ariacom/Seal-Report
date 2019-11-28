@@ -23,10 +23,12 @@ namespace Seal.Forms
         int GetSort();
     }
 
-    public class SourceFolder : ITreeSort { public int GetSort() { return 0; } }
-    public class ModelFolder : ITreeSort { public int GetSort() { return 2; } }
-    public class OutputFolder : ITreeSort { public int GetSort() { return 4; } }
-    public class ScheduleFolder : ITreeSort { public int GetSort() { return 5; } }
+    public class SourceFolder : ITreeSort { public int GetSort() { return 1; } }
+    public class TasksFolder : ITreeSort { public int GetSort() { return 2; } }
+    public class ModelFolder : ITreeSort { public int GetSort() { return 3; } }
+    public class ViewFolder : ITreeSort { public int GetSort() { return 4; } }
+    public class OutputFolder : ITreeSort { public int GetSort() { return 5; } }
+    public class ScheduleFolder : ITreeSort { public int GetSort() { return 6; } }
 
     public class ConnectionFolder : ITreeSort { public int GetSort() { return 0; } }
     public class TableFolder : ITreeSort { public int GetSort() { return 1; } }
@@ -867,10 +869,10 @@ namespace Seal.Forms
                 var entity = selectedEntity as ReportView;
                 if (e.OldValue != null && !entity.Report.Models.Exists(i => i.GUID == newValue)) entity.ModelGUID = e.OldValue.ToString();
             }
-            else if (selectedEntity is ViewFolder && propertyName == "ViewGUID")
+            else if (selectedEntity is Report && propertyName == "ViewGUID")
             {
-                var entity = selectedEntity as ViewFolder;
-                if (e.OldValue != null && !entity.Report.Views.Exists(i => i.GUID == newValue)) entity.ViewGUID = e.OldValue.ToString();
+                var entity = selectedEntity as Report;
+                if (e.OldValue != null && !entity.Views.Exists(i => i.GUID == newValue)) entity.ViewGUID = e.OldValue.ToString();
             }
             else if (selectedEntity is ReportOutput && propertyName == "ViewGUID")
             {

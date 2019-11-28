@@ -344,7 +344,9 @@ namespace Seal.Forms
 
     //Sample 1 to return a file from a disk path
     //We assume here that path is in the first column of the model (the column can be hidden using 'Options: Columns to hide' in the Data Table View)
-    link.ScriptResult = link.Cell.ContextCurrentLine[0].Value.ToString();
+    var pathCell = link.Cell.ContextCurrentLine[0];
+    //pathCell = link.Cell.ContextCurrentLine.FirstOrDefault(i => i.Element.ColumnName.StartsWith(""col_name""));
+    link.ScriptResult = pathCell.Value.ToString();
     //Or in the link tag set in the Cell Script
     link.ScriptResult = link.Tag;
 
@@ -354,7 +356,9 @@ namespace Seal.Forms
     var command = helper.GetDbCommand(model.Connection.GetOpenConnection());
 
     //We assume here that the id is in the first column of the model
-    var blobId = link.Cell.ContextCurrentLine[0].Value;
+    var blobIdCell = link.Cell.ContextCurrentLine[0];
+    //blobIdCell = link.Cell.ContextCurrentLine.FirstOrDefault(i => i.Element.ColumnName.StartsWith(""col_name""));
+    var blobId = blobIdCell.Value;
     command.CommandText = string.Format(""select blob_value from blob_table where blob_id = {0}"", blobId);
     using (var reader = command.ExecuteReader())
     {
@@ -858,12 +862,12 @@ namespace Seal.Forms
                     converter.ConfigureTemplateEditor(frm, context.PropertyDescriptor.Name, ref template, ref language);
                     ScintillaHelper.Init(frm.textBox, language);
                 }
-                else if (context.Instance is ViewFolder)
+                else if (context.Instance is Report)
                 {
                     if (context.PropertyDescriptor.Name == "DisplayName")
                     {
                         template = displayNameTemplate;
-                        frm.ObjectForCheckSyntax = ((ReportComponent)context.Instance).Report;
+                        frm.ObjectForCheckSyntax = (Report)context.Instance;
                         frm.Text = "Edit display name script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
