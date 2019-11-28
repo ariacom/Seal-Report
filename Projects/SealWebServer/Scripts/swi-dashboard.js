@@ -72,8 +72,10 @@ var SWIDashboard = /** @class */ (function () {
         });
     };
     SWIDashboard.prototype.enableControls = function () {
+        var addWidget = $("#dashboard-add-widget");
+        SWIUtil.ShowHideControl(addWidget, _da._dashboard && _da._dashboard.Editable);
         var spinnerHidden = !$(".spinner-menu").is(":visible");
-        SWIUtil.ShowHideControl($("#dashboard-add-widget"), _da._dashboard && _da._dashboard.Editable && spinnerHidden);
+        SWIUtil.EnableButton(addWidget, _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
     };
     SWIDashboard.prototype.handleDashboardResult = function (data) {

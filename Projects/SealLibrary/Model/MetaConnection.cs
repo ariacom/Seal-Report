@@ -50,23 +50,25 @@ namespace Seal.Model
                 else GetProperty("ConnectionString2").SetIsBrowsable(true);
                 GetProperty("UserName").SetIsBrowsable(true);
                 if (IsEditable) GetProperty("ClearPassword").SetIsBrowsable(true);
-                
+
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("HelperCheckConnection").SetIsBrowsable(true);
-                if (IsEditable) GetProperty("HelperCreateFromExcelAccess").SetIsBrowsable(true);
-
+                if (IsEditable && !Environment.Is64BitProcess)
+                {
+                    GetProperty("HelperCreateFromExcelAccess").SetIsBrowsable(true);
+                    GetProperty("HelperCreateFromExcelAccess").SetIsReadOnly(true);
+                }
                 GetProperty("Information").SetIsReadOnly(true);
                 GetProperty("Error").SetIsReadOnly(true);
                 GetProperty("HelperCheckConnection").SetIsReadOnly(true);
-                if (IsEditable) GetProperty("HelperCreateFromExcelAccess").SetIsReadOnly(true);
 
                 GetProperty("DateTimeFormat").SetIsReadOnly(!IsEditable || DatabaseType == DatabaseType.MSAccess || DatabaseType == DatabaseType.MSExcel);
 
                 TypeDescriptor.Refresh(this);
             }
         }
-        #endregion
+#endregion
 
         /// <summary>
         /// Create a basic connection into a source
@@ -128,9 +130,10 @@ namespace Seal.Model
         [Browsable(false)]
         public string FullConnectionString
         {
-            get {
+            get
+            {
                 string result = Helper.GetOleDbConnectionString(ConnectionString, UserName, ClearPassword);
-                return Source.Repository.ReplaceRepositoryKeyword(result); 
+                return Source.Repository.ReplaceRepositoryKeyword(result);
             }
         }
 
@@ -167,7 +170,8 @@ namespace Seal.Model
         [XmlIgnore]
         public string ClearPassword
         {
-            get {
+            get
+            {
                 try
                 {
                     return CryptoHelper.DecryptTripleDES(Password, PasswordKey);
@@ -179,12 +183,13 @@ namespace Seal.Model
                     return Password;
                 }
             }
-            set {
+            set
+            {
                 try
                 {
                     Password = CryptoHelper.EncryptTripleDES(value, PasswordKey);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Error = "Error during password encryption:" + ex.Message;
                     TypeDescriptor.Refresh(this);
@@ -261,7 +266,7 @@ namespace Seal.Model
             Cursor.Current = Cursors.Default;
         }
 
-        #region Helpers
+#region Helpers
         /// <summary>
         /// Editor Helper: Check the database connection
         /// </summary>
@@ -296,6 +301,6 @@ namespace Seal.Model
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
         public string Error { get; set; }
 
-        #endregion
+#endregion
     }
 }
