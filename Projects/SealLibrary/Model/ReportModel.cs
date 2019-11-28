@@ -867,7 +867,7 @@ namespace Seal.Model
             get
             {
                 List<ReportRestriction> result = new List<ReportRestriction>();
-                foreach (ReportRestriction restriction in Restrictions.OrderBy(i => i.SortOrder))
+                foreach (ReportRestriction restriction in Restrictions.OrderBy(i => i.DisplayOrder))
                 {
                     ReportRestriction newRestriction = restriction;
                     if (Report.ForOutput && Report.OutputToExecute.UseCustomRestrictions)

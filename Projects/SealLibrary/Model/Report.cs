@@ -1746,7 +1746,7 @@ namespace Seal.Model
 
                     int index = 0;
                     _executionCommonRestrictions = new List<ReportRestriction>();
-                    foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None).OrderBy(i => i.SortOrder))
+                    foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None).OrderBy(i => i.DisplayOrder))
                     {
                         if (
                             restriction.IsInputValue ||
