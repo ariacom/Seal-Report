@@ -1,0 +1,36 @@
+﻿@using Seal.Model;
+@{
+    SecurityProvider provider = Model;
+
+    //Parameters for this provider
+    provider.Parameters.Add(new SecurityParameter() { Name = "token_key", DisplayName = "Token Key", Description = "The token key that allows validation" });
+	
+    provider.Script = @"@using Seal.Model;
+@using Jose;
+@using Newtonsoft.Json.Linq;
+@using System.Text;
+@{
+	// The jose-jwt.dll and Newtonsoft.Json.dll libraries are needed in the Repository\Assemblies directory
+	
+    SecurityUser user = Model;
+	// Decoding and validating the token received with the key
+    string json = Jose.JWT.Decode(user.WebAuthorizationHeader, Encoding.ASCII.GetBytes(user.Security.GetValue(""token_key"")));
+    JObject rss = JObject.Parse(json);
+    
+	// Obtaining the current unix time to validate the token expiration
+    DateTime foo = DateTime.UtcNow;
+    long unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
+	
+    // Validating the token expiration
+    if(unixTime > (long)rss[""exp""]){
+        user.Error = ""Token Expired"";
+    }else{
+		// Inserting data from the token payload
+        user.Name = (string)rss[""username""];
+		string securityGroup = (string)rss[""securityGroup""];
+        user.AddSecurityGroup(securityGroup);
+		string culture = (string)rss[""culture""];
+        user.SetDefaultCulture(culture);
+    }
+}";
+}
