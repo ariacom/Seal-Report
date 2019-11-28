@@ -185,6 +185,7 @@ namespace Seal
             }
         }
 
+        private TreeNode _reportTN;
         private TreeNode _sourceTN;
         private TreeNode _viewTN;
         private TreeNode _tasksTN;
@@ -205,6 +206,10 @@ namespace Seal
                 mainSplitContainer.Visible = true;
 
                 mainTreeView.Nodes.Clear();
+
+                _reportTN = new TreeNode("General") { Tag = Report, ImageIndex = 16, SelectedImageIndex = 16 };
+                mainTreeView.Nodes.Add(_reportTN);
+
                 _sourceTN = new TreeNode("Sources") { Tag = new SourceFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
                 mainTreeView.Nodes.Add(_sourceTN);
                 foreach (var source in _report.Sources)
@@ -223,7 +228,7 @@ namespace Seal
                 }
                 modelTN.Expand();
 
-                _viewTN = new TreeNode("Views") { Tag = new ViewFolder() { Report = Report }, ImageIndex = 8, SelectedImageIndex = 8 };
+                _viewTN = new TreeNode("Views") { Tag = new ViewFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
                 mainTreeView.Nodes.Add(_viewTN);
                 foreach (ReportView view in _report.Views)
                 {
@@ -234,7 +239,7 @@ namespace Seal
                 }
                 _viewTN.ExpandAll();
 
-                _tasksTN = new TreeNode("Tasks") { Tag = new TasksFolder() { Report = Report }, ImageIndex = 2, SelectedImageIndex = 2 };
+                _tasksTN = new TreeNode("Tasks") { Tag = new TasksFolder(), ImageIndex = 2, SelectedImageIndex = 2 };
                 mainTreeView.Nodes.Add(_tasksTN);
                 foreach (var task in _report.Tasks)
                 {
@@ -648,6 +653,13 @@ namespace Seal
                 modelPanel.Model = (ReportModel)selectedEntity;
                 modelPanel.Init(this);
             }
+            else if (selectedEntity is Report)
+            {
+                Report entity = (Report)selectedEntity;
+                mainPropertyGrid.Visible = true;
+                entity.InitEditor();
+                mainPropertyGrid.SelectedObject = selectedEntity;
+            }
             else if (selectedEntity is RootComponent)
             {
                 RootComponent entity = (RootComponent)selectedEntity;
@@ -817,129 +829,137 @@ namespace Seal
 
         private void treeContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            object entity = mainTreeView.SelectedNode.Tag;
-            treeContextMenuStrip.Items.Clear();
-            if (entity is SourceFolder)
+            try
             {
-                addAddItem("Add Data Source", null);
-                addAddItem("Add No SQL Data Source", null);
-                foreach (var source in _repository.Sources)
-                {
-                    addAddItem(string.Format("Add {0} (Repository)", source.Name), source);
-                }
-                addRemoveItem("Remove Data Sources...");
-            }
-            else if (entity is ViewFolder)
-            {
-                if (RepositoryServer.ViewTemplates.Exists(i => i.Name == ReportViewTemplate.ModelName))
-                {
-                    addAddItem("Add a View", null);
-                }
-                addRemoveItem("Remove Views...");
-            }
-            else if (entity is ReportView)
-            {
-                var currentTemplateName = ((ReportView)entity).TemplateName;
-                foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(currentTemplateName)))
-                {
-                    addAddItem("Add a " + template.Name + " View", template, template.Description);
-                }
-                addRemoveItem("Remove Views...");
-                addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                addSmartCopyItem("Smart copy...", entity);
-                if (mainTreeView.SelectedNode.Parent.Tag is ViewFolder) addExecuteRenderContextItem(((RootComponent)entity).Name);
-            }
-            else if (entity is TasksFolder)
-            {
-                addAddItem("Add a Task", null);
-                addRemoveItem("Remove Tasks...");
-            }
-            else if (entity is OutputFolder)
-            {
-                foreach (var device in _repository.Devices)
-                {
-                    addAddItem("Add Output for " + device.FullName, device);
-                }
-                addRemoveItem("Remove Outputs...");
-            }
-            else if (entity is ScheduleFolder)
-            {
-                foreach (var output in _report.Outputs.OrderBy(i => i.Name))
-                {
-                    addAddItem("Add Schedule for " + Helper.QuoteSingle(output.Name), output);
-                }
-                if (_report.Tasks.Count > 0)
-                {
-                    if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
-                    addAddItem("Add Schedule for the Report Tasks", null);
-                }
+                Cursor.Current = Cursors.WaitCursor;
 
-                addRemoveItem("Remove Schedules...");
-            }
-            else if (entity is ModelFolder)
-            {
-                addAddItem("Add a MetaData Model", 1);
-                addAddItem("Add a SQL Model", 2);
-                addRemoveItem("Remove Models...");
-            }
-            else if (entity is ReportModel)
-            {
-                var reportModel = entity as ReportModel;
-                addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                addSmartCopyItem("Smart copy...", entity);
-
-                ToolStripMenuItem ts = new ToolStripMenuItem();
-                ts.Click += new System.EventHandler(convertModel);
-                ts.Text = reportModel.IsSQLModel ? "Convert SQL Model to a MetaData Model" : "Convert MetaData Model to a SQL Model";
-                if (!reportModel.IsSQLModel || (reportModel.IsSQLModel && !string.IsNullOrEmpty(reportModel.Table.Sql)))
+                object entity = mainTreeView.SelectedNode.Tag;
+                treeContextMenuStrip.Items.Clear();
+                if (entity is SourceFolder)
                 {
+                    addAddItem("Add Data Source", null);
+                    addAddItem("Add No SQL Data Source", null);
+                    foreach (var source in _repository.Sources)
+                    {
+                        addAddItem(string.Format("Add {0} (Repository)", source.Name), source);
+                    }
+                    addRemoveItem("Remove Data Sources...");
+                }
+                else if (entity is ViewFolder)
+                {
+                    if (RepositoryServer.ViewTemplates.Exists(i => i.Name == ReportViewTemplate.ModelName))
+                    {
+                        addAddItem("Add a View", null);
+                    }
+                    addRemoveItem("Remove Views...");
+                }
+                else if (entity is ReportView)
+                {
+                    var currentTemplateName = ((ReportView)entity).TemplateName;
+                    foreach (var template in RepositoryServer.ViewTemplates.Where(i => i.ParentNames.Contains(currentTemplateName)))
+                    {
+                        addAddItem("Add a " + template.Name + " View", template, template.Description);
+                    }
+                    addRemoveItem("Remove Views...");
+                    addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addSmartCopyItem("Smart copy...", entity);
+                    if (mainTreeView.SelectedNode.Parent.Tag is ViewFolder) addExecuteRenderContextItem(((RootComponent)entity).Name);
+                }
+                else if (entity is TasksFolder)
+                {
+                    addAddItem("Add a Task", null);
+                    addRemoveItem("Remove Tasks...");
+                }
+                else if (entity is OutputFolder)
+                {
+                    foreach (var device in _repository.Devices)
+                    {
+                        addAddItem("Add Output for " + device.FullName, device);
+                    }
+                    addRemoveItem("Remove Outputs...");
+                }
+                else if (entity is ScheduleFolder)
+                {
+                    foreach (var output in _report.Outputs.OrderBy(i => i.Name))
+                    {
+                        addAddItem("Add Schedule for " + Helper.QuoteSingle(output.Name), output);
+                    }
+                    if (_report.Tasks.Count > 0)
+                    {
+                        if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        addAddItem("Add Schedule for the Report Tasks", null);
+                    }
+
+                    addRemoveItem("Remove Schedules...");
+                }
+                else if (entity is ModelFolder)
+                {
+                    addAddItem("Add a MetaData Model", 1);
+                    addAddItem("Add a SQL Model", 2);
+                    addRemoveItem("Remove Models...");
+                }
+                else if (entity is ReportModel)
+                {
+                    var reportModel = entity as ReportModel;
+                    addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addSmartCopyItem("Smart copy...", entity);
+
+                    ToolStripMenuItem ts = new ToolStripMenuItem();
+                    ts.Click += new System.EventHandler(convertModel);
+                    ts.Text = reportModel.IsSQLModel ? "Convert SQL Model to a MetaData Model" : "Convert MetaData Model to a SQL Model";
+                    if (!reportModel.IsSQLModel || (reportModel.IsSQLModel && !string.IsNullOrEmpty(reportModel.Table.Sql)))
+                    {
+                        if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                        treeContextMenuStrip.Items.Add(ts);
+                    }
+                }
+                else if (entity is ReportTask)
+                {
+                    addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addSmartCopyItem("Smart copy...", entity);
+                    if (((ReportTask)entity).Enabled) addExecuteRenderContextItem(((RootComponent)entity).Name, " (this task only)");
+                }
+                else if (entity is ReportOutput)
+                {
+                    addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                    addSmartCopyItem("Smart copy...", entity);
+                    addExecuteRenderContextItem(((RootComponent)entity).Name);
+                }
+                else if (entity is ReportSchedule)
+                {
+                    addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+                }
+                else if (entity is ReportSource)
+                {
+                    addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
+
                     if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                    ToolStripMenuItem ts = new ToolStripMenuItem();
+                    ts.Click += new System.EventHandler(convertReportSourceAsRepositorySource);
+                    ts.Text = "Convert Report Source to a Repository Source...";
+                    ts.Enabled = (((ReportSource)entity).MetaSourceGUID == null);
+                    treeContextMenuStrip.Items.Add(ts);
+                    treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                    ts = new ToolStripMenuItem();
+                    ts.Click += new System.EventHandler(editMetaSource);
+                    ts.Text = "Edit the Repository Source with the Server Manager...";
+                    ts.Enabled = (((ReportSource)entity).MetaSourceGUID != null);
                     treeContextMenuStrip.Items.Add(ts);
                 }
+                else
+                {
+                    treeViewHelper.treeContextMenuStrip_Opening(sender, e);
+                }
             }
-            else if (entity is ReportTask)
+            finally
             {
-                addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                addSmartCopyItem("Smart copy...", entity);
-                if (((ReportTask)entity).Enabled) addExecuteRenderContextItem(((RootComponent)entity).Name, " (this task only)");
-            }
-            else if (entity is ReportOutput)
-            {
-                addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-                addSmartCopyItem("Smart copy...", entity);
-                addExecuteRenderContextItem(((RootComponent)entity).Name);
-            }
-            else if (entity is ReportSchedule)
-            {
-                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-            }
-            else if (entity is ReportSource)
-            {
-                addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
-
-                if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
-                ToolStripMenuItem ts = new ToolStripMenuItem();
-                ts.Click += new System.EventHandler(convertReportSourceAsRepositorySource);
-                ts.Text = "Convert Report Source to a Repository Source...";
-                ts.Enabled = (((ReportSource)entity).MetaSourceGUID == null);
-                treeContextMenuStrip.Items.Add(ts);
-                treeContextMenuStrip.Items.Add(new ToolStripSeparator());
-                ts = new ToolStripMenuItem();
-                ts.Click += new System.EventHandler(editMetaSource);
-                ts.Text = "Edit the Repository Source with the Server Manager...";
-                ts.Enabled = (((ReportSource)entity).MetaSourceGUID != null);
-                treeContextMenuStrip.Items.Add(ts);
-            }
-            else
-            {
-                treeViewHelper.treeContextMenuStrip_Opening(sender, e);
+                Cursor.Current = Cursors.Default;
             }
         }
-
 
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1576,7 +1596,7 @@ namespace Seal
         {
             toolStripHelper.HandleShortCut(e);
         }
-        
+
 
         private void nextWidget_Click(object sender, EventArgs e)
         {
@@ -1588,14 +1608,14 @@ namespace Seal
                 if (widgets.Count > 0)
                 {
                     ReportView view = widgets[0];
-                    if (currentView != null) 
+                    if (currentView != null)
                     {
                         for (int i = 0; i < widgets.Count; i++)
                         {
                             if (currentView == widgets[i])
                             {
-                                if (i == widgets.Count-1) view = widgets[0];
-                                else view = widgets[i+1];
+                                if (i == widgets.Count - 1) view = widgets[0];
+                                else view = widgets[i + 1];
                             }
                         }
                     }

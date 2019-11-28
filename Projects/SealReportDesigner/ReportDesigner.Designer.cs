@@ -128,7 +128,7 @@
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -138,7 +138,7 @@
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -146,7 +146,7 @@
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
             this.reloadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.reloadToolStripMenuItem.Text = "Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
@@ -155,7 +155,7 @@
             this.saveToolStripMenuItem.Image = global::Seal.Properties.Resources.save;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -163,21 +163,21 @@
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.ShortcutKeyDisplayString = "";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(164, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(165, 6);
             // 
             // executeToolStripMenuItem
             // 
@@ -185,7 +185,7 @@
             this.executeToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.White;
             this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
             this.executeToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.executeToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.executeToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.executeToolStripMenuItem.Text = "Execute";
             this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
             // 
@@ -195,7 +195,7 @@
             this.renderToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.White;
             this.renderToolStripMenuItem.Name = "renderToolStripMenuItem";
             this.renderToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F6;
-            this.renderToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.renderToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.renderToolStripMenuItem.Text = "Render";
             this.renderToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
             // 
@@ -205,7 +205,7 @@
             this.executeViewOutputToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.White;
             this.executeViewOutputToolStripMenuItem.Name = "executeViewOutputToolStripMenuItem";
             this.executeViewOutputToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F10;
-            this.executeViewOutputToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.executeViewOutputToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.executeViewOutputToolStripMenuItem.Text = "Execute View";
             this.executeViewOutputToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
             // 
@@ -215,32 +215,32 @@
             this.renderViewOutputToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.White;
             this.renderViewOutputToolStripMenuItem.Name = "renderViewOutputToolStripMenuItem";
             this.renderViewOutputToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F11;
-            this.renderViewOutputToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.renderViewOutputToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.renderViewOutputToolStripMenuItem.Text = "Render View";
             this.renderViewOutputToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(164, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(165, 6);
             // 
             // MRUToolStripMenuItem
             // 
             this.MRUToolStripMenuItem.Name = "MRUToolStripMenuItem";
-            this.MRUToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.MRUToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.MRUToolStripMenuItem.Text = "Recent Reports";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(164, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(165, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Image = global::Seal.Properties.Resources.exit;
             this.exitToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -275,7 +275,7 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // helpToolStripMenuItem
@@ -409,7 +409,7 @@
             this.executeToolStripButton.Image = global::Seal.Properties.Resources.execute;
             this.executeToolStripButton.ImageTransparentColor = System.Drawing.Color.White;
             this.executeToolStripButton.Name = "executeToolStripButton";
-            this.executeToolStripButton.Size = new System.Drawing.Size(67, 22);
+            this.executeToolStripButton.Size = new System.Drawing.Size(68, 22);
             this.executeToolStripButton.Text = "Execute";
             this.executeToolStripButton.ToolTipText = "F5 Execute the report";
             this.executeToolStripButton.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
@@ -429,7 +429,7 @@
             this.executeViewOutputToolStripButton.Image = global::Seal.Properties.Resources.execute;
             this.executeViewOutputToolStripButton.ImageTransparentColor = System.Drawing.Color.White;
             this.executeViewOutputToolStripButton.Name = "executeViewOutputToolStripButton";
-            this.executeViewOutputToolStripButton.Size = new System.Drawing.Size(95, 22);
+            this.executeViewOutputToolStripButton.Size = new System.Drawing.Size(96, 22);
             this.executeViewOutputToolStripButton.Text = "Execute View";
             this.executeViewOutputToolStripButton.ToolTipText = "Execute the report using the selected view";
             this.executeViewOutputToolStripButton.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
@@ -517,6 +517,7 @@
             this.mainImageList.Images.SetKeyName(13, "nosql.png");
             this.mainImageList.Images.SetKeyName(14, "task2.png");
             this.mainImageList.Images.SetKeyName(15, "modelSQL.png");
+            this.mainImageList.Images.SetKeyName(16, "configuration.png");
             // 
             // mainPropertyGrid
             // 

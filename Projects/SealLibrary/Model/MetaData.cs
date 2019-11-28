@@ -88,6 +88,7 @@ namespace Seal.Model
             get
             {
                 MetaTable result = Tables.FirstOrDefault(i => i.Alias == MasterTableName);
+                if (result == null && Tables.Count > 0) result = Tables[0]; 
                 return result;
             }
         }

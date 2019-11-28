@@ -16,6 +16,11 @@ using System.Text;
 using System.Diagnostics;
 using System.Xml;
 using RazorEngine.Templating;
+using System.ComponentModel;
+using Seal.Forms;
+using Seal.Converter;
+using System.Drawing.Design;
+using DynamicTypeDescriptor;
 
 namespace Seal.Model
 {
@@ -42,8 +47,33 @@ namespace Seal.Model
     /// <summary>
     /// The main Report class to store a report definition, plus extra properties for execution 
     /// </summary>
-    public class Report : ReportExecutionLog
+    public class Report : RootEditor, ReportExecutionLog, ITreeSort
     {
+        #region Editor
+
+        protected override void UpdateEditorAttributes()
+        {
+            if (_dctd != null)
+            {
+                //Disable all properties
+                foreach (var property in Properties) property.SetIsBrowsable(false);
+                //Then enable
+                GetProperty("ViewGUID").SetIsBrowsable(true);
+                GetProperty("DisplayName").SetIsBrowsable(true);
+                GetProperty("InputValues").SetIsBrowsable(true);
+                GetProperty("WidgetCache").SetIsBrowsable(true);
+
+                GetProperty("InitScript").SetIsBrowsable(true);
+                GetProperty("CommonScripts").SetIsBrowsable(true);
+                //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (Report.CommonScripts.Count == 0 ? "None" : Report.CommonScripts.Count.ToString() + " Items(s)"));
+                TypeDescriptor.Refresh(this);
+            }
+        }
+
+        #endregion
+
+        public int GetSort() { return 0; }
+
         /// <summary>
         /// Unique identifier of the report
         /// </summary>
@@ -80,8 +110,10 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// List of common razor scripts that can be used in the report
+        /// List of scripts added to all scripts executed for the report (including tasks). This may be useful to defined common functions for the report.
         /// </summary>
+        [Category("Scripts"), DisplayName("Common Scripts"), Description("List of scripts added to all scripts executed for the report (including tasks). This may be useful to defined common functions for the report."), Id(1, 2)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
         public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
 
@@ -133,8 +165,10 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// List of input values defined for the report
+        /// Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report.
         /// </summary>
+        [Category("Definition"), DisplayName("Report Input Values"), Description("Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report."), Id(3, 1)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<ReportRestriction> InputValues { get; set; } = new List<ReportRestriction>();
         public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
 
@@ -175,8 +209,10 @@ namespace Seal.Model
         public List<ReportView> Views { get; set; } = new List<ReportView>();
 
         /// <summary>
-        /// Display name of the report
+        /// The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'.
         /// </summary>
+        [Category("Definition"), DisplayName("Display name"), Description("The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'."), Id(1, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string DisplayName { get; set; } = "";
         public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(DisplayName); }
 
@@ -207,14 +243,16 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions). 
+        /// A Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions). 
         /// </summary>
+        [Category("Scripts"), DisplayName("Report Execution Init script"), Description("A Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions)."), Id(2, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string InitScript { get; set; } = "";
         public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
 
-        /// <summary>
-        /// GUID of the view to execute by default
-        /// </summary>
+        [DefaultValue(null)]
+        [Category("Definition"), DisplayName("Current view"), Description("The current view used to execute the report."), Id(2, 1)]
+        [TypeConverter(typeof(ReportViewConverter))]
         public string ViewGUID { get; set; }
 
         /// <summary>
@@ -229,8 +267,10 @@ namespace Seal.Model
         public bool ShouldSerializeSchedules() { return Schedules.Count > 0; }
 
         /// <summary>
-        /// Number of seconds the report result is kept when executed for dashboard widgets 
+        /// For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report.
         /// </summary>
+        [Category("Definition"), DisplayName("Widgets cache duration"), Description("For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report."), Id(5, 1)]
+        [DefaultValue(60)]
         public int WidgetCache { get; set; } = 60;
         public bool ShouldSerializeWidgetCache() { return WidgetCache != 60; }
 
@@ -1706,7 +1746,7 @@ namespace Seal.Model
 
                     int index = 0;
                     _executionCommonRestrictions = new List<ReportRestriction>();
-                    foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None))
+                    foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None).OrderBy(i => i.SortOrder))
                     {
                         if (
                             restriction.IsInputValue ||

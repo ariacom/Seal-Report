@@ -97,8 +97,8 @@
     var helper = new TaskDatabaseHelper();&#xD;
     var command = helper.GetDbCommand(model.Connection.GetOpenConnection());&#xD;
 &#xD;
-    //Here we assume here that the id is in the first column&#xD;
-    var employeeID = link.Cell.ContextCurrentLine[0].Value;&#xD;
+    //Get employee ID value&#xD;
+    var employeeID = link.Cell.ContextCurrentLine.FirstOrDefault(i =&gt; i.Element.ColumnName.EndsWith("EmployeeID")).Value;&#xD;
     command.CommandText = string.Format("select photo from employees where employeeID = {0}", employeeID);&#xD;
     using (var reader = command.ExecuteReader())&#xD;
     {&#xD;

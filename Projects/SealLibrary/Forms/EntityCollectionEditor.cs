@@ -60,7 +60,7 @@ namespace Seal.Forms
                     var model = Context.Instance as ReportModel;
                     model.InitCommonRestrictions();
                 }
-                else if (Context.Instance is ViewFolder)
+                else if (Context.Instance is Report)
                 {
                     allowAdd = true;
                     allowRemove = true;
@@ -224,13 +224,13 @@ namespace Seal.Forms
             SetModified();
             if (_component != null) _component.UpdateEditor();
 
-            if (instance is ReportRestriction && _component is ViewFolder)
+            if (instance is ReportRestriction && Context.Instance is Report)
             {
                 var result = ReportRestriction.CreateReportRestriction();
                 result.TypeRe = ColumnType.Text;
                 result.Operator = Operator.Equal;
                 result.ChangeOperator = false;
-                result.Report = ((ViewFolder)_component).Report;
+                result.Report = (Report)Context.Instance;
                 instance = result;
             }
 

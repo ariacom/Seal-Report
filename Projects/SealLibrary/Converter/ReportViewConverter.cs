@@ -13,12 +13,12 @@ namespace Seal.Converter
 {
     public class ReportViewConverter : StringConverter
     {
-        List<ReportView> getViewList(PropertyDescriptor descriptor, ReportComponent component) 
+        List<ReportView> getViewList(PropertyDescriptor descriptor, Report report) 
         {
 
             List<ReportView> result = null;
-            if (descriptor.Name == "ReferenceViewGUID") result = component.Report.FullViewList.Where(i => i.GUID != component.GUID).ToList();
-            else result = component.Report.Views;
+            if (descriptor.Name == "ReferenceViewGUID") result = report.FullViewList.Where(i => i.GUID != report.ViewGUID).ToList();
+            else result = report.Views;
             return result;
         }
 
@@ -34,10 +34,10 @@ namespace Seal.Converter
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
             List<string> choices = new List<string>();
-            ReportComponent component = context.Instance as ReportComponent;
-            if (component != null)
+            Report report = context.Instance as Report;
+            if (report != null)
             {
-                var list = getViewList(context.PropertyDescriptor, component);
+                var list = getViewList(context.PropertyDescriptor, report);
                 choices = (from s in list select s.Name).ToList();
                 if (context.PropertyDescriptor.Name == "ReferenceViewGUID")
                 {
@@ -57,10 +57,10 @@ namespace Seal.Converter
         {
             if (context != null)
             {
-                ReportComponent component = context.Instance as ReportComponent;
-                if (component != null && value != null)
+                Report report = context.Instance as Report;
+                if (report != null && value != null)
                 {
-                    var list = getViewList(context.PropertyDescriptor, component);
+                    var list = getViewList(context.PropertyDescriptor, report);
                     ReportView view = list.FirstOrDefault(i => i.GUID == value.ToString());
                     if (view != null) return view.Name;
                 }
@@ -75,10 +75,10 @@ namespace Seal.Converter
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            ReportComponent component = context.Instance as ReportComponent;
-            if (component != null && value != null)
+            Report report = context.Instance as Report;
+            if (report != null && value != null)
             {
-                var list = getViewList(context.PropertyDescriptor, component);
+                var list = getViewList(context.PropertyDescriptor, report);
                 ReportView view = list.FirstOrDefault(i => i.Name == value.ToString());
                 if (view != null) return view.GUID;
             }
