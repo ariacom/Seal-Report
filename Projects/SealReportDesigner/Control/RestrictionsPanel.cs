@@ -344,7 +344,7 @@ namespace Seal.Controls
                     restriction.DisplayName = initialName + " " + index.ToString();
                 }
                 Restrictions.Add(restriction);
-                restriction.SortOrder = Restrictions.Count.ToString();
+                restriction.DisplayOrder = Restrictions.Count;
 
                 if (forPrompt)
                 {

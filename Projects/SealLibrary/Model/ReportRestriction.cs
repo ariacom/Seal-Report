@@ -47,8 +47,7 @@ namespace Seal.Model
                 GetProperty("EnumGUIDRE").SetIsBrowsable(true);
                 GetProperty("ChangeOperator").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
-                GetProperty("SortOrderRe").SetIsBrowsable(true);
-
+                GetProperty("DisplayOrderRE").SetIsBrowsable(true);
                 //Conditional
                 if (IsEnum)
                 {
@@ -148,7 +147,12 @@ namespace Seal.Model
         /// </summary>
         public static ReportRestriction CreateReportRestriction()
         {
-            return new ReportRestriction() { GUID = Guid.NewGuid().ToString(), _type = ColumnType.Default, _numericStandardFormat = NumericStandardFormat.Default, _datetimeStandardFormat = DateTimeStandardFormat.Default, SortOrder="1" };
+            return new ReportRestriction() {
+                GUID = Guid.NewGuid().ToString(),
+                _type = ColumnType.Default,
+                _numericStandardFormat = NumericStandardFormat.Default,
+                _datetimeStandardFormat = DateTimeStandardFormat.Default
+            };
         }
 
         /// <summary>
@@ -292,20 +296,13 @@ namespace Seal.Model
         /// <summary>
         /// Sort order used for the display of the prompted restrictions when the report is executed.
         /// </summary>
-        [DefaultValue("1")]
+        [DefaultValue(0)]
         [Category("Advanced"), DisplayName("Display Order"), Description("Order used for the display of the prompted restrictions when the report is executed."), Id(9, 3)]
-        public string SortOrderRe
+        public int DisplayOrderRE
         {
-            get
-            {
-                return SortOrder;
-            }
-            set
-            {
-                SortOrder = value;
-            }
+            get { return DisplayOrder; }
+            set { DisplayOrder = value; }
         }
-
         Operator _operator = Operator.Equal;
         /// <summary>
         /// The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator).
