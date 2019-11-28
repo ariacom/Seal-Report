@@ -74,6 +74,11 @@ namespace Seal.Model
         public string WebPassword = "";
 
         /// <summary>
+        /// Parameters for authentication: Authorization Header
+        /// </summary>
+        public string WebAuthorizationHeader = null;
+
+        /// <summary>
         /// The current Windows IPrincipal
         /// </summary>
         public IPrincipal WebPrincipal = null;
