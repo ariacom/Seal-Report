@@ -183,3 +183,8 @@ table.dataTable {
     font-weight: bold;
     font-style: italic;
 }
+
+/* spin speed */
+#refresh-nav-item.fa-spin {
+    animation-duration: 1s;
+}
