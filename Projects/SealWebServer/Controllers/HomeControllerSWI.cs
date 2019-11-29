@@ -29,7 +29,7 @@ namespace SealWebServer.Controllers
                 if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user) || (!string.IsNullOrEmpty(AuthorizationHeader) && WebUser.WebAuthorizationHeader != AuthorizationHeader))
                 {
                     CreateRepository();
-                    CreateWebUser(true);
+                    CreateWebUser();
                     WebUser.WebPrincipal = User;
                     WebUser.WebUserName = user;
                     WebUser.WebPassword = password;
@@ -445,7 +445,7 @@ namespace SealWebServer.Controllers
             try
             {
                 if (WebUser != null) WebUser.Logout();
-                CreateWebUser(true);
+                CreateWebUser();
                 return Json(new { });
             }
             catch (Exception ex)
