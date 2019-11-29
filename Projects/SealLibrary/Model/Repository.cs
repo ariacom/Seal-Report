@@ -165,12 +165,17 @@ namespace Seal.Model
                 if (_configuration == null)
                 {
                     _configuration = SealServerConfiguration.LoadFromFile(ConfigurationPath, true);
-                    if (_configuration == null) _configuration = new SealServerConfiguration();
+                    if (_configuration == null)
+                    {
+                        _configuration = new SealServerConfiguration();
+                    }
                     _configuration.Repository = this;
                 }
                 return _configuration;
             }
-            set { _configuration = value; }
+            set {
+                _configuration = value;
+            }
         }
 
         /// <summary>

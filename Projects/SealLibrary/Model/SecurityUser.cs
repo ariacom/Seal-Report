@@ -181,6 +181,7 @@ namespace Seal.Model
                     {
                         if (_persFolderRight == null || _persFolderRight < group.PersFolderRight) _persFolderRight = group.PersFolderRight;
                     }
+                    if (_persFolderRight == null) _persFolderRight = PersonalFolderRight.None;
                 }
                 return _persFolderRight.Value;
             }
@@ -220,6 +221,8 @@ namespace Seal.Model
                     {
                         if (_viewType == null || _viewType < group.ViewType) _viewType = group.ViewType;
                     }
+
+                    if (_viewType == null) _viewType = ViewType.Reports;
                 }
                 return _viewType.Value;
             }

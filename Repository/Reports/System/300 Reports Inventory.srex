@@ -23,7 +23,7 @@
     ReportModel reportModel = metaTable.NoSQLModel;&#xD;
     Report report = (reportModel != null ? reportModel.Report : null);&#xD;
 &#xD;
-    if (report != null) {&#xD;
+    if (report != null &amp;&amp; report.Tag != null) {&#xD;
         foreach (var item in ((List&lt;Report&gt;) report.Tag)) {&#xD;
             table.Rows.Add(&#xD;
                 item.DisplayNameEx, &#xD;
@@ -63,7 +63,7 @@
     ReportModel reportModel = metaTable.NoSQLModel;&#xD;
     Report report = (reportModel != null ? reportModel.Report : null);&#xD;
 &#xD;
-    if (report != null) {&#xD;
+    if (report != null &amp;&amp; report.Tag != null) {&#xD;
         foreach (var item in ((List&lt;Report&gt;) report.Tag)) {&#xD;
             foreach (var schedule in item.Schedules) {&#xD;
                 table.Rows.Add(&#xD;
@@ -133,7 +133,7 @@
     ReportModel reportModel = metaTable.NoSQLModel;&#xD;
     Report report = (reportModel != null ? reportModel.Report : null);&#xD;
 &#xD;
-    if (report != null) {&#xD;
+    if (report != null &amp;&amp; report.Tag != null) {&#xD;
         foreach (var item in ((List&lt;Report&gt;) report.Tag)) {&#xD;
             foreach (var model in item.Models) {&#xD;
                 foreach (var element in model.Elements) {&#xD;
@@ -193,7 +193,7 @@
     ReportModel reportModel = metaTable.NoSQLModel;&#xD;
     Report report = (reportModel != null ? reportModel.Report : null);&#xD;
 &#xD;
-    if (report != null) {&#xD;
+    if (report != null &amp;&amp; report.Tag != null) {&#xD;
         foreach (var item in ((List&lt;Report&gt;) report.Tag)) {&#xD;
             foreach (var model in item.Models) {&#xD;
                 foreach (var restriction in model.Restrictions) {&#xD;
