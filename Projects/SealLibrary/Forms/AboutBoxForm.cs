@@ -19,7 +19,7 @@ namespace Seal.Forms
             this.Text = String.Format("About {0}", AssemblyTitle.Replace(" Library",""));
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
-            linkLabel.Text = "Get the last version and free support at http://wwww.sealreport.org";
+            linkLabel.Text = "Get the last version and free support at https://sealreport.org";
             ShowIcon = true;
             Icon = Repository.ProductIcon;
         }
@@ -106,13 +106,13 @@ namespace Seal.Forms
 
         private void linkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://www.sealreport.org");
+            Process.Start("https://sealreport.org");
         }
 
         private void AboutBoxForm_Shown(object sender, EventArgs e)
         {
             var defaultText = "A genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n\r\n\r\n";
-            defaultText += "Copyright(c) Seal Report, Ariacom (www.ariacom.com).\r\n\r\n";
+            defaultText += "Copyright(c) Seal Report, Ariacom (https://ariacom.com).\r\n\r\n";
             defaultText += "Seal Report is licensed under the Apache License, Version 2.0.\r\nhttp://www.apache.org/licenses/LICENSE-2.0.";
             try
             {
@@ -134,7 +134,7 @@ namespace Seal.Forms
                 }
                 else
                 {
-                    linkLabel.Text = "http://www.sealreport.org";
+                    linkLabel.Text = "https://sealreport.org";
                     this.textBoxDescription.Text = text;
                 }
             }

@@ -243,7 +243,7 @@
     &#xD;
     log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
 &#xD;
-    //GetUsers() is defined in Report Common Scripts (Tasks tree node)&#xD;
+    //GetUsers() is defined in Report Common Scripts (General tree node)&#xD;
     var users = GetUsers();&#xD;
     foreach (var user in users) {&#xD;
         table.Rows.Add(&#xD;
@@ -290,7 +290,7 @@
 &#xD;
     log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
     &#xD;
-    //GetUsers() is defined in Report Common Scripts (Tasks tree node)&#xD;
+    //GetUsers() is defined in Report Common Scripts (General tree node)&#xD;
     var users = GetUsers();&#xD;
     foreach (var user in users) {&#xD;
         addRecord(table, user, Repository.Instance.ReportsFolder+"\\");&#xD;
@@ -348,7 +348,7 @@
                 ReportExecutionLog log = metaTable;&#xD;
 &#xD;
     log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
-    //GetUsers() is defined in Report Common Scripts (Tasks tree node)&#xD;
+    //GetUsers() is defined in Report Common Scripts (General tree node)&#xD;
     var users = GetUsers();&#xD;
     foreach (var user in users) {&#xD;
         foreach (var folder in user.SecurityDashboardFolders) {&#xD;
@@ -389,7 +389,7 @@
                 ReportExecutionLog log = metaTable;&#xD;
 &#xD;
     log.LogMessage("Processing " + metaTable.Source.Name);&#xD;
-    //GetUsers() is defined in Report Common Scripts (Tasks tree node)&#xD;
+    //GetUsers() is defined in Report Common Scripts (General tree node)&#xD;
     var users = GetUsers();&#xD;
     foreach (var user in users) {&#xD;
         foreach (var item in user.ForbiddenDevices) {&#xD;

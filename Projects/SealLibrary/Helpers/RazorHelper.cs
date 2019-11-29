@@ -50,7 +50,7 @@ namespace Seal.Helpers
                     if (dummy7 == null) dummy7 = new Control();
                     if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
                     if (dummy9 == null) dummy9 = JWT.DefaultSettings;
-                    if (dummy10 == null) dummy10 = JObject.Parse("");
+                    if (dummy10 == null) dummy10 = JObject.Parse("{}");
                 }
                 catch { }
                 _loadDone = true;
