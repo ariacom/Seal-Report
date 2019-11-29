@@ -1,79 +1,60 @@
-﻿<?xml version="1.0" encoding="utf-8"?><SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><ProviderName>JWT</ProviderName><UseCustomScript>true</UseCustomScript><Script>@using Seal.Model;&#xD;
-@using Jose;&#xD;
-@using Newtonsoft.Json.Linq;&#xD;
-@using System.Text;&#xD;
-@{&#xD;
-    //Sample of authentication from a JWT token&#xD;
-    SecurityUser user = Model;&#xD;
-    &#xD;
-    var jwtToken = user.Token; //Token got from SWILogin parameter&#xD;
-    &#xD;
-    //OR token can be get from the header Request with the Bearer keyword:&#xD;
-    var httpAuthorization = user.Request.ServerVariables.Get("HTTP_AUTHORIZATION");&#xD;
-    if (!string.IsNullOrEmpty(httpAuthorization) &amp;&amp; httpAuthorization.Contains("Bearer")) {&#xD;
-        jwtToken = httpAuthorization.Replace("Bearer ", "");  &#xD;
-    }&#xD;
-    &#xD;
-	// Decoding and validating the token received with the key&#xD;
-    string json = Jose.JWT.Decode(jwtToken, Encoding.ASCII.GetBytes(user.Security.GetValue("token_key")));&#xD;
-    JObject rss = JObject.Parse(json);&#xD;
-    &#xD;
-	// Obtaining the current unix time to validate the token expiration&#xD;
-    DateTime foo = DateTime.UtcNow;&#xD;
-    long unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();&#xD;
-	&#xD;
-    // Validating the token expiration&#xD;
-    if(unixTime &gt; (long)rss["exp"]){&#xD;
-        user.Error = "Token Expired";&#xD;
-    }else{&#xD;
-		// Inserting data from the token payload&#xD;
-        user.Name = (string)rss["username"];&#xD;
-		string securityGroup = (string)rss["securityGroup"];&#xD;
-        user.AddSecurityGroup(securityGroup);&#xD;
-		string culture = (string)rss["culture"];&#xD;
-        user.SetDefaultCulture(culture);&#xD;
-    }&#xD;
-}&#xD;
-&#xD;
-/*&#xD;
-Example to generate the Token from PHP:&#xD;
-&#xD;
-&lt;?php&#xD;
-use Lcobucci\JWT\Builder;&#xD;
-use Lcobucci\JWT\Signer\Hmac\Sha256;&#xD;
-use Lcobucci\JWT\Signer\Key;&#xD;
-&#xD;
-$time = time();&#xD;
-&#xD;
-$token = (new Builder())&#xD;
--&gt;issuedAt($time)&#xD;
--&gt;expiresAt($time + 3600 )&#xD;
--&gt;withClaim('culture','English')&#xD;
--&gt;withClaim('securityGroup','Default Group')&#xD;
--&gt;withClaim('username','test')&#xD;
--&gt;getToken(new Sha256(),new Key('SecretKey'));&#xD;
-*/&#xD;
-&#xD;
-/*&#xD;
-And then to call SWILogin:&#xD;
-&#xD;
-&lt;script&gt;&#xD;
-    $.ajax({&#xD;
-        type: "POST",&#xD;
-        url: url + "/SWILogin",&#xD;
-        headers: {&#xD;
-            'Authorization': 'Bearer YOUR TOKEN',&#xD;
-        },&#xD;
-        cache: false,&#xD;
-        success: function (data) {&#xD;
-            if(data.name !== undefined){&#xD;
-                // Login OK&#xD;
-            }else{&#xD;
-                // Login Error&#xD;
-                console.log(data);&#xD;
-            }&#xD;
+﻿<?xml version="1.0" encoding="utf-8"?><SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><ProviderName>Basic Authentication</ProviderName><UseCustomScript>true</UseCustomScript><Script>@using Seal.Model
+@using Seal.Helpers
+@{
+    SecurityUser user = Model;
+	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
+	//user.WebUserName -&gt; user name from the login screen
+	//user.WebPassword -&gt; password from the login screen
+
+	user.Name = user.WebUserName; //Display name
+    //security check can be hardcoded
+	if (user.WebUserName == "ex" &amp;&amp; user.WebPassword == "ex")
+	{
+		user.AddSecurityGroup("Group (Execute)");
+	}
+	else if (user.WebUserName == "exo" &amp;&amp; user.WebPassword == "exo")
+	{
+		user.AddSecurityGroup("Group (Execute Output)");
+	}
+	else if (user.WebUserName == "sc" &amp;&amp; user.WebPassword == "sc")
+	{
+		user.AddSecurityGroup("Group (Schedule)");
+	}
+	else if (user.WebUserName == "ed" &amp;&amp; user.WebPassword == "ed")
+	{
+		user.AddSecurityGroup("Group (Edit)");
+	}
+	else if (user.WebUserName == "exed" &amp;&amp; user.WebPassword == "exed")
+	{
+		user.AddSecurityGroup("Group (Execute)");
+		user.AddSecurityGroup("Group (Edit)");
+	}
+	else if (user.WebUserName == "daview" &amp;&amp; user.WebPassword == "daview")&#xD;
+	{&#xD;
+		user.AddSecurityGroup("Group (View Dashboards)");&#xD;
+	}&#xD;
+	else if (user.WebUserName == "daedit" &amp;&amp; user.WebPassword == "daedit")&#xD;
+	{&#xD;
+		user.AddSecurityGroup("Group (Edit Dashboards)");&#xD;
+	}&#xD;
+	else if (user.WebUserName == "demo" &amp;&amp; user.WebPassword == "demo")&#xD;
+	{&#xD;
+		user.AddSecurityGroup("Group (Demo)");&#xD;
+	}&#xD;
+	else if (user.WebUserName == "nogroup" &amp;&amp; user.WebPassword == "nogroup")&#xD;
+	{&#xD;
+        throw new Exception("This user has no group");&#xD;
+	}&#xD;
+	else if (user.WebUserName == "ben" &amp;&amp; user.WebPassword == "ben")&#xD;
+	{&#xD;
+        user.Name = "Benjaminto Seal";&#xD;
+		user.AddDefaultSecurityGroup();&#xD;
+        var imagePath = @"C:\temp\" + user.WebUserName + ".png";&#xD;
+        if (System.IO.File.Exists(imagePath)) {&#xD;
+            user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);&#xD;
         }&#xD;
-    });&#xD;
-&lt;/script&gt;&#xD;
-*/&#xD;
-</Script><Parameters><SecurityParameter><Name>token_key</Name></SecurityParameter></Parameters><Groups><SecurityGroup><Name>Default Group</Name><Folders><SecurityFolder /></Folders><SqlModel>true</SqlModel><PersonalDashboardFolder>true</PersonalDashboardFolder><DashboardFolders><SecurityDashboardFolder><Name>General</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name></SecurityDashboardFolder></DashboardFolders><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute Output)</Name><Folders><SecurityFolder><Path>\Samples</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder><SecurityFolder><Path>\System</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder></Folders><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Schedule)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Schedule</FolderRight></SecurityFolder></Folders><PersFolderRight>Files</PersFolderRight><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Edit)</Name><Folders><SecurityFolder /></Folders><PersFolderRight>Reports</PersFolderRight><ViewType>Reports</ViewType><Devices><SecurityDevice><Name>Folder Device</Name></SecurityDevice></Devices><Sources><SecuritySource><Name>RSS No SQL Source</Name></SecuritySource></Sources><Connections><SecurityConnection><Name>connection</Name></SecurityConnection></Connections><Columns><SecurityColumn><Source>Northwind</Source><Tag /><Category>Products</Category></SecurityColumn><SecurityColumn><Source>Northwind</Source><Tag /><Category>Customers</Category></SecurityColumn></Columns><Culture /></SecurityGroup><SecurityGroup><Name>Group (View Dashboards)</Name><ViewType>Dashboards</ViewType><ManageDashboards>false</ManageDashboards><DashboardFolders><SecurityDashboardFolder><Name>General</Name><Right>Execute</Right></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name><Right>Execute</Right></SecurityDashboardFolder></DashboardFolders></SecurityGroup><SecurityGroup><Name>Group (Edit Dashboards)</Name><ViewType>Dashboards</ViewType><DashboardFolders><SecurityDashboardFolder><Name>General</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name></SecurityDashboardFolder></DashboardFolders><Widgets><SecurityWidget><ReportName /><Tag>KPI</Tag><Name /></SecurityWidget></Widgets></SecurityGroup><SecurityGroup><Name>Group (Demo)</Name><PersFolderRight>Reports</PersFolderRight><SqlModel>true</SqlModel><PersonalDashboardFolder>true</PersonalDashboardFolder><DashboardFolders><SecurityDashboardFolder><Name>General</Name><Right>Execute</Right></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name><Right>Execute</Right></SecurityDashboardFolder></DashboardFolders></SecurityGroup></Groups></SealSecurity>
+	}&#xD;
+	else if (string.IsNullOrEmpty(user.WebUserName)) {
+		user.AddDefaultSecurityGroup();
+	}
+}</Script><Groups><SecurityGroup><Name>Default Group</Name><Folders><SecurityFolder /></Folders><SqlModel>true</SqlModel><PersonalDashboardFolder>true</PersonalDashboardFolder><DashboardFolders><SecurityDashboardFolder><Name>General</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name></SecurityDashboardFolder></DashboardFolders><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute Output)</Name><Folders><SecurityFolder><Path>\Samples</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder><SecurityFolder><Path>\System</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder></Folders><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Schedule)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Schedule</FolderRight></SecurityFolder></Folders><PersFolderRight>Files</PersFolderRight><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Edit)</Name><Folders><SecurityFolder /></Folders><PersFolderRight>Reports</PersFolderRight><ViewType>Reports</ViewType><Devices><SecurityDevice><Name>Folder Device</Name></SecurityDevice></Devices><Sources><SecuritySource><Name>RSS No SQL Source</Name></SecuritySource></Sources><Connections><SecurityConnection><Name>connection</Name></SecurityConnection></Connections><Columns><SecurityColumn><Source>Northwind</Source><Tag /><Category>Products</Category></SecurityColumn><SecurityColumn><Source>Northwind</Source><Tag /><Category>Customers</Category></SecurityColumn></Columns><Culture /></SecurityGroup><SecurityGroup><Name>Group (View Dashboards)</Name><ViewType>Dashboards</ViewType><ManageDashboards>false</ManageDashboards><DashboardFolders><SecurityDashboardFolder><Name>General</Name><Right>Execute</Right></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name><Right>Execute</Right></SecurityDashboardFolder></DashboardFolders></SecurityGroup><SecurityGroup><Name>Group (Edit Dashboards)</Name><ViewType>Dashboards</ViewType><DashboardFolders><SecurityDashboardFolder><Name>General</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name></SecurityDashboardFolder></DashboardFolders><Widgets><SecurityWidget><ReportName /><Tag>KPI</Tag><Name /></SecurityWidget></Widgets></SecurityGroup><SecurityGroup><Name>Group (Demo)</Name><PersFolderRight>Reports</PersFolderRight><SqlModel>true</SqlModel><PersonalDashboardFolder>true</PersonalDashboardFolder><DashboardFolders><SecurityDashboardFolder><Name>General</Name><Right>Execute</Right></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name><Right>Execute</Right></SecurityDashboardFolder></DashboardFolders></SecurityGroup></Groups></SealSecurity>
