@@ -3,20 +3,14 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Seal.Model;
 using System.IO;
 using Seal.Helpers;
-using Seal.Converter;
 using Seal.Forms;
 using System.Diagnostics;
-using System.Threading;
 
 namespace Seal
 {
@@ -31,7 +25,6 @@ namespace Seal
         ToolStripMenuItem configureMenuItem = new ToolStripMenuItem() { Text = "Configure Server...", ToolTipText = string.Format("Configure the {0} Report Server", Repository.SealRootProductName) };
         ToolStripMenuItem publishWebMenuItem = new ToolStripMenuItem() { Text = "Publish Web Site on IIS...", ToolTipText = string.Format("Publish the {0} Web Site on the local Internet Information Server", Repository.SealRootProductName) };
         ToolStripMenuItem securityMenuItem = new ToolStripMenuItem() { Text = "Configure Web Security...", ToolTipText = string.Format("Configure how the reports and folders are published on {0} Web Site", Repository.SealRootProductName) };
-        ToolStripMenuItem securitySWIMenuItem = new ToolStripMenuItem() { Text = "Configure Web Security for Seal Web Interface...", ToolTipText = string.Format("Configure how the reports and folders are published on {0} Web Site", Repository.SealRootProductName) };
 
         MetaSource _source = null;
         public MetaSource Source
@@ -92,11 +85,6 @@ namespace Seal
             securityMenuItem.Click += securityClick;
             configurationToolStripMenuItem.DropDownItems.Add(securityMenuItem);
             securityMenuItem.ShortcutKeys = (Keys.Control | Keys.W);
-
-            configurationToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-            securitySWIMenuItem.Click += securitySWIClick;
-            configurationToolStripMenuItem.DropDownItems.Add(securitySWIMenuItem);
-            securitySWIMenuItem.ShortcutKeys = (Keys.Control | Keys.E);
 
             ShowIcon = true;
             Icon = Properties.Resources.serverManager;
@@ -191,21 +179,6 @@ namespace Seal
             {
                 //reload security
                 _repository.ReloadSecurity();
-            }
-        }
-
-        void securitySWIClick(object sender, EventArgs e)
-        {
-            var frm = new SecurityEditorForm(_repository.SecuritySWI);
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                if (string.IsNullOrEmpty(_repository.SecuritySWI.FilePath)) _repository.SecuritySWI.FilePath = _repository.SecuritySWIPath;
-                _repository.SecuritySWI.SaveToFile();
-            }
-            else
-            {
-                //reload security
-                _repository.ReloadSecuritySWI();
             }
         }
 

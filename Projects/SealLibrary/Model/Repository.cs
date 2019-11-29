@@ -174,7 +174,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Forces a configuration relaod
+        /// Forces a configuration reload
         /// </summary>
         public void ReloadConfiguration()
         {
@@ -182,7 +182,6 @@ namespace Seal.Model
         }
 
         SealSecurity _security = null;
-        SealSecurity _securitySWI = null;
 
         /// <summary>
         /// Current security for Web
@@ -203,24 +202,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Current security for Seal Web Interface
-        /// </summary>
-        public SealSecurity SecuritySWI
-        {
-            get
-            {
-                if (_securitySWI == null)
-                {
-                    _securitySWI = SealSecurity.LoadFromFile(SecuritySWIPath, false);
-                    if (_securitySWI == null) _securitySWI = new SealSecurity();
-                    _securitySWI.Repository = this;
-                }
-                return _securitySWI;
-            }
-            set { _securitySWI = value; }
-        }
-
-        /// <summary>
         /// Forces a security reload for Web
         /// </summary>
         public void ReloadSecurity()
@@ -228,13 +209,6 @@ namespace Seal.Model
             _security = null;
         }
 
-        /// <summary>
-        /// Forces a security reload for Seal Web Interface
-        /// </summary>
-        public void ReloadSecuritySWI()
-        {
-            _securitySWI = null;
-        }
 
         static string FindDebugRepository(string path)
         {
@@ -455,7 +429,6 @@ namespace Seal.Model
         {
             if (Configuration.FilePath != null && File.GetLastWriteTime(Configuration.FilePath) != Configuration.LastModification) return true;
             if (Security.FilePath != null && File.GetLastWriteTime(Security.FilePath) != Security.LastModification) return true;
-            if (SecuritySWI.FilePath != null && File.GetLastWriteTime(SecuritySWI.FilePath) != SecuritySWI.LastModification) return true;
             foreach (var item in Sources) if (File.GetLastWriteTime(item.FilePath) != item.LastModification) return true;
             foreach (var item in Devices.Where(i => i is OutputEmailDevice)) if (item.FilePath != null && File.GetLastWriteTime(item.FilePath) != ((OutputEmailDevice)item).LastModification) return true;
             //Check for new files
@@ -690,14 +663,6 @@ namespace Seal.Model
         public string SecurityPath
         {
             get { return Path.Combine(SecurityFolder, "Security.xml"); }
-        }
-
-        /// <summary>
-        /// Security file path for SWI
-        /// </summary>
-        public string SecuritySWIPath
-        {
-            get { return Path.Combine(SecurityFolder, "SecuritySWI.xml"); }
         }
 
         /// <summary>

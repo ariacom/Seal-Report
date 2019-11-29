@@ -37,7 +37,7 @@ class SWIGateway {
     }
 
     public Login(user: string, password: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWILoginWeb", {
+        $.post(_server + "SWILogin", {
             user: user, password: password
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })

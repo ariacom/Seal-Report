@@ -17,33 +17,24 @@ namespace SealWebServer.Controllers
 {
     public partial class HomeController : Controller
     {
+        /// <summary>
+        /// Start a session with the Web Report Server using the user name, password, token (may be optional according to the authentication configured on the server) and returns information of the logged user (SWIUserProfile).
+        /// </summary>
         [HttpPost]
-        public ActionResult SWILogin(string user, string password)
+        public ActionResult SWILogin(string user, string password, string token)
         {
             WriteDebug("SWILogin");
-            string authorizationHeader = (Request.ServerVariables.Get("HTTP_AUTHORIZATION") != null ? (Request.ServerVariables.Get("HTTP_AUTHORIZATION").Contains("Bearer") ? Request.ServerVariables.Get("HTTP_AUTHORIZATION").Replace("Bearer ", "") : null) : null);
-            return GenerateResponseLogin(true, user, password, authorizationHeader);
-        }
 
-        [HttpPost]
-        public ActionResult SWILoginWeb(string user, string password)
-        {
-            WriteDebug("SWILoginWeb");
-            return GenerateResponseLogin(false, user, password, null);
-        }
-
-        private ActionResult GenerateResponseLogin(bool IsSWI, string user, string password, string authorizationHeader)
-        {
             try
             {
-                if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user) || (!string.IsNullOrEmpty(authorizationHeader) && WebUser.WebAuthorizationHeader != authorizationHeader))
+                if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user) || (!string.IsNullOrEmpty(token) && WebUser.Token != token))
                 {
                     CreateRepository();
-                    CreateWebUser(IsSWI);
+                    CreateWebUser();
                     WebUser.WebPrincipal = User;
                     WebUser.WebUserName = user;
                     WebUser.WebPassword = password;
-                    WebUser.WebAuthorizationHeader = authorizationHeader;
+                    WebUser.Token = token;
                     Authenticate();
 
                     if (!WebUser.IsAuthenticated) throw new Exception(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
@@ -76,18 +67,35 @@ namespace SealWebServer.Controllers
                     dashboard = GetCookie(SealLastDashboardCookieName),
                     viewtype = WebUser.ViewType,
                     lastview = view,
-                    dashboardFolders = WebUser.DashboardFolders.ToArray(),
-                    manageDashboards = WebUser.ManageDashboards,
-                    userTag = WebUser.Tag
+                    dashboardfolders = WebUser.DashboardFolders.ToArray(),
+                    managedashboards = WebUser.ManageDashboards,
+                    usertag = WebUser.Tag
                 });
             }
             catch (Exception ex)
             {
                 return HandleSWIException(ex);
             }
-
         }
 
+        void addValidFolders(SWIFolder folder, List<SWIFolder> result)
+        {
+            if (folder.right == 0) {
+                //Add only folder with rights
+                foreach (var childFolder in folder.folders)
+                {
+                    addValidFolders(childFolder, result);
+                }
+            }
+            else
+            {
+                result.Add(folder);
+            }
+        }
+
+        /// <summary>
+        /// Returns all the folders of the user (including Personal folders).
+        /// </summary>
         [HttpPost]
         public ActionResult SWIGetRootFolders()
         {
@@ -106,8 +114,14 @@ namespace SealWebServer.Controllers
                 //Report
                 var folder = getFolder("\\");
                 fillFolder(folder);
-                result.Add(folder);
-
+                if (WebUser.ShowAllFolders)
+                {
+                    result.Add(folder);
+                }
+                else
+                {
+                    addValidFolders(folder, result);
+                }
                 WebUser.Folders = result;
                 return Json(result.ToArray());
             }
@@ -117,6 +131,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the list of the published folders for the current user from a root folder.
+        /// </summary>
         [HttpPost]
         public ActionResult SWIGetFolders(string path)
         {
@@ -136,6 +153,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the list of file names and details contained in a folder.
+        /// </summary>
         [HttpPost]
         public ActionResult SWIGetFolderDetail(string path)
         {
@@ -157,7 +177,7 @@ namespace SealWebServer.Controllers
                             path = folder.Combine(Path.GetFileName(newPath)),
                             name = Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
                             last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
-                            isReport = FileHelper.IsSealReportFile(newPath),
+                            isreport = FileHelper.IsSealReportFile(newPath),
                             right = folder.right
                         });
                     }
@@ -172,6 +192,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the list of file names and details matching a search in the repository.
+        /// </summary>
         [HttpPost]
         public ActionResult SWISearch(string path, string pattern)
         {
@@ -190,6 +213,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete a sub-folder in the repository. The folder must be empty.
+        /// </summary>
         [HttpPost]
         public ActionResult SWIDeleteFolder(string path)
         {
@@ -207,6 +233,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Create a sub-folder in the repository.
+        /// </summary>
         [HttpPost]
         public ActionResult SWICreateFolder(string path)
         {
@@ -224,6 +253,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Rename a sub-folder in the repository.
+        /// </summary>
         [HttpPost]
         public ActionResult SWIRenameFolder(string source, string destination)
         {
@@ -242,6 +274,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the views and outputs of a report.
+        /// </summary>
         [HttpPost]
         public ActionResult SWIGetReportDetail(string path)
         {
@@ -256,9 +291,9 @@ namespace SealWebServer.Controllers
                 Repository repository = Repository;
                 Report report = Report.LoadFromFile(newPath, repository, false);
                 SWIReportDetail result = new SWIReportDetail();
-                result.views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
-                result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayName = report.TranslateOutputName(i.Name) }).ToArray() : new SWIOutput[] { };
-                if (result.views.Length == 0 && result.outputs.Length == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayName = report.TranslateViewName(i.Name) }).ToArray();
+                result.views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToArray();
+                result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToArray() : new SWIOutput[] { };
+                if (result.views.Length == 0 && result.outputs.Length == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToArray();
 
                 return Json(result);
 
@@ -269,8 +304,9 @@ namespace SealWebServer.Controllers
             }
         }
 
-
-
+        /// <summary>
+        /// Delete files or reports from the repository.
+        /// </summary>
         [HttpPost]
         public ActionResult SWIDeleteFiles(string paths)
         {
@@ -307,6 +343,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Move a file or a report in the repository.
+        /// </summary>
         [HttpPost]
         public ActionResult SWIMoveFile(string source, string destination, bool copy)
         {
@@ -347,6 +386,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Execute a report into a report result and returns the result. Check API of Seal Web Interface for more information.
+        /// </summary>
         [HttpPost]
         public ActionResult SWExecuteReportToResult(string path, string viewGUID, string outputGUID, string format)
         {
@@ -393,7 +435,9 @@ namespace SealWebServer.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Execute a report and returns the report html display result content (e.g. html with prompted restrictions). Check API of Seal Web Interface for more information.
+        /// </summary>
         [HttpPost]
         public ActionResult SWExecuteReport(string path, bool? render, string viewGUID, string outputGUID)
         {
@@ -424,7 +468,9 @@ namespace SealWebServer.Controllers
             }
         }
 
-
+        /// <summary>
+        /// View a file published in the repository.
+        /// </summary>
         [HttpPost]
         public ActionResult SWViewFile(string path)
         {
@@ -444,6 +490,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Clear the current user session.
+        /// </summary>
         [HttpPost]
         public ActionResult SWILogout()
         {
@@ -455,7 +504,6 @@ namespace SealWebServer.Controllers
             try
             {
                 if (WebUser != null) WebUser.Logout();
-                CreateWebUser(true);
                 return Json(new { });
             }
             catch (Exception ex)
@@ -464,7 +512,9 @@ namespace SealWebServer.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Set the culture and the default view (reports or dashboards) for the logged user.
+        /// </summary>
         [HttpPost]
         public ActionResult SWISetUserProfile(string culture, string defaultView)
         {
@@ -490,7 +540,9 @@ namespace SealWebServer.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Returns the profile information of the logged user.
+        /// </summary>
         [HttpPost]
         public ActionResult SWIGetUserProfile()
         {
@@ -551,6 +603,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Translate a text either from the public translations or the repository translations. If the optional parameter instance is not empty, the repository translations are used.
+        /// </summary>
         [HttpPost]
         public ActionResult SWITranslate(string context, string instance, string reference)
         {
@@ -567,6 +622,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the version of the Seal Web Interface and the version of the Seal Library.
+        /// </summary>
         [HttpPost]
         public ActionResult SWIGetVersions()
         {

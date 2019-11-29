@@ -16,9 +16,9 @@ namespace Seal.Model
         public string dashboard;
         public string lastview;
         public ViewType viewtype;
-        public SWIDashboardFolder[] dashboardFolders;
-        public bool manageDashboards = false;
-        public string userTag;
+        public SWIDashboardFolder[] dashboardfolders;
+        public bool managedashboards = false;
+        public string usertag;
     }
 
     /// <summary>
@@ -103,7 +103,7 @@ namespace Seal.Model
         public string path;
         public string name;
         public string last;
-        public bool isReport;
+        public bool isreport;
         public int right;
     }
 
@@ -123,7 +123,7 @@ namespace Seal.Model
     {
         public string guid;
         public string name;
-        public string displayName;
+        public string displayname;
     }
 
     /// <summary>
@@ -133,7 +133,7 @@ namespace Seal.Model
     {
         public string guid;
         public string name;
-        public string displayName;
+        public string displayname;
     }
 
     /// <summary>

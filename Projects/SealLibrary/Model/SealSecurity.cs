@@ -266,6 +266,8 @@ namespace Seal.Model
                 result.AppendLine();
                 result.AppendFormat("    Personal Folder: {0}\r\n", Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight));
                 result.AppendLine();
+                result.AppendFormat("    Show all folders: {0}\r\n", group.ShowAllFolders ? "yes" : "no");
+                result.AppendLine();
                 result.AppendFormat("    Dashboard Personal Folder: {0}\r\n", group.PersonalDashboardFolder? "yes" : "no");
                 result.AppendLine();
                 result.AppendFormat("    Manage Dashboards View: {0}\r\n", group.ManageDashboards ? "yes" : "no");
