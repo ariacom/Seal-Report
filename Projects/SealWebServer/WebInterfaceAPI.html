@@ -83,10 +83,11 @@ $.post("https://sealreport.org/demo/SWIGetVersions")
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWILogin", {
     user: "the user name", // The user name
     password: "the password" // The password
+    token: "an authentication token" // Optional token that can be used in the Security Provider Script
 })
 .done(function (data) {
         if (!data.error) { /* Do your job here */ }

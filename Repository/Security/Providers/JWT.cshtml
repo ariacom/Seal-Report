@@ -21,25 +21,39 @@
         jwtToken = httpAuthorization.Replace(""Bearer "", """");  
     }
     
-	// Decoding and validating the token received with the key
-    string json = Jose.JWT.Decode(jwtToken, Encoding.ASCII.GetBytes(user.Security.GetValue(""token_key"")));
-    JObject rss = JObject.Parse(json);
-    
-	// Obtaining the current unix time to validate the token expiration
-    DateTime foo = DateTime.UtcNow;
-    long unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
-	
-    // Validating the token expiration
-    if(unixTime > (long)rss[""exp""]){
-        user.Error = ""Token Expired"";
-    }else{
-		// Inserting data from the token payload
-        user.Name = (string)rss[""username""];
-		string securityGroup = (string)rss[""securityGroup""];
-        user.AddSecurityGroup(securityGroup);
-		string culture = (string)rss[""culture""];
-        user.SetDefaultCulture(culture);
-    }
+	if (!string.IsNullOrEmpty(jwtToken)) {	
+		// Decoding and validating the token received with the key
+		string json = Jose.JWT.Decode(jwtToken, Encoding.ASCII.GetBytes(user.Security.GetValue(""token_key"")));
+		JObject rss = JObject.Parse(json);
+		
+		// Obtaining the current unix time to validate the token expiration
+		DateTime foo = DateTime.UtcNow;
+		long unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
+		
+		// Validating the token expiration
+		if(unixTime > (long)rss[""exp""]) {
+			user.Error = ""Token Expired"";
+		}
+		else {
+			// Inserting data from the token payload
+			user.Name = (string)rss[""username""];
+			string securityGroup = (string)rss[""securityGroup""];
+			user.AddSecurityGroup(securityGroup);
+			string culture = (string)rss[""culture""];
+			user.SetDefaultCulture(culture);
+		}
+	}
+	else {
+		//No token, an alternate authentication can be done here (just copy code from the other security providers...)
+		if (user.WebUserName == ""userName"" && user.WebPassword == ""password"")
+		{
+			user.AddDefaultSecurityGroup();
+			//user.AddSecurityGroup(""aGroupName"");
+		}
+		else {
+			throw new Exception(""Invalid user name or password"");
+		}		
+	}
 }
 
 /*
