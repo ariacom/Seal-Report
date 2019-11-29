@@ -80,13 +80,13 @@ namespace SealWebServer.Controllers
             }
         }
 
-        SecurityUser CreateWebUser(bool IsSWI = false)
+        SecurityUser CreateWebUser()
         {
             if (Repository == null)
             {
                 CreateRepository();
             }
-            var user = new SecurityUser((IsSWI ? Repository.SecuritySWI: Repository.Security));
+            var user = new SecurityUser(Repository.Security);
 
             //Load profile
             if (System.IO.File.Exists(user.ProfilePath)) user.Profile = SecurityUserProfile.LoadFromFile(user.ProfilePath);
@@ -793,7 +793,7 @@ namespace SealWebServer.Controllers
                         path = folder.Combine(Path.GetFileName(newPath)),
                         name = folder.fullname + "\\" + Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
                         last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
-                        isReport = FileHelper.IsSealReportFile(newPath),
+                        isreport = FileHelper.IsSealReportFile(newPath),
                         right = folder.right
                     });
                 }

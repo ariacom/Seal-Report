@@ -104,8 +104,9 @@ $.post("https://sealreport.org/demo/SWILogin", {
                             dashboard (string) : the last dashboard GUID viewed by the user<br />
                             viewType (int): 0 reports only, 1 dashboards only, 2 reports and dashboards<br />
                             lastview (string): last user's view (reports or dashboards)<br />
-                            dashboardFolders ([string]): array of string of the dashboard folders with the edit right<br />
-                            manageDashboards (bool): manage dashboards view right of the user<br />
+                            dashboardfolders ([string]): array of string of the dashboard folders with the edit right<br />
+                            managedashboards (bool): manage dashboards view right of the user<br />
+                            usertag (string) : custom tag string (e.g. may be used to show a photo of the user)<br />
                             error (string) : if any error, the error description
                         </td>
                     </tr>
@@ -240,7 +241,7 @@ $.post("https://sealreport.org/demo/SWIGetFolderDetail", {
                             path (string): the file path<br />
                             name (string): the translated file name<br />
                             last (string): the last modification date and time<br />
-                            isReport (boolean): true if the file is a report<br />
+                            isreport (boolean): true if the file is a report<br />
                             right (int): right applied to the folder (0 = Execute reports, 1 = Execute reports, 2 = Schedule reports, 3 = Edit reports)<br />
                         </td>
                     </tr>
@@ -280,7 +281,7 @@ $.post("https://sealreport.org/demo/SWISearch", {
                             path (string): the file path<br />
                             name (string): the translated file name<br />
                             last (string): the last modification date and time<br />
-                            isReport (boolean): true if the file is a report<br />
+                            isreport (boolean): true if the file is a report<br />
                             right (int): right applied to the folder (0 = Execute reports, 1 = Execute reports, 2 = Schedule reports, 3 = Edit reports)<br />
                         </td>
                     </tr>
@@ -319,7 +320,7 @@ $.post("https://sealreport.org/demo/SWIGetReportDetail", {
                         <td>
                             guid (string): the unique identifier of the output<br />
                             name (string): the output name <br />
-                            displayName (string): the output name translated
+                            displayname (string): the output name translated
                         </td>
                     </tr>
                     <tr>
@@ -327,7 +328,7 @@ $.post("https://sealreport.org/demo/SWIGetReportDetail", {
                         <td>
                             guid (string): the unique identifier of the view<br />
                             name (string): the view name <br />
-                            displayName (string): the view name translated
+                            displayname (string): the view name translated
                         </td>
                     </tr>
                 </tbody>
@@ -465,13 +466,14 @@ $.post("https://sealreport.org/demo/SWIGetUserProfile")
             <h2>SWISetUserProfile</h2>
             <table class="table table-striped">
                 <tbody>
-                    <tr><th>Description</th><td>Set the culture for the logged user.</td></tr>
+                    <tr><th>Description</th><td>Set the culture and the default view (reports or dashboards) for the logged user.</td></tr>
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
 $.post("https://sealreport.org/demo/SWISetUserProfile", {
             culture: "it-IT" // the new user's culture name or code
+            defaultView: "dashboards" // reports or dashboards
 })
 .done(function (data) {
         if (!data.error) { /* Do your job here */ }

@@ -103,7 +103,7 @@ var SWIMain = /** @class */ (function () {
         var hasReports = (_main._profile.viewtype == 0 || _main._profile.viewtype == 2);
         var hasDashboard = (_main._profile.viewtype == 1 || _main._profile.viewtype == 2);
         SWIUtil.ShowHideControl($("#dashboard-toggle"), _main._profile.viewtype == 2); /* reports and dashboards */
-        SWIUtil.ShowHideControl($("#dashboards-nav-item"), _main._profile.manageDashboards);
+        SWIUtil.ShowHideControl($("#dashboards-nav-item"), _main._profile.managedashboards);
         //Dashboard toggle
         $("#dashboard-toggle").unbind('click').on("click", function (e) {
             $outputPanel.hide();
@@ -465,10 +465,10 @@ var SWIMain = /** @class */ (function () {
             $tableBody.append($tr);
             if (_main._canEdit)
                 $tr.append($("<td class='hidden-xs'>").append($("<input>").addClass("report-checkbox").prop("type", "checkbox").data("path", file.path)));
-            $tr.append($("<td>").append($("<a>").addClass("report-name").data("path", file.path).data("isReport", file.isReport).text(file.name)));
+            $tr.append($("<td>").append($("<a>").addClass("report-name").data("path", file.path).data("isReport", file.isreport).text(file.name)));
             var $td = $("<td>").css("text-align", "center").data("path", file.path);
             $tr.append($td);
-            if (file.isReport) {
+            if (file.isreport) {
                 $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Views and outputs")).addClass("btn btn-default btn-table fa fa-list-ul report-output"));
                 if (file.right >= folderRightSchedule && hasEditor)
                     $td.append($("<button>").prop("type", "button").prop("title", SWIUtil.tr("Edit report")).addClass("btn btn-default fa fa-pencil report-edit hidden-xs"));
@@ -515,13 +515,13 @@ var SWIMain = /** @class */ (function () {
                 for (var i = 0; i < data.views.length; i++) {
                     var $tr = $("<tr>");
                     $tableBody.append($tr);
-                    $tr.append($("<td>").append($("<a>").data("viewguid", data.views[i].guid).addClass("output-name").text(data.views[i].displayName)));
+                    $tr.append($("<td>").append($("<a>").data("viewguid", data.views[i].guid).addClass("output-name").text(data.views[i].displayname)));
                     $tr.append($("<td>").html(SWIUtil.tr("View")));
                 }
                 for (var i = 0; i < data.outputs.length; i++) {
                     var $tr = $("<tr>");
                     $tableBody.append($tr);
-                    $tr.append($("<td>").append($("<a>").data("outputguid", data.outputs[i].guid).addClass("output-name").text(data.outputs[i].displayName)));
+                    $tr.append($("<td>").append($("<a>").data("outputguid", data.outputs[i].guid).addClass("output-name").text(data.outputs[i].displayname)));
                     $tr.append($("<td>").html(SWIUtil.tr("Output")));
                 }
                 //adjust position with the final size
@@ -589,7 +589,7 @@ var SWIMain = /** @class */ (function () {
         if (show) {
             $(".folderview").hide();
             $(".dashboardview").show();
-            SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.dashboardFolders.length != 0);
+            SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.dashboardfolders.length != 0);
             span.addClass("glyphicon-th-list");
             $("#dashboard-toggle").attr("title", SWIUtil.tr2("View reports"));
             _dashboard.reorderItems(true);

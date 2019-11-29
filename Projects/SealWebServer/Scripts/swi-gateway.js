@@ -36,7 +36,7 @@ var SWIGateway = /** @class */ (function () {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.Login = function (user, password, callback, errorcb) {
-        $.post(_server + "SWILoginWeb", {
+        $.post(_server + "SWILogin", {
             user: user, password: password
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
