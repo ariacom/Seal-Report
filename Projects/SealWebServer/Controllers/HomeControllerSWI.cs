@@ -21,29 +21,19 @@ namespace SealWebServer.Controllers
         public ActionResult SWILogin(string user, string password)
         {
             WriteDebug("SWILogin");
-            string authorizationHeader = (Request.ServerVariables.Get("HTTP_AUTHORIZATION") != null ? (Request.ServerVariables.Get("HTTP_AUTHORIZATION").Contains("Bearer") ? Request.ServerVariables.Get("HTTP_AUTHORIZATION").Replace("Bearer ", "") : null) : null);
-            return GenerateResponseLogin(true, user, password, authorizationHeader);
-        }
-
-        [HttpPost]
-        public ActionResult SWILoginWeb(string user, string password)
-        {
-            WriteDebug("SWILoginWeb");
-            return GenerateResponseLogin(false, user, password, null);
-        }
-
-        private ActionResult GenerateResponseLogin(bool IsSWI, string user, string password, string authorizationHeader)
-        {
             try
             {
-                if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user) || (!string.IsNullOrEmpty(authorizationHeader) && WebUser.WebAuthorizationHeader != authorizationHeader))
+                // We extract the token from the header and clean it
+                string AuthorizationHeader = (Request.ServerVariables.Get("HTTP_AUTHORIZATION") != null ? (Request.ServerVariables.Get("HTTP_AUTHORIZATION").Contains("Bearer") ? Request.ServerVariables.Get("HTTP_AUTHORIZATION").Replace("Bearer ", "") : null) : null);
+
+                if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user) || (!string.IsNullOrEmpty(AuthorizationHeader) && WebUser.WebAuthorizationHeader != AuthorizationHeader))
                 {
                     CreateRepository();
-                    CreateWebUser(IsSWI);
+                    CreateWebUser(true);
                     WebUser.WebPrincipal = User;
                     WebUser.WebUserName = user;
                     WebUser.WebPassword = password;
-                    WebUser.WebAuthorizationHeader = authorizationHeader;
+                    WebUser.WebAuthorizationHeader = AuthorizationHeader;
                     Authenticate();
 
                     if (!WebUser.IsAuthenticated) throw new Exception(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
@@ -85,8 +75,8 @@ namespace SealWebServer.Controllers
             {
                 return HandleSWIException(ex);
             }
-
         }
+
 
         [HttpPost]
         public ActionResult SWIGetRootFolders()
