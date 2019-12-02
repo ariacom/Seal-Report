@@ -173,6 +173,12 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag;
+
         MetaData _metaData = null;
         /// <summary>
         /// MetaData contained in the source 

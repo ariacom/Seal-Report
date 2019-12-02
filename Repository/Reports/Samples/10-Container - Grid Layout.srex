@@ -1,45 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>b2f8bfdd-c19d-43a8-83a1-88d6bd0a3bc4</GUID><Sources><ReportSource><GUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>918dd2c7-c7a5-4377-9cbd-feae7b7838f8</GUID><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns></MetaTable></Tables></MetaData><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource><ReportSource><GUID>cd0caa1f-cd7a-4e0c-9a70-f247ca33721f</GUID><Name>RSS No SQL Source (Repository)</Name><ConnectionGUID>1</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData /><MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</GUID><Name>model table</Name><SourceGUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</SourceGUID><Elements><ReportElement><GUID>287860fc-f508-4c69-95f5-e2ebff863bd6</GUID><Name>Employees.LastName</Name><Category>Master</Category><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Views><ReportView><GUID>48434652-2e24-4390-ab3c-116b5c9dcf41</GUID><Name>view</Name><Views><ReportView><GUID>e7e2dec4-038a-4c78-b9cc-33e9e9b2a5b0</GUID><Name>Container Blue Border</Name><Views><ReportView><GUID>a891be9a-d648-4b3a-89ec-662c88449b85</GUID><Name>Text1 Left Row1</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model
-@{
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>b2f8bfdd-c19d-43a8-83a1-88d6bd0a3bc4</GUID><Sources><ReportSource><GUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>918dd2c7-c7a5-4377-9cbd-feae7b7838f8</GUID><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns></MetaTable></Tables></MetaData><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource><ReportSource><GUID>cd0caa1f-cd7a-4e0c-9a70-f247ca33721f</GUID><Name>RSS No SQL Source (Repository)</Name><ConnectionGUID>1</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData /><MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</GUID><Name>model table</Name><SourceGUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</SourceGUID><Elements><ReportElement><GUID>287860fc-f508-4c69-95f5-e2ebff863bd6</GUID><Name>Employees.LastName</Name><Category>Master</Category><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Views><ReportView><GUID>48434652-2e24-4390-ab3c-116b5c9dcf41</GUID><Name>view</Name><Views><ReportView><GUID>e7e2dec4-038a-4c78-b9cc-33e9e9b2a5b0</GUID><Name>Container Blue Border</Name><Views><ReportView><GUID>a891be9a-d648-4b3a-89ec-662c88449b85</GUID><Name>Text1 Left Row1</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
 
 &lt;h1&gt;@view.Name&lt;/h1&gt;
 
-</CustomTemplate><SortOrder>1</SortOrder></ReportView><ReportView><GUID>37e9da5a-15e0-4ce9-b1b3-961a9ffa22db</GUID><Name>Text2 Right Row1</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model
-@{
+</CustomTemplate><SortOrder>1</SortOrder></ReportView><ReportView><GUID>37e9da5a-15e0-4ce9-b1b3-961a9ffa22db</GUID><Name>Text2 Right Row1</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
 
 &lt;h1&gt;@view.Name&lt;/h1&gt;
 
-</CustomTemplate><SortOrder>2</SortOrder></ReportView><ReportView><GUID>073cb874-1927-4c34-a090-7c6a4262149d</GUID><Name>Text3 Center Row2</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model
-@{
+</CustomTemplate><SortOrder>2</SortOrder></ReportView><ReportView><GUID>073cb874-1927-4c34-a090-7c6a4262149d</GUID><Name>Text3 Center Row2</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
 
 &lt;h1&gt;@view.Name&lt;/h1&gt;
 
-</CustomTemplate><SortOrder>3</SortOrder></ReportView><ReportView><GUID>68cc45f1-d683-4f90-b3a6-80fb89075b4f</GUID><Name>Text4 Left Row3</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model
-@{
+</CustomTemplate><SortOrder>3</SortOrder></ReportView><ReportView><GUID>68cc45f1-d683-4f90-b3a6-80fb89075b4f</GUID><Name>Text4 Left Row3</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
 
 &lt;h1&gt;@view.Name&lt;/h1&gt;
 
-</CustomTemplate><SortOrder>4</SortOrder></ReportView><ReportView><GUID>4ea493a4-4d43-4fbf-91ff-ee163d7c16dd</GUID><Name>Text5 Right Row3</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model
-@{
+</CustomTemplate><SortOrder>4</SortOrder></ReportView><ReportView><GUID>4ea493a4-4d43-4fbf-91ff-ee163d7c16dd</GUID><Name>Text5 Right Row3</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
 
 &lt;h1&gt;@view.Name&lt;/h1&gt;
 
-</CustomTemplate><SortOrder>5</SortOrder></ReportView><ReportView><GUID>49b55cbf-7b41-4651-8542-a3ad348b0cbd</GUID><Name>Model Table</Name><Views><ReportView><GUID>ccc76f4a-86c3-445a-903e-c2aff9f2030a</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</ModelGUID><SortOrder>7</SortOrder></ReportView><ReportView><GUID>b871a4a8-e7d5-47c4-9aec-c28df8aa81f6</GUID><Name>Container Red Border</Name><Views><ReportView><GUID>957f415b-17e0-49d2-941f-6bd46b89fe69</GUID><Name>Text6</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model
-@{
+</CustomTemplate><SortOrder>5</SortOrder></ReportView><ReportView><GUID>49b55cbf-7b41-4651-8542-a3ad348b0cbd</GUID><Name>Model Table</Name><Views><ReportView><GUID>ccc76f4a-86c3-445a-903e-c2aff9f2030a</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</ModelGUID><SortOrder>7</SortOrder></ReportView><ReportView><GUID>b871a4a8-e7d5-47c4-9aec-c28df8aa81f6</GUID><Name>Container Red Border</Name><Views><ReportView><GUID>957f415b-17e0-49d2-941f-6bd46b89fe69</GUID><Name>Text6</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
@@ -58,8 +52,7 @@
   &lt;PageScript /&gt;
   &lt;ChartScript /&gt;
   &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView><ReportView><GUID>7ed9648b-f8cc-43b4-8292-9b36482f46e9</GUID><Name>Text7</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model
-@{
+&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView><ReportView><GUID>7ed9648b-f8cc-43b4-8292-9b36482f46e9</GUID><Name>Text7</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }

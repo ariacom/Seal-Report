@@ -35,6 +35,8 @@ namespace Seal.Converter
         {
             List<string> choices = new List<string>();
             Report report = context.Instance as Report;
+            if (report == null && context.Instance is ReportComponent) report = ((ReportComponent)context.Instance).Report;
+
             if (report != null)
             {
                 var list = getViewList(context.PropertyDescriptor, report);
@@ -58,6 +60,8 @@ namespace Seal.Converter
             if (context != null)
             {
                 Report report = context.Instance as Report;
+                if (report == null && context.Instance is ReportComponent) report = ((ReportComponent)context.Instance).Report;
+
                 if (report != null && value != null)
                 {
                     var list = getViewList(context.PropertyDescriptor, report);
@@ -76,6 +80,8 @@ namespace Seal.Converter
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             Report report = context.Instance as Report;
+            if (report == null && context.Instance is ReportComponent) report = ((ReportComponent)context.Instance).Report;
+
             if (report != null && value != null)
             {
                 var list = getViewList(context.PropertyDescriptor, report);

@@ -80,9 +80,7 @@
       </DbInfoMessage>
       <SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID>
       <SQL />
-      <Script>@using Seal.Model
-@using Seal.Helpers
-@using System.Data
+      <Script>@using System.Data
 @using System.IO
 @{
 	//Load a table from an Excel file, needs ODBC Drivers for Office 2007 installed
