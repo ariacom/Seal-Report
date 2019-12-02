@@ -51,9 +51,7 @@
         <Length>0</Length>
       </DbInfoMessage>
       <SourceGUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</SourceGUID>
-      <Script>@using Seal.Model
-@using Seal.Helpers
-@{
+      <Script>@{
 	//Refresh Data Sources enumerated lists
 	//Useful to schedule this task (for example once a day) if your enumerated values have changed.. 
 	ReportTask task = Model;

@@ -8,8 +8,7 @@ AND [3dbbc2a7-6e96-495a-9393-70344a13d921]</Restriction><Restrictions><ReportRes
 &lt;/div&gt;</CustomTemplate><SortOrder>4</SortOrder></ReportView><ReportView><GUID>d19764eb-66a7-47c5-8d66-95e02d94a0a1</GUID><Name>Title</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>&lt;div class="text-center" style="width:250px"&gt;
 &lt;h4&gt;A title sample !&lt;/h4&gt;
 &lt;/div&gt;
-</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><CustomTemplate /><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>571d29f3-c500-44a8-84a8-e82ca9d75406</ModelGUID><Parameters><Parameter><Name>show_summary_table</Name><Value>False</Value></Parameter></Parameters><SortOrder>6</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model&#xD;
-@{&#xD;
+</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><CustomTemplate /><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>571d29f3-c500-44a8-84a8-e82ca9d75406</ModelGUID><Parameters><Parameter><Name>show_summary_table</Name><Value>False</Value></Parameter></Parameters><SortOrder>6</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{&#xD;
     Report report = Model;&#xD;
     ReportView view = report.CurrentView;&#xD;
     int index = 0;&#xD;

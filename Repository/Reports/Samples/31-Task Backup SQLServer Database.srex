@@ -58,8 +58,7 @@
         <Length>0</Length>
       </DbInfoMessage>
       <SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID>
-      <SQL>@using Seal.Model
-@{
+      <SQL>@{
 //--Simply backup msdb SQLServer database to a file...
 ReportTask task = Model;
 string result = @"BACKUP DATABASE msdb TO DISK='C:\temp\backup_msdb_" + DateTime.Now.ToShortDateString() + ".bak' WITH INIT, MEDIANAME = 'msdb'";
