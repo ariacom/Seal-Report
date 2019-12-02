@@ -167,6 +167,17 @@ namespace Seal.Helpers
             }
         }
 
+        public static void AddPersonalFolderChoices(string path, List<string> choices)
+        {
+            foreach (var folder in Directory.GetDirectories(path))
+            {
+                if (folder.ToLower().EndsWith("_dashboards")) continue;
+                string newFolder = folder.StartsWith(Repository.Instance.PersonalFolder) ? folder.Substring(Repository.Instance.PersonalFolder.Length) : folder;
+                choices.Add(newFolder);
+                AddPersonalFolderChoices(folder, choices);
+            }
+        }
+
         #region Seal Attachments
         public static string GetResultFilePrefix(string path)
         {
