@@ -874,7 +874,7 @@ namespace Seal.Forms
                     else if (context.PropertyDescriptor.Name == "InitScript")
                     {
                         template = razorInitScriptTemplate;
-                        frm.ObjectForCheckSyntax = ((ReportComponent)context.Instance).Report;
+                        frm.ObjectForCheckSyntax = (Report)context.Instance;
                         frm.Text = "Edit the script executed when the report is initialized";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }

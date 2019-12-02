@@ -129,6 +129,9 @@ namespace Seal.Helpers
                 result = configuration.SetConfigurationCommonScripts(result);
             }
 
+            if (!result.Contains("@using Seal.Model")) result += "@using Seal.Model\r\n";
+            if (!result.Contains("@using Seal.Helpers")) result += "@using Seal.Helpers\r\n";
+
             return result;
         }
 

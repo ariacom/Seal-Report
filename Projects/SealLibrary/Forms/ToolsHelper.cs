@@ -36,7 +36,6 @@ namespace Seal.Forms
 
         ToolStripMenuItem _checkSource = new ToolStripMenuItem() { Text = "Check Data Sources...", ToolTipText = "Check all data source definitions with the objects in the database", AutoToolTip = true };
         ToolStripMenuItem _refreshEnum = new ToolStripMenuItem() { Text = "Refresh Enumerated Lists...", ToolTipText = "Refresh all the dynamic enmerated list values from the database", AutoToolTip = true };
-        ToolStripMenuItem _checkExecution = new ToolStripMenuItem() { Text = "Check Report Executions...", ToolTipText = "Check all the reports in the repository", AutoToolTip = true };
         ToolStripMenuItem _exportSourceTranslations = new ToolStripMenuItem() { Text = "Export Data Source translations in CSV...", ToolTipText = "Export all translations found in the Data Source into a CSV file.", AutoToolTip = true };
         ToolStripMenuItem _exportReportsTranslations = new ToolStripMenuItem() { Text = "Export Folders, Reports and Dashboards translations in CSV...", ToolTipText = "Export all report and folders translations found in the repository into a CSV file.", AutoToolTip = true };
         ToolStripMenuItem _synchronizeSchedules = new ToolStripMenuItem() { Text = "Synchronize Report Schedules...", ToolTipText = "Parse all reports in the repository and and synchronize their schedules with their definition in the Windows Task Scheduler", AutoToolTip = true };
@@ -66,11 +65,6 @@ namespace Seal.Forms
 
                 _synchronizeSchedulesCurrentUser.Click += tools_Click;
                 toolsMenuItem.DropDownItems.Add(_synchronizeSchedulesCurrentUser);
-
-                toolsMenuItem.DropDownItems.Add(new ToolStripSeparator());
-
-                _checkExecution.Click += tools_Click;
-                toolsMenuItem.DropDownItems.Add(_checkExecution);
             }
 
             _viewWidgetList.Click += tools_Click;
@@ -126,10 +120,6 @@ namespace Seal.Forms
                 else if (sender == _refreshEnum)
                 {
                     thread = new Thread(delegate (object param) { RefreshEnums((ExecutionLogInterface)param, sources); });
-                }
-                else if (sender == _checkExecution)
-                {
-                    thread = new Thread(delegate (object param) { CheckExecutions((ExecutionLogInterface)param); });
                 }
                 else if (sender == _exportSourceTranslations)
                 {
@@ -323,97 +313,6 @@ namespace Seal.Forms
             else log.Log("Youpi, pas d'erreur !");
         }
 
-
-        void checkExecutions(ExecutionLogInterface log, string folder, Repository repository, ref int count, ref int errorCount, StringBuilder errorSummary)
-        {
-            log.Log("Checking folder '{0}'", folder);
-            foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))
-            {
-                try
-                {
-                    if (log.IsJobCancelled()) return;
-                    log.Log("Checking report '{0}'", reportPath);
-                    count++;
-                    Report report = Report.LoadFromFile(reportPath, repository);
-                    if (!string.IsNullOrEmpty(report.LoadErrors)) throw new Exception(string.Format("Error loading the report: {0}", report.LoadErrors));
-                    report.CheckingExecution = true;
-                    if (report.Tasks.Count > 0) log.Log("Warning: Report Task executions are skipped.");
-                    foreach (ReportView view in report.Views)
-                    {
-                        if (log.IsJobCancelled()) return;
-                        log.Log("Running report with view '{0}'", view.Name);
-                        try
-                        {
-                            report.CurrentViewGUID = view.GUID;
-                            ReportExecution reportExecution = new ReportExecution() { Report = report };
-                            reportExecution.Execute();
-
-                            int cnt = 120;
-                            while (--cnt > 0 && report.IsExecuting && !log.IsJobCancelled())
-                            {
-                                Thread.Sleep(1000);
-                            }
-
-                            if (report.IsExecuting)
-                            {
-                                if (cnt == 0) log.Log("Warning: Report is running for more than 2 minutes. Cancelling the execution...");
-                                report.CancelExecution();
-                            }
-
-                            if (!string.IsNullOrEmpty(report.ExecutionErrors)) throw new Exception(report.ExecutionErrors);
-                            if (!string.IsNullOrEmpty(report.ExecutionView.Error)) throw new Exception(report.ExecutionView.Error);
-
-                            report.RenderOnly = true;
-                        }
-                        catch (Exception ex)
-                        {
-                            errorCount++;
-                            log.LogRaw("ERROR\r\n");
-                            log.Log(ex.Message);
-                            errorSummary.AppendFormat("\r\nReport '{0}' View '{1}': {2}\r\n", reportPath, view.Name, ex.Message);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    errorCount++;
-                    log.LogRaw("ERROR\r\n");
-                    log.Log(ex.Message);
-                    errorSummary.AppendFormat("\r\nReport '{0}': {1}\r\n", reportPath, ex.Message);
-                }
-            }
-            log.LogRaw("\r\n");
-
-            foreach (string subFolder in Directory.GetDirectories(folder))
-            {
-                if (log.IsJobCancelled()) return;
-                checkExecutions(log, subFolder, repository, ref count, ref errorCount, errorSummary);
-            }
-        }
-
-        public void CheckExecutions(ExecutionLogInterface log)
-        {
-            int count = 0, errorCount = 0;
-            StringBuilder errorSummary = new StringBuilder("");
-
-            Repository repository = Repository.Instance.CreateFast();
-            try
-            {
-                log.Log("Starting Check Report Executions\r\n");
-                checkExecutions(log, repository.ReportsFolder, repository, ref count, ref errorCount, errorSummary);
-                log.Log("Checking personal folders\r\n");
-                checkExecutions(log, repository.PersonalFolder, repository, ref count, ref errorCount, errorSummary);
-            }
-            catch (Exception ex)
-            {
-                log.Log("\r\n[UNEXPECTED ERROR RECEIVED]\r\n{0}\r\n", ex.Message);
-            }
-            log.Log("Check Report Executions terminated\r\n");
-
-            log.Log("SUMMARY: {0} Report(s) checked, {1} Error(s) detected.\r\n{2}", count, errorCount, errorSummary);
-            if (errorCount == 0) log.Log("Youpi, pas d'erreur !");
-
-        }
 
         string initTranslationFile(StringBuilder translations, string separator, Repository repository)
         {

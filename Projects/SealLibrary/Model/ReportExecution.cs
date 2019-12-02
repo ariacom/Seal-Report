@@ -80,6 +80,11 @@ namespace Seal.Model
         /// </summary>
         public string NavigationParameter = null;
 
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        public object Tag;
+
         Thread _executeThread;
 
         /// <summary>
@@ -655,8 +660,6 @@ namespace Seal.Model
 
         void executeTasks(ExecutionStep step)
         {
-            if (Report.CheckingExecution) return;
-
             var tasks = Report.ExecutionTasks.Where(i => i.Step == step).OrderBy(i => i.SortOrder).ToList();
             if (tasks.Count > 0)
             {

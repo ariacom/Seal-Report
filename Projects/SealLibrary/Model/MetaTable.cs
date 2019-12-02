@@ -370,7 +370,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Returns the last oder to display the columns
+        /// Returns the last order to display the columns
         /// </summary>
         public int GetLastDisplayOrder()
         {
