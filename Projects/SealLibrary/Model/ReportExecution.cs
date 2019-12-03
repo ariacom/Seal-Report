@@ -384,19 +384,13 @@ namespace Seal.Model
             string dateMessage = report.Translate("Use the date format '{0}' or one of the following keywords:", report.CultureInfo.DateTimeFormat.ShortDatePattern) + " " + report.DateKeywordsList;
 
             DateTime dt;
-
-            if (string.IsNullOrEmpty(val1))
-                val1 = restriction.Value1;
-
             string val = val1;
             if (restriction.IsDateTime)
             {
                 if (string.IsNullOrEmpty(val))
                 {
-                    if (DateTime.MinValue.Equals(restriction.Date1))
-                        restriction.Date1Keyword = "";
-                    else
-                        val = restriction.Date1.ToString();
+                    restriction.Date1 = DateTime.MinValue;
+                    restriction.Date1Keyword = "";
                 }
                 else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                 {
@@ -420,20 +414,13 @@ namespace Seal.Model
 
             if (restriction.Prompt != PromptType.PromptOneValue)
             {
-                if (string.IsNullOrEmpty(val2))
-                    val2 = restriction.Value2;
-                if (string.IsNullOrEmpty(val3))
-                    val3 = restriction.Value3;
-                if (string.IsNullOrEmpty(val4))
-                    val4 = restriction.Value4;
-
                 val = val2;
                 if (restriction.IsDateTime)
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        if (DateTime.MinValue.Equals(restriction.Date2))
-                            restriction.Date2Keyword = "";
+                        restriction.Date2 = DateTime.MinValue;
+                        restriction.Date2Keyword = "";
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                     {
@@ -453,8 +440,8 @@ namespace Seal.Model
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        if (DateTime.MinValue.Equals(restriction.Date3))
-                            restriction.Date3Keyword = "";
+                        restriction.Date3 = DateTime.MinValue;
+                        restriction.Date3Keyword = "";
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                     {
@@ -474,8 +461,8 @@ namespace Seal.Model
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        if (DateTime.MinValue.Equals(restriction.Date4))
-                            restriction.Date4Keyword = "";
+                        restriction.Date4 = DateTime.MinValue;
+                        restriction.Date4Keyword = "";
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                     {
@@ -503,19 +490,17 @@ namespace Seal.Model
             }
             if (restriction.IsEnum)
             {
-                List<string> selected_enum = new List<string>();
+                restriction.EnumValues.Clear();
                 foreach (var enumVal in restriction.EnumRE.Values)
                 {
                     val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
                     if (val.ToLower() == "true")
                     {
-                        selected_enum.Add(enumVal.Id);
+                        restriction.EnumValues.Add(enumVal.Id);
                         //Check only one restriction
                         if (restriction.Prompt == PromptType.PromptOneValue) break;
                     }
                 }
-                if(selected_enum.Count > 0)
-                    restriction.EnumValues = selected_enum;
 
                 //check required flag
                 if (restriction.EnumValues.Count == 0 && restriction.Required)
