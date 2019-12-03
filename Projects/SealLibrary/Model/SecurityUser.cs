@@ -10,6 +10,7 @@ using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
+using System.Web;
 
 namespace Seal.Model
 {
@@ -74,9 +75,14 @@ namespace Seal.Model
         public string WebPassword = "";
 
         /// <summary>
-        /// Parameters for authentication: Authorization Header
+        /// Parameters for authentication: Token
         /// </summary>
-        public string WebAuthorizationHeader = null;
+        public string Token = null;
+
+        /// <summary>
+        /// Parameters for authentication: The Request done for the login
+        /// </summary>
+        public HttpRequestBase Request = null;
 
         /// <summary>
         /// The current Windows IPrincipal
@@ -175,6 +181,7 @@ namespace Seal.Model
                     {
                         if (_persFolderRight == null || _persFolderRight < group.PersFolderRight) _persFolderRight = group.PersFolderRight;
                     }
+                    if (_persFolderRight == null) _persFolderRight = PersonalFolderRight.None;
                 }
                 return _persFolderRight.Value;
             }
@@ -214,8 +221,31 @@ namespace Seal.Model
                     {
                         if (_viewType == null || _viewType < group.ViewType) _viewType = group.ViewType;
                     }
+
+                    if (_viewType == null) _viewType = ViewType.Reports;
                 }
                 return _viewType.Value;
+            }
+        }
+
+
+        private bool? _showAllFolder = null;
+        /// <summary>
+        /// True if folders with no right are also shown
+        /// </summary>
+        public bool ShowAllFolders
+        {
+            get
+            {
+                if (_showAllFolder == null)
+                {
+                    _showAllFolder = false;
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (group.ShowAllFolders) _showAllFolder = true;
+                    }
+                }
+                return _showAllFolder.Value;
             }
         }
 

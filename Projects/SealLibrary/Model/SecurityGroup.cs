@@ -41,6 +41,7 @@ namespace Seal.Model
                 GetProperty("Culture").SetIsBrowsable(true);
                 GetProperty("LogoName").SetIsBrowsable(true);
                 GetProperty("PersFolderRight").SetIsBrowsable(true);
+                GetProperty("ShowAllFolders").SetIsBrowsable(true);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -62,20 +63,27 @@ namespace Seal.Model
         public bool ShouldSerializeFolders() { return Folders.Count > 0; }
 
         /// <summary>
-        /// Define if the group can view Reports and Dashboards
-        /// </summary>
-        [Category("Definition"), DisplayName("View type"), Description("Define if the group can view Reports and Dashboards."), Id(3, 1)]
-        [TypeConverter(typeof(NamedEnumConverter))]
-        [DefaultValue(ViewType.ReportsDashboards)]
-        public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
-
-        /// <summary>
         /// Define the right of the dedicated personal folder for each user of the group
         /// </summary>
         [Category("Definition"), DisplayName("Personal folder"), Description("Define the right of the dedicated personal folder for each user of the group."), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(PersonalFolderRight.None)]
         public PersonalFolderRight PersFolderRight { get; set; } = PersonalFolderRight.None;
+
+        /// <summary>
+        /// Define if the group can view Reports and Dashboards
+        /// </summary>
+        [Category("Definition"), DisplayName("Show all folders"), Description("If true, parent folder with no rights are also shown in the tree view."), Id(5, 1)]
+        [DefaultValue(false)]
+        public bool ShowAllFolders { get; set; } = false;
+
+        /// <summary>
+        /// Define if the group can view Reports and Dashboards
+        /// </summary>
+        [Category("Definition"), DisplayName("View type"), Description("Define if the group can view Reports and Dashboards."), Id(6, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(ViewType.ReportsDashboards)]
+        public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
 
         /// <summary>
         /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.

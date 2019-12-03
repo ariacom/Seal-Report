@@ -63,8 +63,8 @@ namespace Seal.Model
                 GetProperty("InputValues").SetIsBrowsable(true);
                 GetProperty("WidgetCache").SetIsBrowsable(true);
 
-                GetProperty("InitScript").SetIsBrowsable(true);
                 GetProperty("CommonScripts").SetIsBrowsable(true);
+                GetProperty("InitScript").SetIsBrowsable(true);
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (Report.CommonScripts.Count == 0 ? "None" : Report.CommonScripts.Count.ToString() + " Items(s)"));
                 TypeDescriptor.Refresh(this);
             }
@@ -2057,7 +2057,7 @@ namespace Seal.Model
         /// Object that can be used at run-time for any purpose
         /// </summary>
         [XmlIgnore]
-        public Object Tag;
+        public object Tag;
 
         /// <summary>
         /// Helper to find a view from its identifier

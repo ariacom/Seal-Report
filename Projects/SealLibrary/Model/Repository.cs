@@ -165,16 +165,21 @@ namespace Seal.Model
                 if (_configuration == null)
                 {
                     _configuration = SealServerConfiguration.LoadFromFile(ConfigurationPath, true);
-                    if (_configuration == null) _configuration = new SealServerConfiguration();
+                    if (_configuration == null)
+                    {
+                        _configuration = new SealServerConfiguration();
+                    }
                     _configuration.Repository = this;
                 }
                 return _configuration;
             }
-            set { _configuration = value; }
+            set {
+                _configuration = value;
+            }
         }
 
         /// <summary>
-        /// Forces a configuration relaod
+        /// Forces a configuration reload
         /// </summary>
         public void ReloadConfiguration()
         {
@@ -182,6 +187,7 @@ namespace Seal.Model
         }
 
         SealSecurity _security = null;
+
         /// <summary>
         /// Current security
         /// </summary>
@@ -201,12 +207,13 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Forces a security reload
+        /// Forces a security reload for Web
         /// </summary>
         public void ReloadSecurity()
         {
             _security = null;
         }
+
 
         static string FindDebugRepository(string path)
         {

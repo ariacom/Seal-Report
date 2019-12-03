@@ -1,6 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>b94efd18-9a33-49bd-91db-e750793751f5</GUID><Sources><ReportSource><GUID>651d9841-53de-4676-84bd-134ec53b62c1</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>618ab846-7318-4c6e-a74f-020e5b6c4e5e</GUID><Sql>select * from employees</Sql><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><WhereSQL>@using Seal.Model
-@using Seal.Helpers
-@{
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>b94efd18-9a33-49bd-91db-e750793751f5</GUID><Sources><ReportSource><GUID>651d9841-53de-4676-84bd-134ec53b62c1</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>618ab846-7318-4c6e-a74f-020e5b6c4e5e</GUID><Sql>select * from employees</Sql><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><WhereSQL>@{
   MetaTable table = Model;
   string result = "";
   if (table.Source.Report != null &amp;&amp; table.Source.Report.SecurityContext != null)
@@ -16,8 +14,7 @@ AND [f0efb2d0-7f45-42cd-936e-aae3be6b91c8]</Restriction><Restrictions><ReportRes
 &lt;li&gt;A custom 'Report Execution Init Script' in the root 'Views' tree node.&lt;/li&gt;&#xD;
 &lt;/ul&gt;&#xD;
 &lt;/p&gt;&#xD;
-</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>report_description</Name><Value>How to use of the Init Script defined in the Views tree node...</Value></Parameter></Parameters><SortOrder>0</SortOrder></ReportView></Views><InitScript>@using Seal.Model
-@{
+</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>report_description</Name><Value>How to use of the Init Script defined in the Views tree node...</Value></Parameter></Parameters><SortOrder>0</SortOrder></ReportView></Views><InitScript>@{
     Report report = Model;
 	ReportExecutionLog log = report;
 	ReportModel model = report.Models[0];

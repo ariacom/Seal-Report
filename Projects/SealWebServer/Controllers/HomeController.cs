@@ -793,7 +793,7 @@ namespace SealWebServer.Controllers
                         path = folder.Combine(Path.GetFileName(newPath)),
                         name = folder.fullname + "\\" + Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
                         last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
-                        isReport = FileHelper.IsSealReportFile(newPath),
+                        isreport = FileHelper.IsSealReportFile(newPath),
                         right = folder.right
                     });
                 }

@@ -66,9 +66,7 @@
         <Length>0</Length>
       </DbInfoMessage>
       <SourceGUID>ecb7bf25-4687-4420-98ff-c9315948edb7</SourceGUID>
-      <Script>@using Seal.Model
-@using Seal.Helpers
-@using System.IO
+      <Script>@using System.IO
 @using System.Data
 @{
     ReportTask task = Model;

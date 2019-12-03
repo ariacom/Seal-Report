@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><CurrentViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</CurrentViewGUID><GUID>536be27c-4b6d-4b1e-b305-84fa57bb7c9f</GUID><Sources><ReportSource><GUID>5de46d8c-d602-4581-aa17-76721663f961</GUID><Name>Files Source</Name><Connections><MetaConnection><GUID>34e2309d-d4ee-4768-ac9e-ed0ea9f708a4</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>34e2309d-d4ee-4768-ac9e-ed0ea9f708a4</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>a8f2314d-0f63-4c82-8b1b-35f31faf195f</GUID><DefinitionScript>@using Seal.Model&#xD;
-@using System.Data&#xD;
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><CurrentViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</CurrentViewGUID><GUID>536be27c-4b6d-4b1e-b305-84fa57bb7c9f</GUID><Sources><ReportSource><GUID>5de46d8c-d602-4581-aa17-76721663f961</GUID><Name>Files Source</Name><Connections><MetaConnection><GUID>34e2309d-d4ee-4768-ac9e-ed0ea9f708a4</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>34e2309d-d4ee-4768-ac9e-ed0ea9f708a4</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>a8f2314d-0f63-4c82-8b1b-35f31faf195f</GUID><DefinitionScript>@using System.Data&#xD;
 @using System.IO&#xD;
 @{&#xD;
     MetaTable metaTable = Model;&#xD;
@@ -16,8 +15,7 @@
     log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
 }&#xD;
 &#xD;
-</DefinitionScript><LoadScript>@using Seal.Model&#xD;
-@using System.Data&#xD;
+</DefinitionScript><LoadScript>@using System.Data&#xD;
 @using System.IO&#xD;
 @{&#xD;
     MetaTable metaTable = Model;&#xD;
@@ -37,9 +35,7 @@
     log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
 }&#xD;
 &#xD;
-</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>f6aff525-716a-4498-bdc1-e89af846f774</GUID><Name>path</Name><Type>Text</Type><Category>Master</Category><DisplayName>Path</DisplayName><DisplayOrder>1</DisplayOrder></MetaColumn><MetaColumn><GUID>b8bee239-c51c-4dd7-a2d7-b92d707725d6</GUID><Name>name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Name</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>fe8afa08-65e1-4d04-a3dc-6fd6556d5603</GUID><Name>type</Name><Type>Text</Type><Category>Master</Category><DisplayName>Type</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>2038b989-1143-450d-a1b7-8b05f9b5850d</GUID><Name>LastWrite</Name><Type>DateTime</Type><Category>Master</Category><DisplayName>Last Write</DisplayName><DisplayOrder>4</DisplayOrder><DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat><Format>G</Format></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>d826ff6e-821a-4834-aab8-d50ec18a6024</GUID><Name>model</Name><SourceGUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</SourceGUID><FinalScript>@using Seal.Model&#xD;
-@using Seal.Helpers&#xD;
-@using System.Data&#xD;
+</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>f6aff525-716a-4498-bdc1-e89af846f774</GUID><Name>path</Name><Type>Text</Type><Category>Master</Category><DisplayName>Path</DisplayName><DisplayOrder>1</DisplayOrder></MetaColumn><MetaColumn><GUID>b8bee239-c51c-4dd7-a2d7-b92d707725d6</GUID><Name>name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Name</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>fe8afa08-65e1-4d04-a3dc-6fd6556d5603</GUID><Name>type</Name><Type>Text</Type><Category>Master</Category><DisplayName>Type</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>2038b989-1143-450d-a1b7-8b05f9b5850d</GUID><Name>LastWrite</Name><Type>DateTime</Type><Category>Master</Category><DisplayName>Last Write</DisplayName><DisplayOrder>4</DisplayOrder><DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat><Format>G</Format></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>d826ff6e-821a-4834-aab8-d50ec18a6024</GUID><Name>model</Name><SourceGUID>2d8d60b6-e1d3-459a-91f6-c03693ae55ea</SourceGUID><FinalScript>@using System.Data&#xD;
 @{&#xD;
     ReportModel model = Model;&#xD;
  	ReportExecutionLog log = model.Report;&#xD;
@@ -67,8 +63,7 @@
 &#xD;
 &#xD;
 }&#xD;
-</FinalScript><Elements><ReportElement><GUID>f1f56c12-6b23-4b68-9b59-667ba5859fbd</GUID><Name>Employees.EmployeeID</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID></ReportElement><ReportElement><GUID>7c2d9e78-6d5e-434e-89eb-ccff16244d60</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><CellScript /></ReportElement><ReportElement><GUID>c377f2bb-2f57-4c03-965b-27ce10707d3d</GUID><Name>Employees.LastName</Name><DisplayName>Photo</DisplayName><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><CellScript>@using Seal.Model&#xD;
-@{&#xD;
+</FinalScript><Elements><ReportElement><GUID>f1f56c12-6b23-4b68-9b59-667ba5859fbd</GUID><Name>Employees.EmployeeID</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID></ReportElement><ReportElement><GUID>7c2d9e78-6d5e-434e-89eb-ccff16244d60</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><CellScript /></ReportElement><ReportElement><GUID>c377f2bb-2f57-4c03-965b-27ce10707d3d</GUID><Name>Employees.LastName</Name><DisplayName>Photo</DisplayName><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID><CellScript>@{&#xD;
 	//Add Hyperlink or File Download navigation&#xD;
 	ResultCell cell=Model;&#xD;
 	ReportElement element = cell.Element;&#xD;
@@ -80,9 +75,7 @@
         cell.AddNavigationFileDownload("Download photo of " + cell.DisplayValue);&#xD;
     }&#xD;
 }&#xD;
-</CellScript><NavigationScript>@using Seal.Model&#xD;
-@using Seal.Helpers&#xD;
-@using System.Data&#xD;
+</CellScript><NavigationScript>@using System.Data&#xD;
 @using System.IO&#xD;
 @using System.Text&#xD;
 @{&#xD;
@@ -114,8 +107,7 @@
     //cell.AddNavigationFileDownload("Download" + cell.DisplayValue);&#xD;
 }&#xD;
 &#xD;
-</NavigationScript></ReportElement></Elements></ReportModel></Models><CommonScripts><CommonScript><Name>GetImageBytesFromOLEField</Name><Script>@using Seal.Model&#xD;
-@using System.Text&#xD;
+</NavigationScript></ReportElement></Elements></ReportModel></Models><CommonScripts><CommonScript><Name>GetImageBytesFromOLEField</Name><Script>@using System.Text&#xD;
 @using System.IO&#xD;
 &#xD;
 @functions &#xD;

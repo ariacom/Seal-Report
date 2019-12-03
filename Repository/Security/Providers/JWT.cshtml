@@ -10,27 +10,92 @@
 @using Newtonsoft.Json.Linq;
 @using System.Text;
 @{
-	// The jose-jwt.dll and Newtonsoft.Json.dll libraries are needed in the Repository\Assemblies directory
-	
+    //Sample of authentication from a JWT token
     SecurityUser user = Model;
-	// Decoding and validating the token received with the key
-    string json = Jose.JWT.Decode(user.WebAuthorizationHeader, Encoding.ASCII.GetBytes(user.Security.GetValue(""token_key"")));
-    JObject rss = JObject.Parse(json);
     
-	// Obtaining the current unix time to validate the token expiration
-    DateTime foo = DateTime.UtcNow;
-    long unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
-	
-    // Validating the token expiration
-    if(unixTime > (long)rss[""exp""]){
-        user.Error = ""Token Expired"";
-    }else{
-		// Inserting data from the token payload
-        user.Name = (string)rss[""username""];
-		string securityGroup = (string)rss[""securityGroup""];
-        user.AddSecurityGroup(securityGroup);
-		string culture = (string)rss[""culture""];
-        user.SetDefaultCulture(culture);
+    var jwtToken = user.Token; //Token got from SWILogin parameter
+    
+    //OR token can be get from the header Request with the Bearer keyword:
+    var httpAuthorization = user.Request.ServerVariables.Get(""HTTP_AUTHORIZATION"");
+    if (!string.IsNullOrEmpty(httpAuthorization) && httpAuthorization.Contains(""Bearer"")) {
+        jwtToken = httpAuthorization.Replace(""Bearer "", """");  
     }
-}";
+    
+	if (!string.IsNullOrEmpty(jwtToken)) {	
+		// Decoding and validating the token received with the key
+		string json = Jose.JWT.Decode(jwtToken, Encoding.ASCII.GetBytes(user.Security.GetValue(""token_key"")));
+		JObject rss = JObject.Parse(json);
+		
+		// Obtaining the current unix time to validate the token expiration
+		DateTime foo = DateTime.UtcNow;
+		long unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
+		
+		// Validating the token expiration
+		if(unixTime > (long)rss[""exp""]) {
+			user.Error = ""Token Expired"";
+		}
+		else {
+			// Inserting data from the token payload
+			user.Name = (string)rss[""username""];
+			string securityGroup = (string)rss[""securityGroup""];
+			user.AddSecurityGroup(securityGroup);
+			string culture = (string)rss[""culture""];
+			user.SetDefaultCulture(culture);
+		}
+	}
+	else {
+		//No token, an alternate authentication can be done here (just copy code from the other security providers...)
+		if (user.WebUserName == ""userName"" && user.WebPassword == ""password"")
+		{
+			user.AddDefaultSecurityGroup();
+			//user.AddSecurityGroup(""aGroupName"");
+		}
+		else {
+			throw new Exception(""Invalid user name or password"");
+		}		
+	}
+}
+
+/*
+Example to generate the Token from PHP:
+
+<?php
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key;
+
+$time = time();
+
+$token = (new Builder())
+->issuedAt($time)
+->expiresAt($time + 3600 )
+->withClaim('culture','English')
+->withClaim('securityGroup','Default Group')
+->withClaim('username','test')
+->getToken(new Sha256(),new Key('SecretKey'));
+*/
+
+/*
+And then to call SWILogin:
+
+<script>
+    $.ajax({
+        type: ""POST"",
+        url: url + ""/SWILogin"",
+        headers: {
+            'Authorization': 'Bearer YOUR TOKEN',
+        },
+        cache: false,
+        success: function (data) {
+            if(data.name !== undefined){
+                // Login OK
+            }else{
+                // Login Error
+                console.log(data);
+            }
+        }
+    });
+</script>
+*/
+";
 }

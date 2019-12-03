@@ -142,9 +142,7 @@
                   <Views />
                   <TemplateName>Chart Plotly</TemplateName>
                   <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>@using Seal.Model
-@using Seal.Helpers
-@{
+                  <CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
     ReportView modelView = report.CurrentModelView;

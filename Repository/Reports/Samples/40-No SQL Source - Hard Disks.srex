@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>02e72659-419e-4be3-a8d5-a1489b5ae2c3</GUID><Sources><ReportSource><GUID>11f8a228-661f-41b7-ab03-c411e48dc078</GUID><Name>Hard Drive Information</Name><Connections><MetaConnection><GUID>713ab353-556f-400e-8e20-2fb98a4cb32a</GUID><Name>connection</Name><ConnectionString>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%SEALREPOSITORY%\Databases\Northwind.mdb;Persist Security Info=False</ConnectionString></MetaConnection></Connections><ConnectionGUID>713ab353-556f-400e-8e20-2fb98a4cb32a</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>5ba3a7c3-a59c-46cd-8f6a-70c91ded211a</GUID><DefinitionScript>@using Seal.Model
-@using System.Data
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>02e72659-419e-4be3-a8d5-a1489b5ae2c3</GUID><Sources><ReportSource><GUID>11f8a228-661f-41b7-ab03-c411e48dc078</GUID><Name>Hard Drive Information</Name><Connections><MetaConnection><GUID>713ab353-556f-400e-8e20-2fb98a4cb32a</GUID><Name>connection</Name><ConnectionString>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%SEALREPOSITORY%\Databases\Northwind.mdb;Persist Security Info=False</ConnectionString></MetaConnection></Connections><ConnectionGUID>713ab353-556f-400e-8e20-2fb98a4cb32a</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>5ba3a7c3-a59c-46cd-8f6a-70c91ded211a</GUID><DefinitionScript>@using System.Data
 @{
     MetaTable metaTable = Model;
 	ReportExecutionLog log = metaTable;
@@ -16,8 +15,7 @@
     metaTable.NoSQLTable = table;
     log.LogMessage("{0} column(s) defined", table.Columns.Count);
 }
-</DefinitionScript><LoadScript>@using Seal.Model
-@using System.Data
+</DefinitionScript><LoadScript>@using System.Data
 @using System.IO
 @{
     MetaTable metaTable = Model;
