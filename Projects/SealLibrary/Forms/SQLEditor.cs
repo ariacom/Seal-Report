@@ -18,10 +18,8 @@ namespace Seal.Forms
         const string descriptionTemplate2 = "Note that Razor script can be used if the text starts with '@'.\r\nThe final SQL may contain Common Restrictions or Values by using the keywords '{CommonRestriction_<Name>}' or '{CommonValue_<Name>}' where <Name> is the Common Restriction name.\r\nCommon Restrictions can then be configured in the Report Models involved.\r\n";
         const string descriptionTemplate3 = "The final SQL may contain Common Restrictions or Values by using the keyword '{CommonRestriction_<Name>}' or '{CommonValue_<Name>}' where <Name> is the Common Restriction name.\r\nCommon Restrictions can then be configured in the Report Models involved.\r\n";
 
-        const string razorTableTemplate = "@using Seal.Model\r\n@{\r\nMetaTable table = Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
-        const string razorTableWhereTemplate = @"@using Seal.Model
-@using Seal.Helpers
-@{
+        const string razorTableTemplate = "@{\r\nMetaTable table = Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
+        const string razorTableWhereTemplate = @"@{
     MetaTable table = Model;
     string restriction = Environment.UserName; //This gives the windows user of the process running the engine
     if (table.Source.Report != null && table.Source.Report.SecurityContext != null)
@@ -37,10 +35,10 @@ namespace Seal.Forms
     string result = string.Format(""Orders.EmployeeID in (SELECT EmployeeID FROM Employees WHERE LastName={0})"", Helper.QuoteSingle(restriction));
     }
 @Raw(result)";
-        const string razorSourceTemplate = "@using Seal.Model\r\n@{\r\nMetaSource source = Model;\r\nstring result = \"update Employees set LastName=LastName\";\r\n}\r\n@Raw(result)";
-        const string razorModelTemplate = "@using Seal.Model\r\n@{\r\nReportModel model = Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
-        const string razorTaskTemplate = "@using Seal.Model\r\n@{\r\nReportTask task= Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
-        const string razorEnumTemplate = "@using Seal.Model\r\n@{\r\nMetaEnum enumList= Model;\r\nstring result = \"SELECT DISTINCT CategoryID, CategoryName FROM Categories ORDER BY 2\";\r\n}\r\n@Raw(result)";
+        const string razorSourceTemplate = "@{\r\nMetaSource source = Model;\r\nstring result = \"update Employees set LastName=LastName\";\r\n}\r\n@Raw(result)";
+        const string razorModelTemplate = "@{\r\nReportModel model = Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
+        const string razorTaskTemplate = "@{\r\nReportTask task= Model;\r\nstring result = \"update Employees set LastName=LastName where {CommonRestriction_LastName}\";\r\n}\r\n@Raw(result)";
+        const string razorEnumTemplate = "@{\r\nMetaEnum enumList= Model;\r\nstring result = \"SELECT DISTINCT CategoryID, CategoryName FROM Categories ORDER BY 2\";\r\n}\r\n@Raw(result)";
 
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {

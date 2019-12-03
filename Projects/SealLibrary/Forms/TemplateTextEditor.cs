@@ -19,27 +19,23 @@ namespace Seal.Forms
     {
         public static object CurrentEntity = null; //Hack to get the current entity
 
-        const string razorPreOutputTemplate = @"@using Seal.Model
-@{
+        const string razorPreOutputTemplate = @"@{
     ReportOutput output = Model;
     string result = ""1""; //Set result to 0 to cancel the report.
 }
 @Raw(result)";
 
-        const string razorPostOutputTemplate = @"@using Seal.Model
-@{
+        const string razorPostOutputTemplate = @"@{
     ReportOutput output = Model;
 }";
 
-        const string displayNameTemplate = @"@using Seal.Model
-@{
+        const string displayNameTemplate = @"@{
     Report report = Model;
     string result = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + "" "" + DateTime.Now.ToShortDateString();
 }
 @Raw(result)";
 
-        const string razorTaskTemplate = @"@using Seal.Model
-@{
+        const string razorTaskTemplate = @"@{
     ReportTask task = Model;
     Report report = task.Report;
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
@@ -52,8 +48,7 @@ namespace Seal.Forms
 @Raw(result)
 ";
 
-        const string razorCellScriptTemplate = @"@using Seal.Model
-@{
+        const string razorCellScriptTemplate = @"@{
     ResultCell cell = Model;
 
     ReportElement element = cell.Element;
@@ -203,8 +198,7 @@ namespace Seal.Forms
         };
 
 
-        const string razorTableDefinitionScriptTemplate = @"@using Seal.Model
-@using System.Data
+        const string razorTableDefinitionScriptTemplate = @"@using System.Data
 @{
     MetaTable metaTable = Model;
 	ReportExecutionLog log = metaTable;
@@ -220,8 +214,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorTableLoadScriptTemplate = @"@using Seal.Model
-@using System.Data
+        const string razorTableLoadScriptTemplate = @"@using System.Data
 @{
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
@@ -240,8 +233,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorModelLoadScriptTemplate = @"@using Seal.Model
-@using System.Data
+        const string razorModelLoadScriptTemplate = @"@using System.Data
 @{
     ReportModel model = Model;
     DataTable table = model.ResultTable;
@@ -263,8 +255,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorModelLoadScriptTemplateNoSQL = @"@using Seal.Model
-@using System.Data
+        const string razorModelLoadScriptTemplateNoSQL = @"@using System.Data
 @{
     ReportModel model = Model;
     DataTable table = model.ResultTable;
@@ -280,8 +271,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorModelPreLoadScriptTemplateNoSQL = @"@using Seal.Model
-@using System.Data
+        const string razorModelPreLoadScriptTemplateNoSQL = @"@using System.Data
 @{
     ReportModel model = Model;
 	ReportExecutionLog log = model.Report;
@@ -301,8 +291,7 @@ namespace Seal.Forms
 ";
 
 
-        const string razorModelFinalScriptTemplate = @"@using Seal.Model
-@using System.Data
+        const string razorModelFinalScriptTemplate = @"@using System.Data
 @{
     ReportModel model = Model;
  	ReportExecutionLog log = model.Report;
@@ -329,9 +318,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorModelNavigationScriptTemplate = @"@using Seal.Model
-@using Seal.Helpers
-@using System.Data
+        const string razorModelNavigationScriptTemplate = @"@using System.Data
 @using System.IO
 @{
     NavigationLink link = Model;
@@ -376,8 +363,7 @@ namespace Seal.Forms
 ";
 
 
-        const string razorInitScriptTemplate = @"@using Seal.Model
-@{
+        const string razorInitScriptTemplate = @"@{
     Report report = Model;
 	ReportExecutionLog log = report;
 
@@ -400,8 +386,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorConfigurationReportCreationScriptTemplate = @"@using Seal.Model
-@{
+        const string razorConfigurationReportCreationScriptTemplate = @"@{
     Report report = Model;
 
     //Script executed when the report is created
@@ -420,9 +405,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorConfigurationAuditScriptTemplate = @"@using Seal.Model
-@using Seal.Helpers
-@using System.Data
+        const string razorConfigurationAuditScriptTemplate = @"@using System.Data
 @using System.Data.Common
 
 @{
@@ -496,8 +479,7 @@ namespace Seal.Forms
 ";
 
 
-        const string razorSourceInitScriptTemplate = @"@using Seal.Model
-@using System.Data
+        const string razorSourceInitScriptTemplate = @"@using System.Data
 @{
     MetaSource source = Model;
 	ReportExecutionLog log = null;
@@ -516,8 +498,7 @@ namespace Seal.Forms
 }
 ";
 
-        const string razorConfigurationInitScriptTemplate = @"@using Seal.Model
-@using System.Data
+        const string razorConfigurationInitScriptTemplate = @"@using System.Data
 @{
     Report report = Model;
 	ReportExecutionLog log = Model;
@@ -825,7 +806,7 @@ namespace Seal.Forms
                     List<string> samples = new List<string>();
                     foreach (var sample in tasksSamples)
                     {
-                        samples.Add("@using Seal.Model\r\n@using Seal.Helpers\r\n@using System.Data\r\n@{\r\n\t//" + sample.Item1 + "\r\n\t" + sample.Item2 + "}\r\n|" + sample.Item1);
+                        samples.Add("@using System.Data\r\n@{\r\n\t//" + sample.Item1 + "\r\n\t" + sample.Item2 + "}\r\n|" + sample.Item1);
                     }
                     frm.SetSamples(samples);
                 }
@@ -874,7 +855,7 @@ namespace Seal.Forms
                     else if (context.PropertyDescriptor.Name == "InitScript")
                     {
                         template = razorInitScriptTemplate;
-                        frm.ObjectForCheckSyntax = ((ReportComponent)context.Instance).Report;
+                        frm.ObjectForCheckSyntax = (Report)context.Instance;
                         frm.Text = "Edit the script executed when the report is initialized";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
@@ -889,7 +870,7 @@ namespace Seal.Forms
                         List<string> samples = new List<string>();
                         foreach (var sample in razorCellScriptSamples)
                         {
-                            samples.Add("@using Seal.Model\r\n@{\r\n\t//" + sample.Item1 + "\r\n\tResultCell cell=Model;\r\n\tReportElement element = cell.Element;\r\n\tReportModel reportModel = element.Model;\r\n\tReport report = reportModel.Report;\r\n\t" + sample.Item2 + "}\r\n|" + sample.Item1);
+                            samples.Add("@{\r\n\t//" + sample.Item1 + "\r\n\tResultCell cell=Model;\r\n\tReportElement element = cell.Element;\r\n\tReportModel reportModel = element.Model;\r\n\tReport report = reportModel.Report;\r\n\t" + sample.Item2 + "}\r\n|" + sample.Item1);
                         }
                         frm.SetSamples(samples);
 

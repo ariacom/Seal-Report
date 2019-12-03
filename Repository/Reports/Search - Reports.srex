@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>76458352-ff7c-4d42-8127-9d04b51caf36</GUID><Sources><ReportSource><GUID>8157459c-75ce-4375-a30f-420e8f7ced73</GUID><Name>Reports List</Name><Connections><MetaConnection><GUID>e307999e-3679-4a07-8c18-98efa3a872a4</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>e307999e-3679-4a07-8c18-98efa3a872a4</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>e97b0791-2dd8-43b1-aa99-df4edab6f76d</GUID><DefinitionScript>@using Seal.Model&#xD;
-@using System.Data&#xD;
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>76458352-ff7c-4d42-8127-9d04b51caf36</GUID><Sources><ReportSource><GUID>8157459c-75ce-4375-a30f-420e8f7ced73</GUID><Name>Reports List</Name><Connections><MetaConnection><GUID>e307999e-3679-4a07-8c18-98efa3a872a4</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>e307999e-3679-4a07-8c18-98efa3a872a4</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>e97b0791-2dd8-43b1-aa99-df4edab6f76d</GUID><DefinitionScript>@using System.Data&#xD;
 @{&#xD;
     MetaTable metaTable = Model;&#xD;
 	ReportExecutionLog log = metaTable;&#xD;
@@ -18,8 +17,7 @@
     metaTable.NoSQLTable = table;&#xD;
     log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
 }&#xD;
-</DefinitionScript><LoadScript>@using Seal.Model&#xD;
-@using System.IO&#xD;
+</DefinitionScript><LoadScript>@using System.IO&#xD;
 @using System.Data&#xD;
 &#xD;
 @functions {&#xD;

@@ -81,9 +81,7 @@
       </DbInfoMessage>
       <SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID>
       <SQL />
-      <Script>@using Seal.Model
-@using Seal.Helpers
-@{
+      <Script>@{
 	//Load a table from an external data source
 	//When executed, the task executes the source SQL and create a table in the SQLServer database
 	//If check SQL statements have been defined, the load is triggered only if the 2 check tables have different values

@@ -14,6 +14,8 @@ using System.ServiceModel.Syndication;
 using System.Windows.Forms;
 using Seal.Model;
 using System.DirectoryServices.AccountManagement;
+using Jose;
+using Newtonsoft.Json.Linq;
 
 namespace Seal.Helpers
 {
@@ -28,6 +30,8 @@ namespace Seal.Helpers
         static XDocument dummy6 = null;
         static Control dummy7 = null;
         static PrincipalContext dummy8 = null;
+        static JwtSettings dummy9 = null;
+        static JObject dummy10 = null;
 
         static bool _loadDone = false;
         static public void LoadRazorAssemblies()
@@ -45,6 +49,8 @@ namespace Seal.Helpers
                     if (dummy6 == null) dummy6 = new XDocument();
                     if (dummy7 == null) dummy7 = new Control();
                     if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
+                    if (dummy9 == null) dummy9 = JWT.DefaultSettings;
+                    if (dummy10 == null) dummy10 = JObject.Parse("{}");
                 }
                 catch { }
                 _loadDone = true;
@@ -122,6 +128,9 @@ namespace Seal.Helpers
             {
                 result = configuration.SetConfigurationCommonScripts(result);
             }
+
+            if (!result.Contains("@using Seal.Model")) result += "@using Seal.Model\r\n";
+            if (!result.Contains("@using Seal.Helpers")) result += "@using Seal.Helpers\r\n";
 
             return result;
         }
