@@ -189,7 +189,7 @@ namespace Seal.Model
         SealSecurity _security = null;
 
         /// <summary>
-        /// Current security for Web
+        /// Current security
         /// </summary>
         public SealSecurity Security
         {
@@ -663,7 +663,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Security file path for web
+        /// Security file path
         /// </summary>
         public string SecurityPath
         {
