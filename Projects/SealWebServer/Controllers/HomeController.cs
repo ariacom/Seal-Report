@@ -813,6 +813,9 @@ namespace SealWebServer.Controllers
             //Do not use input restrictions for navigation...
             if (report.IsNavigating) return;
 
+            // If we receive the "userdefaults" field we define the field
+            if (report.PreInputRestrictions.ContainsKey("usedefaults")) report.InputRestrictionsUserDefaults = Convert.ToBoolean(report.PreInputRestrictions["usedefaults"]);
+
             if (report.PreInputRestrictions.Count > 0)
             {
                 int i = 0;
