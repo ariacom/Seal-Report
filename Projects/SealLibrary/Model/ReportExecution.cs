@@ -555,6 +555,8 @@ namespace Seal.Model
                 }
                 if (selected_enum.Count > 0)
                     restriction.EnumValues = selected_enum;
+                else if (!UseDefaultRestrictions)
+                    restriction.EnumValues.Clear();
 
                 //check required flag
                 if (restriction.EnumValues.Count == 0 && restriction.Required)
