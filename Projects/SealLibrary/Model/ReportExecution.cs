@@ -384,13 +384,29 @@ namespace Seal.Model
             string dateMessage = report.Translate("Use the date format '{0}' or one of the following keywords:", report.CultureInfo.DateTimeFormat.ShortDatePattern) + " " + report.DateKeywordsList;
 
             DateTime dt;
+
+            if (report.InputRestrictionsUserDefaults && string.IsNullOrEmpty(val1))
+                val1 = restriction.Value1;
+
             string val = val1;
             if (restriction.IsDateTime)
             {
                 if (string.IsNullOrEmpty(val))
                 {
-                    restriction.Date1 = DateTime.MinValue;
-                    restriction.Date1Keyword = "";
+                    if (report.InputRestrictionsUserDefaults)
+                    {
+                        if (DateTime.MinValue.Equals(restriction.Date1))
+                            restriction.Date1Keyword = "";
+                        else
+                            val = restriction.Date1.ToString();
+                    }
+                    else
+                    {
+                        restriction.Date1 = DateTime.MinValue;
+                        restriction.Date1Keyword = "";
+                    }
+
+
                 }
                 else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                 {
@@ -414,13 +430,28 @@ namespace Seal.Model
 
             if (restriction.Prompt != PromptType.PromptOneValue)
             {
+                if (report.InputRestrictionsUserDefaults && string.IsNullOrEmpty(val2))
+                    val2 = restriction.Value2;
+                if (report.InputRestrictionsUserDefaults && string.IsNullOrEmpty(val3))
+                    val3 = restriction.Value3;
+                if (report.InputRestrictionsUserDefaults && string.IsNullOrEmpty(val4))
+                    val4 = restriction.Value4;
+
                 val = val2;
                 if (restriction.IsDateTime)
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        restriction.Date2 = DateTime.MinValue;
-                        restriction.Date2Keyword = "";
+                        if (report.InputRestrictionsUserDefaults)
+                        {
+                            if (DateTime.MinValue.Equals(restriction.Date1))
+                                restriction.Date1Keyword = "";
+                        }
+                        else
+                        {
+                            restriction.Date1 = DateTime.MinValue;
+                            restriction.Date1Keyword = "";
+                        }
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                     {
@@ -440,8 +471,16 @@ namespace Seal.Model
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        restriction.Date3 = DateTime.MinValue;
-                        restriction.Date3Keyword = "";
+                        if (report.InputRestrictionsUserDefaults)
+                        {
+                            if (DateTime.MinValue.Equals(restriction.Date1))
+                                restriction.Date1Keyword = "";
+                        }
+                        else
+                        {
+                            restriction.Date1 = DateTime.MinValue;
+                            restriction.Date1Keyword = "";
+                        }
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                     {
@@ -461,8 +500,16 @@ namespace Seal.Model
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        restriction.Date4 = DateTime.MinValue;
-                        restriction.Date4Keyword = "";
+                        if (report.InputRestrictionsUserDefaults)
+                        {
+                            if (DateTime.MinValue.Equals(restriction.Date1))
+                                restriction.Date1Keyword = "";
+                        }
+                        else
+                        {
+                            restriction.Date1 = DateTime.MinValue;
+                            restriction.Date1Keyword = "";
+                        }
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                     {
@@ -490,17 +537,19 @@ namespace Seal.Model
             }
             if (restriction.IsEnum)
             {
-                restriction.EnumValues.Clear();
+                List<string> selected_enum = new List<string>();
                 foreach (var enumVal in restriction.EnumRE.Values)
                 {
                     val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
                     if (val.ToLower() == "true")
                     {
-                        restriction.EnumValues.Add(enumVal.Id);
+                        selected_enum.Add(enumVal.Id);
                         //Check only one restriction
                         if (restriction.Prompt == PromptType.PromptOneValue) break;
                     }
                 }
+                if (selected_enum.Count > 0)
+                    restriction.EnumValues = selected_enum;
 
                 //check required flag
                 if (restriction.EnumValues.Count == 0 && restriction.Required)
