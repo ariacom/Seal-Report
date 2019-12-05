@@ -894,12 +894,6 @@ namespace Seal.Model
         public Dictionary<string, string> InputRestrictions = new Dictionary<string, string>();
 
         /// <summary>
-        /// When executing a report from SWI, if we keep the values of the report default restrictions in case of omission
-        /// </summary>
-        [XmlIgnore]
-        public bool InputRestrictionsUserDefaults = false;
-
-        /// <summary>
         /// Input restriction value for a given key
         /// </summary>
         public string GetInputRestriction(string key)

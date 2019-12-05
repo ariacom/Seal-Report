@@ -214,7 +214,7 @@ namespace SealWebServer.Controllers
                     Report report = execution.Report;
 
                     Helper.WriteLogEntryWeb(EventLogEntryType.Information, Request, WebUser, "Starting report '{0}'", report.FilePath);
-                    initInputRestrictions(report);
+                    initInputRestrictions(execution, report);
                     while (execution.IsConvertingToExcel) Thread.Sleep(100);
                     report.IsNavigating = false;
                     execution.Execute();
@@ -806,15 +806,15 @@ namespace SealWebServer.Controllers
             }
         }
 
-        void initInputRestrictions(Report report)
+        void initInputRestrictions(ReportExecution execution, Report report)
         {
             report.InputRestrictions.Clear();
 
             //Do not use input restrictions for navigation...
             if (report.IsNavigating) return;
 
-            // If we receive the "userdefaults" field we define the field
-            if (report.PreInputRestrictions.ContainsKey("usedefaults")) report.InputRestrictionsUserDefaults = Convert.ToBoolean(report.PreInputRestrictions["usedefaults"]);
+            // If we receive the "use_default_restrictions" field we define the field
+            if (report.PreInputRestrictions.ContainsKey("use_default_restrictions")) execution.UseDefaultRestrictions = Convert.ToBoolean(report.PreInputRestrictions["use_default_restrictions"]);
 
             if (report.PreInputRestrictions.Count > 0)
             {
@@ -978,7 +978,7 @@ namespace SealWebServer.Controllers
             FileHelper.PurgeTempApplicationDirectory();
 
             report.InitForExecution();
-            initInputRestrictions(report);
+            initInputRestrictions(execution, report);
             //Apply input restrictions if any
             if (report.InputRestrictions.Count > 0) execution.CheckInputRestrictions();
 

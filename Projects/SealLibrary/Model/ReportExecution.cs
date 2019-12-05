@@ -85,6 +85,11 @@ namespace Seal.Model
         /// </summary>
         public object Tag;
 
+        /// <summary>
+        /// If true, default report restriction values not specified are kept when the report is executed from SWI 
+        /// </summary>
+        public bool UseDefaultRestrictions = false;
+
         Thread _executeThread;
 
         /// <summary>
@@ -379,13 +384,13 @@ namespace Seal.Model
         /// <summary>
         /// Set restriction values from input 1,2,3,4
         /// </summary>
-        public static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired)
+        public static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired, bool useDefaultRestrictions)
         {
             string dateMessage = report.Translate("Use the date format '{0}' or one of the following keywords:", report.CultureInfo.DateTimeFormat.ShortDatePattern) + " " + report.DateKeywordsList;
 
             DateTime dt;
 
-            if (report.InputRestrictionsUserDefaults && string.IsNullOrEmpty(val1))
+            if (useDefaultRestrictions && string.IsNullOrEmpty(val1))
                 val1 = restriction.Value1;
 
             string val = val1;
@@ -393,7 +398,7 @@ namespace Seal.Model
             {
                 if (string.IsNullOrEmpty(val))
                 {
-                    if (report.InputRestrictionsUserDefaults)
+                    if (useDefaultRestrictions)
                     {
                         if (DateTime.MinValue.Equals(restriction.Date1))
                             restriction.Date1Keyword = "";
@@ -430,11 +435,11 @@ namespace Seal.Model
 
             if (restriction.Prompt != PromptType.PromptOneValue)
             {
-                if (report.InputRestrictionsUserDefaults && string.IsNullOrEmpty(val2))
+                if (useDefaultRestrictions && string.IsNullOrEmpty(val2))
                     val2 = restriction.Value2;
-                if (report.InputRestrictionsUserDefaults && string.IsNullOrEmpty(val3))
+                if (useDefaultRestrictions && string.IsNullOrEmpty(val3))
                     val3 = restriction.Value3;
-                if (report.InputRestrictionsUserDefaults && string.IsNullOrEmpty(val4))
+                if (useDefaultRestrictions && string.IsNullOrEmpty(val4))
                     val4 = restriction.Value4;
 
                 val = val2;
@@ -442,15 +447,15 @@ namespace Seal.Model
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        if (report.InputRestrictionsUserDefaults)
+                        if (useDefaultRestrictions)
                         {
-                            if (DateTime.MinValue.Equals(restriction.Date1))
-                                restriction.Date1Keyword = "";
+                            if (DateTime.MinValue.Equals(restriction.Date2))
+                                restriction.Date2Keyword = "";
                         }
                         else
                         {
-                            restriction.Date1 = DateTime.MinValue;
-                            restriction.Date1Keyword = "";
+                            restriction.Date2 = DateTime.MinValue;
+                            restriction.Date2Keyword = "";
                         }
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
@@ -471,15 +476,15 @@ namespace Seal.Model
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        if (report.InputRestrictionsUserDefaults)
+                        if (useDefaultRestrictions)
                         {
-                            if (DateTime.MinValue.Equals(restriction.Date1))
-                                restriction.Date1Keyword = "";
+                            if (DateTime.MinValue.Equals(restriction.Date3))
+                                restriction.Date3Keyword = "";
                         }
                         else
                         {
-                            restriction.Date1 = DateTime.MinValue;
-                            restriction.Date1Keyword = "";
+                            restriction.Date3 = DateTime.MinValue;
+                            restriction.Date3Keyword = "";
                         }
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
@@ -500,15 +505,15 @@ namespace Seal.Model
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        if (report.InputRestrictionsUserDefaults)
+                        if (useDefaultRestrictions)
                         {
-                            if (DateTime.MinValue.Equals(restriction.Date1))
-                                restriction.Date1Keyword = "";
+                            if (DateTime.MinValue.Equals(restriction.Date4))
+                                restriction.Date4Keyword = "";
                         }
                         else
                         {
-                            restriction.Date1 = DateTime.MinValue;
-                            restriction.Date1Keyword = "";
+                            restriction.Date4 = DateTime.MinValue;
+                            restriction.Date4Keyword = "";
                         }
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
@@ -565,7 +570,8 @@ namespace Seal.Model
                        Report.GetInputRestriction(restriction.ValueHtmlId + "_2"),
                        Report.GetInputRestriction(restriction.ValueHtmlId + "_3"),
                        Report.GetInputRestriction(restriction.ValueHtmlId + "_4"),
-                       true
+                       true,
+                       UseDefaultRestrictions
                        );
             }
         }
