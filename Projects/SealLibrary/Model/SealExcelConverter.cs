@@ -49,7 +49,7 @@ namespace Seal.Model
                 try
                 {
                     Assembly currentAssembly = AppDomain.CurrentDomain.Load("SealConverter");
-                    Type t = currentAssembly.GetType("SealExcelConverter.ExcelConverter", true);
+                    Type t = currentAssembly.GetType("Seal.Converter.ExcelConverter", true);
                     Object[] args = new Object[] { };
                     result = (SealExcelConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);
                     result.ApplicationPath = applicationPath;
