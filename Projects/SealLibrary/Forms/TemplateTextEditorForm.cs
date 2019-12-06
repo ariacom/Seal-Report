@@ -179,7 +179,7 @@ namespace Seal.Forms
                 samplesMenuItem.DropDownItems.Add(item);
 
                 ToolStripMenuItem item2 = new ToolStripMenuItem(title);
-                item2.ToolTipText = value.Length > 900 ? value.Substring(0, 900) + "..." : value;
+                item2.ToolTipText = item.ToolTipText;
                 item2.Click += new System.EventHandler(this.item_Click2);
                 item2.Tag = value;
                 samplesMenuItem2.DropDownItems.Add(item2);
