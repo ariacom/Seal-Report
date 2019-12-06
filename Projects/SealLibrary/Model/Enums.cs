@@ -352,6 +352,8 @@ namespace Seal.Model
         Prompt,
         [Description("Prompt only one value")]
         PromptOneValue,
+        [Description("Prompt only two values")]
+        PromptTwoValues,
     }
 
     public enum ViewParameterType

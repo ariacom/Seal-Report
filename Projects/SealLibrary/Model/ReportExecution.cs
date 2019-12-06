@@ -427,7 +427,7 @@ namespace Seal.Model
             else restriction.Value1 = val;
 
             //check required flag
-            if (checkRequired && string.IsNullOrEmpty(val) && restriction.Required)
+            if (checkRequired && restriction.Required && string.IsNullOrEmpty(val))
             {
                 report.HasValidationErrors = true;
                 report.ExecutionErrors += string.Format("{0} '{1}'\r\n", report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
@@ -437,12 +437,20 @@ namespace Seal.Model
             {
                 if (useDefaultRestrictions && string.IsNullOrEmpty(val2))
                     val2 = restriction.Value2;
+
                 if (useDefaultRestrictions && string.IsNullOrEmpty(val3))
                     val3 = restriction.Value3;
                 if (useDefaultRestrictions && string.IsNullOrEmpty(val4))
                     val4 = restriction.Value4;
 
                 val = val2;
+                //check required flag
+                if (restriction.Prompt == PromptType.PromptTwoValues && checkRequired && restriction.Required && string.IsNullOrEmpty(val))
+                {
+                    report.HasValidationErrors = true;
+                    report.ExecutionErrors += string.Format("{0} '{1}'\r\n", report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
+                }
+
                 if (restriction.IsDateTime)
                 {
                     if (string.IsNullOrEmpty(val))
@@ -471,63 +479,66 @@ namespace Seal.Model
                 }
                 else restriction.Value2 = val;
 
-                val = val3;
-                if (restriction.IsDateTime)
+                if (restriction.Prompt != PromptType.PromptTwoValues)
                 {
-                    if (string.IsNullOrEmpty(val))
+                    val = val3;
+                    if (restriction.IsDateTime)
                     {
-                        if (useDefaultRestrictions)
+                        if (string.IsNullOrEmpty(val))
                         {
-                            if (DateTime.MinValue.Equals(restriction.Date3))
+                            if (useDefaultRestrictions)
+                            {
+                                if (DateTime.MinValue.Equals(restriction.Date3))
+                                    restriction.Date3Keyword = "";
+                            }
+                            else
+                            {
+                                restriction.Date3 = DateTime.MinValue;
                                 restriction.Date3Keyword = "";
+                            }
                         }
-                        else
+                        else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                         {
-                            restriction.Date3 = DateTime.MinValue;
                             restriction.Date3Keyword = "";
+                            restriction.Date3 = dt;
                         }
+                        else if (validateDateKeyword(report, val, dateMessage)) restriction.Date3Keyword = report.TranslateDateKeywordsToEnglish(val);
                     }
-                    else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
+                    else if (restriction.IsNumeric)
                     {
-                        restriction.Date3Keyword = "";
-                        restriction.Date3 = dt;
+                        if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value3 = val;
                     }
-                    else if (validateDateKeyword(report, val, dateMessage)) restriction.Date3Keyword = report.TranslateDateKeywordsToEnglish(val);
-                }
-                else if (restriction.IsNumeric)
-                {
-                    if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value3 = val;
-                }
-                else restriction.Value3 = val;
+                    else restriction.Value3 = val;
 
-                val = val4;
-                if (restriction.IsDateTime)
-                {
-                    if (string.IsNullOrEmpty(val))
+                    val = val4;
+                    if (restriction.IsDateTime)
                     {
-                        if (useDefaultRestrictions)
+                        if (string.IsNullOrEmpty(val))
                         {
-                            if (DateTime.MinValue.Equals(restriction.Date4))
+                            if (useDefaultRestrictions)
+                            {
+                                if (DateTime.MinValue.Equals(restriction.Date4))
+                                    restriction.Date4Keyword = "";
+                            }
+                            else
+                            {
+                                restriction.Date4 = DateTime.MinValue;
                                 restriction.Date4Keyword = "";
+                            }
                         }
-                        else
+                        else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                         {
-                            restriction.Date4 = DateTime.MinValue;
                             restriction.Date4Keyword = "";
+                            restriction.Date4 = dt;
                         }
+                        else if (validateDateKeyword(report, val, dateMessage)) restriction.Date4Keyword = report.TranslateDateKeywordsToEnglish(val);
                     }
-                    else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
+                    else if (restriction.IsNumeric)
                     {
-                        restriction.Date4Keyword = "";
-                        restriction.Date4 = dt;
+                        if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value4 = val;
                     }
-                    else if (validateDateKeyword(report, val, dateMessage)) restriction.Date4Keyword = report.TranslateDateKeywordsToEnglish(val);
+                    else restriction.Value4 = val;
                 }
-                else if (restriction.IsNumeric)
-                {
-                    if (string.IsNullOrEmpty(val) || validateNumeric(report, val)) restriction.Value4 = val;
-                }
-                else restriction.Value4 = val;
             }
         }
 
@@ -549,8 +560,10 @@ namespace Seal.Model
                     if (val.ToLower() == "true")
                     {
                         selected_enum.Add(enumVal.Id);
-                        //Check only one restriction
+                        //Only one restriction
                         if (restriction.Prompt == PromptType.PromptOneValue) break;
+                        //Only 2 restrictions
+                        if (restriction.Prompt == PromptType.PromptTwoValues && selected_enum.Count == 2) break;
                     }
                 }
                 if (selected_enum.Count > 0)
