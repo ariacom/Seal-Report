@@ -558,34 +558,15 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
-                "Copy a date input value to all date restrictions in the report",
-@"ReportTask task = Model;
-    Report report = task.Report;   
-    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'
-    foreach (var model in report.Models) 
-    {
-        foreach (var page in model.Pages) 
-        {
-            //Format page result table
-            foreach (var line in page.PageTable.Lines) 
-            {
-                foreach (var cell in line) 
-                {
-                    if (cell.IsTitle) {
-                        cell.FinalCssStyle = ""font-size:20px; color:blue;"";
-                    }
-                }
-            }       
-            //Format data result table
-            foreach (var line in page.DataTable.Lines) 
-            {
-                foreach (var cell in line) 
-                {
-                    if (cell.Element != null && cell.Element.IsNumeric && cell.DoubleValue< 0) {
-                        cell.FinalCssStyle = ""font-weight:bold;color:red;"";
-                    }
-                }
-            }       
+                "Copy date input values to all date restrictions in the report",
+@"    ReportTask task = Model;
+    Report report = task.Report;
+    //Take the first input value has been defined in the report
+    var inputValue = report.InputValues[0];
+    foreach (var model in report.Models) {
+        foreach (var restriction in model.Restrictions.Where(i => i.TypeRe == ColumnType.DateTime)) {
+            restriction.Date1 = inputValue.Date1;
+            restriction.Date2 = inputValue.Date2;
         }
     }
 "

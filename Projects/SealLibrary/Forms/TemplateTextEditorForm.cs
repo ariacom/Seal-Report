@@ -22,6 +22,7 @@ namespace Seal.Forms
         public string ScriptHeader = null;
 
         ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...");
+        ToolStripMenuItem samplesMenuItem2 = new ToolStripMenuItem("Samples in Notepad");
 
         static Size? LastSize = null;
         static Point? LastLocation = null;
@@ -126,7 +127,7 @@ namespace Seal.Forms
             {
                 FormHelper.CheckRazorSyntax(textBox, ScriptHeader, ObjectForCheckSyntax, _compilationErrors);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 error = ex.Message;
             }
@@ -173,35 +174,35 @@ namespace Seal.Forms
                 }
                 ToolStripMenuItem item = new ToolStripMenuItem(title);
                 item.ToolTipText = value.Length > 900 ? value.Substring(0, 900) + "..." : value;
+                item.Click += new System.EventHandler(this.item_Click);
+                item.Tag = value;
                 samplesMenuItem.DropDownItems.Add(item);
 
-                ToolStripMenuItem subItem = new ToolStripMenuItem("Use the script");
-                subItem.Click += new System.EventHandler(this.item_Click);
-                subItem.Tag = value;
-                item.DropDownItems.Add(subItem);
-                subItem = new ToolStripMenuItem("View in Notepad...");
-                subItem.Click += new System.EventHandler(this.item_Click);
-                subItem.Tag = value;
-                item.DropDownItems.Add(subItem);
-
+                ToolStripMenuItem item2 = new ToolStripMenuItem(title);
+                item2.ToolTipText = value.Length > 900 ? value.Substring(0, 900) + "..." : value;
+                item2.Click += new System.EventHandler(this.item_Click2);
+                item2.Tag = value;
+                samplesMenuItem2.DropDownItems.Add(item2);
             }
             if (samples.Count > 0 && !mainToolStrip.Items.Contains(samplesMenuItem)) mainToolStrip.Items.Add(samplesMenuItem);
+            if (samples.Count > 0 && !mainToolStrip.Items.Contains(samplesMenuItem2)) mainToolStrip.Items.Add(samplesMenuItem2);
         }
 
         void item_Click(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem)
             {
-                if (((ToolStripMenuItem)sender).Text.ToLower().Contains("notepad"))
-                {
-                    var path = FileHelper.GetTempUniqueFileName("script.txt");
-                    File.WriteAllText(path, ((ToolStripMenuItem)sender).Tag.ToString(), Encoding.UTF8);
-                    Process.Start(path);
-                }
-                else
-                {
-                    textBox.Text = ((ToolStripMenuItem)sender).Tag.ToString();
-                }
+                textBox.Text = ((ToolStripMenuItem)sender).Tag.ToString();
+            }
+        }
+
+        void item_Click2(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem)
+            {
+                var path = FileHelper.GetTempUniqueFileName("script.txt");
+                File.WriteAllText(path, ((ToolStripMenuItem)sender).Tag.ToString(), Encoding.UTF8);
+                Process.Start(path);
             }
         }
 
