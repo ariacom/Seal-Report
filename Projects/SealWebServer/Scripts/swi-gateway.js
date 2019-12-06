@@ -341,3 +341,4 @@ var SWIGateway = /** @class */ (function () {
     };
     return SWIGateway;
 }());
+//# sourceMappingURL=swi-gateway.js.map
