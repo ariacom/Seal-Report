@@ -10,6 +10,9 @@ using Seal.Model;
 using RazorEngine.Templating;
 using Seal.Helpers;
 using ScintillaNET;
+using System.IO;
+using System.Diagnostics;
+using System.Text;
 
 namespace Seal.Forms
 {
@@ -169,17 +172,37 @@ namespace Seal.Forms
                     value = sample.Substring(0, index);
                 }
                 ToolStripMenuItem item = new ToolStripMenuItem(title);
-                item.Click += new System.EventHandler(this.item_Click);
-                item.Tag = value;
                 item.ToolTipText = value.Length > 900 ? value.Substring(0, 900) + "..." : value;
                 samplesMenuItem.DropDownItems.Add(item);
+
+                ToolStripMenuItem subItem = new ToolStripMenuItem("Use the script");
+                subItem.Click += new System.EventHandler(this.item_Click);
+                subItem.Tag = value;
+                item.DropDownItems.Add(subItem);
+                subItem = new ToolStripMenuItem("View in Notepad...");
+                subItem.Click += new System.EventHandler(this.item_Click);
+                subItem.Tag = value;
+                item.DropDownItems.Add(subItem);
+
             }
             if (samples.Count > 0 && !mainToolStrip.Items.Contains(samplesMenuItem)) mainToolStrip.Items.Add(samplesMenuItem);
         }
 
         void item_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem) textBox.Text = ((ToolStripMenuItem)sender).Tag.ToString();
+            if (sender is ToolStripMenuItem)
+            {
+                if (((ToolStripMenuItem)sender).Text.ToLower().Contains("notepad"))
+                {
+                    var path = FileHelper.GetTempUniqueFileName("script.txt");
+                    File.WriteAllText(path, ((ToolStripMenuItem)sender).Tag.ToString(), Encoding.UTF8);
+                    Process.Start(path);
+                }
+                else
+                {
+                    textBox.Text = ((ToolStripMenuItem)sender).Tag.ToString();
+                }
+            }
         }
 
         public void SetResetText(string resetText)

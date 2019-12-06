@@ -374,7 +374,6 @@ namespace Seal.Model
                             }
 
                             //Get drill parent link
-                            //Element.MetaColumn.DillUpOnlyIfDD
                             foreach (MetaTable table in Element.Source.MetaData.Tables)
                             {
                                 foreach (MetaColumn parentColumn in table.Columns.Where(i => i.DrillChildren.Contains(Element.MetaColumnGUID)))
@@ -407,7 +406,7 @@ namespace Seal.Model
                                 foreach (var guid in subreport.Restrictions)
                                 {
                                     var cellValue = SubReportValues.FirstOrDefault(i => i.Element.MetaColumnGUID == guid);
-                                    if (cellValue != null)
+                                    if (cellValue != null && !string.IsNullOrEmpty(cellValue.NavigationValue))
                                     {
                                         subReportRestrictions += string.Format("&res{0}={1}&val{0}={2}", index, guid, HttpUtility.UrlEncode(cellValue.NavigationValue));
                                         index++;

@@ -61,7 +61,7 @@
                                         {
                                             <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
                                         }
-                                        if (restriction.Prompt == PromptType.PromptOneValue)
+                                        if ((restriction.Prompt == PromptType.PromptOneValue) || (restriction.Prompt == PromptType.PromptTwoValues && j == 2))
                                         {
                                             break;
                                         }

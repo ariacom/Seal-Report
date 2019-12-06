@@ -430,6 +430,7 @@ WebJS;Please select first the type of report you want to create...;;Veuillez cho
 WebJS;Processing;;En cours
 WebJS;Prompt at execution;;Demander à l'exécution
 WebJS;Prompt only one value;;Demander une valeur à l'exécution
+WebJS;Prompt only two values;;Demander deux valeurs à l'exécution
 WebJS;Public;;Publique
 WebJS;Public edition;;Edition publique
 WebJS;Public execution;;Exécution publique

@@ -525,6 +525,72 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
+                "Format final result cells before rendering",
+@"ReportTask task = Model;
+    Report report = task.Report;   
+    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'
+    foreach (var model in report.Models) 
+    {
+        foreach (var page in model.Pages) 
+        {
+            //Format page result table
+            foreach (var line in page.PageTable.Lines) 
+            {
+                foreach (var cell in line) 
+                {
+                    if (cell.IsTitle) {
+                        cell.FinalCssStyle = ""font-size:20px; color:blue;"";
+                    }
+                }
+            }       
+            //Format data result table
+            foreach (var line in page.DataTable.Lines) 
+            {
+                foreach (var cell in line) 
+                {
+                    if (cell.Element != null && cell.Element.IsNumeric && cell.DoubleValue< 0) {
+                        cell.FinalCssStyle = ""font-weight:bold;color:red;"";
+                    }
+                }
+            }       
+        }
+    }
+"
+                ),
+            new Tuple<string, string>(
+                "Copy a date input value to all date restrictions in the report",
+@"ReportTask task = Model;
+    Report report = task.Report;   
+    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'
+    foreach (var model in report.Models) 
+    {
+        foreach (var page in model.Pages) 
+        {
+            //Format page result table
+            foreach (var line in page.PageTable.Lines) 
+            {
+                foreach (var cell in line) 
+                {
+                    if (cell.IsTitle) {
+                        cell.FinalCssStyle = ""font-size:20px; color:blue;"";
+                    }
+                }
+            }       
+            //Format data result table
+            foreach (var line in page.DataTable.Lines) 
+            {
+                foreach (var cell in line) 
+                {
+                    if (cell.Element != null && cell.Element.IsNumeric && cell.DoubleValue< 0) {
+                        cell.FinalCssStyle = ""font-weight:bold;color:red;"";
+                    }
+                }
+            }       
+        }
+    }
+"
+                ),
+            new Tuple<string, string>(
                 "Display the report input values",
 @"ReportTask task = Model;
     Report report = task.Report;
@@ -710,7 +776,7 @@ namespace Seal.Forms
         return dbHelper.RootGetTableColumnValues(row, dateTimeFormat);
     });
 
-	dbHelper.MyGetTableColumnValue = new CustomGetTableColumnValue(delegate(DataRow row, DataColumn col, string dateTimeFormat) {
+    dbHelper.MyGetTableColumnValue = new CustomGetTableColumnValue(delegate(DataRow row, DataColumn col, string dateTimeFormat) {
         //return dbHelper.RootGetTableColumnValue(row, col, datetimeFormat);
         //Root implementation may be the following...
         StringBuilder result = new StringBuilder();
@@ -806,7 +872,7 @@ namespace Seal.Forms
                     List<string> samples = new List<string>();
                     foreach (var sample in tasksSamples)
                     {
-                        samples.Add("@using System.Data\r\n@{\r\n\t//" + sample.Item1 + "\r\n\t" + sample.Item2 + "}\r\n|" + sample.Item1);
+                        samples.Add("@using System.Data\r\n@{\r\n    //" + sample.Item1 + "\r\n    " + sample.Item2 + "}\r\n|" + sample.Item1);
                     }
                     frm.SetSamples(samples);
                 }
