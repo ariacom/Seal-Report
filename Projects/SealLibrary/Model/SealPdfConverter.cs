@@ -47,7 +47,7 @@ namespace Seal.Model
                 try
                 {
                     Assembly currentAssembly = AppDomain.CurrentDomain.Load("SealConverter");
-                    Type t = currentAssembly.GetType("SealPdfConverter.PdfConverter", true);
+                    Type t = currentAssembly.GetType("Seal.Converter.PdfConverter", true);
                     Object[] args = new Object[] { };
                     result = (SealPdfConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);
                     result.ApplicationPath = applicationPath;

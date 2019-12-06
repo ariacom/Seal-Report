@@ -58,8 +58,8 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                GetProperty("ViewGUID").SetIsBrowsable(true);
                 GetProperty("DisplayName").SetIsBrowsable(true);
+                GetProperty("ViewGUID").SetIsBrowsable(true);
                 GetProperty("InputValues").SetIsBrowsable(true);
                 GetProperty("WidgetCache").SetIsBrowsable(true);
 
@@ -78,6 +78,66 @@ namespace Seal.Model
         /// Unique identifier of the report
         /// </summary>
         public string GUID { get; set; }
+
+        /// <summary>
+        /// The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'.
+        /// </summary>
+        [Category("Definition"), DisplayName("Display name"), Description("The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'."), Id(1, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string DisplayName { get; set; } = "";
+        public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(DisplayName); }
+
+        private string _displayNameEx = null;
+        /// <summary>
+        /// The final display name of the report. It may include script execution defined in DisplayName
+        /// </summary>
+        [XmlIgnore]
+        public string DisplayNameEx
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_displayNameEx)) return _displayNameEx;
+                if (!string.IsNullOrEmpty(DisplayName))
+                {
+                    try
+                    {
+                        _displayNameEx = RazorHelper.CompileExecute(DisplayName, this);
+                    }
+                    catch { }
+                }
+                else
+                {
+                    _displayNameEx = Path.GetFileNameWithoutExtension(FilePath);
+                }
+                return _displayNameEx;
+            }
+        }
+
+        [DefaultValue(null)]
+        [Category("Definition"), DisplayName("Current view"), Description("The current view used to execute the report."), Id(2, 1)]
+        [TypeConverter(typeof(ReportViewConverter))]
+        public string ViewGUID { get; set; }
+
+        /// <summary>
+        /// GUID of the view to being executed
+        /// </summary>
+        public string CurrentViewGUID;
+
+        /// <summary>
+        /// Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report.
+        /// </summary>
+        [Category("Definition"), DisplayName("Report Input Values"), Description("Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report."), Id(3, 1)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<ReportRestriction> InputValues { get; set; } = new List<ReportRestriction>();
+        public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
+
+        /// <summary>
+        /// For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report.
+        /// </summary>
+        [Category("Definition"), DisplayName("Widgets cache duration"), Description("For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report."), Id(5, 1)]
+        [DefaultValue(60)]
+        public int WidgetCache { get; set; } = 60;
+        public bool ShouldSerializeWidgetCache() { return WidgetCache != 60; }
 
         /// <summary>
         /// List of data sources of the report (either from repository or defined in the report itself)
@@ -165,14 +225,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report.
-        /// </summary>
-        [Category("Definition"), DisplayName("Report Input Values"), Description("Definition of additional report input values (actually a restriction used as value only that may be prompted). Input values can then be used in the task scripts or any scripts used to generate the report."), Id(3, 1)]
-        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        public List<ReportRestriction> InputValues { get; set; } = new List<ReportRestriction>();
-        public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
-
-        /// <summary>
         /// Returns an input value (Report Restriction) from a given name
         /// </summary>
         public ReportRestriction GetInputValueByName(string name)
@@ -209,40 +261,6 @@ namespace Seal.Model
         public List<ReportView> Views { get; set; } = new List<ReportView>();
 
         /// <summary>
-        /// The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'.
-        /// </summary>
-        [Category("Definition"), DisplayName("Display name"), Description("The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'."), Id(1, 1)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string DisplayName { get; set; } = "";
-        public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(DisplayName); }
-
-        private string _displayNameEx = null;
-        /// <summary>
-        /// The final display name of the report. It may include script execution defined in DisplayName
-        /// </summary>
-        [XmlIgnore]
-        public string DisplayNameEx
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(_displayNameEx)) return _displayNameEx;
-                if (!string.IsNullOrEmpty(DisplayName))
-                {
-                    try
-                    {
-                        _displayNameEx = RazorHelper.CompileExecute(DisplayName, this);
-                    }
-                    catch { }
-                }
-                else
-                {
-                    _displayNameEx = Path.GetFileNameWithoutExtension(FilePath);
-                }
-                return _displayNameEx;
-            }
-        }
-
-        /// <summary>
         /// A Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions). 
         /// </summary>
         [Category("Scripts"), DisplayName("Report Execution Init script"), Description("A Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions)."), Id(2, 2)]
@@ -250,29 +268,11 @@ namespace Seal.Model
         public string InitScript { get; set; } = "";
         public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
 
-        [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Current view"), Description("The current view used to execute the report."), Id(2, 1)]
-        [TypeConverter(typeof(ReportViewConverter))]
-        public string ViewGUID { get; set; }
-
-        /// <summary>
-        /// GUID of the view to being executed
-        /// </summary>
-        public string CurrentViewGUID;
-
         /// <summary>
         /// List of schedules of the report
         /// </summary>
         public List<ReportSchedule> Schedules { get; set; } = new List<ReportSchedule>();
         public bool ShouldSerializeSchedules() { return Schedules.Count > 0; }
-
-        /// <summary>
-        /// For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report.
-        /// </summary>
-        [Category("Definition"), DisplayName("Widgets cache duration"), Description("For dashboards, the duration in seconds the report execution is kept by the Web Report Server to render the widgets defined in the report."), Id(5, 1)]
-        [DefaultValue(60)]
-        public int WidgetCache { get; set; } = 60;
-        public bool ShouldSerializeWidgetCache() { return WidgetCache != 60; }
 
         /// <summary>
         /// Current repository of the report
