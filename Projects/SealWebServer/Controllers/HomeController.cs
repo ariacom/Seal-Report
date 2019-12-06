@@ -814,6 +814,7 @@ namespace SealWebServer.Controllers
             if (report.IsNavigating) return;
 
             // If we receive the "use_default_restrictions" field we define the field
+            execution.UseDefaultRestrictions = false; //flag not set 
             if (report.PreInputRestrictions.ContainsKey("use_default_restrictions")) execution.UseDefaultRestrictions = Convert.ToBoolean(report.PreInputRestrictions["use_default_restrictions"]);
 
             if (report.PreInputRestrictions.Count > 0)

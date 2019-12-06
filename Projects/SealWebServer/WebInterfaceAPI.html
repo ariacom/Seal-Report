@@ -103,7 +103,7 @@ $.post("https://sealreport.org/demo/SWILogin", {
                             culture (string) : the user's culture name<br />
                             folder (string) : the last folder viewed by the user<br />
                             dashboard (string) : the last dashboard GUID viewed by the user<br />
-                            viewType (int): 0 reports only, 1 dashboards only, 2 reports and dashboards<br />
+                            viewtype (int): 0 reports only, 1 dashboards only, 2 reports and dashboards<br />
                             lastview (string): last user's view (reports or dashboards)<br />
                             dashboardfolders ([string]): array of string of the dashboard folders with the edit right<br />
                             managedashboards (bool): manage dashboards view right of the user<br />
@@ -362,12 +362,13 @@ $.post("https://sealreport.org/demo/SWIGetReportDetail", {
                             <b>enum_values</b> containing the list of enumerated identifiers separated by commas if the restriction is an enumerated list.<br />
                             <br />
                             Several restrictions can be defined by changing the prefix index.<br />
+                            A flag 'use_default_restrictions' (default value is false) can be to true to force the use of the default values for custom restrictions not specified.
                         </td>
                     </tr>
                     <tr>
                         <th>Call</th>
                         <td>
-<pre>
+                            <pre>
     var f = $('&lt;form method="post" target="_blank" />').appendTo('body');
     f.attr('action', sealServer + "SWExecuteReportToResult");
     f.append($('&lt;input/>').attr('name', 'path').attr('value', path));  //the report path, if empty the report definition must be specified
@@ -377,6 +378,7 @@ $.post("https://sealreport.org/demo/SWIGetReportDetail", {
     f.append($('&lt;input />').attr('name', 'format').attr('value', "html"));  // optional, html by default, print, csv, pdf or excel with the converter 
 
     //optional restriction values if defined as prompted in the report
+    f.append($('&lt;input />').attr('name', 'use_default_restrictions').attr('value', "true")); //true -> e.g. for '"\\Search - Orders.srex', existing country values defined in the report will be used
     f.append($('&lt;input />').attr('name', 'r0_name').attr('value', "Quantity"));
     f.append($('&lt;input />').attr('name', 'r0_operator').attr('value', "Between"));
     f.append($('&lt;input />').attr('name', 'r0_value_1').attr('value', "34"));
