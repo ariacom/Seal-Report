@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <link href="https://sealreport.org/demo/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>Seal Web Interface Samples</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -34,8 +35,8 @@
     </style>
     <script>
         var sealServer = "/demo/";
-        sealServer = "http://localhost:17178/seal/";
-        var connected = false; 
+        //sealServer = "http://localhost:17178/seal/";
+        var connected = false;
 
         function enableControls() {
             $("button").prop("disabled", !connected);
@@ -301,20 +302,20 @@
                 });
 
             $("#logout_button")
-            .click(function () {
-                $.post(sealServer + "SWILogout")
-                    .done(function (data) {
-                        if (!data.error) {
-                            $("#connect_label").text("");
-                            $("#logout_label").text("Disconnected");
-                            connected = false;
-                        }
-                        else {
-                            $("#browse_detail_label").text("Error: " + data.error);
-                        }
-                        enableControls();
-                    })
-            });
+                .click(function () {
+                    $.post(sealServer + "SWILogout")
+                        .done(function (data) {
+                            if (!data.error) {
+                                $("#connect_label").text("");
+                                $("#logout_label").text("Disconnected");
+                                connected = false;
+                            }
+                            else {
+                                $("#browse_detail_label").text("Error: " + data.error);
+                            }
+                            enableControls();
+                        })
+                });
 
             $("#version_button")
                 .click(function () {
