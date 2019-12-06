@@ -573,7 +573,7 @@ namespace Seal.Model
         {
             get
             {
-                return ExecutionView.GetValue("messages_mode") == "enabledshown" || (ExecutionView.GetValue("messages_mode") == "enabled" && !string.IsNullOrEmpty(WebExecutionErrors));
+                return (ExecutionView.GetValue("messages_mode") == "enabledshown") || (ExecutionView.GetValue("messages_mode") == "enabled" && !string.IsNullOrEmpty(WebExecutionErrors));
             }
         }
 
