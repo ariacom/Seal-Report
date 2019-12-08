@@ -19,6 +19,7 @@ namespace Seal.Model
     {
         public const string ReportFormatParameter = "report_format";
         public const string DrillEnabledParameter = "drill_enabled";
+        public const string DrillAllParameter = "drill_all";
         public const string SubReportsEnabledParameter = "subreports_enabled";
         public const string ServerPaginationParameter = "serverpagination_enabled";
         public const string ForceExecutionParameter = "force_execution";
