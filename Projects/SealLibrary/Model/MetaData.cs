@@ -40,6 +40,24 @@ namespace Seal.Model
         public List<MetaEnum> Enums { get; set; } = new List<MetaEnum>();
         public bool ShouldSerializeEnums() { return Enums.Count > 0; }
 
+
+        /// <summary>
+        /// All meta columns
+        /// </summary>
+        [XmlIgnore]
+        public virtual List<MetaColumn> AllColumns
+        {
+            get
+            {
+                var result = new List<MetaColumn>();
+                foreach (var table in Tables)
+                {
+                    result.AddRange(table.Columns);
+                }
+                return result;
+            }
+        }
+
         /// <summary>
         /// Returns a column from its GUID
         /// </summary>

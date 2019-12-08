@@ -113,7 +113,7 @@ function realMouseCoords(event) {
 function initMessageMenu() {
     var messages = $("#execution_messages");
     messages.mouseenter(function (e) {
-        var $menu = $("#message_popupmenu")
+        var $menu = $("#message_popupmenu");
         $menu
             .mouseenter(function () {
                 $menu.show();
@@ -305,103 +305,6 @@ function getTableData(datatable, guid, viewid, pageid, data, callback, settings)
     }
 }
 
-function mainInit() {
-    //force execute
-    $("input").keydown(function (event) {
-        if (event.keyCode == 13) $("#execute_button").focus();
-    });
-
-    $("#execute_button").click(function () {
-        //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
-        executeReport();
-    });
-
-    $("#restrictions_button").click(function () {
-        submitViewParameter(rootViewId, "restriction_button", !$("#restrictions_div").hasClass("in"));
-        $("#restrictions_button").toggleClass("active");
-        //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
-    });
-
-    //print layout
-    if (printLayout) {
-        $("nav").removeClass("navbar-fixed-top");
-        $("body").css("padding-top", "0px");
-    }
-
-    //tabs buttons
-    $(".sr_tab").click(function () {
-        submitViewParameter(rootViewId, "information_button", false);
-        if ($("#message_button").length) {
-            submitViewParameter(rootViewId, "message_button", false);
-            scrollMessages();
-        }
-        submitViewParameter(rootViewId, $(this).attr("id"), true);
-
-        setTimeout(function () { //redraw dataTables
-            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
-        }, 200);
-
-        //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
-    });
-
-    //result links
-    $(".sr_result").click(function () {
-        $("#header_form").attr("target", urlPrefix != "" ? "_blank" : "");
-        $("#header_form").attr("action", urlPrefix + $(this).attr("id"));
-        $("#header_form").submit();
-        //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
-    });
-
-    //operator change
-    $(".form-control").change(function () {
-        restrictionSelectChange(this);
-    }).change();
-
-    $(".form-control").keyup(function () {
-        restrictionSelectChange(this);
-    });
-
-    //validation
-    $(".numeric_input").keyup(function () {
-        var v = this.value;
-        if (!$.isNumeric(v)) {
-            this.value = this.value.slice(0, -1);
-        }
-    });
-
-    //navigation
-    if (hasNavigation) {
-        $("#nav_button")
-            .mouseenter(function () {
-                if (urlPrefix != "") {
-                    $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: $("#execution_guid").val() })
-                        .done(function (data) {
-                            if (data.links != null && data.links != "") {
-                                initNavMenu();
-                                $("#nav_menu").html(data.links);
-                                showNavMenu();
-                            }
-                        });
-                }
-                else {
-                    $("#header_form").attr("action", "ActionGetNavigationLinks");
-                    initNavMenu();
-                    $("#header_form").submit();
-                    showNavMenu();
-                }
-            })
-            .mouseleave(function () {
-                $("#nav_menu").hide();
-            });
-
-        $("#nav_badge").removeClass("hidden");
-    }
-    initNavCells(executeReport);
-}
 
 //Enum select picker
 function requestEnumData(filter, forceNoMessage) {
@@ -508,6 +411,104 @@ function initEnums() {
             });
         }
     });
+}
+
+function mainInit() {
+    //force execute
+    $("input").keydown(function (event) {
+        if (event.keyCode == 13) $("#execute_button").focus();
+    });
+
+    $("#execute_button").click(function () {
+        //Collapse navbar
+        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+        executeReport();
+    });
+
+    $("#restrictions_button").click(function () {
+        submitViewParameter(rootViewId, "restriction_button", !$("#restrictions_div").hasClass("in"));
+        $("#restrictions_button").toggleClass("active");
+        //Collapse navbar
+        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+    });
+
+    //print layout
+    if (printLayout) {
+        $("nav").removeClass("navbar-fixed-top");
+        $("body").css("padding-top", "0px");
+    }
+
+    //tabs buttons
+    $(".sr_tab").click(function () {
+        submitViewParameter(rootViewId, "information_button", false);
+        if ($("#message_button").length) {
+            submitViewParameter(rootViewId, "message_button", false);
+            scrollMessages();
+        }
+        submitViewParameter(rootViewId, $(this).attr("id"), true);
+
+        setTimeout(function () { //redraw dataTables
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+        }, 200);
+
+        //Collapse navbar
+        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+    });
+
+    //result links
+    $(".sr_result").click(function () {
+        $("#header_form").attr("target", urlPrefix != "" ? "_blank" : "");
+        $("#header_form").attr("action", urlPrefix + $(this).attr("id"));
+        $("#header_form").submit();
+        //Collapse navbar
+        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+    });
+
+    //operator change
+    $(".form-control").change(function () {
+        restrictionSelectChange(this);
+    }).change();
+
+    $(".form-control").keyup(function () {
+        restrictionSelectChange(this);
+    });
+
+    //validation
+    $(".numeric_input").keyup(function () {
+        var v = this.value;
+        if (!$.isNumeric(v)) {
+            this.value = this.value.slice(0, -1);
+        }
+    });
+
+    //navigation
+    if (hasNavigation) {
+        $("#nav_button")
+            .mouseenter(function () {
+                if (urlPrefix != "") {
+                    $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: $("#execution_guid").val() })
+                        .done(function (data) {
+                            if (data.links != null && data.links != "") {
+                                initNavMenu();
+                                $("#nav_menu").html(data.links);
+                                showNavMenu();
+                            }
+                        });
+                }
+                else {
+                    $("#header_form").attr("action", "ActionGetNavigationLinks");
+                    initNavMenu();
+                    $("#header_form").submit();
+                    showNavMenu();
+                }
+            })
+            .mouseleave(function () {
+                $("#nav_menu").hide();
+            });
+
+        $("#nav_badge").removeClass("hidden");
+    }
+    initNavCells(executeReport);
 }
 
 $(document).ready(function () {
