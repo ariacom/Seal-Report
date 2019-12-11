@@ -22,7 +22,7 @@ namespace Seal.Forms
         public string ScriptHeader = null;
 
         ToolStripMenuItem samplesMenuItem = new ToolStripMenuItem("Samples...");
-        ToolStripMenuItem samplesMenuItem2 = new ToolStripMenuItem("Samples in Notepad");
+        ToolStripMenuItem samplesMenuItem2 = new ToolStripMenuItem("Samples (Notepad)");
 
         static Size? LastSize = null;
         static Point? LastLocation = null;
@@ -200,7 +200,7 @@ namespace Seal.Forms
         {
             if (sender is ToolStripMenuItem)
             {
-                var path = FileHelper.GetTempUniqueFileName("script.txt");
+                var path = FileHelper.GetTempUniqueFileName("sample.txt");
                 File.WriteAllText(path, ((ToolStripMenuItem)sender).Tag.ToString(), Encoding.UTF8);
                 Process.Start(path);
             }

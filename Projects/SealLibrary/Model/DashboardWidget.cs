@@ -15,6 +15,8 @@ namespace Seal.Model
     /// </summary>
     public class DashboardWidget : RootEditor
     {
+        public static string NoExecView = "-1";
+
         #region Editor
 
         protected override void UpdateEditorAttributes()
@@ -113,11 +115,12 @@ namespace Seal.Model
         public int Height { get; set; } = 0;
 
         /// <summary>
-        /// If true, the widget name is a link to execute the full report
+        /// If a root view is specified, the widget name has a link to execute the full report using the root view
         /// </summary>
-        [DisplayName("Allow report execution"), Description("If true, the widget name is a link to execute the full report."), Id(9, 1)]
-        [DefaultValue(true)]
-        public bool Exec { get; set; } = true;
+        [DefaultValue(null)]
+        [Category("Definition"), DisplayName("View to execute from title"), Description("If a root view is specified, the widget name has a link to execute the full report using the root view."), Id(9, 1)]
+        [TypeConverter(typeof(ReportViewConverter))]
+        public string ExecViewGUID { get; set; }
 
         /// <summary>
         /// Number of seconds before the widget is re-executed. If -1, the rate of the root view is used (defined in property 'Options: Auto-Refresh (seconds)'). A value of 0 means no refresh.
