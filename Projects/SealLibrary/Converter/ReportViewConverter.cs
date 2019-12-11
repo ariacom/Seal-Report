@@ -8,12 +8,22 @@ using System.ComponentModel;
 using Seal.Model;
 using System.Globalization;
 using System.Collections.Generic;
+using Seal.Forms;
 
 namespace Seal.Converter
 {
     public class ReportViewConverter : StringConverter
     {
-        List<ReportView> getViewList(PropertyDescriptor descriptor, Report report) 
+        Report getReport(ITypeDescriptorContext context)
+        {
+            Report report = context.Instance as Report;
+            if (report == null && context.Instance is ReportComponent) report = ((ReportComponent)context.Instance).Report;
+            if (report == null && TemplateTextEditor.CurrentEntity is Report) report = (Report)TemplateTextEditor.CurrentEntity;
+
+            return report;
+        }
+
+        List<ReportView> getViewList(PropertyDescriptor descriptor, Report report)
         {
 
             List<ReportView> result = null;
@@ -34,14 +44,12 @@ namespace Seal.Converter
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
             List<string> choices = new List<string>();
-            Report report = context.Instance as Report;
-            if (report == null && context.Instance is ReportComponent) report = ((ReportComponent)context.Instance).Report;
-
+            Report report = getReport(context);
             if (report != null)
             {
                 var list = getViewList(context.PropertyDescriptor, report);
                 choices = (from s in list select s.Name).ToList();
-                if (context.PropertyDescriptor.Name == "ReferenceViewGUID")
+                if (context.PropertyDescriptor.Name == "ReferenceViewGUID" || context.PropertyDescriptor.Name == "ExecViewGUID")
                 {
                     choices.Insert(0, "");
                 }
@@ -59,9 +67,7 @@ namespace Seal.Converter
         {
             if (context != null)
             {
-                Report report = context.Instance as Report;
-                if (report == null && context.Instance is ReportComponent) report = ((ReportComponent)context.Instance).Report;
-
+                Report report = getReport(context);
                 if (report != null && value != null)
                 {
                     var list = getViewList(context.PropertyDescriptor, report);
@@ -79,9 +85,7 @@ namespace Seal.Converter
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            Report report = context.Instance as Report;
-            if (report == null && context.Instance is ReportComponent) report = ((ReportComponent)context.Instance).Report;
-
+            Report report = getReport(context);
             if (report != null && value != null)
             {
                 var list = getViewList(context.PropertyDescriptor, report);
