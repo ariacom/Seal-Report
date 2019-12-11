@@ -969,8 +969,17 @@ namespace SealWebServer.Controllers
                         if (modelView != null && modelView.Model != null && modelView.Model.Pages.Count > 0)
                         {
                             report.CurrentPage = modelView.Model.Pages[0];
-                            report.CurrentPage.PageId = null; //Reset page id
                         }
+
+                        //Reset page id
+                        foreach (var model in report.Models)
+                        {
+                            foreach (var page in model.Pages)
+                            {
+                                page.PageId = null; //Reset page id as it is used as unique identifier in datatables
+                            }
+                        }
+
                         content = view.Parse();
                     }
                     finally
@@ -989,7 +998,8 @@ namespace SealWebServer.Controllers
                     dashboardguid = guid,
                     itemguid = itemguid,
                     executionguid = execution.Report.ExecutionGUID,
-                    path = widget.Exec ? widget.ReportPath : "",
+                    path = !string.IsNullOrEmpty(widget.ExecViewGUID) ? widget.ReportPath : "",
+                    viewGUID = widget.ExecViewGUID,
                     lastexec = Translate("Last execution at") + " " + report.ExecutionEndDate.ToString("G", Repository.CultureInfo),
                     description = Repository.TranslateWidgetDescription(widget.ReportPath.Replace(Repository.ReportsFolder, "\\"), widget.Description),
                     dynamic = item.Dynamic,

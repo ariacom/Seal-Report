@@ -239,7 +239,7 @@ namespace Seal.Forms
                         report.Views.Clear();
                         report.AddView(ReportViewTemplate.ModelDetailName);
                         report.Views[0].InitParameters(true);
-                        report.Views[0].Parameters.First(i => i.Name == "restriction_button").BoolValue = false; 
+                        report.Views[0].Parameters.First(i => i.Name == "restriction_button").BoolValue = false;
 
                         report.Sources.RemoveAll(i => i.MetaSourceGUID != _metaColumn.Source.GUID);
 
@@ -343,6 +343,7 @@ namespace Seal.Forms
                             var sr = new SubReport() { Path = report.FilePath.Replace(_metaColumn.Source.Repository.RepositoryPath, Repository.SealRepositoryKeyword), Name = Path.GetFileNameWithoutExtension(dlg.FileName) };
 
                             bool tableOk = false;
+                            var restrList = new List<ReportRestriction>();
                             foreach (var model in report.Models.Where(i => i.Source.MetaSourceGUID == _metaColumn.Source.GUID))
                             {
                                 foreach (var restriction in model.Restrictions.Where(i => i.Prompt != PromptType.None))
@@ -353,7 +354,10 @@ namespace Seal.Forms
                                         if (col != null)
                                         {
                                             tableOk = true;
-                                            sr.Restrictions.Add(col.GUID);
+                                            if (!restrList.Exists(i => i.MetaColumnGUID == restriction.MetaColumnGUID))
+                                            {
+                                                restrList.Add(restriction);
+                                            }
                                         }
                                     }
                                 }
@@ -361,11 +365,18 @@ namespace Seal.Forms
 
                             if (!tableOk) throw new Exception("Unable to add this Sub-Report:\r\nThe report does not contain any prompted restriction...");
 
-                            _metaColumn.SubReports.Add(sr);
-                            MessageBox.Show(string.Format("The Sub-Report named '{0}' has been added with {1} restriction(s).", Path.GetFileName(dlg.FileName), sr.Restrictions.Count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            var frm = new MultipleSelectForm("Select the restrictions to include", restrList, "DisplayNameEl");
+                            //select all by default
+                            for (int i = 0; i < frm.checkedListBox.Items.Count; i++) frm.checkedListBox.SetItemChecked(i, true);
+                            if (frm.ShowDialog() == DialogResult.OK)
+                            {
+                                foreach (object item in frm.CheckedItems) sr.Restrictions.Add(((ReportRestriction)item).MetaColumnGUID);
+                                _metaColumn.SubReports.Add(sr);
+                                MessageBox.Show(string.Format("The Sub-Report named '{0}' has been added with {1} restriction(s).", Path.GetFileName(dlg.FileName), sr.Restrictions.Count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            _metaColumn.UpdateEditor();
-                            setModified();
+                                _metaColumn.UpdateEditor();
+                                setModified();
+                            }
                         }
                     }
                     else if (context.PropertyDescriptor.Name == "HelperOpenSubReportFolder")

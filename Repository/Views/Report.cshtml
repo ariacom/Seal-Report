@@ -84,7 +84,7 @@
     }
     @Raw(report.AttachScriptFiles(repository.Configuration.ScriptFiles))
 
-    <script type="text/javascript">
+        <script type="text/javascript">
             var inReport = true;
             var generateHTMLDisplay =  @Helper.ToJS(report.GenerateHTMLDisplay);
 
@@ -99,6 +99,7 @@
             var isExecuting = @Helper.ToJS(report.IsExecuting);
             var isCancel = @Helper.ToJS(report.Cancel);
             var printLayout = @Helper.ToJS(report.PrintLayout);
+            var showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode")== "enabledshownexec");
             var autoscroll = false;
 
             var rootViewId = '@view.ViewId';
@@ -225,7 +226,7 @@
                     } catch (e) {}
                 }
         });
-    </script>
+        </script>
     @Raw(report.AttachScriptFile("helpers.js"))
     @Raw(report.AttachScriptFile("common.js"))
     @Raw(report.AttachScriptFile("custom.js"))

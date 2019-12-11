@@ -1151,6 +1151,9 @@ namespace Seal.Model
             var refView = ReferenceView;
             if (refView != null)
             {
+                InitPartialTemplates();
+                InitParameters(false);
+
                 //Templates
                 if (!UseCustomTemplate)
                 {

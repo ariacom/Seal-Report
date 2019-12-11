@@ -9,7 +9,7 @@ var hasEditor: boolean;
 declare var Muuri: any;
 declare function nvd3UpdateCharts();
 declare function getTopLeft(item: any);
-declare function initNavCells(reportPath: string, itenGUID: string);
+declare function initNavCells(reportPath: string, itemGUID: string);
 
 //Muuri layout
 function loadLayout(grid, serializedLayout) {
@@ -101,8 +101,9 @@ class SWIDashboard {
         nameLink.attr("title", data.description);
         if (data.path) {
             nameLink.attr("path", data.path);
+            nameLink.attr("viewGUID", data.viewGUID);            
             nameLink.unbind('click').on("click", function (e) {
-                _gateway.ExecuteReport($(e.currentTarget).attr("path"), false, null, null);
+                _gateway.ExecuteReport($(e.currentTarget).attr("path"), false, $(e.currentTarget).attr("viewGUID"), null);
             });
         }
         else {

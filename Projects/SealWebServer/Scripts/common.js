@@ -255,6 +255,14 @@ function executeReport(nav) {
     $("#nav_button").attr("disabled", "disabled");
 
     setMessageHeight();
+
+    if (showMsgDuringExec) {
+        $("#" + rootViewId).removeClass("active in");
+        $("#report_button").parent().removeClass("active");
+        $("#information_button").parent().removeClass("active");
+        $("#message_div").addClass("active in");
+        $("#message_button").parent().addClass("active");
+    }
 }
 
 function submitViewParameter(viewId, parameterName, parameterValue) {

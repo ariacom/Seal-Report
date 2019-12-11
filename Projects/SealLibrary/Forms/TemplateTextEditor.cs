@@ -518,10 +518,17 @@ namespace Seal.Forms
         static readonly Tuple<string, string>[] tasksSamples =
         {
             new Tuple<string, string>(
-                "Refresh Data Sources enumerated lists",
-@"ReportTask task = Model;
-    var helper = new TaskHelper(task);
-    helper.RefreshRepositoryEnums();
+                "Copy date input values to all date restrictions in the report",
+@"    ReportTask task = Model;
+    Report report = task.Report;
+    //Take the first input value has been defined in the report
+    var inputValue = report.InputValues[0];
+    foreach (var model in report.Models) {
+        foreach (var restriction in model.Restrictions.Where(i => i.TypeRe == ColumnType.DateTime)) {
+            restriction.Date1 = inputValue.Date1;
+            restriction.Date2 = inputValue.Date2;
+        }
+    }
 "
                 ),
             new Tuple<string, string>(
@@ -558,20 +565,6 @@ namespace Seal.Forms
 "
                 ),
             new Tuple<string, string>(
-                "Copy date input values to all date restrictions in the report",
-@"    ReportTask task = Model;
-    Report report = task.Report;
-    //Take the first input value has been defined in the report
-    var inputValue = report.InputValues[0];
-    foreach (var model in report.Models) {
-        foreach (var restriction in model.Restrictions.Where(i => i.TypeRe == ColumnType.DateTime)) {
-            restriction.Date1 = inputValue.Date1;
-            restriction.Date2 = inputValue.Date2;
-        }
-    }
-"
-                ),
-            new Tuple<string, string>(
                 "Display the report input values",
 @"ReportTask task = Model;
     Report report = task.Report;
@@ -583,6 +576,13 @@ namespace Seal.Forms
 }
 "
             ),
+            new Tuple<string, string>(
+                "Refresh Data Sources enumerated lists",
+@"ReportTask task = Model;
+    var helper = new TaskHelper(task);
+    helper.RefreshRepositoryEnums();
+"
+                ),
             new Tuple<string, string>(
                 "Load a table from an Excel file, may need ODBC Office 2007 Drivers",
 @"ReportTask task = Model;

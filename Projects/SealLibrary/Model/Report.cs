@@ -417,6 +417,7 @@ namespace Seal.Model
         public void InitForExecution()
         {
             string fileName = "", fileFolder = "";
+            var template = ExecutionView.Template; //This force to init parameters
 
             //Copy values from reference views
             foreach (var view in FullViewList.Where(i => i.ReferenceView != null))
@@ -445,7 +446,6 @@ namespace Seal.Model
 
             try
             {
-                var template = ExecutionView.Template; //This force to init parameters
                 fileName = ResultFileName;
                 fileFolder = FileHelper.TempApplicationDirectory;
 
@@ -573,7 +573,10 @@ namespace Seal.Model
         {
             get
             {
-                return (ExecutionView.GetValue("messages_mode") == "enabledshown") || (ExecutionView.GetValue("messages_mode") == "enabled" && !string.IsNullOrEmpty(WebExecutionErrors));
+                return ((ExecutionView.GetValue("messages_mode") == "enabledshown")
+                    || (ExecutionView.GetValue("messages_mode") == "enabledshownexec" &&  (Status == ReportStatus.NotExecuted || Status == ReportStatus.Executing))
+                    || (ExecutionView.GetValue("messages_mode") == "enabled" && !string.IsNullOrEmpty(WebExecutionErrors))
+                    );
             }
         }
 
@@ -1186,6 +1189,7 @@ namespace Seal.Model
             foreach (var view in FullViewList.Where(i => !string.IsNullOrEmpty(i.ReferenceViewGUID)))
             {
                 view.ReferenceViewGUID = newValues[view.ReferenceViewGUID];
+                if (!string.IsNullOrEmpty(view.WidgetDefinition.ExecViewGUID)) view.WidgetDefinition.ExecViewGUID = newValues[view.WidgetDefinition.ExecViewGUID];
             }
 
             //Current view of the report
@@ -1557,11 +1561,31 @@ namespace Seal.Model
         /// </summary>
         public void RemoveView(ReportView parent, ReportView view)
         {
+            foreach (var refView in FullViewList.Where(i => !string.IsNullOrEmpty(i.ReferenceViewGUID)))
+            {
+                var v1 = FindView(view.Views, refView.GUID);
+                if (v1 == null)
+                {
+                    //This view has a reference and is not part of the children of the deleted view
+                    var v2 = FindView(view.Views, refView.ReferenceViewGUID);
+                    if (v2 != null)
+                    {
+                        throw new Exception(string.Format("Unable to remove the view '{0}': This view or one of its children named '{2}' is referenced by the view '{1}'.", view.Name, refView.Name, v2.Name));
+                    }
+                }
+            }
+
             if (parent == null)
             {
+                //Delete a root view
                 foreach (ReportOutput output in Outputs)
                 {
                     if (output.ViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is used by the output '{1}'.", view.Name, output.Name));
+                }
+
+                foreach (var refView in FullViewList)
+                {
+                    if (refView.WidgetDefinition.ExecViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is referenced by the Widget in the view '{1}'.", view.Name, refView.Name));
                 }
 
                 if (Views.Count == 1) throw new Exception("Unable to remove the view: The report must contain at least one View.");
@@ -1569,7 +1593,10 @@ namespace Seal.Model
                 //Change the default view if necessary
                 if (view.GUID == ViewGUID) ViewGUID = Views[0].GUID;
             }
-            else parent.Views.Remove(view);
+            else
+            {
+                parent.Views.Remove(view);
+            }
         }
 
         /// <summary>
