@@ -22,8 +22,7 @@
     @Raw(report.AttachCSSFile("bootstrap-select.min.css", "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"))
     @Raw(report.AttachCSSFile("bootstrap-datetimepicker.min.css"))
     <!-- CSS DataTables-->
-    @Raw(report.AttachCSSFile("dataTables.bootstrap.min.css", "https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css"))
-    @Raw(report.AttachCSSFile("responsive.bootstrap.min.css", "https://cdn.datatables.net/responsive/2.2.2/css/responsive.bootstrap.min.css"))
+	@Raw(report.AttachCSSFile("datatables.min.css", "https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.20/af-2.3.4/b-1.6.1/b-colvis-1.6.1/b-flash-1.6.1/b-html5-1.6.1/b-print-1.6.1/cr-1.5.2/fc-3.3.0/fh-3.1.6/kt-2.5.1/r-2.2.3/rg-1.1.1/rr-1.2.6/sc-2.0.1/sl-1.3.1/datatables.min.css"))
 
     @Raw(report.AttachCSSFiles(repository.Configuration.CssFiles))
     @Raw(report.AttachCSSFile("seal.css"))
@@ -41,10 +40,9 @@
     @Raw(report.AttachScriptFile("bootstrap-datetimepicker.min.js"))
 
     <!--Scripts Datatables-->
-    @Raw(report.AttachScriptFile("jquery.dataTables.min.js", "https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"))
-    @Raw(report.AttachScriptFile("dataTables.bootstrap.min.js", "https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap.min.js"))
-    @Raw(report.AttachScriptFile("dataTables.responsive.min.js"))
-    @Raw(report.AttachScriptFile("responsive.bootstrap.min.js", "https://cdn.datatables.net/responsive/2.2.2/js/responsive.bootstrap.min.js"))
+	@Raw(report.AttachScriptFile("pdfmake.min.js", "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"))
+	@Raw(report.AttachScriptFile("vfs_fonts.js", "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"))
+    @Raw(report.AttachScriptFile("datatables.min.js", "https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.20/af-2.3.4/b-1.6.1/b-colvis-1.6.1/b-flash-1.6.1/b-html5-1.6.1/b-print-1.6.1/cr-1.5.2/fc-3.3.0/fh-3.1.6/kt-2.5.1/r-2.2.3/rg-1.1.1/rr-1.2.6/sc-2.0.1/sl-1.3.1/datatables.min.js"))
 
     @Raw(report.AttachScriptFile("datetime-moment.js"))
     @if (report.HasChart)
