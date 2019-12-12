@@ -77,7 +77,7 @@ function showPopupNavMenu(source, content, forChart, executionguid) {
         });
 
     if (popupNavMenuTimeout != -1) clearTimeout(popupNavMenuTimeout);
-    popupNavMenuTimeout = setTimeout(function () { $popup.hide(); }, 3000);
+    popupNavMenuTimeout = setTimeout(function () { $popup.hide(); }, 4000);
 }
 
 

@@ -346,7 +346,7 @@ namespace Seal.Forms
                             var restrList = new List<ReportRestriction>();
                             foreach (var model in report.Models.Where(i => i.Source.MetaSourceGUID == _metaColumn.Source.GUID))
                             {
-                                foreach (var restriction in model.Restrictions.Where(i => i.Prompt != PromptType.None))
+                                foreach (var restriction in model.Restrictions)
                                 {
                                     foreach (var table in _metaColumn.MetaTable.Source.MetaData.Tables)
                                     {
@@ -363,7 +363,7 @@ namespace Seal.Forms
                                 }
                             }
 
-                            if (!tableOk) throw new Exception("Unable to add this Sub-Report:\r\nThe report does not contain any prompted restriction...");
+                            if (!tableOk) throw new Exception("Unable to add this Sub-Report:\r\nThe report does not contain any restriction...");
 
                             var frm = new MultipleSelectForm("Select the restrictions to include", restrList, "DisplayNameEl");
                             //select all by default
