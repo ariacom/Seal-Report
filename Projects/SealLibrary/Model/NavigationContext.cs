@@ -58,7 +58,7 @@ namespace Seal.Model
                         if (string.IsNullOrEmpty(res) || string.IsNullOrEmpty(val)) break;
                         foreach (var model in newReport.Models)
                         {
-                            foreach (var restriction in model.Restrictions.Where(i => i.MetaColumnGUID == res && i.Prompt != PromptType.None))
+                            foreach (var restriction in model.Restrictions.Where(i => i.MetaColumnGUID == res))
                             {
                                 restriction.SetNavigationValue(val);
                                 srcRestriction = restriction.GeNavigationDisplayValue();
