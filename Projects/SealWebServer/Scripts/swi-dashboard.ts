@@ -373,7 +373,7 @@ class SWIDashboard {
                         }, 20);
 
                         setTimeout(function () {
-                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+                            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
                         }, 40);
 
                         _da.reorderItems(true);

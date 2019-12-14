@@ -55,7 +55,7 @@
                     var colors = null;
                     if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
                     else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
-                    else if (colorsDef == "d3c") colors = d3.scale.category20c().range(); 
+                    else if (colorsDef == "d3c") colors = d3.scale.category20c().range();
                     else colors = @Raw(view.GetValue("nvd3_colors"));
 
                     (@chartId).color(colors);
@@ -101,9 +101,9 @@
                     //Options
                     var hideControls = (@Helper.ToJS(view.GetBoolValue("nvd3_hide_controls") || report.PrintLayout) || chartType == 'scatterChart' || (series.length == 1 && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')));
                     if ((@chartId).showControls != null) (@chartId).showControls(!hideControls);
-                    if ((@chartId).showLegend != null) (@chartId).showLegend(@Helper.ToJS(view.GetBoolValue("nvd3_show_legend")));
-                    if ((@chartId).stacked != null && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')) (@chartId).stacked(@Helper.ToJS(view.GetBoolValue("nvd3_bar_stacked"))); //for Bar
-                    if ((@chartId).reduceXTicks != null) (@chartId).reduceXTicks(!@Helper.ToJS(view.GetBoolValue("chart_show_all_axis_labels")));
+                    if ((@chartId).showLegend != null) (@chartId).showLegend(@view.GetBoolValueJS("nvd3_show_legend"));
+                    if ((@chartId).stacked != null && (chartType == 'multiBarChart' || chartType == 'multiBarHorizontalChart')) (@chartId).stacked(@view.GetBoolValueJS("nvd3_bar_stacked")); //for Bar
+                    if ((@chartId).reduceXTicks != null) (@chartId).reduceXTicks(!@view.GetBoolValueJS("chart_show_all_axis_labels"));
 
                     if ((@chartId).useInteractiveGuideline != null) (@chartId).useInteractiveGuideline(true);
                     if ((@chartId).interpolate != null) (@chartId).interpolate('cardinal');
@@ -160,7 +160,7 @@
                             .text(chartTitle);
 
                         //re-adjust title...
-                        setTimeout(function () { nvd3UpdateCharts(); }, 200);               
+                        setTimeout(function () { nvd3UpdateCharts(); }, 200);
                     }
 
                     svg

@@ -521,7 +521,7 @@ namespace Seal.Forms
                 "Copy date input values to all date restrictions in the report",
 @"    ReportTask task = Model;
     Report report = task.Report;
-    //Take the first input value has been defined in the report
+    //Take the first input value that has been defined in the report
     var inputValue = report.InputValues[0];
     foreach (var model in report.Models) {
         foreach (var restriction in model.Restrictions.Where(i => i.TypeRe == ColumnType.DateTime)) {
@@ -573,9 +573,28 @@ namespace Seal.Forms
     }
     //Use also:
     //ReportRestriction restr = report.GetInputValueByName(""AnInputName"");
-}
 "
             ),
+            new Tuple<string, string>(
+                "Change the connections for a specific report output execution",
+@"ReportTask task = Model;
+    Report report = task.Report;
+    if (report.OutputToExecute != null && report.OutputToExecute.Name.StartsWith(""Your output name..."")) {
+        //Execution for a given output, we can modify the connections of the models
+        
+        //Select a model to modify
+        var model = report.Models.FirstOrDefault(i => i.Name.StartsWith(""Your model name...""));
+        if (model != null) {
+            //Select the new connection
+            var connection = model.Source.Connections.FirstOrDefault(i => i.Name.StartsWith(""Your connection name...""));
+            if (connection != null) {
+                report.LogMessage(""Setting connection '{0}' to '{1}'"", connection.Name, model.Name);
+                //Set it to the model
+                model.ConnectionGUID = connection.GUID;
+        }
+    }
+"
+                ),
             new Tuple<string, string>(
                 "Refresh Data Sources enumerated lists",
 @"ReportTask task = Model;

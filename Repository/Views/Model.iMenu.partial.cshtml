@@ -7,7 +7,7 @@
 
 
 <script>
-    $(function () {
+    $(document).ready(function () {
         $('#tc_@(view.ViewId) a').click(function (e) {
             submitViewParameter("@view.ViewId", "tab_selected_index", $($(this).attr('href')).index());
             @if (report.HasNVD3Chart)
@@ -17,7 +17,7 @@
             </text>
             }
             setTimeout(function () { //redraw dt
-                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
             }, 200);
         });
     });
