@@ -110,7 +110,7 @@ var SWIMain = /** @class */ (function () {
             _main.showDashboard($("#main-dashboard").css("display") != "block");
             if ($("#main-dashboard").css("display") == "block") {
                 setTimeout(function () {
-                    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
                     nvd3UpdateCharts();
                 }, 200);
             }
@@ -601,7 +601,7 @@ var SWIMain = /** @class */ (function () {
             span.addClass("glyphicon-th-large");
             $("#dashboard-toggle").attr("title", SWIUtil.tr2("View dashboards"));
         }
-        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
     };
     return SWIMain;
 }());

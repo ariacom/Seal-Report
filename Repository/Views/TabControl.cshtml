@@ -18,7 +18,7 @@
             </text>
             }
             setTimeout(function () { //redraw dt
-                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().fixedColumns().relayout();
             }, 200);
         });
     });

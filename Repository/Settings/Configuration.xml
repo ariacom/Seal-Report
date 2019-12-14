@@ -1,9 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString><TaskFolderName>Seal Report</TaskFolderName><WebProductName>Seal Report</WebProductName><FileReplacePatterns><FileReplacePattern><FileName>bootstrap.min.css</FileName><OldValue>url(../fonts/glyphicons-halflings-regular</OldValue><NewValue>url(https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/fonts/glyphicons-halflings-regular</NewValue></FileReplacePattern></FileReplacePatterns><CssFiles>_ed.buttons.bootstrap.min.css&#xD;
-_ed.select.bootstrap.min.css&#xD;
-_ed.editor.bootstrap.min.css</CssFiles><ScriptFiles>_ed.dataTables.buttons.min.js&#xD;
-_ed.buttons.bootstrap.min.js&#xD;
-_ed.dataTables.select.min.js&#xD;
-_ed.dataTables.editor.min.js&#xD;
+﻿<?xml version="1.0" encoding="utf-8"?><SealServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><DefaultConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</DefaultConnectionString><TaskFolderName>Seal Report</TaskFolderName><WebProductName>Seal Report</WebProductName><FileReplacePatterns><FileReplacePattern><FileName>datatables.min.css</FileName><OldValue>url(Bootstrap-3.3.7/fonts/glyphicons-halflings-regular</OldValue><NewValue>url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular</NewValue></FileReplacePattern></FileReplacePatterns><CssFiles>_ed.editor.bootstrap.min.css</CssFiles><ScriptFiles>_ed.dataTables.editor.min.js&#xD;
 _ed.editor.bootstrap.min.js&#xD;
 _ed.common.js</ScriptFiles><AuditScript>@using Seal.Model&#xD;
 @using Seal.Helpers&#xD;

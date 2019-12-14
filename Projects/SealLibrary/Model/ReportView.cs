@@ -370,6 +370,15 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Returns a parameter boolean value for JavaScript
+        /// </summary>
+        public string GetBoolValueJS(string name)
+        {
+            Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
+            return (parameter == null ? false : parameter.BoolValue).ToString().ToLower();
+        }
+
+        /// <summary>
         /// Returns a parameter boolean value with a default if it does not exist
         /// </summary>
         public bool GetBoolValue(string name, bool defaultValue)

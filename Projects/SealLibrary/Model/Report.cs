@@ -1128,20 +1128,15 @@ namespace Seal.Model
                 if (source.IsNoSQL && source.MetaData.Tables.Count > 1) source.MetaData.Tables.RemoveAll(i => i.IsEditable);
             }
 
-            //and a 2 models
+            //and a model
             if (result.Models.Count == 0)
             {
                 result.AddModel(false);
-                var model = result.AddModel(true);
-                model.Name = "SQL Model";
             }
             //Add default views
             ReportView view = result.AddModelHTMLView();
             if (view == null) throw new Exception(string.Format("Unable to find any view in your repository. Check that your repository folder '{0}' contains all the default sub-folders and files...", repository.RepositoryPath));
             result.ViewGUID = view.GUID;
-
-            view = result.AddModelHTMLView();
-            view.Name = "SQL view";
 
             //Creation script
             if (!string.IsNullOrEmpty(repository.Configuration.ReportCreationScript))

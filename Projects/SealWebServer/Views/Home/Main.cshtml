@@ -14,13 +14,11 @@
     <meta charset="utf-8" />
     <link href="~/Images/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
 
-    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/dataTables.min.css" />
     <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
     <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
     <link rel='stylesheet' href='~/Content/bootstrap-datetimepicker.min.css' />
-    <link rel="stylesheet" href="~/Content/dataTables.bootstrap.min.css" />
-    <link rel="stylesheet" href="~/Content/responsive.bootstrap.min.css" />
     <link rel="stylesheet" href="~/Content/SealWeb.css" />
     <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.CssFiles))
@@ -263,8 +261,7 @@
         </div>
     </div>
 
-    <script src='~/Scripts/jquery.min.js'></script>
-    <script src='~/Scripts/bootstrap.min.js'></script>
+    <script src="~/Scripts/dataTables.min.js"></script>
     <script src="~/Scripts/jstree.min.js"></script>
     <script src="~/Scripts/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
@@ -274,11 +271,7 @@
         <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
     }
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/Scripts/jquery.dataTables.min.js"></script>
-    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
-    <script src="~/Scripts/dataTables.responsive.min.js"></script>
     <script src="~/Scripts/datetime-moment.js"></script>
-    <script src="~/Scripts/responsive.bootstrap.min.js"></script>
 
     <!-- muuri -->
     <script src='~/Scripts/web-animations.min.js'></script>

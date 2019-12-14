@@ -98,7 +98,7 @@
                         overlaying: 'y',
                         side:'right',
                     },
-                    showlegend: @Helper.ToJS(view.GetBoolValue("plotly_show_legend")),
+                    showlegend: @view.GetBoolValueJS("plotly_show_legend"),
                     legend: {
                         @Raw(Helper.AddIfNotEmpty("",view.GetValue("plotly_legend_position"),","))
                         orientation: "@view.GetValue("plotly_legend_orientation")"

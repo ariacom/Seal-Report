@@ -64,10 +64,10 @@
                 ]
             };
             var options = {
-                responsive: @Helper.ToJS(view.GetBoolValue("chartjs_responsive")),
-                maintainAspectRatio: @Helper.ToJS(view.GetBoolValue("chartjs_maintainratio")),
+                responsive: @view.GetBoolValueJS("chartjs_responsive"),
+                maintainAspectRatio: @view.GetBoolValueJS("chartjs_maintainratio"),
                 legend: {
-                    display: @Helper.ToJS(view.GetBoolValue("chartjs_show_legend")),
+                    display: @view.GetBoolValueJS("chartjs_show_legend"),
                     position: '@view.GetValue("chartjs_legend_position")'
                 },
                 title: {
@@ -127,7 +127,7 @@
                 scales: {
                     @(chartType != "horizontalBar" ? "x" : "y")Axes: [{
                         offset: true,
-                        display: @Helper.ToJS(view.GetBoolValue("chartjs_show_xaxis")),
+                        display: @view.GetBoolValueJS("chartjs_show_xaxis"),
                         stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                         @if (reportModel.ExecChartIsDateTimeAxis) {
                             <text>
@@ -156,7 +156,7 @@
                             <text>
                             {
                                 id: 'yaxis-1',
-                                display: @Helper.ToJS(view.GetBoolValue("chartjs_show_yaxis")),
+                                display: @view.GetBoolValueJS("chartjs_show_yaxis"),
                                 stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
                                 ticks: {
                                     callback: function (label, index, labels) {
@@ -171,7 +171,7 @@
                             <text>
                             {
                                 id: 'yaxis-2',
-                                display: @Helper.ToJS(view.GetBoolValue("chartjs_show_yaxis")),
+                                display: @view.GetBoolValueJS("chartjs_show_yaxis"),
                                 position: 'right',
                                 ticks: {
                                     callback: function(label, index, labels) {

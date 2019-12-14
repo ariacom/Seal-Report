@@ -76,7 +76,7 @@ function scrollMessages() {
 }
 
 function resize() {
-    if (!printLayout) $("body").css("padding-top", $("#bar_top").height() + 15);
+    if (!printLayout) setTimeout(function () { $("body").css("padding-top", $("#bar_top").height() + 15); }, 200);
     setMessageHeight();
 }
 
@@ -456,7 +456,7 @@ function mainInit() {
         submitViewParameter(rootViewId, $(this).attr("id"), true);
 
         setTimeout(function () { //redraw dataTables
-            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
         }, 200);
 
         //Collapse navbar
@@ -523,7 +523,7 @@ $(document).ready(function () {
     mainInit();
 
     if ((forceExecution || !hasRestrictions) && !isExecuting && !isCancel) executeReport();
-
+    
     //Select Picker
     $(".operator_select").selectpicker('refresh');
     initEnums();
@@ -546,13 +546,13 @@ $(document).ready(function () {
     $('.datepicker_date,.datepicker_datetime').datetimepicker({
         locale: languageName
     });
-
+    
     //resize handler
     $(window).on('resize', function () {
         resize();
     });
     resize();
-
+    
     if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 
     //back to top
