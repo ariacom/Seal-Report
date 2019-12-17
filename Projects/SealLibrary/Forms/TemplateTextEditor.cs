@@ -56,6 +56,7 @@ namespace Seal.Forms
     Report report = reportModel.Report;
     //Script executed to modify a result cell 
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    //For performances reason, consider to process your result table in a dedicated Task with an execution step 'Models generated, before rendering' 
 	/*
     cell.ContextRow indicates the current row (type = int)
     cell.ContextCol indicates the current column (type = int)
@@ -88,7 +89,8 @@ namespace Seal.Forms
         {
             new Tuple<string, string>(
                 "Simple format",
-@"if (cell.IsTitle)
+@"//For performances reason, consider to process your result table in a dedicated Task with an execution step 'Models generated, before rendering' 
+if (cell.IsTitle)
 	{
         if (cell.ContextIsSummaryTable) {
     		cell.FinalCssStyle = ""font-weight:bold;"";
@@ -117,7 +119,8 @@ namespace Seal.Forms
                 ),
             new Tuple<string, string>(
                 "Display negative values in red and bold",
-@"if (cell.DoubleValue < 0)
+@"//For performances reason, consider to process your result table in a dedicated Task with an execution step 'Models generated, before rendering' 
+if (cell.DoubleValue < 0)
 	{
 		cell.FinalCssStyle = ""font-weight:bold;"";
 		cell.FinalCssClass = ""danger lead text-right""; //These are Bootstrap classes
@@ -410,8 +413,6 @@ namespace Seal.Forms
 
 @{
     Audit audit = Model;
-
-    //Sample script to log events into the Audit database, this script may be modified and adapted
     var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith(""Audit""));
     if (auditSource != null) {
         var helper = new TaskDatabaseHelper();
@@ -458,9 +459,9 @@ namespace Seal.Forms
             }
             catch
             {
-                //Create the table (to be adapted for your database type, e.g. ident identity(1,1), datetime2, execution_error varchar(max) for SQLServer)
+                //Create the table (to be adapted for your database type, e.g. ident identity(1,1), execution_error varchar(max) for SQLServer)
                 command.CommandText = @""create table sr_audit (
-                        event_date datetime,event_type varchar(20),event_detail varchar(250),user_name varchar(250),user_groups varchar(250),report_name varchar(250),report_path varchar(250),execution_context varchar(250),execution_view varchar(250),execution_status varchar(50),execution_duration int null,execution_locale varchar(50),execution_error varchar(250),output_type varchar(50),output_name varchar(250),output_information varchar(250),output_error varchar(250),schedule_name varchar(250)
+                        event_date datetime,event_type varchar(20),event_detail varchar(255),user_name varchar(255),user_groups varchar(255),report_name varchar(255),report_path varchar(255),execution_context varchar(255),execution_view varchar(255),execution_status varchar(255),execution_duration int null,execution_locale varchar(255),execution_error varchar(max),output_type varchar(255),output_name varchar(255),output_information varchar(max),output_error varchar(max),schedule_name varchar(255)
                     )"";
                 command.ExecuteNonQuery();
             }
@@ -471,8 +472,8 @@ namespace Seal.Forms
     {
         var parameter = command.CreateParameter();
         parameter.DbType = type;
-        parameter.Value = value;
-        if (value is string && ((string)value).Length >= 250) value = ((string)value).Substring(0, 249);
+        if (value is string && ((string)value).Length >= 255) parameter.Value = ((string)value).Substring(0, 254);
+        else parameter.Value = value;
         command.Parameters.Add(parameter);
     }
 }
