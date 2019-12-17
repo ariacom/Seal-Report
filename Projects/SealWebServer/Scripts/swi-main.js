@@ -79,6 +79,7 @@ var SWIMain = /** @class */ (function () {
         _main._searchMode = false;
         _main._clipboard = null;
         _main._clipboardCut = false;
+        _main.clearFilesTable();
         $("#search-pattern").val("");
         $("body").children(".modal-backdrop").remove();
         $loginModal.modal('hide');
@@ -419,10 +420,11 @@ var SWIMain = /** @class */ (function () {
             });
             setTimeout(function () {
                 if (!_main._profile.folder || _main._profile.folder == "" || !$folderTree.jstree(true).get_node(_main._profile.folder))
-                    _main._profile.folder = "\\";
+                    _main._profile.folder = "";
                 _main._folderpath = _main._profile.folder;
                 $folderTree.jstree("deselect_all");
-                $folderTree.jstree('select_node', _main._folderpath);
+                if (_main._folderpath)
+                    $folderTree.jstree('select_node', _main._folderpath);
             }, 100);
             $waitDialog.modal('hide');
         });
@@ -443,13 +445,18 @@ var SWIMain = /** @class */ (function () {
             $("#refresh-nav-item").removeClass("fa-spin");
         });
     };
-    SWIMain.prototype.buildReportsTable = function (data) {
+    SWIMain.prototype.clearFilesTable = function () {
         var $tableHead = $("#file-table-head");
         var $tableBody = $("#file-table-body");
         if (!$("#file-table-head").is(':empty'))
             $('#file-table').dataTable().fnDestroy();
         $tableHead.empty();
         $tableBody.empty();
+    };
+    SWIMain.prototype.buildReportsTable = function (data) {
+        var $tableHead = $("#file-table-head");
+        var $tableBody = $("#file-table-body");
+        _main.clearFilesTable();
         //Header
         var $tr = $("<tr>");
         $tableHead.append($tr);
