@@ -18,7 +18,11 @@
             </text>
             }
             setTimeout(function () { //redraw dt
-                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().fixedColumns().relayout();
+                try {
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    $.fn.dataTable.tables({ visible: true, api: true }).fixedColumns().relayout();
+                }
+                catch (ex) { /* unexpected exception... */}
             }, 200);
         });
     });
