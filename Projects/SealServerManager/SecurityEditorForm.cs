@@ -63,7 +63,7 @@ Rules applied if a user belongs to several groups:
 - Folders: the highest right is used (No right, Execute reports / View files, Execute reports and outputs / View files, Edit schedules / View files, Edit reports / Manage files)
 - Personal folder: the highest right is used (No personal folder, Personal folder for files only, Personal folder for reports and files)
 - View type: the union of the views (Reports, Dashboards)
-- Show all folders: true if one group has set this flag to true
+- Show all folders: true if one group has this flag set to true
 
 Web Report Designer Security
 - SQL Models: True if true in one group

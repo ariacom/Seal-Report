@@ -139,10 +139,8 @@ class SWIMain {
             _main.showDashboard($("#main-dashboard").css("display") != "block");
 
             if ($("#main-dashboard").css("display") == "block") {
-                setTimeout(function () {
-                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
-                    nvd3UpdateCharts();
-                }, 200);
+                redrawNVD3Charts();
+                redrawDataTables();
             }
         });
 
@@ -687,8 +685,6 @@ class SWIMain {
             span.addClass("glyphicon-th-large");
             $("#dashboard-toggle").attr("title", SWIUtil.tr2("View dashboards"));
         }
-        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
+        redrawDataTables();
     }
-
-
 }
