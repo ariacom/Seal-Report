@@ -501,7 +501,7 @@ namespace Seal.Helpers
         private static string GetContextDetail(HttpRequestBase request, SecurityUser user)
         {
             var result = new StringBuilder("\r\n");
-            if (user != null) result.AppendFormat("User: '{0}'; Groups: '{1}'; Windows User: '{2}'\r\n", user.Name, user.SecurityGroupsDisplay, Environment.UserName);
+            if (user != null) result.AppendFormat("User: '{0}'; Groups: '{1}'; Windows User: '{2}'\r\n", user.Name, user.SecurityGroupsDisplay, WindowsIdentity.GetCurrent().Name);
             if (request != null)
             {
                 result.AppendFormat("URL: '{0}'\r\n", request.Url.OriginalString);

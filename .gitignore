@@ -92,3 +92,4 @@ Temporary Items
 Repository/Sources/TEST_*.scfx
 Projects/SealWebServer/Views/Home/MenuBig.cshtml
 Repository/Databases/Audit.ldb
+*.ldb
