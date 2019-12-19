@@ -38,18 +38,27 @@
                 @Raw(Helper.AddIfNotEmpty("scrollY: '", view.GetValue("data_tables_scrolly"), "',"))
                 scrollX: @view.GetBoolValueJS("data_tables_scrollx"),
                 scrollCollapse: @view.GetBoolValueJS("data_tables_scrollcollapse"),
-                fixedColumns: {
-                    leftColumns: @view.GetValue("data_tables_fixcolleft"),
-                    rightColumns: @view.GetValue("data_tables_fixcolright")
-                },
-                fixedHeader: {
-                    header: @view.GetBoolValueJS("data_tables_fixheader"),
-                    headerOffset: $("#bar_top").height(),
-                    footer: @view.GetBoolValueJS("data_tables_fixfooter"),
-                    footerOffset: 5,
-                },
-                deferRender: @view.GetBoolValueJS("data_tables_scroller"),
-                scroller: @view.GetBoolValueJS("data_tables_scroller"),
+                @if (view.GetValue("data_tables_fixcolleft") != "0" || view.GetValue("data_tables_fixcolright") != "0")
+                {<text>
+                    fixedColumns: {
+                        leftColumns: @view.GetValue("data_tables_fixcolleft"),
+                        rightColumns: @view.GetValue("data_tables_fixcolright")
+                    },
+                </text>}
+                @if (view.GetBoolValue("data_tables_fixheader") || view.GetBoolValue("data_tables_fixfooter"))
+                {<text>
+                    fixedHeader: {
+                        header: @view.GetBoolValueJS("data_tables_fixheader"),
+                        headerOffset: $("#bar_top").height(),
+                        footer: @view.GetBoolValueJS("data_tables_fixfooter"),
+                        footerOffset: 5,
+                    },
+                </text>}
+                @if (view.GetBoolValue("data_tables_scroller"))
+                {<text>
+                    deferRender: @view.GetBoolValueJS("data_tables_scroller"),
+                    scroller: @view.GetBoolValueJS("data_tables_scroller"),
+                </text>}
                 @if (report.IsServerPaginationEnabled && enabled)
                 {<text>
                         ajax: function(data, callback, settings) {

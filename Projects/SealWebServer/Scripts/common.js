@@ -454,10 +454,7 @@ function mainInit() {
             scrollMessages();
         }
         submitViewParameter(rootViewId, $(this).attr("id"), true);
-
-        setTimeout(function () { //redraw dataTables
-            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
-        }, 200);
+        redrawDataTables();
 
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();

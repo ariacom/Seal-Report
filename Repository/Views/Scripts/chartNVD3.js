@@ -42,6 +42,11 @@ function nvd3UpdateCharts() {
 }
 nv.utils.windowResize(nvd3UpdateCharts);
 
+function redrawNVD3Charts() {
+    //redraw nvd3 charts
+    setTimeout(function () { nvd3UpdateCharts(); }, 200);
+}
+
 //Hide tooltips when scrolling
 window.onscroll = function () {
     for (var i = 0; i < nvd3Charts.length; i++) {

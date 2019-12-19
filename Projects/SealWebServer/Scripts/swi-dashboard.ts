@@ -7,7 +7,8 @@ var _daEditor: DashboardEditorInterface;
 var hasEditor: boolean;
 
 declare var Muuri: any;
-declare function nvd3UpdateCharts();
+declare function redrawNVD3Charts();
+declare function redrawDataTables();
 declare function getTopLeft(item: any);
 declare function initNavCells(reportPath: string, itemGUID: string);
 
@@ -368,14 +369,8 @@ class SWIDashboard {
 
                     setTimeout(function () {
                         SWIUtil.ShowHideControl($(".item,.group-name"), true);
-                        setTimeout(function () {
-                            nvd3UpdateCharts();
-                        }, 20);
-
-                        setTimeout(function () {
-                            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
-                        }, 40);
-
+                        redrawNVD3Charts();
+                        redrawDataTables();
                         _da.reorderItems(true);
                     }, 400);
                 });

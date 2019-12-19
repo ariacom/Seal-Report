@@ -13,17 +13,10 @@
             submitViewParameter("@view.ViewId", "tab_selected_index", $($(this).attr('href')).index());
             @if (report.HasNVD3Chart)
             {<text>
-                    //redraw nvd3 charts
-                    setTimeout(function () { nvd3UpdateCharts(); }, 200);
+            redrawNVD3Charts();
             </text>
             }
-            setTimeout(function () { //redraw dt
-                try {
-                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-                    $.fn.dataTable.tables({ visible: true, api: true }).fixedColumns().relayout();
-                }
-                catch (ex) { /* unexpected exception... */}
-            }, 200);
+            redrawDataTables();
         });
     });
 </script>

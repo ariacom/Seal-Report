@@ -316,12 +316,8 @@ var SWIDashboard = /** @class */ (function () {
                     SWIUtil.ShowHideControl($(".item,.group-name"), false);
                     setTimeout(function () {
                         SWIUtil.ShowHideControl($(".item,.group-name"), true);
-                        setTimeout(function () {
-                            nvd3UpdateCharts();
-                        }, 20);
-                        setTimeout(function () {
-                            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
-                        }, 40);
+                        redrawNVD3Charts();
+                        redrawDataTables();
                         _da.reorderItems(true);
                     }, 400);
                 });

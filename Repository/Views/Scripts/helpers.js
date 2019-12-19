@@ -1,5 +1,4 @@
-﻿
-function getTopLeft(item) {
+﻿function getTopLeft(item) {
     var rect = item.getBoundingClientRect();
     var obj = item;
     var curleft = 0;
@@ -94,5 +93,18 @@ function initNavCells(executionguid, parentId) {
         })
         .mouseleave(function () {
             $("#nav_popupmenu").hide();
-        })
+        });
 }
+
+function redrawDataTables() {
+    setTimeout(function () { //redraw dt
+        try {
+            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+            $.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
+            $.fn.dataTable.tables({ visible: true, api: true }).fixedColumns().relayout();
+        }
+        catch (ex) { console.log(ex); }
+    }, 200);
+}
+
+

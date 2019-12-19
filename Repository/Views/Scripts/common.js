@@ -78,6 +78,7 @@ function scrollMessages() {
 function resize() {
     if (!printLayout) setTimeout(function () { $("body").css("padding-top", $("#bar_top").height() + 15); }, 200);
     setMessageHeight();
+    redrawDataTables();
 }
 
 function showNavMenu() {
@@ -454,10 +455,7 @@ function mainInit() {
             scrollMessages();
         }
         submitViewParameter(rootViewId, $(this).attr("id"), true);
-
-        setTimeout(function () { //redraw dataTables
-            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
-        }, 200);
+        redrawDataTables();
 
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
