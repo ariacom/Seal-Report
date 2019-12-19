@@ -78,6 +78,7 @@ function scrollMessages() {
 function resize() {
     if (!printLayout) setTimeout(function () { $("body").css("padding-top", $("#bar_top").height() + 15); }, 200);
     setMessageHeight();
+    redrawDataTables();
 }
 
 function showNavMenu() {
