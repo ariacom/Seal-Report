@@ -592,6 +592,7 @@ if (cell.DoubleValue < 0)
                 report.LogMessage(""Setting connection '{0}' to '{1}'"", connection.Name, model.Name);
                 //Set it to the model
                 model.ConnectionGUID = connection.GUID;
+           }
         }
     }
 "
@@ -738,7 +739,7 @@ if (cell.DoubleValue < 0)
     dbHelper.MyGetTableCreateCommand = new CustomGetTableCreateCommand(delegate(DataTable table) {
         //return RootGetTableCreateCommand(table);
         //Root implementation may be the following...
-        StringBuilder result = new StringBuilder();
+        var result = new System.Text.StringBuilder();
         foreach (DataColumn col in table.Columns)
         {
             if (result.Length > 0) result.Append(',');
@@ -752,7 +753,7 @@ if (cell.DoubleValue < 0)
     dbHelper.MyGetTableColumnNames = new CustomGetTableColumnNames(delegate(DataTable table) {
         //return dbHelper.RootGetTableColumnNames(table);
         //Root implementation may be the following...
-        StringBuilder result = new StringBuilder();
+        var result = new System.Text.StringBuilder();
         foreach (DataColumn col in table.Columns)
         {
             if (result.Length > 0) result.Append(',');
@@ -780,7 +781,7 @@ if (cell.DoubleValue < 0)
     dbHelper.MyGetTableColumnValue = new CustomGetTableColumnValue(delegate(DataRow row, DataColumn col, string dateTimeFormat) {
         //return dbHelper.RootGetTableColumnValue(row, col, datetimeFormat);
         //Root implementation may be the following...
-        StringBuilder result = new StringBuilder();
+        var result = new System.Text.StringBuilder();
         if (row.IsNull(col))
         {
             result.Append(""NULL"");
