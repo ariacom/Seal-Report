@@ -22,4 +22,8 @@ $(document).ready(function () {
     $(".live-sample").unbind('click').on("click", function (e) {
         executeReport($(this).text().replace("Live Sample: ", "/Samples/") + ".srex");
     });
+	
+    $(".live-system").unbind('click').on("click", function (e) {
+        executeReport($(this).text().replace("System: ", "/System/") + ".srex");
+    });
 });

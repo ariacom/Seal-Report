@@ -556,6 +556,7 @@
                                 A <strong>Report Task</strong> is a SQL or a Razor Script executed before the report models are loaded and the report result is generated.<br />
                                 A task references one <strong>Data Source</strong> and on <strong>Connection</strong>.<br />
                                 A report can have several tasks executed sequentially from the top to the bottom.<br />
+                                A task can be executed at different <strong>step</strong> of the report generation (<eg>e.g. A task can be executed after the model generation and before the rendering to modify the result tables</eg>)<br />
                                 If a task is a Razor Script, it can stop the report execution by returning the "0" value or by setting the <code>CancelReport</code> flag to true.<br /> Thus, simple workflows can be implemented with tasks (<eg>e.g if a given condition fails, the report is cancelled</eg>).<br />
                                 Using the <code>Execute for each connection</code> property, a task can be executed for all connections defined in the <strong>Data Source</strong>.<br /><br />
 
@@ -752,7 +753,7 @@
                                 When a report is executed, the following process is done.
                             </p>
 
-                            <h4>Step 1: Execute Report Tasks</h4>
+                            <h4>Step 1: Execute Report Tasks having step 'Before models generation'</h4>
                             <p>
                                 Tasks are executed sequentially (SQL or C# Script) from the top to the bottom.<br />
                                 If a task has a razor script returning <b>"0"</b>, the report is cancelled.
@@ -779,16 +780,26 @@
                                 <li>Perform final sort.</li>
                                 <li>Execute any '<em>Final Script</em>' defined in the models.</li>
                             </ul>
-                            <h4>Step 3: Render Views</h4>
+
+                            <h4>Step 3: Execute Report Tasks having step 'Models generated, before rendering'</h4>
+                            <p>Tasks execution as Step 1.</p>
+
+                            <h4>Step 4: Render Views</h4>
                             <p>Sequentially render report views from the root Report View to generate the result (from top to bottom).</p>
 
-                            <h4>Step 4: Process Output</h4>
+                            <h4>Step 5: Execute Report Tasks having step 'Rendering is done, before output execution'</h4>
+                            <p>Tasks execution as Step 1.</p>
+
+                            <h4>Step 6: Process Output</h4>
                             <p>If any, process the output defined for the execution.</p>
                             <ul>
                                 <li>Check if the '<em>Pre Execution Script</em>' returns '0' or option to cancel if no records</li>
                                 <li>Execute the output on the selected Device</li>
                                 <li>Execute the '<em>Post Execution Script</em>'</li>
                             </ul>
+
+                            <h4>Step 7: Execute Report Tasks having step 'After execution'</h4>
+                            <p>Tasks execution as Step 1.</p>
                         </div>
                         <!-- end col -->
                     </div>
