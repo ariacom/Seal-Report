@@ -197,7 +197,7 @@ function setProgressBarMessage(selector, progression, message, classname) {
 
 function executeReport(nav) {
     if (nav != null && nav.startsWith("HL:")) {
-        window.open(nav.replace("HL:",""), '_blank');
+        window.open(nav.replace("HL:", ""), '_blank');
         return;
     }
 
@@ -449,12 +449,16 @@ function mainInit() {
 
     //tabs buttons
     $(".sr_tab").click(function () {
-        submitViewParameter(rootViewId, "information_button", false);
+        var buttonId = $(this).attr("id");
+        submitViewParameter(rootViewId, "information_button", buttonId == "information_button");
         if ($("#message_button").length) {
-            submitViewParameter(rootViewId, "message_button", false);
-            scrollMessages();
+            var messageMode = "enabled";
+            if (buttonId == "message_button") {
+                messageMode = "enabledshown";
+                scrollMessages();
+            }
+            submitViewParameter(rootViewId, "messages_mode", messageMode);
         }
-        submitViewParameter(rootViewId, $(this).attr("id"), true);
         redrawDataTables();
 
         //Collapse navbar
@@ -521,7 +525,7 @@ $(document).ready(function () {
     mainInit();
 
     if ((forceExecution || !hasRestrictions) && !isExecuting && !isCancel) executeReport();
-    
+
     //Select Picker
     $(".operator_select").selectpicker('refresh');
     initEnums();
@@ -544,13 +548,13 @@ $(document).ready(function () {
     $('.datepicker_date,.datepicker_datetime').datetimepicker({
         locale: languageName
     });
-    
+
     //resize handler
     $(window).on('resize', function () {
         resize();
     });
     resize();
-    
+
     if (!executionTimer && refreshRate > 0) refreshTimer = setInterval(executeReport, refreshRate * 1000);
 
     //back to top

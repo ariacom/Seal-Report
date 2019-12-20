@@ -101,6 +101,7 @@ function redrawDataTables() {
         try {
             $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
             $.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
+            $.fn.dataTable.tables({ visible: true, api: true }).fixedColumns().relayout();
         }
         catch (ex) { console.log(ex); }
     }, 200);
