@@ -27,7 +27,7 @@
 </script>
 
 <!--information_div-->
-<div id="information_div" class="tab-pane fade @(view.GetBoolValue("information_button") && string.IsNullOrEmpty(report.WebExecutionErrors) ? "active in" : "")">
+<div id="information_div" class="tab-pane fade @(!report.ShowExecutionMessages && view.GetBoolValue("information_button") && string.IsNullOrEmpty(report.WebExecutionErrors) ? "active in" : "")">
     @if (!report.Cancel && report.Status != ReportStatus.NotExecuted && string.IsNullOrEmpty(report.WebExecutionErrors))
     {
         <ul class="list-group">
