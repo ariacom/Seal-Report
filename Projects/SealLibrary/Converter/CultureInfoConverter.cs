@@ -10,7 +10,7 @@ using System.Globalization;
 namespace Seal.Converter
 {
     /// <summary>
-    /// Converter Objects user for the Property Grid Editor
+    /// Converter Objects
     /// </summary>
     internal class NamespaceDoc
     {
