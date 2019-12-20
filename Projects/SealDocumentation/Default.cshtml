@@ -209,13 +209,10 @@
                                     Edit the <i>Connection String</i> property with the OLE DB Wizard and verify the connection is working using the <strong>[Check Connection]</strong> helper or <strong>[F7]</strong>.
                                 </li>
                                 <li>
-                                    In the left tree view, click on the Model node named "SQL Model". The model is displayed.
+                                    In the left tree view, right-click on the root node named "Models" and select <strong>[Add a SQL Model]</strong> in the contextual menu.<br />A new SQL Model named "Model2" is created and the SQL Editor is displayed. Click <strong>[Cancel]</strong> to close the dialog.
                                 </li>
                                 <li>
                                     In the model definition, set the <i>Source</i> property to a the Data Source called "Data Source" that you have previously created.
-                                </li>
-                                <li>
-                                    Press <strong>[F7]</strong> to edit the SQL Select Statement for the model.<br />The SQL Editor Dialog appears.
                                 </li>
                                 <li>
                                     In the text box, type your SQL statement (e.g. "select * from products") and click <strong>[OK]</strong>. The Source tree view displays the columns of the Select.
@@ -227,7 +224,7 @@
                                     If necessary, drag and drop elements in the restrictions panel to filter data.
                                 </li>
                                 <li>
-                                    In the left tree view, click on the root views node named "Views" and set the <i>Current View</i> property to "SQL View".
+                                    In the left tree view, click on the view node named "Views\View\Model" and set the <i>Current Model</i> property to "Model2".
                                 </li>
                                 <li>
                                     Click <strong>[Execute]</strong> or press <strong>[F5]</strong>.<br />The report is executed.
