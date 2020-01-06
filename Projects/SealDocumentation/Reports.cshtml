@@ -380,7 +380,7 @@
                             </p>
                             <ul>
                                 <li><b>Page Table</b>: Render the Page table of the page result.</li>
-                                <li><b>Data Table</b>: Render the Data table of the page result</li>
+                                <li><b>Data Table</b>: Render the Data table of the page result (use of the <a href="https://datatables.net/" target="_blank">DataTables</a> JavaScript Component).</li>
                                 <li><b>Chart JS:</b> Render the Chart JS Series of the page result</li>
                                 <li><b>NVD3 Chart</b>: Render the NVD3 Series of the page result</li>
                                 <li><b>Plotly Chart</b>: Render the Plotly Series of the page result</li>
@@ -401,6 +401,12 @@
                                 <ul>
                                     <li><code>Options: Invert data table</code> to swap the columns and rows of the data table from their original presentation.</li>
                                 </ul>
+                            </div>
+
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Reference View</h4>
+                                If your report contains several views sharing the same configuration, you can configure one view and reference it from the other views using the <code>Reference View</code> property.<br />
+                                <eg>e.g. All tables of the report have no sort, all JS Charts have the same size, etc.</eg>
                             </div>
 
                             <div class="bs-callout bs-callout-warning">

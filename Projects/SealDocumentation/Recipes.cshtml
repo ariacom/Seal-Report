@@ -21,6 +21,7 @@
                                 <li><a href="#lineIntegration_2">Seal Web Interface API</a></li>
                             </ul>
                         </li>
+                        <li><a href="#lineCopyingInputValue" style="padding:0px 2px">Copying input value with a task</a></li>
                         <li><a href="#lineDynamicChartTitle" style="padding:0px 2px">Dynamic report and chart title</a></li>
                     </ul>
                     <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
@@ -115,8 +116,6 @@
                                 <h4>Example for Northwind:</h4>
                                 In the <strong>Northwind</strong> Data Source, select the <strong>Orders</strong> table, then use the following <code>Additional WHERE Clause</code>:
                                 <pre class="brush: csharp; highlight: [16]">
-@@using Seal.Model
-@@using Seal.Helpers
 @@{
     MetaTable table = Model;
     string restriction = Environment.UserName; //This gives the windows user of the process running the engine
@@ -211,8 +210,6 @@
                                 Check the interesting report <strong>34-Task Generate several Report Results</strong> in the <strong>/Reports/Samples</strong> Repository sub-folder.<br />
                                 The reports has a task that generates a report result by country using the <strong>Search - Orders</strong> report.
                                 <pre class="brush: csharp; ">
-@@using Seal.Model
-@@using Seal.Helpers
 @@using System.IO
 @@using System.Data
 @@{
@@ -298,6 +295,63 @@ executeReport("/Overview - Sales.srex");
                     <!-- end row -->
                 </section>
                 <!-- end section -->
+                <section id="lineCopyingInputValue" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Copying input value with a task <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                This recipe shows how to copy input values prompted to the user to several model restrictions.<br />
+                                Using the <b>Report Designer</b>, create a report having one to several models with a date restriction (<eg>e.g. <strong>Order Year</strong></eg>)<br />
+                                <br />
+                                <b>Create an input value:</b><br />
+                                Select the root <strong>General</strong> node in the main Tree View and edit the <code>Report Input Values</code> property.<br />
+                                Add a new input value with the following properties:<br />
+                                <code>Name</code>='My Date', <code>Prompt restriction</code>='Prompt only two values' and <code>Data Type</code>='Date &amp; Time'
+                                <br />
+                                <br />
+                                <b>Add a task to copy the value during execution:</b><br />
+                                Create a report task with the following code:
+                            </p>
+                            <pre class="brush: csharp;">
+@@using System.Data
+@@{
+     ReportTask task = Model;
+    Report report = task.Report;
+    var inputValue = report.InputValues.FirstOrDefault(i => i.DisplayName == "My Date");
+    if (inputValue != null) {
+        foreach (var model in report.Models) {
+            report.LogMessage("Checking model '{0}'", model.Name);
+            foreach (var restriction in model.Restrictions.Where(i => i.Name == "Orders.OrderDate")) {
+                report.LogMessage("Copying to '{0}'", restriction.DisplayNameEl);
+                restriction.Date1 = inputValue.Date1;
+                restriction.Date2 = inputValue.Date2;
+
+                //Use restriction.Value1 = inputValue.Value1; if the restriction is a Text or a Numeric
+                //Use restriction.EnumValues = inputValue.EnumValues; if the restriction is an Enumerated list
+           }
+        }
+    }
+}
+                                </pre>
+                            <p>
+                                During the report execution, the task will copy the 2 values prompted to all Orders.OrderDate restrictions.<br />
+                                <br />
+                                <div class="bs-callout bs-callout-warning">
+                                    <h4>Task to modify result tables</h4>
+                                    Note that you can also create a task with the <code>Execution Step</code> set to 'Models generated, before rendering' to modify the result tables generated in the models (e.g. modify cell values or styles).
+                                </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
                 <section id="lineDynamicChartTitle" class="section">
                     <div class="row">
                         <div class="col-md-12 left-align">
@@ -314,22 +368,34 @@ executeReport("/Overview - Sales.srex");
                                 Add a restriction in the model (<eg>e.g. prompt a value for <strong>Order Year</strong></eg>)<br />
                                 <br />
                                 <b>To modify the report title:</b><br />
-                                Select the root <strong>Views</strong>  node in the main Tree View and edit the <code>Display Name</code> property.
+                                Select the root <strong>General</strong>  node in the main Tree View and edit the <code>Display Name</code> property.
                             </p>
-                            <pre class="brush: csharp; highlight: [5]">
-@@using Seal.Model
+                            <pre class="brush: csharp; highlight: [4]">
 @@using System.IO
 @@{
     Report report = Model;
-    string result = Path.GetFileNameWithoutExtension(report.FilePath) + " " + report.Models[0].GetRestrictionByName("Order Year").DisplayValue1 + ' ' + DateTime.Now.ToShortDateString();
+    string result = Path.GetFileNameWithoutExtension(report.FilePath) + " " + report.Models[0].GetRestrictionByName("Order Year").DisplayValue1 + " " + DateTime.Now.ToShortDateString();
 }
 @@Raw(result)
                                 </pre>
                             <p>
-                                The report title will contain the restriction chosen by the user and the current date.<br />
-                                <br />
-                                <b>To modify the chart title:</b><br />
-                                Select the Chart JS View, then edit the <code>Custom template</code> property to change the code that defines the chart title (around the line number 70):
+                                The report title will contain the restriction chosen by the user and the current date.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                Note that you can also create a task to do the same with the following script:<br />
+                                <pre class="brush: csharp; highlight: [5]">
+@@using System.IO
+@@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    report.DisplayName = Path.GetFileNameWithoutExtension(report.FilePath) + " " + report.Models[0].GetRestrictionByName("Order Year").DisplayValue1 + " " + DateTime.Now.ToShortDateString();
+}
+                                </pre>
+                            </div>
+                            <p>
+                            <br />
+                            <b>To modify the chart title:</b><br />
+                            Select the Chart JS View, then edit the <code>Custom template</code> property to change the code that defines the chart title (around the line number 70):
                             </p>
                             <pre class="brush: csharp; highlight: [3]">
                 title: {
@@ -341,7 +407,7 @@ executeReport("/Overview - Sales.srex");
                 },
                                 </pre>
                             <p>
-                                <b>page.PageTable[1,0].HTMLValue</b> returns the first value of your current page table, but you can use any relevant value from your model or report (<eg>e.g. <b>reportModel.GetRestrictionByName("Order Year").DisplayValue1</b> for a restriction value</eg>.
+                                <b>page.PageTable[1,0].HTMLValue</b> returns the first value of your current page table, but you can use any relevant value from your model or report (<eg>e.g. <b>reportModel.GetRestrictionByName("Order Year").DisplayValue1</b> for a restriction value</eg>).
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 This may be easily adapted for the other chart type.
