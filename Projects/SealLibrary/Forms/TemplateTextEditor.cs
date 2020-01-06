@@ -170,11 +170,11 @@ if (cell.DoubleValue < 0)
 		//No running totals for last table line (summary or data)
 		cell.Value = null;		
 	}
-	else if (!cell.IsTitle && cell.ContextRow > 0)
+	else if (!cell.IsSerie && !cell.IsTitle && cell.ContextRow > 0)
 	{
         //Normal case for DataTable and SummaryTable
 		var previousValue = cell.ContextTable[cell.ContextRow-1,cell.ContextCol].DoubleValue;
-		var currentValue = cell.ContextTable[cell.ContextRow,cell.ContextCol-2].DoubleValue;
+		var currentValue = cell.ContextTable[cell.ContextRow,cell.ContextCol].DoubleValue;
 		//Calculate the running total
 		cell.Value = currentValue + (previousValue != null ? previousValue : 0);
     }	
