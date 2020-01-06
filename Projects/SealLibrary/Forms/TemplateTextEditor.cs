@@ -32,8 +32,10 @@ namespace Seal.Forms
         const string displayNameTemplate = @"@{
     Report report = Model;
     string result = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + "" "" + DateTime.Now.ToShortDateString();
+    //result = report.ExecutionView.Name;
+    //result = report.Models[0].GetRestrictionByName(""A restriction name"").DisplayValue1;
 }
-@Raw(result)";
+    @Raw(result)";
 
         const string razorTaskTemplate = @"@{
     ReportTask task = Model;
@@ -520,7 +522,7 @@ if (cell.DoubleValue < 0)
         {
             new Tuple<string, string>(
                 "Copy date input values to all date restrictions in the report",
-@"    ReportTask task = Model;
+@"ReportTask task = Model;
     Report report = task.Report;
     //Take the first input value that has been defined in the report
     var inputValue = report.InputValues[0];
