@@ -628,7 +628,7 @@ namespace Seal.Model
                 {
                     foreach (IdentityReference group in identity.Groups)
                     {
-                        result.Add(group.Translate(typeof(NTAccount)).ToString().ToLower());
+                        result.Add(group.Translate(typeof(NTAccount)).ToString());
                     }
                 }
             }
@@ -669,10 +669,9 @@ namespace Seal.Model
                 if (user != null)
                 {
                     UserPrincipal = user;
-                    // find the roles....
-                    var roles = user.GetGroups();
+                    var groups = user.GetAuthorizationGroups();
                     // enumerate over them
-                    foreach (Principal p in roles)
+                    foreach (Principal p in groups)
                     {
                         result.Add(p.Name);
                     }

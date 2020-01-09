@@ -5,8 +5,7 @@
     //Parameters for this provider
     provider.Parameters.Add(new SecurityParameter() { Name = "oledb_connection_string", Value = "Provider=SQLOLEDB.1;Persist Security Info=False;Initial Catalog=master;Data Source=(local)", DisplayName = "Database connection string", Description = "The OleDb database connection string used to authenticate the user" });
 
-    provider.Script = @"@using Seal.Model
-@using System.Data
+    provider.Script = @"@using System.Data
 @using System.Data.Common
 @using Seal.Helpers
 @{

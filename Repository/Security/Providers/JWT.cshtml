@@ -5,8 +5,7 @@
     //Parameters for this provider
     provider.Parameters.Add(new SecurityParameter() { Name = "token_key", DisplayName = "Token Key", Description = "The token key that allows validation" });
 	
-    provider.Script = @"@using Seal.Model;
-@using Jose;
+    provider.Script = @"@using Jose;
 @using Newtonsoft.Json.Linq;
 @using System.Text;
 @{

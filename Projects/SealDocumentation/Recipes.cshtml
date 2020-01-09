@@ -189,7 +189,7 @@
                         <div class="col-md-12">
                             <h4>SealLibrary Assembly</h4>
                             <p>
-                                If you have a project referencing the <b>SealLibrary.dll</b> assembly, you can execute a report with the following code (got from the <strong>TestAndSamples</strong> project of the solution)
+                                If you have a project referencing the <b>SealLibrary.dll</b> assembly, you can execute a report with the following code (got from the <strong>TestAndSamples</strong> project of the solution).
                             </p>
                             <pre class="brush: csharp; ">
             Repository repository = Repository.Create();
@@ -203,8 +203,57 @@
             Process.Start(resultPath); //result contains the file path of the HTML report result
                                 </pre>
                             <p>
-                                The  <strong>TestAndSamples</strong> project contains also code showing how to create and execute a report from scratch.
+                                The following code shows how to create a report having a restriction (also got from the <strong>TestAndSamples</strong> project of the solution).
                             </p>
+                            <pre class="brush: csharp; ">
+           var repository = Repository.Create();
+            Report report = Report.Create(repository);
+            report.DisplayName = "Sample Report";
+            var source = report.Sources.FirstOrDefault(i => i.Name.StartsWith("Northwind"));
+            source.MetaData.Tables.Clear();
+            //Update the data source with a new table
+            var table = source.AddTable(true);
+            table.DynamicColumns = true;
+            table.Name = "products";
+            //Instead of the name, could be a direct SQL statement:
+            //table.Sql = "select * from products";
+            table.Refresh();
+
+            //Set the source of the default model
+            report.Models[0].SourceGUID = source.GUID;
+            //Add elements to the reports model
+            foreach (var column in table.Columns)
+            {
+                var element = ReportElement.Create();
+                element.MetaColumnGUID = column.GUID;
+                element.Name = column.Name;
+                element.PivotPosition = PivotPosition.Row;
+                element.Source = source;
+                report.Models[0].Elements.Add(element);
+            }
+
+            //Add a restriction to the model
+            var restriction = ReportRestriction.CreateReportRestriction();
+            restriction.Source = report.Models[0].Source;
+            restriction.Report = report;
+            restriction.Model = report.Models[0];
+            restriction.MetaColumnGUID = table.Columns.FirstOrDefault(i => i.Name == "products.ProductName").GUID;
+            restriction.SetDefaults();
+            restriction.Operator = Operator.Contains;
+            restriction.Value1 = "er";
+            report.Models[0].Restrictions.Add(restriction);
+            //Set the restriction text
+            if (!string.IsNullOrEmpty(report.Models[0].Restriction)) report.Models[0].Restriction = string.Format("({0}) AND ", report.Models[0].Restriction);
+            report.Models[0].Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+
+            //Then execute it
+            ReportExecution execution = new ReportExecution() { Report = report };
+            execution.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(100);
+            string result = execution.GenerateHTMLResult();
+            Process.Start(result);
+                            </pre>
+                            <br />
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Generating report results on the fly...</h4>
                                 Check the interesting report <strong>34-Task Generate several Report Results</strong> in the <strong>/Reports/Samples</strong> Repository sub-folder.<br />
@@ -393,9 +442,9 @@ executeReport("/Overview - Sales.srex");
                                 </pre>
                             </div>
                             <p>
-                            <br />
-                            <b>To modify the chart title:</b><br />
-                            Select the Chart JS View, then edit the <code>Custom template</code> property to change the code that defines the chart title (around the line number 70):
+                                <br />
+                                <b>To modify the chart title:</b><br />
+                                Select the Chart JS View, then edit the <code>Custom template</code> property to change the code that defines the chart title (around the line number 70):
                             </p>
                             <pre class="brush: csharp; highlight: [3]">
                 title: {

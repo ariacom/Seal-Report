@@ -214,9 +214,9 @@ namespace SealWebServer.Controllers
                     Report report = execution.Report;
 
                     Helper.WriteLogEntryWeb(EventLogEntryType.Information, Request, WebUser, "Starting report '{0}'", report.FilePath);
+                    report.IsNavigating = false;
                     initInputRestrictions(execution, report);
                     while (execution.IsConvertingToExcel) Thread.Sleep(100);
-                    report.IsNavigating = false;
                     execution.Execute();
                     return null;
                 }
