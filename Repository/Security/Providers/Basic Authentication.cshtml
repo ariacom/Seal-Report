@@ -3,9 +3,7 @@
     SecurityProvider provider = Model;
 
     //Parameters for this provider
-    provider.Script = @"@using Seal.Model
-@using Seal.Helpers
-@{
+    provider.Script = @"@{
     SecurityUser user = Model;
 	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
 	//user.WebUserName -> user name from the login screen

@@ -8,8 +8,7 @@
     provider.Parameters.Add(new SecurityParameter() { Name = "ldap_use_ssl", DisplayName = "Use secure socket layer", BoolValue = true, Description = "If true, the secure socket layer (SSL) are used" });
     provider.Parameters.Add(new SecurityParameter() { Name = "ldap_auth_type",DisplayName = "Authorization Type", Value = "Basic", Enums = new string[] { "Anonymous", "Basic", "Digest", "Dpa", "External", "Kerberos", "Msn", "Negotiate", "Ntlm", "Sicily" }, Description = "Specify the authentication method to use on a connection" });
 
-    provider.Script = @"@using Seal.Model;
-@using System.Net;
+    provider.Script = @"@using System.Net;
 @using System.DirectoryServices.Protocols;
 @{
     SecurityUser user = Model;

@@ -8,9 +8,7 @@
     provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_skip_domain", BoolValue = true, DisplayName = "Groups matching: Skip domain name", Description = "If true, the Windows-Security groups matching is done without the domain name." });
     provider.Parameters.Add(new SecurityParameter() { Name = "windows_groups_ad_context", Value = "Domain", DisplayName = "Groups matching: Method used to get the Windows groups", Enums = new string[] { "", "Machine", "Domain" }, Description = "Select the context type used to get the Windows Groups. If empty, Windows Identity is used instead of Active Directory." });
 
-    provider.Script = @"@using Seal.Model;
-@using Seal.Helpers;
-@using System.Net;
+    provider.Script = @"@using System.Net;
 @{
     SecurityUser user = Model;
 	//Basic Windows authentication: check  user/password and set name and groups...
@@ -38,7 +36,26 @@
 		
 		if (user.SecurityGroups.Count == 0)		
 		{
-			user.Error = ""The user is authenticated but he does not belong to any security group."";        
+			user.Error = ""The user is authenticated but he does not belong to any security group."";
+            var log = ""Windows Groups from Windows Identity:\r\n"";
+            var identity = user.Identity;
+            if (user.WebPrincipal != null) { identity = user.WebPrincipal.Identity as System.Security.Principal.WindowsIdentity; }
+            if (identity != null)
+            {
+                foreach (var group in identity.Groups.OrderBy(i => i.Translate(typeof(System.Security.Principal.NTAccount)).ToString()))
+                {
+                    log += group.Translate(typeof(System.Security.Principal.NTAccount)).ToString() + ""\r\n"";
+                }
+            }
+            log += ""\r\nWindows Groups from AD:\r\n"";
+            if (user.UserPrincipal != null)
+            {
+                foreach (var p in user.UserPrincipal.GetAuthorizationGroups().OrderBy(i => i.Name))
+                {
+                    log += p.Name + ""\r\n"";
+                }
+            }
+            Helper.WriteLogEntry(""Web Report Server"", System.Diagnostics.EventLogEntryType.Warning, log);            
 		}
 
         //User default culture, theme and logo can be also overwritten with

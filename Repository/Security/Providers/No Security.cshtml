@@ -2,8 +2,7 @@
 @{
     SecurityProvider provider = Model;
 
-    provider.Script = @"@using Seal.Model;
-@{
+    provider.Script = @"@{
     SecurityUser user = Model;
 	//No security: use the default security group
     user.Name = """";
