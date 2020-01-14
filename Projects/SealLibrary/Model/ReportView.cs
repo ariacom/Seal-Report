@@ -772,6 +772,19 @@ namespace Seal.Model
         [XmlIgnore]
         public ReportView ParentView { get; set; } = null;
 
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag;
+
+        /// <summary>
+        /// Suffix that can be used to build JS identifier (e.g. for datatables)
+        /// </summary>
+        [XmlIgnore]
+        public string IdSuffix;
+
+
         #region PDF and Excel Converters
 
         /// <summary>
@@ -1529,8 +1542,6 @@ namespace Seal.Model
         /// <summary>
         /// True if the column is hidden
         /// </summary>
-        /// <param name="col"></param>
-        /// <returns></returns>
         public bool IsColumnHidden(int col)
         {
             if (_columnsHidden == null) _columnsHidden = GetValue(Parameter.ColumnsHiddenParameter).Split(';').ToList();

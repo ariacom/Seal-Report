@@ -10,7 +10,7 @@ declare var Muuri: any;
 declare function redrawNVD3Charts();
 declare function redrawDataTables();
 declare function getTopLeft(item: any);
-declare function initNavCells(reportPath: string, itemGUID: string);
+declare function initNavCells(executionGUID: string, parentSelector: string);
 
 //Muuri layout
 function loadLayout(grid, serializedLayout) {
@@ -87,8 +87,8 @@ class SWIDashboard {
 
     private enableControls() {
         var addWidget = $("#dashboard-add-widget");
-        SWIUtil.ShowHideControl(addWidget, _da._dashboard && _da._dashboard.Editable);
         var spinnerHidden = !$(".spinner-menu").is(":visible");
+        SWIUtil.ShowHideControl(addWidget, _da._dashboard && _da._dashboard.Editable);
         SWIUtil.EnableButton(addWidget, _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
     }
@@ -148,7 +148,7 @@ class SWIDashboard {
             _da._grids[i].refreshItems().layout(); 
         }
 
-        initNavCells(data.executionguid, data.itemguid);
+        initNavCells(data.executionguid, "#" + data.itemguid);
     }
 
     private refreshDashboardItem(guid: string, itemguid: string, force : boolean) {

@@ -49,8 +49,14 @@ module SWIUtil {
     }
 
     export function EnableButton(button: JQuery, enabled: boolean) {
-        if (!enabled) button.prop('disabled', 'true').addClass("disabled");
-        else button.removeProp('disabled').removeClass("disabled");
+        if (button.length > 0 && (button[0] as any).type === "button") {
+            if (!enabled) button.removeClass("active").addClass("disabled");
+            else button.addClass("active").removeClass("disabled");
+        }
+        else {
+            if (!enabled) button.prop('disabled', 'true').addClass("disabled");
+            else button.removeProp('disabled').removeClass("disabled");
+        }
     }
 
     export function EnableLinkInput(link: JQuery, enabled: boolean) {

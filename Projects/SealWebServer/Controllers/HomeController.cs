@@ -235,18 +235,7 @@ namespace SealWebServer.Controllers
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
 
-                ReportExecution execution = null;
-                if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
-                {
-                    execution = Session[execution_guid] as ReportExecution;
-                }
-                else
-                {
-                    //Navigation from dashboard, set the root report in the session
-                    execution = DashboardExecutions.FirstOrDefault(i => i.Report.ExecutionGUID == execution_guid);
-                    Session[execution_guid] = execution;
-                }
-
+                ReportExecution execution = getExecution(execution_guid);
                 if (execution != null)
                 {
                     if (execution.RootReport == null) execution.RootReport = execution.Report;
@@ -632,13 +621,13 @@ namespace SealWebServer.Controllers
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
 
-                if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
+                ReportExecution execution = getExecution(execution_guid);
+                if (execution != null)
                 {
-                    ReportExecution execution = Session[execution_guid] as ReportExecution;
                     var view = execution.Report.ExecutionView.GetView(viewid);
-                    if (view != null)
+                    if (view != null && view.ModelView != null)
                     {
-                        var page = view.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
+                        var page = view.ModelView.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
                         if (page != null)
                         {
                             return Json(page.DataTable.GetLoadTableData(view, parameters), JsonRequestBehavior.AllowGet);
@@ -708,6 +697,22 @@ namespace SealWebServer.Controllers
         {
             Helper.WriteWebException(ex, Request, WebUser);
             return Json(new { error = ex.Message, authenticated = (WebUser != null && WebUser.IsAuthenticated) });
+        }
+
+        ReportExecution getExecution(string execution_guid)
+        {
+            ReportExecution execution = null;
+            if (!string.IsNullOrEmpty(execution_guid) && Session[execution_guid] is ReportExecution)
+            {
+                execution = Session[execution_guid] as ReportExecution;
+            }
+            else
+            {
+                //Navigation from dashboard, set the root report in the session
+                execution = DashboardExecutions.FirstOrDefault(i => i.Report.ExecutionGUID == execution_guid);
+                Session[execution_guid] = execution;
+            }
+            return execution;
         }
 
         string getFullPath(string path)

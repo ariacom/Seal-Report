@@ -47,10 +47,18 @@ var SWIUtil;
     }
     SWIUtil.HideMessages = HideMessages;
     function EnableButton(button, enabled) {
-        if (!enabled)
-            button.prop('disabled', 'true').addClass("disabled");
-        else
-            button.removeProp('disabled').removeClass("disabled");
+        if (button.length > 0 && button[0].type === "button") {
+            if (!enabled)
+                button.removeClass("active").addClass("disabled");
+            else
+                button.addClass("active").removeClass("disabled");
+        }
+        else {
+            if (!enabled)
+                button.prop('disabled', 'true').addClass("disabled");
+            else
+                button.removeProp('disabled').removeClass("disabled");
+        }
     }
     SWIUtil.EnableButton = EnableButton;
     function EnableLinkInput(link, enabled) {
@@ -159,4 +167,3 @@ var SWIUtil;
     }
     SWIUtil.InitNumericInput = InitNumericInput;
 })(SWIUtil || (SWIUtil = {}));
-//# sourceMappingURL=swi-utils.js.map

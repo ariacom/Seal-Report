@@ -73,8 +73,8 @@ var SWIDashboard = /** @class */ (function () {
     };
     SWIDashboard.prototype.enableControls = function () {
         var addWidget = $("#dashboard-add-widget");
-        SWIUtil.ShowHideControl(addWidget, _da._dashboard && _da._dashboard.Editable);
         var spinnerHidden = !$(".spinner-menu").is(":visible");
+        SWIUtil.ShowHideControl(addWidget, _da._dashboard && _da._dashboard.Editable);
         SWIUtil.EnableButton(addWidget, _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
     };
@@ -126,7 +126,7 @@ var SWIDashboard = /** @class */ (function () {
         for (var i = 0; i < _da._grids.length; i++) {
             _da._grids[i].refreshItems().layout();
         }
-        initNavCells(data.executionguid, data.itemguid);
+        initNavCells(data.executionguid, "#" + data.itemguid);
     };
     SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force) {
         clearTimeout(_da._refreshTimers[itemguid]);
@@ -387,4 +387,3 @@ var SWIDashboard = /** @class */ (function () {
     };
     return SWIDashboard;
 }());
-//# sourceMappingURL=swi-dashboard.js.map
