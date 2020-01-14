@@ -81,9 +81,9 @@ function showPopupNavMenu(source, content, forChart, executionguid) {
 
 
 //navigation initialization 
-function initNavCells(executionguid, parentId) {
+function initNavCells(executionguid, parentSelector) {
     var selector = "td:not([navigation=''])";
-    if (parentId) selector = "#" + parentId + " " + selector;
+    if (parentSelector) selector = parentSelector + " " + selector;
     $(selector)
         .mouseenter(function (e) {
             var nav = $(this).attr("navigation");
@@ -96,8 +96,9 @@ function initNavCells(executionguid, parentId) {
         });
 }
 
+//redraw datatables
 function redrawDataTables() {
-    setTimeout(function () { //redraw dt
+    setTimeout(function () { 
         try {
             $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
             $.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();
@@ -107,4 +108,64 @@ function redrawDataTables() {
     }, 200);
 }
 
+//data tables
+function dtCreatedCell(td, cellData, rowData, row, col) {
+    if (cellData) {
+        var cellDatas = cellData.split('§', 6);
+        $(td).html(cellDatas[5]);
+        $(td).attr("class", cellDatas[4]);
+        $(td).attr("style", cellDatas[3]);
+        $(td).attr("navigation", cellDatas[2]);
+        $(td).parent().attr("class", cellDatas[1]);
+        $(td).parent().attr("style", cellDatas[0]);
+    }
+}
 
+//data tables
+function dtRenderer(api, rowIdx, columns) {
+    var data = $.map(columns, function (col, i) {
+        var cellDatas = col.data.split('§', 6);
+        return col.hidden ?
+            '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+            '<th>' + col.title + (col.title != '' ? ':' : '') + '</th> ' +
+            (cellDatas.length == 1 ? '<td>' + col.data : '<td style="' + cellDatas[3] + '" class="' + cellDatas[4] + '">' + cellDatas[5]) + '</td>' +
+            '</tr>' :
+            '';
+    }).join('');
+
+    return data ? $('<table/>').append(data) : false;
+}
+
+//data tables, server pagination
+function getTableData(datatable, guid, viewid, pageid, data, callback, settings) {
+    try {
+        var params = data.draw + "§" + settings.aaSorting + "§" + settings.oPreviousSearch.sSearch.replace("<", "&lt;").replace(">", "&gt;") + "§" + settings._iDisplayLength + "§" + settings._iDisplayStart;
+        if (urlPrefix != "") {
+            $.post(urlPrefix + "ActionGetTableData", { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
+                .done(function (data) {
+                    try {
+                        var json = jQuery.parseJSON(data);
+                        callback(json);
+                        initNavCells(guid, "[viewid='" + viewid + "']");
+                    }
+                    catch (ex) {
+                        datatable[0].innerHTML = "Error loading data..." + "<br>" + ex.message;
+                    }
+                });
+        }
+        else {
+            $("#header_form").attr("action", "ActionGetTableData");
+            $("#parameter_tableload").html(params);
+            $("#viewid_tableload").val(viewid);
+            $("#pageid_tableload").val(pageid);
+            $("#header_form").submit();
+            var json = jQuery.parseJSON($("#parameter_tableload").text());
+            callback(json);
+            $("#parameter_tableload").html("");
+            initNavCells();
+        }
+    }
+    catch (ex2) {
+        datatable[0].innerHTML = "Error loading data..." + "<br>" + ex2.message;
+    }
+}

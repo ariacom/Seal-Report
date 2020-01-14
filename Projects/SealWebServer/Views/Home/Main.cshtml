@@ -304,6 +304,7 @@
     <script type="text/javascript">
         //server
         var WebApplicationName = '@HomeController.GetWebUrl(Request, Response)';
+        var urlPrefix = WebApplicationName;
         var inReport = false;
 
         //formats
@@ -340,6 +341,22 @@
         $.fn.dataTable.moment(shortDateFormat);
         $.fn.dataTable.moment(shortDateTimeFormat);
         $.extend( true, $.fn.dataTable.defaults, {
+                responsive: {
+                    details: {
+                        renderer: function (api, rowIdx, columns) {
+                            dtRenderer(api, rowIdx, columns);
+                        }
+                    }
+                },
+                columnDefs: [
+                    { orderable: false, targets: ["firstcell"]},
+                        {
+                            targets: "_all",
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                dtCreatedCell(td, cellData, rowData, row, col);
+                            }
+                        }
+            ],
             language: {
                 decimal: decimalSeparator,
                 thousands: thousandSeparator,

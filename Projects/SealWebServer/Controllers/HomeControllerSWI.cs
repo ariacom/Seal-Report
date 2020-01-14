@@ -963,23 +963,11 @@ namespace SealWebServer.Controllers
                     try
                     {
                         report.Status = ReportStatus.RenderingDisplay;
-                        report.ExecutionView.SetParameter(Parameter.ServerPaginationParameter, false);
-
                         report.CurrentModelView = modelView;
                         if (modelView != null && modelView.Model != null && modelView.Model.Pages.Count > 0)
                         {
                             report.CurrentPage = modelView.Model.Pages[0];
                         }
-
-                        //Reset page id
-                        foreach (var model in report.Models)
-                        {
-                            foreach (var page in model.Pages)
-                            {
-                                page.PageId = null; //Reset page id as it is used as unique identifier in datatables
-                            }
-                        }
-
                         content = view.Parse();
                     }
                     finally

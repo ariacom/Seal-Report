@@ -56,7 +56,7 @@ namespace Seal.Model
         /// </summary>
         public string GetLoadTableData(ReportView view, string parameter)
         {
-            var model = view.Model;
+            var model = view.ModelView.Model;
             var parameters = parameter.Replace("&lt;", "<").Replace("&gt;", ">").Split('§');
 
             int echo = 1, len = 50, start = 0;
@@ -113,6 +113,16 @@ namespace Seal.Model
             {
                 var sortIndex = int.Parse(sort.Split(',')[0]);
                 var refLine = Lines[BodyStartRow];
+
+                //Handle hidden columns
+                for (int col = 0; col < refLine.Length; col++)
+                {
+                    if (col <= sortIndex && (view.IsColumnHidden(col) || IsColumnHidden(col))) {
+                        sortIndex++;
+                    }
+                }
+
+
                 if (sortIndex < refLine.Length)
                 {
                     //clear other sort
@@ -139,12 +149,10 @@ namespace Seal.Model
                 len = _filteredLines.Count;
             }
 
-            var dataTableView = view.Report.FindViewFromTemplate(view.Views, ReportViewTemplate.DataTableName);
-            if (dataTableView == null) dataTableView = view.Report.FindViewFromTemplate(view.Views, ReportViewTemplate.DataTableEditorName);
-            var rowBodyClass = dataTableView.GetValue("data_table_body_class");
-            var rowBodyStyle = dataTableView.GetValue("data_table_body_css");
-            var rowSubClass = dataTableView.GetValue("data_table_subtotal_class");
-            var rowSubStyle = dataTableView.GetValue("data_table_subtotal_css");
+            var rowBodyClass = view.GetValue("data_table_body_class");
+            var rowBodyStyle = view.GetValue("data_table_body_css");
+            var rowSubClass = view.GetValue("data_table_subtotal_class");
+            var rowSubStyle = view.GetValue("data_table_subtotal_css");
 
             for (int row = start; row < _filteredLines.Count && row < start + len; row++)
             {
@@ -153,7 +161,7 @@ namespace Seal.Model
                 sb.Append("[");
                 for (int col = 0; col < line.Length; col++)
                 {
-                    if (dataTableView.IsColumnHidden(col) || IsColumnHidden(col)) { continue; }
+                    if (view.IsColumnHidden(col) || IsColumnHidden(col)) { continue; }
                     ResultCell cell = line[col];
                     var cellValue = !string.IsNullOrEmpty(cell.FinalValue) ? cell.FinalValue : cell.DisplayValue;
                     var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
