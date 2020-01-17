@@ -388,6 +388,13 @@
                                 <li><b>Model Container</b>: A grid container for the page result (refer to Bootstrap 3 grid at <a href="https://getbootstrap.com/docs/3.4/css/#grid" target="_blank">https://getbootstrap.com/docs/3.4/css/#grid</a>). </li>
                             </ul>
 
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Data Tables: Server Pagination</h4>
+                                By default and for performances reason, <b>tables</b> are displayed using server pagination, this means that the cell values of a page are sent to the browser when the user click on a page number
+                                (refer to <a href="https://www.datatables.net/manual/server-side" target="_blank">Data Tables Server Side processing</a> for more information).<br>
+                                For a report, the server pagination can be enabled or disabled using the root view parameter <code>Options: Server Pagination Enabled</code>.
+                            </div>
+
                             <div class="bs-callout bs-callout-warning">
                                 Try some useful parameters of a <b>Report</b> View:
                                 <ul>
@@ -399,7 +406,8 @@
                                 </ul>
                                 Other useful parameters of a <b>Data Table</b> View:
                                 <ul>
-                                    <li><code>Options: Invert data table</code> to swap the columns and rows of the data table from their original presentation.</li>
+                                    <li><code>Options: Invert data table</code> to swap the columns and rows of the data table from their original presentation. This is valid only if the server pagination parameter is disabled in the root view.</li>
+                                    <li><code>Options: Columns to hide</code> to to hide columns in the table (<eg>e.g. the column is only used for a sort or for a calculation</eg>).</li>
                                 </ul>
                             </div>
 
