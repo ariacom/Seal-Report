@@ -579,6 +579,33 @@ if (cell.DoubleValue < 0)
 "
             ),
             new Tuple<string, string>(
+                "Update the navigation link text",
+@"ReportTask task = Model;
+    Report report = task.Report;   
+    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'
+    
+    foreach (var model in report.Models) 
+    {
+        foreach (var page in model.Pages) 
+        {
+            foreach (var line in page.DataTable.Lines) 
+            {
+                ResultCell cellFirstName = line.FirstOrDefault(i => i.Element != null && i.Element.Name == ""Employees.FirstName"");
+                ResultCell cellLastName = line.FirstOrDefault(i => i.Element != null && i.Element.Name == ""Employees.LastName"");
+                if (cellFirstName != null && cellLastName != null) {
+                    //Change the sub-report link generic text
+                    var link = cellLastName.Links.FirstOrDefault(i => i.Href.Contains(""Employee+Detail.srex""));
+                    if (link != null) {
+                        link.Text = ""View "" + cellFirstName.Value + "" "" + cellLastName.Value;
+                    }
+                }
+            }       
+        }
+    }
+}
+"
+            ),
+            new Tuple<string, string>(
                 "Change the connections for a specific report output execution",
 @"ReportTask task = Model;
     Report report = task.Report;
