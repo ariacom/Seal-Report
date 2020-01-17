@@ -602,7 +602,6 @@ if (cell.DoubleValue < 0)
             }       
         }
     }
-}
 "
             ),
             new Tuple<string, string>(
