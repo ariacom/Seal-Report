@@ -128,7 +128,8 @@ namespace Seal.Helpers
             {
                 result = true;
             }
-            else {
+            else
+            {
                 if (value.Contains(".")) value = value.Replace(".", ",");
                 else if (value.Contains(",")) value = value.Replace(",", ".");
                 if (Double.TryParse(value, out d)) result = true;
@@ -517,13 +518,13 @@ namespace Seal.Helpers
         {
             var currentEx = ex;
             var message = new StringBuilder("Unexpected error:\r\n");
-            while (currentEx != null)
-            {
-                message.AppendFormat("\r\n{0}\r\n({1})\r\n", currentEx.Message, currentEx.StackTrace);
-                currentEx = currentEx.InnerException;
-            }
             try
             {
+                while (currentEx != null)
+                {
+                    message.AppendFormat("\r\n{0}\r\n({1})\r\n", currentEx.Message, currentEx.StackTrace);
+                    currentEx = currentEx.InnerException;
+                }
                 message.Append(GetContextDetail(request, user));
             }
             catch { }
@@ -791,7 +792,7 @@ namespace Seal.Helpers
                 if (CTE != null && CTE.Length > 5 && CTE.ToLower().Trim().StartsWith("with"))
                 {
                     var startIndex = CTE.ToLower().IndexOf("with");
-                    if (startIndex >= 0) result += "," + CTE.Substring(startIndex+5);
+                    if (startIndex >= 0) result += "," + CTE.Substring(startIndex + 5);
                 }
             }
             else result = CTE;

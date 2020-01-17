@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>f3ddefe1-0677-4cd6-a465-4cc2ebd063d3</GUID><ViewGUID>24607e17-1fd4-4b2b-8ca7-884af4e7ab93</ViewGUID><Sources><ReportSource><GUID>b794dd5d-6bdc-4db0-8553-fd7473b2056c</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>e9170cbb-a224-4238-9fee-f3b20faae546</GUID><Name>Model</Name><SourceGUID>b794dd5d-6bdc-4db0-8553-fd7473b2056c</SourceGUID><Elements><ReportElement><GUID>0aff5133-18d7-4a3b-a70d-92b4f649f810</GUID><Name>Employees.Title</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>793c07a5-b7bd-41ae-bdea-506ad244005e</MetaColumnGUID></ReportElement><ReportElement><GUID>67270f5a-ea1d-4145-b0d3-668c70874cab</GUID><Name>Employees.FirstName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>adf4d26e-1dc0-4fdd-9de7-c7469cbc9d1a</MetaColumnGUID></ReportElement><ReportElement><GUID>6ae4c1b6-4dc5-41c2-a9d4-5fe85ffbbe85</GUID><Name>Employees.LastName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement><ReportElement><GUID>7d1e0fd7-6320-411d-80db-54592268b6d1</GUID><PivotPosition>Hidden</PivotPosition><SortOrder>Not sorted</SortOrder><MetaColumnGUID>34215f49-e6a5-45e8-bfb8-d51c3a8f0033</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Tasks><ReportTask><GUID>4b2351fe-f3ed-4c84-ad99-874cfa6266dc</GUID><Name>Update navigation link texts</Name><CancelReport>false</CancelReport><SourceGUID>b794dd5d-6bdc-4db0-8553-fd7473b2056c</SourceGUID><Step>BeforeRendering</Step><Script>@{&#xD;
+    ReportTask task = Model;&#xD;
+    Report report = task.Report;   &#xD;
+    //Note that this Task MUST BE executed at the step: 'Models generated, before rendering'&#xD;
+    &#xD;
+    foreach (var model in report.Models) &#xD;
+    {&#xD;
+        foreach (var page in model.Pages) &#xD;
+        {&#xD;
+            foreach (var line in page.DataTable.Lines) &#xD;
+            {&#xD;
+                ResultCell cellFirstName = line.FirstOrDefault(i =&gt; i.Element != null &amp;&amp; i.Element.Name == "Employees.FirstName");&#xD;
+                ResultCell cellLastName = line.FirstOrDefault(i =&gt; i.Element != null &amp;&amp; i.Element.Name == "Employees.LastName");&#xD;
+                if (cellFirstName != null &amp;&amp; cellLastName != null) {&#xD;
+                    //Change the sub-report link generic text&#xD;
+                    var link = cellLastName.Links.FirstOrDefault(i =&gt; i.Href.Contains("Employee+Detail.srex"));&#xD;
+                    if (link != null) {&#xD;
+                        link.Text = "View " + cellFirstName.Value + " " + cellLastName.Value;&#xD;
+                    }&#xD;
+                }&#xD;
+            }       &#xD;
+        }&#xD;
+    }&#xD;
+}&#xD;
+</Script><SortOrder>0</SortOrder></ReportTask></Tasks><Views><ReportView><GUID>24607e17-1fd4-4b2b-8ca7-884af4e7ab93</GUID><Name>View</Name><Views><ReportView><GUID>0269d380-c3ff-45ff-83c4-b95a4bfc5e7f</GUID><Name>Model</Name><Views><ReportView><GUID>adb830b8-a75e-4724-ab9c-8ddabef7a7b9</GUID><Name>Model Container</Name><Views><ReportView><GUID>2ead522b-a9e5-425f-8552-ffcd6696a6e1</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>c3ab0822-b5ef-43c9-9135-c9d24171d0d3</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>86741d40-02c3-4128-873c-4f03b28112af</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>75bde527-1f9b-4891-a759-c8a11feb7b8a</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>1f94d533-1923-40bc-9af3-1e51112e8a74</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>e9170cbb-a224-4238-9fee-f3b20faae546</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>1</SortOrder></ReportView></Views></Report>
