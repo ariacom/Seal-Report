@@ -4,6 +4,8 @@
     ReportView view = Model;
     Report report = view.Report;
     Repository repository = report.Repository;
+    var restrictionPerRow = view.GetNumericValue("restrictions_per_row");
+    if  (restrictionPerRow == 0) { restrictionPerRow = 1; }
 }
 
 <!--restrictions_div-->
@@ -12,13 +14,13 @@
     <div id="restrictions_div" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "") collapse @((report.HasRestrictions && view.GetBoolValue("restriction_button")) ? "in" : "")">
         <div class="panel-group" role="tablist">
             <!--rows of xx restrictions -->
-            @for (int row = 0; row <= report.ExecutionCommonRestrictions.Count / view.GetNumericValue("restrictions_per_row"); row++)
+            @for (int row = 0; row <= report.ExecutionCommonRestrictions.Count / restrictionPerRow; row++)
             {
                 <div class="row">
-                    @for (int i = view.GetNumericValue("restrictions_per_row") * row; i < report.ExecutionCommonRestrictions.Count && i < view.GetNumericValue("restrictions_per_row") * (row + 1); i++)
+                    @for (int i = restrictionPerRow * row; i < report.ExecutionCommonRestrictions.Count && i < restrictionPerRow * (row + 1); i++)
                     {
                         var restriction = report.ExecutionCommonRestrictions[i];
-                        <div class="col-sm-@(12 / view.GetNumericValue("restrictions_per_row"))">
+                        <div class="col-sm-@(12 / restrictionPerRow)">
                             <div class="form-group">
                                 <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select" style="display:@(restriction.HasOperator ? "inline" : "none");">
                                     @foreach (Operator op in restriction.AllowedDisplayOperators)
