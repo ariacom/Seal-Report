@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -339,7 +339,8 @@ namespace Seal.Model
             }
             else if (output.EmailZipAttachments)
             {
-                using (ZipFile zip = new ZipFile())
+#if !NETCOREAPP
+                using (ZipFile zip = new ZipFile()) 
                 {
                     if (!string.IsNullOrEmpty(output.EmailZipPassword)) zip.Password = output.EmailZipPassword;
                     foreach (var attachement in message.Attachments) zip.AddFile(Path.Combine(Path.GetDirectoryName(report.ResultFilePath), attachement.Name), ".");
@@ -349,6 +350,7 @@ namespace Seal.Model
                     message.Attachments.Add(new Attachment(zipName));
                     message.Attachments[0].Name = report.ExecutionName + ".zip";
                 }
+#endif
             }
             SmtpClient client = SmtpClient;
             client.Send(message);

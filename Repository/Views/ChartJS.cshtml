@@ -129,6 +129,10 @@
                         offset: true,
                         display: @view.GetBoolValueJS("chartjs_show_xaxis"),
                         stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
+                        scaleLabel: {
+                            display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_xaxis_title")))),
+                            labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_xaxis_title"))))'
+                        },
                         @if (reportModel.ExecChartIsDateTimeAxis) {
                             <text>
                                     type: 'time',
@@ -158,6 +162,10 @@
                                 id: 'yaxis-1',
                                 display: @view.GetBoolValueJS("chartjs_show_yaxis"),
                                 stacked: @Helper.ToJS(reportModel.ExecChartJSType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
+                                scaleLabel: {
+                                    display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_yaxis_title")))),
+                                    labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis_title"))))'
+                                },
                                 ticks: {
                                     callback: function (label, index, labels) {
                                         if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(new Date(label));
@@ -173,6 +181,10 @@
                                 id: 'yaxis-2',
                                 display: @view.GetBoolValueJS("chartjs_show_yaxis"),
                                 position: 'right',
+                                scaleLabel: {
+                                    display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_yaxis2_title")))),
+                                    labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis2_title"))))'
+                                },
                                 ticks: {
                                     callback: function(label, index, labels) {
                                         if (@Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))')(new Date(label));

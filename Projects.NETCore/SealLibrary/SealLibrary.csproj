@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Helpers\HelperForms.cs" />
+    <Compile Remove="Helpers\Impersonator.cs" />
+    <Compile Remove="Helpers\PropertyGridHelper.cs" />
+    <Compile Remove="Helpers\ScintillaHelper.cs" />
+    <Compile Remove="Helpers\ScintillaRestrictionLexer.cs" />
+    <Compile Remove="Helpers\TreeViewEditorHelper.cs" />
+    <Compile Remove="Helpers\TreeViewHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="RazorEngine.NetCore.ZuLiang" Version="2.2.3.6" />
+    <PackageReference Include="System.Data.Odbc" Version="4.7.0" />
+    <PackageReference Include="System.Data.OleDb" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="4.7.0" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.7.0" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
+    <PackageReference Include="TaskScheduler" Version="2.8.18" />
+  </ItemGroup>
+
+</Project>

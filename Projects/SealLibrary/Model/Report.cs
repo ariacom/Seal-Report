@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -18,7 +18,6 @@ using System.Xml;
 using RazorEngine.Templating;
 using System.ComponentModel;
 using Seal.Forms;
-using Seal.Converter;
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
 
@@ -65,6 +64,7 @@ namespace Seal.Model
 
                 GetProperty("CommonScripts").SetIsBrowsable(true);
                 GetProperty("InitScript").SetIsBrowsable(true);
+                GetProperty("NavigationScript").SetIsBrowsable(true);
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (Report.CommonScripts.Count == 0 ? "None" : Report.CommonScripts.Count.ToString() + " Items(s)"));
                 TypeDescriptor.Refresh(this);
             }
@@ -269,6 +269,38 @@ namespace Seal.Model
         public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
 
         /// <summary>
+        /// Optional Razor Script executed if script navigation links have been added in the CellScript
+        /// </summary>
+        [Category("Scripts"), DisplayName("Report Navigation Script"), Description("Optional Razor Script executed if script navigation links have been added to the report (e.g. in a dedicated task)."), Id(3, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
+        public string NavigationScript { get; set; }
+        public bool ShouldSerializeNavigationScript() { return !string.IsNullOrEmpty(NavigationScript); }
+
+
+        /// <summary>
+        /// Get the hyperlink string to execute the report navigation script.
+        /// </summary>
+        public string GetReportNavigationScriptLink(string text = "", string linkTag = "")
+        {
+            var guid = Guid.NewGuid().ToString();
+            var link = new NavigationLink() { Type = NavigationType.ReportScript, Href = guid, Text = text, Report = this, Tag = linkTag };
+            NavigationLinks.Add(guid, link);
+            return link.FullHref;
+        }
+
+        /// <summary>
+        /// Get the hyperlink string to execute the report navigation script to download a file.
+        /// </summary>
+        public string GetReportNavigationFileDownloadLink(string text = "", string linkTag = "")
+        {
+            var guid = Guid.NewGuid().ToString();
+            var link = new NavigationLink() { Type = NavigationType.FileDownload, Href = guid, Text = text, Report = this, Tag = linkTag };
+            NavigationLinks.Add(guid, link);
+            return link.FullHref;
+        }
+
+        /// <summary>
         /// List of schedules of the report
         /// </summary>
         public List<ReportSchedule> Schedules { get; set; } = new List<ReportSchedule>();
@@ -329,7 +361,7 @@ namespace Seal.Model
         {
             get
             {
-                if (string.IsNullOrEmpty(_HTMLDisplayFilePath)) _HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, "result.htm"));
+                if (string.IsNullOrEmpty(_HTMLDisplayFilePath)) _HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, "result.html"));
                 return _HTMLDisplayFilePath;
             }
             set { _HTMLDisplayFilePath = value; }
@@ -405,7 +437,7 @@ namespace Seal.Model
                     }
                 }
                 if (string.IsNullOrEmpty(fileName)) fileName = "result";
-                fileName = Helper.CleanFileName(fileName) + ".htm";
+                fileName = Helper.CleanFileName(fileName) + ".html";
                 if (!ForOutput) fileName = fileName.Replace(" ", "_");
                 return fileName;
             }
@@ -461,7 +493,7 @@ namespace Seal.Model
                     ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension);
                 }
                 //Display path is always an HTML one...
-                HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".htm"));
+                HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"));
 
                 //Clear some cache values...
                 _displayNameEx = null;
@@ -849,6 +881,12 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public ReportExecutionContext ExecutionContext = ReportExecutionContext.DesignerReport;
+
+        /// <summary>
+        /// Current result format generated durin a View Result: html, print, csv, pdf, excel
+        /// </summary>
+        [XmlIgnore]
+        public string ExecutionViewResultFormat = "";
 
         /// <summary>
         /// Current security user of the report execution
@@ -1413,7 +1451,7 @@ namespace Seal.Model
             result.Name = Helper.GetUniqueName(string.Format("output ({0})", device.Name), (from i in Outputs select i.Name).ToList());
             if (device is OutputFolderDevice)
             {
-                result.FolderPath = string.IsNullOrEmpty(FilePath) ? Repository.SealRepositoryKeyword + "\\Reports\\" : Path.GetDirectoryName(FilePath).Replace(Repository.RepositoryPath, Repository.SealRepositoryKeyword);
+                result.FolderPath = string.IsNullOrEmpty(FilePath) ? Repository.SealRepositoryKeyword + string.Format("{0}Reports{0}", Path.DirectorySeparatorChar) : Path.GetDirectoryName(FilePath).Replace(Repository.RepositoryPath, Repository.SealRepositoryKeyword);
                 result.FileName = Repository.SealReportDisplayNameKeyword;
             }
 
@@ -1632,7 +1670,7 @@ namespace Seal.Model
             }
 
             string result = Path.Combine(Repository.ViewImagesFolder, fileName);
-            return "file:///" + result.Replace("\\", "/");
+            return "file:///" + result.Replace(Path.DirectorySeparatorChar.ToString(), "/");
         }
 
         /// <summary>
@@ -1682,6 +1720,7 @@ namespace Seal.Model
         /// </summary>
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
+            fileName = FileHelper.ConvertOSFilePath(fileName);
             string sourceFilePath = Path.Combine(Repository.ViewScriptsFolder, fileName);
             if (!File.Exists(sourceFilePath)) return "";
 
@@ -1727,6 +1766,7 @@ namespace Seal.Model
         /// </summary>
         public string AttachCSSFile(string fileName, string cdnPath = "")
         {
+            fileName = FileHelper.ConvertOSFilePath(fileName);
             string sourceFilePath = Path.Combine(Repository.ViewContentFolder, fileName);
             if (!File.Exists(sourceFilePath)) return "";
 
@@ -2030,8 +2070,8 @@ namespace Seal.Model
                 var format = Format;
                 if (format == ReportFormat.csv) return "csv";
                 if (format == ReportFormat.excel) return "xlsx";
-                if (format == ReportFormat.pdf) return "htm"; //converter to pdf 
-                return "htm";
+                if (format == ReportFormat.pdf) return "html"; //converter to pdf 
+                return "html";
             }
         }
 
@@ -2307,7 +2347,7 @@ namespace Seal.Model
         {
             get
             {
-                return FilePath.Replace(Repository.ReportsFolder, "").Replace(Repository.SubReportsFolder, string.Format("\\..\\{0}", Path.GetFileNameWithoutExtension(Repository.SubReportsFolder)));
+                return FilePath.Replace(Repository.ReportsFolder, "").Replace(Repository.SubReportsFolder, string.Format("{1}..{1}{0}", Path.GetFileNameWithoutExtension(Repository.SubReportsFolder), Path.DirectorySeparatorChar));
             }
         }
 
@@ -2399,7 +2439,7 @@ namespace Seal.Model
 
                 string logFileName = Path.Combine(Repository.LogsFolder, string.Format("log_{0:yyyy_MM_dd}.txt", DateTime.Now));
                 var message = ExecutionMessages;
-                if (string.IsNullOrEmpty(message) && !string.IsNullOrEmpty(ExecutionErrors)) message = ExecutionErrors;
+                if (!string.IsNullOrEmpty(ExecutionErrors)) message += string.Format("\r\nError Message:\r\n{0}\r\n", ExecutionErrors);
                 if (!Cancel && !string.IsNullOrEmpty(ExecutionErrorStackTrace)) message += string.Format("\r\nError Stack Trace:\r\n{0}\r\n", ExecutionErrorStackTrace);
                 string log = string.Format("********************\r\nExecution of '{0}' on {1} {2}\r\n{3}********************\r\n", FilePath, DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), message);
                 File.AppendAllText(logFileName, log);

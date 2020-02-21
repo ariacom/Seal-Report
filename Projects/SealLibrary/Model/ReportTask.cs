@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -9,13 +9,13 @@ using System.Xml.Serialization;
 using System.ComponentModel;
 using Seal.Helpers;
 using DynamicTypeDescriptor;
-using Seal.Converter;
 using System.Drawing.Design;
 using Seal.Forms;
 using System.Data.Common;
 using System.Threading;
 using System.Data.Odbc;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 
 namespace Seal.Model
 {
@@ -62,7 +62,7 @@ namespace Seal.Model
             return new ReportTask() { GUID = Guid.NewGuid().ToString() };
         }
 
-        
+
         /// <summary>
         /// Init all references of the task
         /// </summary>
@@ -201,6 +201,12 @@ namespace Seal.Model
         public int SortOrder { get; set; } = 0;
 
         /// <summary>
+        /// Custom Tag the can be used at execution time to store any object
+        /// </summary>
+        [XmlIgnore]
+        public object Tag;
+
+        /// <summary>
         /// Returns the order of the task
         /// </summary>
         public int GetSort()
@@ -278,7 +284,6 @@ namespace Seal.Model
         /// <summary>
         /// Returns a DbCommand from a MetaConnection
         /// </summary>
-        /// <param name="metaConnection"></param>
         public DbCommand GetDbCommand(MetaConnection metaConnection)
         {
             DbCommand result = null;
@@ -289,8 +294,13 @@ namespace Seal.Model
                     DbConnection connection = metaConnection.GetOpenConnection();
                     if (connection is OdbcConnection)
                     {
-                        ((OdbcConnection)connection).InfoMessage += new OdbcInfoMessageEventHandler(OdbcDbInfoMessage);
+                        ((OdbcConnection)connection).InfoMessage += new OdbcInfoMessageEventHandler(OdbcInfoMessage);
                         result = ((OdbcConnection)connection).CreateCommand();
+                    }
+                    else if (connection is SqlConnection)
+                    {
+                        ((SqlConnection)connection).InfoMessage += new SqlInfoMessageEventHandler(SqlInfoMessage);
+                        result = ((SqlConnection)connection).CreateCommand();
                     }
                     else
                     {
@@ -336,12 +346,20 @@ namespace Seal.Model
             Progression = 0;
             if (!Report.Cancel && !string.IsNullOrEmpty(SQL))
             {
-                if (string.IsNullOrEmpty(currentConnection.ConnectionString)) throw new Exception("The connection string is not defined for this Task.");
+                if (string.IsNullOrEmpty(currentConnection.ConnectionString) && string.IsNullOrEmpty(Connection.MSSqlServerConnectionString)) throw new Exception("The connection string is not defined for this Task.");
                 _command = GetDbCommand(currentConnection);
-                string finalSql = RazorHelper.CompileExecute(SQL, this);
-                LogMessage("Executing SQL: {0}", finalSql);
-                _command.CommandText = finalSql;
-                object sqlResult = _command.ExecuteScalar();
+                object sqlResult = null;
+                try
+                {
+                    string finalSql = RazorHelper.CompileExecute(SQL, this);
+                    LogMessage("Executing SQL: {0}", finalSql);
+                    _command.CommandText = finalSql;
+                    sqlResult = _command.ExecuteScalar();
+                }
+                finally
+                {
+                    _command.Connection.Close();
+                }
 
                 if (sqlResult != null && !(sqlResult is DBNull))
                 {
@@ -372,11 +390,14 @@ namespace Seal.Model
             DbInfoMessage.Append(e.Message);
         }
 
-        void OdbcDbInfoMessage(object sender, OdbcInfoMessageEventArgs e)
+        void OdbcInfoMessage(object sender, OdbcInfoMessageEventArgs e)
         {
             DbInfoMessage.Append(e.Message);
         }
-
+        void SqlInfoMessage(object sender, SqlInfoMessageEventArgs e)
+        {
+            DbInfoMessage.Append(e.Message);
+        }
         #endregion
     }
 }

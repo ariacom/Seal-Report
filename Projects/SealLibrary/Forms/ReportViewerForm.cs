@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -10,6 +10,7 @@ using System.Diagnostics;
 using Seal.Model;
 using System.IO;
 using Seal.Helpers;
+using System.Web;
 
 namespace Seal.Forms
 {
@@ -290,10 +291,12 @@ namespace Seal.Forms
 
                     case ReportExecution.ActionNavigate:
                         string nav = webBrowser.Document.All[ReportExecution.HtmlId_navigation_id].GetAttribute("value");
-                        if (nav.StartsWith(NavigationLink.FileDownloadPrefix))
+                        var parameters = HttpUtility.ParseQueryString(webBrowser.Document.All[ReportExecution.HtmlId_navigation_parameters].GetAttribute("value"));
+
+                        if (nav.StartsWith(NavigationLink.FileDownloadPrefix)) //File download
                         {
-                            var filePath = _navigation.NavigateScript(nav, _execution.Report);
-                            if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
+                            var filePath = _navigation.NavigateScript(nav, _execution.Report, parameters);
+                            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
                             {
                                 Process.Start(filePath);
                             }
@@ -303,7 +306,13 @@ namespace Seal.Forms
                             }
                             cancelNavigation = true;
                         }
-                        else
+                        else if (nav.StartsWith(NavigationLink.ReportScriptPrefix)) //Report Script
+                        {
+                            HtmlElement dataload = webBrowser.Document.All["navigation_result"];
+                            dataload.InnerText = _navigation.NavigateScript(nav, _execution.Report, parameters);
+                            cancelNavigation = true;
+                        }
+                        else //Drill or SubReport
                         {
                             _execution = _navigation.Navigate(nav, _execution.RootReport);
                             _report = _execution.Report;
@@ -374,7 +383,9 @@ namespace Seal.Forms
             catch (Exception ex)
             {
                 cancelNavigation = true;
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                var message = ex.Message;
+                if (ex.InnerException != null) message += "\r\n" + ex.InnerException.Message;
+                MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return cancelNavigation;
         }

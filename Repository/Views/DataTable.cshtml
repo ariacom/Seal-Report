@@ -28,7 +28,7 @@
                 responsive: @view.GetBoolValueJS("data_tables_responsive"),
                 ordering: @view.GetBoolValueJS("data_tables_sort_enabled"),
                 paging: @view.GetBoolValueJS("data_tables_pagination_enabled"),
-                lengthMenu: [[10, 25, 50, 100, 500], [10, 25, 50, 100, 500]],
+                lengthMenu: [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, "@report.Translate("All")"]],
                 pageLength: @(view.GetBoolValue("data_tables_pagination_enabled") ? view.GetValue("data_tables_pagination_size") : "-1"),
                 info: @view.GetBoolValueJS("data_tables_show_information"),
                 searching: @view.GetBoolValueJS("data_tables_filter_enabled"),

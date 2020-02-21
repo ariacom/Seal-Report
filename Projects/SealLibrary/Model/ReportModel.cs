@@ -1,5 +1,5 @@
 ﻿//
-// Copyright 2015 (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright 2015 (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0
 //
 
@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Xml.Serialization;
-using Seal.Converter;
 using Seal.Helpers;
 using System.ComponentModel;
 using System.Data.OleDb;
@@ -21,6 +20,7 @@ using RazorEngine.Templating;
 using System.Diagnostics;
 using System.Data.Common;
 using System.Data.Odbc;
+using System.Data.SqlClient;
 using System.IO;
 
 namespace Seal.Model
@@ -502,7 +502,7 @@ namespace Seal.Model
             for (int i = 0; i < GetElements(PivotPosition.Page).Count(); i++)
             {
                 var element = GetElements(PivotPosition.Page).ElementAt(i);
-                if (string.IsNullOrEmpty(element.SortOrder) || element.SortOrder == SortOrderConverter.kNoSortKeyword) element.SortOrder = string.Format("{0} Ascendant", i + 1);
+                if (string.IsNullOrEmpty(element.SortOrder) || element.SortOrder == ReportElement.kNoSortKeyword) element.SortOrder = string.Format("{0} Ascendant", i + 1);
             }
         }
 
@@ -985,7 +985,7 @@ namespace Seal.Model
         /// Custom Tag the can be used at execution time to store any object
         /// </summary>
         [XmlIgnore]
-        public Object Tag;
+        public object Tag;
 
         /// <summary>
         /// Init all model references: Elements, Restrictions, etc.
@@ -1219,7 +1219,7 @@ namespace Seal.Model
                             element.MetaColumnGUID = guid;
                             element.PivotPosition = PivotPosition.Hidden;
                             element.IsForNavigation = true;
-                            element.SortOrder = SortOrderConverter.kNoSortKeyword;
+                            element.SortOrder = ReportElement.kNoSortKeyword;
                             Elements.Add(element);
                         }
                     }
@@ -1759,10 +1759,10 @@ namespace Seal.Model
             for (int i = 0; i < elements.Count(); i++)
             {
                 ReportElement element = elements.ElementAt(i);
-                if (element.SortOrder != SortOrderConverter.kNoSortKeyword)
+                if (element.SortOrder != ReportElement.kNoSortKeyword)
                 {
-                    if (element.SortOrder == SortOrderConverter.kAutomaticAscSortKeyword) element.FinalSortOrder = string.Format("{0} {1}", i, SortOrderConverter.kAscendantSortKeyword);
-                    else if (element.SortOrder == SortOrderConverter.kAutomaticDescSortKeyword) element.FinalSortOrder = string.Format("{0} {1}", i, SortOrderConverter.kDescendantSortKeyword);
+                    if (element.SortOrder == ReportElement.kAutomaticAscSortKeyword) element.FinalSortOrder = string.Format("{0} {1}", i, ReportElement.kAscendantSortKeyword);
+                    else if (element.SortOrder == ReportElement.kAutomaticDescSortKeyword) element.FinalSortOrder = string.Format("{0} {1}", i, ReportElement.kDescendantSortKeyword);
                     else element.FinalSortOrder = element.SortOrder;
                 }
             }
@@ -1774,7 +1774,7 @@ namespace Seal.Model
             {
                 if (!orderColumns.Contains(element.SQLColumn) && element.IsSorted)
                 {
-                    string ascdesc = element.SortOrder.Contains(SortOrderConverter.kAscendantSortKeyword) ? " ASC" : " DESC";
+                    string ascdesc = element.SortOrder.Contains(ReportElement.kAscendantSortKeyword) ? " ASC" : " DESC";
                     Helper.AddValue(ref orderClause, ",", (Source.IsNoSQL ? element.SQLColumnName : element.SQLColumn) + ascdesc); //If NoSQL, the Data View can not be sorted with aggregate...
                     Helper.AddValue(ref orderClauseName, ",", element.SQLColumnName + ascdesc);
                     orderColumns.Add(element.SQLColumn);
@@ -1869,7 +1869,7 @@ namespace Seal.Model
                     //check if we can reuse the current running query: same source, same connection string and same pre/Post SQL
                     ReportModel runningModel = RunningModels[key];
                     if (Source == runningModel.Source
-                        && Connection.FullConnectionString == runningModel.Connection.FullConnectionString
+                        && ((!Connection.IsMSSqlServerConnection && Connection.FullConnectionString == runningModel.Connection.FullConnectionString) || (Connection.IsMSSqlServerConnection && Connection.FullMSSqlServerConnectionString == runningModel.Connection.FullMSSqlServerConnectionString))
                         && string.IsNullOrEmpty(runningModel.ExecutionError)
                         && ((PreSQL == null && runningModel.PreSQL == null) || (PreSQL.Trim() == runningModel.PreSQL.Trim()))
                         && ((PostSQL == null && runningModel.PostSQL == null) || (PostSQL.Trim() == runningModel.PostSQL.Trim()))
@@ -1976,7 +1976,7 @@ namespace Seal.Model
                 //Normal SQL
                 try
                 {
-                    if (string.IsNullOrEmpty(Connection.ConnectionString)) throw new Exception("The connection string is not defined for this Model.");
+                    if (string.IsNullOrEmpty(Connection.ConnectionString) && string.IsNullOrEmpty(Connection.MSSqlServerConnectionString)) throw new Exception("The connection string is not defined for this Model.");
                     _command = null;
 
                     //Check if we can use a data table from another model
@@ -1992,6 +1992,7 @@ namespace Seal.Model
                             {
                                 connection = Connection.GetOpenConnection();
                                 if (connection is OdbcConnection) _command = ((OdbcConnection)connection).CreateCommand();
+                                else if (connection is SqlConnection) _command = ((SqlConnection)connection).CreateCommand();
                                 else _command = ((OleDbConnection)connection).CreateCommand();
                                 _command.CommandTimeout = 0;
                                 ExecutionDate = DateTime.Now;
@@ -2014,6 +2015,7 @@ namespace Seal.Model
                         ResultTable = new DataTable();
                         DbDataAdapter adapter = null;
                         if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
+                        else if (connection is SqlConnection) adapter = new SqlDataAdapter((SqlCommand)_command);
                         else adapter = new OleDbDataAdapter((OleDbCommand)_command);
                         adapter.Fill(ResultTable);
                         executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);

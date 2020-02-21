@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -43,6 +43,11 @@ namespace Seal.Model
         public const string SealWebPublishTemp = "temp";
 
         /// <summary>
+        /// Repository path got from the configuration file
+        /// </summary>
+        public static string RepositoryConfigurationPath = Properties.Settings.Default.RepositoryPath;
+
+        /// <summary>
         /// Current path
         /// </summary>
         public string RepositoryPath { get; private set; }
@@ -55,6 +60,7 @@ namespace Seal.Model
             get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
         }
 
+#if !NETCOREAPP
         /// <summary>
         /// Product icon
         /// </summary>
@@ -62,6 +68,7 @@ namespace Seal.Model
         {
             get { return Path.GetFileName(Application.ExecutablePath).ToLower() == SealServerManager.ToLower() ? Properties.Resources.serverManager : Properties.Resources.reportDesigner; }
         }
+#endif
 
         private string _licenseText = null;
         /// <summary>
@@ -103,7 +110,11 @@ namespace Seal.Model
             {
 
                 if (_cultureInfo == null && !string.IsNullOrEmpty(Configuration.DefaultCulture)) _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == Configuration.DefaultCulture);
-                if (_cultureInfo == null) _cultureInfo = CultureInfo.CurrentCulture;
+                if (_cultureInfo == null)
+                {
+                    _cultureInfo = CultureInfo.CurrentCulture;
+                    if (_cultureInfo.TwoLetterISOLanguageName == "iv") _cultureInfo = new CultureInfo("en");
+                }
 
                 return _cultureInfo;
             }
@@ -229,7 +240,7 @@ namespace Seal.Model
         /// <returns></returns>
         public static string FindRepository()
         {
-            string path = Properties.Settings.Default.RepositoryPath;
+            string path = RepositoryConfigurationPath;
 #if DEBUG
             //Try to get the Repository from the dev env.
             path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", ""));
@@ -285,25 +296,6 @@ namespace Seal.Model
             }
         }
 
-
-        /// <summary>
-        /// Creates a basic repository from a given path
-        /// </summary>
-        public static Repository Create(string path)
-        {
-            Repository result = null;
-
-            if (Directory.Exists(path))
-            {
-                result = new Repository();
-                result.Init(path);
-            }
-            if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'.", path));
-
-            return result;
-        }
-
-
         /// <summary>
         /// Creates a basic repository
         /// </summary>
@@ -317,7 +309,7 @@ namespace Seal.Model
                 result = new Repository();
                 result.Init(path);
             }
-            if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'. Please check your configuration file.", Properties.Settings.Default.RepositoryPath));
+            if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'. Please check your configuration file.", RepositoryConfigurationPath));
 
             return result;
         }
@@ -502,7 +494,7 @@ namespace Seal.Model
         /// </summary>
         public string DevicesEmailFolder
         {
-            get { return Path.Combine(RepositoryPath, "Devices\\Email"); }
+            get { return Path.Combine(RepositoryPath, string.Format("Devices{0}Email", Path.DirectorySeparatorChar)); }
         }
 
         /// <summary>
@@ -928,13 +920,13 @@ namespace Seal.Model
         /// </summary>
         public string TranslateFolderPath(string path)
         {
-            if (path == "\\") return path;
+            if (path == Path.DirectorySeparatorChar.ToString()) return path;
 
             string path2 = path;
             string result = "";
-            while (!string.IsNullOrEmpty(path2) && path2 != "\\")
+            while (!string.IsNullOrEmpty(path2) && path2 != Path.DirectorySeparatorChar.ToString())
             {
-                result = "\\" + TranslateFolderName(path2) + result;
+                result = Path.DirectorySeparatorChar.ToString() + TranslateFolderName(path2) + result;
                 path2 = Path.GetDirectoryName(path2);
             }
             return result;
@@ -1033,7 +1025,7 @@ namespace Seal.Model
         {
             get
             {
-                return !string.IsNullOrEmpty(WebApplicationPath) ? WebApplicationPath : Path.GetDirectoryName(Application.ExecutablePath);
+                return !string.IsNullOrEmpty(WebApplicationPath) ? WebApplicationPath : Helper.GetApplicationDirectory();
             }
         }
 

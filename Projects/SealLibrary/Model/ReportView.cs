@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -10,7 +10,6 @@ using System.IO;
 using System.Xml.Serialization;
 using Seal.Helpers;
 using System.ComponentModel;
-using Seal.Converter;
 using Seal.Forms;
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
@@ -66,7 +65,7 @@ namespace Seal.Model
                 //Helpers
                 GetProperty("HelperReloadConfiguration").SetIsBrowsable(true);
                 GetProperty("HelperResetParameters").SetIsBrowsable(true);
-                GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(true);
+                GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(Template.Name == ReportViewTemplate.ReportName);
                 GetProperty("HelperResetExcelConfigurations").SetIsBrowsable(true);
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
@@ -598,10 +597,11 @@ namespace Seal.Model
         public bool ShouldSerializePartialTemplates() { return PartialTemplates.Count > 0; }
 
 
+#if !NETCOREAPP
         /// <summary>
         /// The custom partial template texts for the view
         /// </summary>
-        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [TypeConverter(typeof(ExpandableObjectConverter))] 
         [DisplayName("Custom partial template Texts"), Description("The custom partial template texts for the view."), Category("Custom template texts"), Id(5, 3)]
         [XmlIgnore]
         public PartialTemplatesEditor PartialTemplatesConfiguration
@@ -613,6 +613,7 @@ namespace Seal.Model
                 return editor;
             }
         }
+#endif
 
         /// <summary>
         /// The view parameters
@@ -638,6 +639,7 @@ namespace Seal.Model
         }
         public bool ShouldSerializeCultureName() { return !string.IsNullOrEmpty(_cultureName); }
 
+#if !NETCOREAPP
         /// <summary>
         /// The view configuration values for edition.
         /// </summary>
@@ -653,6 +655,7 @@ namespace Seal.Model
                 return editor;
             }
         }
+#endif
 
         /// <summary>
         /// Current sort order of the view
@@ -691,9 +694,16 @@ namespace Seal.Model
                     if (culture != null) _cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == _cultureName).Clone() as CultureInfo;
                 }
                 //Culture from the execution view
-                if (_cultureInfo == null && Report.ExecutionView != this && Report.ExecutionView != null) _cultureInfo = Report.CultureInfo.Clone() as CultureInfo;
+                if (_cultureInfo == null && Report.ExecutionView != this && Report.ExecutionView != null)
+                {
+                    _cultureInfo = Report.CultureInfo.Clone() as CultureInfo;
+                    if (_cultureInfo.TwoLetterISOLanguageName == "iv") _cultureInfo = new CultureInfo("en");
+                }
                 //Culture from the repository
-                if (_cultureInfo == null) _cultureInfo = Report.Repository.CultureInfo.Clone() as CultureInfo;
+                if (_cultureInfo == null) {
+                    _cultureInfo = Report.Repository.CultureInfo.Clone() as CultureInfo;
+                    if (_cultureInfo.TwoLetterISOLanguageName == "iv") _cultureInfo = new CultureInfo("en");
+                }
                 return _cultureInfo;
             }
         }
@@ -829,7 +839,7 @@ namespace Seal.Model
                     _pdfConverter = SealPdfConverter.Create(Report.Repository.ApplicationPath);
                     if (PdfConfigurations.Count == 0) PdfConfigurations = Report.Repository.Configuration.PdfConfigurations.ToList();
                     _pdfConverter.SetConfigurations(PdfConfigurations, this);
-                    _pdfConverter.EntityHandler = HelperEditor.HandlerInterface;
+                    _pdfConverter.EntityHandler = HelperEditor.HandlerInterface; //!NETCore
                     UpdateEditorAttributes();
                 }
                 return _pdfConverter;
@@ -888,7 +898,7 @@ namespace Seal.Model
                     if (ExcelConfigurations.Count == 0) ExcelConfigurations = Report.Repository.Configuration.ExcelConfigurations.ToList();
 
                     _excelConverter.SetConfigurations(ExcelConfigurations, this);
-                    _excelConverter.EntityHandler = HelperEditor.HandlerInterface;
+                    _excelConverter.EntityHandler = HelperEditor.HandlerInterface; //!NETCore
                     UpdateEditorAttributes();
                 }
                 return _excelConverter;

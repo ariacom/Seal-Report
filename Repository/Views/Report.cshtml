@@ -53,7 +53,10 @@
     @if (report.HasPlotlyChart)
     {
         @Raw(report.AttachScriptFile("plotly-latest.min.js", "https://cdn.plot.ly/plotly-1.48.1.min.js"))
-        @Raw(report.AttachScriptFile("plotly\\plotly-locale-" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
+        if (view.CultureInfo.TwoLetterISOLanguageName != "en")
+        {
+            @Raw(report.AttachScriptFile("plotly\\plotly-locale-" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))
+        }
     }
 
     @if (report.HasNVD3Chart)
@@ -74,7 +77,7 @@
     }
     @Raw(report.AttachScriptFiles(repository.Configuration.ScriptFiles))
 
-        <script type="text/javascript">
+    <script type="text/javascript">
             var inReport = true;
             var generateHTMLDisplay =  @Helper.ToJS(report.GenerateHTMLDisplay);
 
@@ -191,7 +194,7 @@
                     } catch (e) {}
                 }
         });
-        </script>
+    </script>
     @Raw(report.AttachScriptFile("helpers.js"))
     @Raw(report.AttachScriptFile("common.js"))
     @Raw(report.AttachScriptFile("custom.js"))
@@ -209,6 +212,8 @@
         <form id="header_form" method="post" action="">
             <input type="hidden" name="execution_guid" id="execution_guid" value="@report.ExecutionGUID" />
             <input type="hidden" name="navigation_id" id="navigation_id" value="" />
+            <input type="hidden" name="navigation_parameters" id="navigation_parameters" value="" />
+            <input type="hidden" name="navigation_result" id="navigation_result" value="" />
             <input type="hidden" name="viewid_tableload" id="viewid_tableload" value="" />
             <input type="hidden" name="pageid_tableload" id="pageid_tableload" value="" />
             <input type="hidden" name="id_enumload" id="id_enumload" value="" />

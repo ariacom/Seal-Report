@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -8,7 +8,6 @@ using System.Linq;
 using System.Xml.Serialization;
 using System.Data;
 using System.ComponentModel;
-using Seal.Converter;
 using System.Drawing.Design;
 using System.IO;
 using Seal.Helpers;
@@ -17,6 +16,7 @@ using DynamicTypeDescriptor;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Xml;
+using System.Data.SqlClient;
 
 namespace Seal.Model
 {
@@ -66,8 +66,8 @@ namespace Seal.Model
             }
         }
 
-        [XmlIgnore]
-        public ConnectionFolder ConnectionFolder = new ConnectionFolder();
+        [XmlIgnore] 
+        public ConnectionFolder ConnectionFolder = new ConnectionFolder(); 
         [XmlIgnore]
         public TableFolder TableFolder = new TableFolder();
         [XmlIgnore]
@@ -200,7 +200,7 @@ namespace Seal.Model
         {
             MetaConnection result = MetaConnection.Create(this);
             result.ConnectionString = Repository.Configuration.DefaultConnectionString;
-            result.DatabaseType = ConnectionStringEditor.GetDatabaseType(result.ConnectionString);
+            result.DatabaseType = ConnectionStringEditor.GetDatabaseType(result.ConnectionString); //!NETCore
 
             result.Name = Helper.GetUniqueName(result.Name, (from i in Connections select i.Name).ToList());
             Connections.Add(result);
@@ -531,9 +531,11 @@ namespace Seal.Model
                     if (col != null) column.Category = col.Category;
                     else column.Category = !string.IsNullOrEmpty(table.AliasName) ? table.AliasName : Helper.DBNameToDisplayName(table.Name.Trim());
                     column.Source = this;
-                    string odbcType = "";
-                    if (row.Table.Columns.Contains("TYPE_NAME")) odbcType = row["TYPE_NAME"].ToString();
-                    column.Type = connection is OdbcConnection ? Helper.ODBCToNetTypeConverter(odbcType) : Helper.DatabaseToNetTypeConverter(row["DATA_TYPE"]);
+                    string dbType = "";
+                    if (row.Table.Columns.Contains("TYPE_NAME")) dbType = row["TYPE_NAME"].ToString();
+                    if (connection is OdbcConnection) column.Type = Helper.ODBCToNetTypeConverter(dbType);
+                    else if (connection is SqlConnection) column.Type = Helper.ODBCToNetTypeConverter(row["DATA_TYPE"].ToString());
+                    else Helper.DatabaseToNetTypeConverter(row["DATA_TYPE"]);
                     column.SetStandardFormat();
                     if (!columns.Exists(i => i.Name == column.Name)) columns.Add(column);
                 }

@@ -1,8 +1,9 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using Seal.Forms;
+using Seal.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,21 +44,24 @@ namespace Seal.Model
         {
             SealExcelConverter result = null;
             //Check if an implementation is available in a .dll
-            string applicationPath = string.IsNullOrEmpty(assemblyDirectory) ? Path.GetDirectoryName(Application.ExecutablePath) : assemblyDirectory;
+            string applicationPath = string.IsNullOrEmpty(assemblyDirectory) ? Helper.GetApplicationDirectory() : assemblyDirectory;
             if (File.Exists(Path.Combine(applicationPath, "SealConverter.dll")))
             {
                 try
                 {
-                    Assembly currentAssembly = AppDomain.CurrentDomain.Load("SealConverter");
+                    Assembly currentAssembly = Assembly.LoadFrom(Path.Combine(applicationPath, "SealConverter.dll"));
+                    //Load related DLLs
+                    Assembly.LoadFrom(Path.Combine(applicationPath, "DocumentFormat.OpenXml.dll"));
+                    Assembly.LoadFrom(Path.Combine(applicationPath, "EPPlus.dll"));
                     Type t = currentAssembly.GetType("Seal.Converter.ExcelConverter", true);
                     Object[] args = new Object[] { };
                     result = (SealExcelConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);
                     result.ApplicationPath = applicationPath;
-                    //Load related DLLs
-                    Assembly.LoadFrom(Path.Combine(applicationPath, "DocumentFormat.OpenXml.dll"));
-                    Assembly.LoadFrom(Path.Combine(applicationPath, "EPPlus.dll"));
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
 
             if (result == null) result = new SealExcelConverter();
@@ -76,7 +80,7 @@ namespace Seal.Model
         /// <summary>
         /// Current application path
         /// </summary>
-        public string ApplicationPath = Path.GetDirectoryName(Application.ExecutablePath);
+        public string ApplicationPath = Helper.GetApplicationDirectory();
 
         /// <summary>
         /// Convert to Excel and save the result to a destination path
@@ -96,9 +100,9 @@ namespace Seal.Model
             return new List<string>();
         }
 
-        public virtual void ConfigureTemplateEditor(TemplateTextEditorForm frm, string propertyName, ref string template, ref string language) { }
+        public virtual void ConfigureTemplateEditor(TemplateTextEditorForm frm, string propertyName, ref string template, ref string language) { } //!NETCore
 
-        public IEntityHandler EntityHandler = null;
+        public IEntityHandler EntityHandler = null; //!NETCore
 
         public virtual string GetLicenseText()
         {
@@ -107,6 +111,10 @@ namespace Seal.Model
 
         public virtual void InitFromReferenceView(ReportView referenceView)
         {
+        }
+        public virtual Report GetReport()
+        {
+            return null;
         }
     }
 }

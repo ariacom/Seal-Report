@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using Seal.Helpers;
@@ -268,7 +268,7 @@ namespace Seal.Model
                     //public
                     foreach (var f in SecurityDashboardFolders.Where(i => i.Right == DashboardFolderRight.Edit))
                     {
-                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateDashboardFolder("\\" + f.FolderPath, f.Name), path = f.FolderPath });
+                        _dashboardFolders.Add(new SWIDashboardFolder() { name = Security.Repository.TranslateDashboardFolder(Path.DirectorySeparatorChar.ToString() + f.FolderPath, f.Name), path = f.FolderPath });
                     }
                 }
                 return _dashboardFolders;
@@ -324,6 +324,7 @@ namespace Seal.Model
             Error = "";
             Warning = "";
             string script = (Security.UseCustomScript && !string.IsNullOrEmpty(Security.Script) ? Security.Script : Security.ProviderScript);
+            if (string.IsNullOrEmpty(script)) throw new Exception("No Security Script to execute. Check the rights to access the repository Security.xml file...");
             try
             {
                 RazorHelper.CompileExecute(script, this);
@@ -747,6 +748,7 @@ namespace Seal.Model
             var result = Name;
             if (!string.IsNullOrEmpty(PersonalFolderName)) result = PersonalFolderName;
             else if (!string.IsNullOrEmpty(WebUserName)) result = WebUserName;
+            if (string.IsNullOrEmpty(result)) result = "";
             return result;
         }
 
@@ -787,7 +789,7 @@ namespace Seal.Model
                             newWidget.ReportName = widget.ReportName;
                             newWidget.ReportPath = widget.ReportPath;
                             _widgets.Add(newWidget.GUID, newWidget);
-                            var instance = newWidget.ReportPath.Replace(Security.Repository.ReportsFolder, "\\");
+                            var instance = newWidget.ReportPath.Replace(Security.Repository.ReportsFolder, Path.DirectorySeparatorChar.ToString());
                             newWidget.Name = Security.Repository.TranslateWidgetName(instance, newWidget.Name);
                             newWidget.Description = Security.Repository.TranslateWidgetDescription(instance, newWidget.Description);
                         }
@@ -839,7 +841,7 @@ namespace Seal.Model
                     }
                     else
                     {
-                        var instance = widget.ReportPath.Replace(Security.Repository.ReportsFolder, "\\");
+                        var instance = widget.ReportPath.Replace(Security.Repository.ReportsFolder, Path.DirectorySeparatorChar.ToString());
                         item.DisplayName = Security.Repository.TranslateWidgetName(instance, widget.Name);
                     }
                     item.SetWidget(widget);

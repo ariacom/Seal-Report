@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -8,7 +8,6 @@ using System.Xml.Serialization;
 using System.ComponentModel;
 using Seal.Helpers;
 using DynamicTypeDescriptor;
-using Seal.Converter;
 using System.Windows.Forms;
 using System.Drawing.Design;
 using Seal.Forms;
@@ -199,7 +198,10 @@ namespace Seal.Model
         public string NotificationEmailTo
         {
             get { return _notificationEmailTo; }
-            set { _notificationEmailTo = value; UpdateEditorAttributes(); }
+            set { 
+                _notificationEmailTo = value; 
+                UpdateEditorAttributes();  //!NETCore 
+            }
         }
 
         /// <summary>
@@ -231,7 +233,10 @@ namespace Seal.Model
         public int ErrorNumberOfRetries
         {
             get { return Math.Max(_errorNumberOfRetries,0); }
-            set { _errorNumberOfRetries = Math.Max(value,0); UpdateEditorAttributes(); }
+            set { 
+                _errorNumberOfRetries = Math.Max(value,0); 
+                UpdateEditorAttributes(); 
+            }
         }
 
         /// <summary>
@@ -382,7 +387,7 @@ namespace Seal.Model
 #if DEBUG
                         schedulerPath = Path.Combine(@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\x86\Debug", Repository.SealTaskScheduler);
 #endif
-                        taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Application.StartupPath));
+                        taskDefinition.Actions.Add(new ExecAction(string.Format("\"{0}\"", schedulerPath), GUID, Helper.GetApplicationDirectory()));
                         RegisterTaskDefinition(taskDefinition);
                     }
                     SynchronizeTask();
@@ -391,6 +396,12 @@ namespace Seal.Model
             }
             set { _task = value; }
         }
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag;
 
         /// <summary>
         /// ReportOutput of the schedule

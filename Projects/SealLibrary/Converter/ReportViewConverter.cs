@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using Seal.Forms;
 
-namespace Seal.Converter
+namespace Seal.Forms
 {
     public class ReportViewConverter : StringConverter
     {
@@ -27,7 +27,7 @@ namespace Seal.Converter
         {
 
             List<ReportView> result = null;
-            if (descriptor.Name == "ReferenceViewGUID") result = report.FullViewList.Where(i => i.GUID != report.ViewGUID).ToList();
+            if (descriptor.Name == "ReferenceViewGUID") result = report.FullViewList;
             else result = report.Views;
             return result;
         }

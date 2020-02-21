@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -16,6 +16,7 @@ using Seal.Model;
 using System.DirectoryServices.AccountManagement;
 using Jose;
 using Newtonsoft.Json.Linq;
+using Ionic.Zip;
 
 namespace Seal.Helpers
 {
@@ -28,10 +29,11 @@ namespace Seal.Helpers
         static LdapConnection dummy4 = null;
         static SyndicationFeed dummy5 = null;
         static XDocument dummy6 = null;
-        static Control dummy7 = null;
+        static Control dummy7 = null; //!NETCore
         static PrincipalContext dummy8 = null;
-        static JwtSettings dummy9 = null;
+        static JwtSettings dummy9 = null; //!NETCore
         static JObject dummy10 = null;
+        static ZipFile dummy11 = null; //!NETCore
 
         static bool _loadDone = false;
         static public void LoadRazorAssemblies()
@@ -47,12 +49,16 @@ namespace Seal.Helpers
                     if (dummy4 == null) dummy4 = new LdapConnection("");
                     if (dummy5 == null) dummy5 = new SyndicationFeed();
                     if (dummy6 == null) dummy6 = new XDocument();
-                    if (dummy7 == null) dummy7 = new Control();
+                    if (dummy7 == null) dummy7 = new Control(); //!NETCore
                     if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
-                    if (dummy9 == null) dummy9 = JWT.DefaultSettings;
+                    if (dummy9 == null) dummy9 = JWT.DefaultSettings; //!NETCore
                     if (dummy10 == null) dummy10 = JObject.Parse("{}");
+                    if (dummy11 == null) dummy11 = new ZipFile(); //!NETCore
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 _loadDone = true;
             }
         }
@@ -86,9 +92,9 @@ namespace Seal.Helpers
             else if (model is NavigationLink)
             {
                 var ob = (NavigationLink)model;
-                if (ob.Cell != null)
+                if (ob.Report != null)
                 {
-                    report = ob.Cell.Element.Report;
+                    report = ob.Report;
                     if (report.Repository != null) configuration = report.Repository.Configuration;
                 }
             }
@@ -101,20 +107,41 @@ namespace Seal.Helpers
             else if (model is MetaEnum)
             {
                 var ob = (MetaEnum)model;
-                report = ob.Source.Report;
-                configuration = ob.Source.Repository.Configuration;
+                if (ob.Source != null)
+                {
+                    report = ob.Source.Report;
+                    configuration = ob.Source.Repository.Configuration;
+                }
             }
             else if (model is MetaTable)
             {
                 var ob = (MetaTable)model;
-                report = ob.Source.Report;
-                configuration = ob.Source.Repository.Configuration;
+                if (ob.Source != null)
+                {
+                    report = ob.Source.Report;
+                    configuration = ob.Source.Repository.Configuration;
+                }
             }
             else if (model is MetaConnection)
             {
                 var ob = (MetaConnection)model;
-                report = ob.Source.Report;
-                configuration = ob.Source.Repository.Configuration;
+                if (ob.Source != null)
+                {
+                    report = ob.Source.Report;
+                    configuration = ob.Source.Repository.Configuration;
+                }
+            }
+            else if (model is SealExcelConverter)
+            {
+                var ob = (SealExcelConverter)model;
+                report = ob.GetReport();
+                configuration = (report  == null ? Repository.Instance.Configuration : report.Repository.Configuration);
+            }
+            else if (model is SealPdfConverter)
+            {
+                var ob = (SealPdfConverter)model;
+                report = ob.GetReport();
+                configuration = (report == null ? Repository.Instance.Configuration : report.Repository.Configuration);
             }
 
             if (!string.IsNullOrEmpty(header)) result += "\r\n" + header;

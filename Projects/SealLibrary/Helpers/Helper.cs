@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -22,6 +22,8 @@ using System.Data.Odbc;
 using System.Xml.Serialization;
 using System.Globalization;
 using System.Net.Mail;
+using System.Data.SqlClient;
+using System.Linq;
 
 namespace Seal.Helpers
 {
@@ -32,7 +34,7 @@ namespace Seal.Helpers
     {
     }
 
-    public class Helper
+    public partial class Helper
     {
         public static string GetEnumDescription(Type type, Object value)
         {
@@ -47,6 +49,36 @@ namespace Seal.Helpers
             foreach (PropertyDescriptor item in TypeDescriptor.GetProperties(src))
             {
                 item.SetValue(dest, item.GetValue(src));
+            }
+        }
+
+
+        static public void CopyPropertiesDifferentObjects(object src, object dest)
+        {
+            var propSource = TypeDescriptor.GetProperties(src);
+            var propDest = TypeDescriptor.GetProperties(dest);
+            foreach (PropertyDescriptor itemDest in propDest)
+            {
+                var itemSource = propSource.Find(itemDest.Name, true);
+                if (itemSource != null)
+                {
+                    try
+                    {
+                        itemDest.SetValue(dest, itemSource.GetValue(src));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(itemDest.Name + " " + ex.Message);
+                    }
+                }
+            }
+        }
+
+        static public void CopyPropertiesFromReference(object defaultObject, object referenceObject, object destObject)
+        {
+            foreach (PropertyDescriptor item in TypeDescriptor.GetProperties(defaultObject))
+            {
+                if (item.GetValue(destObject) == item.GetValue(defaultObject)) item.SetValue(destObject, item.GetValue(referenceObject));
             }
         }
 
@@ -223,7 +255,10 @@ namespace Seal.Helpers
                 result = Helper.NetTypeConverter(Helper.OleDbToNetTypeConverter(columnType));
                 if (columnType == OleDbType.WChar || columnType == OleDbType.VarWChar || columnType == OleDbType.LongVarWChar) result = ColumnType.UnicodeText;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             return result;
         }
 
@@ -234,7 +269,10 @@ namespace Seal.Helpers
             {
                 result = Helper.OdbcTypeConverter(odbcType);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             return result;
         }
 
@@ -378,11 +416,6 @@ namespace Seal.Helpers
             return "0";
         }
 
-        public static bool CanDragAndDrop(DragEventArgs e)
-        {
-            return (e.Data.GetDataPresent(typeof(TreeNode)) && ((TreeNode)e.Data.GetData(typeof(TreeNode))).Tag is MetaColumn) || e.Data.GetDataPresent(typeof(Button));
-        }
-
         static public string GetExceptionMessage(TemplateCompilationException ex)
         {
             var result = new StringBuilder("");
@@ -425,25 +458,6 @@ namespace Seal.Helpers
             }
         }
 
-        public static GridItemCollection GetAllGridEntries(PropertyGrid grid)
-        {
-            object view = grid.GetType().GetField("gridView", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(grid);
-            return (GridItemCollection)view.GetType().InvokeMember("GetAllGridEntries", BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance, null, view, null);
-        }
-
-        public static GridItem GetGridEntry(PropertyGrid grid, string label)
-        {
-            var entries = Helper.GetAllGridEntries(grid);
-            if (entries != null)
-            {
-                foreach (GridItem item in entries)
-                {
-                    string label2 = item.Label.Replace("\t", "").ToLower();
-                    if (label2 == label) return item;
-                }
-            }
-            return null;
-        }
 
         public static string FormatMessage(string message)
         {
@@ -472,78 +486,23 @@ namespace Seal.Helpers
             {
                 if (args.Length != 0) msg = string.Format(message, args);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             try
             {
+                Console.WriteLine(msg);
                 if (msg.Length > 25000)
                 {
                     msg = msg.Substring(0, 25000) + "\r\n...\r\nMessage truncated, check the log file in the Logs Repository sub-folder.";
                 }
                 EventLog.WriteEntry(source, msg, type);
             }
-            catch { }
-        }
-
-
-        private static string GetIPAddress(HttpRequestBase request)
-        {
-            string ipAddress = request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-            if (!string.IsNullOrEmpty(ipAddress))
+            catch (Exception ex)
             {
-                string[] addresses = ipAddress.Split(',');
-                if (addresses.Length != 0)
-                {
-                    return addresses[0];
-                }
+                Console.WriteLine(ex.Message);
             }
-            return request.ServerVariables["REMOTE_ADDR"];
-        }
-
-        private static string GetContextDetail(HttpRequestBase request, SecurityUser user)
-        {
-            var result = new StringBuilder("\r\n");
-            if (user != null) result.AppendFormat("User: '{0}'; Groups: '{1}'; Windows User: '{2}'\r\n", user.Name, user.SecurityGroupsDisplay, WindowsIdentity.GetCurrent().Name);
-            if (request != null)
-            {
-                result.AppendFormat("URL: '{0}'\r\n", request.Url.OriginalString);
-                if (request.RequestContext != null && request.RequestContext.HttpContext != null) result.AppendFormat("Session: '{0}'\r\n", request.RequestContext.HttpContext.Session.SessionID);
-                result.AppendFormat("IP: '{0}'\r\n", GetIPAddress(request));
-                if (request.Form.Count > 0) foreach (string key in request.Form.Keys) result.AppendFormat("{0}={1}\r\n", key, key.ToLower() == "password" ? "********" : request.Form[key]);
-                if (request.QueryString.Count > 0) foreach (string key in request.QueryString.Keys) result.AppendFormat("{0}={1}\r\n", key, key.ToLower() == "password" ? "********" : request.QueryString[key]);
-            }
-            return result.ToString();
-        }
-
-        public static void WriteWebException(Exception ex, HttpRequestBase request, SecurityUser user)
-        {
-            var currentEx = ex;
-            var message = new StringBuilder("Unexpected error:\r\n");
-            try
-            {
-                while (currentEx != null)
-                {
-                    message.AppendFormat("\r\n{0}\r\n({1})\r\n", currentEx.Message, currentEx.StackTrace);
-                    currentEx = currentEx.InnerException;
-                }
-                message.Append(GetContextDetail(request, user));
-            }
-            catch { }
-            WriteLogEntry("Seal Web Server", EventLogEntryType.Error, message.ToString());
-        }
-
-        public static void WriteLogEntryWeb(EventLogEntryType type, string message, params object[] args)
-        {
-            WriteLogEntry("Seal Web Server", type, message, args);
-        }
-
-        public static void WriteLogEntryWeb(EventLogEntryType type, HttpRequestBase request, SecurityUser user, string message, params object[] args)
-        {
-            WriteLogEntry("Seal Web Server", type, message + GetContextDetail(request, user), args);
-        }
-
-        public static void WriteLogEntryWebDebug(HttpRequestBase request, SecurityUser user, string message)
-        {
-            WriteLogEntry("Seal Web Server", EventLogEntryType.Information, message + GetContextDetail(request, user));
         }
 
         public static void WriteLogEntryScheduler(EventLogEntryType type, string message, params object[] args)
@@ -579,48 +538,6 @@ namespace Seal.Helpers
             return (major >= 6);
         }
 
-        static bool _checkTaskSchedulerOSDone = false;
-        public static bool CheckTaskSchedulerOS()
-        {
-            if (!IsValidOS() && !_checkTaskSchedulerOSDone)
-            {
-                if (MessageBox.Show("The Task Scheduler works only with Windows Vista, 7, 2008 or above...\r\nDo you want to continue ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
-                {
-                    return false;
-                }
-                _checkTaskSchedulerOSDone = true;
-            }
-            return true;
-        }
-
-        static bool _checkWebServerOSDone = false;
-        public static bool CheckWebServerOS()
-        {
-            if (!IsValidOS() && !_checkWebServerOSDone)
-            {
-                if (MessageBox.Show("The Web Server works only with Windows Vista, 7, 2008 or above...\r\nDo you want to continue ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
-                {
-                    return false;
-                }
-                _checkWebServerOSDone = true;
-            }
-            return true;
-        }
-
-        static bool _checkOleDBDone = false;
-        public static bool CheckOLEDBOS()
-        {
-            if (!IsValidOS() && !_checkOleDBDone)
-            {
-                if (MessageBox.Show("The OLEDB Data Link Editor works only with Windows Vista, 7, 2008 or above...\r\nDo you want to continue ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
-                {
-                    return false;
-                }
-                _checkOleDBDone = true;
-                return false;
-            }
-            return true;
-        }
 
         public static void DisplayDataTable(DataTable table)
         {
@@ -646,9 +563,17 @@ namespace Seal.Helpers
                 command.CommandText = sql;
                 adapter = new OdbcDataAdapter(command);
             }
+            else if (connection is SqlConnection)
+            {
+                SqlCommand command = ((SqlConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
+                command.CommandText = sql;
+                adapter = new SqlDataAdapter(command);
+            }
             else
             {
                 OleDbCommand command = ((OleDbConnection)connection).CreateCommand();
+                command.CommandTimeout = 0;
                 command.CommandText = sql;
                 adapter = new OleDbDataAdapter(command);
             }
@@ -680,7 +605,7 @@ namespace Seal.Helpers
         public static DbConnection DbConnectionFromConnectionString(string connectionString)
         {
             DbConnection connection = null;
-            OleDbConnectionStringBuilder builder = new System.Data.OleDb.OleDbConnectionStringBuilder(connectionString);
+            OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connectionString);
             string provider = builder["Provider"].ToString();
             if (provider.StartsWith("MSDASQL"))
             {
@@ -707,7 +632,7 @@ namespace Seal.Helpers
 
         public static int CalculateHash(string str)
         {
-            return str.GetHashCode();
+            return str == null ? 0 : str.GetHashCode();
         }
 
 
@@ -829,6 +754,7 @@ namespace Seal.Helpers
             return result;
         }
 
+  #if !NETCOREAPP
         public static void RunInAnotherAppDomain(string assemblyFile, string[] args)
         {
             // RazorEngine cannot clean up from the default appdomain...
@@ -846,6 +772,15 @@ namespace Seal.Helpers
             domain.ExecuteAssembly(assemblyFile, args);
             // RazorEngine will cleanup. 
             AppDomain.Unload(domain);
+        }
+#endif
+
+        public static string GetApplicationDirectory()
+        {
+            var assembly = Assembly.GetEntryAssembly();
+            if (assembly == null) assembly = Assembly.GetCallingAssembly();
+            if (assembly == null) assembly = new StackTrace().GetFrames().Last().GetMethod().Module.Assembly;
+            return Path.GetDirectoryName(assembly.Location);
         }
     }
 }

@@ -1,0 +1,192 @@
+﻿/* light buttons */
+.lighticon-menu .lightbutton {
+    display: inline-block;
+    text-align: center;
+    background: #f2f2f2;
+    padding: .4rem 0 .5rem .1rem;
+}
+
+.lightbutton {
+    line-height: 1.25; /* default: 1.5 */
+    cursor: pointer;
+    padding: 0 1px;
+    margin: 0;
+    min-width: 40px;
+    /*color: see theme*/
+}
+
+a {
+    cursor: pointer;
+}
+
+.lightbutton:hover {
+    /*color: see theme*/
+}
+
+.lightbutton.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.lightbutton-icon {
+    font-size: 1.2em;
+}
+
+/* Reduce lightbutton text size */
+.lightbutton-text {
+    font-size: 0.82em;
+}
+
+/* bootstrap override */
+
+.report-name, .output-name {
+    color: #000 !important;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.bootstrap-select2 {
+    width: 100% !important;
+}
+
+#file-table-view > div > .row {
+    margin-right: 0px !important; /* avoid overflow on datatable */
+}
+
+#schedule-row > div > .form-group, #schedule-exec > .form-group {
+    margin-bottom: 2px;
+}
+
+
+/* jstree */
+.jstree-wholerow-clicked {
+    background: #d9d9d9 !important;
+}
+
+#elements-tree {
+    background: none !important;
+}
+
+/* Drag panels */
+.drag-panel {
+    padding: 1px !important;
+    margin: 2px 0px !important;
+    background: linear-gradient(#FFF, #d9d9d9);
+    overflow: auto;
+}
+
+.drop-span {
+    margin: 10px;
+    position: absolute;
+    font-style: italic;
+}
+
+
+.over {
+    border: 1px dashed #000;
+    opacity: 0.5;
+    background: #cccccc;
+}
+
+.over2 {
+    opacity: 0.5;
+    background: orange !important;
+}
+
+#wait-dialog {
+    top: 80px;
+    z-index: 100000 !important;
+}
+
+@media (min-width: 768px) {
+    #wait-dialog > .modal-dialog {
+        width: 300px;
+    }
+}
+
+.properties-label {
+    display: inline;
+    padding-top: 8px;
+    width: 35%;
+    float: left;
+}
+
+.properties-value {
+    display: inline;
+    width: 65%;
+    float: left;
+}
+
+#action-tableheader {
+    width: 120px;
+    min-width: 120px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    #action-tableheader {
+        width: 60px;
+        min-width: 60px;
+    }
+}
+
+/* Element buttons */
+.element-btn-group {
+    display: none;
+    width: 100%;
+}
+
+
+.numeric {
+    text-align: right;
+}
+
+/* editor panels */
+.editor-panel {
+    height: 520px;
+}
+
+/* dataTables */
+table.dataTable {
+    margin: 0px !important;
+}
+
+/*dashboards */
+.grid {
+    position: relative;
+}
+
+.item {
+    position: absolute;
+    margin: 5px;
+    z-index: 1;
+    border-width: 2px;
+}
+
+.item.muuri-item-hidden {
+    z-index: 0;
+}
+
+.item.muuri-item-positioning {
+    z-index: 2;
+}
+
+.item.muuri-item-releasing {
+    z-index: 3;
+}
+
+.item.muuri-item-dragging {
+    z-index: 4;
+}
+
+.dashboard-personal {
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* spin speed */
+#refresh-nav-item.fa-spin {
+    animation-duration: 1s;
+}
+
+.not-dotnet-core { display: none !important; }

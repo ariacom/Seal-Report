@@ -93,4 +93,4 @@ _ed.common.js</ScriptFiles><AuditScript>@using System.Data&#xD;
         }&#xD;
     }&#xD;
 }&#xD;
-</Script></CommonScript></CommonScripts><DefaultCulture /><CsvSeparator /><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebApplicationName>/seal</WebApplicationName><WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>
+</Script></CommonScript></CommonScripts><PdfUseClient>true</PdfUseClient><PdfServicePassword>popol</PdfServicePassword><DefaultCulture /><CsvSeparator /><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebApplicationName>/seal</WebApplicationName><WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>

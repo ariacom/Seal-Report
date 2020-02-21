@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -14,6 +14,7 @@ using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Data.Common;
+using System.Data.OleDb;
 
 namespace Seal.Helpers
 {
@@ -248,15 +249,14 @@ namespace Seal.Helpers
         {
             var source = _task.Report.GetReportSource(reportSourceName);
             if (source == null) throw new Exception(string.Format("Invalid report source name: '{0}'", reportSourceName));
-            return LoadTableFromExternalSource(source.Connection.FullConnectionString, sourceSelectStatement, destinationTableName, useAllConnections, sourceCheckSelect, destinationCheckSelect);
+            return LoadTableFromExternalSource(source.Connection, sourceSelectStatement, destinationTableName, useAllConnections, sourceCheckSelect, destinationCheckSelect);
         }
 
-        public bool LoadTableFromExternalSource(string sourceConnectionString, string sourceSelectStatement, string destinationTableName, bool useAllConnections = false, string sourceCheckSelect = "", string destinationCheckSelect = "")
+        public bool LoadTableFromExternalSource(MetaConnection sourceConnection, string sourceSelectStatement, string destinationTableName, bool useAllConnections = false, string sourceCheckSelect = "", string destinationCheckSelect = "")
         {
             bool result = false;
             try
             {
-                string connectionString = _task.Repository.ReplaceRepositoryKeyword(sourceConnectionString);
                 LogMessage("Starting Loading Table using '{0}'", sourceSelectStatement);
                 DataTable table = null;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
@@ -270,13 +270,13 @@ namespace Seal.Helpers
                         doIt = false;
                         try
                         {
-                            DataTable checkTable1 = DatabaseHelper.LoadDataTable(connectionString, sourceCheckSelect);
+                            DataTable checkTable1 = LoadDataTable(sourceConnection, sourceCheckSelect);
                             if (_task.CancelReport) break;
-                            DataTable checkTable2 = DatabaseHelper.LoadDataTable(connection.FullConnectionString, destinationCheckSelect);
+                            DataTable checkTable2 = LoadDataTable(connection, destinationCheckSelect);
                             if (_task.CancelReport) break;
                             if (!DatabaseHelper.AreTablesIdentical(checkTable1, checkTable2)) doIt = true;
                         }
-                        catch 
+                        catch
                         {
                             doIt = true;
                         }
@@ -294,7 +294,7 @@ namespace Seal.Helpers
                             {
                                 if (_task.CancelReport) break;
                                 string sql = string.Format("select * from (select ROW_NUMBER() over (order by {0}) rn, a.* from ({1}) a) b where rn > {2} and rn <= {3}", DatabaseHelper.LoadSortColumn, sourceSelect, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
-                                table = DatabaseHelper.LoadDataTable(connectionString, sql);
+                                table = LoadDataTable(sourceConnection, sql);
                                 if (table.Rows.Count == 0) break;
 
                                 table.TableName = destinationTableName;
@@ -314,7 +314,7 @@ namespace Seal.Helpers
 
                             if (table == null)
                             {
-                                table = DatabaseHelper.LoadDataTable(connectionString, sourceSelect);
+                                table = LoadDataTable(sourceConnection, sourceSelect);
                                 table.TableName = destinationTableName;
                             }
 
@@ -370,21 +370,36 @@ namespace Seal.Helpers
             {
                 if (_task.CancelReport) break;
                 var command = _task.GetDbCommand(connection);
-                command.CommandText = sql;
-                DatabaseHelper.ExecuteCommand(command);
+                try
+                {
+                    command.CommandText = sql;
+                    DatabaseHelper.ExecuteCommand(command);
+                }
+                finally
+                {
+                    command.Connection.Close();
+                }
             }
         }
 
         public object ExecuteScalar(string sql)
         {
+            object result = null;
             var connection = _task.Source.Connections.FirstOrDefault(i => i.GUID == _task.Connection.GUID);
             if (connection != null)
             {
                 var command = _task.GetDbCommand(connection);
-                command.CommandText = sql;
-                return command.ExecuteScalar();
+                try
+                {
+                    command.CommandText = sql;
+                    result = command.ExecuteScalar();
+                }
+                finally
+                {
+                    command.Connection.Close();
+                }
             }
-            return null;
+            return result;
         }
 
         public DataTable LoadDataTable(string sql)
@@ -392,9 +407,33 @@ namespace Seal.Helpers
             var connection = _task.Source.Connections.FirstOrDefault(i => i.GUID == _task.Connection.GUID);
             if (connection != null)
             {
-                return DatabaseHelper.LoadDataTable(connection.FullConnectionString, sql);
+                return LoadDataTable(connection, sql);
             }
             return null;
+        }
+
+        public DataTable LoadDataTable(MetaConnection connection, string sql)
+        {
+            if (connection.IsMSSqlServerConnection)
+                return DatabaseHelper.LoadDataTable(connection.FullMSSqlServerConnectionString, sql, true);
+            else
+                return DatabaseHelper.LoadDataTable(connection.FullConnectionString, sql);
+        }
+
+        public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)
+        {
+            if (connection.IsMSSqlServerConnection)
+                DatabaseHelper.ExecuteNonQuery(connection.FullMSSqlServerConnectionString, sql, commandsSeparator, true);
+            else
+                DatabaseHelper.ExecuteNonQuery(connection.FullConnectionString, sql, commandsSeparator);
+        }
+
+        public object ExecuteScalar(MetaConnection connection, string sql)
+        {
+            if (connection.IsMSSqlServerConnection)
+                return DatabaseHelper.ExecuteScalar(connection.FullMSSqlServerConnectionString, sql, true);
+            else
+                return DatabaseHelper.ExecuteScalar(connection.FullConnectionString, sql);
         }
 
 
@@ -437,7 +476,14 @@ namespace Seal.Helpers
                 {
                     if (_task.CancelReport) break;
 
-                    SqlConnection conn = new SqlConnection(connection.SQLServerConnectionString);
+                    string connectionString = connection.FullMSSqlServerConnectionString;
+                    if (string.IsNullOrEmpty(connectionString) && !string.IsNullOrEmpty(connection.FullConnectionString))
+                    {
+                        OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connection.FullConnectionString);
+                        connectionString = string.Format("Server={0};Database={1};", builder["Data Source"], builder["Initial Catalog"]);
+                        connectionString += (builder.ContainsKey("User ID") ? string.Format("User Id={0};Password={1};", builder["User ID"], builder["Password"]) : "Trusted_Connection=True;");
+                    }
+                    SqlConnection conn = new SqlConnection(connectionString);
                     try
                     {
                         conn.FireInfoMessageEventOnUserErrors = true;
