@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -29,7 +29,7 @@ namespace Seal.Forms
         {
             // Try with DataConnectionDialog, but unable to select OleDbSource first... we keep MSDASC :-(
             //Update with VS 2017, still no easy/standard way to do it... we keep MSDASC :-(
-            /*    DataConnectionDialog dcd = new DataConnectionDialog();
+            /*   DataConnectionDialog dcd = new DataConnectionDialog();
 
             DataSource.AddStandardDataSources(dcd);
             dcd.SelectedDataSource = DataSource.OdbcDataSource;

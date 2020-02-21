@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Xml.Serialization;
-using Seal.Converter;
 using DynamicTypeDescriptor;
 using Seal.Helpers;
 using System.Drawing.Design;
@@ -199,7 +198,8 @@ namespace Seal.Model
                     SetStandardFormat();
                     UpdateEditorAttributes();
                 }
-                else _numericStandardFormat = value;
+                else
+                    _numericStandardFormat = value;
             }
         }
         public bool ShouldSerializeNumericStandardFormat() { return _numericStandardFormat != NumericStandardFormat.Default; }
@@ -222,7 +222,8 @@ namespace Seal.Model
                     SetStandardFormat();
                     UpdateEditorAttributes();
                 }
-                else _datetimeStandardFormat = value;
+                else
+                    _datetimeStandardFormat = value;
             }
         }
         public bool ShouldSerializeDateTimeStandardFormat() { return _datetimeStandardFormat != DateTimeStandardFormat.Default; }
@@ -533,7 +534,7 @@ namespace Seal.Model
         /// <summary>
         /// Last information message ther column has been checked
         /// </summary>
-        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message ther column has been checked."), Id(5, 10)]
+        [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message after the column has been checked."), Id(5, 10)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
         public string Information { get; set; }
 

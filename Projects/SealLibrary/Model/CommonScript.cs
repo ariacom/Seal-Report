@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using DynamicTypeDescriptor;
@@ -30,7 +30,7 @@ namespace Seal.Model
                 {
                     foreach (var cell in line) 
                     {
-                        if (cell.Element != null && cell.Element.IsNumeric && cell.DoubleValue< 0) {
+                        if (cell.Element != null && cell.Element.IsNumeric && cell.DoubleValue < 0) {
                             cell.FinalCssStyle = ""font-weight:bold;color:red;"";
                         }
                     }

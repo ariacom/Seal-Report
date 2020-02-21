@@ -1,9 +1,9 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using DynamicTypeDescriptor;
-using Seal.Converter;
+using Seal.Forms;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
@@ -43,7 +43,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("\tPath"), Description("The folder path containing the reports to publish. The path is relative to the repository 'Reports' folder and should be unique in the security group."), Id(1, 1)]
         [TypeConverter(typeof(RepositoryFolderConverter))]
         [DefaultValue("\\")]
-        public string Path { get; set; } = "\\";
+        public string Path { get; set; } = System.IO.Path.DirectorySeparatorChar.ToString();
 
         bool _useSubFolders = true;
         /// <summary>

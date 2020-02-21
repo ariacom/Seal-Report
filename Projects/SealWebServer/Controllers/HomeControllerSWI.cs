@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -23,7 +23,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWILogin(string user, string password, string token)
         {
-            WriteDebug("SWILogin");
+            writeDebug("SWILogin");
 
             try
             {
@@ -35,7 +35,7 @@ namespace SealWebServer.Controllers
                     WebUser.WebUserName = user;
                     WebUser.WebPassword = password;
                     WebUser.Token = token;
-                    WebUser.Request = Request;
+                    WebUser.Request = Request; //!NETCore
                     Authenticate();
 
                     if (!WebUser.IsAuthenticated) throw new Exception(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
@@ -45,11 +45,11 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(AuditType.Login, WebUser, null, null);
 
                 //Set culture from cookie
-                string culture = GetCookie(SealCultureCookieName);
+                string culture = getCookie(SealCultureCookieName);
                 if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
 
                 //Set default view
-                string view = GetCookie(SealLastViewCookieName);
+                string view = getCookie(SealLastViewCookieName);
                 if (string.IsNullOrEmpty(view)) view = "reports";
                 //Check rights
                 if (WebUser.ViewType == Seal.Model.ViewType.Reports && view == "dashboards") view = "reports";
@@ -64,8 +64,8 @@ namespace SealWebServer.Controllers
                     name = WebUser.Name,
                     group = WebUser.SecurityGroupsDisplay,
                     culture = Repository.CultureInfo.EnglishName,
-                    folder = GetCookie(SealLastFolderCookieName),
-                    dashboard = GetCookie(SealLastDashboardCookieName),
+                    folder = getCookie(SealLastFolderCookieName),
+                    dashboard = getCookie(SealLastDashboardCookieName),
                     viewtype = WebUser.ViewType,
                     lastview = view,
                     dashboardfolders = WebUser.DashboardFolders.ToArray(),
@@ -100,7 +100,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetRootFolders()
         {
-            WriteDebug("SWIGetRootFolders");
+            writeDebug("SWIGetRootFolders");
             try
             {
                 checkSWIAuthentication();
@@ -113,7 +113,7 @@ namespace SealWebServer.Controllers
                     result.Add(personalFolder);
                 }
                 //Report
-                var folder = getFolder("\\");
+                var folder = getFolder(Path.DirectorySeparatorChar.ToString());
                 fillFolder(folder);
                 if (WebUser.ShowAllFolders)
                 {
@@ -138,7 +138,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetFolders(string path)
         {
-            WriteDebug("SWIGetFolders");
+            writeDebug("SWIGetFolders");
             try
             {
                 checkSWIAuthentication();
@@ -160,7 +160,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetFolderDetail(string path)
         {
-            WriteDebug("SWIGetFolderDetail");
+            writeDebug("SWIGetFolderDetail");
             try
             {
                 SWIFolder folder = getFolder(path);
@@ -183,7 +183,7 @@ namespace SealWebServer.Controllers
                         });
                     }
                 }
-                SetCookie(SealLastFolderCookieName, path);
+                setCookie(SealLastFolderCookieName, path);
 
                 return Json(new SWIFolderDetail() { folder = folder, files = files.ToArray() });
             }
@@ -199,7 +199,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWISearch(string path, string pattern)
         {
-            WriteDebug("SWISearch");
+            writeDebug("SWISearch");
             try
             {
                 SWIFolder folder = getFolder(path);
@@ -220,7 +220,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIDeleteFolder(string path)
         {
-            WriteDebug("SWIDeleteFolder");
+            writeDebug("SWIDeleteFolder");
             try
             {
                 SWIFolder folder = getFolder(path);
@@ -240,7 +240,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWICreateFolder(string path)
         {
-            WriteDebug("SWICreateFolder");
+            writeDebug("SWICreateFolder");
             try
             {
                 SWIFolder folder = getFolder(path);
@@ -260,7 +260,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIRenameFolder(string source, string destination)
         {
-            WriteDebug("SWIRenameFolder");
+            writeDebug("SWIRenameFolder");
             try
             {
                 SWIFolder folderSource = getFolder(source);
@@ -281,7 +281,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetReportDetail(string path)
         {
-            WriteDebug("SWIGetReportDetail");
+            writeDebug("SWIGetReportDetail");
             try
             {
                 SWIFolder folder = getParentFolder(path);
@@ -311,7 +311,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIDeleteFiles(string paths)
         {
-            WriteDebug("SWIDeleteFiles");
+            writeDebug("SWIDeleteFiles");
             try
             {
                 checkSWIAuthentication();
@@ -350,7 +350,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIMoveFile(string source, string destination, bool copy)
         {
-            WriteDebug("SWIMoveFile");
+            writeDebug("SWIMoveFile");
             try
             {
                 SWIFolder folderSource = getParentFolder(source);
@@ -393,7 +393,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWExecuteReportToResult(string path, string viewGUID, string outputGUID, string format)
         {
-            WriteDebug("SWExecuteReportToResult");
+            writeDebug("SWExecuteReportToResult");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -442,7 +442,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWExecuteReport(string path, bool? render, string viewGUID, string outputGUID)
         {
-            WriteDebug("SWExecuteReport");
+            writeDebug("SWExecuteReport");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -475,7 +475,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWViewFile(string path)
         {
-            WriteDebug("SWViewFile");
+            writeDebug("SWViewFile");
             try
             {
                 if (!CheckAuthentication()) return Content(_loginContent);
@@ -497,7 +497,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWILogout()
         {
-            WriteDebug("SWILogout");
+            writeDebug("SWILogout");
 
             //Audit
             Audit.LogAudit(AuditType.Logout, WebUser, null, null);
@@ -519,7 +519,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWISetUserProfile(string culture, string defaultView)
         {
-            WriteDebug("SWISetUserProfile");
+            writeDebug("SWISetUserProfile");
             try
             {
                 checkSWIAuthentication();
@@ -528,10 +528,10 @@ namespace SealWebServer.Controllers
                 {
                     if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
                     WebUser.ClearCache();
-                    SetCookie(SealCultureCookieName, culture);
+                    setCookie(SealCultureCookieName, culture);
                 }
 
-                if (!string.IsNullOrEmpty(defaultView)) SetCookie(SealLastViewCookieName, defaultView);
+                if (!string.IsNullOrEmpty(defaultView)) setCookie(SealLastViewCookieName, defaultView);
 
                 return Json(new { });
             }
@@ -547,7 +547,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetUserProfile()
         {
-            WriteDebug("SWIGetUserProfile");
+            writeDebug("SWIGetUserProfile");
             try
             {
                 if (WebUser == null || !WebUser.IsAuthenticated) return Json(new { authenticated = false });
@@ -592,7 +592,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetCultures()
         {
-            WriteDebug("SWIGetCultures");
+            writeDebug("SWIGetCultures");
             try
             {
                 checkSWIAuthentication();
@@ -610,7 +610,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWITranslate(string context, string instance, string reference)
         {
-            WriteDebug("SWITranslate");
+            writeDebug("SWITranslate");
             try
             {
                 checkSWIAuthentication();
@@ -629,7 +629,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetVersions()
         {
-            WriteDebug("SWIGetVersions");
+            writeDebug("SWIGetVersions");
             try
             {
                 return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion, Info = Info });
@@ -661,7 +661,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetUserDashboards()
         {
-            WriteDebug("SWIGetUserDashboards");
+            writeDebug("SWIGetUserDashboards");
             try
             {
                 checkSWIAuthentication();
@@ -677,7 +677,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetDashboards()
         {
-            WriteDebug("SWIGetDashboards");
+            writeDebug("SWIGetDashboards");
             try
             {
                 checkSWIAuthentication();
@@ -694,7 +694,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetDashboardItems(string guid)
         {
-            WriteDebug("SWIGetDashboardItems");
+            writeDebug("SWIGetDashboardItems");
             try
             {
                 checkSWIAuthentication();
@@ -715,7 +715,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetDashboardItem(string guid, string itemguid)
         {
-            WriteDebug("SWIGetDashboardItems");
+            writeDebug("SWIGetDashboardItems");
             try
             {
                 checkSWIAuthentication();
@@ -740,11 +740,11 @@ namespace SealWebServer.Controllers
         {
             get
             {
-                List<ReportExecution> result = (List<ReportExecution>)Session[SessionDashboardExecutions];
+                List<ReportExecution> result = (List<ReportExecution>)getSessionValue(SessionDashboardExecutions);
                 if (result == null)
                 {
                     result = new List<ReportExecution>();
-                    Session[SessionDashboardExecutions] = result;
+                    setSessionValue(SessionDashboardExecutions,result);
                 }
                 return result;
             }
@@ -753,7 +753,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIAddDashboard(string[] guids)
         {
-            WriteDebug("SWIAddDashboard");
+            writeDebug("SWIAddDashboard");
             try
             {
                 checkSWIAuthentication();
@@ -776,7 +776,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIRemoveDashboard(string guid)
         {
-            WriteDebug("SWIRemoveDashboard");
+            writeDebug("SWIRemoveDashboard");
             try
             {
                 checkSWIAuthentication();
@@ -799,7 +799,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWISwapDashboardOrder(string guid1, string guid2)
         {
-            WriteDebug("SWISwapDashboardOrder");
+            writeDebug("SWISwapDashboardOrder");
             try
             {
                 checkSWIAuthentication();
@@ -830,11 +830,11 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWISetLastDashboard(string guid)
         {
-            WriteDebug("SWISetLastDashboard");
+            writeDebug("SWISetLastDashboard");
             try
             {
                 checkSWIAuthentication();
-                SetCookie(SealLastDashboardCookieName, guid);
+                setCookie(SealLastDashboardCookieName, guid);
                 return Json(new object { });
 
             }
@@ -847,7 +847,7 @@ namespace SealWebServer.Controllers
         [HttpPost]
         public ActionResult SWIGetDashboardResult(string guid, string itemguid, bool force)
         {
-            WriteDebug("SWIGetDashboardResult");
+            writeDebug("SWIGetDashboardResult");
             try
             {
                 checkSWIAuthentication();
@@ -954,7 +954,7 @@ namespace SealWebServer.Controllers
                 }
                 if (report.HasErrors)
                 {
-                    Helper.WriteWebException(new Exception(report.FilePath + ":\r\n" + report.ExecutionErrors), Request, WebUser);
+                    WebHelper.WriteWebException(new Exception(report.FilePath + ":\r\n" + report.ExecutionErrors), getContextDetail(Request, WebUser));
                     throw new Exception("Error: the widget has errors");
                 }
                 //Reset pointers and parse
@@ -989,7 +989,7 @@ namespace SealWebServer.Controllers
                     path = !string.IsNullOrEmpty(widget.ExecViewGUID) ? widget.ReportPath : "",
                     viewGUID = widget.ExecViewGUID,
                     lastexec = Translate("Last execution at") + " " + report.ExecutionEndDate.ToString("G", Repository.CultureInfo),
-                    description = Repository.TranslateWidgetDescription(widget.ReportPath.Replace(Repository.ReportsFolder, "\\"), widget.Description),
+                    description = Repository.TranslateWidgetDescription(widget.ReportPath.Replace(Repository.ReportsFolder, Path.DirectorySeparatorChar.ToString()), widget.Description),
                     dynamic = item.Dynamic,
                     content = content,
                     refresh = (item.Refresh == -1 ? report.ExecutionView.GetNumericValue("refresh_rate") : item.Refresh)

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -14,8 +14,8 @@ using DynamicTypeDescriptor;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
 using Seal.Helpers;
-using Seal.Converter;
 using Seal.Forms;
+using System.IO;
 
 namespace Seal.Model
 {
@@ -217,7 +217,8 @@ namespace Seal.Model
                     SetStandardFormat();
                     UpdateEditorAttributes();
                 }
-                else _datetimeStandardFormat = value;
+                else
+                    _datetimeStandardFormat = value;
             }
         }
 
@@ -238,7 +239,8 @@ namespace Seal.Model
                     SetStandardFormat();
                     UpdateEditorAttributes();
                 }
-                else _numericStandardFormat = value;
+                else
+                    _numericStandardFormat = value;
             }
         }
 
@@ -1255,7 +1257,7 @@ namespace Seal.Model
                         for (int i = 0; i < value2.Length; i++)
                         {
                             string unicode = BitConverter.ToString(Encoding.Unicode.GetBytes(value2[i].ToString())).Replace("-", "");
-                            result += "\\" + unicode.Substring(2, 2) + unicode.Substring(0, 2);
+                            result += Path.DirectorySeparatorChar.ToString() + unicode.Substring(2, 2) + unicode.Substring(0, 2);
                         }
                         result = "UNISTR(" + Helper.QuoteSingle(result) + ")";
                     }

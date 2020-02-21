@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -22,7 +22,10 @@ namespace Seal.Helpers
                     {
                         Directory.CreateDirectory(result);
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
                 return result;
             }
@@ -40,7 +43,10 @@ namespace Seal.Helpers
                     if (Directory.GetLastWriteTime(dir).AddMinutes(120) < DateTime.Now)
                     Directory.Delete(dir, true);
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
 
@@ -57,11 +63,17 @@ namespace Seal.Helpers
                         {
                             File.Delete(file);
                         }
-                        catch { };
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
                 }
             }
-            catch { };
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public static string CleanFilePath(string filePath)
@@ -161,7 +173,7 @@ namespace Seal.Helpers
             foreach (var folder in Directory.GetDirectories(path))
             {
                 string newFolder = folder.StartsWith(Repository.Instance.ReportsFolder) ? folder.Substring(Repository.Instance.ReportsFolder.Length) : folder;
-                if (string.IsNullOrEmpty(newFolder)) newFolder = "\\";
+                if (string.IsNullOrEmpty(newFolder)) newFolder = Path.DirectorySeparatorChar.ToString();
                 choices.Add(prefix + newFolder);
                 AddFolderChoices(folder, prefix, choices);
             }
@@ -176,6 +188,11 @@ namespace Seal.Helpers
                 choices.Add(newFolder);
                 AddPersonalFolderChoices(folder, choices);
             }
+        }
+
+        public static string ConvertOSFilePath(string filePath)
+        {
+            return filePath.Replace('\\', Path.DirectorySeparatorChar);
         }
 
         #region Seal Attachments

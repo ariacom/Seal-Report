@@ -1,12 +1,11 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.ComponentModel;
-using Seal.Converter;
 using System.Drawing.Design;
 using DynamicTypeDescriptor;
 using System.IO;
@@ -66,6 +65,12 @@ namespace Seal.Model
                 GetProperty("CssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
 
+                GetProperty("PdfServer").SetIsBrowsable(!ForPublication);
+                GetProperty("PdfServerPort").SetIsBrowsable(!ForPublication);
+                GetProperty("PdfUseClient").SetIsBrowsable(!ForPublication);
+                GetProperty("PdfServicePassword").SetIsBrowsable(!ForPublication);
+                GetProperty("PdfWebServiceURL").SetIsBrowsable(!ForPublication);
+                GetProperty("PdfUseWebService").SetIsBrowsable(!ForPublication);
                 GetProperty("ExcelConverter").SetIsBrowsable(!ForPublication);
                 GetProperty("PdfConverter").SetIsBrowsable(!ForPublication);
                 GetProperty("HelperResetPDFConfigurations").SetIsBrowsable(!ForPublication);
@@ -235,6 +240,55 @@ namespace Seal.Model
             return key;
         }
 
+
+        /// <summary>
+        /// If true, the client library is used to perform the HTML to PDF conversion (mainly useful for .NETCore distribution). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
+        /// </summary>
+        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for .NETCore or Azure). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services."), Category("PDF Converter: Client Library"), Id(1, 5)]
+        [DefaultValue(false)]
+        public bool PdfUseClient { get; set; } = false;
+        public bool ShouldSerializeUsePdfClient() { return PdfUseClient; }
+
+        /// <summary>
+        /// If the client library is used, the HTML to PDF server IP or name.
+        /// </summary>
+        [DisplayName("PDF Server"), Description("If the client library is used, the HTML to PDF server IP or name."), Category("PDF Converter: Client Library"), Id(2, 5)]
+        [DefaultValue("127.0.0.1")]
+        public string PdfServer { get; set; } = "127.0.0.1";
+        public bool ShouldSerializePdfServer() { return PdfServer != "127.0.0.1"; }
+
+        /// <summary>
+        /// If the client library is used, the HTML to PDF server IP or name.
+        /// </summary>
+        [DisplayName("PDF Server Port"), Description("If the client library is used, the HTML to PDF server port number."), Category("PDF Converter: Client Library"), Id(3, 5)]
+        [DefaultValue(45001)]
+        public uint PdfServerPort { get; set; } = 45001;
+        public bool ShouldSerializePdfServerPort() { return PdfServerPort != 45001; }
+
+        /// <summary>
+        /// If the client library is used, optional HTML to PDF converter service password.
+        /// </summary>
+        [DisplayName("PDF Service Password"), Description("If the client library is used, optional HTML to PDF converter service password."), Category("PDF Converter: Client Library"), Id(4, 5)]
+        [DefaultValue(false)]
+        public string PdfServicePassword { get; set; } = "";
+        public bool ShouldSerializePdfServicePassword() { return !string.IsNullOrEmpty(PdfServicePassword); }
+
+        /// <summary>
+        /// If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion.
+        /// </summary>
+        [DisplayName("Use PDF Web Service"), Description("If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion."), Category("PDF Converter: Client Library"), Id(5, 5)]
+        [DefaultValue(false)]
+        public bool PdfUseWebService { get; set; } = false;
+        public bool ShouldSerializePdfUseWebService() { return PdfUseWebService; }
+
+        /// <summary>
+        /// If the client library is used, the HTML to PDF web service URL.
+        /// </summary>
+        [DisplayName("PDF Web Service URL"), Description("If the client library is used, the HTML to PDF web service URL."), Category("PDF Converter: Client Library"), Id(6, 5)]
+        [DefaultValue(false)]
+        public string PdfWebServiceURL { get; set; } = "";
+        public bool ShouldSerializePdfWebServiceURL() { return !string.IsNullOrEmpty(PdfWebServiceURL); }
+
         /// <summary>
         /// Current default configuration values for Pdf converter
         /// </summary>
@@ -247,7 +301,7 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Default PDF Configuration"), Description("All the default options applied to the PDF conversion from the HTML result."), Category("PDF and Excel Converter"), Id(1, 4)]
+        [DisplayName("Default PDF Configuration"), Description("All the default options applied to the PDF conversion from the HTML result."), Category("PDF and Excel Converter Configuration"), Id(1, 4)]
         public SealPdfConverter PdfConverter
         {
             get
@@ -283,7 +337,7 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Default Excel Configuration"), Description("All the default options applied to the Excel conversion from the view."), Category("PDF and Excel Converter"), Id(2, 4)]
+        [DisplayName("Default Excel Configuration"), Description("All the default options applied to the Excel conversion from the view."), Category("PDF and Excel Converter Configuration"), Id(2, 4)]
         public SealExcelConverter ExcelConverter
         {
             get
@@ -310,7 +364,7 @@ namespace Seal.Model
         /// <summary>
         /// Editor Helper: Reset PDF configuration values to their default values
         /// </summary>
-        [Category("PDF and Excel Converter"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(3, 4)]
+        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(9, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetPDFConfigurations
         {
@@ -320,7 +374,7 @@ namespace Seal.Model
         /// <summary>
         /// Editor Helper: Reset Excel configuration values to their default values
         /// </summary>
-        [Category("PDF and Excel Converter"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(4, 4)]
+        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(10, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetExcelConfigurations
         {
@@ -355,7 +409,7 @@ namespace Seal.Model
         /// The name of the culture used when a report is created. If not specified, the current culture of the server is used.
         /// </summary>
         [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used when a report is created. If not specified, the current culture of the server is used."), Id(1, 2)]
-        [TypeConverter(typeof(Converter.CultureInfoConverter))]
+        [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
         public string DefaultCulture { get; set; } = "";
 
         /// <summary>
@@ -477,8 +531,7 @@ namespace Seal.Model
             {
                 ExcelConfigurations = ExcelConverter.GetConfigurations();
             }
-
-#if !DEBUG
+#if !DEBUG && !NETCOREAPP
             //Set installation path, used by, to define schedules
             if (Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealServerManager.ToLower() || Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealReportDesigner.ToLower())
             {

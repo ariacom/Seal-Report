@@ -1,13 +1,14 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System.Collections.Generic;
 using System.ComponentModel;
 using Seal.Model;
 using Seal.Helpers;
+using System.IO;
 
-namespace Seal.Converter
+namespace Seal.Forms
 {
     public class RepositoryFolderConverter : StringConverter
     {
@@ -26,8 +27,8 @@ namespace Seal.Converter
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
             List<string> choices = new List<string>();
-            string prefix = (context.Instance is ReportOutput ? Repository.SealRepositoryKeyword + "\\Reports" : "");
-            choices.Add(prefix + "\\");
+            string prefix = (context.Instance is ReportOutput ? Repository.SealRepositoryKeyword + Path.DirectorySeparatorChar.ToString() + "Reports" : "");
+            choices.Add(prefix + Path.DirectorySeparatorChar);
             FileHelper.AddFolderChoices(Repository.Instance.ReportsFolder, prefix, choices);
 
             return new StandardValuesCollection(choices);

@@ -14,12 +14,12 @@
     <meta charset="utf-8" />
     <link href="~/Images/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
 
-    <link rel="stylesheet" href="~/Content/dataTables.min.css" />
+    <link rel="stylesheet" href="~/Content/datatables.min.css" />
     <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
     <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
     <link rel='stylesheet' href='~/Content/bootstrap-datetimepicker.min.css' />
-    <link rel="stylesheet" href="~/Content/SealWeb.css" />
+    <link rel="stylesheet" href="~/Content/sealweb.css" />
     <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.CssFiles))
     {
@@ -261,7 +261,7 @@
         </div>
     </div>
 
-    <script src="~/Scripts/dataTables.min.js"></script>
+    <script src="~/Scripts/datatables.min.js"></script>
     <script src="~/Scripts/jstree.min.js"></script>
     <script src="~/Scripts/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
@@ -303,7 +303,7 @@
 
     <script type="text/javascript">
         //server
-        var WebApplicationName = '@HomeController.GetWebUrl(Request, Response)';
+        var WebApplicationName = '@HomeController.GetWebUrl(Context.Request, Context.Response)';
         var urlPrefix = WebApplicationName;
         var inReport = false;
 
@@ -312,6 +312,7 @@
         var decimalSeparator = '@Html.Raw(repository.CultureInfo.NumberFormat.NumberDecimalSeparator)';
         var thousandSeparator = '@Html.Raw(Helper.ToJS(repository.CultureInfo.NumberFormat.NumberGroupSeparator))';
         var currencySymbol = '@Html.Raw(Helper.ToJS(repository.CultureInfo.NumberFormat.CurrencySymbol))';
+        var dirSeparator = '@(System.IO.Path.DirectorySeparatorChar == '\\' ? "\\\\" : System.IO.Path.DirectorySeparatorChar.ToString())';
         //for datepicker
         var languageName = '@repository.CultureInfo.TwoLetterISOLanguageName';
         var shortDateFormat = '@repository.MomentJSShortDateFormat';

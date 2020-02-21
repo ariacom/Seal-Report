@@ -1,7 +1,9 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using System.IO;
+
 namespace Seal.Model
 {
     /// <summary>
@@ -50,7 +52,7 @@ namespace Seal.Model
             get { return path.StartsWith(PersonalPrefix); }
         }
 
-        public string Path
+        public string FinalPath
         {
             get { return path.StartsWith(PersonalPrefix) ? path.Substring(1) : path; }
         }
@@ -68,7 +70,7 @@ namespace Seal.Model
 
         public string Combine(string newName)
         {
-            return path + (path.EndsWith("\\") ? "" : "\\") + System.IO.Path.GetFileName(newName);
+            return path + (path.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString()) + System.IO.Path.GetFileName(newName);
         }
 
         //Physical path

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -149,7 +149,7 @@ namespace Seal.Model
             set
             {
                 _dynamicColumns = value;
-                UpdateEditorAttributes();
+                UpdateEditorAttributes();  //!NETCore
             }
         }
         public bool ShouldSerializeDynamicColumns() { return _dynamicColumns; }
@@ -492,7 +492,7 @@ namespace Seal.Model
                 Information = "Error got when refreshing dynamic columns.";
             }
             Information = Helper.FormatMessage(Information);
-            UpdateEditorAttributes();
+            UpdateEditorAttributes();  //!NETCore
         }
 
         /// <summary>
@@ -542,7 +542,7 @@ namespace Seal.Model
                 Information = "Error got when sorting columns.";
             }
             Information = Helper.FormatMessage(Information);
-            UpdateEditorAttributes();
+            UpdateEditorAttributes();  //!NETCore
         }
 
         /// <summary>
@@ -619,7 +619,7 @@ namespace Seal.Model
                 Information = "Error got when checking the table.";
             }
             Information = Helper.FormatMessage(Information);
-            UpdateEditorAttributes();
+            UpdateEditorAttributes();  //!NETCore
         }
 
         /// <summary>

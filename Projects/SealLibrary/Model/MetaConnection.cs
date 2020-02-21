@@ -1,23 +1,18 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.Drawing.Design;
-using Seal.Converter;
 using Seal.Forms;
 using System.Xml.Serialization;
 using DynamicTypeDescriptor;
-using System.Data.OleDb;
-using System.Data.Odbc;
 using Seal.Helpers;
 using System.Windows.Forms;
 using System.Data.Common;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace Seal.Model
 {
@@ -32,9 +27,9 @@ namespace Seal.Model
         [XmlIgnore]
         public MetaSource Source = null;
 
-        #region Editor
-
         static string PasswordKey = "1awéàèüwienyjhdl+256()$$";
+
+        #region Editor
 
         protected override void UpdateEditorAttributes()
         {
@@ -48,6 +43,8 @@ namespace Seal.Model
                 GetProperty("DateTimeFormat").SetIsBrowsable(true);
                 if (IsEditable) GetProperty("ConnectionString").SetIsBrowsable(true);
                 else GetProperty("ConnectionString2").SetIsBrowsable(true);
+
+                GetProperty("MSSqlServerConnectionString").SetIsBrowsable(true);
                 GetProperty("UserName").SetIsBrowsable(true);
                 if (IsEditable) GetProperty("ClearPassword").SetIsBrowsable(true);
 
@@ -63,12 +60,13 @@ namespace Seal.Model
                 GetProperty("Error").SetIsReadOnly(true);
                 GetProperty("HelperCheckConnection").SetIsReadOnly(true);
 
+                GetProperty("MSSqlServerConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("DateTimeFormat").SetIsReadOnly(!IsEditable || DatabaseType == DatabaseType.MSAccess || DatabaseType == DatabaseType.MSExcel);
 
                 TypeDescriptor.Refresh(this);
             }
         }
-#endregion
+        #endregion
 
         /// <summary>
         /// Create a basic connection into a source
@@ -101,10 +99,9 @@ namespace Seal.Model
         /// OLEDB Connection string used to connect to the database
         /// </summary>
         [DefaultValue(null)]
-        [DisplayName("Connection string"), Description("OLEDB Connection string used to connect to the database. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(3, 1)]
+        [DisplayName("OLE DB Connection string"), Description("OLE DB Connection string used to connect to the database. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Definition"), Id(3, 1)]
         [Editor(typeof(ConnectionStringEditor), typeof(UITypeEditor))]
         public string ConnectionString { get; set; }
-
 
         /// <summary>
         /// Property Helper for editor
@@ -118,14 +115,22 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// If set and the Database type is 'MS SQLServer', a native MS SQLServer connection is used (SqlConnection object instead of OleDbConnection or OdbcConnection) and the 'OLE DB Connection string' is not used.
+        /// </summary>
+        [DefaultValue(null)]
+        [DisplayName("Sql Server Connection string"), Description("If set and the Database type is 'MS SQLServer', a native MS SQLServer connection is used (SqlConnection object instead of OleDbConnection or OdbcConnection) and the 'OLE DB Connection string' is not used."), Category("Definition"), Id(4, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string MSSqlServerConnectionString { get; set; }
+
+        /// <summary>
         /// The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates).
         /// </summary>
         [DefaultValue("yyyy-MM-dd HH:mm:ss")]
-        [DisplayName("Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(4, 1)]
+        [DisplayName("Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(5, 1)]
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
 
         /// <summary>
-        /// Full Connection String with user name and password
+        /// Full OLEdb Connection String with user name and password
         /// </summary>
         [Browsable(false)]
         public string FullConnectionString
@@ -138,18 +143,28 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// SQLServer Connection String
+        /// Full MS SqlServer Connection String with user name and password
         /// </summary>
-        public string SQLServerConnectionString
+        public string FullMSSqlServerConnectionString
         {
             get
             {
-                OleDbConnectionStringBuilder builder = new System.Data.OleDb.OleDbConnectionStringBuilder(FullConnectionString);
-                string result = string.Format("Server={0};Database={1};", builder["Data Source"], builder["Initial Catalog"], builder["User ID"], builder["Password"]);
-                result += (builder.ContainsKey("User ID") ? string.Format("User Id={0};Password={1};", builder["User ID"], builder["Password"]) : "Trusted_Connection=True;");
-                return result;
+                string result = Helper.GetOleDbConnectionString(MSSqlServerConnectionString, UserName, ClearPassword);
+                return Source.Repository.ReplaceRepositoryKeyword(result);
             }
         }
+
+        /// <summary>
+        /// True, if the SqlServer driver will be used intead of the OLEdb driver
+        /// </summary>
+        public bool IsMSSqlServerConnection
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(MSSqlServerConnectionString) && DatabaseType == DatabaseType.MSSQLServer;
+            }
+        }
+
 
         /// <summary>
         /// User name used to connect to the database
@@ -204,12 +219,21 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsEditable = true;
 
+        /// <summary>
+        /// Result for the database connection script
+        /// </summary>
+        [XmlIgnore]
+        public DbConnection DbConnectionResult;
+
         [XmlIgnore]
         private DbConnection DbConnection
         {
             get
             {
-                return Helper.DbConnectionFromConnectionString(FullConnectionString);
+                if (IsMSSqlServerConnection)
+                    return new SqlConnection(FullMSSqlServerConnectionString);
+                else
+                    return Helper.DbConnectionFromConnectionString(FullConnectionString);
             }
         }
 
@@ -230,7 +254,10 @@ namespace Seal.Model
                         command.CommandText = "alter session set nls_date_format='yyyy-mm-dd hh24:mi:ss'";
                         command.ExecuteNonQuery();
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
 
                 return connection;
@@ -241,6 +268,7 @@ namespace Seal.Model
             }
         }
 
+#if !NETCOREAPP
         /// <summary>
         /// Check the current connection
         /// </summary>
@@ -265,8 +293,9 @@ namespace Seal.Model
             UpdateEditorAttributes();
             Cursor.Current = Cursors.Default;
         }
+#endif
 
-#region Helpers
+        #region Helpers
         /// <summary>
         /// Editor Helper: Check the database connection
         /// </summary>
@@ -301,6 +330,6 @@ namespace Seal.Model
         [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
         public string Error { get; set; }
 
-#endregion
+        #endregion
     }
 }

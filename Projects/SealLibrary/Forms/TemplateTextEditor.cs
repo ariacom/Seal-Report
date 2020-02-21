@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -323,7 +323,7 @@ if (cell.DoubleValue < 0)
 }
 ";
 
-        const string razorModelNavigationScriptTemplate = @"@using System.Data
+        const string razorModelCellNavigationScriptTemplate = @"@using System.Data
 @using System.IO
 @{
     NavigationLink link = Model;
@@ -367,7 +367,31 @@ if (cell.DoubleValue < 0)
 }
 ";
 
+        const string razorModelReportNavigationScriptTemplate = @"@using System.IO
+@{
+    NavigationLink link = Model;
+    Report report = link.Report;
 
+    //Script executed for a report navigation...
+    //The report navigation is called from a link got from:
+    //report.GetReportNavigationScriptLink(string text = ""download"", string linkTag = """") to get a custom result (saved in link.ScriptResult)
+    //
+    //report.GetReportNavigationScriptLink(string text = ""html"", string linkTag = """") to get a file to download (final file path saved in link.ScriptResult)
+    
+    if (link.Text == ""download"") {
+        //Sample 1 to return a file from a disk path
+        link.ScriptResult = ""C:\\temp\\aFile.pdf"";
+        //Or in the link tag set in the Cell Script
+        link.ScriptResult = link.Tag;
+    }
+    else if (link.Text == ""html"") {
+        //Sample 2 to return a custom html
+        link.ScriptResult = string.Format(""<b> This is a custom HTML built in the 'Report Navigation Script' from the server at {0}.</b><hr>"", DateTime.Now);
+    }
+
+    //Check a full implementation in the sample report '17-Custom buttons and report navigation'
+}
+";
         const string razorInitScriptTemplate = @"@{
     Report report = Model;
 	ReportExecutionLog log = report;
@@ -558,7 +582,7 @@ if (cell.DoubleValue < 0)
             {
                 foreach (var cell in line) 
                 {
-                    if (cell.Element != null && cell.Element.IsNumeric && cell.DoubleValue< 0) {
+                    if (cell.Element != null && cell.Element.IsNumeric && cell.DoubleValue < 0) {
                         cell.FinalCssStyle = ""font-weight:bold;color:red;"";
                     }
                 }
@@ -847,7 +871,8 @@ if (cell.DoubleValue < 0)
                 ),
         };
 
-        
+
+        const string sqlConnectionString = @"Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;";
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             if (context != null && context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
@@ -955,6 +980,13 @@ if (cell.DoubleValue < 0)
                         frm.Text = "Edit the script executed when the report is initialized";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
+                    else if (context.PropertyDescriptor.Name == "NavigationScript")
+                    {
+                        template = razorModelReportNavigationScriptTemplate;
+                        frm.ObjectForCheckSyntax = new NavigationLink() { Report = (Report)context.Instance };
+                        frm.Text = "Edit the navigation script executed for the report";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
                 }
                 else if (context.Instance is ReportElement)
                 {
@@ -975,8 +1007,8 @@ if (cell.DoubleValue < 0)
                     }
                     else if (context.PropertyDescriptor.Name == "NavigationScript")
                     {
-                        template = razorModelNavigationScriptTemplate;
-                        frm.ObjectForCheckSyntax = new NavigationLink() { Cell = new ResultCell() { Element = element } };
+                        template = razorModelCellNavigationScriptTemplate;
+                        frm.ObjectForCheckSyntax = new NavigationLink() { Cell = new ResultCell() { Element = element }, Report = element.Report };
                         frm.Text = "Edit the navigation script executed for the model";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
@@ -1014,6 +1046,15 @@ if (cell.DoubleValue < 0)
                         frm.Text = "Edit column name";
                         ScintillaHelper.Init(frm.textBox, Lexer.Sql);
                         frm.textBox.WrapMode = WrapMode.Word;
+                    }
+                }
+                else if (context.Instance is MetaConnection)
+                {
+                    if (context.PropertyDescriptor.Name == "MSSqlServerConnectionString")
+                    {
+                        template = sqlConnectionString;
+                        frm.Text = "Edit MS SQLServer Connection script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
                 }
                 else if (context.Instance is SealSecurity)

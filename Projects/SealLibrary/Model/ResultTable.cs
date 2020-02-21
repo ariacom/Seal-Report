@@ -1,8 +1,8 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
-using Seal.Converter;
+using Seal.Forms;
 using Seal.Helpers;
 using System;
 using System.Collections.Generic;
@@ -48,6 +48,11 @@ namespace Seal.Model
         /// </summary>
         public bool InvertDone = false;
 
+        /// <summary>
+        /// Custom Tag the can be used at execution time to store any object
+        /// </summary>
+        public object Tag;
+
         private string _lastSearch = "";
         private List<ResultCell[]> _filteredLines = null;
 
@@ -72,7 +77,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Helper.WriteLogEntryWeb(EventLogEntryType.Error, string.Format("GetLoadTableData-> Error in parameter:{0}\r\n{1}", parameter, ex.Message));
+                Helper.WriteLogEntry("Seal Get Table Data", EventLogEntryType.Error, string.Format("GetLoadTableData-> Error in parameter:{0}\r\n{1}", parameter, ex.Message));
                 echo = 1; len = 50; start = 0;
                 sort = ""; search = "";
             }
@@ -133,7 +138,7 @@ namespace Seal.Model
                         ResultCell cell = line[sortIndex];
                         if (cell.Element != null)
                         {
-                            var ascdesc = (sort.ToLower().Contains("asc") ? SortOrderConverter.kAscendantSortKeyword : SortOrderConverter.kDescendantSortKeyword);
+                            var ascdesc = (sort.ToLower().Contains("asc") ? ReportElement.kAscendantSortKeyword : ReportElement.kDescendantSortKeyword);
                             cell.Element.FinalSortOrder = sortIndex + " " + ascdesc;
                             break;
                         }

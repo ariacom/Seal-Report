@@ -15,6 +15,7 @@ Report;>;;>
 Report;>=;;>=
 Report;A value is required for;;Une valeur est requise pour
 Report;All selected;;Tout est sélectionné
+Report;All;;Tout
 Report;and;;et
 Report;Auto Scroll enabled;;Défilement automatique
 Report;Average of;;Moyenne de
@@ -137,7 +138,6 @@ Report;Pick Second;;Seconde
 Report;Toggle Period;;Changer la période
 Report;Select Time;;Sélectionner l'heure
 Report;Subtotal;;Sous-total
-Web;Actions;;Actions
 Web;Add;;Ajouter
 Web;Add dashboards;;Ajouter des Dashboards
 Web;Add widgets to the dashboard;;Ajouter des Widgets au Dashboard
@@ -216,7 +216,6 @@ Web;Is Multiline;;Multi-lignes
 Web;Is required;;Requis
 Web;Last;;Dernier
 Web;Last execution at;;Dernière exécution à
-Web;Last modification;;Modification
 Web;Licensed to;;Licence pour
 Web;Login;;Connexion
 Web;Logout;;Déconnexion
@@ -297,6 +296,7 @@ WebJS;1 Decimal;;1 Décimale
 WebJS;2 Decimals;;2 Décimales
 WebJS;3 Decimals;;3 Décimales
 WebJS;4 Decimals;;4 Décimales
+WebJS;Actions;;Actions
 WebJS;All selected;;Tout est sélectionné
 WebJS;and;;et
 WebJS;Ascendant;;Ascendant
@@ -375,6 +375,7 @@ WebJS;Is not Null;;N'est pas Null
 WebJS;Is Null;;Est Null
 WebJS;Is smaller or equal than;;Est plus petit ou égal à
 WebJS;Is smaller than;;Est plus petit que
+WebJS;Last modification;;Dernière modification
 WebJS;Line;;Ligne
 WebJS;Long date;;Date longue
 WebJS;Maximum;;Maximum
@@ -439,6 +440,7 @@ WebJS;Remove;;Effacer
 WebJS;Remove the dashboard from your view;;Enlever le Dashboard de la vue
 WebJS;Remove widget from dashboard;;Enlever le Widget du Dashboard
 WebJS;Rename;;Renommer
+WebJS;Report;;Rapport
 WebJS;Reports;;Rapports
 WebJS;Report has been modified, do you really want to close ?;;Le rapport a été modifié, voulez-vous vraiment fermer ?
 WebJS;Report saved;;Rapport sauvegardé

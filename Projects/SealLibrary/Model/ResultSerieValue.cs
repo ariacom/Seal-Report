@@ -1,8 +1,7 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
-using Seal.Converter;
 using System;
 using System.Collections.Generic;
 
@@ -29,7 +28,7 @@ namespace Seal.Model
             {
                 //Then by splitter values descending or ascending
                 var result = string.Compare(sx.SplitterValues, sy.SplitterValues);
-                if (sx.SplitterCells.Length > 0 && sx.SplitterCells[0].Element != null && !sx.SplitterCells[0].Element.SortOrder.Contains(SortOrderConverter.kAscendantSortKeyword))
+                if (sx.SplitterCells.Length > 0 && sx.SplitterCells[0].Element != null && !sx.SplitterCells[0].Element.SortOrder.Contains(ReportElement.kAscendantSortKeyword))
                 {
                     return -1 * result;
                 }
@@ -85,7 +84,7 @@ namespace Seal.Model
             get
             {
                 bool result = true;
-                if (SplitterCells.Length > 0 && SplitterCells[0].Element != null && !SplitterCells[0].Element.SortOrder.Contains(SortOrderConverter.kAscendantSortKeyword))
+                if (SplitterCells.Length > 0 && SplitterCells[0].Element != null && !SplitterCells[0].Element.SortOrder.Contains(ReportElement.kAscendantSortKeyword))
                 {
                     result = false;
                 }

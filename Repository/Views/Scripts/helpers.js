@@ -54,7 +54,7 @@ function showPopupNavMenu(source, content, forChart, executionguid) {
             f.submit();
         }
         else {
-            executeReport(nav, executionguid);
+            executeReport(nav);
         }
         $popup.hide();
     });

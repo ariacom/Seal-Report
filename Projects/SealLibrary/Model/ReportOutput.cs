@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -9,7 +9,6 @@ using System.Xml.Serialization;
 using System.ComponentModel;
 using Seal.Helpers;
 using DynamicTypeDescriptor;
-using Seal.Converter;
 using System.Drawing.Design;
 using Seal.Forms;
 using System.ComponentModel.Design;
@@ -243,7 +242,10 @@ namespace Seal.Model
         public bool EmailHtmlBody
         {
             get { return _emailHtmlBody; }
-            set { _emailHtmlBody = value; UpdateEditorAttributes(); }
+            set { 
+                _emailHtmlBody = value; 
+                UpdateEditorAttributes();
+            }
         }
 
         private bool _emailMessagesInBody = false;
@@ -255,7 +257,10 @@ namespace Seal.Model
         public bool EmailMessagesInBody
         {
             get { return _emailMessagesInBody; }
-            set { _emailMessagesInBody = value; UpdateEditorAttributes(); }
+            set {
+                _emailMessagesInBody = value; 
+                UpdateEditorAttributes();  //!NETCore
+            }
         }
 
         /// <summary>
@@ -274,7 +279,10 @@ namespace Seal.Model
         public bool EmailZipAttachments
         {
             get { return _emailZipAttachments; }
-            set { _emailZipAttachments = value; UpdateEditorAttributes(); }
+            set { 
+                _emailZipAttachments = value; 
+                UpdateEditorAttributes();  //!NETCore
+            }
         }
 
         /// <summary>
@@ -292,7 +300,10 @@ namespace Seal.Model
         public bool EmailSkipAttachments
         {
             get { return _emailSkipAttachments; }
-            set { _emailSkipAttachments = value; UpdateEditorAttributes(); }
+            set { 
+                _emailSkipAttachments = value; 
+                UpdateEditorAttributes();  //!NETCore
+            }
         }
 
         /// <summary>
@@ -312,7 +323,7 @@ namespace Seal.Model
         /// The culture used to generate the report. If empty, the culture from the groups is used, then the default culture.
         /// </summary>
         [Category("Security and Publication"), DisplayName("Culture"), Description("The culture used to generate the report. If empty, the culture from the groups is used, then the default culture."), Id(3, 6)]
-        [TypeConverter(typeof(Converter.CultureInfoConverter))]
+        [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
         public string UserCulture { get; set; }
 
         /// <summary>
@@ -328,6 +339,12 @@ namespace Seal.Model
         [DefaultValue(true)]
         [Category("Security and Publication"), DisplayName("Public Edit"), Description("For the Web Report Server Designer: If true, the output and shedule can be edited by all users having the schedule right on the report. If false, only the user owner can edit the schedule."), Id(4, 6)]
         public bool PublicEdit { get; set; } = true;
+
+        /// <summary>
+        /// Object that can be used at run-time for any purpose
+        /// </summary>
+        [XmlIgnore]
+        public object Tag;
 
         /// <summary>
         /// Format of the output

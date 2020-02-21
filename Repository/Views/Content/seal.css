@@ -59,12 +59,8 @@ body {
         border-width: 0 !important;
     }
 
-    .navbar-toggle, .navbar-nav, #back-to-top {
-        display: none;
-    }
-
-    .navigation_icon {
-        display: none;
+    .navbar-toggle, .navbar-nav, .navigation_icon, #back-to-top, .no-print, .no-print * {
+        display: none !important;
     }
 }
 

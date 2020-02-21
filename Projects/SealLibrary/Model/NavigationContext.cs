@@ -1,10 +1,11 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using Seal.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -209,16 +210,22 @@ namespace Seal.Model
             return new ReportExecution() { NavigationParameter = navigation, Report = newReport, RootReport = rootReport };
         }
 
-        public string NavigateScript(string navigation, Report report)
+        public string NavigateScript(string navigation, Report report, NameValueCollection parameters)
         {
-            var linkGUID = navigation.Replace(NavigationLink.FileDownloadPrefix, "");
+            var linkGUID = navigation.Substring(3);
             var result = "";
             if (report.NavigationLinks.ContainsKey(linkGUID))
             {
                 var link = report.NavigationLinks[linkGUID];
-                if (link.Cell.Element != null)
+                link.Parameters = parameters;
+                if (link.Cell != null && link.Cell.Element != null) //Cell Navigation Script
                 {
                     RazorHelper.CompileExecute(link.Cell.Element.NavigationScript, link);
+                    result = link.ScriptResult;
+                }
+                else if (link.Cell == null && link.Report != null) //Report Navigation Script
+                {
+                    RazorHelper.CompileExecute(link.Report.NavigationScript, link);
                     result = link.ScriptResult;
                 }
             }

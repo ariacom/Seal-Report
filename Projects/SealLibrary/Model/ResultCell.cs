@@ -1,11 +1,10 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Seal.Converter;
 using Seal.Helpers;
 using System.Web;
 using System.Globalization;
@@ -70,14 +69,18 @@ namespace Seal.Model
         public string FinalCssClass = "";
 
         /// <summary>
+        /// Custom Tag the can be used at execution time to store any object
+        /// </summary>
+        public object Tag;
+
+        /// <summary>
         /// HTML value of the cell
         /// </summary>
         public string HTMLValue
         {
             get
             {
-                if (!string.IsNullOrEmpty(FinalValue)) return FinalValue;
-                return DisplayValue;
+                return !string.IsNullOrEmpty(FinalValue) ? FinalValue : DisplayValue;
             }
         }
 
@@ -86,8 +89,7 @@ namespace Seal.Model
         /// </summary>
         public string CSVValue(bool useFormat, string separator)
         {
-            string result = ExcelHelper.ToCsv(useFormat ? DisplayValue : RawDisplayValue, separator);
-            return result;
+            return ExcelHelper.ToCsv(useFormat ? DisplayValue : RawDisplayValue, separator);
         }
 
         /// <summary>
@@ -262,7 +264,7 @@ namespace Seal.Model
                 if (aCell != null && bCell != null)
                 {
                     int result = CompareCell(aCell, bCell);
-                    if (result != 0) return (element.FinalSortOrder.Contains(SortOrderConverter.kAscendantSortKeyword) ? 1 : -1) * result;
+                    if (result != 0) return (element.FinalSortOrder.Contains(ReportElement.kAscendantSortKeyword) ? 1 : -1) * result;
                 }
             }
             return 0;
@@ -290,7 +292,7 @@ namespace Seal.Model
                     ResultCell aCell = a[sortIndex];
                     ResultCell bCell = b[sortIndex];
                     int result = CompareCell(aCell, bCell);
-                    if (result != 0) return (element.FinalSortOrder.Contains(SortOrderConverter.kAscendantSortKeyword) ? 1 : -1) * result;
+                    if (result != 0) return (element.FinalSortOrder.Contains(ReportElement.kAscendantSortKeyword) ? 1 : -1) * result;
                 }
             }
             return 0;
@@ -440,7 +442,7 @@ namespace Seal.Model
         public void AddNavigationFileDownload(string text, string linkTag = "")
         {
             var guid = Guid.NewGuid().ToString();
-            var link = new NavigationLink() { Type = NavigationType.FileDownload, Href = guid, Text = text, Cell = this, Tag = linkTag };
+            var link = new NavigationLink() { Type = NavigationType.FileDownload, Href = guid, Text = text, Cell = this, Report = Element != null ? Element.Report : null, Tag = linkTag };
             Links.Add(link);
             ContextModel.Report.NavigationLinks.Add(guid, link);
         }

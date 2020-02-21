@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using System;
@@ -9,7 +9,6 @@ using System.Xml.Serialization;
 using System.ComponentModel;
 using Seal.Helpers;
 using DynamicTypeDescriptor;
-using Seal.Converter;
 using System.Globalization;
 using Seal.Forms;
 using System.Drawing.Design;
@@ -22,6 +21,12 @@ namespace Seal.Model
     [ClassResource(BaseName = "DynamicTypeDescriptorApp.Properties.Resources", KeyPrefix = "ReportElement_")]
     public class ReportElement : MetaColumn
     {
+        public const string kAutomaticAscSortKeyword = "Automatic Ascendant";
+        public const string kAutomaticDescSortKeyword = "Automatic Descendant";
+        public const string kNoSortKeyword = "Not sorted";
+        public const string kAscendantSortKeyword = "Ascendant";
+        public const string kDescendantSortKeyword = "Descendant";
+
         #region Editor
 
         /// <summary>
@@ -208,10 +213,10 @@ namespace Seal.Model
         /// <summary>
         /// Sort order in the result tables. Page elements are sorted first, then Row, Column and Data elements.
         /// </summary>
-        [DefaultValue(SortOrderConverter.kAutomaticAscSortKeyword)]
+        [DefaultValue(kAutomaticAscSortKeyword)]
         [Category("Definition"), DisplayName("Sort Order"), Description("Sort order in the result tables. Page elements are sorted first, then Row, Column and Data elements."), Id(2, 1)]
         [TypeConverter(typeof(SortOrderConverter))]
-        public string SortOrder { get; set; } = SortOrderConverter.kAutomaticAscSortKeyword;
+        public string SortOrder { get; set; } = kAutomaticAscSortKeyword;
 
         /// <summary>
         /// Data type of the column
@@ -232,7 +237,7 @@ namespace Seal.Model
                     SetStandardFormat();
                 }
                 else Type = value;
-                UpdateEditorAttributes();
+                UpdateEditorAttributes();  //!NETCore
             }
         }
 
@@ -318,7 +323,7 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsSorted
         {
-            get { return SortOrder != SortOrderConverter.kNoSortKeyword && !string.IsNullOrEmpty(SortOrder); }
+            get { return SortOrder != kNoSortKeyword && !string.IsNullOrEmpty(SortOrder); }
         }
 
         /// <summary>
@@ -401,7 +406,7 @@ namespace Seal.Model
                     }
                 }
                 _calculationOption = value;
-                UpdateEditorAttributes();
+                UpdateEditorAttributes();  //!NETCore
             }
         }
 

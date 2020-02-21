@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) Seal Report, Eric Pfirsch (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using Seal.Model;
@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic.FileIO;
+using System.Data.SqlClient;
 
 namespace Seal.Helpers
 {
@@ -99,67 +100,74 @@ namespace Seal.Helpers
             return table;
         }
 
-        public DataTable LoadDataTable(string connectionString, string sql)
+        public DataTable LoadDataTable(string connectionString, string sql, bool useSqlConnection = false)
         {
             DataTable table = new DataTable();
             try
             {
                 if (MyLoadDataTable != null) return MyLoadDataTable(connectionString, sql);
 
-                if (UseDbDataAdapter)
+                var connection = useSqlConnection ? new SqlConnection(connectionString) : Helper.DbConnectionFromConnectionString(connectionString);
+                try
                 {
-                    DbDataAdapter adapter = null;
-                    var connection = Helper.DbConnectionFromConnectionString(connectionString);
                     connection.Open();
-                    if (connection is OdbcConnection) adapter = new OdbcDataAdapter(sql, (OdbcConnection)connection);
-                    else adapter = new OleDbDataAdapter(sql, (OleDbConnection)connection);
-                    adapter.SelectCommand.CommandTimeout = SelectTimeout;
-                    adapter.Fill(table);
-                }
-                else
-                {
-                    var connection = Helper.DbConnectionFromConnectionString(connectionString);
-                    connection.Open();
-                    DbCommand cmd = null;
-                    if (connection is OdbcConnection) cmd = new OdbcCommand(sql, (OdbcConnection)connection);
-                    else cmd = new OleDbCommand(sql, (OleDbConnection)connection);
-                    cmd.CommandTimeout = 0;
-                    cmd.CommandType = CommandType.Text;
-
-                    DbDataReader dr = cmd.ExecuteReader();
-
-                    DataTable schemaTable = dr.GetSchemaTable();
-                    foreach (DataRow dataRow in schemaTable.Rows)
+                    if (UseDbDataAdapter)
                     {
-                        DataColumn dataColumn = new DataColumn();
-                        dataColumn.ColumnName = dataRow["ColumnName"].ToString();
-                        dataColumn.DataType = Type.GetType(dataRow["DataType"].ToString());
-                        dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
-                        dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
-                        dataColumn.Unique = (bool)dataRow["IsUnique"];
+                        DbDataAdapter adapter = null;
+                        if (connection is OdbcConnection) adapter = new OdbcDataAdapter(sql, (OdbcConnection)connection);
+                        else if (connection is SqlConnection) adapter = new SqlDataAdapter(sql, (SqlConnection)connection);
+                        else adapter = new OleDbDataAdapter(sql, (OleDbConnection)connection);
+                        adapter.SelectCommand.CommandTimeout = SelectTimeout;
+                        adapter.Fill(table);
+                    }
+                    else
+                    {
+                        DbCommand cmd = null;
+                        if (connection is OdbcConnection) cmd = new OdbcCommand(sql, (OdbcConnection)connection);
+                        else if (connection is SqlConnection) cmd = new SqlCommand(sql, (SqlConnection)connection);
+                        else cmd = new OleDbCommand(sql, (OleDbConnection)connection);
+                        cmd.CommandTimeout = 0;
+                        cmd.CommandType = CommandType.Text;
 
-                        for (int i = 0; i < table.Columns.Count; i++)
+                        DbDataReader dr = cmd.ExecuteReader();
+
+                        DataTable schemaTable = dr.GetSchemaTable();
+                        foreach (DataRow dataRow in schemaTable.Rows)
                         {
-                            if (dataColumn.ColumnName == table.Columns[i].ColumnName)
+                            DataColumn dataColumn = new DataColumn();
+                            dataColumn.ColumnName = dataRow["ColumnName"].ToString();
+                            dataColumn.DataType = Type.GetType(dataRow["DataType"].ToString());
+                            dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
+                            dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
+                            dataColumn.Unique = (bool)dataRow["IsUnique"];
+
+                            for (int i = 0; i < table.Columns.Count; i++)
                             {
-                                dataColumn.ColumnName += "_" + table.Columns.Count.ToString();
+                                if (dataColumn.ColumnName == table.Columns[i].ColumnName)
+                                {
+                                    dataColumn.ColumnName += "_" + table.Columns.Count.ToString();
+                                }
                             }
+                            table.Columns.Add(dataColumn);
                         }
-                        table.Columns.Add(dataColumn);
-                    }
 
-                    while (dr.Read())
-                    {
-                        DataRow dataRow = table.NewRow();
-                        for (int i = 0; i < table.Columns.Count; i++)
+                        while (dr.Read())
                         {
-                            dataRow[i] = dr[i];
+                            DataRow dataRow = table.NewRow();
+                            for (int i = 0; i < table.Columns.Count; i++)
+                            {
+                                dataRow[i] = dr[i];
+                            }
+                            table.Rows.Add(dataRow);
                         }
-                        table.Rows.Add(dataRow);
                     }
+                }
+                finally
+                {
+                    connection.Close();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(string.Format("Error got when executing '{0}':\r\n{1}\r\n", sql, ex.Message));
             }
@@ -218,7 +226,7 @@ namespace Seal.Helpers
                         separator = ',';
                         if (line2.Split(';').Length > line2.Split(',').Length) separator = ';';
                     }
-                    var sep2 = (separator.Value == '|' || separator.Value == ':' ? "\\" : "") + separator.Value;
+                    var sep2 = (separator.Value == '|' || separator.Value == ':' ? Path.DirectorySeparatorChar.ToString() : "") + separator.Value;
                     string exp = "(?<=^|" + sep2 + ")(\"(?:[^\"]|\"\")*\"|[^" + sep2 + "]*)";
                     regexp = new Regex(exp);
                 }
@@ -342,37 +350,51 @@ namespace Seal.Helpers
         {
             DbCommand result = null;
             if (connection is OdbcConnection) result = ((OdbcConnection)connection).CreateCommand();
+            else if (connection is SqlConnection) result = ((SqlConnection)connection).CreateCommand();
             else result = ((OleDbConnection)connection).CreateCommand();
             result.CommandTimeout = SelectTimeout;
             return result;
         }
 
-        public void ExecuteNonQuery(string connectionString, string sql, string commandsSeparator = null)
+        public void ExecuteNonQuery(string connectionString, string sql, string commandsSeparator = null, bool useSqlConnection = false)
         {
-            DbConnection connection = Helper.DbConnectionFromConnectionString(connectionString);
-            connection.Open();
-            DbCommand command = GetDbCommand(connection);
-            string[] commandTexts = new string[] { sql };
-            if (!string.IsNullOrEmpty(commandsSeparator))
+            var connection = useSqlConnection ? new SqlConnection(connectionString) : Helper.DbConnectionFromConnectionString(connectionString);
+            try
             {
-                commandTexts = sql.Split(new string[] { commandsSeparator }, StringSplitOptions.RemoveEmptyEntries);
+                connection.Open();
+                DbCommand command = GetDbCommand(connection);
+                string[] commandTexts = new string[] { sql };
+                if (!string.IsNullOrEmpty(commandsSeparator))
+                {
+                    commandTexts = sql.Split(new string[] { commandsSeparator }, StringSplitOptions.RemoveEmptyEntries);
+                }
+                foreach (var commandText in commandTexts)
+                {
+                    command.CommandText = commandText;
+                    command.ExecuteNonQuery();
+                }
             }
-            foreach (var commandText in commandTexts)
+            finally
             {
-                command.CommandText = commandText;
-                command.ExecuteNonQuery();
+                connection.Close();
             }
-            connection.Close();
         }
 
-        public object ExecuteScalar(string connectionString, string sql)
+        public object ExecuteScalar(string connectionString, string sql, bool useSqlConnection = false)
         {
-            DbConnection connection = Helper.DbConnectionFromConnectionString(connectionString);
-            connection.Open();
-            DbCommand command = GetDbCommand(connection);
-            command.CommandText = sql;
-            var result = command.ExecuteScalar();
-            connection.Close();
+            object result = null;
+            var connection = useSqlConnection ? new SqlConnection(connectionString) : Helper.DbConnectionFromConnectionString(connectionString);
+            try
+            {
+                connection.Open();
+                DbCommand command = GetDbCommand(connection);
+                command.CommandText = sql;
+                result = command.ExecuteScalar();
+            }
+            finally
+            {
+                connection.Close();
+            }
             return result;
         }
 
@@ -380,54 +402,68 @@ namespace Seal.Helpers
         {
             try
             {
-                command.CommandText = string.Format("drop table {0}", CleanName(table.TableName));
+                try
+                {
+                    command.CommandText = string.Format("drop table {0}", CleanName(table.TableName));
+                    ExecuteCommand(command);
+                }
+                catch { }
+                command.CommandText = GetTableCreateCommand(table);
                 ExecuteCommand(command);
             }
-            catch { }
-            command.CommandText = GetTableCreateCommand(table);
-            ExecuteCommand(command);
+            finally
+            {
+                command.Connection.Close();
+            }
         }
 
         public void InsertTable(DbCommand command, DataTable table, string dateTimeFormat, bool deleteFirst)
         {
-            DbTransaction transaction = command.Connection.BeginTransaction();
-            int cnt = 0;
             try
             {
-                command.Transaction = transaction;
-                if (deleteFirst)
+                DbTransaction transaction = command.Connection.BeginTransaction();
+                int cnt = 0;
+                try
                 {
-                    command.CommandText = string.Format("delete from {0}", CleanName(table.TableName));
-                    ExecuteCommand(command);
-                }
+                    command.Transaction = transaction;
+                    if (deleteFirst)
+                    {
+                        command.CommandText = string.Format("delete from {0}", CleanName(table.TableName));
+                        ExecuteCommand(command);
+                    }
 
-                StringBuilder sql = new StringBuilder("");
-                string sqlTemplate = string.Format("insert into {0} ({1})", CleanName(table.TableName), GetTableColumnNames(table)) + " values ({0});\r\n";
-                foreach (DataRow row in table.Rows)
-                {
-                    sql.AppendFormat(sqlTemplate, GetTableColumnValues(row, dateTimeFormat));
-                    cnt++;
-                    if (cnt % InsertBurstSize == 0)
+                    StringBuilder sql = new StringBuilder("");
+                    string sqlTemplate = string.Format("insert into {0} ({1})", CleanName(table.TableName), GetTableColumnNames(table)) + " values ({0});\r\n";
+                    foreach (DataRow row in table.Rows)
+                    {
+                        sql.AppendFormat(sqlTemplate, GetTableColumnValues(row, dateTimeFormat));
+                        cnt++;
+                        if (cnt % InsertBurstSize == 0)
+                        {
+                            command.CommandText = GetInsertCommand(sql.ToString());
+                            ExecuteCommand(command);
+                            sql = new StringBuilder("");
+                        }
+                    }
+
+                    if (sql.Length != 0)
                     {
                         command.CommandText = GetInsertCommand(sql.ToString());
                         ExecuteCommand(command);
-                        sql = new StringBuilder("");
                     }
+                    transaction.Commit();
                 }
-
-                if (sql.Length != 0)
+                catch
                 {
-                    command.CommandText = GetInsertCommand(sql.ToString());
-                    ExecuteCommand(command);
+                    transaction.Rollback();
+                    throw;
                 }
-                transaction.Commit();
             }
-            catch
+            finally
             {
-                transaction.Rollback();
-                throw;
+                command.Connection.Close();
             }
-        }
+}
 
 
         public string RootGetTableCreateCommand(DataTable table)
@@ -581,7 +617,7 @@ namespace Seal.Helpers
             }
             else if (col.DataType.Name == "DateTime" || col.DataType.Name == "Date")
             {
-                result= Helper.QuoteSingle(((DateTime)row[col]).ToString(dateTimeFormat));
+                result = Helper.QuoteSingle(((DateTime)row[col]).ToString(dateTimeFormat));
             }
             else
             {

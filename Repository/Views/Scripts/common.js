@@ -196,13 +196,13 @@ function setProgressBarMessage(selector, progression, message, classname) {
 }
 
 function executeReport(nav) {
-    if (nav != null && nav.startsWith("HL:")) {
+    if (nav != null && nav.startsWith("HL:")) { //Hyperlink
         window.open(nav.replace("HL:", ""), '_blank');
         return;
     }
 
     $("#navigation_id").val(nav);
-    if (nav != null && nav.startsWith("FD:")) {
+    if (nav != null && nav.startsWith("FD:")) { //File download
         $("#header_form").attr("action", urlPrefix + "ActionNavigate");
         $("#header_form").submit();
         return;
