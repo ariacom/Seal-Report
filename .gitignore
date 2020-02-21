@@ -50,7 +50,7 @@ SpecialFolders/
 Projects/SealDocumentation/Help/
 
 #web report editor files
-SealEditor.sln
+SealEditor*.sln
 SealWebServerEditor.*
 HomeControllerSWIEditor.cs
 SWIReportModels.cs
