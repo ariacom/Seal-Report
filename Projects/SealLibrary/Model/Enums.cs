@@ -31,6 +31,16 @@ namespace Seal.Model
         MySQL,
     }
 
+    public enum ConnectionType
+    {
+        [Description("OleDb")]
+        OleDb,
+        [Description("Odbc")]
+        Odbc,
+        [Description("MS SQLServer")]
+        MSSQLServer,
+    }
+
     public enum ColumnType
     {
         [Description("Default")]

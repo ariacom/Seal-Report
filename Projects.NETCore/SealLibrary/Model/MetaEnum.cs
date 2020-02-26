@@ -246,11 +246,12 @@ namespace Seal.Model
         {
             if (_source == null || !IsDynamic || string.IsNullOrEmpty(Sql)) return;
 
+            DbConnection connection = null;
             try
             {
                 Error = "";
                 Information = "";
-                DbConnection connection = _source.GetOpenConnection();
+                connection = _source.GetOpenConnection();
                 var result = getValues(connection, RazorHelper.CompileExecute(Sql, this));
                 connection.Close();
                 if (checkOnly) return;
@@ -262,6 +263,10 @@ namespace Seal.Model
             {
                 Error = ex.Message;
                 Information = "Error got when refreshing the values.";
+            }
+            finally
+            {
+                if (connection != null && connection.State == ConnectionState.Open) connection.Close();
             }
             Information = Helper.FormatMessage(Information);
             

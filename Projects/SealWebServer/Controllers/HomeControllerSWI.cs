@@ -704,6 +704,7 @@ namespace SealWebServer.Controllers
                 var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
                 if (dashboard == null) throw new Exception("Error: The dashboard does not exist");
 
+                foreach (var item in dashboard.Items) item.JSonSerialization = true;
                 return Json(dashboard.Items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order).ToArray());
             }
             catch (Exception ex)

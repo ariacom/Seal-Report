@@ -4,6 +4,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Seal.Model;
 
@@ -142,7 +143,7 @@ namespace Seal.Helpers
                 }
                 catch(Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                    Debug.WriteLine(ex.Message);
                 }
             }
 

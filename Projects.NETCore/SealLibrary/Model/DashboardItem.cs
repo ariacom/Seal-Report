@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using Newtonsoft.Json;
 using System.Xml.Serialization;
 
 namespace Seal.Model
@@ -41,7 +42,7 @@ namespace Seal.Model
         /// </summary>
         public string Name { get; set; } = "";
         public bool ShouldSerializeName() {
-            return (_widget != null && _widget.Name != Name);
+            return JSonSerialization || (_widget != null && _widget.Name != Name);
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace Seal.Model
         public string Icon { get; set; }
         public bool ShouldSerializeIcon()
         {
-            return (_widget != null && _widget.Icon != Icon);
+            return JSonSerialization || (_widget != null && _widget.Icon != Icon);
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace Seal.Model
         public string Color { get; set; }
         public bool ShouldSerializeColor()
         {
-            return (_widget != null && _widget.Color != Color);
+            return JSonSerialization || (_widget != null && _widget.Color != Color);
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace Seal.Model
         public int Width { get; set; } = -1;
         public bool ShouldSerializeWidth()
         {
-            return (_widget != null && _widget.Width != Width);
+            return JSonSerialization || (_widget != null && _widget.Width != Width);
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace Seal.Model
         public int Height { get; set; } = -1;
         public bool ShouldSerializeHeight()
         {
-            return (_widget != null && _widget.Height != Height);
+            return JSonSerialization || (_widget != null && _widget.Height != Height);
         }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace Seal.Model
         public bool? Dynamic { get; set; } = null;
         public bool ShouldSerializeDynamic()
         {
-            return (_widget != null && _widget.Dynamic != Dynamic);
+            return JSonSerialization || (_widget != null && _widget.Dynamic != Dynamic);
         }
 
         /// <summary>
@@ -95,7 +96,7 @@ namespace Seal.Model
         public int Refresh { get; set; } = -2;
         public bool ShouldSerializeRefresh()
         {
-            return (_widget != null && _widget.Refresh != Refresh);
+            return JSonSerialization || (_widget != null && _widget.Refresh != Refresh);
         }
 
         /// <summary>
@@ -117,6 +118,13 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public DashboardWidget Widget { get { return _widget; } }
+
+        /// <summary>
+        /// If true, the item is being serialized for Json
+        /// </summary>
+        [XmlIgnore]
+        [JsonIgnore]
+        public bool JSonSerialization = false;
 
         /// <summary>
         /// Set a widget to an item

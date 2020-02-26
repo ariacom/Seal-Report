@@ -15,6 +15,11 @@ using Seal.Model;
 using System.DirectoryServices.AccountManagement;
 using Microsoft.AspNetCore.Html;
 using Newtonsoft.Json.Linq;
+using System.Data.Odbc;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Seal.Helpers
 {
@@ -29,6 +34,8 @@ namespace Seal.Helpers
         static XDocument dummy6 = null;
         static PrincipalContext dummy8 = null;
         static JObject dummy10 = null;
+        static OdbcConnection dummy12 = null;
+        static SqlConnection dummy13 = null;
 
         static bool _loadDone = false;
         static public void LoadRazorAssemblies()
@@ -46,6 +53,8 @@ namespace Seal.Helpers
                     if (dummy6 == null) dummy6 = new XDocument();
                     if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
                     if (dummy10 == null) dummy10 = JObject.Parse("{}");
+                    if (dummy12 == null) dummy12 = new OdbcConnection();
+                    if (dummy13 == null) dummy13 = new SqlConnection();
                 }
                 catch (Exception ex)
                 {
@@ -157,10 +166,10 @@ namespace Seal.Helpers
 
         static public string CompileExecute(string script, object model, string key = null)
         {
+            Debug.WriteLine(key != null ? "Razor Key: " + key : "");
             if (model != null && script != null && script.Trim().StartsWith("@"))
             {
                 string result = "";
-                LoadRazorAssemblies();
                 if (string.IsNullOrEmpty(key))
                 {
                     if (model != null)
@@ -172,25 +181,28 @@ namespace Seal.Helpers
                         key = script;
                     }
                 }
-                if (Engine.Razor.IsTemplateCached(key, model.GetType()))
+
+                if (!(Engine.Razor.IsTemplateCached(key, model.GetType())))
                 {
-                    result = Engine.Razor.Run(key, model.GetType(), model);
+                    Compile(GetFullScript(script, model), model.GetType(), key);
                 }
-                else
-                {
-                    result = Engine.Razor.RunCompile(GetFullScript(script, model), key, model.GetType(), model);
-                }
+                result = Engine.Razor.Run(key, model.GetType(), model);
                 return string.IsNullOrEmpty(result) ? "" : result;
             }
             return script;
         }
 
+        static object lockObject = new object();
         static public void Compile(string script, Type modelType, string key)
         {
-            if (!string.IsNullOrEmpty(script) && !Engine.Razor.IsTemplateCached(key, modelType))
+            lock (lockObject)
             {
-                LoadRazorAssemblies();
-                Engine.Razor.Compile(script, key, modelType);
+
+                if (!string.IsNullOrEmpty(script) && !Engine.Razor.IsTemplateCached(key, modelType))
+                {
+                    LoadRazorAssemblies();
+                    Engine.Razor.Compile(script, key, modelType);
+                }
             }
         }
     }

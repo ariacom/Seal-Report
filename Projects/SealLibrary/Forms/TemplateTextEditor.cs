@@ -436,36 +436,44 @@ if (cell.DoubleValue < 0)
 
         const string razorConfigurationAuditScriptTemplate = @"@using System.Data
 @using System.Data.Common
+@using System.Data.OleDb
+@using System.Data.Odbc
 
 @{
     Audit audit = Model;
-    var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith(""Audit""));
+    var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith(""Audit""));  
     if (auditSource != null) {
         var helper = new TaskDatabaseHelper();
         var command = helper.GetDbCommand(auditSource.Connection.GetOpenConnection());
 
         //Create audit table if necessary
         checkTableCreation(command);
-        command.CommandText = @""insert into sr_audit(event_date,event_type,user_name,user_groups,report_name,report_path,execution_context,execution_view,execution_duration,execution_error,output_type,output_name,output_information,output_error,schedule_name)
-                                values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"";
+        command.CommandText = @""insert into sr_audit(event_date,event_type,user_name,user_groups,report_name,report_path,execution_context,execution_view,execution_duration,execution_error,output_type,output_name,output_information,output_error,schedule_name)"";
+        if (command is OleDbCommand || command is OdbcCommand) {
+            command.CommandText += "" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"";
+        }
+        else {
+            command.CommandText += "" values(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15)"";
+        }
         
         var date = DateTime.Now;
         date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
-        addParameter(command, DbType.DateTime, date); //event_date,
-        addParameter(command, DbType.AnsiString, audit.Type.ToString()); //event_type,
-        addParameter(command, DbType.AnsiString, audit.User != null ? audit.User.Name : (object) DBNull.Value); //user_name,
-        addParameter(command, DbType.AnsiString, audit.User != null ? audit.User.SecurityGroupsDisplay : (object) DBNull.Value); //user_groups,
-        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionName : (object) DBNull.Value); //report_name,
-        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.FilePath : (object) DBNull.Value); //report_path,
-        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionContext.ToString() : (object) DBNull.Value); //execution_context,
-        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionView.Name : (object) DBNull.Value); //execution_view,
-        addParameter(command, DbType.Int32, audit.Report != null ? Convert.ToInt32(audit.Report.ExecutionFullDuration.TotalSeconds) : (object) DBNull.Value); //execution_duration,
-        addParameter(command, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionErrors : (object) DBNull.Value); //execution_error,
-        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.DeviceName : (object) DBNull.Value); //output_type,
-        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Name : (object) DBNull.Value);//output_name,
-        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null && audit.Report.OutputToExecute.Information != null ? audit.Report.OutputToExecute.Information : (object) DBNull.Value);//output_information,
-        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null && audit.Report.OutputToExecute.Error != null ? audit.Report.OutputToExecute.Error : (object) DBNull.Value);//output_error,
-        addParameter(command, DbType.AnsiString, audit.Report != null && audit.Schedule != null ? audit.Schedule.Name : (object) DBNull.Value);//schedule_name
+        int index=1;
+        addParameter(command, index++, DbType.DateTime, date); //event_date,
+        addParameter(command, index++, DbType.AnsiString, audit.Type.ToString()); //event_type,
+        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.Name : (object) DBNull.Value); //user_name,
+        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SecurityGroupsDisplay : (object) DBNull.Value); //user_groups,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionName : (object) DBNull.Value); //report_name,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.FilePath : (object) DBNull.Value); //report_path,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionContext.ToString() : (object) DBNull.Value); //execution_context,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionView.Name : (object) DBNull.Value); //execution_view,
+        addParameter(command, index++, DbType.Int32, audit.Report != null ? Convert.ToInt32(audit.Report.ExecutionFullDuration.TotalSeconds) : (object) DBNull.Value); //execution_duration,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionErrors : (object) DBNull.Value); //execution_error,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.DeviceName : (object) DBNull.Value); //output_type,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Name : (object) DBNull.Value);//output_name,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null && audit.Report.OutputToExecute.Information != null ? audit.Report.OutputToExecute.Information : (object) DBNull.Value);//output_information,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null && audit.Report.OutputToExecute.Error != null ? audit.Report.OutputToExecute.Error : (object) DBNull.Value);//output_error,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Schedule != null ? audit.Schedule.Name : (object) DBNull.Value);//schedule_name
         command.ExecuteNonQuery();                
     }
 
@@ -494,9 +502,10 @@ if (cell.DoubleValue < 0)
         }
     }
 
-    void addParameter(DbCommand command, DbType type, Object value)
+    void addParameter(DbCommand command, int index, DbType type, Object value)
     {
         var parameter = command.CreateParameter();
+        parameter.ParameterName = ""@p"" + index.ToString();
         parameter.DbType = type;
         if (value is string && ((string)value).Length >= 255) parameter.Value = ((string)value).Substring(0, 254);
         else parameter.Value = value;
@@ -856,7 +865,7 @@ if (cell.DoubleValue < 0)
         return result.ToString();
     });
 
-    dbHelper.MyLoadDataTable = new CustomLoadDataTable(delegate(string connectionString, string sql) {
+    dbHelper.MyLoadDataTable = new CustomLoadDataTable(delegate(ConnectionType connectionType, string connectionString, string sql) {
         return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
     });
 
@@ -872,7 +881,8 @@ if (cell.DoubleValue < 0)
         };
 
 
-        const string sqlConnectionString = @"Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;";
+        const string sqlConnectionString = @"Server=myServerAddress;Database=myDatabase;Trusted_Connection=True";
+        const string odbcConnectionString = @"DSN=myDataSourceName;DATABASE=myDatabase";
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             if (context != null && context.Instance is ReportView && context.PropertyDescriptor.IsReadOnly) return UITypeEditorEditStyle.None;
@@ -1053,7 +1063,13 @@ if (cell.DoubleValue < 0)
                     if (context.PropertyDescriptor.Name == "MSSqlServerConnectionString")
                     {
                         template = sqlConnectionString;
-                        frm.Text = "Edit MS SQLServer Connection script";
+                        frm.Text = "Edit the MS SQLServer Connection script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Null);
+                    }
+                    if (context.PropertyDescriptor.Name == "OdbcConnectionString")
+                    {
+                        template = odbcConnectionString;
+                        frm.Text = "Edit the ODBC Connection script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
                     }
                 }

@@ -166,7 +166,7 @@ namespace SealWebServer.Controllers
             }
             catch(Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
             }
             return result.ToString();
         }

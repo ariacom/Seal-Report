@@ -3,6 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using DynamicTypeDescriptor;
+using Newtonsoft.Json;
 using Seal.Forms;
 using System;
 using System.ComponentModel;
@@ -133,6 +134,7 @@ namespace Seal.Model
         /// The XML to insert in a dashboard definition file to show this widget
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         [DisplayName("Dashboard XML"), Description("The XML to insert in a dashboard definition file to show this widget."), Id(11, 1)]
         public string XML
         {
@@ -146,6 +148,7 @@ namespace Seal.Model
         /// True if the widget is published
         /// </summary>
         [XmlIgnore, Browsable(false)]
+        [JsonIgnore]
         public bool IsPublished
         {
             get { return !string.IsNullOrEmpty(_name);  }
@@ -156,18 +159,21 @@ namespace Seal.Model
         /// Current report name
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public string ReportName;
 
         /// <summary>
         /// Current report path
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public string ReportPath;
 
         /// <summary>
         /// Last modification date time
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public DateTime LastModification;
     }
 }

@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -102,6 +103,7 @@ namespace Seal.Model
         /// The XML to insert in a dashboard definition file to show this widget
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public string XML
         {
             get
@@ -114,6 +116,7 @@ namespace Seal.Model
         /// True if the widget is published
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public bool IsPublished
         {
             get { return !string.IsNullOrEmpty(_name);  }
@@ -124,18 +127,21 @@ namespace Seal.Model
         /// Current report name
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public string ReportName;
 
         /// <summary>
         /// Current report path
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public string ReportPath;
 
         /// <summary>
         /// Last modification date time
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public DateTime LastModification;
     }
 }

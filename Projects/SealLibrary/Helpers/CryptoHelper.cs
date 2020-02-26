@@ -17,8 +17,8 @@ namespace Seal.Helpers
         static TripleDESCryptoServiceProvider getCryptoServiceProvider(string key)
         {
             TripleDESCryptoServiceProvider crypto = new TripleDESCryptoServiceProvider();
-            crypto.Key = Encoding.Default.GetBytes(key + "123456789").Take(crypto.KeySize / 8).ToArray();
-            crypto.IV = Encoding.Default.GetBytes(TripleDESVector + "123456789").Take(crypto.BlockSize / 8).ToArray();
+            crypto.Key = Encoding.GetEncoding(1252).GetBytes(key + "123456789").Take(crypto.KeySize / 8).ToArray();
+            crypto.IV = Encoding.GetEncoding(1252).GetBytes(TripleDESVector + "123456789").Take(crypto.BlockSize / 8).ToArray();
             return crypto;
         }
 

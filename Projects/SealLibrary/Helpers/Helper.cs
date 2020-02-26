@@ -428,15 +428,6 @@ namespace Seal.Helpers
             return firstError + result.ToString();
         }
 
-        static public string GetOleDbConnectionString(string input, string userName, string password)
-        {
-            string result = input;
-            if (input != null && !input.Contains("User ID=") && !string.IsNullOrEmpty(userName)) result += string.Format(";User ID={0}", userName);
-            if (input != null && !input.Contains("Password=") && !string.IsNullOrEmpty(password)) result += string.Format(";Password={0}", password);
-            return result;
-        }
-
-
         static public void ExecutePrePostSQL(DbConnection connection, string sql, object model, bool ignoreErrors)
         {
             try
@@ -602,37 +593,65 @@ namespace Seal.Helpers
             return serializer.Deserialize(ms);
         }
 
-        public static DbConnection DbConnectionFromConnectionString(string connectionString)
+        public static DbConnection DbConnectionFromConnectionString(ConnectionType connectionType, string connectionString)
         {
             DbConnection connection = null;
-            OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connectionString);
-            string provider = builder["Provider"].ToString();
-            if (provider.StartsWith("MSDASQL"))
+            if (connectionType == ConnectionType.MSSQLServer)
             {
-                //Provider=MSDASQL.1;Persist Security Info=False;Extended Properties="DSN=mysql2;SERVER=localhost;UID=root;DATABASE=sakila;PORT=3306";Initial Catalog=sakila
-                //Provider=MSDASQL.1;Persist Security Info=True;Data Source=mysql;Initial Catalog=sakila
-                //Provider=MSDASQL.1;Persist Security Info=False;Extended Properties="DSN=brCRM;DBQ=C:\tem\adb.mdb;DriverId=25;FIL=MS Access;MaxBufferSize=2048;PageTimeout=5;UID=admin;"
-
-                //Extract the real ODBC connection string...to be able to use the OdbcConnection
-                string odbcConnectionString = "";
-                if (builder.ContainsKey("Extended Properties")) odbcConnectionString = builder["Extended Properties"].ToString();
-                else if (builder.ContainsKey("Data Source") && !string.IsNullOrEmpty(builder["Data Source"].ToString())) odbcConnectionString = "DSN=" + builder["Data Source"].ToString();
-                if (odbcConnectionString != "" && builder.ContainsKey("Initial Catalog")) odbcConnectionString += ";DATABASE=" + builder["Initial Catalog"].ToString();
-                if (odbcConnectionString != "" && builder.ContainsKey("User ID")) odbcConnectionString += ";UID=" + builder["User ID"].ToString();
-                if (odbcConnectionString != "" && builder.ContainsKey("Password")) odbcConnectionString += ";PWD=" + builder["Password"].ToString();
-
-                connection = new OdbcConnection(odbcConnectionString);
+                connection = new SqlConnection(connectionString);
+            }
+            else if (connectionType == ConnectionType.Odbc)
+            {
+                connection = new OdbcConnection(connectionString);
             }
             else
             {
-                connection = new OleDbConnection(connectionString);
+                OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connectionString);
+                string provider = builder["Provider"].ToString();
+                if (provider.StartsWith("MSDASQL"))
+                {
+                    //Provider=MSDASQL.1;Persist Security Info=False;Extended Properties="DSN=mysql2;SERVER=localhost;UID=root;DATABASE=sakila;PORT=3306";Initial Catalog=sakila
+                    //Provider=MSDASQL.1;Persist Security Info=True;Data Source=mysql;Initial Catalog=sakila
+                    //Provider=MSDASQL.1;Persist Security Info=False;Extended Properties="DSN=brCRM;DBQ=C:\tem\adb.mdb;DriverId=25;FIL=MS Access;MaxBufferSize=2048;PageTimeout=5;UID=admin;"
+
+                    //Extract the real ODBC connection string...to be able to use the OdbcConnection
+                    string odbcConnectionString = "";
+                    if (builder.ContainsKey("Extended Properties")) odbcConnectionString = builder["Extended Properties"].ToString();
+                    else if (builder.ContainsKey("Data Source") && !string.IsNullOrEmpty(builder["Data Source"].ToString())) odbcConnectionString = "DSN=" + builder["Data Source"].ToString();
+                    if (odbcConnectionString != "" && builder.ContainsKey("Initial Catalog")) odbcConnectionString += ";DATABASE=" + builder["Initial Catalog"].ToString();
+                    if (odbcConnectionString != "" && builder.ContainsKey("User ID")) odbcConnectionString += ";UID=" + builder["User ID"].ToString();
+                    if (odbcConnectionString != "" && builder.ContainsKey("Password")) odbcConnectionString += ";PWD=" + builder["Password"].ToString();
+
+                    connection = new OdbcConnection(odbcConnectionString);
+                }
+                else
+                {
+                    connection = new OleDbConnection(connectionString);
+                }
             }
+
             return connection;
+        }
+
+        static public string GetOleDbConnectionString(string input, string userName, string password)
+        {
+            string result = input;
+            if (input != null && !input.Contains("User ID=") && !string.IsNullOrEmpty(userName)) result += string.Format(";User ID={0}", userName);
+            if (input != null && !input.Contains("Password=") && !string.IsNullOrEmpty(password)) result += string.Format(";Password={0}", password);
+            return result;
+        }
+
+        static public string GetOdbcConnectionString(string input, string userName, string password)
+        {
+            string result = input;
+            if (input != null && !input.Contains("UID=") && !string.IsNullOrEmpty(userName)) result += string.Format(";UID={0}", userName);
+            if (input != null && !input.Contains("PWD=") && !string.IsNullOrEmpty(password)) result += string.Format(";PWD={0}", password);
+            return result;
         }
 
         public static int CalculateHash(string str)
         {
-            return str == null ? 0 : str.GetHashCode();
+            return string.IsNullOrEmpty(str) ? 0 : str.GetHashCode();
         }
 
 
@@ -754,7 +773,7 @@ namespace Seal.Helpers
             return result;
         }
 
-  #if !NETCOREAPP
+#if !NETCOREAPP
         public static void RunInAnotherAppDomain(string assemblyFile, string[] args)
         {
             // RazorEngine cannot clean up from the default appdomain...
