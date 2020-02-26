@@ -15,6 +15,7 @@ using Seal.Helpers;
 using System.Collections;
 using System.Data.Common;
 using System.Data.Odbc;
+using System.Data.SqlClient;
 
 namespace Seal.Forms
 {
@@ -657,7 +658,7 @@ namespace Seal.Forms
                 if (schemaTables.Columns.Contains("TABLE_SCHEMA")) schema = row["TABLE_SCHEMA"].ToString();
                 else if (schemaTables.Columns.Contains("TABLE_SCHEM")) schema = row["TABLE_SCHEM"].ToString();
                 table.Name = (!string.IsNullOrEmpty(schema) ? source.GetTableName(schema) + "." : "") + source.GetTableName(row["TABLE_NAME"].ToString());
-                table.Type = row["TABLE_TYPE"].ToString();
+                if (schemaTables.Columns.Contains("TABLE_TYPE")) table.Type = row["TABLE_TYPE"].ToString();
                 table.Source = source;
                 tables.Add(table);
             }

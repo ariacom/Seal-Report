@@ -10,6 +10,7 @@ using Seal.Helpers;
 using System.Data.Common;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.Odbc;
 
 namespace Seal.Model
 {
@@ -51,8 +52,32 @@ namespace Seal.Model
         [DefaultValue(DatabaseType.Standard)]
         public DatabaseType DatabaseType { get; set; } = DatabaseType.Standard;
 
+        private ConnectionType _connectionType = ConnectionType.OleDb;
         /// <summary>
-        /// OLEDB Connection string used to connect to the database
+        /// The type of the connection used
+        /// </summary>
+        [DefaultValue(ConnectionType.OleDb)]
+        public ConnectionType ConnectionType
+        {
+            get {
+                return _connectionType;
+            }
+            set
+            {
+                _connectionType = value;
+#if !NETCOREAPP
+                if (_connectionType == ConnectionType.MSSQLServer && DatabaseType != DatabaseType.MSSQLServer) {
+                    DatabaseType = DatabaseType.MSSQLServer;
+                    MessageBox.Show(string.Format("The database type has been set to {0}", DatabaseType), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                
+#endif
+            }
+
+        }
+
+        /// <summary>
+        /// OLE DB Connection string used to connect to the database if the connection type is OLE DB
         /// </summary>
         [DefaultValue(null)]
         public string ConnectionString { get; set; }
@@ -68,7 +93,14 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// If set and the Database type is 'MS SQLServer', a native MS SQLServer connection is used (SqlConnection object instead of OleDbConnection or OdbcConnection) and the 'OLE DB Connection string' is not used.
+        /// ODBC Connection string used to connect to the database if the connection type is ODBC
+        /// </summary>
+        [DefaultValue(null)]
+        public string OdbcConnectionString { get; set; }
+
+
+        /// <summary>
+        /// MS SQLServer Connection string used to connect to the database if the connection type is MS SQLServer
         /// </summary>
         [DefaultValue(null)]
         public string MSSqlServerConnectionString { get; set; }
@@ -80,41 +112,31 @@ namespace Seal.Model
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
 
         /// <summary>
-        /// Full OLEdb Connection String with user name and password
+        /// Full Connection String (Oledb, Odbc or MSSQLServer) with user name and password
         /// </summary>
         [Browsable(false)]
         public string FullConnectionString
         {
             get
             {
-                string result = Helper.GetOleDbConnectionString(ConnectionString, UserName, ClearPassword);
+                var result = "";
+                if (ConnectionType == ConnectionType.MSSQLServer)
+                {
+                    result = Helper.GetOleDbConnectionString(MSSqlServerConnectionString, UserName, ClearPassword);
+
+                }
+                else if (ConnectionType == ConnectionType.Odbc)
+                {
+                    result = Helper.GetOdbcConnectionString(OdbcConnectionString, UserName, ClearPassword);
+                }
+                else
+                {
+                    result = Helper.GetOleDbConnectionString(ConnectionString, UserName, ClearPassword);
+                }
+
                 return Source.Repository.ReplaceRepositoryKeyword(result);
             }
         }
-
-        /// <summary>
-        /// Full MS SqlServer Connection String with user name and password
-        /// </summary>
-        public string FullMSSqlServerConnectionString
-        {
-            get
-            {
-                string result = Helper.GetOleDbConnectionString(MSSqlServerConnectionString, UserName, ClearPassword);
-                return Source.Repository.ReplaceRepositoryKeyword(result);
-            }
-        }
-
-        /// <summary>
-        /// True, if the SqlServer driver will be used intead of the OLEdb driver
-        /// </summary>
-        public bool IsMSSqlServerConnection
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(MSSqlServerConnectionString) && DatabaseType == DatabaseType.MSSQLServer;
-            }
-        }
-
 
         /// <summary>
         /// User name used to connect to the database
@@ -178,10 +200,7 @@ namespace Seal.Model
         {
             get
             {
-                if (IsMSSqlServerConnection)
-                    return new SqlConnection(FullMSSqlServerConnectionString);
-                else
-                    return Helper.DbConnectionFromConnectionString(FullConnectionString);
+                return Helper.DbConnectionFromConnectionString(ConnectionType, FullConnectionString);
             }
         }
 
@@ -216,13 +235,12 @@ namespace Seal.Model
             }
         }
 
-#if !NETCOREAPP
+
         /// <summary>
         /// Check the current connection
         /// </summary>
         public void CheckConnection()
         {
-            Cursor.Current = Cursors.WaitCursor;
             Error = "";
             Information = "";
             try
@@ -238,10 +256,8 @@ namespace Seal.Model
                 Information = "Error got when checking the connection.";
             }
             Information = Helper.FormatMessage(Information);
-            
-            Cursor.Current = Cursors.Default;
         }
-#endif
+
 
         #region Helpers
         /// <summary>

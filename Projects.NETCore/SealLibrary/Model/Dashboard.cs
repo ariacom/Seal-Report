@@ -92,6 +92,8 @@ namespace Seal.Model
         {
             try
             {
+                foreach (var item in Items) item.JSonSerialization = false;
+
                 XmlSerializer serializer = new XmlSerializer(typeof(Dashboard));
                 XmlWriterSettings ws = new XmlWriterSettings();
                 ws.NewLineHandling = NewLineHandling.Entitize;

@@ -26,7 +26,7 @@ namespace Seal.Helpers
     public delegate string CustomGetTableColumnValues(DataRow row, string dateTimeFormat);
     public delegate string CustomGetTableColumnValue(DataRow row, DataColumn col, string datetimeFormat);
 
-    public delegate DataTable CustomLoadDataTable(string connectionString, string sql);
+    public delegate DataTable CustomLoadDataTable(ConnectionType connectionType, string connectionString, string sql);
     public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "");
     public delegate DataTable CustomLoadDataTableFromCSV(string csvPath, char? separator = null);
 
@@ -100,14 +100,14 @@ namespace Seal.Helpers
             return table;
         }
 
-        public DataTable LoadDataTable(string connectionString, string sql, bool useSqlConnection = false)
+        public DataTable LoadDataTable(ConnectionType connectionType, string connectionString, string sql)
         {
             DataTable table = new DataTable();
             try
             {
-                if (MyLoadDataTable != null) return MyLoadDataTable(connectionString, sql);
+                if (MyLoadDataTable != null) return MyLoadDataTable(connectionType, connectionString, sql);
 
-                var connection = useSqlConnection ? new SqlConnection(connectionString) : Helper.DbConnectionFromConnectionString(connectionString);
+                var connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
                 try
                 {
                     connection.Open();
@@ -356,9 +356,9 @@ namespace Seal.Helpers
             return result;
         }
 
-        public void ExecuteNonQuery(string connectionString, string sql, string commandsSeparator = null, bool useSqlConnection = false)
+        public void ExecuteNonQuery(ConnectionType connectionType, string connectionString, string sql, string commandsSeparator = null)
         {
-            var connection = useSqlConnection ? new SqlConnection(connectionString) : Helper.DbConnectionFromConnectionString(connectionString);
+            var connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
             try
             {
                 connection.Open();
@@ -380,10 +380,10 @@ namespace Seal.Helpers
             }
         }
 
-        public object ExecuteScalar(string connectionString, string sql, bool useSqlConnection = false)
+        public object ExecuteScalar(ConnectionType connectionType, string connectionString, string sql, bool useSqlConnection = false)
         {
             object result = null;
-            var connection = useSqlConnection ? new SqlConnection(connectionString) : Helper.DbConnectionFromConnectionString(connectionString);
+            var connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
             try
             {
                 connection.Open();

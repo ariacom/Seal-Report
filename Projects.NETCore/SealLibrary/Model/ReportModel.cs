@@ -1057,7 +1057,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -1321,7 +1321,7 @@ namespace Seal.Model
                             rootPath.tablesToUse = new List<MetaTable>(FromTables.Where(i => i.GUID != leftTable.GUID));
                             JoinTables(rootPath, resultPaths);
                         }
-                        Debug.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
+                        Console.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
 
                         if (JoinPaths != null)
                         {
@@ -1400,7 +1400,7 @@ namespace Seal.Model
                                 }
                             }
 
-                            Debug.WriteLine("Indirect Joins: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths2.Count, _indirectCount);
+                            Console.WriteLine("Indirect Joins: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths2.Count, _indirectCount);
 
                             if (JoinPaths != null)
                             {
@@ -1778,7 +1778,8 @@ namespace Seal.Model
                     //check if we can reuse the current running query: same source, same connection string and same pre/Post SQL
                     ReportModel runningModel = RunningModels[key];
                     if (Source == runningModel.Source
-                        && ((!Connection.IsMSSqlServerConnection && Connection.FullConnectionString == runningModel.Connection.FullConnectionString) || (Connection.IsMSSqlServerConnection && Connection.FullMSSqlServerConnectionString == runningModel.Connection.FullMSSqlServerConnectionString))
+                        && Connection.ConnectionType == runningModel.Connection.ConnectionType
+                        && Connection.FullConnectionString == runningModel.Connection.FullConnectionString
                         && string.IsNullOrEmpty(runningModel.ExecutionError)
                         && ((PreSQL == null && runningModel.PreSQL == null) || (PreSQL.Trim() == runningModel.PreSQL.Trim()))
                         && ((PostSQL == null && runningModel.PostSQL == null) || (PostSQL.Trim() == runningModel.PostSQL.Trim()))

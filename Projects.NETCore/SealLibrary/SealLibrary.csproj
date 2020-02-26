@@ -25,7 +25,7 @@
     <PackageReference Include="RazorEngine.NetCore.ZuLiang" Version="2.2.3.6" />
     <PackageReference Include="System.Data.Odbc" Version="4.7.0" />
     <PackageReference Include="System.Data.OleDb" Version="4.7.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="4.7.0" />
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.7.0" />
     <PackageReference Include="System.DirectoryServices.Protocols" Version="4.7.0" />

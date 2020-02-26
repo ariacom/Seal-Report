@@ -80,7 +80,7 @@ namespace Seal.Model
         {
             get
             {
-                return !string.IsNullOrEmpty(FinalValue) ? FinalValue : DisplayValue;
+                return !string.IsNullOrEmpty(FinalValue) ? FinalValue : DisplayValue.Replace("\r","").Replace("\n","<br>");
             }
         }
 

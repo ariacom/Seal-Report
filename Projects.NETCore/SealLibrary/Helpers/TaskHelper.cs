@@ -414,26 +414,17 @@ namespace Seal.Helpers
 
         public DataTable LoadDataTable(MetaConnection connection, string sql)
         {
-            if (connection.IsMSSqlServerConnection)
-                return DatabaseHelper.LoadDataTable(connection.FullMSSqlServerConnectionString, sql, true);
-            else
-                return DatabaseHelper.LoadDataTable(connection.FullConnectionString, sql);
+            return DatabaseHelper.LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql);
         }
 
         public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)
         {
-            if (connection.IsMSSqlServerConnection)
-                DatabaseHelper.ExecuteNonQuery(connection.FullMSSqlServerConnectionString, sql, commandsSeparator, true);
-            else
-                DatabaseHelper.ExecuteNonQuery(connection.FullConnectionString, sql, commandsSeparator);
+            DatabaseHelper.ExecuteNonQuery(connection.ConnectionType, connection.FullConnectionString, sql, commandsSeparator);
         }
 
         public object ExecuteScalar(MetaConnection connection, string sql)
         {
-            if (connection.IsMSSqlServerConnection)
-                return DatabaseHelper.ExecuteScalar(connection.FullMSSqlServerConnectionString, sql, true);
-            else
-                return DatabaseHelper.ExecuteScalar(connection.FullConnectionString, sql);
+            return DatabaseHelper.ExecuteScalar(connection.ConnectionType, connection.FullConnectionString, sql, true);
         }
 
 
@@ -476,12 +467,16 @@ namespace Seal.Helpers
                 {
                     if (_task.CancelReport) break;
 
-                    string connectionString = connection.FullMSSqlServerConnectionString;
-                    if (string.IsNullOrEmpty(connectionString) && !string.IsNullOrEmpty(connection.FullConnectionString))
+                    string connectionString = connection.FullConnectionString;
+                    if (connection.ConnectionType == ConnectionType.OleDb)
                     {
                         OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder(connection.FullConnectionString);
                         connectionString = string.Format("Server={0};Database={1};", builder["Data Source"], builder["Initial Catalog"]);
                         connectionString += (builder.ContainsKey("User ID") ? string.Format("User Id={0};Password={1};", builder["User ID"], builder["Password"]) : "Trusted_Connection=True;");
+                    }
+                    else if (connection.ConnectionType == ConnectionType.Odbc)
+                    {
+                        throw new Exception("Odbc connection type not supported");
                     }
                     SqlConnection conn = new SqlConnection(connectionString);
                     try
