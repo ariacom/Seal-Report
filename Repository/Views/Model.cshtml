@@ -4,6 +4,7 @@
     ReportView view = report.CurrentView;
 
     report.CurrentModelView = view;
+    view.IdSuffix = Guid.NewGuid().ToString().Replace("-", "");
 }
 
 @if (report.Format == ReportFormat.csv)
@@ -12,7 +13,7 @@
 }
 else
 {
-<div id='@view.ViewId' @Raw(view.AddAttribute("class", "model_class")) @Raw(view.AddAttribute("style", "model_css"))>
+<div @Raw(view.AddAttribute("class", "model_class")) @Raw(view.AddAttribute("style", "model_css"))>
     @if (view.Model.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") == "right")
     {
         <div class="row">

@@ -9,7 +9,7 @@
 @if (reportModel.SummaryTable != null && reportModel.SummaryTable.RowCount > 0 && view.GetBoolValue("show_summary_table"))
 {
     activeFirst = false;
-    <div class="tab-pane fade in active" id="@(view.ViewId + "_summary")">
+    <div class="tab-pane fade in active" id="@(view.IdSuffix + "_summary")">
         @Include(view.GetPartialTemplateKey("Model.iSummaryTable", view), view)
     </div>
     if (report.PrintLayout && view.GetBoolValue("print_break_after_page"))
@@ -33,7 +33,7 @@
         activeFirst = false;
     }
 
-    <div class="container-fluid @className" id="@(view.ViewId + page.PageId)">
+    <div class="container-fluid @className" id="@(view.IdSuffix + page.PageId)">
         @Raw(view.ParseChildren())
 
         @if (view.GetBoolValue("show_page_separator"))

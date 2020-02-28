@@ -2309,13 +2309,12 @@ namespace Seal.Model
             {
                 if (string.IsNullOrWhiteSpace(message.Trim()) && args.Length == 0)
                 {
-                    Console.WriteLine(message);
+                    Debug.WriteLine(message);
                     ExecutionMessages += message;
                 }
                 else
                 {
-                    //string are supposed to be thread-safe...
-                    Console.WriteLine(string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args)));
+                    Debug.WriteLine(string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args)));
                     ExecutionMessages += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args));
                 }
             }

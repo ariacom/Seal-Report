@@ -440,6 +440,10 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
+                if (execution == null)
+                {
+                    execution = DashboardExecutions.FirstOrDefault(i => i.Report.ExecutionGUID == execution_guid);
+                }
                 if (execution != null)
                 {
                     Report report = execution.Report;

@@ -12,12 +12,11 @@
 }
 else
 {
-<div id='@view.ViewId' @Raw(view.AddAttribute("class", "modeldetail_class")) @Raw(view.AddAttribute("style", "modeldetail_css"))>
+<div @Raw(view.AddAttribute("class", "modeldetail_class")) @Raw(view.AddAttribute("style", "modeldetail_css"))>
 
     @foreach (ResultPage page in reportModel.Pages)
     {
         <div>
-            <a name="@(view.ViewId + page.PageId)"></a>
             @if (page.PageTable != null && page.PageTable.RowCount == 2 && page.PageTable.ColumnCount > 0)
             {
                 <table class='table table-striped table-hover table-bordered'>

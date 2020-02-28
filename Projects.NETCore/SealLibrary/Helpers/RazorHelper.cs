@@ -166,7 +166,6 @@ namespace Seal.Helpers
 
         static public string CompileExecute(string script, object model, string key = null)
         {
-            Debug.WriteLine(key != null ? "Razor Key: " + key : "");
             if (model != null && script != null && script.Trim().StartsWith("@"))
             {
                 string result = "";

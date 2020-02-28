@@ -6,10 +6,10 @@
 
 @if (!report.PrintLayout)
 {
-    <ul id="tc_@(view.ViewId)" class="nav nav-@(view.GetValue("tab_style"))s @(view.GetValue("tab_position") != "top" ? "nav-stacked" : "") @(view.GetBoolValue("tab_justified") ? "nav-justified" : "")">
+    <ul id="tc_@(view.IdSuffix)" class="nav nav-@(view.GetValue("tab_style"))s @(view.GetValue("tab_position") != "top" ? "nav-stacked" : "") @(view.GetBoolValue("tab_justified") ? "nav-justified" : "")">
         @foreach (ReportView childView in view.Views.OrderBy(i => i.SortOrderFull))
         {
-            <li ><a data-toggle="@(view.GetValue("tab_style"))" href='#@(childView.ViewId)_tab_page'>@childView.ViewName</a></li>
+            <li ><a data-toggle="@(view.GetValue("tab_style"))" href='#@(childView.IdSuffix)_tab_page'>@childView.ViewName</a></li>
         }
     </ul>
 }

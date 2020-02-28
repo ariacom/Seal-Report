@@ -6,7 +6,7 @@
     Repository repository = report.Repository;
 }
 
-<div id="@(view.ViewId)_tab_page" style="" class="@(report.PrintLayout ? "" : "tab-pane fade")">
+<div id="@(view.IdSuffix)_tab_page" style="" class="@(report.PrintLayout ? "" : "tab-pane fade")">
     @if (view.HasValue("tab_description"))
     {
         <div class="alert alert-info">

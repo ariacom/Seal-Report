@@ -4,13 +4,18 @@
     Report report = Model;
     ReportView view = report.CurrentView;
     Repository repository = report.Repository;
+    view.IdSuffix = Guid.NewGuid().ToString().Replace("-", "");
+    foreach (ReportView childView in view.Views)
+    {
+        childView.IdSuffix = Guid.NewGuid().ToString().Replace("-", "");
+    }
 }
 
 <script>
-    $(function () {
-        $('#tc_@(view.ViewId) li:eq(@view.GetNumericValue("tab_selected_index")) a').tab('show');
-        $('#tc_@(view.ViewId) a').click(function (e) {
-            submitViewParameter("@view.ViewId", "tab_selected_index", $($(this).attr('href')).index());
+    $(document).ready(function () {
+        $('#tc_@(view.IdSuffix) li:eq(@view.GetNumericValue("tab_selected_index")) a').tab('show');
+        $('#tc_@(view.IdSuffix) a').click(function (e) {
+            submitViewParameter("@report.ExecutionGUID", "@view.ViewId", "tab_selected_index", $($(this).attr('href')).index());
             @if (report.HasNVD3Chart)
             {<text>
             redrawNVD3Charts();
