@@ -139,7 +139,7 @@ function initMessageMenu() {
 
     //autoscroll
     $("#message_autoscroll").click(function () {
-        submitViewParameter(rootViewId, "messages_autoscroll", $('#message_autoscroll').is(":checked"));
+        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "messages_autoscroll", $('#message_autoscroll').is(":checked"));
     });
 
     //message options
@@ -266,21 +266,6 @@ function executeReport(nav) {
     }
 }
 
-function submitViewParameter(viewId, parameterName, parameterValue) {
-    if (generateHTMLDisplay) {
-        if (urlPrefix != "") {
-            $.post(urlPrefix + "ActionUpdateViewParameter", { execution_guid: $("#execution_guid").val(), parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
-        }
-        else {
-            $("#parameter_view_id").val(viewId);
-            $("#parameter_view_name").val(parameterName);
-            $("#parameter_view_value").val(parameterValue);
-            $("#header_form").attr("action", "ActionUpdateViewParameter");
-            $("#header_form").submit();
-        }
-    }
-}
-
 //Enum select picker
 function requestEnumData(filter, forceNoMessage) {
     var result;
@@ -401,7 +386,7 @@ function mainInit() {
     });
 
     $("#restrictions_button").click(function () {
-        submitViewParameter(rootViewId, "restriction_button", !$("#restrictions_div").hasClass("in"));
+        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "restriction_button", !$("#restrictions_div").hasClass("in"));
         $("#restrictions_button").toggleClass("active");
         //Collapse navbar
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
@@ -416,14 +401,14 @@ function mainInit() {
     //tabs buttons
     $(".sr_tab").click(function () {
         var buttonId = $(this).attr("id");
-        submitViewParameter(rootViewId, "information_button", buttonId == "information_button");
+        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), "information_button", buttonId == "information_button");
         if ($("#message_button").length) {
             var messageMode = "enabled";
             if (buttonId == "message_button") {
                 messageMode = "enabledshown";
                 scrollMessages();
             }
-            submitViewParameter(rootViewId, "messages_mode", messageMode);
+            if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "messages_mode", messageMode);
         }
         redrawDataTables();
 

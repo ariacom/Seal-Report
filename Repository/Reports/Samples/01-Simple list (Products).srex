@@ -1,169 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GUID>a41f0ad3-16f9-4766-b9d3-33f882fad04f</GUID>
-  <Sources>
-    <ReportSource>
-      <GUID>70370890-3da6-4c57-bad7-3729570efef5</GUID>
-      <Name>Northwind (Repository)</Name>
-      <Connections />
-      <ConnectionGUID>1</ConnectionGUID>
-      <InitScript />
-      <TasksScript />
-      <MetaData>
-        <Tables>
-          <MetaTable>
-            <GUID>5c919d36-900b-4c36-9902-9103ef9604e5</GUID>
-            <Alias>SealMasterTable</Alias>
-            <DynamicColumns>true</DynamicColumns>
-            <MustRefresh>false</MustRefresh>
-            <Columns />
-          </MetaTable>
-        </Tables>
-        <Joins />
-        <Enums />
-      </MetaData>
-      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
-    </ReportSource>
-  </Sources>
-  <Models>
-    <ReportModel>
-      <GUID>031b29cc-df91-4adc-982a-dbbd8e662393</GUID>
-      <Name>model</Name>
-      <SourceGUID>70370890-3da6-4c57-bad7-3729570efef5</SourceGUID>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
-      <Elements>
-        <ReportElement>
-          <GUID>c07250de-6eed-4c24-bb70-333599f7fa3c</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <Tag />
-          <NumericStandardFormat>Numeric0</NumericStandardFormat>
-          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-          <Format />
-          <EnumGUID />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Page</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-          <EnumGUIDEL />
-        </ReportElement>
-        <ReportElement>
-          <GUID>741c7301-94d5-4876-9f73-8e12db3653e5</GUID>
-          <Name>Products.ProductName</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>eeaee07b-f5e2-4705-b956-e2dd9b09ad06</GUID>
-          <Name>Products.QuantityPerUnit</Name>
-          <Category>Master</Category>
-          <Tag />
-          <NumericStandardFormat>Numeric0</NumericStandardFormat>
-          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-          <Format />
-          <EnumGUID />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</MetaColumnGUID>
-          <EnumGUIDEL />
-        </ReportElement>
-        <ReportElement>
-          <GUID>6d4742f7-4813-4559-a220-6f83a6a309ab</GUID>
-          <Name>Products.UnitPrice</Name>
-          <Category>Master</Category>
-          <Tag />
-          <NumericStandardFormat>Numeric0</NumericStandardFormat>
-          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-          <Format />
-          <EnumGUID />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</MetaColumnGUID>
-          <EnumGUIDEL />
-        </ReportElement>
-        <ReportElement>
-          <GUID>22f44cf2-f0c3-4d07-9ee7-72a5712f396e</GUID>
-          <Name>Products.UnitsInStock</Name>
-          <Category>Master</Category>
-          <Tag />
-          <NumericStandardFormat>Numeric0</NumericStandardFormat>
-          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-          <Format />
-          <EnumGUID />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID>
-          <EnumGUIDEL />
-        </ReportElement>
-        <ReportElement>
-          <GUID>645cbd50-4920-4b4a-af78-f30aaafc78b8</GUID>
-          <Name>Products.UnitsOnOrder</Name>
-          <Category>Master</Category>
-          <Tag />
-          <NumericStandardFormat>Numeric0</NumericStandardFormat>
-          <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
-          <Format />
-          <EnumGUID />
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>6fa87b3b-048f-4680-9516-35679cba84bf</MetaColumnGUID>
-          <EnumGUIDEL />
-        </ReportElement>
-      </Elements>
-      <Restriction />
-      <Restrictions />
-      <AggregateRestriction />
-      <AggregateRestrictions />
-    </ReportModel>
-  </Models>
-  <Outputs />
-  <Tasks />
-  <CommonScripts />
-  <TasksScript />
-  <Views>
-    <ReportView>
-      <GUID>53b70185-5682-4d65-abad-089630729ca2</GUID>
-      <Name>view</Name>
-      <Views>
-        <ReportView>
-          <GUID>2fb686d5-851e-480f-b2aa-3408f092e483</GUID>
-          <Name>Model HTML View</Name>
-          <Views>
-            <ReportView>
-              <GUID>5fe33951-7d28-40e0-8f4a-dd3405aae7dd</GUID>
-              <Name>Model Container</Name>
-              <Views>
-                <ReportView>
-                  <GUID>eb23d1f0-836c-46db-b2d3-57f059bc9d87</GUID>
-                  <Name>Page Table</Name>
-                  <Views />
-                  <TemplateName>Page Table</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>1</SortOrder>
-                  <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>a41f0ad3-16f9-4766-b9d3-33f882fad04f</GUID><ViewGUID>53b70185-5682-4d65-abad-089630729ca2</ViewGUID><Sources><ReportSource><GUID>70370890-3da6-4c57-bad7-3729570efef5</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>5c919d36-900b-4c36-9902-9103ef9604e5</GUID><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns></MetaTable></Tables></MetaData><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>031b29cc-df91-4adc-982a-dbbd8e662393</GUID><Name>model</Name><SourceGUID>70370890-3da6-4c57-bad7-3729570efef5</SourceGUID><Elements><ReportElement><GUID>c07250de-6eed-4c24-bb70-333599f7fa3c</GUID><Name>Products.CategoryID</Name><Category>Master</Category><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><PivotPosition>Page</PivotPosition><AggregateFunction>Count</AggregateFunction><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID><EnumGUIDEL /></ReportElement><ReportElement><GUID>741c7301-94d5-4876-9f73-8e12db3653e5</GUID><Name>Products.ProductName</Name><Category>Master</Category><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>087ed2f1-b58b-4407-9291-8329ee5dbfe1</MetaColumnGUID></ReportElement><ReportElement><GUID>eeaee07b-f5e2-4705-b956-e2dd9b09ad06</GUID><Name>Products.QuantityPerUnit</Name><Category>Master</Category><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>fc5b4299-9a72-44b2-b0a5-8bfcc5e15ef9</MetaColumnGUID><EnumGUIDEL /></ReportElement><ReportElement><GUID>6d4742f7-4813-4559-a220-6f83a6a309ab</GUID><Name>Products.UnitPrice</Name><Category>Master</Category><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><PivotPosition>Row</PivotPosition><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>b58c7176-d8e6-4edd-9a6c-6444e5a04b3a</MetaColumnGUID><EnumGUIDEL /></ReportElement><ReportElement><GUID>22f44cf2-f0c3-4d07-9ee7-72a5712f396e</GUID><Name>Products.UnitsInStock</Name><Category>Master</Category><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><PivotPosition>Row</PivotPosition><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>e603a329-4e4f-48c5-97e0-60c140f5de8a</MetaColumnGUID><EnumGUIDEL /></ReportElement><ReportElement><GUID>645cbd50-4920-4b4a-af78-f30aaafc78b8</GUID><Name>Products.UnitsOnOrder</Name><Category>Master</Category><NumericStandardFormat>Numeric0</NumericStandardFormat><DateTimeStandardFormat>ShortDate</DateTimeStandardFormat><PivotPosition>Row</PivotPosition><Nvd3Serie>ScatterChart</Nvd3Serie><MetaColumnGUID>6fa87b3b-048f-4680-9516-35679cba84bf</MetaColumnGUID><EnumGUIDEL /></ReportElement></Elements></ReportModel></Models><Views><ReportView><GUID>53b70185-5682-4d65-abad-089630729ca2</GUID><Name>view</Name><Views><ReportView><GUID>2fb686d5-851e-480f-b2aa-3408f092e483</GUID><Name>Model HTML View</Name><Views><ReportView><GUID>5fe33951-7d28-40e0-8f4a-dd3405aae7dd</GUID><Name>Model Container</Name><Views><ReportView><GUID>eb23d1f0-836c-46db-b2d3-57f059bc9d87</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
@@ -190,21 +25,7 @@
   &lt;PageScript /&gt;
   &lt;ChartScript /&gt;
   &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
-                </ReportView>
-                <ReportView>
-                  <GUID>665dbab2-221e-46d3-981c-37ea45d9d7b8</GUID>
-                  <Name>Chart JS</Name>
-                  <Views />
-                  <TemplateName>Chart JS</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>2</SortOrder>
-                  <PdfConfigurations />
-                  <ExcelConfigurations>
-                    <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView><ReportView><GUID>665dbab2-221e-46d3-981c-37ea45d9d7b8</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
@@ -231,54 +52,7 @@
   &lt;PageScript /&gt;
   &lt;ChartScript /&gt;
   &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-                  </ExcelConfigurations>
-                </ReportView>
-                <ReportView>
-                  <GUID>857c2879-a06a-4542-9de9-a43e06c25572</GUID>
-                  <Name>Chart NVD3</Name>
-                  <Views />
-                  <TemplateName>Chart NVD3</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>3</SortOrder>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
-                </ReportView>
-                <ReportView>
-                  <GUID>e61405a7-10ae-41f1-bd51-8b847e84100a</GUID>
-                  <Name>Chart Plotly</Name>
-                  <Views />
-                  <TemplateName>Chart Plotly</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>4</SortOrder>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
-                </ReportView>
-                <ReportView>
-                  <GUID>e1932b76-0b84-4258-a6ec-b2e7d282d7b4</GUID>
-                  <Name>Data Table</Name>
-                  <Views />
-                  <TemplateName>Data Table</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>5</SortOrder>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
-                </ReportView>
-              </Views>
-              <TemplateName>Model Container</TemplateName>
-              <PartialTemplates />
-              <Parameters />
-              <CultureName />
-              <SortOrder>1</SortOrder>
-              <PdfConfigurations />
-              <ExcelConfigurations>
-                <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView><ReportView><GUID>857c2879-a06a-4542-9de9-a43e06c25572</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>e61405a7-10ae-41f1-bd51-8b847e84100a</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>e1932b76-0b84-4258-a6ec-b2e7d282d7b4</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
@@ -305,25 +79,7 @@
   &lt;PageScript /&gt;
   &lt;ChartScript /&gt;
   &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-              </ExcelConfigurations>
-            </ReportView>
-          </Views>
-          <TemplateName>Model</TemplateName>
-          <ModelGUID>031b29cc-df91-4adc-982a-dbbd8e662393</ModelGUID>
-          <CustomTemplate />
-          <PartialTemplates />
-          <Parameters>
-            <Parameter>
-              <Name>show_summary_table</Name>
-              <Value>False</Value>
-            </Parameter>
-          </Parameters>
-          <CultureName />
-          <SortOrder>1</SortOrder>
-          <PdfConfigurations />
-          <ExcelConfigurations>
-            <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>031b29cc-df91-4adc-982a-dbbd8e662393</ModelGUID><CustomTemplate /><Parameters><Parameter><Name>show_summary_table</Name><Value>False</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><CustomTemplate /><Parameters><Parameter><Name>report_description</Name><Value>Simple list with a break per product category.</Value></Parameter></Parameters><SortOrder>0</SortOrder><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
   &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
@@ -350,57 +106,4 @@
   &lt;PageScript /&gt;
   &lt;ChartScript /&gt;
   &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-          </ExcelConfigurations>
-        </ReportView>
-      </Views>
-      <TemplateName>Report</TemplateName>
-      <ModelGUID />
-      <CustomTemplate />
-      <PartialTemplates />
-      <Parameters>
-        <Parameter>
-          <Name>report_description</Name>
-          <Value>Simple list with a break per product category.</Value>
-        </Parameter>
-      </Parameters>
-      <CultureName />
-      <SortOrder>0</SortOrder>
-      <PdfConfigurations />
-      <ExcelConfigurations>
-        <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;NewSheetMode&gt;PerTabPage&lt;/NewSheetMode&gt;
-  &lt;ShowTitle&gt;false&lt;/ShowTitle&gt;
-  &lt;ShowMessage&gt;false&lt;/ShowMessage&gt;
-  &lt;ShowInformation&gt;false&lt;/ShowInformation&gt;
-  &lt;DeleteEmptyRows&gt;true&lt;/DeleteEmptyRows&gt;
-  &lt;AutoFitColumns&gt;true&lt;/AutoFitColumns&gt;
-  &lt;AutoFilterColumns&gt;true&lt;/AutoFilterColumns&gt;
-  &lt;FreezePanes&gt;true&lt;/FreezePanes&gt;
-  &lt;UseElementFormat&gt;true&lt;/UseElementFormat&gt;
-  &lt;UseCellStyle&gt;true&lt;/UseCellStyle&gt;
-  &lt;NewSheetPerPage&gt;false&lt;/NewSheetPerPage&gt;
-  &lt;ChartWidth&gt;600&lt;/ChartWidth&gt;
-  &lt;ChartHeight&gt;400&lt;/ChartHeight&gt;
-  &lt;ChartStacked&gt;false&lt;/ChartStacked&gt;
-  &lt;NewSheetForCharts&gt;false&lt;/NewSheetForCharts&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string>
-      </ExcelConfigurations>
-    </ReportView>
-  </Views>
-  <DisplayName />
-  <InitScript />
-  <ViewGUID>53b70185-5682-4d65-abad-089630729ca2</ViewGUID>
-  <Schedules />
-</Report>
+&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView></Views></Report>

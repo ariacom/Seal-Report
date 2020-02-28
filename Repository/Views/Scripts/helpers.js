@@ -169,3 +169,18 @@ function getTableData(datatable, guid, viewid, pageid, data, callback, settings)
         datatable[0].innerHTML = "Error loading data..." + "<br>" + ex2.message;
     }
 }
+
+
+function submitViewParameter(executionId, viewId, parameterName, parameterValue) {
+    if (urlPrefix != "") {
+        $.post(urlPrefix + "ActionUpdateViewParameter", { execution_guid: executionId, parameter_view_id: viewId, parameter_view_name: parameterName, parameter_view_value: parameterValue });
+    }
+    else {
+        $("#parameter_view_id").val(viewId);
+        $("#parameter_view_name").val(parameterName);
+        $("#parameter_view_value").val(parameterValue);
+        $("#header_form").attr("action", "ActionUpdateViewParameter");
+        $("#header_form").submit();
+    }
+}
+
