@@ -435,20 +435,81 @@
                                 Several properties allow to configure the <b>Widget</b> default look and behavior  (<eg>e.g. Default height and width, auto-refresh rate, etc.</eg>).
                             </p>
                             <div class="bs-callout bs-callout-warning">
-                                <h4>Edit your dashboards manually</h4>
-                                To add the <b>Widget</b> to one of your <b>Dashboard</b>, just edit the dashboard definition file (*.sdax) located in the <i>/Dashboards</i> Repository sub-folder with a text editor.<br />
-                                Then cut and paste the <code>Dashboard XML</code> text into the <b>&lt;Items&gt;</b> XML tag.
-                            </div>
-                            <div class="bs-callout bs-callout-demo">
-                                Here is a basic dashboard definition file having one widget item:
-                                <pre class="brush: xml; highlight: [6,7,8]">
+                                <h4>Create or edit your dashboards manually</h4>
+                                <ul>
+                                    <li>
+                                        <b>Dashboard folders security</b><br />
+                                        Using the Server Manager, use the Menu <srmenu>Configure Web Security (CTRL+W)</srmenu>, then
+                                        click on Security Groups and edit the Default Group, check that at least a Dashboard Folder is defined in the Dashboard Security.
+                                    </li>
+                                    <li>
+                                        <b>Create the Dashboard file</b><br />
+                                        Using a text editor, create a dashboard definition file (*.sdax) into one sub-folder of the <i>/Dashboards</i> Repository sub-folder with the following content:
+                                        <pre class="brush: xml; highlight: [3,4]">
                                     &lt;?xml version="1.0" encoding="utf-8" ?>
                                     &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-                                    &lt;GUID>97adfacd-de4e-437e-a6bd-709797a89345&lt;/GUID>
-                                    &lt;Name>A Dashboard Name&lt;/Name>
+                                    &lt;GUID>yourDashboardGUID&lt;/GUID>
+                                    &lt;Name>Your Dashboard Name&lt;/Name>
+                                    &lt;Items>
+                                    &lt;/Items>
+                                    &lt;/Dashboard>                                    
+                                </pre>
+                                        Replace the <i>yourDashboardGUID</i> value by any unique identifier.
+                                    </li>
+                                    <li>
+                                        <b>Get Widget GUID</b><br />
+                                        Using the <b>Report Designer</b>, open the report and browse to a Widget Definition (<srmenu>Tools->Go to next widget in the report</srmenu> menu or <srmenu>CTRL+W</srmenu>), then copy and paste the <code>Dashboard XML</code> text into the <b>&lt;Items&gt;</b> XML tag.
+                                        <pre class="brush: xml; highlight: [6,7,8]">
+                                    &lt;?xml version="1.0" encoding="utf-8" ?>
+                                    &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                                    &lt;GUID>yourDashboardGUID&lt;/GUID>
+                                    &lt;Name>Your Dashboard Name&lt;/Name>
                                     &lt;Items>
                                         &lt;DashboardItem>
                                             &lt;WidgetGUID>f1178eee-fe6c-4263-bf64-1499a69c8a53&lt;/WidgetGUID>
+                                        &lt;/DashboardItem>
+                                    &lt;/Items>
+                                    &lt;/Dashboard>                                    
+                                </pre>
+                                    </li>
+                                    <li>
+                                        <b>Add the item GUID</b><br />
+                                        Add a unique &lt;GUID> value to the &lt;DashboardItem> element.
+                                                                         <pre class="brush: xml; highlight: [7]">
+                                    &lt;?xml version="1.0" encoding="utf-8" ?>
+                                    &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                                    &lt;GUID>yourDashboardGUID&lt;/GUID>
+                                    &lt;Name>Your Dashboard Name&lt;/Name>
+                                    &lt;Items>
+                                        &lt;DashboardItem>
+                                            &lt;GUID>yourItemGUID&lt;/GUID>
+                                            &lt;WidgetGUID>f1178eee-fe6c-4263-bf64-1499a69c8a53&lt;/WidgetGUID>
+                                        &lt;/DashboardItem>
+                                    &lt;/Items>
+                                    &lt;/Dashboard>                                    
+                                </pre>
+                                    </li>
+                                    <li>
+                                        <b>View the Dashboard</b><br />
+                                        From the <b>Web Report Server</b>, logout and login to refresh the dashboard list, then go to the dashboard view and add the new Dashboard to you current view using the <b>Manage Dashboard</b> button.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bs-callout bs-callout-demo">
+                                Here is the dashboard definition file having 2 widget items (got from the KPI sample):
+                                <pre class="brush: xml;">
+                                    &lt;?xml version="1.0" encoding="utf-8" ?>
+                                    &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                                    &lt;GUID>37838ba-4859-4f43-8df5-7bd276076fbc&lt;/GUID>
+                                    &lt;Name>KPI&lt;/Name>
+                                    &lt;Items>
+                                        &lt;DashboardItem>
+                                        &lt;GUID>e1812486-2383-4557-afcd-4fd94a9c11fa&lt;/GUID>
+                                            &lt;WidgetGUID>f1178eee-fe6c-4263-bf64-1499a69c8a53&lt;/WidgetGUID>
+                                        &lt;/DashboardItem>
+                                        &lt;DashboardItem>
+                                        &lt;GUID>04a1e553-a77b-43bc-86cf-b89c9650e8d3&lt;/GUID>
+                                            &lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
                                         &lt;/DashboardItem>
                                     &lt;/Items>
                                     &lt;/Dashboard>                                    
@@ -456,7 +517,7 @@
                             </div>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Widgets Navigation</h4>
-                                From the <b>Report Designer</b>, use the <srmenu>Tools->Go to next widget in the report</srmenu> menu to navigate between the different Widgets published contained in the report.
+                                From the <b>Report Designer</b>, use the <srmenu>Tools->Go to next widget in the report</srmenu> menu or <srmenu>CTRL+W</srmenu> to navigate between the different Widgets published contained in the report.
                             </div>
                         </div>
                         <!-- end col -->
@@ -832,4 +893,5 @@
         $(document).ready(function () {
             $("#reports_nav").addClass("active");
         });
-    </script>}
+    </script>
+}
