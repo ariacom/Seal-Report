@@ -16,6 +16,7 @@
     Template.Parameters.Add(new Parameter() { Name = "tab_justified", DisplayName = "Tab justified", BoolValue = false, Description = "If true, tabs or pills have equal widths." });
     Template.Parameters.Add(new Parameter() { Name = "tab_menu_width", DisplayName = "Tab menu width", NumericValue = 3, Description = "For Left or Right menu, the width of the column between 1 and 11 on 12 spans (default is 3)." });
     Template.Parameters.Add(new Parameter() { Name = "print_break_after_view", DisplayName = "Print: Force a break after a view", BoolValue = true, Description = "If true, a new page is started after a view is displayed for the print layout." });
+    Template.Parameters.Add(new Parameter() { Name = "pdf_toc_items", DisplayName = "PDF: Generate TOC Items", BoolValue = true, Description = "If true, table of contents items are generated for the PDF conversion." });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Tab Page" };

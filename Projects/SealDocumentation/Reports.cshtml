@@ -459,14 +459,14 @@
                                     <li>
                                         <b>Get Widget GUID</b><br />
                                         Using the <b>Report Designer</b>, open the report and browse to a Widget Definition (<srmenu>Tools->Go to next widget in the report</srmenu> menu or <srmenu>CTRL+W</srmenu>), then copy and paste the <code>Dashboard XML</code> text into the <b>&lt;Items&gt;</b> XML tag.
-                                        <pre class="brush: xml; highlight: [6,7,8]">
+                                                                                                                                                                                                                                                                                        <pre class="brush: xml; highlight: [6,7,8]">
                                     &lt;?xml version="1.0" encoding="utf-8" ?>
                                     &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
                                     &lt;GUID>yourDashboardGUID&lt;/GUID>
                                     &lt;Name>Your Dashboard Name&lt;/Name>
                                     &lt;Items>
                                         &lt;DashboardItem>
-                                            &lt;WidgetGUID>f1178eee-fe6c-4263-bf64-1499a69c8a53&lt;/WidgetGUID>
+                                            &lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
                                         &lt;/DashboardItem>
                                     &lt;/Items>
                                     &lt;/Dashboard>                                    
@@ -475,7 +475,7 @@
                                     <li>
                                         <b>Add the item GUID</b><br />
                                         Add a unique &lt;GUID> value to the &lt;DashboardItem> element.
-                                                                         <pre class="brush: xml; highlight: [7]">
+                                                                <pre class="brush: xml; highlight: [7]">
                                     &lt;?xml version="1.0" encoding="utf-8" ?>
                                     &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
                                     &lt;GUID>yourDashboardGUID&lt;/GUID>
@@ -483,7 +483,7 @@
                                     &lt;Items>
                                         &lt;DashboardItem>
                                             &lt;GUID>yourItemGUID&lt;/GUID>
-                                            &lt;WidgetGUID>f1178eee-fe6c-4263-bf64-1499a69c8a53&lt;/WidgetGUID>
+                                            &lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
                                         &lt;/DashboardItem>
                                     &lt;/Items>
                                     &lt;/Dashboard>                                    
@@ -505,11 +505,11 @@
                                     &lt;Items>
                                         &lt;DashboardItem>
                                         &lt;GUID>e1812486-2383-4557-afcd-4fd94a9c11fa&lt;/GUID>
-                                            &lt;WidgetGUID>f1178eee-fe6c-4263-bf64-1499a69c8a53&lt;/WidgetGUID>
+                                            &lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
                                         &lt;/DashboardItem>
                                         &lt;DashboardItem>
                                         &lt;GUID>04a1e553-a77b-43bc-86cf-b89c9650e8d3&lt;/GUID>
-                                            &lt;WidgetGUID>8e57329d-fc2d-4fe4-9203-04f4bc32f68e&lt;/WidgetGUID>
+                                            &lt;WidgetGUID>1fda90cc-0e69-4b76-a385-b004e06c47a7&lt;/WidgetGUID>
                                         &lt;/DashboardItem>
                                     &lt;/Items>
                                     &lt;/Dashboard>                                    

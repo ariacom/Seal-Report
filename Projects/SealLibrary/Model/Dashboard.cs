@@ -40,6 +40,22 @@ namespace Seal.Model
                 {
                     result = (Dashboard)serializer.Deserialize(xr);
                 }
+                //Check missing GUIDs for manual edition
+                bool saveIt = false;
+                if (string.IsNullOrEmpty(result.GUID))
+                {
+                    saveIt = true;
+                    result.GUID = Guid.NewGuid().ToString();
+                }
+                foreach (var item in result.Items)
+                {
+                    if (string.IsNullOrEmpty(item.GUID))
+                    {
+                        saveIt = true;
+                        item.GUID = Guid.NewGuid().ToString();
+                    }
+                }
+                if (saveIt) result.SaveToFile(path);
                 result.Path = path;
                 result.LastModification = File.GetLastWriteTime(path);
             }
