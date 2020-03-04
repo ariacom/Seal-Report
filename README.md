@@ -17,6 +17,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **No SQL Data Sources:**
 Fill up your source Data Tables from your own code and display them in a report.
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
+* **NETCore**: From 5.5, a NETCore version is available for the Web Report Server.
 
 A **live demonstration** of the <a href="https://sealreport.org/demo" target=_blank>Web Report Server</a> is available.
 
@@ -53,9 +54,11 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 * .Net Framework 4.5
 * Database OLE DB or ODBC Drivers
 * For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater
+* .NETCore 3.1 for the Web Report Server (limitations: no Report Schedules, no Zip options for Email Output) 
+
 
 **For development:**
-* Visual Studio 2017
+* Visual Studio 2019
 
 ## License
 Seal Report is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>
