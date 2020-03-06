@@ -48,6 +48,7 @@ Assemblies/
 Logs/
 SpecialFolders/
 Projects/SealDocumentation/Help/
+*.pubxml
 
 #web report editor files
 SealEditor*.sln
