@@ -719,21 +719,6 @@ if (cell.DoubleValue < 0)
 "
                 ),
             new Tuple<string, string>(
-                "Load a table from a source table located in an external data source defined with a connection string",
-@"ReportTask task = Model;
-    var helper = new TaskHelper(task);
-	helper.LoadTableFromExternalSource(
-        ""SourceConnectionString"", //full connection string used to load the source table
-        ""SourceSelectStatement"", //SQL Select Statement to get the source table
-        ""DestinationTableName"", //destination table name
-        false, //if true, the table is loaded for all connections defined in the Source
-        """", //optional SQL Select Statement to get a Check table from the source connection
-        """" //optional SQL Select Statement to get a Check table from the destination connection, 
-        //if both source and destination Check tables are identicals, the table is not loaded
-    );
-"
-                ),
-            new Tuple<string, string>(
                 "Query or update the database",
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);

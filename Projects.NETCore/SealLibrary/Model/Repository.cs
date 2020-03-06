@@ -227,6 +227,8 @@ namespace Seal.Model
 
         static string FindDebugRepository(string path)
         {
+            if (string.IsNullOrEmpty(path) || path.Length < 2) return null;
+
             string result = Path.Combine(Path.GetDirectoryName(path), "Repository");
             if (Directory.Exists(result)) return result;
             return null;
@@ -254,16 +256,25 @@ namespace Seal.Model
                 path = Path.GetDirectoryName(path);
             }
 #endif
+            path = "";
             if (string.IsNullOrEmpty(path))
             {
                 if (!Directory.Exists(path) || path == Path.GetPathRoot(path))
                 {
-                    if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData))) Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
-                    path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SealDefaultRepository);
+                    //Missing repository, try in wwwroot (to easy Azure deployment...)
+#if !NETCOREAPP
+                    path = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", ""))), SealDefaultRepository);
+#else
+                    path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "")), "Repository");
+#endif
+                    if (!Directory.Exists(path) || path == Path.GetPathRoot(path))
+                    {
+                        //Set default
+                        if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData))) Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
+                        path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SealDefaultRepository);
+                    }
                 }
             }
-            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-
             return path;
         }
 
@@ -670,7 +681,7 @@ namespace Seal.Model
             return inputFolder.Replace(Repository.SealRepositoryKeyword, RepositoryPath).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
         }
 
-        #region Translations
+#region Translations
 
         //Translations, one dictionary per context
         Dictionary<string, RepositoryTranslation> _translations = null;
@@ -1009,9 +1020,9 @@ namespace Seal.Model
             return result;
         }
 
-        #endregion
+#endregion
 
-        #region Web publishing
+#region Web publishing
         /// <summary>
         /// Current web application apth
         /// </summary>
@@ -1028,9 +1039,9 @@ namespace Seal.Model
             }
         }
 
-        #endregion
+#endregion
 
-        #region Helpers
+#region Helpers
         //Helpers
         /// <summary>
         /// Find and load report form its identifier
@@ -1068,7 +1079,7 @@ namespace Seal.Model
             return result;
         }
 
-        #endregion
+#endregion
     }
 }
 
