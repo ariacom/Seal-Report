@@ -125,6 +125,7 @@
     <Content Include="Content\jstree-style.min.css" />
     <Content Include="Content\bootstrap-select.min.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
+    <Content Include="Content\seal.css" />
     <Content Include="Content\SealWeb.css" />
     <Content Include="Content\nv.d3.min.css" />
     <Content Include="Content\throbber.gif" />
@@ -133,6 +134,7 @@
     <Content Include="Images\favicon.ico" />
     <Content Include="Images\faviconWebServer.ico" />
     <Content Include="Images\logo.png" />
+    <Content Include="Scripts\common.js" />
     <Content Include="Scripts\dataTables.min.js" />
     <Content Include="Scripts\bootstrap-select.min.js" />
     <Content Include="Scripts\moment.min.js" />
@@ -150,6 +152,7 @@
     <Content Include="Scripts\i18n\selectpicker.pt.min.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\datetime-moment.js" />
+    <Content Include="Scripts\swi.js" />
     <Content Include="Scripts\web-animations.min.js" />
     <Content Include="Scripts\hammer.min.js" />
     <Content Include="Scripts\muuri.min.js" />
@@ -228,6 +231,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Menu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\SealWebServer - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\SealWebServerEditor - Web Deploy.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

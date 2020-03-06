@@ -1437,6 +1437,14 @@ namespace Seal.Model
                                 {
                                     subTotalLine[j].Cells.Add(dataTable[i, j]);
                                 }
+                                else if (subTotalLine[j].Element == null && dataTable[i, j].Element != null && dataTable[i, j].Element.PivotPosition == PivotPosition.Data)
+                                {
+                                    var sourceCell = dataTable[i, j];
+                                    totalCells.Add(subTotalLine[j]);
+                                    subTotalLine[j].Element = sourceCell.Element;
+                                    subTotalLine[j].FinalCssClass += " text-right";
+                                    subTotalLine[j].Cells.Add(sourceCell);
+                                }
                             }
                         }
                         i++;
