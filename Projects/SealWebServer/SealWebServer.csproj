@@ -177,10 +177,6 @@
     <Content Include="Scripts\plotly\plotly-locale-it.js" />
     <Content Include="Scripts\plotly\plotly-locale-nl.js" />
     <Content Include="Scripts\plotly\plotly-locale-pt.js" />
-    <Content Include="Scripts\swi-utils.js" />
-    <Content Include="Scripts\swi-gateway.js" />
-    <Content Include="Scripts\swi-dashboard.js" />
-    <Content Include="Scripts\swi-main.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

@@ -190,6 +190,17 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the Seal Scheduler is used instead of the Windows Tasks Scheduler
+        /// </summary>
+        public bool UseSealScheduler
+        {
+            get
+            {
+                return Configuration.UseSealScheduler;
+            }
+        }
+
+        /// <summary>
         /// Forces a configuration reload
         /// </summary>
         public void ReloadConfiguration()
@@ -224,7 +235,6 @@ namespace Seal.Model
         {
             _security = null;
         }
-
 
         static string FindDebugRepository(string path)
         {

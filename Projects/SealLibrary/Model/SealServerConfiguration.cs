@@ -108,6 +108,7 @@ namespace Seal.Model
         /// </summary>
         [Category("Server Settings"), DisplayName("Task Folder Name"), Description("The name of the Task Scheduler folder containg the schedules of the reports. Warning: Changing this name will affect all existing schedules !"), Id(2, 1)]
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
+        public bool UseSealScheduler { get; set; } = true;
 
         /// <summary>
         /// The logo file name used by the report templates
