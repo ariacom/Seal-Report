@@ -206,8 +206,8 @@ namespace Seal.Model
         /// </summary>      
         public string GetReportCommonScriptKey(string name, object model)
         {
-            var script = CommonScripts.FirstOrDefault(i => i.Name == name); 
-            if (script == null) throw new Exception(string.Format("Unable to find a report common script  named '{0}'...", name));            
+            var script = CommonScripts.FirstOrDefault(i => i.Name == name);
+            if (script == null) throw new Exception(string.Format("Unable to find a report common script  named '{0}'...", name));
 
             string key = string.Format("REPCS:{0}_{1}_{2}_{3}", FilePath, GUID, name, File.GetLastWriteTime(FilePath).ToString("s"));
             try
@@ -606,7 +606,7 @@ namespace Seal.Model
             get
             {
                 return ((ExecutionView.GetValue("messages_mode") == "enabledshown")
-                    || (ExecutionView.GetValue("messages_mode") == "enabledshownexec" &&  (Status == ReportStatus.NotExecuted || Status == ReportStatus.Executing))
+                    || (ExecutionView.GetValue("messages_mode") == "enabledshownexec" && (Status == ReportStatus.NotExecuted || Status == ReportStatus.Executing))
                     || (ExecutionView.GetValue("messages_mode") == "enabled" && !string.IsNullOrEmpty(WebExecutionErrors))
                     );
             }
@@ -1234,7 +1234,7 @@ namespace Seal.Model
             {
                 output.ViewGUID = newValues[output.ViewGUID];
             }
-            
+
             //No schedule
             Schedules.Clear();
         }
@@ -1257,17 +1257,30 @@ namespace Seal.Model
                 }
 
                 //Clear unused tasks
-                foreach (Task task in TaskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.StartsWith(FilePath + "\n")))
+                if (Repository.UseSealScheduler)
                 {
-                    try
+                    foreach (var schedule in SealReportScheduler.Instance.GetSchedules().Where(i => i.ReportGUID == GUID).ToList())
                     {
-                        ReportSchedule schedule = Schedules.FirstOrDefault(i => i.TaskSource == task.Definition.RegistrationInfo.Source);
-                        if (schedule == null)
+                        if (!Schedules.Exists(i => i.GUID == schedule.GUID))
                         {
-                            TaskFolder.DeleteTask(task.Name);
+                            SealReportScheduler.Instance.DeleteSchedule(schedule.GUID);
                         }
                     }
-                    catch { }
+                }
+                else
+                {
+                    foreach (Task task in TaskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.StartsWith(FilePath + "\n")))
+                    {
+                        try
+                        {
+                            ReportSchedule schedule = Schedules.FirstOrDefault(i => i.TaskSource == task.Definition.RegistrationInfo.Source);
+                            if (schedule == null)
+                            {
+                                TaskFolder.DeleteTask(task.Name);
+                            }
+                        }
+                        catch { }
+                    }
                 }
             }
             catch { }
@@ -1297,7 +1310,7 @@ namespace Seal.Model
                 LastModification = File.GetLastWriteTime(path);
             }
             //Clear and synchronize tasks
-            if (SchedulesModified) SynchronizeTasks();
+            if (SchedulesModified || Repository.UseSealScheduler) SynchronizeTasks();
             SchedulesModified = false;
         }
 

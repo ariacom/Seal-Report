@@ -14,6 +14,7 @@ using Seal.Forms;
 using System.ComponentModel.Design;
 using Microsoft.Win32.TaskScheduler;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Seal.Model
 {
@@ -34,9 +35,23 @@ namespace Seal.Model
                 GetProperty("OutputName").SetIsBrowsable(!IsTasksSchedule);
                 GetProperty("IsTasksSchedule").SetIsBrowsable(IsTasksSchedule);
 
-                GetProperty("IsEnabled").SetIsBrowsable(true);
-                GetProperty("LastRunTime").SetIsBrowsable(true);
-                GetProperty("NextRunTime").SetIsBrowsable(true);
+                //Seal scheduler
+                GetProperty("SealEnabled").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealStart").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealEnd").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealType").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealDaysInterval").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Daily);
+                GetProperty("SealWeeksInterval").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Weekly);
+                GetProperty("SealWeekdays").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Weekly);
+                GetProperty("SealMonths").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Monthly);
+                GetProperty("SealDays").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Monthly);
+                GetProperty("SealRepeatInterval").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealRepeatDuration").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealNextExecution").SetIsBrowsable(Report.Repository.UseSealScheduler);
+
+                GetProperty("IsEnabled").SetIsBrowsable(!Report.Repository.UseSealScheduler);
+                GetProperty("LastRunTime").SetIsBrowsable(!Report.Repository.UseSealScheduler);
+                GetProperty("NextRunTime").SetIsBrowsable(!Report.Repository.UseSealScheduler);
 
                 GetProperty("NotificationEmailSubject").SetIsBrowsable(true);
                 GetProperty("NotificationEmailBody").SetIsBrowsable(true);
@@ -54,7 +69,7 @@ namespace Seal.Model
                 GetProperty("HelperEditProperties").SetIsBrowsable(true);
                 GetProperty("HelperRunTaskScheduler").SetIsBrowsable(true);
 
-                GetProperty("ErrorMinutesBetweenRetries").SetIsReadOnly(ErrorNumberOfRetries<=0);
+                GetProperty("ErrorMinutesBetweenRetries").SetIsReadOnly(ErrorNumberOfRetries <= 0);
                 GetProperty("ErrorEmailSubject").SetIsReadOnly(string.IsNullOrEmpty(ErrorEmailTo));
                 GetProperty("ErrorEmailFrom").SetIsReadOnly(string.IsNullOrEmpty(ErrorEmailTo));
                 GetProperty("ErrorEmailSendMode").SetIsReadOnly(string.IsNullOrEmpty(ErrorEmailTo));
@@ -89,7 +104,227 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Is Schedule for Report Tasks"), Description("If true, the schedule is executed without output definition. It may be used to schedule reports having only tasks. The default view of the report is used for the execution."), Id(1, 1)]
         public bool IsTasksSchedule
         {
-            get {return string.IsNullOrEmpty(OutputGUID); }
+            get { return string.IsNullOrEmpty(OutputGUID); }
+        }
+
+        [Category("Definition"), DisplayName("Is enabled"), Description("True if the schedule is enabled."), Id(2, 1)]
+        [XmlIgnore]
+        [DefaultValue(true)]
+        public bool SealEnabled
+        {
+            get
+            {
+                return SealSchedule.Enabled;
+            }
+            set
+            {
+                SealSchedule.Enabled = value;
+            }
+        }
+
+        [Category("Definition"), DisplayName("Start date"), Description("Start date and time of the schedule."), Id(2, 1)]
+        [XmlIgnore]
+        public DateTime SealStart
+        {
+            get
+            {
+                return SealSchedule.Start;
+            }
+            set
+            {
+                SealSchedule.Start = value;
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+        [Category("Definition"), DisplayName("End date"), Description("End date and time of the schedule."), Id(3, 1)]
+        [XmlIgnore]
+        public DateTime SealEnd
+        {
+            get
+            {
+                return SealSchedule.End;
+            }
+            set
+            {
+                SealSchedule.End = value;
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+
+
+        [Category("Definition"), DisplayName("Trigger type"), Description("Type of schedule trigger."), Id(4, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(TriggerType.Daily)]
+        [XmlIgnore]
+        public TriggerType SealType
+        {
+            get
+            {
+                return SealSchedule.Type;
+            }
+            set
+            {
+                SealSchedule.Type = value;
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+
+        [Category("Definition"), DisplayName("Recur every (days)"), Description("Number of days."), Id(5, 1)]
+        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
+        [XmlIgnore]
+        public int SealDaysInterval
+        {
+            get
+            {
+                return SealSchedule.DaysInterval;
+            }
+            set
+            {
+                SealSchedule.DaysInterval = value;
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+
+        [Category("Definition"), DisplayName("Recur every (weeks)"), Description("Number of weeks."), Id(6, 1)]
+        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
+        [XmlIgnore]
+        public int SealWeeksInterval
+        {
+            get
+            {
+                return SealSchedule.WeeksInterval;
+            }
+            set
+            {
+                SealSchedule.WeeksInterval = value;
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+
+        [Category("Definition"), DisplayName("Week days"), Description("Days of the week to execute the schedule."), Id(7, 1)]
+        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
+        [XmlIgnore]
+        public List<int> SealWeekdays
+        {
+            get
+            {
+                return SealSchedule.Weekdays;
+            }
+            set
+            {
+                SealSchedule.Weekdays = value;
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+
+        [Category("Definition"), DisplayName("Months"), Description("Months to execute the schedule."), Id(8, 1)]
+        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
+        [XmlIgnore]
+        public List<int> SealMonths
+        {
+            get
+            {
+                return SealSchedule.Months;
+            }
+            set
+            {
+                SealSchedule.Months = value;
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+
+        [Category("Definition"), DisplayName("Days of the month"), Description("Days of the month to execute the schedule."), Id(9, 1)]
+        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
+        [XmlIgnore]
+        public List<int> SealDays
+        {
+            get
+            {
+                return SealSchedule.Days;
+            }
+            set
+            {
+                SealSchedule.Days = value;
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+
+
+        [Category("Definition"), DisplayName("Repeat schedule every"), Description("Interval of the schedule repetition."), Id(10, 1)]
+        [XmlIgnore]
+        [DefaultValue("None")]
+        [TypeConverter(typeof(ScheduleRepeatConverter))]
+        public string SealRepeatInterval
+        {
+            get
+            {
+                return Helper.FromTimeSpan(SealSchedule.RepeatInterval, "None", null);
+            }
+            set
+            {
+                SealSchedule.RepeatInterval = Helper.ToTimeSpan(value, null);
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+
+        [Category("Definition"), DisplayName("For a duration of"), Description("Duration of the schedule repetition."), Id(11, 1)]
+        [XmlIgnore]
+        [DefaultValue("Indefinitely")]
+        [TypeConverter(typeof(ScheduleRepeatConverter))]
+        public string SealRepeatDuration
+        {
+            get
+            {
+                return Helper.FromTimeSpan(SealSchedule.RepeatDuration, "Indefinitely", null);
+            }
+            set
+            {
+                SealSchedule.RepeatDuration = Helper.ToTimeSpan(value, null);
+                SealSchedule.CalculateNextExecution();
+                UpdateEditor();
+            }
+        }
+
+        [Category("Definition"), DisplayName("Next execution"), Description("Next execution planned for the schedule."), Id(12, 1)]
+        [XmlIgnore]
+        public DateTime? SealNextExecution
+        {
+            get
+            {
+                if (SealSchedule.NextExecution == DateTime.MaxValue) return null;
+                return SealSchedule.NextExecution;
+            }
+        }
+
+        /// <summary>
+        /// Current schedule if the Seal Scheduler is used
+        /// </summary>
+        SealSchedule _sealSchedule = null;
+        [XmlIgnore]
+        public SealSchedule SealSchedule
+        {
+            get
+            {
+                if (_sealSchedule == null)
+                {
+                    _sealSchedule = SealReportScheduler.Instance.GetSchedule(GUID);
+                    if (_sealSchedule == null) _sealSchedule = SealReportScheduler.Instance.CreateSchedule(GUID, TaskName, Report);
+                }
+                return _sealSchedule;
+            }
+            set
+            {
+                _sealSchedule = value;
+            }
         }
 
         /// <summary>
@@ -115,7 +350,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Task name as used in the Windows Task Scheduler.
+        /// Task name as used in the Windows Task Scheduler or for the Seal Schedule file name.
         /// </summary>
         [XmlIgnore]
         public string TaskName
@@ -125,7 +360,7 @@ namespace Seal.Model
                 var result = Helper.CleanFileName(string.Format("[{0}] {1} {2} {3}", Path.GetFileNameWithoutExtension(Report.FilePath), Report.DisplayNameEx, Name, GUID));
                 if (result.Length > 120) result = Helper.CleanFileName(string.Format("[{0}] {1} {2}", Path.GetFileNameWithoutExtension(Report.FilePath), Name, GUID));
                 if (result.Length > 120) result = Helper.CleanFileName(string.Format("[{0}] {1}", Path.GetFileNameWithoutExtension(Report.FilePath), GUID));
-                return result.Replace("'","");
+                return result.Replace("'", "");
             }
         }
 
@@ -198,8 +433,9 @@ namespace Seal.Model
         public string NotificationEmailTo
         {
             get { return _notificationEmailTo; }
-            set { 
-                _notificationEmailTo = value; 
+            set
+            {
+                _notificationEmailTo = value;
                 UpdateEditorAttributes();  //!NETCore 
             }
         }
@@ -222,8 +458,6 @@ namespace Seal.Model
         [Category("Email Notification in case of success"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(5, 3)]
         public string NotificationEmailFrom { get; set; }
 
-
-
         int _errorNumberOfRetries = 0;
         /// <summary>
         /// The maximum number of retries in case of error
@@ -232,10 +466,11 @@ namespace Seal.Model
         [Category("Failover: Retries"), DisplayName("Number of retries"), Description("The maximum number of retries in case of error."), Id(2, 5)]
         public int ErrorNumberOfRetries
         {
-            get { return Math.Max(_errorNumberOfRetries,0); }
-            set { 
-                _errorNumberOfRetries = Math.Max(value,0); 
-                UpdateEditorAttributes(); 
+            get { return Math.Max(_errorNumberOfRetries, 0); }
+            set
+            {
+                _errorNumberOfRetries = Math.Max(value, 0);
+                UpdateEditorAttributes();
             }
         }
 
@@ -283,23 +518,31 @@ namespace Seal.Model
         /// </summary>
         public void SynchronizeTask()
         {
-            string description = string.Format("Schedule for the Tasks. Report '{0}'", Report.FilePath);
-            if (!IsTasksSchedule) description = string.Format("Schedule for the output '{0}'. Report '{1}'", Output.Name, Report.FilePath);
-
-            TaskDefinition definition = Task.Definition;
-            if (definition.RegistrationInfo.Source != TaskSource || definition.RegistrationInfo.Description != description || TaskName != Task.Name)
+            if (Report.Repository.UseSealScheduler)
             {
-                definition.RegistrationInfo.Source = TaskSource;
-                definition.RegistrationInfo.Description = description;
-                //If name has changed, we have to delete then insert it again...
-                string oldName = Task.Name;
-                if (!string.IsNullOrEmpty(oldName) && TaskName != oldName)
+                SealReportScheduler.Instance.SaveSchedule(SealSchedule);
+            }
+            else
+            {
+                string description = string.Format("Schedule for the Tasks. Report '{0}'", Report.FilePath);
+                if (!IsTasksSchedule) description = string.Format("Schedule for the output '{0}'. Report '{1}'", Output.Name, Report.FilePath);
+
+                TaskDefinition definition = Task.Definition;
+                if (definition.RegistrationInfo.Source != TaskSource || definition.RegistrationInfo.Description != description || TaskName != Task.Name)
                 {
-                    Report.TaskFolder.DeleteTask(oldName);
-                    RegisterTaskDefinition(definition);                }
-                else
-                {
-                    _task.RegisterChanges();
+                    definition.RegistrationInfo.Source = TaskSource;
+                    definition.RegistrationInfo.Description = description;
+                    //If name has changed, we have to delete then insert it again...
+                    string oldName = Task.Name;
+                    if (!string.IsNullOrEmpty(oldName) && TaskName != oldName)
+                    {
+                        Report.TaskFolder.DeleteTask(oldName);
+                        RegisterTaskDefinition(definition);
+                    }
+                    else
+                    {
+                        _task.RegisterChanges();
+                    }
                 }
             }
         }
@@ -356,7 +599,6 @@ namespace Seal.Model
                     }
                 }
             }
-
             return result;
         }
 
@@ -449,7 +691,6 @@ namespace Seal.Model
         {
             get { return "<Click to run the Task Scheduler Microsoft Management Console>"; }
         }
-
 
         #endregion
 

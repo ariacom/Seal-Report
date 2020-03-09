@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converter\ScheduleRepeatConverter.cs" />
     <Compile Include="Converter\DashboardFolderConverter.cs" />
     <Compile Include="Converter\WidgetIconClassConverter.cs" />
     <Compile Include="Converter\WidgetColorClassConverter.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Converter\ViewParameterEnumConverter.cs" />
     <Compile Include="Converter\CultureNameConverter.cs" />
     <Compile Include="Forms\PartialTemplatesEditor.cs" />
+    <Compile Include="Forms\IntArrayEditor.cs" />
     <Compile Include="Helpers\HelperForms.cs" />
     <Compile Include="Model\Audit.cs" />
     <Compile Include="Model\EditorTableDefinition.cs" />
@@ -265,6 +267,8 @@
     <Compile Include="Model\RootComponent.cs" />
     <Compile Include="Model\WebInterfaceModels.cs" />
     <Compile Include="Model\DashboardWidget.cs" />
+    <Compile Include="Model\SealSchedule.cs" />
+    <Compile Include="Model\SealReportScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -684,6 +684,8 @@ namespace Seal
             if (entry != null) entry.Expanded = _widgetExpanded;
             entry = Helper.GetGridEntry(mainPropertyGrid, "custom partial template texts");
             if (entry != null) entry.Expanded = true;
+            entry = Helper.GetGridEntry(mainPropertyGrid, "schedule definition");
+            if (entry != null) entry.Expanded = true;
 
             toolStripHelper.SetHelperButtons(selectedEntity);
             enableControls();

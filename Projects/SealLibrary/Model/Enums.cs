@@ -508,4 +508,16 @@ namespace Seal.Model
         ReportDelete,
         ReportSave,
     }
+
+    public enum TriggerType
+    {
+        [Description("One time")]
+        Time = 1,
+        [Description("Daily")]
+        Daily = 2,
+        [Description("Weekly")]
+        Weekly = 3,
+        [Description("Monthly")]
+        Monthly = 4,
+    }
 }

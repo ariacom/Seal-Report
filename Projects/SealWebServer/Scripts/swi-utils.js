@@ -57,7 +57,7 @@ var SWIUtil;
             if (!enabled)
                 button.prop('disabled', 'true').addClass("disabled");
             else
-                button.removeProp('disabled').removeClass("disabled");
+                button.removeAttr('disabled').removeProp('disabled').removeClass("disabled");
         }
     }
     SWIUtil.EnableButton = EnableButton;

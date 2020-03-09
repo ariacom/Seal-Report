@@ -801,5 +801,51 @@ namespace Seal.Helpers
             if (assembly == null) assembly = new StackTrace().GetFrames().Last().GetMethod().Module.Assembly;
             return Path.GetDirectoryName(assembly.Location);
         }
+
+        public static string FromTimeSpan(TimeSpan val, string def, Repository repository)
+        {
+            string result = "";
+            string minStr = repository == null ? "minute" : repository.TranslateWebJS("minute").ToLower();
+            string hourStr = repository == null ? "hour" : repository.TranslateWebJS("hour").ToLower();
+            string dayStr = repository == null ? "day" : repository.TranslateWebJS("day").ToLower();
+            string minStr2 = repository == null ? "minutes" : repository.TranslateWebJS("minutes").ToLower();
+            string hourStr2 = repository == null ? "hours" : repository.TranslateWebJS("hours").ToLower();
+            string dayStr2 = repository == null ? "days" : repository.TranslateWebJS("days").ToLower();
+            if (val != null)
+            {
+                if (val.Minutes > 0) result = val.Minutes.ToString() + " " + (val.Minutes > 1 ? minStr2 : minStr);
+                else if (val.Hours > 0) result = val.Hours.ToString() + " " + (val.Hours > 1 ? hourStr2 : hourStr);
+                else if (val.Days > 0) result = val.Days.ToString() + " " + (val.Days > 1 ? dayStr2 : dayStr);
+                else result = def;
+            }
+            return result;
+        }
+
+        public static TimeSpan ToTimeSpan(string str, Repository repository)
+        {
+            string minStr = repository == null ? "minute" : repository.TranslateWebJS("minute").ToLower();
+            string hourStr = repository == null ? "hour" : repository.TranslateWebJS("hour").ToLower();
+            string dayStr = repository == null ? "day" : repository.TranslateWebJS("day").ToLower();
+            TimeSpan result = new TimeSpan(0, 0, 0);
+            if (!string.IsNullOrEmpty(str))
+            {
+                int val;
+                str = str.ToLower();
+                if (str.Contains(minStr))
+                {
+                    if (int.TryParse(str.Replace(" ", "").Replace(minStr, "").Replace("s", ""), out val)) result = new TimeSpan(0, val, 0);
+                }
+                else if (str.Contains(hourStr))
+                {
+                    if (int.TryParse(str.Replace(" ", "").Replace(hourStr, "").Replace("s", ""), out val)) result = new TimeSpan(val, 0, 0);
+                }
+                else if (str.Contains(dayStr))
+                {
+                    if (int.TryParse(str.Replace(" ", "").Replace(dayStr, "").Replace("s", ""), out val)) result = new TimeSpan(val, 0, 0, 0);
+                }
+            }
+            return result;
+        }
+
     }
 }

@@ -504,7 +504,7 @@ namespace Seal.Forms
                         var dashboard = Dashboard.LoadFromFile(p);
                         translations.AppendFormat("DashboardName{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(p.Substring(repository.DashboardPublicFolder.Length)), Helper.QuoteDouble(dashboard.Name), extraSeparators);
 
-                        foreach(var item in dashboard.Items)
+                        foreach (var item in dashboard.Items)
                         {
                             if (!string.IsNullOrEmpty(item.Name) && !names.Contains(item.GroupName)) names.Add(item.Name);
                             if (!string.IsNullOrEmpty(item.GroupName) && !groupNames.Contains(item.GroupName)) groupNames.Add(item.GroupName);
@@ -607,42 +607,62 @@ namespace Seal.Forms
                 log.Log("Checking personal folders\r\n");
                 SynchronizeSchedules(log, repository.PersonalFolder, repository, ref count, ref errorCount, errorSummary, useCurrentUser);
 
-                log.Log("Checking for Orphan tasks\r\n");
+                log.Log("Checking for Orphan schedules\r\n");
 
-                TaskService taskService = new TaskService();
-                TaskFolder taskFolder = taskService.RootFolder.SubFolders.FirstOrDefault(i => i.Name == repository.Configuration.TaskFolderName);
-                if (taskFolder != null)
+                if (repository.UseSealScheduler)
                 {
-                    foreach (Task task in taskFolder.GetTasks())
+                    foreach (var schedule in SealReportScheduler.Instance.GetSchedules())
                     {
-                        log.Log("Checking task '{0}'", task.Name);
+                        log.Log("Checking schedule '{0}'", schedule.FilePath);
                         try
                         {
-                            string reportPath = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 0);
-                            string reportGUID = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 1);
-                            string scheduleGUID = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 3);
-                            Report report = ReportExecution.GetScheduledReport(taskFolder, reportPath, reportGUID, scheduleGUID, repository);
-                            if (report != null)
-                            {
-                                ReportSchedule schedule = ReportExecution.GetReportSchedule(taskFolder, report, scheduleGUID);
-                                if (schedule == null)
-                                {
-                                    taskDeleted++;
-                                    log.Log("WARNING: Unable to find schedule '{0}' in report '{1}'. Task has been deleted.", scheduleGUID, report.FilePath);
-                                }
-                            }
-                            else
-                            {
-                                taskDeleted++;
-                                log.Log("WARNING: Unable to find report '{0}' for schedule '{1}'. Report tasks have been deleted.", reportGUID, scheduleGUID);
-                            }
                         }
                         catch (Exception ex)
                         {
                             errorCount++;
                             log.LogRaw("ERROR\r\n");
                             log.Log(ex.Message);
-                            errorSummary.AppendFormat("\r\nTask '{0}': {1}\r\n", task.Name, ex.Message);
+                            errorSummary.AppendFormat("\r\nSchedule '{0}': {1}\r\n", schedule.FilePath, ex.Message);
+                        }
+                    }
+                }
+                else
+                {
+                    TaskService taskService = new TaskService();
+                    TaskFolder taskFolder = taskService.RootFolder.SubFolders.FirstOrDefault(i => i.Name == repository.Configuration.TaskFolderName);
+                    if (taskFolder != null)
+                    {
+                        foreach (Task task in taskFolder.GetTasks())
+                        {
+                            log.Log("Checking task '{0}'", task.Name);
+                            try
+                            {
+                                string reportPath = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 0);
+                                string reportGUID = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 1);
+                                string scheduleGUID = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 3);
+                                Report report = ReportExecution.GetScheduledReport(taskFolder, reportPath, reportGUID, scheduleGUID, repository);
+                                if (report != null)
+                                {
+                                    ReportSchedule schedule = ReportExecution.GetReportSchedule(taskFolder, report, scheduleGUID);
+                                    if (schedule == null)
+                                    {
+                                        taskDeleted++;
+                                        log.Log("WARNING: Unable to find schedule '{0}' in report '{1}'. Task has been deleted.", scheduleGUID, report.FilePath);
+                                    }
+                                }
+                                else
+                                {
+                                    taskDeleted++;
+                                    log.Log("WARNING: Unable to find report '{0}' for schedule '{1}'. Report tasks have been deleted.", reportGUID, scheduleGUID);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                errorCount++;
+                                log.LogRaw("ERROR\r\n");
+                                log.Log(ex.Message);
+                                errorSummary.AppendFormat("\r\nTask '{0}': {1}\r\n", task.Name, ex.Message);
+                            }
                         }
                     }
                 }
