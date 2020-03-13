@@ -47,7 +47,10 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
                 GetProperty("DefaultConnectionString").SetIsBrowsable(!ForPublication);
+                GetProperty("UseWebScheduler").SetIsBrowsable(!ForPublication);
                 GetProperty("TaskFolderName").SetIsBrowsable(!ForPublication);
+                GetProperty("TaskFolderName").SetIsReadOnly(UseWebScheduler);
+
                 GetProperty("DefaultCulture").SetIsBrowsable(!ForPublication);
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
                 GetProperty("WebProductName").SetIsBrowsable(!ForPublication);
@@ -102,13 +105,6 @@ namespace Seal.Model
         /// </summary>
         [Category("Server Settings"), DisplayName("Default Connection String"), Description("The OLE DB Default Connection String used when a new Data Source is created. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Id(1, 1)]
         public string DefaultConnectionString { get; set; } = "Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;";
-
-        /// <summary>
-        /// The name of the Task Scheduler folder containg the schedules of the reports
-        /// </summary>
-        [Category("Server Settings"), DisplayName("Task Folder Name"), Description("The name of the Task Scheduler folder containg the schedules of the reports. Warning: Changing this name will affect all existing schedules !"), Id(2, 1)]
-        public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
-        public bool UseSealScheduler { get; set; } = true;
 
         /// <summary>
         /// The logo file name used by the report templates
@@ -172,31 +168,57 @@ namespace Seal.Model
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string ScriptFiles { get; set; } = null;
 
+        bool _useWebScheduler = false;
+        /// <summary>
+        /// If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). Mainly to allow schedules for .NETCore or Azure installations.
+        /// </summary>
+        [Category("Report Scheduler Settings"), DisplayName("Use Web Report Server Scheduler"), Description("If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). Mainly to allow schedules for .NETCore or Azure installations."), Id(1, 2)]
+        [DefaultValue(false)]
+        public bool UseWebScheduler
+        {
+            get
+            {
+                return _useWebScheduler;
+            }
+            set
+            {
+                _useWebScheduler = value;
+                UpdateEditor(); //!NETCore
+            }
+        }
+
+        /// <summary>
+        /// Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used
+        /// </summary>
+        [Category("Report Scheduler Settings"), DisplayName("Task Folder Name"), Description("Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used. Warning: Changing this name will affect all existing schedules !"), Id(2, 2)]
+        public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
+
+
         /// <summary>
         /// If set, the script is executed to log events (login, logut, report execution, etc.). The common implementation is to insert a record into a database table.
         /// </summary>
-        [Category("Scripts"), DisplayName("Audit Script"), Description("If set, the script is executed to log events (login, logut, report execution, etc.). The common implementation is to insert a record into a database table."), Id(1, 3)]
+        [Category("Scripts"), DisplayName("Audit Script"), Description("If set, the script is executed to log events (login, logut, report execution, etc.). The common implementation is to insert a record into a database table."), Id(1, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string AuditScript { get; set; } = null;
 
         /// <summary>
         /// If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here.
         /// </summary>
-        [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 3)]
+        [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(4, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string InitScript { get; set; } = null;
 
         /// <summary>
         /// If set, the script is executed when a new report is created. Default values for report creation can be set here.
         /// </summary>
-        [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(5, 3)]
+        [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(5, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string ReportCreationScript { get; set; } = null;
 
         /// <summary>
         /// List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the reports. To include the script, an @Include("common script name") directive must be inserted at the beginning of the script.
         /// </summary>
-        [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the reports. To include the script, an @Include(\"< script name >\") directive must be inserted at the beginning of the script."), Id(7, 3)]
+        [Category("Scripts"), DisplayName("\tCommon Scripts"), Description("List of scripts added to all scripts executed during a report execution (including tasks). This may be useful to defined common functions for the reports. To include the script, an @Include(\"< script name >\") directive must be inserted at the beginning of the script."), Id(7, 4)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<CommonScript> CommonScripts { get; set; } = new List<CommonScript>();
         public bool ShouldSerializeCommonScripts() { return CommonScripts.Count > 0; }
@@ -245,7 +267,7 @@ namespace Seal.Model
         /// <summary>
         /// If true, the client library is used to perform the HTML to PDF conversion (mainly useful for .NETCore distribution). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
         /// </summary>
-        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for .NETCore or Azure). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services."), Category("PDF Converter: Client Library"), Id(1, 5)]
+        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for .NETCore or Azure). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services."), Category("PDF Converter: Client Library"), Id(1, 6)]
         [DefaultValue(false)]
         public bool PdfUseClient { get; set; } = false;
         public bool ShouldSerializeUsePdfClient() { return PdfUseClient; }
@@ -253,7 +275,7 @@ namespace Seal.Model
         /// <summary>
         /// If the client library is used, the HTML to PDF server IP or name.
         /// </summary>
-        [DisplayName("PDF Server"), Description("If the client library is used, the HTML to PDF server IP or name."), Category("PDF Converter: Client Library"), Id(2, 5)]
+        [DisplayName("PDF Server"), Description("If the client library is used, the HTML to PDF server IP or name."), Category("PDF Converter: Client Library"), Id(2, 6)]
         [DefaultValue("127.0.0.1")]
         public string PdfServer { get; set; } = "127.0.0.1";
         public bool ShouldSerializePdfServer() { return PdfServer != "127.0.0.1"; }
@@ -261,7 +283,7 @@ namespace Seal.Model
         /// <summary>
         /// If the client library is used, the HTML to PDF server IP or name.
         /// </summary>
-        [DisplayName("PDF Server Port"), Description("If the client library is used, the HTML to PDF server port number."), Category("PDF Converter: Client Library"), Id(3, 5)]
+        [DisplayName("PDF Server Port"), Description("If the client library is used, the HTML to PDF server port number."), Category("PDF Converter: Client Library"), Id(3, 6)]
         [DefaultValue(45001)]
         public uint PdfServerPort { get; set; } = 45001;
         public bool ShouldSerializePdfServerPort() { return PdfServerPort != 45001; }
@@ -269,7 +291,7 @@ namespace Seal.Model
         /// <summary>
         /// If the client library is used, optional HTML to PDF converter service password.
         /// </summary>
-        [DisplayName("PDF Service Password"), Description("If the client library is used, optional HTML to PDF converter service password."), Category("PDF Converter: Client Library"), Id(4, 5)]
+        [DisplayName("PDF Service Password"), Description("If the client library is used, optional HTML to PDF converter service password."), Category("PDF Converter: Client Library"), Id(4, 6)]
         [DefaultValue(false)]
         public string PdfServicePassword { get; set; } = "";
         public bool ShouldSerializePdfServicePassword() { return !string.IsNullOrEmpty(PdfServicePassword); }
@@ -277,7 +299,7 @@ namespace Seal.Model
         /// <summary>
         /// If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion.
         /// </summary>
-        [DisplayName("Use PDF Web Service"), Description("If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion."), Category("PDF Converter: Client Library"), Id(5, 5)]
+        [DisplayName("Use PDF Web Service"), Description("If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion."), Category("PDF Converter: Client Library"), Id(5, 6)]
         [DefaultValue(false)]
         public bool PdfUseWebService { get; set; } = false;
         public bool ShouldSerializePdfUseWebService() { return PdfUseWebService; }
@@ -285,7 +307,7 @@ namespace Seal.Model
         /// <summary>
         /// If the client library is used, the HTML to PDF web service URL.
         /// </summary>
-        [DisplayName("PDF Web Service URL"), Description("If the client library is used, the HTML to PDF web service URL."), Category("PDF Converter: Client Library"), Id(6, 5)]
+        [DisplayName("PDF Web Service URL"), Description("If the client library is used, the HTML to PDF web service URL."), Category("PDF Converter: Client Library"), Id(6, 6)]
         [DefaultValue(false)]
         public string PdfWebServiceURL { get; set; } = "";
         public bool ShouldSerializePdfWebServiceURL() { return !string.IsNullOrEmpty(PdfWebServiceURL); }
@@ -302,7 +324,7 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Default PDF Configuration"), Description("All the default options applied to the PDF conversion from the HTML result."), Category("PDF and Excel Converter Configuration"), Id(1, 4)]
+        [DisplayName("Default PDF Configuration"), Description("All the default options applied to the PDF conversion from the HTML result."), Category("PDF and Excel Converter Configuration"), Id(1, 5)]
         public SealPdfConverter PdfConverter
         {
             get
@@ -338,7 +360,7 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Default Excel Configuration"), Description("All the default options applied to the Excel conversion from the view."), Category("PDF and Excel Converter Configuration"), Id(2, 4)]
+        [DisplayName("Default Excel Configuration"), Description("All the default options applied to the Excel conversion from the view."), Category("PDF and Excel Converter Configuration"), Id(2, 5)]
         public SealExcelConverter ExcelConverter
         {
             get
@@ -365,7 +387,7 @@ namespace Seal.Model
         /// <summary>
         /// Editor Helper: Reset PDF configuration values to their default values
         /// </summary>
-        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(9, 4)]
+        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(9, 5)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetPDFConfigurations
         {
@@ -375,7 +397,7 @@ namespace Seal.Model
         /// <summary>
         /// Editor Helper: Reset Excel configuration values to their default values
         /// </summary>
-        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(10, 4)]
+        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset Excel configurations"), Description("Reset Excel configuration values to their default values."), Id(10, 5)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperResetExcelConfigurations
         {
@@ -409,14 +431,14 @@ namespace Seal.Model
         /// <summary>
         /// The name of the culture used when a report is created. If not specified, the current culture of the server is used.
         /// </summary>
-        [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used when a report is created. If not specified, the current culture of the server is used."), Id(1, 2)]
+        [Category("Formats"), DisplayName("Culture"), Description("The name of the culture used when a report is created. If not specified, the current culture of the server is used."), Id(1, 3)]
         [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
         public string DefaultCulture { get; set; } = "";
 
         /// <summary>
         /// The numeric format used for numeric column having the default format
         /// </summary>
-        [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format."), Id(2, 2)]
+        [Category("Formats"), DisplayName("Numeric Format"), Description("The numeric format used for numeric column having the default format."), Id(2, 3)]
         [TypeConverter(typeof(CustomFormatConverter))]
         [DefaultValue("N0")]
         public string NumericFormat { get; set; } = "N0";
@@ -424,7 +446,7 @@ namespace Seal.Model
         /// <summary>
         /// The date time format used for date time column having the default format
         /// </summary>
-        [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format."), Id(3, 2)]
+        [Category("Formats"), DisplayName("Date Time Format"), Description("The date time format used for date time column having the default format."), Id(3, 3)]
         [TypeConverter(typeof(CustomFormatConverter))]
         [DefaultValue("d")]
         public string DateTimeFormat { get; set; } = "d";
@@ -432,25 +454,25 @@ namespace Seal.Model
         /// <summary>
         /// If not specified in the report, separator used for the CSV template
         /// </summary>
-        [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(4, 2)]
+        [Category("Formats"), DisplayName("CSV Separator"), Description("If not specified in the report, separator used for the CSV template. If empty, the separator of the user culture is used."), Id(4, 3)]
         public string CsvSeparator { get; set; } = "";
 
         /// <summary>
         /// The name of the IIS Application pool used by the web application
         /// </summary>
-        [Category("Web Server IIS Publication"), DisplayName("Application Pool Name"), Description("The name of the IIS Application pool used by the web application."), Id(2, 1)]
+        [Category("Web Server IIS Publication"), DisplayName("Application Pool Name"), Description("The name of the IIS Application pool used by the web application."), Id(2, 3)]
         public string WebApplicationPoolName { get; set; } = Repository.SealRootProductName + " Application Pool";
 
         /// <summary>
         /// The name of the IIS Web application. Use '/' to publish on 'Default Web Site'
         /// </summary>
-        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application. Use '/' to publish on 'Default Web Site'."), Id(1, 1)]
+        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application. Use '/' to publish on 'Default Web Site'."), Id(1, 3)]
         public string WebApplicationName { get; set; } = "/Seal";
 
         /// <summary>
         /// The directory were the web site files are published
         /// </summary>
-        [Category("Web Server IIS Publication"), DisplayName("Publication directory"), Description("The directory were the web site files are published."), Id(3, 1)]
+        [Category("Web Server IIS Publication"), DisplayName("Publication directory"), Description("The directory were the web site files are published."), Id(3, 3)]
         [EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor))]
         public string WebPublicationDirectory { get; set; } = "";
 

@@ -12,6 +12,7 @@ namespace Seal.Model
         public const string HyperLinkPrefix = "HL:";
         public const string FileDownloadPrefix = "FD:";
         public const string ReportScriptPrefix = "RS:";
+        public const string ReportExecutionPrefix = "RE:";
 
         public NavigationType Type;
         public string Href = "";
@@ -21,6 +22,7 @@ namespace Seal.Model
                 if (Type == NavigationType.Hyperlink) return HyperLinkPrefix + Href;
                 else if (Type == NavigationType.FileDownload) return FileDownloadPrefix + Href;
                 else if (Type == NavigationType.ReportScript) return ReportScriptPrefix + Href;
+                else if (Type == NavigationType.ReportExecution) return ReportExecutionPrefix + Href;
                 return Href;
             }
         }

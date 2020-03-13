@@ -485,7 +485,8 @@ namespace Seal.Model
         SubReport,
         Hyperlink,
         FileDownload,
-        ReportScript
+        ReportScript,
+        ReportExecution
     }
 
     public enum ExecutionStep
@@ -507,6 +508,18 @@ namespace Seal.Model
         ReportExecution,
         ReportDelete,
         ReportSave,
+    }
+
+    public enum TriggerType
+    {
+        [Description("One time")]
+        Time = 1,
+        [Description("Daily")]
+        Daily = 2,
+        [Description("Weekly")]
+        Weekly = 3,
+        [Description("Monthly")]
+        Monthly = 4,
     }
 }
 

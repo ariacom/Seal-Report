@@ -1,6 +1,4 @@
-﻿using DynamicTypeDescriptor;
-using Seal.Forms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;

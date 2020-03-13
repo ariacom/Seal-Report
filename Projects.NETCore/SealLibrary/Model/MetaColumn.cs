@@ -32,7 +32,6 @@ namespace Seal.Model
         /// <summary>
         /// The name of the column in the table or the SQL Statement used for the column
         /// </summary>
-        [DefaultValue(null)]
         public override string Name
         {
             get { return _name; }
@@ -43,7 +42,6 @@ namespace Seal.Model
         /// Data type of the column
         /// </summary>
         protected ColumnType _type = ColumnType.Default;
-        [DefaultValue(ColumnType.Default)]
         public ColumnType Type
         {
             get { return _type; }
@@ -57,7 +55,6 @@ namespace Seal.Model
         /// <summary>
         /// Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG
         /// </summary>
-        [DefaultValue(false)]
         public bool IsAggregate { get; set; } = false;
         public bool ShouldSerializeIsAggregate() { return IsAggregate; }
 
@@ -90,7 +87,6 @@ namespace Seal.Model
         /// <summary>
         /// The order number used to sort the column in the tree view (by table and by category)
         /// </summary>
-        [DefaultValue(0)]
         public int DisplayOrder { get; set; } = 0;
         public bool ShouldSerializeDisplayOrder() { return DisplayOrder != 0; }
 
@@ -107,7 +103,6 @@ namespace Seal.Model
         /// <summary>
         /// Standard display format applied to the element
         /// </summary>
-        [DefaultValue(NumericStandardFormat.Default)]
         public NumericStandardFormat NumericStandardFormat
         {
             get { return _numericStandardFormat; }
@@ -129,7 +124,6 @@ namespace Seal.Model
         /// <summary>
         /// Standard display format applied to the element
         /// </summary>
-        [DefaultValue(DateTimeStandardFormat.Default)]
         public DateTimeStandardFormat DateTimeStandardFormat
         {
             get { return _datetimeStandardFormat; }
@@ -233,7 +227,6 @@ namespace Seal.Model
         /// <summary>
         /// If defined, a list of values is proposed when the column is used for restrictions
         /// </summary>
-        [DefaultValue(null)]
         public string EnumGUID
         {
             get { return _enumGUID; }
@@ -360,7 +353,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, Drill Up is activated only if a drill down occured
         /// </summary>
-        [DefaultValue(false)]
         public bool DrillUpOnlyIfDD { get; set; } = false;
 
         /// <summary>

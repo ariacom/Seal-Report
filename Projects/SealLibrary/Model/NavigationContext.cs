@@ -49,6 +49,7 @@ namespace Seal.Model
                 if (newReport == null)
                 {
                     string path = reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath);
+                    if (!File.Exists(path)) path = rootReport.Repository.ReportsFolder + path;
                     newReport = Report.LoadFromFile(path, rootReport.Repository);
 
                     int index = 1;
@@ -205,7 +206,10 @@ namespace Seal.Model
             if (previousNav == null)
             {
                 if (!string.IsNullOrEmpty(srcRestriction)) newReport.DisplayName = string.Format("{0} > {1}", newReport.ExecutionName, srcRestriction);
-                else newReport.DisplayName = string.Format("{0} < {1}", newReport.ExecutionName, destLabel);
+                else {
+                    newReport.DisplayName = newReport.ExecutionName;
+                    if (!string.IsNullOrEmpty(destLabel)) newReport.DisplayName += string.Format(" < {0}", destLabel);
+                }
             }
             return new ReportExecution() { NavigationParameter = navigation, Report = newReport, RootReport = rootReport };
         }

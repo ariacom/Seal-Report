@@ -1257,7 +1257,7 @@ namespace Seal.Model
                 }
 
                 //Clear unused tasks
-                if (Repository.UseSealScheduler)
+                if (Repository.UseWebScheduler)
                 {
                     foreach (var schedule in SealReportScheduler.Instance.GetSchedules().Where(i => i.ReportGUID == GUID).ToList())
                     {
@@ -1310,7 +1310,7 @@ namespace Seal.Model
                 LastModification = File.GetLastWriteTime(path);
             }
             //Clear and synchronize tasks
-            if (SchedulesModified || Repository.UseSealScheduler) SynchronizeTasks();
+            if (SchedulesModified || Repository.UseWebScheduler) SynchronizeTasks();
             SchedulesModified = false;
         }
 

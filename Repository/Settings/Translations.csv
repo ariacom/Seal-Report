@@ -253,6 +253,8 @@ Web;Rename folder;;Renommer le répertoire
 Web;Rename, move or copy;;Renommer, déplacer ou copier
 Web;Rename, move or copy dashboard;;Renommer, déplacer ou copier le Dashboard
 Web;Repeat every;;Répéter tous les
+Web;Repeat interval is invalid;;L'intervalle de répétition n'est pas valide 
+Web;Repeat duration is invalid;;La durée de répétition n'est pas valide 
 Web;Report;;Rapport
 Web;Report name;;Nom du rapport
 Web;Report title;;Titre du rapport
@@ -316,6 +318,8 @@ WebJS;Copy to;;Copier vers
 WebJS;Count;;Nombre
 WebJS;Count of;;Nombre de
 WebJS;Create in;;Créer dans
+WebJS;Create a Standard report;;Créer un rapport Standard
+WebJS;Create a SQL report;;Créer un rapport SQL
 WebJS;CSV;;CSV
 WebJS;CSV: Use element format;;CSV: Utiliser le format de l'élément
 WebJS;Daily;;Quotidien
@@ -376,6 +380,7 @@ WebJS;Is Null;;Est Null
 WebJS;Is smaller or equal than;;Est plus petit ou égal à
 WebJS;Is smaller than;;Est plus petit que
 WebJS;Last modification;;Dernière modification
+WebJS;Last;;Dernier
 WebJS;Line;;Ligne
 WebJS;Long date;;Date longue
 WebJS;Maximum;;Maximum
@@ -402,8 +407,6 @@ WebJS;No schedule;;Pas de planification
 WebJS;No Sort;;Pas de tri
 WebJS;No total;;Pas de totaux
 WebJS;No widget;;Aucun widget
-WebJS;Create a Standard report;;Créer un rapport Standard
-WebJS;Create a SQL report;;Créer un rapport SQL
 WebJS;None;;Aucun
 WebJS;Not sorted;;Pas de tri
 WebJS;Number;;Nombre
@@ -450,6 +453,8 @@ WebJS;report(s) or file(s) processed;;rapport(s) ou fichier(s) ont été traité
 WebJS;report(s) or files(s) copied in the clipboard;;rapport(s) ou fichier(s) ont été copiés dans le presse-papier
 WebJS;Scatter;;Point
 WebJS;Schedule;;Planification
+WebJS;second;;seconde
+WebJS;seconds;;secondes
 WebJS;Select all;;Tout
 WebJS;Server Version;;Version du serveur
 WebJS;Short date;;Date courte

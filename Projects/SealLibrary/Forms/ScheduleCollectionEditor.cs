@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace Seal.Forms
 {
-    public class IntArrayEditor : UITypeEditor
+    public class ScheduleCollectionEditor : UITypeEditor
     {
         SealSchedule _schedule = null;
 
@@ -89,18 +89,7 @@ namespace Seal.Forms
                         {
                             result.Add(((IntDisplay)item).Id);
                         }
-                        if (context.PropertyDescriptor.Name == "Weekdays")
-                        {
-                            _schedule.Weekdays = result;
-                        }
-                        else if (context.PropertyDescriptor.Name == "Months")
-                        {
-                            _schedule.Months = result;
-                        }
-                        else if (context.PropertyDescriptor.Name == "Days")
-                        {
-                            _schedule.Days = result;
-                        }
+                        _schedule.CalculateNextExecution();
                         value = result;
                     }
                 }

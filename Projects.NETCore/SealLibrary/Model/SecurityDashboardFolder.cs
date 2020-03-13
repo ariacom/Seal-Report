@@ -23,7 +23,6 @@ namespace Seal.Model
         /// <summary>
         /// The right applied on the dashboards of the folder
         /// </summary>
-        [DefaultValue(DashboardFolderRight.Edit)]
         public DashboardFolderRight Right
         {
             get { return _right; }

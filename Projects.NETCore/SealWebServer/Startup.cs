@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,13 @@ namespace SealWebServer
             SessionTimeout = Configuration.GetValue<int>("SealConfiguration:SessionTimeout", 60);
 
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
+
+            if (Repository.Instance.Configuration.UseWebScheduler)
+            {
+                //Run scheduler
+                var schedulerThread = new Thread(RunScheduler);
+                schedulerThread.Start();
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -80,6 +88,19 @@ namespace SealWebServer
                     pattern: "{action=Main}",
                     new { controller = "Home", action = "Main" });
             });
+        }
+
+        private void RunScheduler()
+        {
+            try
+            {
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Seal Report Scheduler");
+                SealReportScheduler.Instance.Run();
+            }
+            catch (Exception ex)
+            {
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Error, ex.Message);
+            }
         }
     }
 }

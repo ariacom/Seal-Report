@@ -485,7 +485,8 @@ namespace Seal.Model
         SubReport,
         Hyperlink,
         FileDownload,
-        ReportScript
+        ReportScript,
+        ReportExecution
     }
 
     public enum ExecutionStep

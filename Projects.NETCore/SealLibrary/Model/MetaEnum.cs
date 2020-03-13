@@ -32,7 +32,6 @@ namespace Seal.Model
         /// <summary>
         /// Name of the enumerated list
         /// </summary>
-        [DefaultValue(null)]
         public override string Name
         {
             get { return _name; }
@@ -43,7 +42,6 @@ namespace Seal.Model
         /// <summary>
         /// If True, the list is loaded using the SQL Select Statement defined
         /// </summary>
-        [DefaultValue(false)]
         public Boolean IsDynamic
         {
             get { return _isDynamic; }
@@ -57,7 +55,6 @@ namespace Seal.Model
         /// <summary>
         /// If True, the list is loaded before a report execution. Should be set to False if the SQL has poor performances.
         /// </summary>
-        [DefaultValue(false)]
         public Boolean IsDbRefresh { get; set; } = false;
 
         /// <summary>
@@ -88,13 +85,11 @@ namespace Seal.Model
         /// <summary>
         /// If True, the current position of the values in the list is used to sort the column in the report result
         /// </summary>
-        [DefaultValue(false)]
         public Boolean UsePosition { get; set; } = false;
 
         /// <summary>
         /// If True, the enumerated values are translated using the Repository translations
         /// </summary>
-        [DefaultValue(false)]
         public Boolean Translate { get; set; } = false;
 
         [XmlIgnore]
@@ -111,7 +106,6 @@ namespace Seal.Model
         /// <summary>
         /// If the list is dynamic, refreshed upon database connection and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed
         /// </summary>
-        [DefaultValue(2)]
         public int FilterChars { get; set; } = 2;
         public bool ShouldSerializeFilterChars() { return HasFilters; }
 
@@ -142,7 +136,6 @@ namespace Seal.Model
         /// <summary>
         /// The list of values used for this enumerated list
         /// </summary>
-        [DefaultValue(null)]
         public List<MetaEV> Values
         {
             get

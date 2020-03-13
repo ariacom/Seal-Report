@@ -609,22 +609,9 @@ namespace Seal.Forms
 
                 log.Log("Checking for Orphan schedules\r\n");
 
-                if (repository.UseSealScheduler)
+                if (repository.UseWebScheduler)
                 {
-                    foreach (var schedule in SealReportScheduler.Instance.GetSchedules())
-                    {
-                        log.Log("Checking schedule '{0}'", schedule.FilePath);
-                        try
-                        {
-                        }
-                        catch (Exception ex)
-                        {
-                            errorCount++;
-                            log.LogRaw("ERROR\r\n");
-                            log.Log(ex.Message);
-                            errorSummary.AppendFormat("\r\nSchedule '{0}': {1}\r\n", schedule.FilePath, ex.Message);
-                        }
-                    }
+                    SealReportScheduler.Instance.GetSchedules();
                 }
                 else
                 {

@@ -189,6 +189,17 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the Seal Scheduler is used instead of the Windows Tasks Scheduler
+        /// </summary>
+        public bool UseWebScheduler
+        {
+            get
+            {
+                return Configuration.UseWebScheduler;
+            }
+        }
+
+        /// <summary>
         /// Forces a configuration reload
         /// </summary>
         public void ReloadConfiguration()
@@ -224,7 +235,6 @@ namespace Seal.Model
             _security = null;
         }
 
-
         static string FindDebugRepository(string path)
         {
             if (string.IsNullOrEmpty(path) || path.Length < 2) return null;
@@ -256,7 +266,6 @@ namespace Seal.Model
                 path = Path.GetDirectoryName(path);
             }
 #endif
-            path = "";
             if (string.IsNullOrEmpty(path))
             {
                 if (!Directory.Exists(path) || path == Path.GetPathRoot(path))
@@ -470,6 +479,7 @@ namespace Seal.Model
                 if (!Directory.Exists(SubReportsFolder)) Directory.CreateDirectory(SubReportsFolder);
                 if (!Directory.Exists(SpecialsFolder)) Directory.CreateDirectory(SpecialsFolder);
                 if (!Directory.Exists(PersonalFolder)) Directory.CreateDirectory(PersonalFolder);
+                if (!Directory.Exists(SchedulesFolder)) Directory.CreateDirectory(SchedulesFolder);
                 if (!Directory.Exists(DashboardPublicFolder)) Directory.CreateDirectory(DashboardPublicFolder);
             }
             catch { }
@@ -601,6 +611,14 @@ namespace Seal.Model
         public string PersonalFolder
         {
             get { return Path.Combine(SpecialsFolder, "Personal"); }
+        }
+
+        /// <summary>
+        /// SpecialsFolder Schedules folder
+        /// </summary>
+        public string SchedulesFolder
+        {
+            get { return Path.Combine(SpecialsFolder, "Schedules"); }
         }
 
         /// <summary>

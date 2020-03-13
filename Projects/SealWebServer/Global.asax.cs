@@ -35,7 +35,28 @@ namespace SealWebServer
                 var preloadThread = new Thread(PreLoadThread);
                 preloadThread.Start();
             }
+
+            if (Repository.Instance.Configuration.UseWebScheduler)
+            {
+                //Run scheduler
+                var schedulerThread = new Thread(RunScheduler);
+                schedulerThread.Start();
+            }
         }
+
+        private void RunScheduler()
+        {
+            try
+            {
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Seal Report Scheduler");
+                SealReportScheduler.Instance.Run();
+            }
+            catch (Exception ex)
+            {
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Error, ex.Message);
+            }
+        }
+
 
         private void PreLoadThread()
         {
@@ -92,6 +113,7 @@ namespace SealWebServer
 
         protected void Application_End()
         {
+            SealReportScheduler.Running = false;
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Web Report Server");
         }
 

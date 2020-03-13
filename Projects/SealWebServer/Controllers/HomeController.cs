@@ -252,10 +252,37 @@ namespace SealWebServer.Controllers
                         var data = NavigationContext.NavigateScript(nav, execution.Report, parameters);
                         return Json(data);
                     }
+                    else if (nav.StartsWith(NavigationLink.ReportExecutionPrefix)) //Report Script
+                    {
+                        Report report = execution.Report;
+                        string path = report.Repository.ReportsFolder + nav.Substring(3);
+                        var newReport = Report.LoadFromFile(path, report.Repository);
+                        newReport.WebUrl = report.WebUrl;
+                        execution = new ReportExecution() { Report = newReport };
+                        report = newReport;
+                        setSessionValue(report.ExecutionGUID, execution);
+
+                        WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Execute report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
+
+                        report.ExecutionContext = ReportExecutionContext.WebReport;
+                        report.SecurityContext = WebUser;
+                        report.CurrentViewGUID = report.ViewGUID;
+
+                        report.InitForExecution();
+                        execution.RenderHTMLDisplayForViewer();
+                        return getFileResult(report.HTMLDisplayFilePath, report);
+                    }
                     else
                     {
                         execution = NavigationContext.Navigate(nav, execution.RootReport);
                         Report report = execution.Report;
+                        //Check rights if not in subreports folder
+                        if (!report.FilePath.StartsWith(report.Repository.SubReportsFolder))
+                        {
+                            SWIFolder folder = getParentFolder(report.FilePath.Replace(report.Repository.ReportsFolder, ""));
+                            if (folder.right == 0) throw new Exception(string.Format("Error: no right to execute a report on the folder '{0}'", folder.path));
+                        }
+
                         setSessionValue(report.ExecutionGUID, execution);
 
                         WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Navigation report '{0}'", report.FilePath), getContextDetail(Request, WebUser));

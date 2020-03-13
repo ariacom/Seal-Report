@@ -43,7 +43,6 @@ namespace Seal.Model
         /// <summary>
         /// Identifier of the current report source
         /// </summary>
-        [DefaultValue(null)]
         public string SourceGUID { get; set; }
 
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
@@ -51,7 +50,6 @@ namespace Seal.Model
         /// <summary>
         /// The connection identifier used by the task
         /// </summary>
-        [DefaultValue(ReportSource.DefaultReportConnectionGUID)]
         public string ConnectionGUID
         {
             get
@@ -69,13 +67,11 @@ namespace Seal.Model
         /// <summary>
         /// If false, the task is ignored and not executed
         /// </summary>
-        [DefaultValue(true)]
         public bool Enabled { get; set; } = true;
 
         /// <summary>
         /// The Report Execution Step to execute the task. By default, tasks are executed before the models generation.
         /// </summary>
-        [DefaultValue(ExecutionStep.BeforeModel)]
         public ExecutionStep Step { get; set; } = ExecutionStep.BeforeModel;
 
         /// <summary>
@@ -143,13 +139,11 @@ namespace Seal.Model
         /// <summary>
         /// If true, errors occuring during the task execution are ignored and the report execution continues
         /// </summary>
-        [DefaultValue(false)]
         public bool IgnoreError { get; set; } = false;
 
         /// <summary>
         /// If true, the task will be executed for each connection defined in the Data Source. If false, only the current connection is used.
         /// </summary>
-        [DefaultValue(false)]
         public bool ExecuteForEachConnection { get; set; } = false;
 
         /// <summary>

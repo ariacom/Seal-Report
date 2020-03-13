@@ -8,6 +8,7 @@ using System.Linq;
 using Seal.Helpers;
 using System.Web;
 using System.Globalization;
+using System.IO;
 
 namespace Seal.Model
 {
@@ -453,6 +454,24 @@ namespace Seal.Model
         public void AddNavigationHyperLink(string href, string text)
         {
             Links.Add(new NavigationLink() { Type = NavigationType.Hyperlink, Href = href, Text = text });
+        }
+
+        /// <summary>
+        /// Add a navigation link from this cell to execute another report within the current navigation context
+        /// </summary>
+        public void AddNavigationReportNavigation(string path, string menuText, string titleText = "")
+        {
+            var link = new NavigationLink() { Type = NavigationType.SubReport, Href = string.Format("rpa={0}", HttpUtility.UrlEncode(path)), Text = menuText };
+            if (!string.IsNullOrEmpty(titleText)) link.Href += string.Format("&dis={0}", HttpUtility.UrlEncode(titleText));
+            Links.Add(link);
+        }
+
+        /// <summary>
+        /// Add a navigation link from this cell to execute another report in a new window
+        /// </summary>
+        public void AddNavigationReportExecution(string path, string menuText)
+        {
+            Links.Add(new NavigationLink() { Type = NavigationType.ReportExecution, Href = path, Text = menuText });
         }
 
         //Context to be used for cell script...

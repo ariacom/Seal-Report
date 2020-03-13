@@ -1773,16 +1773,16 @@ namespace Seal.Model
             return schedule;
         }
 
-        static void InitReportSchedule(string scheduleGUID, out Task task, out Report report, out ReportSchedule schedule)
+        static void InitReportSchedule(string scheduleGUID, out Report report, out ReportSchedule schedule)
         {
             if (string.IsNullOrEmpty(scheduleGUID)) throw new Exception("No schedule GUID specified !\r\n");
+            Repository repository = Repository.Instance;
 
-            Repository repository = Repository.Create();
             TaskService taskService = new TaskService();
             TaskFolder taskFolder = taskService.RootFolder.SubFolders.FirstOrDefault(i => i.Name == repository.Configuration.TaskFolderName);
             if (taskFolder == null) throw new Exception(string.Format("Unable to find schedule task folder '{0}'\r\nCheck your configuration...", repository.Configuration.TaskFolderName));
 
-            task = taskFolder.GetTasks().FirstOrDefault(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID));
+            Task task = taskFolder.GetTasks().FirstOrDefault(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID));
             if (task == null) throw new Exception(string.Format("Unable to find schedule '{0}'\r\n", scheduleGUID));
 
             string reportPath = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 0);
@@ -1793,6 +1793,7 @@ namespace Seal.Model
             schedule = GetReportSchedule(taskFolder, report, scheduleGUID);
             if (schedule == null) throw new Exception(string.Format("Unable to find schedule '{0}' in report '{1}'.\r\nSchedule has been deleted", scheduleGUID, report.FilePath));
         }
+
 
         static void sendEmail(Report report, string to, string from, string subject, string body)
         {
@@ -1822,21 +1823,34 @@ namespace Seal.Model
         }
 
 
-        public static void ExecuteReportSchedule(string scheduleGUID)
+        public static void ExecuteReportSchedule(string scheduleGUID, Report refReport = null, ReportSchedule refSchedule = null)
         {
             try
             {
-                Task task;
                 Report report;
                 ReportSchedule schedule;
-                InitReportSchedule(scheduleGUID, out task, out report, out schedule);
+                bool useSealScheduler = Repository.Instance.UseWebScheduler;
+                if (useSealScheduler)
+                {
+                    report = refReport;
+                    schedule = refSchedule;
+                }
+                else
+                {
+                    InitReportSchedule(scheduleGUID, out report, out schedule);
+                }
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName);
                 int retries = schedule.ErrorNumberOfRetries + 1;
                 while (--retries >= 0)
                 {
-                    if (report == null || schedule == null || task == null)
+                    if (useSealScheduler)
                     {
-                        InitReportSchedule(scheduleGUID, out task, out report, out schedule);
+                        report = Report.LoadFromFile(refReport.FilePath, refReport.Repository);
+                        schedule = report.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
+                    }
+                    else
+                    {
+                        InitReportSchedule(scheduleGUID, out report, out schedule);
                     }
                     ReportExecution reportExecution = new ReportExecution() { Report = report };
                     report.ExecutionContext = ReportExecutionContext.TaskScheduler;
@@ -1852,7 +1866,7 @@ namespace Seal.Model
                     }
 
                     reportExecution.Execute();
-                    schedule.SynchronizeTask();
+                    if (!useSealScheduler) schedule.SynchronizeTask();
 
                     while (report.IsExecuting)
                     {
@@ -1890,7 +1904,6 @@ namespace Seal.Model
                             var newDate = DateTime.Now.AddMinutes(schedule.ErrorMinutesBetweenRetries);
                             report = null;
                             schedule = null;
-                            task = null;
                             while (DateTime.Now < newDate) Thread.Sleep(1000); //Future: waiting for a notification to die...
                             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, message);
                         }

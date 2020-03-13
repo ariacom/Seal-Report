@@ -1829,7 +1829,7 @@ namespace Seal.Model
             {
                 Report report;
                 ReportSchedule schedule;
-                bool useSealScheduler = Repository.Instance.UseSealScheduler;
+                bool useSealScheduler = Repository.Instance.UseWebScheduler;
                 if (useSealScheduler)
                 {
                     report = refReport;

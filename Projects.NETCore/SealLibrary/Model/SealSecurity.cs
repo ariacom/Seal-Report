@@ -61,7 +61,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, a custom script can be used for the authentication process
         /// </summary>
-        [DefaultValue(false)]
         public bool UseCustomScript
         {
             get { return _useCustomScript; }
