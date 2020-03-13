@@ -28,25 +28,21 @@ namespace Seal.Model
         /// <summary>
         /// Define the right of the dedicated personal folder for each user of the group
         /// </summary>
-        [DefaultValue(PersonalFolderRight.None)]
         public PersonalFolderRight PersFolderRight { get; set; } = PersonalFolderRight.None;
 
         /// <summary>
         /// Define if the group can view Reports and Dashboards
         /// </summary>
-        [DefaultValue(false)]
         public bool ShowAllFolders { get; set; } = false;
 
         /// <summary>
         /// Define if the group can view Reports and Dashboards
         /// </summary>
-        [DefaultValue(ViewType.ReportsDashboards)]
         public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
 
         /// <summary>
         /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.
         /// </summary>
-        [DefaultValue(false)]
         public bool SqlModel { get; set; } = false;
 
         /// <summary>
@@ -76,13 +72,11 @@ namespace Seal.Model
         /// <summary>
         /// If true, the user can modify his current dashboard view (e.g. add/remove dashboards in his view or change orders).
         /// </summary>
-        [DefaultValue(true)]
         public bool ManageDashboards { get; set; } = true;
 
         /// <summary>
         /// If true, users of the group have a personal folder to create personal dashboards.
         /// </summary>
-        [DefaultValue(false)]
         public bool PersonalDashboardFolder { get; set; } = false;
 
         /// <summary>

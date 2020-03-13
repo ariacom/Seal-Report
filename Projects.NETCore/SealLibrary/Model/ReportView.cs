@@ -415,7 +415,6 @@ namespace Seal.Model
         /// <summary>
         /// The data model identifier used for the view
         /// </summary>
-        [DefaultValue(null)]
         public string ModelGUID
         {
             get { return _modelGUID; }
@@ -429,7 +428,6 @@ namespace Seal.Model
         /// <summary>
         /// If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
         /// </summary>
-        [DefaultValue(null)]
         public string ReferenceViewGUID { get; set; }
         public bool ShouldSerializeReferenceViewGUID() { return !string.IsNullOrEmpty(ReferenceViewGUID); }
 
@@ -493,7 +491,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the template text can be modified
         /// </summary>
-        [DefaultValue(false)]
         public bool UseCustomTemplate
         {
             get { return _useCustomTemplate; }
@@ -654,7 +651,6 @@ namespace Seal.Model
         /// <summary>
         /// For the Web Report Server: If true, the view can be executed from the report list.
         /// </summary>
-        [DefaultValue(true)]
         public bool WebExec { get; set; } = true;
 
 

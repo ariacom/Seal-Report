@@ -90,7 +90,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, columns are generated automatically from the Table Name or the SQL Select Statement by reading the database catalog
         /// </summary>
-        [DefaultValue(false)]
         public bool DynamicColumns
         {
             get { return _dynamicColumns; }
@@ -104,7 +103,6 @@ namespace Seal.Model
         /// <summary>
         /// "If true, the display names of the columns are kept when generated from the source SQL
         /// </summary>
-        [DefaultValue(false)]
         public bool KeepColumnNames { get; set; } = false;
 
         /// <summary>
@@ -115,7 +113,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the table must be refreshed for dynamic columns
         /// </summary>
-        [DefaultValue(false)]
         public bool MustRefresh { get; set; } = false;
         public bool ShouldSerializeMustRefresh() { return MustRefresh; }
 
@@ -132,7 +129,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues
         /// </summary>
-        [DefaultValue(false)]
         public bool IgnorePrePostError { get; set; } = false;
         public bool ShouldSerializeIgnorePrePostError() { return IgnorePrePostError; }
 

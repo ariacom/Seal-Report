@@ -31,7 +31,6 @@ namespace Seal.Model
         /// <summary>
         /// The right applied for the widget having this security tag or this name
         /// </summary>
-        [DefaultValue(EditorRight.NoSelection)]
         public EditorRight Right { get; set; } = EditorRight.NoSelection;
 
         /// <summary>

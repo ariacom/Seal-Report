@@ -43,14 +43,12 @@ namespace Seal.Model
         /// <summary>
         /// The source used to build the model
         /// </summary>
-        [DefaultValue(null)]
         public string SourceGUID { get; set; }
 
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
         /// <summary>
         /// The connection used to build the model
         /// </summary>
-        [DefaultValue(ReportSource.DefaultReportConnectionGUID)]
         public string ConnectionGUID
         {
             get
@@ -93,25 +91,21 @@ namespace Seal.Model
         /// <summary>
         /// Optional Razor Script to modify the result table of the model just before the database load
         /// </summary>
-        [DefaultValue("")]
         public string PreLoadScript { get; set; }
 
         /// <summary>
         /// The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used.
         /// </summary>
-        [DefaultValue("")]
         public string LoadScript { get; set; }
 
         /// <summary>
         /// Optional Razor Script to modify the model after its generation
         /// </summary>
-        [DefaultValue("")]
         public string FinalScript { get; set; }
 
         /// <summary>
         /// If true and the table has column values, the first line used for titles is generated in the table header
         /// </summary>
-        [DefaultValue(true)]
         public bool ShowFirstLine { get; set; } = true;
 
         /// <summary>
@@ -127,7 +121,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the column names of the source a kept when building the metadata columns
         /// </summary>
-        [DefaultValue(false)]
         public bool KeepColNames
         {
             get { return Table != null ? Table.KeepColumnNames : false; }
@@ -138,7 +131,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the raw source SQL is used to generate the result table instead of using a 'select * from (Source SQL) a' statement. In this case, aggregations, restrictions and custom SQL are not applied
         /// </summary>
-        [DefaultValue(false)]
         public bool UseRawSQL { get; set; } = false;
         public bool ShouldSerializeUseRawSQL() { return IsSQLModel; }
 
@@ -146,7 +138,6 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')
         /// </summary>
-        [DefaultValue("")]
         public string SqlSelect
         {
             get { return (_sqlSelect == DefaultClause) ? "" : _sqlSelect; }
@@ -157,7 +148,6 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the FROM clause in the generated SQL statement
         /// </summary>
-        [DefaultValue("")]
         public string SqlFrom
         {
             get { return (_sqlFrom == DefaultClause) ? "" : _sqlFrom; }
@@ -168,7 +158,6 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the GROUP BY clause in the generated SQL statement
         /// </summary>
-        [DefaultValue("")]
         public string SqlGroupBy
         {
             get { return (_sqlGroupBy == DefaultClause) ? "" : _sqlGroupBy; }
@@ -179,7 +168,6 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the ORDER BY clause in the generated SQL statement
         /// </summary>
-        [DefaultValue("")]
         public string SqlOrderBy
         {
             get { return (_sqlOrderBy == DefaultClause) ? "" : _sqlOrderBy; }
@@ -190,7 +178,6 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the CTE (Common Table Expressions) clause in the generated SQL statement
         /// </summary>
-        [DefaultValue("")]
         public string SqlCTE
         {
             get { return (_sqlSelect == DefaultClause) ? "" : _sqlCTE; }
@@ -200,25 +187,21 @@ namespace Seal.Model
         /// <summary>
         /// SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'.
         /// </summary>
-        [DefaultValue("")]
         public string PreSQL { get; set; }
 
         /// <summary>
         /// SQL Statement executed after the main query. The statement may contain Razor script if it starts with '@'.
         /// </summary>
-        [DefaultValue("")]
         public string PostSQL { get; set; }
 
         /// <summary>
         /// If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues
         /// </summary>
-        [DefaultValue(false)]
         public bool IgnorePrePostError { get; set; } = false;
 
         /// <summary>
         /// Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
         /// </summary>
-        [DefaultValue(2000)]
         public int BuildTimeout { get; set; } = 2000;
 
         /// <summary>

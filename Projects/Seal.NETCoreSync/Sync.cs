@@ -111,6 +111,7 @@ namespace Seal.NETCoreSync
                 {
                     if (line2.StartsWith("[Category") ||
                         line2.StartsWith("[Editor") ||
+                        line2.StartsWith("[Default") ||
                         line2.StartsWith("[ClassResource") ||
                         line2.StartsWith("[OutputCache") ||
                         line2.StartsWith("[TypeConverter") ||

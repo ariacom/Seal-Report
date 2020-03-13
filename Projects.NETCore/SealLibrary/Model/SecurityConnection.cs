@@ -26,7 +26,6 @@ namespace Seal.Model
         /// <summary>
         /// /The right applied for the connection having this name
         /// </summary>
-        [DefaultValue(EditorRight.NoSelection)]
         public EditorRight Right { get; set; } = EditorRight.NoSelection;
 
         /// <summary>

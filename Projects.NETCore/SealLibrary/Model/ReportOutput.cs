@@ -84,7 +84,6 @@ namespace Seal.Model
         /// <summary>
         /// If the models of the report do not have any record, the output generation is cancelled
         /// </summary>
-        [DefaultValue(false)]
         public bool CancelIfNoRecords { get; set; } = false;
 
         /// <summary>
@@ -153,7 +152,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the report result is copied in the email body message
         /// </summary>
-        [DefaultValue(false)]
         public bool EmailHtmlBody
         {
             get { return _emailHtmlBody; }
@@ -167,7 +165,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the report execution messages are copied in the email body message
         /// </summary>
-        [DefaultValue(false)]
         public bool EmailMessagesInBody
         {
             get { return _emailMessagesInBody; }
@@ -185,7 +182,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the email sent will have an attachement with all files zipped.
         /// </summary>
-        [DefaultValue(false)]
         public bool EmailZipAttachments
         {
             get { return _emailZipAttachments; }
@@ -203,7 +199,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the email sent will have no attachement. This may be useful if the report has only tasks.
         /// </summary>
-        [DefaultValue(false)]
         public bool EmailSkipAttachments
         {
             get { return _emailSkipAttachments; }
@@ -230,13 +225,11 @@ namespace Seal.Model
         /// <summary>
         /// For the Web Report Server: If true, the output can be executed by all users having the execute right on the report. If false, only the user owner can execute the schedule.
         /// </summary>
-        [DefaultValue(true)]
         public bool PublicExec { get; set; } = true;
 
         /// <summary>
         /// For the Web Report Server Designer: If true, the output and shedule can be edited by all users having the schedule right on the report. If false, only the user owner can edit the schedule.
         /// </summary>
-        [DefaultValue(true)]
         public bool PublicEdit { get; set; } = true;
 
         /// <summary>
@@ -328,7 +321,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, custom restrictions can be defined for this output
         /// </summary>
-        [DefaultValue(false)]
         public bool UseCustomRestrictions
         {
             get { return _useCustomRestrictions; }

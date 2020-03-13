@@ -36,22 +36,22 @@ namespace Seal.Model
                 GetProperty("IsTasksSchedule").SetIsBrowsable(IsTasksSchedule);
 
                 //Seal scheduler
-                GetProperty("SealEnabled").SetIsBrowsable(Report.Repository.UseSealScheduler);
-                GetProperty("SealStart").SetIsBrowsable(Report.Repository.UseSealScheduler);
-                GetProperty("SealEnd").SetIsBrowsable(Report.Repository.UseSealScheduler);
-                GetProperty("SealType").SetIsBrowsable(Report.Repository.UseSealScheduler);
-                GetProperty("SealDaysInterval").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Daily);
-                GetProperty("SealWeeksInterval").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Weekly);
-                GetProperty("SealWeekdays").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Weekly);
-                GetProperty("SealMonths").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Monthly);
-                GetProperty("SealDays").SetIsBrowsable(Report.Repository.UseSealScheduler && SealType == TriggerType.Monthly);
-                GetProperty("SealRepeatInterval").SetIsBrowsable(Report.Repository.UseSealScheduler);
-                GetProperty("SealRepeatDuration").SetIsBrowsable(Report.Repository.UseSealScheduler);
-                GetProperty("SealNextExecution").SetIsBrowsable(Report.Repository.UseSealScheduler);
+                GetProperty("SealEnabled").SetIsBrowsable(Report.Repository.UseWebScheduler);
+                GetProperty("SealStart").SetIsBrowsable(Report.Repository.UseWebScheduler);
+                GetProperty("SealEnd").SetIsBrowsable(Report.Repository.UseWebScheduler);
+                GetProperty("SealType").SetIsBrowsable(Report.Repository.UseWebScheduler);
+                GetProperty("SealDaysInterval").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Daily);
+                GetProperty("SealWeeksInterval").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Weekly);
+                GetProperty("SealWeekdays").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Weekly);
+                GetProperty("SealMonths").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Monthly);
+                GetProperty("SealDays").SetIsBrowsable(Report.Repository.UseWebScheduler && SealType == TriggerType.Monthly);
+                GetProperty("SealRepeatInterval").SetIsBrowsable(Report.Repository.UseWebScheduler);
+                GetProperty("SealRepeatDuration").SetIsBrowsable(Report.Repository.UseWebScheduler);
+                GetProperty("SealNextExecution").SetIsBrowsable(Report.Repository.UseWebScheduler);
 
-                GetProperty("IsEnabled").SetIsBrowsable(!Report.Repository.UseSealScheduler);
-                GetProperty("LastRunTime").SetIsBrowsable(!Report.Repository.UseSealScheduler);
-                GetProperty("NextRunTime").SetIsBrowsable(!Report.Repository.UseSealScheduler);
+                GetProperty("IsEnabled").SetIsBrowsable(!Report.Repository.UseWebScheduler);
+                GetProperty("LastRunTime").SetIsBrowsable(!Report.Repository.UseWebScheduler);
+                GetProperty("NextRunTime").SetIsBrowsable(!Report.Repository.UseWebScheduler);
 
                 GetProperty("NotificationEmailSubject").SetIsBrowsable(true);
                 GetProperty("NotificationEmailBody").SetIsBrowsable(true);
@@ -66,8 +66,8 @@ namespace Seal.Model
                 GetProperty("ErrorEmailSendMode").SetIsBrowsable(true);
 
                 //Helpers
-                GetProperty("HelperEditProperties").SetIsBrowsable(true);
-                GetProperty("HelperRunTaskScheduler").SetIsBrowsable(true);
+                GetProperty("HelperEditProperties").SetIsBrowsable(!Report.Repository.UseWebScheduler);
+                GetProperty("HelperRunTaskScheduler").SetIsBrowsable(!Report.Repository.UseWebScheduler);
 
                 GetProperty("ErrorMinutesBetweenRetries").SetIsReadOnly(ErrorNumberOfRetries <= 0);
                 GetProperty("ErrorEmailSubject").SetIsReadOnly(string.IsNullOrEmpty(ErrorEmailTo));
@@ -134,7 +134,7 @@ namespace Seal.Model
             {
                 SealSchedule.Start = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
         [Category("Definition"), DisplayName("End date"), Description("End date and time of the schedule."), Id(3, 1)]
@@ -149,7 +149,7 @@ namespace Seal.Model
             {
                 SealSchedule.End = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
 
@@ -168,12 +168,11 @@ namespace Seal.Model
             {
                 SealSchedule.Type = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
 
         [Category("Definition"), DisplayName("Recur every (days)"), Description("Number of days."), Id(5, 1)]
-        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public int SealDaysInterval
         {
@@ -185,12 +184,11 @@ namespace Seal.Model
             {
                 SealSchedule.DaysInterval = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
 
         [Category("Definition"), DisplayName("Recur every (weeks)"), Description("Number of weeks."), Id(6, 1)]
-        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public int SealWeeksInterval
         {
@@ -202,12 +200,12 @@ namespace Seal.Model
             {
                 SealSchedule.WeeksInterval = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
 
         [Category("Definition"), DisplayName("Week days"), Description("Days of the week to execute the schedule."), Id(7, 1)]
-        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
+        [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public List<int> SealWeekdays
         {
@@ -219,12 +217,12 @@ namespace Seal.Model
             {
                 SealSchedule.Weekdays = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
 
         [Category("Definition"), DisplayName("Months"), Description("Months to execute the schedule."), Id(8, 1)]
-        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
+        [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public List<int> SealMonths
         {
@@ -236,12 +234,12 @@ namespace Seal.Model
             {
                 SealSchedule.Months = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
 
         [Category("Definition"), DisplayName("Days of the month"), Description("Days of the month to execute the schedule."), Id(9, 1)]
-        [Editor(typeof(IntArrayEditor), typeof(UITypeEditor))]
+        [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public List<int> SealDays
         {
@@ -253,7 +251,7 @@ namespace Seal.Model
             {
                 SealSchedule.Days = value;
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
 
@@ -272,7 +270,7 @@ namespace Seal.Model
             {
                 SealSchedule.RepeatInterval = Helper.ToTimeSpan(value, null);
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
 
@@ -290,7 +288,7 @@ namespace Seal.Model
             {
                 SealSchedule.RepeatDuration = Helper.ToTimeSpan(value, null);
                 SealSchedule.CalculateNextExecution();
-                UpdateEditor();
+                UpdateEditor(); //!NETCore
             }
         }
 
@@ -518,8 +516,18 @@ namespace Seal.Model
         /// </summary>
         public void SynchronizeTask()
         {
-            if (Report.Repository.UseSealScheduler)
+            if (Report.Repository.UseWebScheduler)
             {
+                if (File.Exists(SealSchedule.FilePath))
+                {
+                    //Check if the name has changed
+                    if (TaskName != Path.GetFileNameWithoutExtension(SealSchedule.FilePath))
+                    {
+                        var newPath = Path.Combine(Report.Repository.SchedulesFolder, TaskName) + ".xml";
+                        File.Move(SealSchedule.FilePath, newPath);
+                        SealSchedule.FilePath = newPath;
+                    }
+                }
                 SealReportScheduler.Instance.SaveSchedule(SealSchedule);
             }
             else

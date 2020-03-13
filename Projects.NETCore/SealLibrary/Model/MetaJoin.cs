@@ -37,7 +37,6 @@ namespace Seal.Model
         /// <summary>
         /// Name of the join. If reset to an Empty String, the name is built using the table names.
         /// </summary>
-        [DefaultValue(null)]
         public override string Name
         {
             get { return _name; }
@@ -54,7 +53,6 @@ namespace Seal.Model
         /// <summary>
         /// Left table GUID for the join definition
         /// </summary>
-        [DefaultValue(null)]
         public string LeftTableGUID
         {
             get { return _leftTableGUID; }
@@ -88,7 +86,6 @@ namespace Seal.Model
         /// <summary>
         /// Right table GUID for the join definition
         /// </summary>
-        [DefaultValue(null)]
         public string RightTableGUID
         {
             get { return _rightTableGUID; }
@@ -132,7 +129,6 @@ namespace Seal.Model
         /// <summary>
         /// The type of join used to link the 2 tables
         /// </summary>
-        [DefaultValue(JoinType.Inner)]
         public JoinType JoinType
         {
             get { return _joinType; }
@@ -145,7 +141,6 @@ namespace Seal.Model
         /// <summary>
         /// Indicates if the join can also be used in the other direction (left-right or right-left)
         /// </summary>
-        [DefaultValue(true)]
         public bool IsBiDirectional { get; set; } = true;
 
         /// <summary>

@@ -46,14 +46,8 @@ namespace Seal.Model
         public string DefaultConnectionString { get; set; } = "Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;";
 
         /// <summary>
-        /// The name of the Task Scheduler folder containg the schedules of the reports
-        /// </summary>
-        public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
-
-        /// <summary>
         /// The logo file name used by the report templates
         /// </summary>
-        [DefaultValue("logo.png")]
         public string LogoName { get; set; } = "logo.png";
 
         /// <summary>
@@ -72,7 +66,6 @@ namespace Seal.Model
         /// <summary>
         /// Number of days of log files to keep in the repository 'Logs' subfolder. If 0, the log feature is disabled.
         /// </summary>
-        [DefaultValue(30)]
         public int LogDays { get; set; } = 30;
 
         /// <summary>
@@ -83,7 +76,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path).
         /// </summary>
-        [DefaultValue(true)]
         public bool IsLocal { get; set; } = true;
 
         /// <summary>
@@ -101,6 +93,28 @@ namespace Seal.Model
         /// Additional JavaScript files to be included in the HTML report result. One per line or separated by semi-column.
         /// </summary>
         public string ScriptFiles { get; set; } = null;
+
+        bool _useWebScheduler = false;
+        /// <summary>
+        /// If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). Mainly to allow schedules for .NETCore or Azure installations.
+        /// </summary>
+        public bool UseWebScheduler
+        {
+            get
+            {
+                return _useWebScheduler;
+            }
+            set
+            {
+                _useWebScheduler = value;
+            }
+        }
+
+        /// <summary>
+        /// Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used
+        /// </summary>
+        public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
+
 
         /// <summary>
         /// If set, the script is executed to log events (login, logut, report execution, etc.). The common implementation is to insert a record into a database table.
@@ -167,42 +181,36 @@ namespace Seal.Model
         /// <summary>
         /// If true, the client library is used to perform the HTML to PDF conversion (mainly useful for .NETCore distribution). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
         /// </summary>
-        [DefaultValue(false)]
         public bool PdfUseClient { get; set; } = false;
         public bool ShouldSerializeUsePdfClient() { return PdfUseClient; }
 
         /// <summary>
         /// If the client library is used, the HTML to PDF server IP or name.
         /// </summary>
-        [DefaultValue("127.0.0.1")]
         public string PdfServer { get; set; } = "127.0.0.1";
         public bool ShouldSerializePdfServer() { return PdfServer != "127.0.0.1"; }
 
         /// <summary>
         /// If the client library is used, the HTML to PDF server IP or name.
         /// </summary>
-        [DefaultValue(45001)]
         public uint PdfServerPort { get; set; } = 45001;
         public bool ShouldSerializePdfServerPort() { return PdfServerPort != 45001; }
 
         /// <summary>
         /// If the client library is used, optional HTML to PDF converter service password.
         /// </summary>
-        [DefaultValue(false)]
         public string PdfServicePassword { get; set; } = "";
         public bool ShouldSerializePdfServicePassword() { return !string.IsNullOrEmpty(PdfServicePassword); }
 
         /// <summary>
         /// If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion.
         /// </summary>
-        [DefaultValue(false)]
         public bool PdfUseWebService { get; set; } = false;
         public bool ShouldSerializePdfUseWebService() { return PdfUseWebService; }
 
         /// <summary>
         /// If the client library is used, the HTML to PDF web service URL.
         /// </summary>
-        [DefaultValue(false)]
         public string PdfWebServiceURL { get; set; } = "";
         public bool ShouldSerializePdfWebServiceURL() { return !string.IsNullOrEmpty(PdfWebServiceURL); }
 
@@ -322,13 +330,11 @@ namespace Seal.Model
         /// <summary>
         /// The numeric format used for numeric column having the default format
         /// </summary>
-        [DefaultValue("N0")]
         public string NumericFormat { get; set; } = "N0";
 
         /// <summary>
         /// The date time format used for date time column having the default format
         /// </summary>
-        [DefaultValue("d")]
         public string DateTimeFormat { get; set; } = "d";
 
         /// <summary>

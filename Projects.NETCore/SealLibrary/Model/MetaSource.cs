@@ -47,7 +47,6 @@ namespace Seal.Model
         /// <summary>
         /// The connection currently used for this data source
         /// </summary>
-        [DefaultValue(null)]
         public string ConnectionGUID
         {
             get { return _connectionGUID; }
@@ -57,13 +56,11 @@ namespace Seal.Model
         /// <summary>
         /// If true, this source is used as default when a new model is created in a report
         /// </summary>
-        [DefaultValue(false)]
         public bool IsDefault { get; set; } = false;
 
         /// <summary>
         /// If true, this source contains only a table built from a Razor script. The SQL engine will not be used to fill the models.
         /// </summary>
-        [DefaultValue(false)]
         public bool IsNoSQL { get; set; } = false;
 
         /// <summary>
@@ -87,7 +84,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues
         /// </summary>
-        [DefaultValue(false)]
         public bool IgnorePrePostError { get; set; } = false;
 
         /// <summary>

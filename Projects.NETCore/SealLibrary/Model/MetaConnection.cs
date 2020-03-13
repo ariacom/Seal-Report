@@ -39,7 +39,6 @@ namespace Seal.Model
         /// <summary>
         /// The name of the connection
         /// </summary>
-        [DefaultValue(null)]
         public override string Name
         {
             get { return _name; }
@@ -49,14 +48,12 @@ namespace Seal.Model
         /// <summary>
         /// The type of the source database
         /// </summary>
-        [DefaultValue(DatabaseType.Standard)]
         public DatabaseType DatabaseType { get; set; } = DatabaseType.Standard;
 
         private ConnectionType _connectionType = ConnectionType.OleDb;
         /// <summary>
         /// The type of the connection used
         /// </summary>
-        [DefaultValue(ConnectionType.OleDb)]
         public ConnectionType ConnectionType
         {
             get {
@@ -79,13 +76,11 @@ namespace Seal.Model
         /// <summary>
         /// OLE DB Connection string used to connect to the database if the connection type is OLE DB
         /// </summary>
-        [DefaultValue(null)]
         public string ConnectionString { get; set; }
 
         /// <summary>
         /// Property Helper for editor
         /// </summary>
-        [DefaultValue(null)]
         [XmlIgnore]
         public string ConnectionString2
         {
@@ -95,20 +90,17 @@ namespace Seal.Model
         /// <summary>
         /// ODBC Connection string used to connect to the database if the connection type is ODBC
         /// </summary>
-        [DefaultValue(null)]
         public string OdbcConnectionString { get; set; }
 
 
         /// <summary>
         /// MS SQLServer Connection string used to connect to the database if the connection type is MS SQLServer
         /// </summary>
-        [DefaultValue(null)]
         public string MSSqlServerConnectionString { get; set; }
 
         /// <summary>
         /// The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates).
         /// </summary>
-        [DefaultValue("yyyy-MM-dd HH:mm:ss")]
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
 
         /// <summary>

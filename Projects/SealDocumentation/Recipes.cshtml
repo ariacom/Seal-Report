@@ -12,6 +12,7 @@
                 <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation" style="padding-left:0">
                     <ul class="nav">
                         <li><a href="#lineTranslations" style="padding:0px 2px">Adding translation files</a></li>
+                        <li><a href="#lineFormula" style="padding:0px 2px">Formulas and custom SQL</a></li>
                         <li><a href="#lineDynamicSecurity" style="padding:0px 2px">Filtering records based on security</a></li>
                         <li><a href="#lineSQLServerSP" style="padding:0px 2px">SQL Server Stored Procedures</a></li>
                         <li>
@@ -90,6 +91,51 @@
                             </div>
                             <div class="bs-callout bs-callout-warning">
                                 Test your new translations with the Web Report Server, just change your culture in your profile.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineFormula" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Formulas and custom SQL<hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                There is no formula engine in Seal Report.<br />
+                                This is because you should rely mainly on your database engine to perform specific calculations.<br />
+
+                                However, it is easy to change the SQL used to query your column and thus add SQL formula in your model:<br />
+                                <br />
+                                Create a Metadata model, based on Northwind.<br />
+                                Drag and drop the <strong>Suppliers/Supplier</strong> column in the Row Elements of the model.<br />
+                                Use the property <code>Advanced->Custom SQL</code>, you can here customize the SQL with what you want (call of a function, case statements, etc.)<br />
+                                For this sample, just type <b>'SUPPLIER: ' & Suppliers.CompanyName</b> to add a prefix to your column value.<br />
+                                <br />
+                                You can also use this property for the Data elements.<br />
+                                Drag and drop the <strong>Order Details/Quantity</strong> column in the Data Elements.<br />
+                                Rename it to <b>Total Price</b> and set the <code>Advanced->Custom SQL</code> property to: <br />
+                                <b>Sum([Order Details].Quantity*[Order Details].UnitPrice)</b><br />
+                                this will give the calculation of the price per customer.<br />
+                                <br />
+                                Finally, using the aliases of the table involved in the query, you can have a column based on a calculation of columns coming from different tables:<br />
+                                Drag and drop the <strong>Order Details/Quantity</strong> column in the Data Elements and set the <code>Advanced->Custom SQL</code> property to:<br />
+                                <b>Sum([Order Details].Quantity + Products.UnitsInStock)</b>
+
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                Do not hesitate to use the <b>CASE statements</b> in SQL Server or Oracle, they can be very useful.<br />
+                                <br />
+                                You can also override the default SQL generated with the following <b>Model</b> properties :
+                                <code>Select Clause</code>,<code>From Clause</code>,<code>Order By Clause</code>,<code>Group By Clause</code>,<code>Common Table Expression Clause</code><br />
+
                             </div>
                         </div>
                         <!-- end col -->
@@ -480,4 +526,5 @@ executeReport("/Overview - Sales.srex");
         $(document).ready(function () {
             $("#recipes_nav").addClass("active");
         });
-    </script>}
+    </script>
+}

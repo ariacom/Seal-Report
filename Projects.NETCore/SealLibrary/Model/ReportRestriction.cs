@@ -57,13 +57,11 @@ namespace Seal.Model
         /// <summary>
         /// Define if the value of the restriction is prompted to the user when the report is executed
         /// </summary>
-        [DefaultValue(PromptType.None)]
         public PromptType Prompt { get; set; } = PromptType.None;
 
         /// <summary>
         /// If true and the restriction is prompted, a value is required to execute the report
         /// </summary>
-        [DefaultValue(false)]
         public bool Required { get; set; } = false;
 
         /// <summary>
@@ -81,7 +79,6 @@ namespace Seal.Model
         /// <summary>
         /// Data type of the restriction
         /// </summary>
-        [DefaultValue(ColumnType.Default)]
         public ColumnType TypeRe
         {
             get { return _type; }
@@ -95,7 +92,6 @@ namespace Seal.Model
         /// <summary>
         /// Standard display format applied to the restriction display value
         /// </summary>
-        [DefaultValue(DateTimeStandardFormat.Default)]
         public DateTimeStandardFormat DateTimeStandardFormatRe
         {
             get { return _datetimeStandardFormat; }
@@ -115,7 +111,6 @@ namespace Seal.Model
         /// <summary>
         /// Standard display format applied to the restriction display value
         /// </summary>
-        [DefaultValue(NumericStandardFormat.Default)]
         public NumericStandardFormat NumericStandardFormatRe
         {
             get { return _numericStandardFormat; }
@@ -157,19 +152,16 @@ namespace Seal.Model
         /// <summary>
         /// If greater than 0, specifies the number of lines available to edit the first restriction value (only valid for text or numeric when the restriction is prompted)
         /// </summary>
-        [DefaultValue(0)]
         public int InputRows { get; set; } = 0;
 
         /// <summary>
         /// If true, the operator can be changed when the restriction is prompted
         /// </summary>
-        [DefaultValue(true)]
         public bool ChangeOperator { get; set; } = true;
 
         /// <summary>
         /// If defined, the restriction values are selected using the enumerated list
         /// </summary>
-        [DefaultValue(null)]
         public string EnumGUIDRE
         {
             get { return _enumGUID; }
@@ -179,7 +171,6 @@ namespace Seal.Model
         /// <summary>
         /// Sort order used for the display of the prompted restrictions when the report is executed.
         /// </summary>
-        [DefaultValue(0)]
         public int DisplayOrderRE
         {
             get { return DisplayOrder; }
@@ -189,7 +180,6 @@ namespace Seal.Model
         /// <summary>
         /// The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator).
         /// </summary>
-        [DefaultValue(Operator.Equal)]
         public Operator Operator
         {
             get { return _operator; }

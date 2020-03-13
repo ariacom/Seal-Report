@@ -121,7 +121,6 @@ namespace Seal.Model
         /// <summary>
         /// Name of the element when displayed in result tables or restrictions
         /// </summary>
-        [DefaultValue(null)]
         [XmlIgnore]
         public string DisplayNameEl
         {
@@ -152,13 +151,11 @@ namespace Seal.Model
         /// <summary>
         /// Sort order in the result tables. Page elements are sorted first, then Row, Column and Data elements.
         /// </summary>
-        [DefaultValue(kAutomaticAscSortKeyword)]
         public string SortOrder { get; set; } = kAutomaticAscSortKeyword;
 
         /// <summary>
         /// Data type of the column
         /// </summary>
-        [DefaultValue(ColumnType.Default)]
         public ColumnType TypeEd
         {
             get { return _type; }
@@ -178,7 +175,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, a line showing sub-totals is added to the main data table when the value of the element changes
         /// </summary>
-        [DefaultValue(false)]
         public bool ShowSubTotals { get; set; } = false;
 
         /// <summary>
@@ -308,7 +304,6 @@ namespace Seal.Model
         /// <summary>
         /// Aggregate function applied to the Data element
         /// </summary>
-        [DefaultValue(AggregateFunction.Sum)]
         public AggregateFunction AggregateFunction
         {
             get { return _aggregateFunction; }
@@ -319,7 +314,6 @@ namespace Seal.Model
         /// <summary>
         /// For numeric Data elements, define calculation option applied on the element in the table
         /// </summary>
-        [DefaultValue(CalculationOption.No)]
         public CalculationOption CalculationOption
         {
             get { return _calculationOption; }
@@ -342,7 +336,6 @@ namespace Seal.Model
         /// <summary>
         /// For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed.
         /// </summary>
-        [DefaultValue(ShowTotal.No)]
         public ShowTotal ShowTotal
         {
             get { return _showTotal; }
@@ -356,7 +349,6 @@ namespace Seal.Model
         /// <summary>
         /// Aggregate function applied for the totals
         /// </summary>
-        [DefaultValue(AggregateFunction.Sum)]
         public AggregateFunction TotalAggregateFunction { get; set; } = AggregateFunction.Sum;
 
         //Charts
@@ -364,7 +356,6 @@ namespace Seal.Model
         /// <summary>
         /// Defines how the element is used in the chart. Row or Column elements can be either Axis or Splitter (to create a serie for each splitter value).
         /// </summary>
-        [DefaultValue(SerieDefinition.None)]
         public SerieDefinition SerieDefinition
         {
             get { return _serieDefinition; }
@@ -386,7 +377,6 @@ namespace Seal.Model
         /// <summary>
         /// For Numeric or Date Time axis, if true, the element values are used for the axis, otherwise axis values are linear. This feature does not work for all types of chart.
         /// </summary>
-        [DefaultValue(true)]
         public bool AxisUseValues { get; set; } = true;
 
 
@@ -394,7 +384,6 @@ namespace Seal.Model
         /// <summary>
         /// Definition of the serie for the element in the Chart JS chart
         /// </summary>
-        [DefaultValue(ChartJSSerieDefinition.None)]
         public ChartJSSerieDefinition ChartJSSerie
         {
             get { return _chartJSSerie; }
@@ -408,7 +397,6 @@ namespace Seal.Model
         /// <summary>
         /// Definition of the serie for the element in the NVD3 chart
         /// </summary>
-        [DefaultValue(NVD3SerieDefinition.None)]
         public NVD3SerieDefinition Nvd3Serie
         {
             get { return _nvd3Serie; }
@@ -422,7 +410,6 @@ namespace Seal.Model
         /// <summary>
         /// Definition of the serie for the element in the Plotly chart
         /// </summary>
-        [DefaultValue(PlotlySerieDefinition.None)]
         public PlotlySerieDefinition PlotlySerie
         {
             get { return _plotlySerie; }
@@ -436,7 +423,6 @@ namespace Seal.Model
         /// <summary>
         /// Defines how the serie is sorted in the chart
         /// </summary>
-        [DefaultValue(SerieSortType.Y)]
         public SerieSortType SerieSortType
         {
             get { return _serieSortType; }
@@ -450,20 +436,17 @@ namespace Seal.Model
         /// <summary>
         /// Defines if the serie is sorted ascending or descending in the chart
         /// </summary>
-        [DefaultValue(PointSortOrder.Ascending)]
         public PointSortOrder SerieSortOrder { get; set; } = PointSortOrder.Ascending;
 
 
         /// <summary>
         /// Not used (FUTURE). Definition of the X axis of the serie (Primary or Secondary).
         /// </summary>
-        [DefaultValue(AxisType.Primary)]
         public AxisType XAxisType { get; set; } = AxisType.Primary;
 
         /// <summary>
         /// Definition of the Y axis of the serie (Primary or Secondary)
         /// </summary>
-        [DefaultValue(AxisType.Primary)]
         public AxisType YAxisType { get; set; } = AxisType.Primary;
 
         /// <summary>
@@ -554,13 +537,11 @@ namespace Seal.Model
         /// <summary>
         /// Optional Razor Script executed if script navigation links have been added in the CellScript
         /// </summary>
-        [DefaultValue("")]
         public string NavigationScript { get; set; }
 
         /// <summary>
         /// If defined, the enumerated list is used for the display and for sorting
         /// </summary>
-        [DefaultValue(null)]
         public string EnumGUIDEL
         {
             get { return _enumGUID; }
@@ -570,7 +551,6 @@ namespace Seal.Model
         /// <summary>
         /// If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause.
         /// </summary>
-        [DefaultValue(YesNoDefault.Default)]
         public YesNoDefault ForceAggregate { get; set; } = YesNoDefault.Default;
         public bool ShouldSerializeHasAggregate() { return ForceAggregate != YesNoDefault.Default; }
 

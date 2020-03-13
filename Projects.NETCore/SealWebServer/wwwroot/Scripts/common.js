@@ -196,15 +196,27 @@ function setProgressBarMessage(selector, progression, message, classname) {
 }
 
 function executeReport(nav) {
+    var form = $("#header_form");
     if (nav != null && nav.startsWith("HL:")) { //Hyperlink
         window.open(nav.replace("HL:", ""), '_blank');
         return;
     }
 
+    if (nav != null && nav.startsWith("RE:")) { //Report execution
+        if (urlPrefix == "") alert('Not supported from the Report Designer');
+        else {
+            form.attr("target", "_blank");
+            form.attr('action', urlPrefix + "SWExecuteReport");
+            form.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', nav.replace("RE:", "")));
+            form.submit();
+        }
+        return;
+    }
+
     $("#navigation_id").val(nav);
     if (nav != null && nav.startsWith("FD:")) { //File download
-        $("#header_form").attr("action", urlPrefix + "ActionNavigate");
-        $("#header_form").submit();
+        form.attr("action", urlPrefix + "ActionNavigate");
+        form.submit();
         return;
     }
 
@@ -237,15 +249,15 @@ function executeReport(nav) {
         url = urlPrefix + "ActionCancelReport";
     }
 
-    $("#header_form").attr("target", "");
+    form.attr("target", "");
     if (urlPrefix != "") {
-        $.post(url, $("#header_form").serialize()).done(function (data) {
+        $.post(url, form.serialize()).done(function (data) {
             if (nav != null) $('body').html(data);
         });
     }
     else {
-        $("#header_form").attr("action", url);
-        $("#header_form").submit();
+        form.attr("action", url);
+        form.submit();
     }
     //disable controls during execution
     $('#restrictions_div input').prop("disabled", true);

@@ -253,7 +253,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, a custom parameter value is used when the report is executed for the output
         /// </summary>
-        [DefaultValue(false)]
         public bool CustomValue
         {
             get

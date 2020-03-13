@@ -26,6 +26,7 @@ namespace Seal.Forms
             if (context.PropertyDescriptor.Name == "SealRepeatInterval")
             {
                 choices.Add("None");
+                choices.Add("20 seconds");
                 choices.Add("5 minutes");
                 choices.Add("10 minutes");
                 choices.Add("30 minutes");

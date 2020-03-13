@@ -19,7 +19,6 @@ namespace Seal.Model
         /// <summary>
         /// If true, the partial template text for can be modified
         /// </summary>
-        [DefaultValue(false)]
         public bool UseCustom
         {
             get { return _useCustom; }

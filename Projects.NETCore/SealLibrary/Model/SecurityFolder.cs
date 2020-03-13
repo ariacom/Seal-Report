@@ -16,14 +16,12 @@ namespace Seal.Model
         /// <summary>
         /// The folder path containing the reports to publish. The path is relative to the repository 'Reports' folder and should be unique in the security group.
         /// </summary>
-        [DefaultValue("\\")]
         public string Path { get; set; } = System.IO.Path.DirectorySeparatorChar.ToString();
 
         bool _useSubFolders = true;
         /// <summary>
         /// If true, sub-folders are also published with the same definition
         /// </summary>
-        [DefaultValue(true)]
         public bool UseSubFolders
         {
             get { return _useSubFolders; }
@@ -36,14 +34,12 @@ namespace Seal.Model
         /// <summary>
         /// If true, the user can Create, Rename or Delete sub-folders in this folder. This flag is only used if Sub-folders are shown.
         /// </summary>
-        [DefaultValue(true)]
         public bool ManageFolder { get; set; } = true;
 
         FolderRight _folderRight = FolderRight.Edit;
         /// <summary>
         /// The right applied on the reports and files of the folder
         /// </summary>
-        [DefaultValue(FolderRight.Edit)]
         public FolderRight FolderRight
         {
             get { return _folderRight; }
@@ -57,13 +53,11 @@ namespace Seal.Model
         /// <summary>
         /// If true, all the Sub-folders displayed in the Tree View are expanded by default
         /// </summary>
-        [DefaultValue(true)]
         public bool ExpandSubFolders { get; set; } = true;
 
         /// <summary>
         /// If true, only files can be viewed or managed in the folder (reports are not shown and can not be created)
         /// </summary>
-        [DefaultValue(false)]
         public bool FilesOnly { get; set; } = false;
 
         /// <summary>

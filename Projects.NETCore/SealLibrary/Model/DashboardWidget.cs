@@ -60,43 +60,36 @@ namespace Seal.Model
         /// <summary>
         /// If true, the widget may modify dynamically the name, icon or color after the execution (e.g. set the color in red if no record in the model)
         /// </summary>
-        [DefaultValue(false)]
         public bool Dynamic { get; set; } = false;
 
         /// <summary>
         /// CSS class defining the icon of the widget header
         /// </summary>
-        [DefaultValue("glyphicon glyphicon-info-sign")]
         public string Icon { get; set; } = "glyphicon glyphicon-info-sign";
 
         /// <summary>
         /// CSS class defining the background color of the widget header
         /// </summary>
-        [DefaultValue("default")]
         public string Color { get; set; } = "default";
 
         /// <summary>
         /// Width of the widget in pixels. If 0, the widget will use the size of the inner HTML generated.
         /// </summary>
-        [DefaultValue(0)]
         public int Width { get; set; } = 0;
 
         /// <summary>
         /// Height of the widget in pixels. If 0, the widget will use the size of the inner HTML generated.
         /// </summary>
-        [DefaultValue(0)]
         public int Height { get; set; } = 0;
 
         /// <summary>
         /// If a root view is specified, the widget name has a link to execute the full report using the root view
         /// </summary>
-        [DefaultValue(null)]
         public string ExecViewGUID { get; set; }
 
         /// <summary>
         /// Number of seconds before the widget is re-executed. If -1, the rate of the root view is used (defined in property 'Options: Auto-Refresh (seconds)'). A value of 0 means no refresh.
         /// </summary>
-        [DefaultValue(-1)]
         public int Refresh { get; set; } = -1;
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace Seal.Forms
     //result = report.ExecutionView.Name;
     //result = report.Models[0].GetRestrictionByName(""A restriction name"").DisplayValue1;
 }
-    @Raw(result)";
+@Raw(result)";
 
         const string razorTaskTemplate = @"@{
     ReportTask task = Model;
@@ -122,7 +122,7 @@ if (cell.IsTitle)
             new Tuple<string, string>(
                 "Display negative values in red and bold",
 @"//For performances reason, consider to process your result table in a dedicated Task with an execution step 'Models generated, before rendering' 
-if (cell.DoubleValue < 0)
+    if (cell.DoubleValue < 0)
 	{
 		cell.FinalCssStyle = ""font-weight:bold;"";
 		cell.FinalCssClass = ""danger lead text-right""; //These are Bootstrap classes
@@ -183,7 +183,7 @@ if (cell.DoubleValue < 0)
 "
                 ),
             new Tuple<string, string>(
-                "Add Hyperlink or File Download navigation",
+                "Add Hyperlink, Report Execution or File Download navigation",
 @"cell.AddNavigationHyperLink(""https://www.google.com"", report.TranslateRepository(""GeneralText"",""CellScript"",""Visit"") + "" Google"");
     cell.AddNavigationHyperLink(cell.Value.ToString(), cell.DisplayValue);
 
@@ -193,6 +193,12 @@ if (cell.DoubleValue < 0)
         //An optional tag value (second parameter) can be set to identify the link in the 'Navigation Script', here we set ""2"" in NavigationLink.Tag
         cell.AddNavigationFileDownload(""Download 2 "" + cell.DisplayValue, ""2"");
     }
+
+    //Report Execution in a new browser tab
+    cell.AddNavigationReportExecution(""\\Search - Orders.srex"", ""View Orders"");
+
+    //Report Execution in the navigation context
+    cell.AddNavigationReportNavigation(""\\Search - Orders.srex"", ""View Orders"", ""Navigation"");
 "
                 ),
             new Tuple<string, string>(

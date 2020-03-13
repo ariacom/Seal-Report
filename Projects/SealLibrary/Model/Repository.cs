@@ -192,11 +192,11 @@ namespace Seal.Model
         /// <summary>
         /// True if the Seal Scheduler is used instead of the Windows Tasks Scheduler
         /// </summary>
-        public bool UseSealScheduler
+        public bool UseWebScheduler
         {
             get
             {
-                return Configuration.UseSealScheduler;
+                return Configuration.UseWebScheduler;
             }
         }
 

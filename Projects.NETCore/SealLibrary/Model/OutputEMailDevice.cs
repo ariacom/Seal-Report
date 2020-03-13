@@ -55,7 +55,6 @@ namespace Seal.Model
         /// <summary>
         /// SMTP Port used to connect to the server
         /// </summary>
-        [DefaultValue(25)]
         public int Port { get; set; } = 25;
 
         /// <summary>
@@ -115,37 +114,31 @@ namespace Seal.Model
         /// <summary>
         /// Specifies how outgoing email messages will be handled
         /// </summary>
-        [DefaultValue(SmtpDeliveryMethod.Network)]
         public SmtpDeliveryMethod DeliveryMethod { get; set; } = SmtpDeliveryMethod.Network;
 
         /// <summary>
         /// If true, the client uses Secure Socket Layer
         /// </summary>
-        [DefaultValue(false)]
         public bool EnableSsl { get; set; } = false;
 
         /// <summary>
         /// Amount of time in milli-seconds after which the email is not sent
         /// </summary>
-        [DefaultValue(100000)]
         public int Timeout { get; set; } = 100000;
 
         /// <summary>
         /// If true, the default credentials are used
         /// </summary>
-        [DefaultValue(false)]
         public bool UseDefaultCredentials { get; set; } = false;
 
         /// <summary>
         /// If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule)
         /// </summary>
-        [DefaultValue(false)]
         public bool UsedForNotification { get; set; } = false;
 
         /// <summary>
         /// If true, the Email Sender or Reply address can be changed in the Report Designer or the Web Report Designer
         /// </summary>
-        [DefaultValue(true)]
         public bool ChangeSender { get; set; } = true;
 
         /// <summary>
