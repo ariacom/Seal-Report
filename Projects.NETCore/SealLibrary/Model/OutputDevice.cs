@@ -2,6 +2,10 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
+using System;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Seal.Model
@@ -19,7 +23,7 @@ namespace Seal.Model
         /// <summary>
         /// Process the report and send it to the device
         /// </summary>
-        public abstract string Process(Report report);
+        public abstract void Process(Report report);
 
         /// <summary>
         /// Validate the device
@@ -41,6 +45,7 @@ namespace Seal.Model
         /// Save the device to a file
         /// </summary>
         public abstract void SaveToFile(string path);
+
     }
 }
 

@@ -19,9 +19,7 @@ using Newtonsoft.Json.Linq;
 using Ionic.Zip;
 using System.Data.Odbc;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Threading;
+using WinSCP;
 
 namespace Seal.Helpers
 {
@@ -41,6 +39,7 @@ namespace Seal.Helpers
         static ZipFile dummy11 = null; //!NETCore
         static OdbcConnection dummy12 = null;
         static SqlConnection dummy13 = null;
+        static SessionOptions dummy14 = null;
 
         static bool _loadDone = false;
         static public void LoadRazorAssemblies()
@@ -63,6 +62,7 @@ namespace Seal.Helpers
                     if (dummy11 == null) dummy11 = new ZipFile(); //!NETCore
                     if (dummy12 == null) dummy12 = new OdbcConnection();
                     if (dummy13 == null) dummy13 = new SqlConnection();
+                    if (dummy14 == null) dummy14 = new SessionOptions();
                 }
                 catch (Exception ex)
                 {

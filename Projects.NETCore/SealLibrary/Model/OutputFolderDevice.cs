@@ -39,13 +39,14 @@ namespace Seal.Model
         /// <summary>
         /// Check that the report result has been saved and set information
         /// </summary>
-        public override string Process(Report report)
+        public override void Process(Report report)
         {
             ReportOutput output = report.OutputToExecute;
             if (string.IsNullOrEmpty(output.FolderPath)) throw new Exception("The output folder path is not specified in the report output.");
             if (string.IsNullOrEmpty(output.FileName)) throw new Exception("The file name is not specified in the report output.");
+
             output.Information = report.Translate("Report result generated in '{0}'", report.DisplayResultFilePath);
-            return string.Format("Report result generated in '{0}'", report.DisplayResultFilePath);
+            report.LogMessage("Report result generated in '{0}'", report.DisplayResultFilePath);
         }
 
         /// <summary>

@@ -121,7 +121,10 @@ namespace Seal
 
         bool HasValidRepositoryDirectory(string path)
         {
-            return (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower() || Path.GetDirectoryName(path).ToLower() == _repository.DevicesEmailFolder.ToLower());
+            return (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower() 
+                || Path.GetDirectoryName(path).ToLower() == _repository.DevicesEmailFolder.ToLower()
+                || Path.GetDirectoryName(path).ToLower() == _repository.DevicesWinSCPFolder.ToLower()
+                );
         }
 
         bool _adminWarningDone = false;
@@ -235,9 +238,9 @@ namespace Seal
             }
         }
 
-        private void buildOpenMenu(string directory, ToolStripMenuItem menuItem, Image image)
+        private void buildOpenMenu(string directory, ToolStripMenuItem menuItem, Image image, bool clear = true)
         {
-            menuItem.DropDownItems.Clear();
+            if (clear) menuItem.DropDownItems.Clear();
             foreach (var file in Directory.GetFiles(directory, "*." + Repository.SealConfigurationFileExtension))
             {
                 ToolStripMenuItem item = new ToolStripMenuItem(Path.GetFileNameWithoutExtension(file));
@@ -256,6 +259,7 @@ namespace Seal
         {
             buildOpenMenu(_repository.SourcesFolder, openSourceToolStripMenuItem, global::Seal.Properties.Resources.database);
             buildOpenMenu(_repository.DevicesEmailFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.device);
+            buildOpenMenu(_repository.DevicesWinSCPFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.fileserver, false);
         }
 
         void init(object entityToSelect = null)
@@ -277,7 +281,8 @@ namespace Seal
             else if (_device != null)
             {
                 mainSplitContainer.Visible = true;
-                TreeNode mainTN = new TreeNode() { Tag = _device, Text = _device.Name, ImageIndex = 8, SelectedImageIndex = 8 };
+                var imageIndex = _device is OutputEmailDevice ? 8 : 10;
+                TreeNode mainTN = new TreeNode() { Tag = _device, Text = _device.Name, ImageIndex = imageIndex, SelectedImageIndex = imageIndex };
                 mainTreeView.Nodes.Add(mainTN);
                 mainTreeView.SelectedNode = mainTN;
             }
@@ -335,6 +340,7 @@ namespace Seal
             {
                 if (_source != null) return _repository.SourcesFolder;
                 if (_device != null && _device is OutputEmailDevice) return _repository.DevicesEmailFolder;
+                if (_device != null && _device is OutputWinSCPDevice) return _repository.DevicesWinSCPFolder;
                 return "";
             }
         }
@@ -384,20 +390,33 @@ namespace Seal
         private void openFile(string path)
         {
             bool openOK = true;
-            if (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower())
+            try
             {
-                _source = MetaSource.LoadFromFile(path, _repository);
-                _device = null;
+                if (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower())
+                {
+                    _source = MetaSource.LoadFromFile(path, _repository);
+                    _device = null;
+                }
+                else if (Path.GetDirectoryName(path).ToLower() == _repository.DevicesEmailFolder.ToLower())
+                {
+                    _source = null;
+                    _device = OutputEmailDevice.LoadFromFile(path, false);
+                }
+                else if (Path.GetDirectoryName(path).ToLower() == _repository.DevicesWinSCPFolder.ToLower())
+                {
+                    _source = null;
+                    _device = OutputWinSCPDevice.LoadFromFile(path, false);
+                }
+                else
+                {
+                    openOK = false;
+                    MessageBox.Show("The configuration file must be in a repository folder.\r\nA sub-folder of " + _repository.RepositoryPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            else if (Path.GetDirectoryName(path).ToLower() == _repository.DevicesEmailFolder.ToLower())
-            {
-                _source = null;
-                _device = OutputEmailDevice.LoadFromFile(path, false);
-            }
-            else
+            catch(Exception ex)
             {
                 openOK = false;
-                MessageBox.Show("The configuration file must be in a repository folder.\r\nA sub-folder of " + _repository.RepositoryPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             if (openOK)
@@ -440,6 +459,10 @@ namespace Seal
             else if (sender == emailOutputDeviceToolStripMenuItem)
             {
                 _device = OutputEmailDevice.Create();
+            }
+            else if (sender == fileServerDeviceToolStripMenuItem)
+            {
+                _device = OutputWinSCPDevice.Create();
             }
             IsModified = true;
             init(entityToSelect);

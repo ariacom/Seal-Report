@@ -521,5 +521,16 @@ namespace Seal.Model
         [Description("Monthly")]
         Monthly = 4,
     }
+
+    public enum FileServerType
+    {
+        [Description("FTP")]
+        FTP,
+        [Description("SFTP")]
+        SFTP,
+        [Description("SCP")]
+        SCP,
+    }
+
 }
 

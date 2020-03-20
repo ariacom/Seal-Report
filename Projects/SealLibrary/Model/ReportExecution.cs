@@ -1709,7 +1709,7 @@ namespace Seal.Model
 
                     if (!Report.Cancel)
                     {
-                        Report.LogMessage(output.Device.Process(Report));
+                        output.Device.Process(Report);
                         if (!string.IsNullOrEmpty(output.PostScript))
                         {
                             Report.LogMessage("Executing Post-execution script.");
@@ -1910,7 +1910,7 @@ namespace Seal.Model
                     }
                     else
                     {
-                        Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Schedule '{0}' has been executed\r\nReport '{1}\r\n{2}", schedule.Name, report.FilePath, report.ExecutionMessages);
+                        Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Schedule '{0}' has been executed\r\nReport '{1}", schedule.Name, report.FilePath);
 
                         if (!string.IsNullOrEmpty(schedule.NotificationEmailTo) && !report.Cancel)
                         {

@@ -225,6 +225,8 @@
     <Content Include="Resources\enum.png" />
     <Content Include="Resources\execute.png" />
     <Content Include="Resources\exit.png" />
+    <None Include="Resources\fileserver.bmp" />
+    <None Include="Resources\fileserver.png" />
     <Content Include="Resources\filter.png" />
     <Content Include="Resources\folder.png" />
     <Content Include="Resources\help.png" />
@@ -238,6 +240,7 @@
     <Content Include="Resources\print.png" />
     <Content Include="Resources\refresh.png" />
     <Content Include="Resources\save.png" />
+    <None Include="Resources\save1.png" />
     <Content Include="Resources\saveas.png" />
     <Content Include="Resources\scroll.png" />
     <Content Include="Resources\search.png" />

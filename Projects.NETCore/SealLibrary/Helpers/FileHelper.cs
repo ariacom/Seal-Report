@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
 using Seal.Model;
 
 namespace Seal.Helpers
@@ -42,7 +44,7 @@ namespace Seal.Helpers
                 {
                     //purge razor dir older than 120 min
                     if (Directory.GetLastWriteTime(dir).AddMinutes(120) < DateTime.Now)
-                    Directory.Delete(dir, true);
+                        Directory.Delete(dir, true);
                 }
                 catch (Exception ex)
                 {
@@ -141,7 +143,7 @@ namespace Seal.Helpers
                 {
                     File.Copy(file, Path.Combine(destination, Path.GetFileName(file)), true);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                 }
@@ -194,6 +196,43 @@ namespace Seal.Helpers
         public static string ConvertOSFilePath(string filePath)
         {
             return filePath.Replace('\\', Path.DirectorySeparatorChar);
+        }
+
+        public static void CreateZIP(string inputPath, string entryName, string zipPath, string password)
+        {
+            using (FileStream fsOut = File.Create(zipPath))
+            using (var zipStream = new ZipOutputStream(fsOut))
+            {
+                //Code got from https://github.com/icsharpcode/SharpZipLib/wiki/Create-a-Zip-with-full-control-over-content
+                //0-9, 9 being the highest level of compression
+                zipStream.SetLevel(3);
+
+                zipStream.Password = password;
+
+                var fi = new FileInfo(inputPath);
+                //  entryName = ZipEntry.CleanName(inputPath);
+                var newEntry = new ZipEntry(entryName);
+
+                newEntry.DateTime = fi.LastWriteTime;
+
+                // Specifying the AESKeySize triggers AES encryption. 
+                // Allowable values are 0 (off), 128 or 256.
+                // A password on the ZipOutputStream is required if using AES.
+              //  if (!string.IsNullOrEmpty(password)) newEntry.AESKeySize = 128;
+
+                newEntry.Size = fi.Length;
+                zipStream.PutNextEntry(newEntry);
+
+                // Zip the file in buffered chunks
+                var buffer = new byte[4096];
+                using (FileStream fsInput = File.OpenRead(inputPath))
+                {
+                    StreamUtils.Copy(fsInput, zipStream, buffer);
+                }
+                zipStream.Flush();
+                zipStream.CloseEntry();
+                zipStream.Dispose();
+            }
         }
 
         #region Seal Attachments

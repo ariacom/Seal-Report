@@ -470,6 +470,44 @@ namespace Seal.Helpers
             return s;
         }
 
+        static DateTime NextDailyPuge = DateTime.MinValue;
+        const string TaskSchedulerEntry = "Seal Task Scheduler";
+        public static void WriteDailyLog(string prefix, string logsFolder, int logDays, string message)
+        {
+            try
+            {
+                if (logDays <= 0) return;
+
+                if (!Directory.Exists(logsFolder)) Directory.CreateDirectory(logsFolder);
+
+                string logFileName = Path.Combine(logsFolder, string.Format("{0}_{1:yyyy_MM_dd}.txt", prefix, DateTime.Now));
+                File.AppendAllText(logFileName, message);
+
+                if (NextDailyPuge < DateTime.Now)
+                {
+                    NextDailyPuge = DateTime.Now.AddDays(1);
+                    foreach (var file in Directory.GetFiles(logsFolder, "*"))
+                    {
+                        //purge old files...
+                        if (File.GetLastWriteTime(file).AddDays(logDays) < DateTime.Now)
+                        {
+                            try
+                            {
+                                File.Delete(file);
+                            }
+                            catch (Exception ex) {
+                                Console.WriteLine(message + "\r\n" + ex.Message);
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(message + "\r\n" + ex.Message);
+            }
+        }
+
         public static void WriteLogEntry(string source, EventLogEntryType type, string message, params object[] args)
         {
             string msg = message;
@@ -484,9 +522,13 @@ namespace Seal.Helpers
             try
             {
                 Console.WriteLine(msg);
+
+                var fullMessage = string.Format("**********\r\n{0} {1}\r\n{2}\r\n\r\n", DateTime.Now, type.ToString(), msg);
+                Helper.WriteDailyLog(source == TaskSchedulerEntry ? "schedules" : "events", Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, fullMessage);
+
                 if (msg.Length > 25000)
                 {
-                    msg = msg.Substring(0, 25000) + "\r\n...\r\nMessage truncated, check the log file in the Logs Repository sub-folder.";
+                    msg = msg.Substring(0, 25000) + "\r\n...\r\nMessage truncated, check the event log files in the Logs Repository sub-folder.";
                 }
                 EventLog.WriteEntry(source, msg, type);
             }
@@ -498,8 +540,7 @@ namespace Seal.Helpers
 
         public static void WriteLogEntryScheduler(EventLogEntryType type, string message, params object[] args)
         {
-            var message2 = new StringBuilder("Unexpected error:\r\n");
-            WriteLogEntry("Seal Task Scheduler", type, message, args);
+            WriteLogEntry(TaskSchedulerEntry, type, message, args);
         }
 
         public static bool IsMachineAdministrator()

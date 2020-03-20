@@ -37,6 +37,7 @@
             this.noSQLdataSourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.emailOutputDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileServerDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openSourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -110,7 +111,8 @@
             this.dataSourceToolStripMenuItem,
             this.noSQLdataSourceToolStripMenuItem,
             this.toolStripSeparator2,
-            this.emailOutputDeviceToolStripMenuItem});
+            this.emailOutputDeviceToolStripMenuItem,
+            this.fileServerDeviceToolStripMenuItem});
             this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
@@ -145,6 +147,14 @@
             this.emailOutputDeviceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.emailOutputDeviceToolStripMenuItem.Text = "Email Output Device";
             this.emailOutputDeviceToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // fileServerDeviceToolStripMenuItem
+            // 
+            this.fileServerDeviceToolStripMenuItem.Image = global::Seal.Properties.Resources.fileserver;
+            this.fileServerDeviceToolStripMenuItem.Name = "fileServerDeviceToolStripMenuItem";
+            this.fileServerDeviceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.fileServerDeviceToolStripMenuItem.Text = "File Server Output Device";
+            this.fileServerDeviceToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // openSourceToolStripMenuItem
             // 
@@ -209,7 +219,7 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // helpToolStripMenuItem
@@ -321,6 +331,7 @@
             this.mainImageList.Images.SetKeyName(7, "element.png");
             this.mainImageList.Images.SetKeyName(8, "device.png");
             this.mainImageList.Images.SetKeyName(9, "nosql.png");
+            this.mainImageList.Images.SetKeyName(10, "fileserver.png");
             // 
             // mainSplitContainer
             // 
@@ -393,7 +404,7 @@
             this.openTasksToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("openTasksToolStripButton.Image")));
             this.openTasksToolStripButton.ImageTransparentColor = System.Drawing.Color.White;
             this.openTasksToolStripButton.Name = "openTasksToolStripButton";
-            this.openTasksToolStripButton.Size = new System.Drawing.Size(109, 22);
+            this.openTasksToolStripButton.Size = new System.Drawing.Size(107, 22);
             this.openTasksToolStripButton.Text = " Task Scheduler";
             this.openTasksToolStripButton.ToolTipText = "Run the Task Scheduler Microsoft Management Console";
             this.openTasksToolStripButton.Click += new System.EventHandler(this.openTasksToolStripButton_Click);
@@ -475,6 +486,7 @@
         private System.Windows.Forms.ToolStripMenuItem sortColumnAlphaOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sortColumnSQLOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem noSQLdataSourceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fileServerDeviceToolStripMenuItem;
     }
 }
 
