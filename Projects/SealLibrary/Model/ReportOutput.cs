@@ -39,7 +39,7 @@ namespace Seal.Model
                 GetProperty("ViewParameters").SetIsBrowsable(true);
 
                 GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice);
-                GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice);
+                GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputWinSCPDevice);
 
                 GetProperty("EmailSubject").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailBody").SetIsBrowsable(Device is OutputEmailDevice);
@@ -48,8 +48,8 @@ namespace Seal.Model
                 GetProperty("EmailCC").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailBCC").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailMessagesInBody").SetIsBrowsable(Device is OutputEmailDevice);
-                GetProperty("EmailZipAttachments").SetIsBrowsable(Device is OutputEmailDevice);
-                GetProperty("EmailZipPassword").SetIsBrowsable(Device is OutputEmailDevice);
+                GetProperty("ZipResult").SetIsBrowsable(Device is OutputEmailDevice);
+                GetProperty("ZipPassword").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailSkipAttachments").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailFrom").SetIsBrowsable(Device is OutputEmailDevice && ((OutputEmailDevice)Device).ChangeSender);
                 GetProperty("EmailReplyTo").SetIsBrowsable(Device is OutputEmailDevice && ((OutputEmailDevice)Device).ChangeSender);
@@ -70,9 +70,9 @@ namespace Seal.Model
                 GetProperty("EmailHtmlBody").SetIsReadOnly(EmailMessagesInBody);
                 GetProperty("EmailMessagesInBody").SetIsReadOnly(EmailHtmlBody);
 
-                GetProperty("EmailSkipAttachments").SetIsReadOnly(EmailZipAttachments);
-                GetProperty("EmailZipAttachments").SetIsReadOnly(EmailSkipAttachments);
-                GetProperty("EmailZipPassword").SetIsReadOnly(!EmailZipAttachments);
+                GetProperty("EmailSkipAttachments").SetIsReadOnly(ZipResult);
+                GetProperty("ZipResult").SetIsReadOnly(EmailSkipAttachments);
+                GetProperty("ZipPassword").SetIsReadOnly(!ZipResult);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -92,7 +92,7 @@ namespace Seal.Model
         /// </summary>
         public void InitReferences()
         {
-            var initialParameters  = ViewParameters.Where(i=>i.CustomValue).ToList();
+            var initialParameters = ViewParameters.Where(i => i.CustomValue).ToList();
             ViewParameters.Clear();
             if (Report != null && View != null)
             {
@@ -242,8 +242,9 @@ namespace Seal.Model
         public bool EmailHtmlBody
         {
             get { return _emailHtmlBody; }
-            set { 
-                _emailHtmlBody = value; 
+            set
+            {
+                _emailHtmlBody = value;
                 UpdateEditorAttributes();
             }
         }
@@ -257,8 +258,9 @@ namespace Seal.Model
         public bool EmailMessagesInBody
         {
             get { return _emailMessagesInBody; }
-            set {
-                _emailMessagesInBody = value; 
+            set
+            {
+                _emailMessagesInBody = value;
                 UpdateEditorAttributes();  //!NETCore
             }
         }
@@ -270,27 +272,6 @@ namespace Seal.Model
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string EmailBody { get; set; }
 
-        private bool _emailZipAttachments = false;
-        /// <summary>
-        /// If true, the email sent will have an attachement with all files zipped.
-        /// </summary>
-        [DefaultValue(false)]
-        [Category("Email Attachments"), DisplayName("Zip attachements"), Description("If true, the email sent will have an attachement with all files zipped."), Id(2, 5)]
-        public bool EmailZipAttachments
-        {
-            get { return _emailZipAttachments; }
-            set { 
-                _emailZipAttachments = value; 
-                UpdateEditorAttributes();  //!NETCore
-            }
-        }
-
-        /// <summary>
-        /// If not empty, the Zip file attached will be protected with the password
-        /// </summary>
-        [Category("Email Attachments"), DisplayName("Zip password"), Description("If not empty, the Zip file attached will be protected with the password."), Id(3, 5)]
-        public string EmailZipPassword { get; set; }
-
         private bool _emailSkipAttachments = false;
         /// <summary>
         /// If true, the email sent will have no attachement. This may be useful if the report has only tasks.
@@ -300,9 +281,67 @@ namespace Seal.Model
         public bool EmailSkipAttachments
         {
             get { return _emailSkipAttachments; }
-            set { 
-                _emailSkipAttachments = value; 
+            set
+            {
+                _emailSkipAttachments = value;
                 UpdateEditorAttributes();  //!NETCore
+            }
+        }
+
+        /// <summary>
+        /// This property is obsolete. Use ZipResult instead. Will be removed in future version.
+        /// </summary>
+        public bool? EmailZipAttachments { get; set; } = null;
+
+        /// <summary>
+        /// This property is obsolete. Use ZipPassword instead. Will be removed in future version.
+        /// </summary>
+        public string EmailZipPassword { get; set; }
+
+        private bool _zipResult = false;
+        /// <summary>
+        /// If true, the result file will be zipped
+        /// </summary>
+        [DefaultValue(false)]
+        [Category("Zip Options"), DisplayName("Zip result"), Description("If true, the result file will be zipped."), Id(2, 5)]
+        public bool ZipResult
+        {
+            get
+            {
+
+                return _zipResult;
+            }
+            set
+            {
+                _zipResult = value;
+                if (EmailZipAttachments != null)
+                {
+                    _zipResult = EmailZipAttachments.Value;
+                    EmailZipAttachments = null;
+                }
+                UpdateEditorAttributes();  //!NETCore
+            }
+        }
+
+        private string _zipPassword = "";
+        /// <summary>
+        /// If not empty, the Zip result file will be protected with the password
+        /// </summary>
+        [Category("Zip Options"), DisplayName("Zip password"), Description("If not empty, the Zip result file will be protected with the password."), Id(3, 5)]
+        public string ZipPassword
+        {
+            get
+            {
+                return _zipPassword;
+            }
+            set
+            {
+                _zipPassword = value;
+                if (!string.IsNullOrEmpty(EmailZipPassword) && string.IsNullOrEmpty(_zipPassword))
+                {
+                    _zipPassword = EmailZipPassword;
+                    EmailZipPassword = null;
+                }
             }
         }
 
@@ -352,14 +391,17 @@ namespace Seal.Model
         [XmlIgnore]
         public ReportFormat Format
         {
-            get {
+            get
+            {
                 var param = ViewParameters.FirstOrDefault(i => i.Name == Parameter.ReportFormatParameter && i.CustomValue);
                 if (param != null) return (ReportFormat)Enum.Parse(typeof(ReportFormat), param.Value);
                 return Report.Format;
             }
-            set {
+            set
+            {
                 var param = ViewParameters.FirstOrDefault(i => i.Name == Parameter.ReportFormatParameter);
-                if (param != null) {
+                if (param != null)
+                {
                     param.CustomValue = true;
                     param.Value = value.ToString();
                 }

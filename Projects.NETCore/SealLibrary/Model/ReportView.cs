@@ -1314,6 +1314,7 @@ namespace Seal.Model
                     else if (Model.ExecChartIsDateTimeAxis)
                     {
                         DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                        if (!(page.PrimaryXValues[xDimensionKey] is DateTime)) throw new Exception("Invalid DateTime type for a chart axis. Please consider to change the element type...");
                         if (value == null) dt = ((DateTime)page.PrimaryXValues[xDimensionKey]);
                         else if (value.XDimensionValues[0].DateTimeValue != null) dt = value.XDimensionValues[0].DateTimeValue.Value;
                         xValueDT = dt;

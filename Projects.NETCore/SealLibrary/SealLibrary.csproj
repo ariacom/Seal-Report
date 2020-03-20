@@ -23,6 +23,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="RazorEngine.NetCore.ZuLiang" Version="2.2.3.6" />
+    <PackageReference Include="SSH.NET" Version="2016.1.0" />
     <PackageReference Include="System.Data.Odbc" Version="4.7.0" />
     <PackageReference Include="System.Data.OleDb" Version="4.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
@@ -31,6 +32,7 @@
     <PackageReference Include="System.DirectoryServices.Protocols" Version="4.7.0" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
     <PackageReference Include="TaskScheduler" Version="2.8.18" />
+    <PackageReference Include="WinSCP" Version="5.17.2" />
   </ItemGroup>
 
 </Project>

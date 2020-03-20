@@ -557,6 +557,28 @@ if (cell.IsTitle)
         //report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ""."";	    
 }
 ";
+
+        const string sftpDeviceScriptTemplate = @"@using System.IO
+@using Renci.SshNet
+@{
+    Report report = Model;
+    ReportOutput output = report.OutputToExecute;
+    OutputFileServerDevice device = (OutputFileServerDevice) output.Device;
+    //Create client and connect to the server
+    using (var client = new SftpClient(device.Server, device.Port, device.UserName, device.ClearPassword))
+    {
+        client.Connect();
+        //Change directory and upload the file
+        client.ChangeDirectory(device.Directory);
+        using (var fileStream = new FileStream(report.ResultFilePath, FileMode.Open))
+        {
+            client.BufferSize = 4 * 1024;
+            client.UploadFile(fileStream, report.ResultFileName);
+        }
+    }
+}
+";
+
         static readonly Tuple<string, string>[] tasksSamples =
         {
             new Tuple<string, string>(
@@ -1128,6 +1150,20 @@ if (cell.IsTitle)
                     template = razorSourceInitScriptTemplate;
                     frm.ObjectForCheckSyntax = context.Instance;
                     frm.Text = "Edit the init script of the source";
+                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                }
+                else if (context.Instance is OutputWinSCPDevice && context.PropertyDescriptor.Name == "SessionScript")
+                {
+                    template = OutputWinSCPDevice.SessionScriptTemplate;
+                    frm.ObjectForCheckSyntax = context.Instance;
+                    frm.Text = "Edit the script executed to get an open session";
+                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                }
+                else if (context.Instance is OutputWinSCPDevice && context.PropertyDescriptor.Name == "ProcessingScript")
+                {
+                    template = OutputWinSCPDevice.ProcessingScriptTemplate;
+                    frm.ObjectForCheckSyntax = new Report();
+                    frm.Text = "Edit the script executed to when the output is processed";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
                 else if (context.Instance is CommonScript)

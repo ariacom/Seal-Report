@@ -426,7 +426,7 @@ namespace Seal.Model
                 string fileName = DisplayNameEx.ToString();
                 if (ForOutput)
                 {
-                    if (OutputToExecute.Device is OutputFolderDevice)
+                    if (OutputToExecute.Device is OutputFolderDevice || OutputToExecute.Device is OutputWinSCPDevice)
                     {
                         fileName = OutputToExecute.FileName.Replace(Repository.SealReportDisplayNameKeyword, FileHelper.CleanFilePath(DisplayNameEx));
                         try
@@ -1467,6 +1467,10 @@ namespace Seal.Model
                 result.FolderPath = string.IsNullOrEmpty(FilePath) ? Repository.SealRepositoryKeyword + string.Format("{0}Reports{0}", Path.DirectorySeparatorChar) : Path.GetDirectoryName(FilePath).Replace(Repository.RepositoryPath, Repository.SealRepositoryKeyword);
                 result.FileName = Repository.SealReportDisplayNameKeyword;
             }
+            else if (device is OutputWinSCPDevice)
+            {
+                result.FileName = Repository.SealReportDisplayNameKeyword;
+            }
 
             result.Report = this;
             result.OutputDeviceGUID = device.GUID;
@@ -2445,35 +2449,16 @@ namespace Seal.Model
         {
             try
             {
-                if (Repository.Configuration.LogDays <= 0) return;
-
-                if (!Directory.Exists(Repository.LogsFolder)) Directory.CreateDirectory(Repository.LogsFolder);
-
-                string logFileName = Path.Combine(Repository.LogsFolder, string.Format("log_{0:yyyy_MM_dd}.txt", DateTime.Now));
                 var message = ExecutionMessages;
                 if (!string.IsNullOrEmpty(ExecutionErrors)) message += string.Format("\r\nError Message:\r\n{0}\r\n", ExecutionErrors);
                 if (!Cancel && !string.IsNullOrEmpty(ExecutionErrorStackTrace)) message += string.Format("\r\nError Stack Trace:\r\n{0}\r\n", ExecutionErrorStackTrace);
                 string log = string.Format("********************\r\nExecution of '{0}' on {1} {2}\r\n{3}********************\r\n", FilePath, DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), message);
-                File.AppendAllText(logFileName, log);
-
-                if (!PurgeIsDone)
-                {
-                    PurgeIsDone = true;
-                    foreach (var file in Directory.GetFiles(Repository.LogsFolder, "log_*"))
-                    {
-                        //purge old files...
-                        if (File.GetLastWriteTime(file).AddDays(Repository.Configuration.LogDays) < DateTime.Now)
-                        {
-                            try
-                            {
-                                File.Delete(file);
-                            }
-                            catch { };
-                        }
-                    }
-                }
+                Helper.WriteDailyLog("executions", Repository.LogsFolder, Repository.Configuration.LogDays, log);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         #endregion

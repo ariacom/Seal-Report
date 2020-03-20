@@ -396,8 +396,18 @@ namespace Seal.Model
                 {
                     try
                     {
-                        var device = OutputEmailDevice.LoadFromFile(file, true);
-                        Devices.Add(device);
+                        Devices.Add(OutputEmailDevice.LoadFromFile(file, true));
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                }
+                foreach (var file in Directory.GetFiles(DevicesWinSCPFolder, "*." + SealConfigurationFileExtension))
+                {
+                    try
+                    {
+                        Devices.Add(OutputWinSCPDevice.LoadFromFile(file, true));
                     }
                     catch (Exception ex)
                     {
@@ -457,6 +467,10 @@ namespace Seal.Model
             {
                 if (!Devices.Exists(i => i.FilePath == file)) return true;
             }
+            foreach (var file in Directory.GetFiles(DevicesWinSCPFolder, "*." + SealConfigurationFileExtension))
+            {
+                if (!Devices.Exists(i => i.FilePath == file)) return true;
+            }
 
             return false;
         }
@@ -472,6 +486,7 @@ namespace Seal.Model
                 if (!Directory.Exists(SourcesFolder)) Directory.CreateDirectory(SourcesFolder);
                 if (!Directory.Exists(DevicesFolder)) Directory.CreateDirectory(DevicesFolder);
                 if (!Directory.Exists(DevicesEmailFolder)) Directory.CreateDirectory(DevicesEmailFolder);
+                if (!Directory.Exists(DevicesWinSCPFolder)) Directory.CreateDirectory(DevicesWinSCPFolder);
                 if (!Directory.Exists(ReportsFolder)) Directory.CreateDirectory(ReportsFolder);
                 if (!Directory.Exists(SettingsFolder)) Directory.CreateDirectory(SettingsFolder);
                 if (!Directory.Exists(SecurityFolder)) Directory.CreateDirectory(SecurityFolder);
@@ -516,6 +531,14 @@ namespace Seal.Model
         public string DevicesEmailFolder
         {
             get { return Path.Combine(RepositoryPath, string.Format("Devices{0}Email", Path.DirectorySeparatorChar)); }
+        }
+
+        /// <summary>
+        /// Devices File Server folder
+        /// </summary>
+        public string DevicesWinSCPFolder
+        {
+            get { return Path.Combine(RepositoryPath, string.Format("Devices{0}WinSCP", Path.DirectorySeparatorChar)); }
         }
 
         /// <summary>

@@ -17,6 +17,47 @@ namespace Seal.Forms
         {
         }
 
+        static void setIndicatorAppearance(Scintilla textBox, int NUM)
+        {
+            textBox.Indicators[NUM].Style = IndicatorStyle.StraightBox;
+            textBox.Indicators[NUM].Under = true;
+            textBox.Indicators[NUM].ForeColor = Color.Red;
+            textBox.Indicators[NUM].OutlineAlpha = 120;
+            textBox.Indicators[NUM].Alpha = 120;
+        }
+        static void setRazorError(Scintilla textBox, Dictionary<int, string> compilationErrors, Line line, int column, string error)
+        {
+            line.Goto();
+            textBox.CurrentPosition += column - 1;
+            int end = textBox.CurrentPosition;
+            while (++end < textBox.Text.Length)
+            {
+                if (" [](){}.,;\"\':-+*&".IndexOf(textBox.Text[end]) >= 0) break;
+            }
+            textBox.SelectionStart = textBox.CurrentPosition;
+            textBox.SelectionEnd = textBox.CurrentPosition;
+            textBox.Focus();
+
+            textBox.IndicatorFillRange(textBox.CurrentPosition, end - textBox.CurrentPosition);
+            for (int i = textBox.CurrentPosition; i < end; i++)
+            {
+                //Split error text if too long...
+                var errText = "";
+                int lineCount = 0;
+                for (int j = 0; j < error.Length; j++)
+                {
+                    lineCount++;
+                    errText += error[j];
+                    if (lineCount > 120 && error[j] == ' ')
+                    {
+                        lineCount = 0;
+                        errText += "\r\n";
+                    }
+                }
+
+                if (!compilationErrors.ContainsKey(i)) compilationErrors.Add(i, errText);
+            }
+        }
 
         public static void CheckRazorSyntax(Scintilla textBox, string header, object objectForCheckSyntax, Dictionary<int, string> compilationErrors)
         {
@@ -33,14 +74,20 @@ namespace Seal.Forms
                 var script = RazorHelper.GetFullScript(textBox.Text, objectForCheckSyntax, header);
                 RazorHelper.Compile(script, objectForCheckSyntax.GetType(), Guid.NewGuid().ToString());
             }
+            catch (TemplateParsingException ex)
+            {
+                setIndicatorAppearance(textBox, NUM);
+
+                if (ex.Line < textBox.Lines.Count)
+                {
+                    setRazorError(textBox, compilationErrors, textBox.Lines[ex.Line], ex.Column, ex.Message);
+                    error = string.Format("Parsing error:\r\n{0}", ex.Message);
+                    if (ex.InnerException != null) error += "\r\n" + ex.InnerException.Message;
+                }
+            }
             catch (TemplateCompilationException ex)
             {
-                // Update indicator appearance
-                textBox.Indicators[NUM].Style = IndicatorStyle.StraightBox;
-                textBox.Indicators[NUM].Under = true;
-                textBox.Indicators[NUM].ForeColor = Color.Red;
-                textBox.Indicators[NUM].OutlineAlpha = 120;
-                textBox.Indicators[NUM].Alpha = 120;
+                setIndicatorAppearance(textBox, NUM);
 
                 foreach (var err in ex.CompilerErrors)
                 {
@@ -53,36 +100,7 @@ namespace Seal.Forms
                             var line2 = line.Text.Trim();
                             if (line2 == pattern)
                             {
-                                line.Goto();
-                                textBox.CurrentPosition += err.Column - 1;
-                                int end = textBox.CurrentPosition;
-                                while (++end < textBox.Text.Length)
-                                {
-                                    if (" [](){}.,;\"\':-+*&".IndexOf(textBox.Text[end]) >= 0) break;
-                                }
-                                textBox.SelectionStart = textBox.CurrentPosition;
-                                textBox.SelectionEnd = textBox.CurrentPosition;
-                                textBox.Focus();
-
-                                textBox.IndicatorFillRange(textBox.CurrentPosition, end - textBox.CurrentPosition);
-                                for (int i = textBox.CurrentPosition; i < end; i++)
-                                {
-                                    //Split error text if too long...
-                                    var errText = "";
-                                    int lineCount = 0;
-                                    for (int j = 0; j < err.ErrorText.Length; j++)
-                                    {
-                                        lineCount++;
-                                        errText += err.ErrorText[j];
-                                        if (lineCount > 120 && err.ErrorText[j] == ' ')
-                                        {
-                                            lineCount = 0;
-                                            errText += "\r\n";
-                                        }
-                                    }
-
-                                    if (!compilationErrors.ContainsKey(i)) compilationErrors.Add(i, errText);
-                                }
+                                setRazorError(textBox, compilationErrors, line, err.Column, err.ErrorText);
                             }
                         }
                     }
@@ -99,6 +117,6 @@ namespace Seal.Forms
             }
 
             if (!string.IsNullOrEmpty(error)) throw new Exception(error);
-        } 
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace Seal.Model
         /// </summary>
         static public OutputEmailDevice Create()
         {
-            OutputEmailDevice result = new OutputEmailDevice() { GUID = Guid.NewGuid().ToString() };
+            var result = new OutputEmailDevice() { GUID = Guid.NewGuid().ToString() };
             result.Name = "Email Device";
             return result;
         }
@@ -239,7 +239,7 @@ namespace Seal.Model
         /// <summary>
         /// Send the report result by email using the device configuration
         /// </summary>
-        public override string Process(Report report)
+        public override void Process(Report report)
         {
             ReportOutput output = report.OutputToExecute;
 
@@ -278,9 +278,14 @@ namespace Seal.Model
             {
                 message.Attachments.Clear();
             }
-            else if (output.EmailZipAttachments)
+            else if (output.ZipResult)
             {
+
+
 #if !NETCOREAPP
+
+
+
                 using (ZipFile zip = new ZipFile()) 
                 {
                     if (!string.IsNullOrEmpty(output.EmailZipPassword)) zip.Password = output.EmailZipPassword;
@@ -296,7 +301,7 @@ namespace Seal.Model
             SmtpClient client = SmtpClient;
             client.Send(message);
             output.Information = report.Translate("Email sent to '{0}'", output.EmailTo);
-            return string.Format("Email sent to '{0}'", output.EmailTo);
+            report.LogMessage("Email sent to '{0}'", output.EmailTo);
         }
 
         /// <summary>
