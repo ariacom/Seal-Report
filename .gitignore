@@ -60,6 +60,7 @@ swi-editor.*
 swi-dashboard-editor.*
 swi-button-group.*
 swi.js
+MenuBig.cshtml
 MainEditor.cshtml
 DataTableEditor*.cshtml
 _ed.*.css
@@ -89,8 +90,6 @@ _ed.*.js
 Network Trash Folder
 Temporary Items
 .apdisk
-/Repository/Devices/Email/Email Device Test.scfx
-Repository/Sources/TEST_*.scfx
-MenuBig.cshtml
+TEST_*.scfx
 Repository/Databases/Audit.ldb
 *.ldb
