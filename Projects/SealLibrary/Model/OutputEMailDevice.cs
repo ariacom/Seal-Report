@@ -315,47 +315,32 @@ namespace Seal.Model
             if (ChangeSender && !string.IsNullOrEmpty(output.EmailReplyTo)) email = output.EmailReplyTo;
             Helper.AddEmailAddresses(message.ReplyToList, email);
             message.Subject = Helper.IfNullOrEmpty(output.EmailSubject, report.ExecutionName);
+
+            //Body
             if (output.EmailHtmlBody && (output.Format == ReportFormat.html || output.Format == ReportFormat.print))
             {
                 message.Body = File.ReadAllText(report.ResultFilePath);
                 message.IsBodyHtml = true;
             }
-            else if (output.EmailMessagesInBody)
+            else if (output.EmailMessagesInBody || output.EmailSkipAttachments)
             {
                 message.Body = string.Format("Execution messages for report '{0}':\r\n\r\n{1}", report.FilePath, report.ExecutionMessages);
             }
             else
             {
-                if (output.EmailMessagesInBody) message.Body = string.Format("Execution messages for report '{0}':\r\n\r\n{1}", report.FilePath, report.ExecutionMessages);
-                else message.Body = Helper.IfNullOrEmpty(output.EmailBody, report.Translate("Please find the report '{0}' in attachment.", report.ExecutionView.Name));
-
-                message.Attachments.Add(new Attachment(report.ResultFilePath));
+                message.Body = Helper.IfNullOrEmpty(output.EmailBody, report.Translate("Please find the report '{0}' in attachment.", report.ExecutionView.Name));
             }
 
-            //Attachments options
-            if (output.EmailSkipAttachments)
+            //Attachment
+            if (!message.IsBodyHtml && !output.EmailSkipAttachments)
             {
-                message.Attachments.Clear();
-            }
-            else if (output.ZipResult)
-            {
-
-
-#if !NETCOREAPP
-
-
-
-                using (ZipFile zip = new ZipFile()) 
+                if (output.ZipResult)
                 {
-                    if (!string.IsNullOrEmpty(output.EmailZipPassword)) zip.Password = output.EmailZipPassword;
-                    foreach (var attachement in message.Attachments) zip.AddFile(Path.Combine(Path.GetDirectoryName(report.ResultFilePath), attachement.Name), ".");
-                    string zipName = Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + ".zip");
-                    zip.Save(zipName);
-                    message.Attachments.Clear();
-                    message.Attachments.Add(new Attachment(zipName));
-                    message.Attachments[0].Name = report.ExecutionName + ".zip";
+                    string zipPath = Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + ".zip");
+                    FileHelper.CreateZIP(report.ResultFilePath, report.ResultFileName, zipPath, output.ZipPassword);
+                    report.ResultFilePath = zipPath;
                 }
-#endif
+                message.Attachments.Add(new Attachment(report.ResultFilePath));
             }
             SmtpClient client = SmtpClient;
             client.Send(message);
