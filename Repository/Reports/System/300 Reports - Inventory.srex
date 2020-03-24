@@ -17,7 +17,7 @@
 @{&#xD;
     MetaTable metaTable = Model;&#xD;
     DataTable table = metaTable.NoSQLTable;&#xD;
-                ReportExecutionLog log = metaTable;&#xD;
+    ReportExecutionLog log = metaTable;&#xD;
     ReportModel reportModel = metaTable.NoSQLModel;&#xD;
     Report report = (reportModel != null ? reportModel.Report : null);&#xD;
 &#xD;

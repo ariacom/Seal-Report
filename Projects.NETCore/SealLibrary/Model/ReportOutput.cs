@@ -112,6 +112,15 @@ namespace Seal.Model
         /// </summary>
         public string FolderPath { get; set; }
 
+
+        public string FolderWithSeparators { 
+            get
+            {
+                if (string.IsNullOrEmpty(FolderPath) || FolderPath == "/" || FolderPath == "\\") return "/";
+                return (FolderPath.StartsWith("/") ? "" : "/") + FolderPath + (FolderPath.EndsWith("/") ? "" : "/");
+            }
+        }
+
         /// <summary>
         /// The name of the file used to generate the report result
         /// </summary>
@@ -205,7 +214,7 @@ namespace Seal.Model
 
         private bool _zipResult = false;
         /// <summary>
-        /// If true, the result file will be zipped
+        /// If true, the result file will be compressed in a zip file
         /// </summary>
         public bool ZipResult
         {
@@ -247,7 +256,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// If not empty, the output is generated with a security context having the name specified.
+        /// If not empty, the output is generated with a security context having the name specified
         /// </summary>
         public string UserName { get; set; }
 

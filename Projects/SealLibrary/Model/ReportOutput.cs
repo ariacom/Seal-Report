@@ -38,7 +38,8 @@ namespace Seal.Model
                 GetProperty("PostScript").SetIsBrowsable(true);
                 GetProperty("ViewParameters").SetIsBrowsable(true);
 
-                GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice);
+                GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputWinSCPDevice);
+                if (Device is OutputWinSCPDevice) GetProperty("FolderPath").SetDescription("Path of the folder used to generate the report result.");
                 GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputWinSCPDevice);
 
                 GetProperty("EmailSubject").SetIsBrowsable(Device is OutputEmailDevice);
@@ -48,8 +49,8 @@ namespace Seal.Model
                 GetProperty("EmailCC").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailBCC").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailMessagesInBody").SetIsBrowsable(Device is OutputEmailDevice);
-                GetProperty("ZipResult").SetIsBrowsable(Device is OutputEmailDevice);
-                GetProperty("ZipPassword").SetIsBrowsable(Device is OutputEmailDevice);
+                GetProperty("ZipResult").SetIsBrowsable(true);
+                GetProperty("ZipPassword").SetIsBrowsable(true);
                 GetProperty("EmailSkipAttachments").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailFrom").SetIsBrowsable(Device is OutputEmailDevice && ((OutputEmailDevice)Device).ChangeSender);
                 GetProperty("EmailReplyTo").SetIsBrowsable(Device is OutputEmailDevice && ((OutputEmailDevice)Device).ChangeSender);
@@ -70,9 +71,9 @@ namespace Seal.Model
                 GetProperty("EmailHtmlBody").SetIsReadOnly(EmailMessagesInBody);
                 GetProperty("EmailMessagesInBody").SetIsReadOnly(EmailHtmlBody);
 
-                GetProperty("EmailSkipAttachments").SetIsReadOnly(ZipResult);
-                GetProperty("ZipResult").SetIsReadOnly(EmailSkipAttachments);
-                GetProperty("ZipPassword").SetIsReadOnly(!ZipResult);
+                GetProperty("EmailSkipAttachments").SetIsReadOnly(EmailHtmlBody);
+                GetProperty("ZipResult").SetIsReadOnly(Device is OutputEmailDevice && (EmailHtmlBody || EmailSkipAttachments));
+                GetProperty("ZipPassword").SetIsReadOnly(!ZipResult || (Device is OutputEmailDevice && (EmailHtmlBody || EmailSkipAttachments)));
 
                 TypeDescriptor.Refresh(this);
             }
@@ -184,6 +185,15 @@ namespace Seal.Model
         [Category("Folder"), DisplayName("Folder path"), Description("Path of the folder used to generate the report result. The path can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Id(2, 2)]
         [TypeConverter(typeof(RepositoryFolderConverter))]
         public string FolderPath { get; set; }
+
+
+        public string FolderWithSeparators { 
+            get
+            {
+                if (string.IsNullOrEmpty(FolderPath) || FolderPath == "/" || FolderPath == "\\") return "/";
+                return (FolderPath.StartsWith("/") ? "" : "/") + FolderPath + (FolderPath.EndsWith("/") ? "" : "/");
+            }
+        }
 
         /// <summary>
         /// The name of the file used to generate the report result
@@ -300,10 +310,10 @@ namespace Seal.Model
 
         private bool _zipResult = false;
         /// <summary>
-        /// If true, the result file will be zipped
+        /// If true, the result file will be compressed in a zip file
         /// </summary>
         [DefaultValue(false)]
-        [Category("Zip Options"), DisplayName("Zip result"), Description("If true, the result file will be zipped."), Id(2, 5)]
+        [Category("Zip Options"), DisplayName("Zip result"), Description("If true, the result file will be compressed in a zip file."), Id(2, 5)]
         public bool ZipResult
         {
             get
@@ -346,7 +356,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// If not empty, the output is generated with a security context having the name specified.
+        /// If not empty, the output is generated with a security context having the name specified
         /// </summary>
         [Category("Security and Publication"), DisplayName("User name"), Description("If not empty, the output is generated with a security context having the name specified."), Id(1, 6)]
         public string UserName { get; set; }

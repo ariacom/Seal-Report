@@ -1469,6 +1469,8 @@ namespace Seal.Model
             }
             else if (device is OutputWinSCPDevice)
             {
+                result.FolderPath = "/";
+                if(!string.IsNullOrEmpty(((OutputWinSCPDevice)device).Directories)) result.FolderPath = ((OutputWinSCPDevice)device).DirectoriesArray[0];
                 result.FileName = Repository.SealReportDisplayNameKeyword;
             }
 

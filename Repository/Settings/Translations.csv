@@ -288,7 +288,7 @@ Web;Values;;Valeurs
 Web;Widget name;;Nom du Widget
 Web;Widget group name;;Nom du groupe du Widget
 Web;Width;;Largueur
-Web;Zip attachments;;Options ZIP
+Web;Zip result;;Options ZIP
 Web;Zip password;;Mot de passe ZIP
 WebJS;# of % selected;;# de % sélectionné
 WebJS;% of the column;;% de  la colonne
@@ -329,6 +329,7 @@ WebJS;days;;jours
 WebJS;Decimal;;Décimale
 WebJS;Default;;Défaut
 WebJS;Custom;;Spécifique
+WebJS;Chart: Bar stacked;;Graphe: Barres empilées
 WebJS;Default report connection;;Connexion du rapport
 WebJS;Default repository connection;;Connexion du repository
 WebJS;Delete the dashboard;;Effacer le Dashboard
@@ -352,6 +353,7 @@ WebJS;Equals;;Egale
 WebJS;Error;;Erreur
 WebJS;Unexpected error on server;;Erreur sur le serveur
 WebJS;Excel;;Excel
+WebJS;Excel: Use element format;;Excel: Utiliser le format de l'élément
 WebJS;Folder;;Répertoire
 WebJS;For columns;;Pour les colonnes
 WebJS;For rows;;Pour les lignes
@@ -487,7 +489,6 @@ WebJS;The report or file has been renamed;;Le rapport ou le fichier a été reno
 WebJS;The widget has been deleted;;Le Widget a été effacé
 WebJS;Use data tables;;Utiliser les data tables
 WebJS;Use full screen width;;Utiliser toute la largueur de l'écran
-WebJS;Excel: Use element format;;Excel: Utiliser le format de l'élément
 WebJS;View;;Vue
 WebJS;View dashboards;;Voir les Dashboards
 WebJS;View reports;;Voir les rapports
@@ -501,7 +502,7 @@ WebJS;The dashboard has been updated;;Le Dashboard a été mis à jour
 WebJS;Yes;;Oui
 WebJS;Yes (a new line with sub-totals is added when the value changes);;Oui (Une nouvelle ligne avec les sous-totaux est ajoutée lorsque la valeur change)
 WebJS;Yes (element values are used for the axis);;Oui (Les valeurs de l'élément sont utilisés pour l'axe)
-WebJS;Yes (the attachments are zipped);;Oui (Les attachements sont zippés)
+WebJS;Yes (the result is zipped);;Oui (Le fichier est zippé)
 WebJS;Yes (the HTML result is the body);;Oui (L'HTML est le message)
 WebJS;Yes, name, color and icon may change after execution;;Oui, le nom, la couleur ou l'icône peuvent changer après l'exécution
 WebJS;Yes (The output is not generated if the result set is empty);;Oui (la génération sera annulée s'il n'y a pas d'enregistrements)

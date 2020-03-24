@@ -2,7 +2,9 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using Seal.Helpers;
 using System;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Seal.Model
@@ -44,6 +46,14 @@ namespace Seal.Model
             ReportOutput output = report.OutputToExecute;
             if (string.IsNullOrEmpty(output.FolderPath)) throw new Exception("The output folder path is not specified in the report output.");
             if (string.IsNullOrEmpty(output.FileName)) throw new Exception("The file name is not specified in the report output.");
+
+            if (output.ZipResult)
+            {
+                string zipPath = Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + ".zip");
+                FileHelper.CreateZIP(report.ResultFilePath, report.ResultFileName, zipPath, output.ZipPassword);
+                File.Delete(report.ResultFilePath);
+                report.ResultFilePath = zipPath;
+            }
 
             output.Information = report.Translate("Report result generated in '{0}'", report.DisplayResultFilePath);
             report.LogMessage("Report result generated in '{0}'", report.DisplayResultFilePath);

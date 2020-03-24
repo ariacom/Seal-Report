@@ -7,11 +7,9 @@ using Seal.Forms;
 using Seal.Helpers;
 using System;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Drawing.Design;
 using System.IO;
-using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Serialization;
 using WinSCP;
@@ -62,33 +60,45 @@ namespace Seal.Model
 @{
     //Upload the file to the server
     //Full WinSCP documentation at https://winscp.net/eng/docs/library#classes
+    //https://winscp.net/eng/docs/library_session
     Report report = Model;
     ReportOutput output = report.OutputToExecute;
     OutputWinSCPDevice device = (OutputWinSCPDevice) output.Device;
     
-    //https://winscp.net/eng/docs/library_session
-    device.Session = device.GetOpenSession();    
+    var resultFileName = report.ResultFileName;
+    if (output.ZipResult)
+    {
+        string zipPath = Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + "".zip"");
+        FileHelper.CreateZIP(report.ResultFilePath, report.ResultFileName, zipPath, output.ZipPassword);
+        resultFileName = Path.GetFileNameWithoutExtension(report.ResultFileName) + "".zip"";
+        report.ResultFilePath = zipPath;
+    }
+
+    device.Session = device.GetOpenSession();
     //Options
     TransferOptions transferOptions = new TransferOptions()
     {
         TransferMode = TransferMode.Automatic,
         OverwriteMode = OverwriteMode.Overwrite
     };
-    device.Session.PutFileToDirectory(report.ResultFilePath, device.Directory, false, transferOptions);
 
-    var path = device.DirectoryWithSeparators + report.ResultFileName;
+    //Put file
+    var remoteDir = output.FolderWithSeparators;
+    var remotePath = remoteDir + resultFileName;
+    device.Session.PutFileToDirectory(report.ResultFilePath, remoteDir, false, transferOptions);
+
     //Rename the file on the server if necessary
-    if (Path.GetFileName(report.ResultFilePath) != report.ResultFileName)
+    if (Path.GetFileName(report.ResultFilePath) != resultFileName)
     {
-        if (device.Session.FileExists(path)) 
+        if (device.Session.FileExists(remotePath)) 
         {
-            device.Session.RemoveFile(path);
+            device.Session.RemoveFile(remotePath);
         }
-        device.Session.MoveFile(device.DirectoryWithSeparators + Path.GetFileName(report.ResultFilePath), path);
+        device.Session.MoveFile(remoteDir + Path.GetFileName(report.ResultFilePath), remotePath);
     }
 
-    output.Information = report.Translate(""Report result generated in '{0}'"", path);
-    report.LogMessage(""Report result generated in '{0}'"", path);
+    output.Information = report.Translate(""Report result generated in '{0}'"", remotePath);
+    report.LogMessage(""Report result generated in '{0}'"", remotePath);
 }
 ";
 
@@ -104,7 +114,7 @@ namespace Seal.Model
                 GetProperty("Protocol").SetIsBrowsable(true);
                 GetProperty("HostName").SetIsBrowsable(true);
                 GetProperty("PortNumber").SetIsBrowsable(true);
-                GetProperty("Directory").SetIsBrowsable(true);
+                GetProperty("Directories").SetIsBrowsable(true);
                 GetProperty("UserName").SetIsBrowsable(true);
                 GetProperty("ClearPassword").SetIsBrowsable(true);
                 GetProperty("SessionScript").SetIsBrowsable(true);
@@ -113,8 +123,6 @@ namespace Seal.Model
                 GetProperty("HelperTestConnection").SetIsBrowsable(true);
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
-
-                //                GetProperty("CustomScript").SetIsReadOnly(!UseCustomScript);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -153,38 +161,21 @@ namespace Seal.Model
             get { return string.Format("{0} (WinSCP)", Name); }
         }
 
-        Protocol _protocol = Protocol.Ftp;
         /// <summary>
         /// Protocol to connect to the server
         /// </summary>
         [Category("Definition"), DisplayName("Protocol"), Description("Protocol to connect to the server."), Id(1, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(Protocol.Ftp)]
-        public Protocol Protocol
-        {
-            get
-            {
-                return _protocol;
-            }
-            set
-            {
-                _protocol = value;
-                if (_protocol == Protocol.Ftp) PortNumber = 21;
-                if (_protocol == Protocol.Sftp) PortNumber = 22;
-                if (_protocol == Protocol.Scp) PortNumber = 22;
-                if (_protocol == Protocol.S3) PortNumber = 443;
-                if (_protocol == Protocol.Webdav) PortNumber = 80;
-                UpdateEditor();
-            }
-        }
+        public Protocol Protocol { get; set; } = Protocol.Ftp;
 
         /// <summary>
         /// For FTPS, TLS/SSL Implicit or Explicit encryption.
         /// </summary>
         [Category("Definition"), DisplayName("FTP Encryption"), Description("For FTPS, TLS/SSL Implicit or Explicit encryption."), Id(1, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
-        [DefaultValue(WinSCP.FtpSecure.None)]
-        public WinSCP.FtpSecure FtpSecure { get; set; } = WinSCP.FtpSecure.None;
+        [DefaultValue(FtpSecure.None)]
+        public FtpSecure FtpSecure { get; set; } = FtpSecure.None;
 
         /// <summary>
         /// File Server host name
@@ -195,32 +186,33 @@ namespace Seal.Model
         /// <summary>
         /// Port number used to connect to the server (e.g. 21 for FTP, 22 for SFTP, 990 for FTPS, etc.)
         /// </summary>
-        [Category("Definition"), DisplayName("Port number"), Description("Port number used to connect to the server (e.g. 21 for FTP, 22 for SFTP, 990 for FTPS, etc.)"), Id(3, 1)]
+        [Category("Definition"), DisplayName("Port number"), Description("Port number used to connect to the server (e.g. 21 for FTP, 22 for SFTP or SCP, 990 for FTPS, 443 for S3, 80 for Webdav, etc.)"), Id(3, 1)]
         [DefaultValue(21)]
         public int PortNumber { get; set; } = 21;
 
-        /// <summary>
-        /// The remote directory on the File Server
-        /// </summary>
-        [Category("Definition"), DisplayName("Directory"), Description("The remote directory on the server"), Id(4, 1)]
-        public string Directory { get; set; } = "/";
 
         /// <summary>
-        /// Retruns the directory with the / separator
+        /// List of directories allowed on the file server. One per line or separated by semi-column.
         /// </summary>
-        public string DirectoryWithSeparators
+        [Category("Definition"), DisplayName("Directories"), Description("List of directories allowed on the file server. One per line or separated by semi-column."), Id(6, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+        public string Directories { get; set; } = "/";
+
+        /// <summary>
+        /// Array of allowed directories.
+        /// </summary>
+        public string[] DirectoriesArray
         {
             get
             {
-                if (Directory == "/") return Directory;
-                return (Directory.StartsWith("/") ? "" : "/") + Directory + (Directory.EndsWith("/") ? "" : "/");
+                return Directories.Trim().Replace("\r\n", "\r").Split('\r');
             }
         }
 
         /// <summary>
         /// The user name used to connect to the File Server
         /// </summary>
-        [Category("Definition"), DisplayName("User name"), Description("The user name used to connect to the derver"), Id(5, 1)]
+        [Category("Definition"), DisplayName("User name"), Description("The user name used to connect to the derver"), Id(7, 1)]
         public string UserName { get; set; }
 
         /// <summary>
@@ -231,7 +223,7 @@ namespace Seal.Model
         /// <summary>
         /// The clear password used to connect to the File Server
         /// </summary>
-        [Category("Definition"), DisplayName("Password"), Description("The password used to connect to the derver"), PasswordPropertyText(true), Id(6, 1)]
+        [Category("Definition"), DisplayName("Password"), Description("The password used to connect to the derver"), PasswordPropertyText(true), Id(8, 1)]
         [XmlIgnore]
         public string ClearPassword
         {
@@ -263,31 +255,6 @@ namespace Seal.Model
             }
         }
 
-        /*
-        bool _useCustomScript = false;
-        /// <summary>
-        /// If true, the custom script can be modified.
-        /// </summary>
-        [Category("Definition"), DisplayName("Use custom script"), Description("If true, the custom script can be modified."), Id(9, 1)]
-        [DefaultValue(false)]
-        public bool UseCustomScript
-        {
-            get { return _useCustomScript; }
-            set
-            {
-                _useCustomScript = value;
-                UpdateEditorAttributes();
-            }
-        }
-
-        /// <summary>
-        /// Script executed when the output is processed. The default script depends on the server type.
-        /// </summary>
-        [Category("Definition"), DisplayName("Custom script"), Description("Script executed when the output is processed. The default script depends on the server type."), Id(10, 1)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string CustomScript { get; set; } = "";
-        */
-
         /// <summary>
         /// Script executed to get the open session when the output is processed
         /// </summary>
@@ -301,7 +268,6 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Output processing script"), Description("Script executed when the output is processed."), Id(10, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string ProcessingScript { get; set; } = "";
-
 
         /// <summary>
         /// Last information message
@@ -335,39 +301,8 @@ namespace Seal.Model
         /// </summary>
         public override void Process(Report report)
         {
-            var output = report.OutputToExecute;
             var script = string.IsNullOrEmpty(ProcessingScript) ? ProcessingScriptTemplate : ProcessingScript;
-            //RazorHelper.CompileExecute(script, report);
-
-            if (output.ZipResult)
-            {
-
-            }
-            string zipPath = Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + ".zip");
-       //     FileHelper.CreateSample(zipPath, "popol", @"C:\_dev\Seal-Report\Repository\Devices\WinSCP");
-
-            FileHelper.CreateZIP(report.ResultFilePath, report.ResultFileName, zipPath, "popol2");
-            var resultFileName = Path.GetFileNameWithoutExtension(report.ResultFileName) + ".zip";
-            report.ResultFilePath = zipPath;
-
-            Session = GetOpenSession();
-            TransferOptions transferOptions = new TransferOptions()
-            {
-                TransferMode = TransferMode.Automatic,
-                OverwriteMode = OverwriteMode.Overwrite
-            };
-            Session.PutFileToDirectory(report.ResultFilePath, Directory, false, transferOptions);
-
-            var path = DirectoryWithSeparators + resultFileName;
-            //Rename the file on the server if necessary
-            if (Path.GetFileName(report.ResultFilePath) != resultFileName)
-            {
-                if (Session.FileExists(path))
-                {
-                    Session.RemoveFile(path);
-                }
-                Session.MoveFile(DirectoryWithSeparators + Path.GetFileName(report.ResultFilePath), path);
-            }
+            RazorHelper.CompileExecute(script, report);
         }
 
         /// <summary>
