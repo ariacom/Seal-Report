@@ -66,7 +66,7 @@ namespace Seal.Model
     var resultFileName = report.ResultFileName;
     if (output.ZipResult)
     {
-        string zipPath = Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + "".zip"");
+        var zipPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + "".zip""));
         FileHelper.CreateZIP(report.ResultFilePath, report.ResultFileName, zipPath, output.ZipPassword);
         resultFileName = Path.GetFileNameWithoutExtension(report.ResultFileName) + "".zip"";
         report.ResultFilePath = zipPath;

@@ -269,7 +269,7 @@ namespace Seal.Model
             }
             else
             {
-                message.Body = Helper.IfNullOrEmpty(output.EmailBody, report.Translate("Please find the report '{0}' in attachment.", report.ExecutionView.Name));
+                message.Body = Helper.IfNullOrEmpty(output.EmailBody, report.Translate("Please find the report '{0}' in attachment.", report.ExecutionName));
             }
 
             //Attachment
@@ -277,16 +277,18 @@ namespace Seal.Model
             {
                 if (output.ZipResult)
                 {
-                    string zipPath = Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + ".zip");
+                    var zipPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + ".zip"));
                     FileHelper.CreateZIP(report.ResultFilePath, report.ResultFileName, zipPath, output.ZipPassword);
                     report.ResultFilePath = zipPath;
                 }
-                message.Attachments.Add(new Attachment(report.ResultFilePath));
+                var attachment = new Attachment(report.ResultFilePath);
+                attachment.Name = Path.GetFileNameWithoutExtension(report.ResultFileName) + ".zip";
+                message.Attachments.Add(attachment);
             }
             SmtpClient client = SmtpClient;
             client.Send(message);
-            output.Information = report.Translate("Email sent to '{0}'", output.EmailTo);
-            report.LogMessage("Email sent to '{0}'", output.EmailTo);
+            output.Information = report.Translate("Email sent to '{0}'", output.EmailTo.Replace("\r\n", ";"));
+            report.LogMessage("Email sent to '{0}'", output.EmailTo.Replace("\r\n", ";"));
         }
 
         /// <summary>

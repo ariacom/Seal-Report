@@ -506,8 +506,18 @@ namespace Seal.Model
         Login,
         Logout,
         ReportExecution,
-        ReportDelete,
         ReportSave,
+        FileMove,
+        FileCopy,
+        FileDelete,
+        FolderCreate,
+        FolderRename,
+        FolderDelete,
+        DashboardCreate,
+        DashboardSave,
+        DashboardMove,
+        DashboardCopy,
+        DashboardDelete,
     }
 
     public enum TriggerType

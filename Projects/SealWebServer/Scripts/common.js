@@ -1,6 +1,7 @@
 ﻿
 function restrictionSelectChange(source) {
     var idSelect = "#" + $(source).attr('id');
+
     if ($(source).attr('opid') != null) {
         idSelect = "#" + $(source).attr('opid');
     }
@@ -510,6 +511,10 @@ $(document).ready(function () {
 
     $('.datepicker_date,.datepicker_datetime').datetimepicker({
         locale: languageName
+    });
+
+    $('.datepicker_date,.datepicker_datetime').on("dp.change", function (e) {
+        restrictionSelectChange(this.children[0]);
     });
 
     //resize handler

@@ -167,4 +167,3 @@ var SWIUtil;
     }
     SWIUtil.InitNumericInput = InitNumericInput;
 })(SWIUtil || (SWIUtil = {}));
-//# sourceMappingURL=swi-utils.js.map

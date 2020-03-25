@@ -68,7 +68,7 @@ namespace Seal.Model
     var resultFileName = report.ResultFileName;
     if (output.ZipResult)
     {
-        string zipPath = Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + "".zip"");
+        var zipPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + "".zip""));
         FileHelper.CreateZIP(report.ResultFilePath, report.ResultFileName, zipPath, output.ZipPassword);
         resultFileName = Path.GetFileNameWithoutExtension(report.ResultFileName) + "".zip"";
         report.ResultFilePath = zipPath;
@@ -194,7 +194,7 @@ namespace Seal.Model
         /// <summary>
         /// List of directories allowed on the file server. One per line or separated by semi-column.
         /// </summary>
-        [Category("Definition"), DisplayName("Directories"), Description("List of directories allowed on the file server. One per line or separated by semi-column."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Directories"), Description("List of directories allowed on the file server. One directory per line."), Id(6, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string Directories { get; set; } = "/";
 

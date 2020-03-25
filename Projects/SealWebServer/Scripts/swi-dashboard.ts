@@ -256,6 +256,7 @@ class SWIDashboard {
                 //Size
                 if (item.Width > 0) panel.width(item.Width);
                 if (item.Height > 0) panel.height(item.Height);
+                panel.css("overflow", "auto");
 
                 //Panel buttons
                 panelHeader

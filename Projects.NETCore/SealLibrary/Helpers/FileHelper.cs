@@ -210,15 +210,9 @@ namespace Seal.Helpers
                 zipStream.Password = password;
 
                 var fi = new FileInfo(inputPath);
-                //  entryName = ZipEntry.CleanName(inputPath);
                 var newEntry = new ZipEntry(entryName);
 
                 newEntry.DateTime = fi.LastWriteTime;
-
-                // Specifying the AESKeySize triggers AES encryption. 
-                // Allowable values are 0 (off), 128 or 256.
-                // A password on the ZipOutputStream is required if using AES.
-              //  if (!string.IsNullOrEmpty(password)) newEntry.AESKeySize = 128;
 
                 newEntry.Size = fi.Length;
                 zipStream.PutNextEntry(newEntry);

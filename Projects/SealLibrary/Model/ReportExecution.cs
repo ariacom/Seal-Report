@@ -241,7 +241,7 @@ namespace Seal.Model
             {
                 Report.Cancel = true;
                 //Audit
-                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogAudit(AuditType.ReportExecution, Report.SecurityContext, Report, null);
+                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogAudit(AuditType.ReportExecution, Report.SecurityContext, Report, null, null);
                 //Log files
                 Report.LogExecution();
             }
@@ -341,7 +341,7 @@ namespace Seal.Model
                 Report.ExecutionEndDate = DateTime.Now;
 
                 //Audit
-                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogAudit(AuditType.ReportExecution, Report.SecurityContext, Report, null);
+                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogAudit(AuditType.ReportExecution, Report.SecurityContext, Report, null, null);
                 //Log files
                 Report.LogExecution();
             }
@@ -1874,7 +1874,7 @@ namespace Seal.Model
                     }
 
                     //Audit
-                    Audit.LogAudit(AuditType.ReportExecution, report.SecurityContext, report, schedule);
+                    Audit.LogAudit(AuditType.ReportExecution, report.SecurityContext, report, schedule, null);
 
                     if (report.HasErrors)
                     {
