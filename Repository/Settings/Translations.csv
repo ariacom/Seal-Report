@@ -32,6 +32,7 @@ Report;Does not contain;;Ne contient pas
 Report;Drill <;;Navigation <
 Report;Drill >;;Navigation >
 Report;Duration (seconds);;Durée (secondes)
+Report;Email sent to '{0}';;Courriel envoyé à '{0}'
 Report;Ends with;;Se termine par
 Report;Equals;;Egale
 Report;Execute;;Exécuter
@@ -72,6 +73,7 @@ Report;Now;;Maintenant
 Report;Page;;Page
 Report;"Page &p; of &P;";;"Page &p; de &P;"
 Report;Pages;;Pages
+Report;Please find the report '{0}' in attachment.;;Veuillez trouver le rapport '{0}' en attachement. 
 Report;Processing;;En cours
 Report;Processing...;;En cours…
 Report;Please enter a value;;Veuillez entrer une valeur

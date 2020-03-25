@@ -109,6 +109,7 @@ namespace Seal.Model
                 _useWebScheduler = value;
             }
         }
+        public bool ShouldSerializeUseWebScheduler() { return UseWebScheduler; }
 
         /// <summary>
         /// Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used
@@ -116,8 +117,26 @@ namespace Seal.Model
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
 
+
+        bool _auditEnabled = false;
         /// <summary>
-        /// If set, the script is executed to log events (login, logut, report execution, etc.). The common implementation is to insert a record into a database table.
+        /// If true, the Audit script is executed for the follwing events: login, logout, report execution and management, folder management, file management, dashboard management.
+        /// </summary>
+        public bool AuditEnabled
+        {
+            get
+            {
+                return _auditEnabled;
+            }
+            set
+            {
+                _auditEnabled = value;
+            }
+        }
+        public bool ShouldSerializeAuditEnabled() { return AuditEnabled; }
+
+        /// <summary>
+        /// If set, the script is executed to log events. The default implementation is to insert a record into a database table.
         /// </summary>
         public string AuditScript { get; set; } = null;
 

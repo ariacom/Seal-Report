@@ -42,7 +42,7 @@ namespace SealWebServer.Controllers
                 }
 
                 //Audit
-                Audit.LogAudit(AuditType.Login, WebUser, null, null);
+                Audit.LogAudit(AuditType.Login, WebUser, null, null, null);
 
                 //Set culture from cookie
                 string culture = getCookie(SealCultureCookieName);
@@ -226,6 +226,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getFolder(path);
                 if (folder.manage != 2) throw new Exception("Error: no right to delete this folder");
                 Directory.Delete(folder.GetFullPath());
+                Audit.LogAudit(AuditType.FolderDelete, WebUser, null, null, path);
                 return Json(new object { });
             }
             catch (Exception ex)
@@ -246,6 +247,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getFolder(path);
                 if (folder.manage == 0) throw new Exception("Error: no right to create in this folder");
                 Directory.CreateDirectory(folder.GetFullPath());
+                Audit.LogAudit(AuditType.FolderCreate, WebUser, null, null, path);
                 return Json(new object { });
             }
             catch (Exception ex)
@@ -267,6 +269,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folderDest = getFolder(destination);
                 if (folderSource.manage != 2 || folderDest.manage != 2) throw new Exception("Error: no right to rename this folder");
                 Directory.Move(folderSource.GetFullPath(), folderDest.GetFullPath());
+                Audit.LogAudit(AuditType.FolderRename, WebUser, null, null, string.Format("'{0}' to '{1}'", folderSource.path, folderDest.path));
                 return Json(new object { });
             }
             catch (Exception ex)
@@ -333,6 +336,8 @@ namespace SealWebServer.Controllers
                         }
 
                         FileHelper.DeleteSealFile(fullPath);
+
+                        Audit.LogAudit(AuditType.FileDelete, WebUser, null, null, path);
                     }
                 }
                 return Json(new object { });
@@ -366,6 +371,8 @@ namespace SealWebServer.Controllers
 
                 bool hasSchedule = (FileHelper.IsSealReportFile(sourcePath) && FileHelper.ReportHasSchedule(sourcePath));
                 FileHelper.MoveSealFile(sourcePath, destinationPath, copy);
+                if (copy) Audit.LogAudit(AuditType.FileCopy, WebUser, null, null, string.Format("'{0}' to '{1}'", source, Path.GetFileName(destinationPath)));
+                else Audit.LogAudit(AuditType.FileMove, WebUser, null, null, string.Format("'{0}' to '{1}'", source, destination));
                 if (hasSchedule)
                 {
                     //Re-init schedules...
@@ -500,7 +507,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWILogout");
 
             //Audit
-            Audit.LogAudit(AuditType.Logout, WebUser, null, null);
+            Audit.LogAudit(AuditType.Logout, WebUser, null, null, null);
 
             try
             {
@@ -763,8 +770,11 @@ namespace SealWebServer.Controllers
 
                 if (!WebUser.ManageDashboards) throw new Exception("No right to add dashboards");
 
-                foreach (var guid in guids) WebUser.Profile.Dashboards.Add(guid);
-                WebUser.SaveProfile();
+                if (guids != null)
+                {
+                    foreach (var guid in guids) WebUser.Profile.Dashboards.Add(guid);
+                    WebUser.SaveProfile();
+                }
 
                 return Json(new object { });
             }
@@ -786,8 +796,11 @@ namespace SealWebServer.Controllers
 
                 if (!WebUser.ManageDashboards) throw new Exception("No right to remove dashboard");
 
-                if (WebUser.Profile.Dashboards.Contains(guid)) WebUser.Profile.Dashboards.Remove(guid);
-                WebUser.SaveProfile();
+                if (WebUser.Profile.Dashboards.Contains(guid))
+                {
+                    WebUser.Profile.Dashboards.Remove(guid);
+                    WebUser.SaveProfile();
+                }
 
                 return Json(new object { });
             }
@@ -912,8 +925,6 @@ namespace SealWebServer.Controllers
 
                     report.ExecutionContext = ReportExecutionContext.WebReport;
                     report.SecurityContext = WebUser;
-                    //Force load of all models
-                    //report.ExecutionView.SetParameter(Parameter.ForceModelsLoad, true);
                     //Set url
                     report.WebUrl = GetWebUrl(Request, Response);
                 }

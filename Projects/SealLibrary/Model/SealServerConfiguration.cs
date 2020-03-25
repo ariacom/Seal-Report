@@ -58,7 +58,10 @@ namespace Seal.Model
                 GetProperty("CsvSeparator").SetIsBrowsable(!ForPublication);
                 GetProperty("NumericFormat").SetIsBrowsable(!ForPublication);
                 GetProperty("DateTimeFormat").SetIsBrowsable(!ForPublication);
+                GetProperty("AuditEnabled").SetIsBrowsable(!ForPublication);
                 GetProperty("AuditScript").SetIsBrowsable(!ForPublication);
+                GetProperty("AuditScript").SetIsReadOnly(!AuditEnabled);
+
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("CommonScripts").SetIsBrowsable(!ForPublication);
                 //GetProperty("CommonScripts").SetDisplayName("Common Scripts: " + (_commonScripts.Count == 0 ? "None" : _commonScripts.Count.ToString() + " Items(s)"));
@@ -186,6 +189,7 @@ namespace Seal.Model
                 UpdateEditor(); //!NETCore
             }
         }
+        public bool ShouldSerializeUseWebScheduler() { return UseWebScheduler; }
 
         /// <summary>
         /// Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used
@@ -194,10 +198,31 @@ namespace Seal.Model
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
 
+
+        bool _auditEnabled = false;
         /// <summary>
-        /// If set, the script is executed to log events (login, logut, report execution, etc.). The common implementation is to insert a record into a database table.
+        /// If true, the Audit script is executed for the follwing events: login, logout, report execution and management, folder management, file management, dashboard management.
         /// </summary>
-        [Category("Scripts"), DisplayName("Audit Script"), Description("If set, the script is executed to log events (login, logut, report execution, etc.). The common implementation is to insert a record into a database table."), Id(1, 4)]
+        [Category("Audit Settings"), DisplayName("Audit Enabled"), Description("If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management, dashboard management."), Id(1, 3)]
+        [DefaultValue(false)]
+        public bool AuditEnabled
+        {
+            get
+            {
+                return _auditEnabled;
+            }
+            set
+            {
+                _auditEnabled = value;
+                UpdateEditor(); //!NETCore
+            }
+        }
+        public bool ShouldSerializeAuditEnabled() { return AuditEnabled; }
+
+        /// <summary>
+        /// If set, the script is executed to log events. The default implementation is to insert a record into a database table.
+        /// </summary>
+        [Category("Audit Settings"), DisplayName("Audit Script"), Description("If set, the script is executed to log events. The default implementation is to insert a record into a database table."), Id(2, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string AuditScript { get; set; } = null;
 
