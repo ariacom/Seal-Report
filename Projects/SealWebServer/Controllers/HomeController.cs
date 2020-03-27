@@ -98,7 +98,11 @@ namespace SealWebServer.Controllers
             //Clear previous Session variables
             setSessionValue(SessionNavigationContext, null);
             setSessionValue(SessionDashboardExecutions, null);
-
+#if NETCOREAPP
+            user.SessionID = SessionKey;
+#else
+            user.SessionID = Session.SessionID;
+#endif            
             return user;
         }
 
@@ -119,7 +123,9 @@ namespace SealWebServer.Controllers
 
         ContentResult HandleException(Exception ex)
         {
-            WebHelper.WriteWebException(ex, getContextDetail(Request, WebUser));
+            var detail = getContextDetail(Request, WebUser);
+            Audit.LogAudit(AuditType.EventError, WebUser, null, detail, ex.Message);
+            WebHelper.WriteWebException(ex, detail);
 #if DEBUG
             var content = Content(string.Format("<b>Sorry, we got an unexpected exception.</b><br>{0}<br>{1}<br>{2}", ex.Message, RequestUrl, ex.StackTrace));
 #else
@@ -725,7 +731,12 @@ namespace SealWebServer.Controllers
 
         JsonResult HandleSWIException(Exception ex)
         {
-            WebHelper.WriteWebException(ex, getContextDetail(Request, WebUser));
+            if (!(ex is ValidationException))
+            {
+                var detail = getContextDetail(Request, WebUser);
+                Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
+                WebHelper.WriteWebException(ex, detail);
+            }
             return Json(new { error = ex.Message, authenticated = (WebUser != null && WebUser.IsAuthenticated) });
         }
 

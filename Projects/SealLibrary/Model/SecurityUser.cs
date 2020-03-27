@@ -70,9 +70,14 @@ namespace Seal.Model
         public string WebUserName = "";
 
         /// <summary>
-        /// Parameters for authentication: Pasaword
+        /// Parameters for authentication: Password
         /// </summary>
         public string WebPassword = "";
+
+        /// <summary>
+        /// Current SessionID
+        /// </summary>
+        public string SessionID = "";
 
         /// <summary>
         /// Parameters for authentication: Token

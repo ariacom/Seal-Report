@@ -38,11 +38,11 @@ namespace SealWebServer.Controllers
                     WebUser.Request = Request; //!NETCore
                     Authenticate();
 
-                    if (!WebUser.IsAuthenticated) throw new Exception(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
+                    if (!WebUser.IsAuthenticated) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
                 }
 
                 //Audit
-                Audit.LogAudit(AuditType.Login, WebUser, null, null, null);
+                Audit.LogAudit(AuditType.Login, WebUser);
 
                 //Set culture from cookie
                 string culture = getCookie(SealCultureCookieName);
@@ -226,7 +226,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getFolder(path);
                 if (folder.manage != 2) throw new Exception("Error: no right to delete this folder");
                 Directory.Delete(folder.GetFullPath());
-                Audit.LogAudit(AuditType.FolderDelete, WebUser, null, null, path);
+                Audit.LogAudit(AuditType.FolderDelete, WebUser, folder.GetFullPath());
                 return Json(new object { });
             }
             catch (Exception ex)
@@ -247,7 +247,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getFolder(path);
                 if (folder.manage == 0) throw new Exception("Error: no right to create in this folder");
                 Directory.CreateDirectory(folder.GetFullPath());
-                Audit.LogAudit(AuditType.FolderCreate, WebUser, null, null, path);
+                Audit.LogAudit(AuditType.FolderCreate, WebUser, folder.GetFullPath());
                 return Json(new object { });
             }
             catch (Exception ex)
@@ -269,7 +269,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folderDest = getFolder(destination);
                 if (folderSource.manage != 2 || folderDest.manage != 2) throw new Exception("Error: no right to rename this folder");
                 Directory.Move(folderSource.GetFullPath(), folderDest.GetFullPath());
-                Audit.LogAudit(AuditType.FolderRename, WebUser, null, null, string.Format("'{0}' to '{1}'", folderSource.path, folderDest.path));
+                Audit.LogAudit(AuditType.FolderRename, WebUser, folderSource.GetFullPath(), string.Format("Rename to '{0}'", folderDest.GetFullPath()));
                 return Json(new object { });
             }
             catch (Exception ex)
@@ -337,7 +337,7 @@ namespace SealWebServer.Controllers
 
                         FileHelper.DeleteSealFile(fullPath);
 
-                        Audit.LogAudit(AuditType.FileDelete, WebUser, null, null, path);
+                        Audit.LogAudit(AuditType.FileDelete, WebUser, path);
                     }
                 }
                 return Json(new object { });
@@ -371,8 +371,8 @@ namespace SealWebServer.Controllers
 
                 bool hasSchedule = (FileHelper.IsSealReportFile(sourcePath) && FileHelper.ReportHasSchedule(sourcePath));
                 FileHelper.MoveSealFile(sourcePath, destinationPath, copy);
-                if (copy) Audit.LogAudit(AuditType.FileCopy, WebUser, null, null, string.Format("'{0}' to '{1}'", source, Path.GetFileName(destinationPath)));
-                else Audit.LogAudit(AuditType.FileMove, WebUser, null, null, string.Format("'{0}' to '{1}'", source, destination));
+                if (copy) Audit.LogAudit(AuditType.FileCopy, WebUser, sourcePath, string.Format("Copy to '{0}'", destinationPath));
+                else Audit.LogAudit(AuditType.FileMove, WebUser, sourcePath, string.Format("Move to '{0}'", destinationPath));
                 if (hasSchedule)
                 {
                     //Re-init schedules...
@@ -507,7 +507,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWILogout");
 
             //Audit
-            Audit.LogAudit(AuditType.Logout, WebUser, null, null, null);
+            Audit.LogAudit(AuditType.Logout, WebUser);
 
             try
             {
@@ -818,7 +818,7 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
 
-                if (!WebUser.ManageDashboards) throw new Exception("No right to swap  dashboard");
+                if (!WebUser.ManageDashboards) throw new Exception("No right to swap dashboard");
 
                 if (WebUser.Profile.Dashboards.Contains(guid1) && WebUser.Profile.Dashboards.Contains(guid2))
                 {
@@ -966,8 +966,7 @@ namespace SealWebServer.Controllers
                 }
                 if (report.HasErrors)
                 {
-                    WebHelper.WriteWebException(new Exception(report.FilePath + ":\r\n" + report.ExecutionErrors), getContextDetail(Request, WebUser));
-                    throw new Exception("Error: the widget has errors");
+                    throw new Exception(report.Translate("This report has execution errors. Please check details in the Repository Logs Files or in the Event Viewer..."));
                 }
                 //Reset pointers and parse
                 lock (execution)

@@ -552,7 +552,15 @@ namespace Seal.Model
         /// If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause.
         /// </summary>
         public YesNoDefault ForceAggregate { get; set; } = YesNoDefault.Default;
-        public bool ShouldSerializeHasAggregate() { return ForceAggregate != YesNoDefault.Default; }
+        public bool ShouldSerializeForceAggregate() { return ForceAggregate != YesNoDefault.Default; }
+
+
+        /// <summary>
+        /// If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause.
+        /// </summary>
+        public bool SetNullToZero { get; set; } = false;
+        public bool ShouldSerializeSetNullToZero() { return SetNullToZero; }
+
 
         /// <summary>
         /// True if the element is an aggregate

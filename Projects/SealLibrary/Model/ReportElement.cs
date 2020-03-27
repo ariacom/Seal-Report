@@ -54,6 +54,7 @@ namespace Seal.Model
                 GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                 GetProperty("EnumGUIDEL").SetIsBrowsable(true);
                 GetProperty("ForceAggregate").SetIsBrowsable(true);
+                GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
 
                 GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
                 GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
@@ -672,7 +673,17 @@ namespace Seal.Model
         [DefaultValue(YesNoDefault.Default)]
         [Category("Advanced"), DisplayName("Force aggregrate"), Description("If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause."), Id(6, 5)]
         public YesNoDefault ForceAggregate { get; set; } = YesNoDefault.Default;
-        public bool ShouldSerializeHasAggregate() { return ForceAggregate != YesNoDefault.Default; }
+        public bool ShouldSerializeForceAggregate() { return ForceAggregate != YesNoDefault.Default; }
+
+
+        /// <summary>
+        /// If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is Aggregate' is used. This flag impacts the build of the GROUP BY Clause.
+        /// </summary>
+        [DefaultValue(false)]
+        [Category("Advanced"), DisplayName("Set empty cells to zero"), Description("If Yes, empty cells are set to 0."), Id(7, 5)]
+        public bool SetNullToZero { get; set; } = false;
+        public bool ShouldSerializeSetNullToZero() { return SetNullToZero; }
+
 
         /// <summary>
         /// True if the element is an aggregate

@@ -515,14 +515,14 @@ namespace Seal.Model
         /// Last information message
         /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Information"), Description("Last information message."), Id(2, 20)]
-        [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
+        [Editor(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
         public string Information { get; set; }
 
         /// <summary>
         /// Last error message
         /// </summary>
         [XmlIgnore, Category("Helpers"), DisplayName("Error"), Description("Last error message."), Id(3, 20)]
-        [EditorAttribute(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
+        [Editor(typeof(ErrorUITypeEditor), typeof(UITypeEditor))]
         public string Error { get; set; }
 
 
