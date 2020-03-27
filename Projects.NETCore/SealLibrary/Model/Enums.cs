@@ -504,8 +504,10 @@ namespace Seal.Model
     public enum AuditType
     {
         Login,
+        LoginFailure,
         Logout,
         ReportExecution,
+        ReportExecutionError,
         ReportSave,
         FileMove,
         FileCopy,
@@ -518,6 +520,7 @@ namespace Seal.Model
         DashboardMove,
         DashboardCopy,
         DashboardDelete,
+        EventError,
     }
 
     public enum TriggerType

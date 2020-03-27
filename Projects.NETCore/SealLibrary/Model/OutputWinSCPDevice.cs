@@ -81,19 +81,8 @@ namespace Seal.Model
     };
 
     //Put file
-    var remoteDir = output.FolderWithSeparators;
-    var remotePath = remoteDir + resultFileName;
-    device.Session.PutFileToDirectory(report.ResultFilePath, remoteDir, false, transferOptions);
-
-    //Rename the file on the server if necessary
-    if (Path.GetFileName(report.ResultFilePath) != resultFileName)
-    {
-        if (device.Session.FileExists(remotePath)) 
-        {
-            device.Session.RemoveFile(remotePath);
-        }
-        device.Session.MoveFile(remoteDir + Path.GetFileName(report.ResultFilePath), remotePath);
-    }
+    var remotePath = output.FolderWithSeparators + resultFileName;
+    device.Session.PutFiles(report.ResultFilePath, remotePath, false, transferOptions);
 
     output.Information = report.Translate(""Report result generated in '{0}'"", remotePath);
     report.LogMessage(""Report result generated in '{0}'"", remotePath);

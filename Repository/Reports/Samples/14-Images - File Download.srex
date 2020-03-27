@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><CurrentViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</CurrentViewGUID><GUID>536be27c-4b6d-4b1e-b305-84fa57bb7c9f</GUID><Sources><ReportSource><GUID>5de46d8c-d602-4581-aa17-76721663f961</GUID><Name>Files Source</Name><Connections><MetaConnection><GUID>34e2309d-d4ee-4768-ac9e-ed0ea9f708a4</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>34e2309d-d4ee-4768-ac9e-ed0ea9f708a4</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>a8f2314d-0f63-4c82-8b1b-35f31faf195f</GUID><DefinitionScript>@using System.Data&#xD;
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><CurrentViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</CurrentViewGUID><GUID>536be27c-4b6d-4b1e-b305-84fa57bb7c9f</GUID><ViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</ViewGUID><Sources><ReportSource><GUID>5de46d8c-d602-4581-aa17-76721663f961</GUID><Name>Files Source</Name><Connections><MetaConnection><GUID>34e2309d-d4ee-4768-ac9e-ed0ea9f708a4</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>34e2309d-d4ee-4768-ac9e-ed0ea9f708a4</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>a8f2314d-0f63-4c82-8b1b-35f31faf195f</GUID><DefinitionScript>@using System.Data&#xD;
 @using System.IO&#xD;
 @{&#xD;
     MetaTable metaTable = Model;&#xD;
@@ -44,7 +44,7 @@
         &#xD;
     var helper = new TaskDatabaseHelper();&#xD;
     //Get the photos&#xD;
-    var photos = helper.LoadDataTable(model.Connection.FullConnectionString, "select employeeID, photo from employees");&#xD;
+    var photos = helper.LoadDataTable(model.Connection.ConnectionType, model.Connection.FullConnectionString, "select employeeID, photo from employees");&#xD;
 &#xD;
     foreach (ResultPage page in model.Pages)&#xD;
     {&#xD;
@@ -165,4 +165,4 @@
 &lt;li&gt;Property 'Columns to hide' is set to 1 in the Data Table to hide the 'Employee ID' element.&lt;/li&gt;&#xD;
 &lt;/ul&gt;&#xD;
 &lt;/p&gt;&#xD;
-</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>0</SortOrder></ReportView></Views><ViewGUID>47088ad2-fe61-4509-9909-ccf5f5827fe9</ViewGUID></Report>
+</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>0</SortOrder></ReportView></Views></Report>

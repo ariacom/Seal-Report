@@ -9,6 +9,27 @@ using System.Web;
 
 namespace Seal.Model
 {
+
+    /// <summary>
+    /// Exception that should not be logged or audited
+    /// </summary>
+    public class ValidationException : Exception
+    {
+        public ValidationException(string message) : base(message)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Exception for Login process
+    /// </summary>
+    public class LoginException : Exception
+    {
+        public LoginException(string message) : base(message)
+        {
+        }
+    }
+
     /// <summary>
     /// Class dedicated to log events for audit purpose
     /// </summary>
@@ -28,7 +49,7 @@ namespace Seal.Model
 
         //Create audit table if necessary
         checkTableCreation(command);
-        command.CommandText = @""insert into sr_audit(event_date,event_type,event_detail,user_name,user_groups,report_name,report_path,execution_context,execution_view,execution_duration,execution_error,output_type,output_name,output_information,output_error,schedule_name)"";
+        command.CommandText = @""insert into sr_audit(event_date,event_type,event_path,event_detail,event_error,user_name,user_groups,user_session,execution_name,execution_context,execution_view,execution_duration,output_type,output_name,output_information,schedule_name)"";
         if (command is OleDbCommand || command is OdbcCommand) {
             command.CommandText += "" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"";
         }
@@ -41,20 +62,20 @@ namespace Seal.Model
         int index=1;
         addParameter(command, index++, DbType.DateTime, date); //event_date,
         addParameter(command, index++, DbType.AnsiString, audit.Type.ToString()); //event_type,
-        addParameter(command, index++, DbType.AnsiString, audit.Detail != null ? audit.Detail : (object) DBNull.Value); //event_detail,
-        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.Name : (object) DBNull.Value); //user_name,
-        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SecurityGroupsDisplay : (object) DBNull.Value); //user_groups,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionName : (object) DBNull.Value); //report_name,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.FilePath : (object) DBNull.Value); //report_path,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionContext.ToString() : (object) DBNull.Value); //execution_context,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionView.Name : (object) DBNull.Value); //execution_view,
+        addParameter(command, index++, DbType.AnsiString, audit.Path); //event_path,
+        addParameter(command, index++, DbType.AnsiString, audit.Detail); //event_detail,
+        addParameter(command, index++, DbType.AnsiString, audit.Error); //event_error,
+        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.Name : null); //user_name,
+        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SecurityGroupsDisplay : null); //user_groups,
+        addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SessionID : null); //user_session,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionName : null); //execution_name,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionContext.ToString() : null); //execution_context,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionView.Name : null); //execution_view,
         addParameter(command, index++, DbType.Int32, audit.Report != null ? Convert.ToInt32(audit.Report.ExecutionFullDuration.TotalSeconds) : (object) DBNull.Value); //execution_duration,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionErrors : (object) DBNull.Value); //execution_error,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.DeviceName : (object) DBNull.Value); //output_type,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Name : (object) DBNull.Value);//output_name,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null && audit.Report.OutputToExecute.Information != null ? audit.Report.OutputToExecute.Information : (object) DBNull.Value);//output_information,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null && audit.Report.OutputToExecute.Error != null ? audit.Report.OutputToExecute.Error : (object) DBNull.Value);//output_error,
-        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Schedule != null ? audit.Schedule.Name : (object) DBNull.Value);//schedule_name
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.DeviceName : null); //output_type,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Name : null);//output_name,
+        addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Information : null);//output_information,
+        addParameter(command, index++, DbType.AnsiString, audit.Schedule != null ? audit.Schedule.Name : null);//schedule_name
         command.ExecuteNonQuery();                
     }
 
@@ -76,7 +97,7 @@ namespace Seal.Model
             {
                 //Create the table (to be adapted for your database type, e.g. ident identity(1,1), execution_error varchar(max) for SQLServer)
                 command.CommandText = @""create table sr_audit (
-                        event_date datetime,event_type varchar(20),event_detail varchar(255),user_name varchar(255),user_groups varchar(255),report_name varchar(255),report_path varchar(255),execution_context varchar(255),execution_view varchar(255),execution_status varchar(255),execution_duration int null,execution_locale varchar(255),execution_error varchar(max),output_type varchar(255),output_name varchar(255),output_information varchar(max),output_error varchar(max),schedule_name varchar(255)
+                        event_date datetime,event_type varchar(255),event_path varchar(255),event_detail varchar(255),event_error varchar(255),user_name varchar(255),user_groups varchar(255),user_session varchar(255),execution_name varchar(255),execution_context varchar(255),execution_view varchar(255),execution_status varchar(255),execution_duration int null,execution_locale varchar(255),execution_error varchar(255),output_type varchar(255),output_name varchar(255),output_information varchar(255),schedule_name varchar(255)
                     )"";
                 command.ExecuteNonQuery();
             }
@@ -100,7 +121,9 @@ namespace Seal.Model
         public static bool CheckTableCreation = true;
 
         public AuditType Type;
+        public string Path;
         public string Detail;
+        public string Error;
         public SecurityUser User;
         public Report Report;
         public ReportSchedule Schedule;
@@ -108,9 +131,17 @@ namespace Seal.Model
         static string Key = Guid.NewGuid().ToString();
 
         /// <summary>
+        /// Audit a report execution
+        /// </summary>
+        public static void LogReportAudit(AuditType type, SecurityUser user, Report report, ReportSchedule schedule)
+        {
+            Audit.LogAudit(report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, report.SecurityContext, report.FilePath, null, report.ExecutionErrors, report, schedule);
+        }
+
+        /// <summary>
         /// Executes the audit script for a given event
         /// </summary>
-        public static void LogAudit(AuditType type, SecurityUser user, Report report, ReportSchedule schedule, string detail)
+        public static void LogAudit(AuditType type, SecurityUser user, string path = null, string detail = null,string error = null, Report report = null, ReportSchedule schedule = null)
         {
             try
             {
@@ -118,7 +149,7 @@ namespace Seal.Model
                 {
                     var script = Repository.Instance.Configuration.AuditScript;
                     if (string.IsNullOrEmpty(script)) script = AuditScriptTemplate;
-                    var audit = new Audit() { Type = type, User = user, Report = report, Schedule = schedule, Detail = detail };
+                    var audit = new Audit() { Type = type, User = user, Path = path, Detail = detail, Error = error, Report = report, Schedule = schedule };
                     RazorHelper.CompileExecute(script, audit, Key);
                 }
             }

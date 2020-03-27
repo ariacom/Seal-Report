@@ -241,7 +241,7 @@ namespace Seal.Model
             {
                 Report.Cancel = true;
                 //Audit
-                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogAudit(AuditType.ReportExecution, Report.SecurityContext, Report, null, null);
+                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogReportAudit(Report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, Report.SecurityContext, Report, null);
                 //Log files
                 Report.LogExecution();
             }
@@ -277,13 +277,13 @@ namespace Seal.Model
                     foreach (var task in Report.Tasks) task.Progression = 0;
 
                     //Tasks before model
-                    executeTasks(ExecutionStep.BeforeModel);
+                    if (!Report.Cancel) executeTasks(ExecutionStep.BeforeModel);
 
                     //Build models
                     if (!Report.Cancel) buildModels();
 
                     //Tasks before rendering
-                    executeTasks(ExecutionStep.BeforeRendering);
+                    if (!Report.Cancel) executeTasks(ExecutionStep.BeforeRendering);
                 }
                 catch (Exception ex)
                 {
@@ -322,7 +322,7 @@ namespace Seal.Model
                 }
 
                 //Tasks after execution
-                executeTasks(ExecutionStep.AfterExecution);
+                if (!Report.Cancel) executeTasks(ExecutionStep.AfterExecution);
 
                 //Open external result viewer
                 if (!Report.HasErrors && !Report.ForOutput && Report.ExecutionContext == ReportExecutionContext.DesignerReport && !Report.CheckingExecution && Report.HasExternalViewer)
@@ -340,10 +340,13 @@ namespace Seal.Model
                 Debug.WriteLine(string.Format("ExecuteThread {0} {1}", Report.Status, Report.ExecutionGUID));
                 Report.ExecutionEndDate = DateTime.Now;
 
-                //Audit
-                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogAudit(AuditType.ReportExecution, Report.SecurityContext, Report, null, null);
-                //Log files
-                Report.LogExecution();
+                if (!Report.HasValidationErrors)
+                {
+                    //Audit
+                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogReportAudit(Report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, Report.SecurityContext, Report, null);
+                    //Log files
+                    Report.LogExecution();
+                }
             }
         }
 
@@ -1066,6 +1069,32 @@ namespace Seal.Model
                 //Set end row 
                 page.DataTable.BodyEndRow = page.DataTable.Lines.Count;
 
+                //Handle set Zero to Null
+                if (model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.SetNullToZero))
+                {
+                    for (int col = page.DataTable.BodyStartColumn; col < page.DataTable.ColumnCount; col++)
+                    {
+                        for (int row = 0; row < page.DataTable.RowCount; row++)
+                        {
+                            var cell = page.DataTable[row, col];
+                            if (cell != null && !cell.IsTotal && cell.Element != null && cell.Element.PivotPosition == PivotPosition.Data && cell.Element.SetNullToZero)
+                            {
+                                for (int row2 = page.DataTable.BodyStartRow; row2 < page.DataTable.RowCount; row2++)
+                                {
+                                    var cell2 = page.DataTable[row2, col];
+                                    if (cell2.Element == null && cell2.Value == null)
+                                    {
+                                        cell2.Element = cell.Element;
+                                        cell2.Value = 0;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //Handle hidden
                 if (model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && (i.ShowTotal == ShowTotal.RowHidden || i.ShowTotal == ShowTotal.RowColumnHidden)))
                 {
                     for (int col = 0; col < page.DataTable.ColumnCount; col++)
@@ -1874,7 +1903,7 @@ namespace Seal.Model
                     }
 
                     //Audit
-                    Audit.LogAudit(AuditType.ReportExecution, report.SecurityContext, report, schedule, null);
+                    Audit.LogReportAudit(report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, report.SecurityContext, report, schedule);
 
                     if (report.HasErrors)
                     {

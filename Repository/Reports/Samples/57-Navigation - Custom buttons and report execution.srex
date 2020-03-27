@@ -299,7 +299,7 @@ $(document).ready(function () {&#xD;
             var form = $('&lt;form method="post" target="_blank"/&gt;').appendTo('body');&#xD;
             form.attr('action', urlPrefix + "SWExecuteReport");&#xD;
             form.append($('&lt;input /&gt;').attr('type', 'hidden').attr('name', 'path').attr('value', "\\Search - Orders.srex"));&#xD;
-            form.submit();                    &#xD;
+            form.submit();&#xD;
         });&#xD;
 &#xD;
         //disable download on operator change&#xD;

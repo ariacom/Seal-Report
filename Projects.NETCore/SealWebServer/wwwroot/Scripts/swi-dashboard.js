@@ -123,6 +123,7 @@ var SWIDashboard = /** @class */ (function () {
         //Auto-refresh
         if (data.refresh > 0)
             _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false); }, 1000 * data.refresh);
+        //Redraw...
         for (var i = 0; i < _da._grids.length; i++) {
             _da._grids[i].refreshItems().layout();
         }
@@ -244,7 +245,6 @@ var SWIDashboard = /** @class */ (function () {
                 });
                 grid.append(panel);
             } //for
-            content.append($("<hr style='margin:5px 2px'>"));
             if (_da._dashboard && guid == _da._dashboard.GUID)
                 _da.reorderItems(false);
         });

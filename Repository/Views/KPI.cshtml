@@ -16,7 +16,7 @@
     }
 
     @functions {
-        public string getValueFromRange(string definition, int percentage)
+        public string getValueFromRange(string definition, double value)
         {
             var result = "";
             foreach (var def in definition.Replace("\r\n", "\n").Split('\n'))
@@ -27,10 +27,10 @@
                     if (defs.Length == 1) result = defs[0];
                     else if (defs.Length > 1)
                     {
-                        int threshold;
-                        if (int.TryParse(defs[1], out threshold))
+                        double threshold;
+                        if (double.TryParse(defs[1], out threshold))
                         {
-                            if (percentage < threshold) result = defs[0];
+                            if (value < threshold) result = defs[0];
                         }
                     }
                 }
@@ -44,14 +44,14 @@
     @{
         for (int col = 0; col < table.ColumnCount && table.RowCount > 1; col++)
         {
-            string headerValue = "", lastValue = "", trendColor = "", trendIcon = "", goalValue = "", goalColor = "", goalIcon = "";
-            int? trendPercentage = null, goalPercentage = null;
+            string headerValue = "", lastValue = "", buttonColor = "", buttonIcon = "", goalValue = "", goalColor = "", goalIcon = "";
+            double? trendPercentage = null, goalPercentage = null;
             var lastCell = table[table.BodyEndRow - 1, col];
             if (table.BodyStartRow == table.BodyEndRow && table.BodyEndRow < table.RowCount)
             {
                 lastCell = table[table.BodyEndRow, col]; //Case only one value
             }
-            if (lastCell.Element != null && lastCell.Element.IsNumeric && !lastCell.IsTotal && lastCell.Element.PivotPosition == PivotPosition.Data && lastCell.Value != null && !lastCell.Element.DisplayNameEl.EndsWith(goalSuffix))
+            if (lastCell.Element != null && lastCell.Element.IsNumeric && !lastCell.IsTotal && lastCell.Value != null && lastCell.Element.PivotPosition == PivotPosition.Data && !lastCell.Element.DisplayNameEl.EndsWith(goalSuffix))
             {
                 if (table.BodyStartRow == 0) { headerValue = lastCell.Element.DisplayNameElTranslated; }
                 else if (table.BodyStartRow == 1 || (table.BodyStartRow == 2 && !reportModel.ShowFirstLine)) { headerValue = table[0, col].HTMLValue; }
@@ -68,16 +68,16 @@
                     --rowStart;
                 }
 
-                int val = 0;
-                if (valueStart != null && valueStart != 0)
+                double val = 0;
+                if (valueStart != null && valueStart != 0 && trendIndex != 0)
                 {
-                    trendPercentage = Convert.ToInt32(100 * (valueEnd - valueStart) / valueStart);
+                    trendPercentage = 100 * (valueEnd - valueStart) / valueStart;
                     val = trendPercentage.Value;
                 }
-                trendColor = getValueFromRange(view.GetValueOrDefault("kpi_trend_color"), val);
-                newWidgetColor = trendColor.Replace("btn-", "");
-                trendIcon = getValueFromRange(view.GetValueOrDefault("kpi_trend_icon"), val);
-                newWidgetIcon = trendIcon;
+                buttonColor = getValueFromRange(view.GetValue("kpi_trend_color"), view.GetBoolValue("kpi_trend_color_useval") ? Convert.ToInt32(valueEnd) : val);
+                newWidgetColor = buttonColor.Replace("btn-", "");
+                buttonIcon = getValueFromRange(view.GetValue("kpi_trend_icon"), view.GetBoolValue("kpi_trend_icon_useval") ? Convert.ToInt32(valueEnd) : val);
+                newWidgetIcon = buttonIcon;
 
                 //Check if a Goal is defined
                 for (int colGoal = 0; colGoal < table.ColumnCount; colGoal++)
@@ -89,7 +89,7 @@
                         val = 0;
                         if (goalCell.DoubleValue != 0)
                         {
-                            goalPercentage = Convert.ToInt32(100 * (valueEnd - goalCell.DoubleValue) / goalCell.DoubleValue);
+                            goalPercentage = 100 * (valueEnd - goalCell.DoubleValue) / goalCell.DoubleValue;
                             val = goalPercentage.Value;
                         }
                         goalColor = getValueFromRange(view.GetValueOrDefault("kpi_goal_color"), val);
@@ -97,18 +97,18 @@
                     }
                 }
 
-                <span class="text-center btn @trendColor @buttonSize" title="@Raw(headerValue)" style="margin-top:5px;">
-                    <span class="@trendIcon" aria-hidden="true"></span> @Raw(headerValue) <strong>@Raw(lastValue)</strong>
+                <span class="text-center btn @buttonColor @buttonSize" title="@Raw(headerValue)" style="margin-top:5px;">
+                    <span class="@buttonIcon" aria-hidden="true"></span> @Raw(headerValue) <strong>@Raw(lastValue)</strong>
                     @if (trendPercentage != null)
                     {
-                        <span class="badge">@Raw(string.Format("{0:+0;-0;0} %", trendPercentage.Value))</span>
+                        <span class="badge">@Raw(string.Format("{0:+0;-0;0} %", Convert.ToInt32(trendPercentage.Value)))</span>
                     }
                 </span>
 
                 if (!string.IsNullOrEmpty(goalValue))
                 {
                     <span class="text-center label @goalColor" title="@Raw(headerValue)" style="margin-top:0px;font-size: 12px;">
-                        <span class="glyphicon @goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null ? string.Format("({0:+0;-0;0} %)", goalPercentage.Value) : "")
+                        <span class="glyphicon @goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null ? string.Format("({0:+0;-0;0} %)", Convert.ToInt32(goalPercentage.Value)) : "")
                     </span>
                 }
             }
