@@ -1,0 +1,125 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Tutorials";
+}
+
+<div id="wrapper">
+    <div class="container">
+        <section id="top" class="section docs-heading"></section>
+        <!-- end section -->
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation" style="padding-left:0">
+                    <ul class="nav">
+                        <li><a href="#lineTuto1" style="padding:0px 2px">Tuto1</a></li>
+                        <li><a href="#lineTuto2" style="padding:0px 2px">Tuto2</a></li>
+                    </ul>
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <p style="margin-left:20px;">
+                        <strong><a href="#feed">Feed the Seal ?</a></strong><br />
+                        <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <section class="welcome">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Tutorials <hr></h2>
+                            <div class="row">
+                                <div class="col-md-12 full">
+                                    <div>
+                                        <p>
+                                            This page is dedicated to list small tutorials.<br />
+                                        </p>
+                                    </div>
+                                    <div class="bs-callout bs-callout-danger">
+                                        We assume that you have already made the <a href="Default.cshtml#lineTutorials">Quick Tutorials</a> to create basic reports.
+                                    </div>
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h4>Add your Tutorial</h4>
+                                        Do you have a new tutorial to share ?<br />
+                                        As the site for the documentation is part of the solution, <strong>you are welcome to Pull a Request at <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a>.</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                </section>
+                <section id="lineTuto1" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Tuto1 <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Tuto 1</h4>
+                            <div class="row">
+                                <div class="col-md-12 bs-callout bs-callout-info">
+                                    This guide shows ...
+                                </div>
+                            </div>
+                            <ol class="sans">
+                                <li>
+                                    Step 1.
+                                </li>
+                                <li>
+                                    Step 2.
+                                </li>
+
+                            </ol>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineTuto2" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Tuto2 <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Tuto 1</h4>
+                            <div class="row">
+                                <div class="col-md-12 bs-callout bs-callout-info">
+                                    This guide shows ...
+                                </div>
+                            </div>
+                            <ol class="sans">
+                                <li>
+                                    Step 1.
+                                </li>
+                                <li>
+                                    Step 2.
+                                </li>
+
+                            </ol>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+            </div>
+            <!-- // end .col -->
+        </div>
+    </div>
+    <!-- // end container -->
+</div>
+<!-- end wrapper -->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#tutorials_nav").addClass("active");
+        });
+    </script>
+}

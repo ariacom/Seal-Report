@@ -95,6 +95,7 @@
     <Content Include="Server.cshtml" />
     <Content Include="Sources.cshtml" />
     <None Include="packages.config" />
+    <Content Include="Tutorials.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
