@@ -81,7 +81,8 @@ namespace SealWebServer.Controllers
 
         void addValidFolders(SWIFolder folder, List<SWIFolder> result)
         {
-            if (folder.right == 0) {
+            if (folder.right == 0)
+            {
                 //Add only folder with rights
                 foreach (var childFolder in folder.folders)
                 {
@@ -296,7 +297,7 @@ namespace SealWebServer.Controllers
                 Report report = Report.LoadFromFile(newPath, repository, false);
                 SWIReportDetail result = new SWIReportDetail();
                 result.views = (from i in report.Views.Where(i => i.WebExec && i.GUID != report.ViewGUID) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToArray();
-                result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToArray() : new SWIOutput[] { };
+                result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || string.IsNullOrEmpty(j.UserName) || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToArray() : new SWIOutput[] { };
                 if (result.views.Length == 0 && result.outputs.Length == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToArray();
 
                 return Json(result);
@@ -752,7 +753,7 @@ namespace SealWebServer.Controllers
                 if (result == null)
                 {
                     result = new List<ReportExecution>();
-                    setSessionValue(SessionDashboardExecutions,result);
+                    setSessionValue(SessionDashboardExecutions, result);
                 }
                 return result;
             }
@@ -891,18 +892,20 @@ namespace SealWebServer.Controllers
                 var filePath = Repository.ReportsFolder + widget.ReportPath;
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: the report does not exist");
 
-
                 string content = "";
                 ReportView view = null, modelView = null;
 
                 var executions = DashboardExecutions;
+                Debug.WriteLine("{0} Exec1: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
                 lock (executions)
                 {
                     //remove executions older than 2 hours
-                    executions.RemoveAll(i => i.Report.ExecutionEndDate < DateTime.Now.AddHours(-2));
+                    executions.RemoveAll(i => i.Report.ExecutionEndDate != DateTime.MinValue && i.Report.ExecutionEndDate < DateTime.Now.AddHours(-2));
+                    //check if report has been modified
                     var lastDateTime = System.IO.File.GetLastWriteTime(filePath);
                     executions.RemoveAll(i => i.Report.FilePath == filePath && i.Report.LastModification != lastDateTime);
 
+                    //find existing execution
                     foreach (var exec in executions.Where(i => i.Report.FilePath == filePath))
                     {
                         exec.Report.GetWidgetViewToParse(exec.Report.ExecutionView.Views, widget.GUID, ref view, ref modelView);
@@ -912,65 +915,66 @@ namespace SealWebServer.Controllers
                             break;
                         }
                     }
-                }
 
-                if (execution != null)
-                {
-                    report = execution.Report;
-                }
-                else
-                {
-                    repository = Repository.CreateFast();
-                    report = Report.LoadFromFile(filePath, repository);
-
-                    report.ExecutionContext = ReportExecutionContext.WebReport;
-                    report.SecurityContext = WebUser;
-                    //Set url
-                    report.WebUrl = GetWebUrl(Request, Response);
-                }
-
-                if (view == null) {
-                    report.GetWidgetViewToParse(report.Views, widget.GUID, ref view, ref modelView);
-                }
-
-                if (view == null) throw new Exception("Error: the widget does not exist");
-
-                //Set execution view from the new root...
-                report.CurrentViewGUID = report.GetRootView(view).GUID;
-
-                if (execution != null)
-                {
-                    lock (execution)
+                    if (execution == null)
                     {
-                        if (!report.IsExecuting && (force || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
-                        {
-                            //Disable basics
-                            report.ExecutionView.InitParameters(false);
-                            //Set HTML Format
-                            report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
+                        Debug.WriteLine("{0} Exec2: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
+                        //create execution
+                        repository = Repository.CreateFast();
+                        report = Report.LoadFromFile(filePath, repository);
 
-                            execution.Execute();
-                            while (report.IsExecuting) Thread.Sleep(100);
-                        }
-                    }
-                }
-                else
-                {
-                    execution = new ReportExecution() { Report = report };
-                    lock (executions)
-                    {
+                        report.ExecutionContext = ReportExecutionContext.WebReport;
+                        report.SecurityContext = WebUser;
+                        //Set url
+                        report.WebUrl = GetWebUrl(Request, Response);
+
+                        execution = new ReportExecution() { Report = report };
                         executions.Add(execution);
                     }
-                    execution.Execute();
+                    else
+                    {
+                        report = execution.Report;
+                    }
+                    Debug.WriteLine("{0} Exec3: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
+
+                    if (view == null)
+                    {
+                        report.GetWidgetViewToParse(report.Views, widget.GUID, ref view, ref modelView);
+                    }
+
+                    if (view == null) throw new Exception("Error: the widget does not exist");
+
+                    //Set execution view from the new root...
+                    report.CurrentViewGUID = report.GetRootView(view).GUID;
+                }
+
+                Debug.WriteLine("{0} Exec4: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
+                lock (execution)
+                {
+                    Debug.WriteLine("{0} Exec5: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
+                    if (!report.IsExecuting && (report.ExecutionEndDate == DateTime.MinValue || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
+                    {
+                        Debug.WriteLine("{0} Exec6: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
+                        //Disable basics
+                        report.ExecutionView.InitParameters(false);
+                        //Set HTML Format
+                        report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
+                        execution.Execute();
+                    }
                     while (report.IsExecuting) Thread.Sleep(100);
                 }
+                Debug.WriteLine("{0} Exec7: {1} {2} {3}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, executions.Count);
+
                 if (report.HasErrors)
                 {
                     throw new Exception(report.Translate("This report has execution errors. Please check details in the Repository Logs Files or in the Event Viewer..."));
                 }
+
+                Debug.WriteLine("{0} Exe8: {1} {2} {3}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, executions.Count);
                 //Reset pointers and parse
                 lock (execution)
                 {
+                    Debug.WriteLine("{0} Exec9: {1} {2} {3}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, executions.Count);
                     try
                     {
                         report.Status = ReportStatus.RenderingDisplay;
@@ -986,6 +990,7 @@ namespace SealWebServer.Controllers
                         report.Status = ReportStatus.Executed;
                     }
                 }
+                Debug.WriteLine("{0} Exec10: {1} {2} {3}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, executions.Count);
 
                 //Set context for navigation, remove previous, keep root
                 var keys = NavigationContext.Navigations.Where(i => i.Value.Execution.RootReport.ExecutionGUID == report.ExecutionGUID && i.Value.Execution.RootReport != i.Value.Execution.Report).ToArray();

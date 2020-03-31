@@ -207,7 +207,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Week days"), Description("Days of the week to execute the schedule."), Id(7, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
-        public List<int> SealWeekdays
+        public int[] SealWeekdays
         {
             get
             {
@@ -224,7 +224,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Months"), Description("Months to execute the schedule."), Id(8, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
-        public List<int> SealMonths
+        public int[] SealMonths
         {
             get
             {
@@ -241,7 +241,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Days of the month"), Description("Days of the month to execute the schedule."), Id(9, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
-        public List<int> SealDays
+        public int[] SealDays
         {
             get
             {

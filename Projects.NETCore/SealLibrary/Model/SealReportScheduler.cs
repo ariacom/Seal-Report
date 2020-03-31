@@ -43,7 +43,7 @@ namespace Seal.Model
             }
         }
 
-        public static bool Running = true;
+        static bool Running = true;
 
         static SealReportScheduler _instance = null;
         /// <summary>
@@ -129,6 +129,7 @@ namespace Seal.Model
 
         public void Run()
         {
+            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Report Scheduler");
             DateTime lastLoad = DateTime.MinValue;
             while(Running)
             {
@@ -150,14 +151,20 @@ namespace Seal.Model
                                 thread.Start(schedule);
                             }
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
                 }
                 catch (Exception ex)
                 {
                     Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
                 }
-
             }
+            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Report Scheduler is stopped");
+        }
+        public void Shutdown()
+        {
+            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Stopping Report Scheduler");
+            Running = false;
+            Thread.Sleep(4000);
         }
 
         public void SaveSchedule(SealSchedule schedule)

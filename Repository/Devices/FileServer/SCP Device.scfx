@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><OutputWinSCPDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>935f07ed-47f2-4b4e-8835-27d2291be16c</GUID><Name>FTPS Device</Name><FullName>FTPS Device (WinSCP)</FullName><HostName>127.0.0.1</HostName><PortNumber>990</PortNumber><Directories>/folder2</Directories><UserName>tester</UserName><Password>fCV+wKfAkmQX5ix1JzYsaQ==</Password><SessionScript>@using WinSCP&#xD;
+﻿<?xml version="1.0" encoding="utf-8"?><OutputFileServerDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>a29d3e38-0609-4e42-8e0e-e3a637c278f5</GUID><Name>SCP</Name><FullName>SCP (File Server)</FullName><Protocol>SCP</Protocol><HostName>127.0.0.1</HostName><PortNumber>22</PortNumber><Directory>/scp</Directory><UserName>tester</UserName><Password>fCV+wKfAkmQX5ix1JzYsaQ==</Password><SessionScript>@using WinSCP&#xD;
 @{&#xD;
     //Create and open a WinSCP session &#xD;
     //Full WinSCP documentation at https://winscp.net/eng/docs/library#classes&#xD;
@@ -12,12 +12,11 @@
         PortNumber = device.PortNumber,&#xD;
         UserName = device.UserName,&#xD;
         Password = device.ClearPassword,&#xD;
-        GiveUpSecurityAndAcceptAnyTlsHostCertificate = true,  //FTPS&#xD;
-        FtpSecure = FtpSecure.Implicit,                       //FTPS&#xD;
+        SshHostKeyFingerprint = "ssh-rsa 2048 xqHKhbcKv2D2aH2onlie6yF0cCXwHUanGhVxbimxcXs=", //SFTP, SCP&#xD;
     };&#xD;
 &#xD;
     //Create and open the session&#xD;
     device.Session = new Session();&#xD;
     device.Session.Open(sessionOptions);    &#xD;
 }&#xD;
-</SessionScript><ProcessingScript /></OutputWinSCPDevice>
+</SessionScript><ProcessingScript /></OutputFileServerDevice>

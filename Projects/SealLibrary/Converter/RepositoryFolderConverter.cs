@@ -31,10 +31,10 @@ namespace Seal.Forms
             if (context.Instance is ReportOutput)
             {
                 var output = context.Instance as ReportOutput;
-                if (output.Device is OutputWinSCPDevice)
+                if (output.Device is OutputFileServerDevice)
                 {
                     //List of subfolders defined
-                    return new StandardValuesCollection(((OutputWinSCPDevice)output.Device).DirectoriesArray);
+                    return new StandardValuesCollection(((OutputFileServerDevice)output.Device).DirectoriesArray);
                 }
                 else
                 {

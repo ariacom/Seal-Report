@@ -40,6 +40,7 @@ namespace SealWebServer
             }
         }
 
+
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Environment { get; }
 
@@ -70,7 +71,7 @@ namespace SealWebServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
         {
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -80,7 +81,6 @@ namespace SealWebServer
 
             app.UseAuthorization();
 
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -88,13 +88,26 @@ namespace SealWebServer
                     pattern: "{action=Main}",
                     new { controller = "Home", action = "Main" });
             });
+
+            applicationLifetime.ApplicationStopping.Register(OnShutdown);
+
+            Console.CancelKeyPress += (sender, eventArgs) =>
+            {
+                applicationLifetime.StopApplication();
+                // Don't terminate the process immediately, wait for the Main thread to exit gracefully.
+                eventArgs.Cancel = true;
+            };
+        }
+
+        private void OnShutdown()
+        {
+            SealReportScheduler.Instance.Shutdown();
         }
 
         private void RunScheduler()
         {
             try
             {
-                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Seal Report Scheduler");
                 SealReportScheduler.Instance.Run();
             }
             catch (Exception ex)

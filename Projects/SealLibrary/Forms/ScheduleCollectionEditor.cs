@@ -43,7 +43,7 @@ namespace Seal.Forms
                 if (context.Instance != null)
                 {
                     var displaySource = new List<IntDisplay>();
-                    List<int> source = null;
+                    int[] source = null;
                     int startIndex = 0;
 
                     var culture = new CultureInfo("en");
@@ -90,7 +90,7 @@ namespace Seal.Forms
                             result.Add(((IntDisplay)item).Id);
                         }
                         _schedule.CalculateNextExecution();
-                        value = result;
+                        value = result.ToArray();
                     }
                 }
             }

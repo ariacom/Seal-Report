@@ -1,2 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?><OutputWinSCPDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>5b4d1d4b-a5ca-4827-94bc-3a6cebae9859</GUID><Name>FTP Device</Name><FullName>FTP Device (WinSCP)</FullName><HostName>127.0.0.1</HostName><Directories>/&#xD;
-/folder1</Directories><UserName>tester</UserName><Password>fCV+wKfAkmQX5ix1JzYsaQ==</Password><SessionScript /><ProcessingScript /></OutputWinSCPDevice>

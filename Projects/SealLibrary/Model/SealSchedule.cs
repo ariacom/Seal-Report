@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -18,13 +19,13 @@ namespace Seal.Model
         public DateTime NextExecution { get; set; } = DateTime.MaxValue;
         public bool Enabled { get; set; } = true;
         public DateTime Start { get; set; } = DateTime.Now;
-        public DateTime End { get; set; } = DateTime.MinValue;
+        public DateTime End { get; set; } = DateTime.MaxValue;
         public TriggerType Type { get; set; } = TriggerType.Daily;
         public int DaysInterval { get; set; } = 1;
         public int WeeksInterval { get; set; } = 1;
-        public List<int> Weekdays { get; set; } = new List<int> { 1 };
-        public List<int> Months { get; set; } = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        public List<int> Days { get; set; } = new List<int> { 1 };
+        public int[] Weekdays { get; set; } = new int[] { 1 };
+        public int[] Months { get; set; } = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+        public int[] Days { get; set; } = new int[] { 1 };
         [XmlIgnore]
         public TimeSpan RepeatInterval { get; set; } = TimeSpan.Zero;
         public long RepeatIntervalTicks
@@ -100,7 +101,6 @@ namespace Seal.Model
 
         public void CalculateNextExecution()
         {
-            var endDate = (End == DateTime.MinValue ? DateTime.MaxValue : End);
             NextExecution = Start;
 
             switch (Type)
@@ -113,7 +113,7 @@ namespace Seal.Model
                         if (endRepeatDate < DateTime.Now) break;
                         while (true)
                         {
-                            if (NextExecution > DateTime.Now || NextExecution > endDate || NextExecution > endRepeatDate)
+                            if (NextExecution > DateTime.Now || NextExecution > End || NextExecution > endRepeatDate)
                             {
                                 //Found within repeat
                                 break;
@@ -126,7 +126,7 @@ namespace Seal.Model
                 case TriggerType.Daily:
                     while (true)
                     {
-                        if (NextExecution > DateTime.Now || NextExecution > endDate)
+                        if (NextExecution > DateTime.Now || NextExecution > End)
                         {
                             //Found
                             break;
@@ -139,14 +139,14 @@ namespace Seal.Model
                             var endRepeatDate = (RepeatDuration != TimeSpan.Zero ? nextRepeatExecution + RepeatDuration : DateTime.MaxValue);
                             while (endRepeatDate > DateTime.Now)
                             {
-                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > endDate || nextRepeatExecution > endRepeatDate)
+                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End || nextRepeatExecution > endRepeatDate)
                                 {
                                     break;
                                 }
                                 nextRepeatExecution += RepeatInterval;
                             }
 
-                            if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > endDate)
+                            if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End)
                             {
                                 //Found within repeat
                                 NextExecution = nextRepeatExecution;
@@ -161,42 +161,53 @@ namespace Seal.Model
                 case TriggerType.Weekly:
                     while (true)
                     {
-                        if (Weekdays.Count == 0) break;
+                        if (Weekdays.Length == 0) break;
 
                         //Check day of week
-                        if (!Weekdays.Contains((int)NextExecution.DayOfWeek))
+                        for (int i = 0; i < 6; i++)
                         {
-                            NextExecution = NextExecution.AddDays(1);
-                            continue;
+                            var nextWeekExecution = NextExecution.AddDays(i);
+                            if (!Weekdays.Contains((int)nextWeekExecution.DayOfWeek))
+                            {
+                                continue;
+                            }
+
+                            if (nextWeekExecution > DateTime.Now || nextWeekExecution > End)
+                            {
+                                //Found
+                                NextExecution = nextWeekExecution;
+                                break;
+                            }
+
+                            if (RepeatInterval != TimeSpan.Zero)
+                            {
+                                //Handle repeat
+                                var nextRepeatExecution = nextWeekExecution;
+                                var endRepeatDate = (RepeatDuration != TimeSpan.Zero ? nextRepeatExecution + RepeatDuration : DateTime.MaxValue);
+                                while (endRepeatDate > DateTime.Now)
+                                {
+                                    if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End || nextRepeatExecution > endRepeatDate)
+                                    {
+                                        break;
+                                    }
+                                    nextRepeatExecution += RepeatInterval;
+                                }
+
+                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End)
+                                {
+                                    //Found within repeat
+                                    NextExecution = nextRepeatExecution;
+                                    break;
+                                }
+                            }
                         }
 
-                        if (NextExecution > DateTime.Now || NextExecution > endDate)
+                        if (NextExecution > DateTime.Now || NextExecution > End)
                         {
                             //Found
                             break;
                         }
 
-                        if (RepeatInterval != TimeSpan.Zero)
-                        {
-                            //Handle repeat
-                            var nextRepeatExecution = NextExecution;
-                            var endRepeatDate = (RepeatDuration != TimeSpan.Zero ? nextRepeatExecution + RepeatDuration : DateTime.MaxValue);
-                            while (endRepeatDate > DateTime.Now)
-                            {
-                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > endDate || nextRepeatExecution > endRepeatDate)
-                                {
-                                    break;
-                                }
-                                nextRepeatExecution += RepeatInterval;
-                            }
-
-                            if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > endDate)
-                            {
-                                //Found within repeat
-                                NextExecution = nextRepeatExecution;
-                                break;
-                            }
-                        }
                         NextExecution = NextExecution.AddDays(7 * WeeksInterval);
                     }
                     break;
@@ -204,8 +215,8 @@ namespace Seal.Model
                 case TriggerType.Monthly:
                     while (true)
                     {
-                        if (Months.Count == 0) break;
-                        if (Days.Count == 0) break;
+                        if (Months.Length == 0) break;
+                        if (Days.Length == 0) break;
 
                         //Check days and months
                         bool isLastDayOfMonth = (Days.Contains(32) && Months.Contains(NextExecution.Month) && NextExecution.Day == DateTime.DaysInMonth(NextExecution.Year, NextExecution.Month));
@@ -218,7 +229,7 @@ namespace Seal.Model
                             }
                         }
 
-                        if (NextExecution > DateTime.Now || NextExecution > endDate)
+                        if (NextExecution > DateTime.Now || NextExecution > End)
                         {
                             //Found
                             break;
@@ -231,14 +242,14 @@ namespace Seal.Model
                             var endRepeatDate = (RepeatDuration != TimeSpan.Zero ? nextRepeatExecution + RepeatDuration : DateTime.MaxValue);
                             while (endRepeatDate > DateTime.Now)
                             {
-                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > endDate || nextRepeatExecution > endRepeatDate)
+                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End || nextRepeatExecution > endRepeatDate)
                                 {
                                     break;
                                 }
                                 nextRepeatExecution += RepeatInterval;
                             }
 
-                            if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > endDate)
+                            if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End)
                             {
                                 //Found within repeat
                                 NextExecution = nextRepeatExecution;
@@ -246,8 +257,8 @@ namespace Seal.Model
                             }
                         }
 
-                        //Get next month
-                        NextExecution = NextExecution.AddMonths(1);
+                        //Check next day
+                        NextExecution = NextExecution.AddDays(1);
                     }
                     break;
             }

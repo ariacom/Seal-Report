@@ -38,9 +38,9 @@ namespace Seal.Model
                 GetProperty("PostScript").SetIsBrowsable(true);
                 GetProperty("ViewParameters").SetIsBrowsable(true);
 
-                GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputWinSCPDevice);
-                if (Device is OutputWinSCPDevice) GetProperty("FolderPath").SetDescription("Path of the folder used to generate the report result.");
-                GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputWinSCPDevice);
+                GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputFileServerDevice);
+                if (Device is OutputFileServerDevice) GetProperty("FolderPath").SetDescription("Path of the folder used to generate the report result.");
+                GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputFileServerDevice);
 
                 GetProperty("EmailSubject").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailBody").SetIsBrowsable(Device is OutputEmailDevice);

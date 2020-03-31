@@ -7,9 +7,10 @@
 		var viewToExecute = report.Views.FirstOrDefault(i =&gt; i.Name == restriction.FirstStringValue);
 		if (viewToExecute != null) {
 			report.LogMessage("Changing view to " + viewToExecute.Name);
-			report.CurrentViewGUID = viewToExecute.GUID;
+			report.CurrentViewGUID = viewToExecute.GUID;&#xD;
+            viewToExecute.InitParameters(false);
 			if (viewToExecute.Name == "CSV") { //For CSV, update the result file extension
-				report.ResultFilePath = report.ResultFilePath.Replace(".htm",".csv");
+				report.ResultFilePath = report.ResultFilePath.Replace(".html",".csv");
 			}
 		}
 	}		

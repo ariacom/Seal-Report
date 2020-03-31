@@ -17,7 +17,8 @@ using Microsoft.AspNetCore.Html;
 using Newtonsoft.Json.Linq;
 using System.Data.Odbc;
 using System.Data.SqlClient;
-using WinSCP;
+using Renci.SshNet;
+using System.Net;
 
 namespace Seal.Helpers
 {
@@ -34,7 +35,8 @@ namespace Seal.Helpers
         static JObject dummy10 = null;
         static OdbcConnection dummy12 = null;
         static SqlConnection dummy13 = null;
-        static SessionOptions dummy14 = null;
+        static SftpClient dummy14 = null;
+        static WebRequest dummy15 = null;
 
         static bool _loadDone = false;
         static public void LoadRazorAssemblies()
@@ -54,7 +56,8 @@ namespace Seal.Helpers
                     if (dummy10 == null) dummy10 = JObject.Parse("{}");
                     if (dummy12 == null) dummy12 = new OdbcConnection();
                     if (dummy13 == null) dummy13 = new SqlConnection();
-                    if (dummy14 == null) dummy14 = new SessionOptions();
+                    if (dummy14 == null) dummy14 = new SftpClient("","a","");
+                    if (dummy15 == null) dummy15 = WebRequest.Create("ftp://dummy.com");
                 }
                 catch (Exception ex)
                 {
