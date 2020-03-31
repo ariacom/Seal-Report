@@ -66,6 +66,9 @@
     <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
     </Reference>
+    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
     <Reference Include="ScintillaNET FindReplaceDialog, Version=1.4.0.17540, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\ScintillaNET FindReplaceDialog.dll</HintPath>
@@ -84,6 +87,9 @@
     <Reference Include="System.DirectoryServices.Protocols" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
@@ -98,9 +104,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WinSCPnet, Version=1.7.2.10278, Culture=neutral, PublicKeyToken=2271ec4a3c56d0bf, processorArchitecture=MSIL">
-      <HintPath>..\packages\WinSCP.5.17.2\lib\net40\WinSCPnet.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter\ScheduleRepeatConverter.cs" />
@@ -219,7 +222,7 @@
     <Compile Include="Model\NavigationContext.cs" />
     <Compile Include="Model\NavigationLink.cs" />
     <Compile Include="Model\OutputEMailDevice.cs" />
-    <Compile Include="Model\OutputWinSCPDevice.cs" />
+    <Compile Include="Model\OutputFileServerDevice.cs" />
     <Compile Include="Model\OutputFolderDevice.cs" />
     <Compile Include="Forms\ParametersEditor.cs" />
     <Compile Include="Model\ReportTask.cs" />
@@ -515,13 +518,6 @@ copy "$(ProjectDir)..\..\Repository\Views\Scripts\helpers.js" "$(ProjectDir)..\S
 copy "$(ProjectDir)..\..\Repository\Views\Content\seal.css" "$(ProjectDir)..\SealWebServer\Content\"
 </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\WinSCP.5.17.2\build\WinSCP.targets" Condition="Exists('..\packages\WinSCP.5.17.2\build\WinSCP.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\WinSCP.5.17.2\build\WinSCP.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WinSCP.5.17.2\build\WinSCP.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

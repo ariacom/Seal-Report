@@ -535,7 +535,7 @@ namespace Seal.Model
         Monthly = 4,
     }
 
-    public enum FileServerType
+    public enum FileServerProtocol
     {
         [Description("FTP")]
         FTP,

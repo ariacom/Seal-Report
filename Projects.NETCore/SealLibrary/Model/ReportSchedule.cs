@@ -128,7 +128,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public List<int> SealWeekdays
+        public int[] SealWeekdays
         {
             get
             {
@@ -142,7 +142,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public List<int> SealMonths
+        public int[] SealMonths
         {
             get
             {
@@ -156,7 +156,7 @@ namespace Seal.Model
         }
 
         [XmlIgnore]
-        public List<int> SealDays
+        public int[] SealDays
         {
             get
             {

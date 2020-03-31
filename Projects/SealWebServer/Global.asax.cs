@@ -48,7 +48,6 @@ namespace SealWebServer
         {
             try
             {
-                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Seal Report Scheduler");
                 SealReportScheduler.Instance.Run();
             }
             catch (Exception ex)
@@ -113,7 +112,7 @@ namespace SealWebServer
 
         protected void Application_End()
         {
-            SealReportScheduler.Running = false;
+            SealReportScheduler.Instance.Shutdown();
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Web Report Server");
         }
 

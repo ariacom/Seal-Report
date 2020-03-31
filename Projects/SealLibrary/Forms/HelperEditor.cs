@@ -34,7 +34,7 @@ namespace Seal.Forms
         Parameter _parameter;
         SealSecurity _security;
         OutputEmailDevice _emailDevice;
-        OutputWinSCPDevice _fileServerDevice;
+        OutputFileServerDevice _fileServerDevice;
         ReportModel _model;
         SealServerConfiguration _configuration;
 
@@ -51,7 +51,7 @@ namespace Seal.Forms
             _parameter = context.Instance as Parameter;
             _security = context.Instance as SealSecurity;
             _emailDevice = context.Instance as OutputEmailDevice;
-            _fileServerDevice = context.Instance as OutputWinSCPDevice;
+            _fileServerDevice = context.Instance as OutputFileServerDevice;
             _model = context.Instance as ReportModel;
             _configuration = context.Instance as SealServerConfiguration;
         }

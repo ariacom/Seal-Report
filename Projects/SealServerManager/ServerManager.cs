@@ -123,7 +123,7 @@ namespace Seal
         {
             return (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower() 
                 || Path.GetDirectoryName(path).ToLower() == _repository.DevicesEmailFolder.ToLower()
-                || Path.GetDirectoryName(path).ToLower() == _repository.DevicesWinSCPFolder.ToLower()
+                || Path.GetDirectoryName(path).ToLower() == _repository.DevicesFileServerFolder.ToLower()
                 );
         }
 
@@ -259,7 +259,7 @@ namespace Seal
         {
             buildOpenMenu(_repository.SourcesFolder, openSourceToolStripMenuItem, global::Seal.Properties.Resources.database);
             buildOpenMenu(_repository.DevicesEmailFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.device);
-            buildOpenMenu(_repository.DevicesWinSCPFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.fileserver, false);
+            buildOpenMenu(_repository.DevicesFileServerFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.fileserver, false);
         }
 
         void init(object entityToSelect = null)
@@ -340,7 +340,7 @@ namespace Seal
             {
                 if (_source != null) return _repository.SourcesFolder;
                 if (_device != null && _device is OutputEmailDevice) return _repository.DevicesEmailFolder;
-                if (_device != null && _device is OutputWinSCPDevice) return _repository.DevicesWinSCPFolder;
+                if (_device != null && _device is OutputFileServerDevice) return _repository.DevicesFileServerFolder;
                 return "";
             }
         }
@@ -402,10 +402,10 @@ namespace Seal
                     _source = null;
                     _device = OutputEmailDevice.LoadFromFile(path, false);
                 }
-                else if (Path.GetDirectoryName(path).ToLower() == _repository.DevicesWinSCPFolder.ToLower())
+                else if (Path.GetDirectoryName(path).ToLower() == _repository.DevicesFileServerFolder.ToLower())
                 {
                     _source = null;
-                    _device = OutputWinSCPDevice.LoadFromFile(path, false);
+                    _device = OutputFileServerDevice.LoadFromFile(path, false);
                 }
                 else
                 {
@@ -462,7 +462,7 @@ namespace Seal
             }
             else if (sender == fileServerDeviceToolStripMenuItem)
             {
-                _device = OutputWinSCPDevice.Create();
+                _device = OutputFileServerDevice.Create();
             }
             IsModified = true;
             init(entityToSelect);

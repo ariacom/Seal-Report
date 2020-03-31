@@ -3,6 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using DynamicTypeDescriptor;
+using Renci.SshNet;
 using Seal.Forms;
 using Seal.Helpers;
 using System;
@@ -10,9 +11,11 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
 using System.IO;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Serialization;
-using WinSCP;
 
 namespace Seal.Model
 {
@@ -20,51 +23,19 @@ namespace Seal.Model
     /// OutputFileServerDevice is an implementation of device that save the report result to a file server (FTP,SFTP,etc.).
     /// Based on the WinSCP library
     /// </summary>
-    public class OutputWinSCPDevice : OutputDevice
+    public class OutputFileServerDevice : OutputDevice
     {
         static string PasswordKey = "?d_*er)wien?,édl+25.()à,";
 
-
-        public const string SessionScriptTemplate = @"@using WinSCP
-@{
-    //Create and open a WinSCP session 
-    //Full WinSCP documentation at https://winscp.net/eng/docs/library#classes
-    OutputWinSCPDevice device = Model;
-    
-    //https://winscp.net/eng/docs/library_sessionoptions
-    SessionOptions sessionOptions = new SessionOptions
-    {
-        Protocol = device.Protocol,
-        HostName = device.HostName,
-        PortNumber = device.PortNumber,
-        UserName = device.UserName,
-        Password = device.ClearPassword,
-        //GiveUpSecurityAndAcceptAnyTlsHostCertificate = true,  //FTPS
-        //FtpSecure = FtpSecure.Implicit,                       //FTPS
-        //TlsHostCertificateFingerprint = ""9d:34:41:e..."",      //FTPS
-        //WebdavSecure = true,                                  //Webdav
-        //SshHostKeyFingerprint = ""ssh-rsa 2048 ..."",           //SFTP, SCP
-    };
-
-    //sessionOptions.AddRawSettings(""FSProtocol"", ""2"");        //SFTP
-
-    //Create and open the session
-    device.Session = new Session();
-    device.Session.Open(sessionOptions);    
-}
-";
-
-
-        public const string ProcessingScriptTemplate = @"@using WinSCP
+        public const string ProcessingScriptTemplate = @"@using Renci.SshNet
 @using System.IO
+@using System.Net
 @{
     //Upload the file to the server
-    //Full WinSCP documentation at https://winscp.net/eng/docs/library#classes
-    //https://winscp.net/eng/docs/library_session
     Report report = Model;
     ReportOutput output = report.OutputToExecute;
-    OutputWinSCPDevice device = (OutputWinSCPDevice) output.Device;
-    
+    OutputFileServerDevice device = (OutputFileServerDevice)output.Device;
+
     var resultFileName = report.ResultFileName;
     if (output.ZipResult)
     {
@@ -74,17 +45,53 @@ namespace Seal.Model
         report.ResultFilePath = zipPath;
     }
 
-    device.Session = device.GetOpenSession();
-    //Options
-    TransferOptions transferOptions = new TransferOptions()
-    {
-        TransferMode = TransferMode.Automatic,
-        OverwriteMode = OverwriteMode.Overwrite
-    };
-
     //Put file
     var remotePath = output.FolderWithSeparators + resultFileName;
-    device.Session.PutFiles(report.ResultFilePath, remotePath, false, transferOptions);
+
+    if (device.Protocol == FileServerProtocol.FTP)
+    {
+        FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Format(""ftp://{0}:{1}{2}"", device.HostName, device.PortNumber, remotePath));
+        request.KeepAlive = true;
+        request.Method = WebRequestMethods.Ftp.UploadFile;
+        request.Credentials = new NetworkCredential(device.UserName, device.ClearPassword);
+
+        //SSL Management: Accept all certificates or add the certificate to the request
+        //request.EnableSsl = true;
+        //ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+        //request.ClientCertificates = new X509CertificateCollection() { X509Certificate.CreateFromCertFile(@""C:\_dev\Tests\FileZillaKeys\c1.crt"") } ;
+
+        byte[] fileContents = File.ReadAllBytes(report.ResultFilePath);
+        using (Stream requestStream = request.GetRequestStream())
+        {
+            requestStream.Write(fileContents, 0, fileContents.Length);
+        }
+        request.GetResponse();
+    }
+    else if (device.Protocol == FileServerProtocol.SFTP)
+    {
+        using (var sftp = new SftpClient(device.HostName, device.PortNumber, device.UserName, device.ClearPassword))
+        {
+            sftp.Connect();
+            using (Stream fileStream = File.Create(report.ResultFilePath))
+            {
+                sftp.UploadFile(fileStream, remotePath);
+            }
+            sftp.Disconnect();
+        }
+
+    }
+    else if (device.Protocol == FileServerProtocol.SCP)
+    {
+        using (var scp = new ScpClient(device.HostName, device.PortNumber, device.UserName, device.ClearPassword))
+        {
+            scp.Connect();
+            using (Stream fileStream = File.Create(report.ResultFilePath))
+            {
+                scp.Upload(fileStream, remotePath);
+            }
+            scp.Disconnect();
+        }
+    }
 
     output.Information = report.Translate(""Report result generated in '{0}'"", remotePath);
     report.LogMessage(""Report result generated in '{0}'"", remotePath);
@@ -133,10 +140,10 @@ namespace Seal.Model
         /// <summary>
         /// Create a basic OutputFolderDevice
         /// </summary>
-        static public OutputWinSCPDevice Create()
+        static public OutputFileServerDevice Create()
         {
 
-            var result = new OutputWinSCPDevice() { GUID = Guid.NewGuid().ToString() };
+            var result = new OutputFileServerDevice() { GUID = Guid.NewGuid().ToString() };
             result.Name = "File Server Device";
             return result;
         }
@@ -147,7 +154,7 @@ namespace Seal.Model
         [XmlIgnore]
         public override string FullName
         {
-            get { return string.Format("{0} (WinSCP)", Name); }
+            get { return string.Format("{0} (File Server)", Name); }
         }
 
         /// <summary>
@@ -155,17 +162,17 @@ namespace Seal.Model
         /// </summary>
         [Category("Definition"), DisplayName("Protocol"), Description("Protocol to connect to the server."), Id(1, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
-        [DefaultValue(Protocol.Ftp)]
-        public Protocol Protocol { get; set; } = Protocol.Ftp;
+        [DefaultValue(FileServerProtocol.FTP)]
+        public FileServerProtocol Protocol { get; set; } = FileServerProtocol.FTP;
 
         /// <summary>
         /// For FTPS, TLS/SSL Implicit or Explicit encryption.
         /// </summary>
-        [Category("Definition"), DisplayName("FTP Encryption"), Description("For FTPS, TLS/SSL Implicit or Explicit encryption."), Id(1, 1)]
+/*        [Category("Definition"), DisplayName("FTP Encryption"), Description("For FTPS, TLS/SSL Implicit or Explicit encryption."), Id(1, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(FtpSecure.None)]
         public FtpSecure FtpSecure { get; set; } = FtpSecure.None;
-
+        */
         /// <summary>
         /// File Server host name
         /// </summary>
@@ -175,7 +182,7 @@ namespace Seal.Model
         /// <summary>
         /// Port number used to connect to the server (e.g. 21 for FTP, 22 for SFTP, 990 for FTPS, etc.)
         /// </summary>
-        [Category("Definition"), DisplayName("Port number"), Description("Port number used to connect to the server (e.g. 21 for FTP, 22 for SFTP or SCP, 990 for FTPS, 443 for S3, 80 for Webdav, etc.)"), Id(3, 1)]
+        [Category("Definition"), DisplayName("Port number"), Description("Port number used to connect to the server (e.g. 21 for FTP or implicit FTPS, 22 for SFTP or SCP, 990 for FTPS, etc.)"), Id(3, 1)]
         [DefaultValue(21)]
         public int PortNumber { get; set; } = 21;
 
@@ -245,16 +252,9 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Script executed to get the open session when the output is processed
+        /// Script executed when the output is processed. The script can be modified to change the client settings (e.g. configuring FTPS).
         /// </summary>
-        [Category("Definition"), DisplayName("Session script"), Description("Script executed to get the open session when the output is processed."), Id(10, 1)]
-        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
-        public string SessionScript { get; set; } = "";
-
-        /// <summary>
-        /// Script executed when the output is processed. The default script depends on the server type.
-        /// </summary>
-        [Category("Definition"), DisplayName("Output processing script"), Description("Script executed when the output is processed."), Id(10, 1)]
+        [Category("Definition"), DisplayName("Output processing script"), Description("Script executed when the output is processed. The script can be modified to change the client settings (e.g. configuring FTPS)."), Id(10, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string ProcessingScript { get; set; } = "";
 
@@ -273,19 +273,6 @@ namespace Seal.Model
         public string Error { get; set; }
 
         /// <summary>
-        /// The open session got after execution of GetOpenSession()
-        /// </summary>
-        [XmlIgnore]
-        public Session Session;
-
-        public Session GetOpenSession()
-        {
-            var script = string.IsNullOrEmpty(SessionScript) ? SessionScriptTemplate : SessionScript;
-            RazorHelper.CompileExecute(script, this);
-            return Session;
-        }
-
-        /// <summary>
         /// Check that the report result has been saved and set information
         /// </summary>
         public override void Process(Report report)
@@ -299,13 +286,13 @@ namespace Seal.Model
         /// </summary>
         static public OutputDevice LoadFromFile(string path, bool ignoreException)
         {
-            OutputWinSCPDevice result = null;
+            OutputFileServerDevice result = null;
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(OutputWinSCPDevice));
+                XmlSerializer serializer = new XmlSerializer(typeof(OutputFileServerDevice));
                 using (XmlReader xr = XmlReader.Create(path))
                 {
-                    result = (OutputWinSCPDevice)serializer.Deserialize(xr);
+                    result = (OutputFileServerDevice)serializer.Deserialize(xr);
                 }
                 result.Name = Path.GetFileNameWithoutExtension(path);
                 result.FilePath = path;
@@ -342,7 +329,7 @@ namespace Seal.Model
             }
 
             Name = Path.GetFileNameWithoutExtension(path);
-            XmlSerializer serializer = new XmlSerializer(typeof(OutputWinSCPDevice));
+            XmlSerializer serializer = new XmlSerializer(typeof(OutputFileServerDevice));
             XmlWriterSettings ws = new XmlWriterSettings();
             ws.NewLineHandling = NewLineHandling.Entitize;
             using (XmlWriter xw = XmlWriter.Create(path, ws))
@@ -372,92 +359,29 @@ namespace Seal.Model
                 Error = "";
                 Information = "";
 
-                GetOpenSession();
-
-                /*
-
-                                if (Type == FileServerType.FTP)
-                                {
-                                    // Setup session options
-                                    SessionOptions sessionOptions = new SessionOptions
-                                    {
-                                        Protocol = Protocol.Ftp,
-                                        HostName = Server,
-                                        PortNumber = Port,
-                                        UserName = UserName,
-                                        Password = ClearPassword,
-                                        GiveUpSecurityAndAcceptAnyTlsHostCertificate = true, //FTPS
-                                        FtpSecure = FtpSecure.Implicit //FTPS
-                                    };
-
-                                    using (WinSCP.Session session = new WinSCP.Session())
-                                    {
-                                        // Connect
-                                        session.Open(sessionOptions);
-
-                                        // Upload files
-                                        TransferOptions transferOptions = new TransferOptions();
-                                        transferOptions.TransferMode = TransferMode.Binary;
-                                        TransferOperationResult transferResult;
-                                        transferResult = session.PutFiles(@"c:\temp\ftp.png", DirectoryWithSeparators, false, transferOptions);
-                                        transferResult.Check();
-                                    }
-
-                                    /*
-                                    var serverPath = string.Format("{0}:{1}{2}", Server, Port, DirectoryWithSeparators);
-                                    var request = (FtpWebRequest)WebRequest.Create(serverPath);
-
-                                    request.EnableSsl = true;
-                                    ServicePointManager.ServerCertificateValidationCallback = ServicePointManager_ServerCertificateValidationCallback;
-
-                                    request.Method = WebRequestMethods.Ftp.ListDirectory;
-                                    request.Credentials = new NetworkCredential(UserName, ClearPassword);
-                                    request.GetResponse();*
-                                }
-                                else if (Type == FileServerType.SFTP)
-                                {
-                                    // Setup session options
-                                    SessionOptions sessionOptions = new SessionOptions
-                                    {
-                                        Protocol = Protocol.Sftp,
-                                        HostName = Server,
-                                        PortNumber = Port,
-                                        UserName = UserName,
-                                        Password = ClearPassword,
-                                        SshHostKeyFingerprint = "ssh-rsa 2048 xxxxxxxxxxx...="
-                                        //                GiveUpSecurityAndAcceptAnyTlsHostCertificate = true, //FTPS
-                                                                                                      //              FtpSecure = FtpSecure.Implicit //FTPS
-                                    };
-
-                                    using (WinSCP.Session session = new WinSCP.Session())
-                                    {
-                                        // Connect
-                                        session.Open(sessionOptions);
-
-                                        // Upload files
-                                        TransferOptions transferOptions = new TransferOptions();
-                                        transferOptions.TransferMode = TransferMode.Binary;
-                                        TransferOperationResult transferResult;
-                                        transferResult = session.PutFiles(@"c:\temp\ftp.png", DirectoryWithSeparators, false, transferOptions);
-                                        transferResult.Check();
-                                    }
-                /*
-
-                                    using (var client = new SftpClient(Server, Port, UserName, ClearPassword))
-                                    {
-                                        client.Connect();
-                                        client.ChangeDirectory(Directory);
-                                        client.Disconnect();
-                                    }*
-                                }
-                                else if (Type == FileServerType.SCP)
-                                {
-                                    using (ScpClient client = new ScpClient(Server, Port, UserName, ClearPassword))
-                                    {
-                                        client.Connect();
-                                        client.Disconnect();
-                                    }
-                                }*/
+                if (Protocol == FileServerProtocol.FTP)
+                {
+                    FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Format("ftp://{0}:{1}", HostName, PortNumber));
+                    request.Method = WebRequestMethods.Ftp.PrintWorkingDirectory;
+                    request.Credentials = new NetworkCredential(UserName, ClearPassword);
+                    request.GetResponse();
+                }
+                else if (Protocol == FileServerProtocol.SFTP)
+                {
+                    using (var sftp = new SftpClient(HostName, UserName, ClearPassword))
+                    {
+                        sftp.Connect();
+                        sftp.Disconnect();
+                    }
+                }
+                else if (Protocol == FileServerProtocol.SCP)
+                {
+                    using (var scp = new ScpClient(HostName, UserName, ClearPassword))
+                    {
+                        scp.Connect();
+                        scp.Disconnect();
+                    }
+                }
                 Information = string.Format("The connection to '{0}:{1}' is successfull", HostName, PortNumber);
             }
             catch (Exception ex)

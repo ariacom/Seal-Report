@@ -426,7 +426,7 @@ namespace Seal.Model
                 string fileName = DisplayNameEx.ToString();
                 if (ForOutput)
                 {
-                    if (OutputToExecute.Device is OutputFolderDevice || OutputToExecute.Device is OutputWinSCPDevice)
+                    if (OutputToExecute.Device is OutputFolderDevice || OutputToExecute.Device is OutputFileServerDevice)
                     {
                         fileName = OutputToExecute.FileName.Replace(Repository.SealReportDisplayNameKeyword, FileHelper.CleanFilePath(DisplayNameEx));
                         try
@@ -449,7 +449,9 @@ namespace Seal.Model
         public void InitForExecution()
         {
             string fileName = "", fileFolder = "";
-            var template = ExecutionView.Template; //This force to init parameters
+
+            //Init all execution view parameters...
+            foreach (var view in Views) view.InitParameters(false);
 
             //Copy values from reference views
             foreach (var view in FullViewList.Where(i => i.ReferenceView != null))
@@ -1467,10 +1469,10 @@ namespace Seal.Model
                 result.FolderPath = string.IsNullOrEmpty(FilePath) ? Repository.SealRepositoryKeyword + string.Format("{0}Reports{0}", Path.DirectorySeparatorChar) : Path.GetDirectoryName(FilePath).Replace(Repository.RepositoryPath, Repository.SealRepositoryKeyword);
                 result.FileName = Repository.SealReportDisplayNameKeyword;
             }
-            else if (device is OutputWinSCPDevice)
+            else if (device is OutputFileServerDevice)
             {
                 result.FolderPath = "/";
-                if(!string.IsNullOrEmpty(((OutputWinSCPDevice)device).Directories)) result.FolderPath = ((OutputWinSCPDevice)device).DirectoriesArray[0];
+                if(!string.IsNullOrEmpty(((OutputFileServerDevice)device).Directories)) result.FolderPath = ((OutputFileServerDevice)device).DirectoriesArray[0];
                 result.FileName = Repository.SealReportDisplayNameKeyword;
             }
 

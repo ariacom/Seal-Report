@@ -23,6 +23,7 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Seal.Helpers
 {
@@ -479,24 +480,29 @@ namespace Seal.Helpers
 
                 if (!Directory.Exists(logsFolder)) Directory.CreateDirectory(logsFolder);
 
-                string logFileName = Path.Combine(logsFolder, string.Format("{0}_{1:yyyy_MM_dd}.txt", prefix, DateTime.Now));
-                File.AppendAllText(logFileName, message);
-
-                if (NextDailyPuge < DateTime.Now)
+                lock (TaskSchedulerEntry)
                 {
-                    NextDailyPuge = DateTime.Now.AddDays(1);
-                    foreach (var file in Directory.GetFiles(logsFolder, "*"))
+
+                    string logFileName = Path.Combine(logsFolder, string.Format("{0}_{1:yyyy_MM_dd}.txt", prefix, DateTime.Now));
+                    File.AppendAllText(logFileName, message);
+
+                    if (NextDailyPuge < DateTime.Now)
                     {
-                        //purge old files...
-                        if (File.GetLastWriteTime(file).AddDays(logDays) < DateTime.Now)
+                        NextDailyPuge = DateTime.Now.AddDays(1);
+                        foreach (var file in Directory.GetFiles(logsFolder, "*"))
                         {
-                            try
+                            //purge old files...
+                            if (File.GetLastWriteTime(file).AddDays(logDays) < DateTime.Now)
                             {
-                                File.Delete(file);
+                                try
+                                {
+                                    File.Delete(file);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(message + "\r\n" + ex.Message);
+                                };
                             }
-                            catch (Exception ex) {
-                                Console.WriteLine(message + "\r\n" + ex.Message);
-                            };
                         }
                     }
                 }
@@ -529,7 +535,8 @@ namespace Seal.Helpers
                 {
                     msg = msg.Substring(0, 25000) + "\r\n...\r\nMessage truncated, check the event log files in the Logs Repository sub-folder.";
                 }
-                EventLog.WriteEntry(source, msg, type);
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry(source, msg, type);
             }
             catch (Exception ex)
             {

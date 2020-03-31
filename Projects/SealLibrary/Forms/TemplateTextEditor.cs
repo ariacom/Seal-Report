@@ -1072,18 +1072,11 @@ if (cell.IsTitle)
                     frm.Text = "Edit the init script of the source";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
-                else if (context.Instance is OutputWinSCPDevice && context.PropertyDescriptor.Name == "SessionScript")
+                else if (context.Instance is OutputFileServerDevice && context.PropertyDescriptor.Name == "ProcessingScript")
                 {
-                    template = OutputWinSCPDevice.SessionScriptTemplate;
-                    frm.ObjectForCheckSyntax = context.Instance;
-                    frm.Text = "Edit the script executed to get an open session";
-                    ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                }
-                else if (context.Instance is OutputWinSCPDevice && context.PropertyDescriptor.Name == "ProcessingScript")
-                {
-                    template = OutputWinSCPDevice.ProcessingScriptTemplate;
+                    template = OutputFileServerDevice.ProcessingScriptTemplate;
                     frm.ObjectForCheckSyntax = new Report();
-                    frm.Text = "Edit the script executed to when the output is processed";
+                    frm.Text = "Edit the script executed when the output is processed";
                     ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 }
                 else if (context.Instance is CommonScript)
