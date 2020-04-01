@@ -46,7 +46,7 @@ namespace Seal.Model
     }
 
     //Put file
-    var remotePath = output.FolderWithSeparators + resultFileName;
+    var remotePath = output.FileServerFolderWithSeparators + resultFileName;
 
     if (device.Protocol == FileServerProtocol.FTP)
     {
@@ -113,7 +113,6 @@ namespace Seal.Model
                 GetProperty("Directories").SetIsBrowsable(true);
                 GetProperty("UserName").SetIsBrowsable(true);
                 GetProperty("ClearPassword").SetIsBrowsable(true);
-                GetProperty("SessionScript").SetIsBrowsable(true);
                 GetProperty("ProcessingScript").SetIsBrowsable(true);
 
                 GetProperty("HelperTestConnection").SetIsBrowsable(true);

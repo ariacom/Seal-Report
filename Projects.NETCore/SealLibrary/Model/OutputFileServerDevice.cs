@@ -44,7 +44,7 @@ namespace Seal.Model
     }
 
     //Put file
-    var remotePath = output.FolderWithSeparators + resultFileName;
+    var remotePath = output.FileServerFolderWithSeparators + resultFileName;
 
     if (device.Protocol == FileServerProtocol.FTP)
     {

@@ -187,7 +187,7 @@ namespace Seal.Model
         public string FolderPath { get; set; }
 
 
-        public string FolderWithSeparators { 
+        public string FileServerFolderWithSeparators { 
             get
             {
                 if (string.IsNullOrEmpty(FolderPath) || FolderPath == "/" || FolderPath == "\\") return "/";

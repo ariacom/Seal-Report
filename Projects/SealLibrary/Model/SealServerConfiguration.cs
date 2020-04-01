@@ -189,7 +189,6 @@ namespace Seal.Model
                 UpdateEditor(); //!NETCore
             }
         }
-        public bool ShouldSerializeUseWebScheduler() { return UseWebScheduler; }
 
         /// <summary>
         /// Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used
@@ -197,9 +196,7 @@ namespace Seal.Model
         [Category("Report Scheduler Settings"), DisplayName("Task Folder Name"), Description("Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used. Warning: Changing this name will affect all existing schedules !"), Id(2, 2)]
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
-
-
-        bool _auditEnabled = false;
+       bool _auditEnabled = false;
         /// <summary>
         /// If true, the Audit script is executed for the follwing events: login, logout, report execution and management, folder management, file management, dashboard management.
         /// </summary>
@@ -217,7 +214,6 @@ namespace Seal.Model
                 UpdateEditor(); //!NETCore
             }
         }
-        public bool ShouldSerializeAuditEnabled() { return AuditEnabled; }
 
         /// <summary>
         /// If set, the script is executed to log events. The default implementation is to insert a record into a database table.
@@ -295,7 +291,6 @@ namespace Seal.Model
         [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for .NETCore or Azure). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services."), Category("PDF Converter: Client Library"), Id(1, 6)]
         [DefaultValue(false)]
         public bool PdfUseClient { get; set; } = false;
-        public bool ShouldSerializeUsePdfClient() { return PdfUseClient; }
 
         /// <summary>
         /// If the client library is used, the HTML to PDF server IP or name.
@@ -303,7 +298,6 @@ namespace Seal.Model
         [DisplayName("PDF Server"), Description("If the client library is used, the HTML to PDF server IP or name."), Category("PDF Converter: Client Library"), Id(2, 6)]
         [DefaultValue("127.0.0.1")]
         public string PdfServer { get; set; } = "127.0.0.1";
-        public bool ShouldSerializePdfServer() { return PdfServer != "127.0.0.1"; }
 
         /// <summary>
         /// If the client library is used, the HTML to PDF server IP or name.
@@ -311,7 +305,6 @@ namespace Seal.Model
         [DisplayName("PDF Server Port"), Description("If the client library is used, the HTML to PDF server port number."), Category("PDF Converter: Client Library"), Id(3, 6)]
         [DefaultValue(45001)]
         public uint PdfServerPort { get; set; } = 45001;
-        public bool ShouldSerializePdfServerPort() { return PdfServerPort != 45001; }
 
         /// <summary>
         /// If the client library is used, optional HTML to PDF converter service password.
@@ -319,7 +312,6 @@ namespace Seal.Model
         [DisplayName("PDF Service Password"), Description("If the client library is used, optional HTML to PDF converter service password."), Category("PDF Converter: Client Library"), Id(4, 6)]
         [DefaultValue(false)]
         public string PdfServicePassword { get; set; } = "";
-        public bool ShouldSerializePdfServicePassword() { return !string.IsNullOrEmpty(PdfServicePassword); }
 
         /// <summary>
         /// If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion.
@@ -327,7 +319,6 @@ namespace Seal.Model
         [DisplayName("Use PDF Web Service"), Description("If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion."), Category("PDF Converter: Client Library"), Id(5, 6)]
         [DefaultValue(false)]
         public bool PdfUseWebService { get; set; } = false;
-        public bool ShouldSerializePdfUseWebService() { return PdfUseWebService; }
 
         /// <summary>
         /// If the client library is used, the HTML to PDF web service URL.
@@ -335,7 +326,6 @@ namespace Seal.Model
         [DisplayName("PDF Web Service URL"), Description("If the client library is used, the HTML to PDF web service URL."), Category("PDF Converter: Client Library"), Id(6, 6)]
         [DefaultValue(false)]
         public string PdfWebServiceURL { get; set; } = "";
-        public bool ShouldSerializePdfWebServiceURL() { return !string.IsNullOrEmpty(PdfWebServiceURL); }
 
         /// <summary>
         /// Current default configuration values for Pdf converter

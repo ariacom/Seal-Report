@@ -101,7 +101,7 @@ namespace SealWebServer
 
         private void OnShutdown()
         {
-            SealReportScheduler.Instance.Shutdown();
+            if (Repository.Instance.Configuration.UseWebScheduler) SealReportScheduler.Instance.Shutdown();
         }
 
         private void RunScheduler()
