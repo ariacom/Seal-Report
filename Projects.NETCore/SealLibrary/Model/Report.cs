@@ -342,6 +342,10 @@ namespace Seal.Model
                         if (!string.IsNullOrEmpty(OutputToExecute.FolderPath))
                         {
                             result = Repository.ReplaceRepositoryKeyword(OutputToExecute.FolderPath);
+#if NETCOREAPP
+                if (Path.DirectorySeparatorChar == '/' && result.Contains("\\")) result = result.Replace("\\", "/");
+                else if (Path.DirectorySeparatorChar == '\\' && result.Contains("/")) result = result.Replace("/", "\\");
+#endif 
                             if (!Directory.Exists(result)) Directory.CreateDirectory(result);
                         }
                     }

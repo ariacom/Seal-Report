@@ -346,7 +346,7 @@ namespace Seal.Model
             Progression = 0;
             if (!Report.Cancel && !string.IsNullOrEmpty(SQL))
             {
-                if (string.IsNullOrEmpty(currentConnection.ConnectionString) && string.IsNullOrEmpty(Connection.MSSqlServerConnectionString)) throw new Exception("The connection string is not defined for this Task.");
+                if (string.IsNullOrEmpty(Connection.FullConnectionString)) throw new Exception("The connection string is not defined for this Task.");
                 _command = GetDbCommand(currentConnection);
                 object sqlResult = null;
                 try

@@ -1977,7 +1977,7 @@ namespace Seal.Model
                 //Normal SQL
                 try
                 {
-                    if (string.IsNullOrEmpty(Connection.ConnectionString) && string.IsNullOrEmpty(Connection.MSSqlServerConnectionString)) throw new Exception("The connection string is not defined for this Model.");
+                    if (string.IsNullOrEmpty(Connection.FullConnectionString)) throw new Exception("The connection string is not defined for this Model.");
                     _command = null;
 
                     //Check if we can use a data table from another model

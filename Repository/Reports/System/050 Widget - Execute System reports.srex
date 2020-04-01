@@ -49,7 +49,7 @@
     Report report = task.Report;&#xD;
 &#xD;
     report.Tag = new List&lt;Report&gt;();&#xD;
-    SearchReports(report, report.Repository.ReportsFolder + "\\System");&#xD;
+    SearchReports(report, report.Repository.ReportsFolder + Path.DirectorySeparatorChar + "System");&#xD;
 }&#xD;
 &#xD;
 @functions {&#xD;
