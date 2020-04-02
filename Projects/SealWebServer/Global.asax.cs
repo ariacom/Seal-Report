@@ -9,6 +9,7 @@ using System.Configuration;
 using System.Threading;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SealWebServer
 {
@@ -25,6 +26,8 @@ namespace SealWebServer
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
+            Audit.LogEventAudit(AuditType.EventServer, "Starting Web Report Server");
+            Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");
 
             DebugMode = (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["DebugMode"]) && ConfigurationManager.AppSettings["DebugMode"].ToLower() == "true");
 
@@ -74,7 +77,7 @@ namespace SealWebServer
                     if (System.IO.File.Exists(filePath) && !reportList.Contains(filePath)) reportList.Add(filePath);
                 }
 
-                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Starting Preload of {0} Widget Reports", reportList.Count));
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Preload of {0} Widget Reports", reportList.Count);
                 var repository = Repository.Instance.CreateFast();
                 foreach (var reportPath in reportList)
                 {
@@ -98,7 +101,7 @@ namespace SealWebServer
                     }
                     catch (Exception ex)
                     {
-                        WebHelper.WriteLogEntryWeb(EventLogEntryType.Error, string.Format("Pre Load: Error executing '{0}\r\n{1}", reportPath, ex.Message));
+                        WebHelper.WriteLogEntryWeb(EventLogEntryType.Error, "Pre Load: Error executing '{0}\r\n{1}", reportPath, ex.Message);
                     }
                 }
 
@@ -114,6 +117,8 @@ namespace SealWebServer
         {
             SealReportScheduler.Instance.Shutdown();
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Web Report Server");
+            Audit.LogEventAudit(AuditType.EventServer, "Ending Web Report Server");
+            Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");
         }
 
         protected void Session_Start()
@@ -126,12 +131,12 @@ namespace SealWebServer
             if (Session[HomeController.SessionUser] != null)
             {
                 user = (SecurityUser)Session[HomeController.SessionUser];
-                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, null, user, "Ending Web Session '{0}' for user '{1}'", Session.SessionID, user.Name);
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Web Session '{0}' for user '{1}'", Session.SessionID, user.Name);
                 user.Logout();
             }
             else
             {
-                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Ending Web Session '{0}'", Session.SessionID));
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Web Session '{0}'", Session.SessionID);
             }
         }
     }

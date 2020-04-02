@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Seal.Forms;
 using System;
 using System.ComponentModel;
+using System.Drawing.Design;
 using System.Xml.Serialization;
 
 namespace Seal.Model
@@ -116,26 +117,35 @@ namespace Seal.Model
         public int Height { get; set; } = 0;
 
         /// <summary>
-        /// If a root view is specified, the widget name has a link to execute the full report using the root view
-        /// </summary>
-        [DefaultValue(null)]
-        [Category("Definition"), DisplayName("View to execute from title"), Description("If a root view is specified, the widget name has a link to execute the full report using the root view."), Id(9, 1)]
-        [TypeConverter(typeof(ReportViewConverter))]
-        public string ExecViewGUID { get; set; }
-
-        /// <summary>
         /// Number of seconds before the widget is re-executed. If -1, the rate of the root view is used (defined in property 'Options: Auto-Refresh (seconds)'). A value of 0 means no refresh.
         /// </summary>
-        [DisplayName("Auto-Refresh (seconds)"), Description("Number of seconds before the widget is re-executed. If -1, the rate of the root view is used (defined in property 'Options: Auto-Refresh (seconds)'). A value of 0 means no refresh."), Id(10, 1)]
+        [DisplayName("Auto-Refresh (seconds)"), Description("Number of seconds before the widget is re-executed. If -1, the rate of the root view is used (defined in property 'Options: Auto-Refresh (seconds)'). A value of 0 means no refresh."), Id(12, 1)]
         [DefaultValue(-1)]
         public int Refresh { get; set; } = -1;
+
+
+        /// <summary>
+        /// If a report path is specified, the widget name has a link to execute the report and the view specified. If empty, the current report is used.
+        /// </summary>
+        [DefaultValue(null)]
+        [Category("Definition"), DisplayName("Title: Report to execute from the title"), Description("If a report path is specified, the widget name has a link to execute the report and the view specified. If empty, the current report is used."), Id(21, 1)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string ExecReportPath { get; set; }
+
+        /// <summary>
+        /// If a root view is specified, the widget name has a link to execute the report and the view specified.
+        /// </summary>
+        [DefaultValue(null)]
+        [Category("Definition"), DisplayName("Title: View of the report to execute from the title"), Description("If a root view is specified, the widget name has a link to execute the report and the view specified."), Id(22, 1)]
+        [TypeConverter(typeof(ReportViewConverter))]
+        public string ExecViewGUID { get; set; }
 
         /// <summary>
         /// The XML to insert in a dashboard definition file to show this widget
         /// </summary>
         [XmlIgnore]
         [JsonIgnore]
-        [DisplayName("Dashboard XML"), Description("The XML to insert in a dashboard definition file to show this widget."), Id(11, 1)]
+        [DisplayName("Dashboard XML"), Description("The XML to insert in a dashboard definition file to show this widget."), Id(30, 1)]
         public string XML
         {
             get

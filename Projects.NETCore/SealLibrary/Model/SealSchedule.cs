@@ -15,9 +15,9 @@ namespace Seal.Model
         public string ReportPath { get; set; }
         public string ReportGUID { get; set; }
         public DateTime NextExecution { get; set; } = DateTime.MaxValue;
-        public bool Enabled { get; set; } = true;
+        public bool Enabled { get; set; } = false;
         public DateTime Start { get; set; } = DateTime.Now;
-        public DateTime End { get; set; } = DateTime.MaxValue;
+        public DateTime End { get; set; } = DateTime.MinValue;
         public TriggerType Type { get; set; } = TriggerType.Daily;
         public int DaysInterval { get; set; } = 1;
         public int WeeksInterval { get; set; } = 1;
@@ -97,6 +97,15 @@ namespace Seal.Model
             LastModification = File.GetLastWriteTime(FilePath);
         }
 
+        [XmlIgnore]
+        DateTime EndFinal
+        {
+            get
+            {
+                return End == DateTime.MinValue ? DateTime.MaxValue : End;
+            }
+        }
+
         public void CalculateNextExecution()
         {
             NextExecution = Start;
@@ -111,7 +120,7 @@ namespace Seal.Model
                         if (endRepeatDate < DateTime.Now) break;
                         while (true)
                         {
-                            if (NextExecution > DateTime.Now || NextExecution > End || NextExecution > endRepeatDate)
+                            if (NextExecution > DateTime.Now || NextExecution > EndFinal || NextExecution > endRepeatDate)
                             {
                                 //Found within repeat
                                 break;
@@ -124,7 +133,7 @@ namespace Seal.Model
                 case TriggerType.Daily:
                     while (true)
                     {
-                        if (NextExecution > DateTime.Now || NextExecution > End)
+                        if (NextExecution > DateTime.Now || NextExecution > EndFinal)
                         {
                             //Found
                             break;
@@ -137,14 +146,14 @@ namespace Seal.Model
                             var endRepeatDate = (RepeatDuration != TimeSpan.Zero ? nextRepeatExecution + RepeatDuration : DateTime.MaxValue);
                             while (endRepeatDate > DateTime.Now)
                             {
-                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End || nextRepeatExecution > endRepeatDate)
+                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > EndFinal || nextRepeatExecution > endRepeatDate)
                                 {
                                     break;
                                 }
                                 nextRepeatExecution += RepeatInterval;
                             }
 
-                            if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End)
+                            if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > EndFinal)
                             {
                                 //Found within repeat
                                 NextExecution = nextRepeatExecution;
@@ -170,7 +179,7 @@ namespace Seal.Model
                                 continue;
                             }
 
-                            if (nextWeekExecution > DateTime.Now || nextWeekExecution > End)
+                            if (nextWeekExecution > DateTime.Now || nextWeekExecution > EndFinal)
                             {
                                 //Found
                                 NextExecution = nextWeekExecution;
@@ -184,14 +193,14 @@ namespace Seal.Model
                                 var endRepeatDate = (RepeatDuration != TimeSpan.Zero ? nextRepeatExecution + RepeatDuration : DateTime.MaxValue);
                                 while (endRepeatDate > DateTime.Now)
                                 {
-                                    if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End || nextRepeatExecution > endRepeatDate)
+                                    if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > EndFinal || nextRepeatExecution > endRepeatDate)
                                     {
                                         break;
                                     }
                                     nextRepeatExecution += RepeatInterval;
                                 }
 
-                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End)
+                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > EndFinal)
                                 {
                                     //Found within repeat
                                     NextExecution = nextRepeatExecution;
@@ -200,7 +209,7 @@ namespace Seal.Model
                             }
                         }
 
-                        if (NextExecution > DateTime.Now || NextExecution > End)
+                        if (NextExecution > DateTime.Now || NextExecution > EndFinal)
                         {
                             //Found
                             break;
@@ -227,7 +236,7 @@ namespace Seal.Model
                             }
                         }
 
-                        if (NextExecution > DateTime.Now || NextExecution > End)
+                        if (NextExecution > DateTime.Now || NextExecution > EndFinal)
                         {
                             //Found
                             break;
@@ -240,14 +249,14 @@ namespace Seal.Model
                             var endRepeatDate = (RepeatDuration != TimeSpan.Zero ? nextRepeatExecution + RepeatDuration : DateTime.MaxValue);
                             while (endRepeatDate > DateTime.Now)
                             {
-                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End || nextRepeatExecution > endRepeatDate)
+                                if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > EndFinal || nextRepeatExecution > endRepeatDate)
                                 {
                                     break;
                                 }
                                 nextRepeatExecution += RepeatInterval;
                             }
 
-                            if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > End)
+                            if (nextRepeatExecution > DateTime.Now || nextRepeatExecution > EndFinal)
                             {
                                 //Found within repeat
                                 NextExecution = nextRepeatExecution;
@@ -261,7 +270,7 @@ namespace Seal.Model
                     break;
             }
 
-            if (NextExecution < DateTime.Now) NextExecution = DateTime.MinValue;
+            if (NextExecution < DateTime.Now) NextExecution = DateTime.MaxValue;
         }
 
         public bool IsReached()
@@ -276,7 +285,7 @@ namespace Seal.Model
                     Type != TriggerType.Time &&
                     NextExecution <= DateTime.Now &&
                     Start <= DateTime.Now &&
-                    End >= DateTime.Now
+                    EndFinal >= DateTime.Now
                     );
 
             return result;

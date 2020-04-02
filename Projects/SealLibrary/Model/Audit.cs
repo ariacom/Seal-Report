@@ -139,9 +139,17 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Audit an eventn
+        /// </summary>
+        public static void LogEventAudit(AuditType type, string detail)
+        {
+            Audit.LogAudit(type, null, null, detail);
+        }
+
+        /// <summary>
         /// Executes the audit script for a given event
         /// </summary>
-        public static void LogAudit(AuditType type, SecurityUser user, string path = null, string detail = null,string error = null, Report report = null, ReportSchedule schedule = null)
+        public static void LogAudit(AuditType type, SecurityUser user, string path = null, string detail = null, string error = null, Report report = null, ReportSchedule schedule = null)
         {
             try
             {

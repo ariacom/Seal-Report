@@ -96,7 +96,7 @@ namespace Seal.Model
 
         bool _useWebScheduler = false;
         /// <summary>
-        /// If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). Mainly to allow schedules for .NETCore or Azure installations.
+        /// If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). This allows schedules for .NETCore or Azure installations.
         /// </summary>
         public bool UseWebScheduler
         {
@@ -109,16 +109,13 @@ namespace Seal.Model
                 _useWebScheduler = value;
             }
         }
-        public bool ShouldSerializeUseWebScheduler() { return UseWebScheduler; }
 
         /// <summary>
         /// Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used
         /// </summary>
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
-
-
-        bool _auditEnabled = false;
+       bool _auditEnabled = false;
         /// <summary>
         /// If true, the Audit script is executed for the follwing events: login, logout, report execution and management, folder management, file management, dashboard management.
         /// </summary>
@@ -133,7 +130,6 @@ namespace Seal.Model
                 _auditEnabled = value;
             }
         }
-        public bool ShouldSerializeAuditEnabled() { return AuditEnabled; }
 
         /// <summary>
         /// If set, the script is executed to log events. The default implementation is to insert a record into a database table.
@@ -201,37 +197,31 @@ namespace Seal.Model
         /// If true, the client library is used to perform the HTML to PDF conversion (mainly useful for .NETCore distribution). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
         /// </summary>
         public bool PdfUseClient { get; set; } = false;
-        public bool ShouldSerializeUsePdfClient() { return PdfUseClient; }
 
         /// <summary>
         /// If the client library is used, the HTML to PDF server IP or name.
         /// </summary>
         public string PdfServer { get; set; } = "127.0.0.1";
-        public bool ShouldSerializePdfServer() { return PdfServer != "127.0.0.1"; }
 
         /// <summary>
         /// If the client library is used, the HTML to PDF server IP or name.
         /// </summary>
         public uint PdfServerPort { get; set; } = 45001;
-        public bool ShouldSerializePdfServerPort() { return PdfServerPort != 45001; }
 
         /// <summary>
         /// If the client library is used, optional HTML to PDF converter service password.
         /// </summary>
         public string PdfServicePassword { get; set; } = "";
-        public bool ShouldSerializePdfServicePassword() { return !string.IsNullOrEmpty(PdfServicePassword); }
 
         /// <summary>
         /// If true, the client library will call the Web service instead of the TCP service to perform the HTML to PDF conversion.
         /// </summary>
         public bool PdfUseWebService { get; set; } = false;
-        public bool ShouldSerializePdfUseWebService() { return PdfUseWebService; }
 
         /// <summary>
         /// If the client library is used, the HTML to PDF web service URL.
         /// </summary>
         public string PdfWebServiceURL { get; set; } = "";
-        public bool ShouldSerializePdfWebServiceURL() { return !string.IsNullOrEmpty(PdfWebServiceURL); }
 
         /// <summary>
         /// Current default configuration values for Pdf converter

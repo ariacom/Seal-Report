@@ -37,9 +37,9 @@ namespace SealWebServer.Controllers
             Helper.WriteLogEntry("Seal Web Server", type, message, args);
         }
 
-        public static void WriteLogEntryWeb(EventLogEntryType type, string message, string detail, params object[] args)
+        public static void WriteLogEntryWebDetail(EventLogEntryType type, string message, string detail)
         {
-            Helper.WriteLogEntry("Seal Web Server", type, message + detail, args);
+            Helper.WriteLogEntry("Seal Web Server", type, message + detail);
         }
 
         public static void WriteLogEntryWebDebug(string message, string detail)

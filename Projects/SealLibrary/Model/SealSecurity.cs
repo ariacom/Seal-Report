@@ -464,11 +464,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// List of users logged per date
-        /// </summary>
-        static public List<Tuple<DateTime, int>> UsersCountLogs = new List<Tuple<DateTime, int>>() { new Tuple<DateTime, int>(DateTime.Now, 0)};
-
-        /// <summary>
         /// List of logged users
         /// </summary>
         static public List<SecurityUser> LoggedUsers = new List<SecurityUser>();
@@ -481,7 +476,6 @@ namespace Seal.Model
             lock (LoggedUsers)
             {
                 if (!LoggedUsers.Contains(user)) LoggedUsers.Add(user);
-                UsersCountLogs.Add(new Tuple<DateTime, int>(DateTime.Now, SealSecurity.LoggedUsers.Where(i => i.IsAuthenticated).Count()));
             }
         }
 
@@ -493,7 +487,6 @@ namespace Seal.Model
             lock (LoggedUsers)
             {
                 if (LoggedUsers.Contains(user)) LoggedUsers.Remove(user);
-                UsersCountLogs.Add(new Tuple<DateTime, int>(DateTime.Now, SealSecurity.LoggedUsers.Where(i => i.IsAuthenticated).Count()));
             }
         }
     }

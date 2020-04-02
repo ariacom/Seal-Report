@@ -173,9 +173,9 @@ namespace Seal.Model
 
         bool _useWebScheduler = false;
         /// <summary>
-        /// If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). Mainly to allow schedules for .NETCore or Azure installations.
+        /// If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). This allows schedules for .NETCore or Azure installations.
         /// </summary>
-        [Category("Report Scheduler Settings"), DisplayName("Use Web Report Server Scheduler"), Description("If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). Mainly to allow schedules for .NETCore or Azure installations."), Id(1, 2)]
+        [Category("Report Scheduler Settings"), DisplayName("Use Web Report Server Scheduler"), Description("If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). This allows schedules for .NETCore or Azure installations."), Id(1, 2)]
         [DefaultValue(false)]
         public bool UseWebScheduler
         {

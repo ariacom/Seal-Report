@@ -446,10 +446,13 @@ namespace Seal.Model
                 fileName = ResultFileName;
                 fileFolder = FileHelper.TempApplicationDirectory;
 
-                if (ForOutput && OutputToExecute.Device is OutputFolderDevice)
+                if (ForOutput && OutputToExecute.Device is OutputFolderDevice && !OutputToExecute.ZipResult)
                 {
-                    if (Format != ReportFormat.pdf && Format != ReportFormat.excel) fileFolder = OutputFolderDeviceResultFolder;
-                    //For folder output, we do not need a unique file name
+                    //no need to get unique file name
+                    if (Format != ReportFormat.pdf && Format != ReportFormat.excel)
+                    {
+                        fileFolder = OutputFolderDeviceResultFolder;
+                    }
                     ResultFilePath = Path.Combine(fileFolder, Path.GetFileNameWithoutExtension(fileName)) + "." + ResultExtension;
                 }
                 else
@@ -1602,7 +1605,7 @@ namespace Seal.Model
 
                 foreach (var refView in FullViewList)
                 {
-                    if (refView.WidgetDefinition.ExecViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is referenced by the Widget in the view '{1}'.", view.Name, refView.Name));
+                    if (refView.WidgetDefinition.IsPublished && refView.WidgetDefinition.ExecViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is referenced by the Widget in the view '{1}'.", view.Name, refView.Name));
                 }
 
                 if (Views.Count == 1) throw new Exception("Unable to remove the view: The report must contain at least one View.");

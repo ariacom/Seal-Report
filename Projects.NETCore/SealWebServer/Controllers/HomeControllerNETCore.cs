@@ -51,6 +51,10 @@ namespace SealWebServer.Controllers
 
             foreach (var key in keys)
             {
+                //Session is over
+                var user = _sessions[key.Key][SessionUser] as SecurityUser;
+                if (user != null) user.Logout();
+
                 lock (_sessions)
                 {
                     _sessions.Remove(key.Key);

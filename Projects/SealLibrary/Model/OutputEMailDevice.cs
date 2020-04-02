@@ -334,14 +334,9 @@ namespace Seal.Model
             //Attachment
             if (!message.IsBodyHtml && !output.EmailSkipAttachments)
             {
-                if (output.ZipResult)
-                {
-                    var zipPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + ".zip"));
-                    FileHelper.CreateZIP(report.ResultFilePath, report.ResultFileName, zipPath, output.ZipPassword);
-                    report.ResultFilePath = zipPath;
-                }
+                HandleZipOptions(report);
                 var attachment = new Attachment(report.ResultFilePath);
-                attachment.Name = Path.GetFileNameWithoutExtension(report.ResultFileName) + ".zip";
+                attachment.Name = Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath);
                 message.Attachments.Add(attachment);
             }
             SmtpClient client = SmtpClient;

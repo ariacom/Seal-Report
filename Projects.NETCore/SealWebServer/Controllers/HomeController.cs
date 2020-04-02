@@ -209,7 +209,7 @@ namespace SealWebServer.Controllers
                 if (execution != null)
                 {
                     Report report = execution.Report;
-                    WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Starting report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
+                    WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Information, string.Format("Starting report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
                     report.IsNavigating = false;
                     initInputRestrictions(execution, report);
                     while (execution.IsConvertingToExcel) Thread.Sleep(100);
@@ -267,7 +267,7 @@ namespace SealWebServer.Controllers
                         report = newReport;
                         setSessionValue(report.ExecutionGUID, execution);
 
-                        WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Execute report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
+                        WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Information, string.Format("Execute report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
 
                         report.ExecutionContext = ReportExecutionContext.WebReport;
                         report.SecurityContext = WebUser;
@@ -290,7 +290,7 @@ namespace SealWebServer.Controllers
 
                         setSessionValue(report.ExecutionGUID, execution);
 
-                        WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Navigation report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
+                        WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Information, string.Format("Navigation report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
 
                         report.ExecutionContext = ReportExecutionContext.WebReport;
                         report.SecurityContext = WebUser;
@@ -402,8 +402,8 @@ namespace SealWebServer.Controllers
                     Report report = execution.Report;
                     NavigationContext.SetNavigation(execution);
 
-                    WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, string.Format("Viewing result of report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
-                    if (report.HasErrors) WebHelper.WriteLogEntryWeb(EventLogEntryType.Error, string.Format("Report '{0}' execution errors:\r\n{1}", report.FilePath, report.ExecutionErrors), getContextDetail(Request, WebUser));
+                    WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Information, string.Format("Viewing result of report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
+                    if (report.HasErrors) WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Error, string.Format("Report '{0}' execution errors:\r\n{1}", report.FilePath, report.ExecutionErrors), getContextDetail(Request, WebUser));
                     string filePath = report.ForOutput || report.HasExternalViewer ? report.HTMLDisplayFilePath : report.ResultFilePath;
                     if (!System.IO.File.Exists(filePath)) throw new Exception("Error: Result file path does not exists...");
                     return getFileResult(filePath, report);

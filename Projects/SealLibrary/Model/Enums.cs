@@ -521,6 +521,8 @@ namespace Seal.Model
         DashboardCopy,
         DashboardDelete,
         EventError,
+        EventServer,
+        EventLoggedUsers,
     }
 
     public enum TriggerType

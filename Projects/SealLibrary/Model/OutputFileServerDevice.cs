@@ -21,7 +21,6 @@ namespace Seal.Model
 {
     /// <summary>
     /// OutputFileServerDevice is an implementation of device that save the report result to a file server (FTP,SFTP,etc.).
-    /// Based on the WinSCP library
     /// </summary>
     public class OutputFileServerDevice : OutputDevice
     {
@@ -36,14 +35,8 @@ namespace Seal.Model
     ReportOutput output = report.OutputToExecute;
     OutputFileServerDevice device = (OutputFileServerDevice)output.Device;
 
-    var resultFileName = report.ResultFileName;
-    if (output.ZipResult)
-    {
-        var zipPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + "".zip""));
-        FileHelper.CreateZIP(report.ResultFilePath, report.ResultFileName, zipPath, output.ZipPassword);
-        resultFileName = Path.GetFileNameWithoutExtension(report.ResultFileName) + "".zip"";
-        report.ResultFilePath = zipPath;
-    }
+    var resultFileName = (output.ZipResult ? Path.GetFileNameWithoutExtension(report.ResultFileName) + "".zip"" : report.ResultFileName);
+    device.HandleZipOptions(report);
 
     //Put file
     var remotePath = output.FileServerFolderWithSeparators + resultFileName;

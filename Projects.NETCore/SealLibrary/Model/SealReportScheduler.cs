@@ -130,6 +130,7 @@ namespace Seal.Model
         public void Run()
         {
             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Report Scheduler");
+            Audit.LogEventAudit(AuditType.EventServer, "Starting Report Scheduler");
             DateTime lastLoad = DateTime.MinValue;
             while(Running)
             {
@@ -159,10 +160,11 @@ namespace Seal.Model
                 }
             }
             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Report Scheduler is stopped");
+            Audit.LogEventAudit(AuditType.EventServer, "Report Scheduler is stopped");
         }
         public void Shutdown()
         {
-            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Stopping Report Scheduler");
+            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Ending Report Scheduler");
             Running = false;
             Thread.Sleep(4000);
         }
