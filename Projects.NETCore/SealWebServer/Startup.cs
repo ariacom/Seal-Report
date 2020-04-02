@@ -25,12 +25,17 @@ namespace SealWebServer
         {
             Configuration = configuration;
             Environment = environment;
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             //Set repository path
             Repository.RepositoryConfigurationPath = Configuration.GetValue<string>("SealConfiguration:RepositoryPath");
             DebugMode = Configuration.GetValue<Boolean>("SealConfiguration:DebugMode", false);
             SessionTimeout = Configuration.GetValue<int>("SealConfiguration:SessionTimeout", 60);
 
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
+            Audit.LogEventAudit(AuditType.EventServer, "Starting Web Report Server");
+            Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");
 
             if (Repository.Instance.Configuration.UseWebScheduler)
             {
@@ -66,8 +71,6 @@ namespace SealWebServer
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver(); //Force PascalCase
                 });
-
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,6 +105,10 @@ namespace SealWebServer
         private void OnShutdown()
         {
             if (Repository.Instance.Configuration.UseWebScheduler) SealReportScheduler.Instance.Shutdown();
+            WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Web Report Server");
+            Audit.LogEventAudit(AuditType.EventServer, "Ending Web Report Server");
+            Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");
+
         }
 
         private void RunScheduler()

@@ -2,6 +2,8 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using Seal.Helpers;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Seal.Model
@@ -41,6 +43,21 @@ namespace Seal.Model
         /// Save the device to a file
         /// </summary>
         public abstract void SaveToFile(string path);
+
+        /// <summary>
+        /// Handle the Output ZIP Options: Create a zip file if necessary
+        /// </summary>
+        /// <param name="report"></param>
+        public void HandleZipOptions(Report report)
+        {
+            ReportOutput output = report.OutputToExecute;
+            if (output.ZipResult)
+            {
+                var zipPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + ".zip"));
+                FileHelper.CreateZIP(report.ResultFilePath, Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath), zipPath, output.ZipPassword);
+                report.ResultFilePath = zipPath;
+            }
+        }
 
     }
 }

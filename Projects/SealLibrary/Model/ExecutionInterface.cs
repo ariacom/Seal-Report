@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.Text;
 
 namespace Seal.Model
 {
@@ -22,7 +23,7 @@ namespace Seal.Model
         public void LogRaw(string text, params object[] args) { }
     }
 
-    public class ConsoleLogInterface : ExecutionLogInterface
+    public class ConsoleLog : ExecutionLogInterface
     {
         public bool IsJobCancelled() { return false; }
         public void Log(string text, params object[] args) {
@@ -36,4 +37,21 @@ namespace Seal.Model
         }
     }
 
+    public class StringLog : ExecutionLogInterface
+    {
+        public StringBuilder Result = new StringBuilder("");
+        public bool IsJobCancelled() { return false; }
+        public void Log(string text, params object[] args)
+        {
+            Result.AppendFormat(text, args);
+        }
+        public void LogNoCR(string text, params object[] args)
+        {
+            Result.AppendFormat(text, args);
+        }
+        public void LogRaw(string text, params object[] args)
+        {
+            Result.AppendFormat(text, args);
+        }
+    }
 }

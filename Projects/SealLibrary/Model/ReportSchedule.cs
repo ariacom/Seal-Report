@@ -109,7 +109,7 @@ namespace Seal.Model
 
         [Category("Definition"), DisplayName("Is enabled"), Description("True if the schedule is enabled."), Id(2, 1)]
         [XmlIgnore]
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool SealEnabled
         {
             get
@@ -122,7 +122,7 @@ namespace Seal.Model
             }
         }
 
-        [Category("Definition"), DisplayName("Start date"), Description("Start date and time of the schedule."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Start date"), Description("Start date and time of the schedule."), Id(3, 1)]
         [XmlIgnore]
         public DateTime SealStart
         {
@@ -137,7 +137,7 @@ namespace Seal.Model
                 UpdateEditor(); //!NETCore
             }
         }
-        [Category("Definition"), DisplayName("End date"), Description("End date and time of the schedule."), Id(3, 1)]
+        [Category("Definition"), DisplayName("End date"), Description("End date and time of the schedule."), Id(4, 1)]
         [XmlIgnore]
         public DateTime SealEnd
         {
@@ -154,7 +154,7 @@ namespace Seal.Model
         }
 
 
-        [Category("Definition"), DisplayName("Trigger type"), Description("Type of schedule trigger."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Trigger type"), Description("Type of schedule trigger."), Id(5, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(TriggerType.Daily)]
         [XmlIgnore]
@@ -172,7 +172,7 @@ namespace Seal.Model
             }
         }
 
-        [Category("Definition"), DisplayName("Recur every (days)"), Description("Number of days."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Recur every (days)"), Description("Number of days."), Id(6, 1)]
         [XmlIgnore]
         public int SealDaysInterval
         {
@@ -188,7 +188,7 @@ namespace Seal.Model
             }
         }
 
-        [Category("Definition"), DisplayName("Recur every (weeks)"), Description("Number of weeks."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Recur every (weeks)"), Description("Number of weeks."), Id(7, 1)]
         [XmlIgnore]
         public int SealWeeksInterval
         {
@@ -204,7 +204,7 @@ namespace Seal.Model
             }
         }
 
-        [Category("Definition"), DisplayName("Week days"), Description("Days of the week to execute the schedule."), Id(7, 1)]
+        [Category("Definition"), DisplayName("Week days"), Description("Days of the week to execute the schedule."), Id(8, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public int[] SealWeekdays
@@ -221,7 +221,7 @@ namespace Seal.Model
             }
         }
 
-        [Category("Definition"), DisplayName("Months"), Description("Months to execute the schedule."), Id(8, 1)]
+        [Category("Definition"), DisplayName("Months"), Description("Months to execute the schedule."), Id(9, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public int[] SealMonths
@@ -238,7 +238,7 @@ namespace Seal.Model
             }
         }
 
-        [Category("Definition"), DisplayName("Days of the month"), Description("Days of the month to execute the schedule."), Id(9, 1)]
+        [Category("Definition"), DisplayName("Days of the month"), Description("Days of the month to execute the schedule."), Id(10, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public int[] SealDays
@@ -256,7 +256,7 @@ namespace Seal.Model
         }
 
 
-        [Category("Definition"), DisplayName("Repeat schedule every"), Description("Interval of the schedule repetition."), Id(10, 1)]
+        [Category("Definition"), DisplayName("Repeat schedule every"), Description("Interval of the schedule repetition."), Id(11, 1)]
         [XmlIgnore]
         [DefaultValue("None")]
         [TypeConverter(typeof(ScheduleRepeatConverter))]
@@ -274,7 +274,7 @@ namespace Seal.Model
             }
         }
 
-        [Category("Definition"), DisplayName("For a duration of"), Description("Duration of the schedule repetition."), Id(11, 1)]
+        [Category("Definition"), DisplayName("For a duration of"), Description("Duration of the schedule repetition."), Id(12, 1)]
         [XmlIgnore]
         [DefaultValue("Indefinitely")]
         [TypeConverter(typeof(ScheduleRepeatConverter))]
@@ -292,7 +292,7 @@ namespace Seal.Model
             }
         }
 
-        [Category("Definition"), DisplayName("Next execution"), Description("Next execution planned for the schedule."), Id(12, 1)]
+        [Category("Definition"), DisplayName("Next execution"), Description("Next execution planned for the schedule."), Id(13, 1)]
         [XmlIgnore]
         public DateTime? SealNextExecution
         {
@@ -333,6 +333,50 @@ namespace Seal.Model
             string[] sources = source.Split('\n');
             if (sources.Length > index) return sources[index].Trim();
             return ""; ;
+        }
+
+        /// <summary>
+        /// Weekdays in string
+        /// </summary>
+        [XmlIgnore]
+        public string SealDaysString
+        {
+            get
+            {
+                var result = "";
+                if (SealType == TriggerType.Monthly) foreach (var day in SealDays) Helper.AddValue(ref result, ",", day == 32 ? "Last" : day.ToString());
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Weekdays in string
+        /// </summary>
+        [XmlIgnore]
+        public string SealWeekdaysString
+        {
+            get
+            {
+                var result = "";
+
+                if (SealType == TriggerType.Weekly) foreach (var day in SealWeekdays) Helper.AddValue(ref result, ",", Report.CultureInfo.DateTimeFormat.DayNames[day]);
+                
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Weekdays in string
+        /// </summary>
+        [XmlIgnore]
+        public string SealMonthsString
+        {
+            get
+            {
+                var result = "";
+                if (SealType == TriggerType.Monthly) foreach (var m in SealMonths) Helper.AddValue(ref result, ",", Report.CultureInfo.DateTimeFormat.MonthNames[m]);
+                return result;
+            }
         }
 
         /// <summary>

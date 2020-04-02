@@ -42,6 +42,7 @@ namespace SealWebServer.Controllers
 
                 //Audit
                 Audit.LogAudit(AuditType.Login, WebUser);
+                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
 
                 //Set culture from cookie
                 string culture = getCookie(SealCultureCookieName);
@@ -506,12 +507,12 @@ namespace SealWebServer.Controllers
         {
             writeDebug("SWILogout");
 
-            //Audit
-            Audit.LogAudit(AuditType.Logout, WebUser);
-
             try
             {
                 if (WebUser != null) WebUser.Logout();
+                //Audit
+                Audit.LogAudit(AuditType.Logout, WebUser);
+                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
                 return Json(new { });
             }
             catch (Exception ex)
@@ -895,7 +896,6 @@ namespace SealWebServer.Controllers
                 ReportView view = null, modelView = null;
 
                 var executions = DashboardExecutions;
-                Debug.WriteLine("{0} Exec1: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
                 lock (executions)
                 {
                     //remove executions older than 2 hours
@@ -917,7 +917,6 @@ namespace SealWebServer.Controllers
 
                     if (execution == null)
                     {
-                        Debug.WriteLine("{0} Exec2: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
                         //create execution
                         repository = Repository.CreateFast();
                         report = Report.LoadFromFile(filePath, repository);
@@ -934,7 +933,6 @@ namespace SealWebServer.Controllers
                     {
                         report = execution.Report;
                     }
-                    Debug.WriteLine("{0} Exec3: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
 
                     if (view == null)
                     {
@@ -947,13 +945,10 @@ namespace SealWebServer.Controllers
                     report.CurrentViewGUID = report.GetRootView(view).GUID;
                 }
 
-                Debug.WriteLine("{0} Exec4: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
                 lock (execution)
                 {
-                    Debug.WriteLine("{0} Exec5: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
                     if (!report.IsExecuting && (report.ExecutionEndDate == DateTime.MinValue || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
                     {
-                        Debug.WriteLine("{0} Exec6: {1} {2} {3} {4} {5}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, widget.ReportPath, executions.Count, DashboardExecutions.Count);
                         //Disable basics
                         report.ExecutionView.InitParameters(false);
                         //Set HTML Format
@@ -962,18 +957,15 @@ namespace SealWebServer.Controllers
                     }
                     while (report.IsExecuting) Thread.Sleep(100);
                 }
-                Debug.WriteLine("{0} Exec7: {1} {2} {3}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, executions.Count);
 
                 if (report.HasErrors)
                 {
                     throw new Exception(report.Translate("This report has execution errors. Please check details in the Repository Logs Files or in the Event Viewer..."));
                 }
 
-                Debug.WriteLine("{0} Exe8: {1} {2} {3}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, executions.Count);
                 //Reset pointers and parse
                 lock (execution)
                 {
-                    Debug.WriteLine("{0} Exec9: {1} {2} {3}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, executions.Count);
                     try
                     {
                         report.Status = ReportStatus.RenderingDisplay;
@@ -989,19 +981,21 @@ namespace SealWebServer.Controllers
                         report.Status = ReportStatus.Executed;
                     }
                 }
-                Debug.WriteLine("{0} Exec10: {1} {2} {3}", DateTime.Now.ToString("HH:mm:ss:fff"), guid, itemguid, executions.Count);
 
                 //Set context for navigation, remove previous, keep root
                 var keys = NavigationContext.Navigations.Where(i => i.Value.Execution.RootReport.ExecutionGUID == report.ExecutionGUID && i.Value.Execution.RootReport != i.Value.Execution.Report).ToArray();
                 foreach (var key in keys) NavigationContext.Navigations.Remove(key.Key);
                 NavigationContext.SetNavigation(execution);
 
+                var execReportPath = widget.ExecReportPath;
+                if (string.IsNullOrEmpty(execReportPath)) execReportPath = widget.ReportPath;
+
                 var result = new
                 {
                     dashboardguid = guid,
                     itemguid = itemguid,
                     executionguid = execution.Report.ExecutionGUID,
-                    path = !string.IsNullOrEmpty(widget.ExecViewGUID) ? widget.ReportPath : "",
+                    path = !string.IsNullOrEmpty(widget.ExecViewGUID) ? execReportPath : "",
                     viewGUID = widget.ExecViewGUID,
                     lastexec = Translate("Last execution at") + " " + report.ExecutionEndDate.ToString("G", Repository.CultureInfo),
                     description = Repository.TranslateWidgetDescription(widget.ReportPath.Replace(Repository.ReportsFolder, Path.DirectorySeparatorChar.ToString()), widget.Description),

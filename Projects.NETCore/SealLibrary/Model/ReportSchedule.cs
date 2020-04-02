@@ -241,6 +241,50 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Weekdays in string
+        /// </summary>
+        [XmlIgnore]
+        public string SealDaysString
+        {
+            get
+            {
+                var result = "";
+                if (SealType == TriggerType.Monthly) foreach (var day in SealDays) Helper.AddValue(ref result, ",", day == 32 ? "Last" : day.ToString());
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Weekdays in string
+        /// </summary>
+        [XmlIgnore]
+        public string SealWeekdaysString
+        {
+            get
+            {
+                var result = "";
+
+                if (SealType == TriggerType.Weekly) foreach (var day in SealWeekdays) Helper.AddValue(ref result, ",", Report.CultureInfo.DateTimeFormat.DayNames[day]);
+                
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Weekdays in string
+        /// </summary>
+        [XmlIgnore]
+        public string SealMonthsString
+        {
+            get
+            {
+                var result = "";
+                if (SealType == TriggerType.Monthly) foreach (var m in SealMonths) Helper.AddValue(ref result, ",", Report.CultureInfo.DateTimeFormat.MonthNames[m]);
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Task source name
         /// </summary>
         [XmlIgnore]

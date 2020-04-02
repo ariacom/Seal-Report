@@ -5,6 +5,7 @@
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
+using System.Drawing.Design;
 using System.Xml.Serialization;
 
 namespace Seal.Model
@@ -83,14 +84,20 @@ namespace Seal.Model
         public int Height { get; set; } = 0;
 
         /// <summary>
-        /// If a root view is specified, the widget name has a link to execute the full report using the root view
-        /// </summary>
-        public string ExecViewGUID { get; set; }
-
-        /// <summary>
         /// Number of seconds before the widget is re-executed. If -1, the rate of the root view is used (defined in property 'Options: Auto-Refresh (seconds)'). A value of 0 means no refresh.
         /// </summary>
         public int Refresh { get; set; } = -1;
+
+
+        /// <summary>
+        /// If a report path is specified, the widget name has a link to execute the report and the view specified. If empty, the current report is used.
+        /// </summary>
+        public string ExecReportPath { get; set; }
+
+        /// <summary>
+        /// If a root view is specified, the widget name has a link to execute the report and the view specified.
+        /// </summary>
+        public string ExecViewGUID { get; set; }
 
         /// <summary>
         /// The XML to insert in a dashboard definition file to show this widget
