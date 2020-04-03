@@ -200,6 +200,11 @@ namespace Seal.Helpers
 
         public static void CreateZIP(string inputPath, string entryName, string zipPath, string password)
         {
+            CreateZIP(new string[] { inputPath }, entryName, zipPath, password);
+        }
+
+        public static void CreateZIP(string[] inputPaths, string entryName, string zipPath, string password)
+        {
             using (FileStream fsOut = File.Create(zipPath))
             using (var zipStream = new ZipOutputStream(fsOut))
             {
@@ -209,22 +214,25 @@ namespace Seal.Helpers
 
                 zipStream.Password = password;
 
-                var fi = new FileInfo(inputPath);
-                var newEntry = new ZipEntry(entryName);
-
-                newEntry.DateTime = fi.LastWriteTime;
-
-                newEntry.Size = fi.Length;
-                zipStream.PutNextEntry(newEntry);
-
-                // Zip the file in buffered chunks
-                var buffer = new byte[4096];
-                using (FileStream fsInput = File.OpenRead(inputPath))
+                foreach (var inputPath in inputPaths)
                 {
-                    StreamUtils.Copy(fsInput, zipStream, buffer);
+                    var fi = new FileInfo(inputPath);
+                    var newEntry = new ZipEntry(entryName);
+
+                    newEntry.DateTime = fi.LastWriteTime;
+
+                    newEntry.Size = fi.Length;
+                    zipStream.PutNextEntry(newEntry);
+
+                    // Zip the file in buffered chunks
+                    var buffer = new byte[4096];
+                    using (FileStream fsInput = File.OpenRead(inputPath))
+                    {
+                        StreamUtils.Copy(fsInput, zipStream, buffer);
+                    }
+                    zipStream.Flush();
+                    zipStream.CloseEntry();
                 }
-                zipStream.Flush();
-                zipStream.CloseEntry();
                 zipStream.Dispose();
             }
         }

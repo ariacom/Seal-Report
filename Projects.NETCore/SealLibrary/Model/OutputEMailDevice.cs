@@ -277,7 +277,7 @@ namespace Seal.Model
             {
                 HandleZipOptions(report);
                 var attachment = new Attachment(report.ResultFilePath);
-                attachment.Name = Path.GetFileNameWithoutExtension(report.ResultFileName) + ".zip";
+                attachment.Name = Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath);
                 message.Attachments.Add(attachment);
             }
             SmtpClient client = SmtpClient;

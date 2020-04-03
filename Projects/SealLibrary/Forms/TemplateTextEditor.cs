@@ -251,8 +251,14 @@ if (cell.IsTitle)
 	ReportExecutionLog log = model.Report;
 
     //Script executed to modify the model result table after it has been loaded from the database
-    //Modify values in the current result table, rows can also be added and deleted.
+    //Modify values in the current result table, rows can also be added and deleted
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+
+    //Table columns definition
+    foreach (DataColumn col in table.Columns) {
+        log.LogMessage(""Column Name:{0}, Type:{1}"", col.ColumnName, col.DataType);
+    }
+
     log.LogMessage(""Modifying table with the model 'Post Load Script'..."");
     foreach (DataRow row in table.Rows)
     {

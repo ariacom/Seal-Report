@@ -16,7 +16,8 @@ using Seal.Model;
 using System.DirectoryServices.AccountManagement;
 using Jose;
 using Newtonsoft.Json.Linq;
-using Ionic.Zip;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
 using System.Data.Odbc;
 using System.Data.SqlClient;
 using Renci.SshNet;
@@ -37,7 +38,7 @@ namespace Seal.Helpers
         static PrincipalContext dummy8 = null;
         static JwtSettings dummy9 = null; //!NETCore
         static JObject dummy10 = null;
-        static ZipFile dummy11 = null; //!NETCore
+        static FastZip dummy11 = null; 
         static OdbcConnection dummy12 = null;
         static SqlConnection dummy13 = null;
         static SftpClient dummy14 = null;
@@ -61,7 +62,7 @@ namespace Seal.Helpers
                     if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
                     if (dummy9 == null) dummy9 = JWT.DefaultSettings; //!NETCore
                     if (dummy10 == null) dummy10 = JObject.Parse("{}");
-                    if (dummy11 == null) dummy11 = new ZipFile(); //!NETCore
+                    if (dummy11 == null) dummy11 = new FastZip(); 
                     if (dummy12 == null) dummy12 = new OdbcConnection();
                     if (dummy13 == null) dummy13 = new SqlConnection();
                     if (dummy14 == null) dummy14 = new SftpClient("","a","");
@@ -77,7 +78,7 @@ namespace Seal.Helpers
 
         static public string GetFullScript(string script, object model, string header = null)
         {
-            var result = script;
+            var result = (script == null ? "" : script);
             Report report = null;
             SealServerConfiguration configuration = null;
             if (model is SealServerConfiguration)
@@ -168,10 +169,12 @@ namespace Seal.Helpers
                 result = configuration.SetConfigurationCommonScripts(result);
             }
 
-            //Add default using
-            if (!result.Contains("@using Seal.Model")) result += "@using Seal.Model\r\n";
-            if (!result.Contains("@using Seal.Helpers")) result += "@using Seal.Helpers\r\n";
-
+            if (!string.IsNullOrEmpty(result))
+            {
+                //Add default using
+                if (!result.Contains("@using Seal.Model")) result += "@using Seal.Model\r\n";
+                if (!result.Contains("@using Seal.Helpers")) result += "@using Seal.Helpers\r\n";
+            }
             return result;
         }
 

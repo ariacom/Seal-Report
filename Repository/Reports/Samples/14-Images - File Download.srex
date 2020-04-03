@@ -112,10 +112,6 @@
 &#xD;
 @functions &#xD;
 {&#xD;
-    void test() {&#xD;
-    }&#xD;
-    &#xD;
-&#xD;
     byte[] GetImageBytesFromOLEField(byte[] oleFieldBytes)&#xD;
     {&#xD;
         const string BITMAP_ID_BLOCK = "BM";&#xD;
