@@ -11,7 +11,6 @@ using DynamicTypeDescriptor;
 using Seal.Helpers;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
-using Ionic.Zip;
 using Seal.Forms;
 using System.Xml;
 

@@ -87,7 +87,7 @@
                     {
                         goalValue = string.Format("{0}: {1}", report.Translate("Goal"), goalCell.HTMLValue);
                         val = 0;
-                        if (goalCell.DoubleValue != 0)
+                        if (goalCell.DoubleValue != null && goalCell.DoubleValue != 0)
                         {
                             goalPercentage = 100 * (valueEnd - goalCell.DoubleValue) / goalCell.DoubleValue;
                             val = goalPercentage.Value;
