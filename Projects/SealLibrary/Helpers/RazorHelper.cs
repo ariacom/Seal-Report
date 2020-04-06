@@ -53,7 +53,11 @@ namespace Seal.Helpers
                 {
                     //Force the load of the assemblies
                     if (dummy == null) dummy = new HtmlString("");
-                    if (dummy2 == null) dummy2 = new DataTable();
+                    if (dummy2 == null)
+                    {
+                        dummy2 = new DataTable();
+                        dummy2.AsEnumerable();
+                    }
                     if (dummy3 == null) dummy3 = new OleDbConnection();
                     if (dummy4 == null) dummy4 = new LdapConnection("");
                     if (dummy5 == null) dummy5 = new SyndicationFeed();
