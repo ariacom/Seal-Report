@@ -2464,7 +2464,6 @@ namespace Seal.Model
 
         #region Log
 
-        static bool PurgeIsDone = false;
         /// <summary>
         /// Log the report execution in the Log repository folder
         /// </summary>

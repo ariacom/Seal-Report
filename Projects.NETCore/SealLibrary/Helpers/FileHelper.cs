@@ -200,6 +200,13 @@ namespace Seal.Helpers
 
         public static void CreateZIP(string inputPath, string entryName, string zipPath, string password)
         {
+            var dic = new Dictionary<string, string>();
+            dic.Add(inputPath, entryName);
+            CreateZIP(dic, zipPath, password);
+        }
+
+        public static void CreateZIP(Dictionary<string, string> inputTargetPaths,  string zipPath, string password)
+        {
             using (FileStream fsOut = File.Create(zipPath))
             using (var zipStream = new ZipOutputStream(fsOut))
             {
@@ -209,22 +216,25 @@ namespace Seal.Helpers
 
                 zipStream.Password = password;
 
-                var fi = new FileInfo(inputPath);
-                var newEntry = new ZipEntry(entryName);
-
-                newEntry.DateTime = fi.LastWriteTime;
-
-                newEntry.Size = fi.Length;
-                zipStream.PutNextEntry(newEntry);
-
-                // Zip the file in buffered chunks
-                var buffer = new byte[4096];
-                using (FileStream fsInput = File.OpenRead(inputPath))
+                foreach (var inputPath in inputTargetPaths.Keys)
                 {
-                    StreamUtils.Copy(fsInput, zipStream, buffer);
+                    var fi = new FileInfo(inputPath);
+                    var newEntry = new ZipEntry(inputTargetPaths[inputPath]);
+
+                    newEntry.DateTime = fi.LastWriteTime;
+
+                    newEntry.Size = fi.Length;
+                    zipStream.PutNextEntry(newEntry);
+
+                    // Zip the file in buffered chunks
+                    var buffer = new byte[4096];
+                    using (FileStream fsInput = File.OpenRead(inputPath))
+                    {
+                        StreamUtils.Copy(fsInput, zipStream, buffer);
+                    }
+                    zipStream.Flush();
+                    zipStream.CloseEntry();
                 }
-                zipStream.Flush();
-                zipStream.CloseEntry();
                 zipStream.Dispose();
             }
         }

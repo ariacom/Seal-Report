@@ -109,6 +109,10 @@
                     if ((@chartId).interpolate != null) (@chartId).interpolate('cardinal');
                     if ((@chartId).staggerLabels != null) (@chartId).staggerLabels(true);
 
+                    //Force axis ranges
+                    if ((@chartId).forceX && @Helper.ToJS(view.HasValue("nvd3_xaxis_range"))) (@chartId).forceX([@view.GetValue("nvd3_xaxis_range")]);
+                    if ((@chartId).forceY && @Helper.ToJS(view.HasValue("nvd3_yaxis_range"))) (@chartId).forceY([@view.GetValue("nvd3_yaxis_range")]);
+
                     //if ((@chartId).rotateLabels != null) (@chartId).rotateLabels(90);  //for Bar
                     //if ((@chartId).isArea != null) (@chartId).isArea(true); //for Line
                     //(@chartId).xAxis.showMaxMin(false);

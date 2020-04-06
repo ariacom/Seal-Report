@@ -200,10 +200,12 @@ namespace Seal.Helpers
 
         public static void CreateZIP(string inputPath, string entryName, string zipPath, string password)
         {
-            CreateZIP(new string[] { inputPath }, entryName, zipPath, password);
+            var dic = new Dictionary<string, string>();
+            dic.Add(inputPath, entryName);
+            CreateZIP(dic, zipPath, password);
         }
 
-        public static void CreateZIP(string[] inputPaths, string entryName, string zipPath, string password)
+        public static void CreateZIP(Dictionary<string, string> inputTargetPaths,  string zipPath, string password)
         {
             using (FileStream fsOut = File.Create(zipPath))
             using (var zipStream = new ZipOutputStream(fsOut))
@@ -214,10 +216,10 @@ namespace Seal.Helpers
 
                 zipStream.Password = password;
 
-                foreach (var inputPath in inputPaths)
+                foreach (var inputPath in inputTargetPaths.Keys)
                 {
                     var fi = new FileInfo(inputPath);
-                    var newEntry = new ZipEntry(entryName);
+                    var newEntry = new ZipEntry(inputTargetPaths[inputPath]);
 
                     newEntry.DateTime = fi.LastWriteTime;
 

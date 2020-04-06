@@ -177,6 +177,15 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Returns the parameter value if not empty with a prefix and a suffix
+        /// </summary>
+        public string GetValueIfNotEmpty(string prefix, string name, string suffix)
+        {
+            return Helper.AddIfNotEmpty(prefix, GetValue(name), suffix);
+        }
+
+
+        /// <summary>
         /// Returns the parameter value or the configuration value if it does not exist
         /// </summary>
         public string GetValueOrDefault(string name)

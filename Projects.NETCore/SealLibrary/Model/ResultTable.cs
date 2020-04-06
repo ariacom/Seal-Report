@@ -52,6 +52,16 @@ namespace Seal.Model
         /// </summary>
         public object Tag;
 
+        /// <summary>
+        /// Custom Tag the can be used at execution time to store any object
+        /// </summary>
+        public object Tag2;
+
+        /// <summary>
+        /// Custom Tag the can be used at execution time to store any object
+        /// </summary>
+        public object Tag3;
+
         private string _lastSearch = "";
         private List<ResultCell[]> _filteredLines = null;
 

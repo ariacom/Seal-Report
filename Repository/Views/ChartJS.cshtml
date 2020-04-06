@@ -166,7 +166,10 @@
                                     display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_yaxis_title")))),
                                     labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis_title"))))'
                                 },
-                                ticks: {
+                               ticks: {
+                                    @Raw(view.GetValueIfNotEmpty("min:", "chartjs_yaxis_min", ","))
+                                    @Raw(view.GetValueIfNotEmpty("max:", "chartjs_yaxis_max", ","))
+                                    @Raw(view.GetValueIfNotEmpty("stepSize:", "chartjs_yaxis_stepsize", ","))
                                     callback: function (label, index, labels) {
                                         if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(new Date(label));
                                         return d3.format('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(label).valueFormat();
@@ -186,6 +189,9 @@
                                     labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis2_title"))))'
                                 },
                                 ticks: {
+                                    @Raw(view.GetValueIfNotEmpty("min:", "chartjs_yaxis2_min", ","))
+                                    @Raw(view.GetValueIfNotEmpty("max:", "chartjs_yaxis2_max", ","))
+                                    @Raw(view.GetValueIfNotEmpty("stepSize:", "chartjs_yaxis2_stepsize", ","))
                                     callback: function(label, index, labels) {
                                         if (@Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime)) return d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))')(new Date(label));
                                         return d3.format('@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))')(label).valueFormat();

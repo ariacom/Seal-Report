@@ -158,14 +158,6 @@ namespace Seal.Model
         public FileServerProtocol Protocol { get; set; } = FileServerProtocol.FTP;
 
         /// <summary>
-        /// For FTPS, TLS/SSL Implicit or Explicit encryption.
-        /// </summary>
-/*        [Category("Definition"), DisplayName("FTP Encryption"), Description("For FTPS, TLS/SSL Implicit or Explicit encryption."), Id(1, 1)]
-        [TypeConverter(typeof(NamedEnumConverter))]
-        [DefaultValue(FtpSecure.None)]
-        public FtpSecure FtpSecure { get; set; } = FtpSecure.None;
-        */
-        /// <summary>
         /// File Server host name
         /// </summary>
         [Category("Definition"), DisplayName("Host name"), Description("Host name of the server."), Id(2, 1)]

@@ -31,6 +31,16 @@ namespace Seal.Model
     }
 
     /// <summary>
+    /// Exception for Session Lost
+    /// </summary>
+    public class SessionLostException : Exception
+    {
+        public SessionLostException(string message) : base(message)
+        {
+        }
+    }
+
+    /// <summary>
     /// Class dedicated to log events for audit purpose
     /// </summary>
     public class Audit

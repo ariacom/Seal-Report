@@ -205,6 +205,7 @@ namespace SealWebServer.Controllers
             try
             {
                 if (!CheckAuthentication()) return _loginContentResult;
+                if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -231,6 +232,7 @@ namespace SealWebServer.Controllers
             try
             {
                 if (!CheckAuthentication()) return _loginContentResult;
+                if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
 
                 ReportExecution execution = getExecution(execution_guid);
                 if (execution != null)
@@ -396,6 +398,7 @@ namespace SealWebServer.Controllers
             try
             {
                 if (!CheckAuthentication()) return _loginContentResult;
+                if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -726,12 +729,12 @@ namespace SealWebServer.Controllers
 
         void checkSWIAuthentication()
         {
-            if (WebUser == null || !WebUser.IsAuthenticated) throw new Exception("Error: user is not authenticated");
+            if (WebUser == null || !WebUser.IsAuthenticated) throw new SessionLostException("Error: user is not authenticated");
         }
 
         JsonResult HandleSWIException(Exception ex)
         {
-            if (!(ex is ValidationException))
+            if (!(ex is ValidationException) && !(ex is SessionLostException))
             {
                 var detail = getContextDetail(Request, WebUser);
                 Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);

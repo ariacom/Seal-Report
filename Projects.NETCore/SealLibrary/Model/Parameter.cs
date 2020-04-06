@@ -33,7 +33,7 @@ namespace Seal.Model
         /// Parameter type
         /// </summary>
         [XmlIgnore]
-        public ViewParameterType Type { get; set; }
+        public ViewParameterType Type { get; set; } = ViewParameterType.Text;
 
         /// <summary>
         /// If true and the parameter is an enum, only the enum values defined can be selected
@@ -56,7 +56,7 @@ namespace Seal.Model
         /// <summary>
         /// The parameter value
         /// </summary>
-        public string Value { get; set; }
+        public string Value { get; set; } = "";
 
         /// <summary>
         /// 

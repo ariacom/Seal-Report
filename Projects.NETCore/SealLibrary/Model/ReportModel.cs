@@ -880,6 +880,18 @@ namespace Seal.Model
         public object Tag;
 
         /// <summary>
+        /// Custom Tag the can be used at execution time to store any object
+        /// </summary>
+        [XmlIgnore]
+        public object Tag2;
+
+        /// <summary>
+        /// Custom Tag the can be used at execution time to store any object
+        /// </summary>
+        [XmlIgnore]
+        public object Tag3;
+
+        /// <summary>
         /// Init all model references: Elements, Restrictions, etc.
         /// </summary>
         public void InitReferences()
