@@ -380,7 +380,7 @@ namespace Seal.Helpers
             }
         }
 
-        public object ExecuteScalar(ConnectionType connectionType, string connectionString, string sql, bool useSqlConnection = false)
+        public object ExecuteScalar(ConnectionType connectionType, string connectionString, string sql)
         {
             object result = null;
             var connection = Helper.DbConnectionFromConnectionString(connectionType, connectionString);
@@ -397,6 +397,23 @@ namespace Seal.Helpers
             }
             return result;
         }
+
+
+        public DataTable LoadDataTable(MetaConnection connection, string sql)
+        {
+            return LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql);
+        }
+
+        public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)
+        {
+            ExecuteNonQuery(connection.ConnectionType, connection.FullConnectionString, sql, commandsSeparator);
+        }
+
+        public object ExecuteScalar(MetaConnection connection, string sql)
+        {
+            return ExecuteScalar(connection.ConnectionType, connection.FullConnectionString, sql);
+        }
+
 
         public void CreateTable(DbCommand command, DataTable table)
         {

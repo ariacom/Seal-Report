@@ -16,6 +16,7 @@
     log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
 }&#xD;
 </DefinitionScript><LoadScript>@using System.Data&#xD;
+@using System.IO&#xD;
 @{&#xD;
     MetaTable metaTable = Model;&#xD;
     DataTable table = metaTable.NoSQLTable;&#xD;
@@ -39,7 +40,7 @@
     if (report != null &amp;&amp; report.Tag2 != null) {&#xD;
         foreach (var item in ((Dictionary&lt;string,string&gt;) report.Tag2)) {&#xD;
             table.Rows.Add(&#xD;
-                "", &#xD;
+                Path.GetFileName(item.Key), &#xD;
                 item.Key.Replace(report.Repository.ReportsFolder, ""), &#xD;
                 "",&#xD;
                 "",&#xD;
@@ -128,7 +129,7 @@ AND [3f5b1047-6130-4d34-84f9-248148fbb695]</Restriction><Restrictions><ReportRes
                     scriptName = "Report Init Script";&#xD;
                     RazorHelper.Compile(RazorHelper.GetFullScript(report.InitScript, report), report.GetType(), Guid.NewGuid().ToString());&#xD;
                     scriptName = "Report Navigation Script";&#xD;
-                    RazorHelper.Compile(RazorHelper.GetFullScript(report.NavigationScript, report), report.GetType(), Guid.NewGuid().ToString());&#xD;
+                    RazorHelper.Compile(RazorHelper.GetFullScript(report.NavigationScript, new NavigationLink() { Report=report }), typeof(NavigationLink), Guid.NewGuid().ToString());&#xD;
                     foreach (CommonScript script in report.CommonScripts) {&#xD;
                         scriptName = string.Format("Report Common Script '{0}'", script.Name);&#xD;
                         RazorHelper.Compile(RazorHelper.GetFullScript(report.GetCommonScriptsHeader(script), script), script.GetType(), Guid.NewGuid().ToString());&#xD;

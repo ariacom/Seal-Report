@@ -110,6 +110,13 @@ namespace Seal.Helpers
             return "";
         }
 
+        static public string AddIfNotNull(string prefix, object input, string suffix)
+        {
+            if (input != null && input.ToString() != "") return prefix + input.ToString() + suffix;
+            return "";
+        }
+
+
         static public string AddIfNotEmpty(string prefix, string input, string suffix)
         {
             if (!string.IsNullOrEmpty(input)) return prefix + input + suffix;

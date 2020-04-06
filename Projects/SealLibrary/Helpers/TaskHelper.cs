@@ -414,17 +414,17 @@ namespace Seal.Helpers
 
         public DataTable LoadDataTable(MetaConnection connection, string sql)
         {
-            return DatabaseHelper.LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql);
+            return DatabaseHelper.LoadDataTable(connection, sql);
         }
 
         public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)
         {
-            DatabaseHelper.ExecuteNonQuery(connection.ConnectionType, connection.FullConnectionString, sql, commandsSeparator);
+            DatabaseHelper.ExecuteNonQuery(connection, sql, commandsSeparator);
         }
 
         public object ExecuteScalar(MetaConnection connection, string sql)
         {
-            return DatabaseHelper.ExecuteScalar(connection.ConnectionType, connection.FullConnectionString, sql, true);
+            return DatabaseHelper.ExecuteScalar(connection, sql);
         }
 
 

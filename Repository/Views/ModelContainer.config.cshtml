@@ -30,8 +30,8 @@
 "(col-sm-9);col-sm-3 right;|Row 1 for one child view right aligned"
 }
     });
-    Template.Parameters.Add(new Parameter() { Name = "grid_cell_class", Value = "", DisplayName = "Grid cell additional CSS Class", Description = "Additional CSS class attribute of a grid cell.", Enums = new string[] { "text-center", "bg-success", "bg-danger" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "grid_cell_css", Value = "", DisplayName = "Grid cell CSS Style", Description = "CSS style attribute of a grid cell.", Enums = new string[] { "border: 2px solid blue;", "font-size: 10px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "grid_cell_class",DisplayName = "Grid cell additional CSS Class", Description = "Additional CSS class attribute of a grid cell.", Enums = new string[] { "text-center", "bg-success", "bg-danger" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "grid_cell_css", DisplayName = "Grid cell CSS Style", Description = "CSS style attribute of a grid cell.", Enums = new string[] { "border: 2px solid blue;", "font-size: 10px;" }, UseOnlyEnumValues = false });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Model", "Model Container" };

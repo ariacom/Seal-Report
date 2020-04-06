@@ -15,6 +15,8 @@ using Seal.Model;
 using System.DirectoryServices.AccountManagement;
 using Microsoft.AspNetCore.Html;
 using Newtonsoft.Json.Linq;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
 using System.Data.Odbc;
 using System.Data.SqlClient;
 using Renci.SshNet;
@@ -33,6 +35,7 @@ namespace Seal.Helpers
         static XDocument dummy6 = null;
         static PrincipalContext dummy8 = null;
         static JObject dummy10 = null;
+        static FastZip dummy11 = null;
         static OdbcConnection dummy12 = null;
         static SqlConnection dummy13 = null;
         static SftpClient dummy14 = null;
@@ -47,16 +50,21 @@ namespace Seal.Helpers
                 {
                     //Force the load of the assemblies
                     if (dummy == null) dummy = new HtmlString("");
-                    if (dummy2 == null) dummy2 = new DataTable();
+                    if (dummy2 == null)
+                    {
+                        dummy2 = new DataTable();
+                        dummy2.AsEnumerable();
+                    }
                     if (dummy3 == null) dummy3 = new OleDbConnection();
                     if (dummy4 == null) dummy4 = new LdapConnection("");
                     if (dummy5 == null) dummy5 = new SyndicationFeed();
                     if (dummy6 == null) dummy6 = new XDocument();
                     if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
                     if (dummy10 == null) dummy10 = JObject.Parse("{}");
+                    if (dummy11 == null) dummy11 = new FastZip();
                     if (dummy12 == null) dummy12 = new OdbcConnection();
                     if (dummy13 == null) dummy13 = new SqlConnection();
-                    if (dummy14 == null) dummy14 = new SftpClient("","a","");
+                    if (dummy14 == null) dummy14 = new SftpClient("", "a", "");
                     if (dummy15 == null) dummy15 = WebRequest.Create("ftp://dummy.com");
                 }
                 catch (Exception ex)
@@ -69,7 +77,7 @@ namespace Seal.Helpers
 
         static public string GetFullScript(string script, object model, string header = null)
         {
-            var result = script;
+            var result = (script == null ? "" : script);
             Report report = null;
             SealServerConfiguration configuration = null;
             if (model is SealServerConfiguration)
@@ -139,7 +147,7 @@ namespace Seal.Helpers
             {
                 var ob = (SealExcelConverter)model;
                 report = ob.GetReport();
-                configuration = (report  == null ? Repository.Instance.Configuration : report.Repository.Configuration);
+                configuration = (report == null ? Repository.Instance.Configuration : report.Repository.Configuration);
             }
             else if (model is SealPdfConverter)
             {
@@ -160,10 +168,12 @@ namespace Seal.Helpers
                 result = configuration.SetConfigurationCommonScripts(result);
             }
 
-            //Add default using
-            if (!result.Contains("@using Seal.Model")) result += "@using Seal.Model\r\n";
-            if (!result.Contains("@using Seal.Helpers")) result += "@using Seal.Helpers\r\n";
-
+            if (!string.IsNullOrEmpty(result))
+            {
+                //Add default using
+                if (!result.Contains("@using Seal.Model")) result += "@using Seal.Model\r\n";
+                if (!result.Contains("@using Seal.Helpers")) result += "@using Seal.Helpers\r\n";
+            }
             return result;
         }
 

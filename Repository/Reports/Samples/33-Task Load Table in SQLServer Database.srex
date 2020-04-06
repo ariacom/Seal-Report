@@ -1,87 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GUID>b844f1af-a9b3-4474-9d94-ecf601948de4</GUID>
-  <Sources>
-    <ReportSource>
-      <GUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</GUID>
-      <Name>Northwind (Repository)</Name>
-      <Connections />
-      <ConnectionGUID>1</ConnectionGUID>
-      <InitScript />
-      <TasksScript />
-      <MetaData>
-        <Tables>
-          <MetaTable>
-            <GUID>509563f6-f3fd-4dcf-9be8-8e53e5c92496</GUID>
-            <Alias>SealMasterTable</Alias>
-            <DynamicColumns>true</DynamicColumns>
-            <MustRefresh>false</MustRefresh>
-            <Columns />
-          </MetaTable>
-        </Tables>
-        <Joins />
-        <Enums />
-      </MetaData>
-      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
-    </ReportSource>
-    <ReportSource>
-      <GUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</GUID>
-      <Name>Local SQLServer</Name>
-      <Connections>
-        <MetaConnection>
-          <GUID>d28d79a7-bc64-40ac-b205-4c0d5fd381cf</GUID>
-          <Name>connection</Name>
-          <ConnectionString>Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Data Source=(local)</ConnectionString>
-          <UserName />
-          <Password />
-        </MetaConnection>
-      </Connections>
-      <ConnectionGUID>d28d79a7-bc64-40ac-b205-4c0d5fd381cf</ConnectionGUID>
-      <InitScript />
-      <TasksScript />
-      <MetaData>
-        <Tables>
-          <MetaTable>
-            <GUID>ab9fab1f-1c50-4154-804e-c04a2fcf7350</GUID>
-            <Alias>SealMasterTable</Alias>
-            <DynamicColumns>true</DynamicColumns>
-            <MustRefresh>false</MustRefresh>
-            <Columns />
-          </MetaTable>
-        </Tables>
-        <Joins />
-        <Enums />
-      </MetaData>
-    </ReportSource>
-  </Sources>
-  <Models>
-    <ReportModel>
-      <GUID>358d7529-640e-4626-b40a-957e52e9a646</GUID>
-      <Name>model</Name>
-      <SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID>
-      <IgnorePrePostError>false</IgnorePrePostError>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
-      <Elements />
-      <Restriction />
-      <Restrictions />
-      <AggregateRestriction />
-      <AggregateRestrictions />
-    </ReportModel>
-  </Models>
-  <Outputs />
-  <Tasks>
-    <ReportTask>
-      <GUID>27bcb127-6bb1-431a-a9aa-f8ff5d319473</GUID>
-      <Name>Load table</Name>
-      <CancelReport>false</CancelReport>
-      <DbInfoMessage>
-        <Capacity>16</Capacity>
-        <Length>0</Length>
-      </DbInfoMessage>
-      <SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID>
-      <SQL />
-      <Script>@{
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>b844f1af-a9b3-4474-9d94-ecf601948de4</GUID><ViewGUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</ViewGUID><Sources><ReportSource><GUID>8c3ed94a-91bf-4efa-b043-00804f4a8533</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>509563f6-f3fd-4dcf-9be8-8e53e5c92496</GUID><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns></MetaTable></Tables></MetaData><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource><ReportSource><GUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</GUID><Name>Local SQLServer</Name><Connections><MetaConnection><GUID>d28d79a7-bc64-40ac-b205-4c0d5fd381cf</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Data Source=(local)\sqlexpress</ConnectionString><UserName /></MetaConnection></Connections><ConnectionGUID>d28d79a7-bc64-40ac-b205-4c0d5fd381cf</ConnectionGUID><MetaData><Tables><MetaTable><GUID>ab9fab1f-1c50-4154-804e-c04a2fcf7350</GUID><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns></MetaTable></Tables></MetaData></ReportSource></Sources><Models><ReportModel><GUID>358d7529-640e-4626-b40a-957e52e9a646</GUID><Name>model</Name><SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID></ReportModel></Models><Tasks><ReportTask><GUID>27bcb127-6bb1-431a-a9aa-f8ff5d319473</GUID><Name>Load table</Name><CancelReport>false</CancelReport><SourceGUID>745ce0e2-a49e-45c4-a488-eedf5017a1c2</SourceGUID><SQL /><Script>@{
 	//Load a table from an external data source
 	//When executed, the task executes the source SQL and create a table in the SQLServer database
 	//If check SQL statements have been defined, the load is triggered only if the 2 check tables have different values
@@ -96,43 +13,15 @@
 	helper.DatabaseHelper.ColumnCharLength = 0; //0 means auto size
 	helper.DatabaseHelper.InsertBurstSize = 500; //Number of insert per SQL command
 	helper.DatabaseHelper.ExcelOdbcDriver = "Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={0}";
-	*/
+	*/&#xD;
+    &#xD;
+    var source = task.Report.Sources.FirstOrDefault(i =&gt; i.Name.StartsWith("Northwind"));
 	helper.LoadTableFromExternalSource(
-		@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=%SEALREPOSITORY%\Databases\Northwind.mdb;Persist Security Info=False", //Source connection string
+		source.Connection, //Source connection
 		"select * from employees", //Select statement for the source table
 		"northwind_employees", //Name of the destination table
 		false, //if true the load is done for all connections
 		"",//"select count(*) from employees", //If not empty, the select is done to build the check table from the source connection 
 		""//"select count(*) from northwind_employees" //If not empty, the select is done to build the check table from the destination connection
 		);
-}</Script>
-      <SortOrder>1</SortOrder>
-    </ReportTask>
-  </Tasks>
-  <TasksScript />
-  <Views>
-    <ReportView>
-      <GUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</GUID>
-      <Name>view</Name>
-      <Views />
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <PartialTemplates />
-      <Parameters>
-        <Parameter>
-          <Name>messages_mode</Name>
-          <Value>enabledshown</Value>
-        </Parameter>
-      </Parameters>
-      <CultureName />
-      <SortOrder>0</SortOrder>
-      <WebExec>true</WebExec>
-      <PdfConfigurations />
-      <ExcelConfigurations />
-    </ReportView>
-  </Views>
-  <DisplayName />
-  <InitScript />
-  <ViewGUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</ViewGUID>
-  <Schedules />
-</Report>
+}</Script><SortOrder>1</SortOrder></ReportTask></Tasks><Views><ReportView><GUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</GUID><Name>view</Name><TemplateName>Report</TemplateName><Parameters><Parameter><Name>messages_mode</Name><Value>enabledshown</Value></Parameter></Parameters><SortOrder>0</SortOrder></ReportView></Views></Report>
