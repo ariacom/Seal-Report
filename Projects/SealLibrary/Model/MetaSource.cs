@@ -25,6 +25,8 @@ namespace Seal.Model
     /// </summary>
     public class MetaSource : ReportComponent
     {
+        const string DefaultConnectionString = "Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;";
+
         /// <summary>
         /// Current file path of the source
         /// </summary>
@@ -199,7 +201,7 @@ namespace Seal.Model
         public MetaConnection AddConnection()
         {
             MetaConnection result = MetaConnection.Create(this);
-            result.ConnectionString = Repository.Configuration.DefaultConnectionString;
+            result.ConnectionString = DefaultConnectionString;
             result.DatabaseType = ConnectionStringEditor.GetDatabaseType(result.ConnectionString); //!NETCore
 
             result.Name = Helper.GetUniqueName(result.Name, (from i in Connections select i.Name).ToList());
@@ -370,7 +372,7 @@ namespace Seal.Model
             {
                 //Add default connection
                 MetaConnection connection = MetaConnection.Create(this);
-                connection.ConnectionString = repository.Configuration.DefaultConnectionString;
+                connection.ConnectionString = DefaultConnectionString;
                 Connections.Add(connection);
                 ConnectionGUID = connection.GUID;
             }

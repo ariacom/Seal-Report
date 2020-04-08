@@ -46,7 +46,6 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                GetProperty("DefaultConnectionString").SetIsBrowsable(!ForPublication);
                 GetProperty("UseWebScheduler").SetIsBrowsable(!ForPublication);
                 GetProperty("TaskFolderName").SetIsBrowsable(!ForPublication);
                 GetProperty("TaskFolderName").SetIsReadOnly(UseWebScheduler);
@@ -102,12 +101,6 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public bool ForPublication = false;
-
-        /// <summary>
-        /// The OLE DB Default Connection String used when a new Data Source is created
-        /// </summary>
-        [Category("Server Settings"), DisplayName("Default Connection String"), Description("The OLE DB Default Connection String used when a new Data Source is created. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Id(1, 1)]
-        public string DefaultConnectionString { get; set; } = "Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;";
 
         /// <summary>
         /// The logo file name used by the report templates
