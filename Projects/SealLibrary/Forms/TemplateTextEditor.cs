@@ -618,6 +618,7 @@ if (cell.IsTitle)
     Report report = task.Report;
     var model = report.Models[0];
     
+    //If loaded in a task, the model will not be loaded during the standard models generation process
     report.LogMessage(""Loading model Result Table for model '{0}'"", model.Name);
     task.Execution.LoadResultTableModel(model);   
    
