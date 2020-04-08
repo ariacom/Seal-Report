@@ -111,8 +111,15 @@ function redrawDataTables() {
 //data tables
 function dtCreatedCell(td, cellData, rowData, row, col) {
     if (cellData) {
-        var cellDatas = cellData.split('§', 6);
-        $(td).html(cellDatas[5]);
+        var cellDatas = cellData.split('§');
+        if (cellDatas.length > 5) {
+            var html = "";
+            for (var i = 5; i < cellDatas.length; i++) {
+                html += (html != "" ? "§" : "") + cellDatas[i];
+            }
+            $(td).html(html);
+        }
+        else $(td).html(cellDatas[5]);
         $(td).attr("class", cellDatas[4]);
         $(td).attr("style", cellDatas[3]);
         $(td).attr("navigation", cellDatas[2]);

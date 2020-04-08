@@ -691,6 +691,15 @@ namespace Seal.Model
                 //Thread.Sleep(5000); //For DEV: Simulate long query
 #endif
                 model.SetColumnsName();
+
+                if (Report.ExecutionTasks.Exists(i => i.Step == ExecutionStep.BeforeModel))
+                {
+                    Report.LogMessage("Model '{0}': Waiting for all models to be executed...", model.Name);
+                    //Wait for all models to be executed
+                    Thread.Sleep(100);
+                    while (Report.ExecutionModels.Exists(i => !i.ResultTableAvailable && string.IsNullOrEmpty(i.ExecutionError))) Thread.Sleep(200);
+                }
+
                 Report.LogMessage("Model '{0}': Building pages...", model.Name);
                 if (!Report.Cancel) buildPages(model);
                 model.Progression = 75; //75% 

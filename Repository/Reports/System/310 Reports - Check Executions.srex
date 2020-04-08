@@ -30,9 +30,9 @@
                 item.Report.DisplayNameEx, &#xD;
                 item.Report.FilePath.Replace(report.Repository.ReportsFolder, ""), &#xD;
                 ((ReportView)item.Tag).Name,&#xD;
-                item.Report.ExecutionMessages.Replace("\r\n","&lt;br&gt;"),&#xD;
+                item.Report.ExecutionMessages,&#xD;
                 item.Report.HasErrors ? "Yes" : "No",&#xD;
-                (item.Report.ExecutionErrors + Helper.AddNotEmpty("\r\n",((ReportView)item.Tag).Error)).Replace("\r\n","&lt;br&gt;")&#xD;
+                (item.Report.ExecutionErrors + Helper.AddNotEmpty("\r\n",((ReportView)item.Tag).Error))&#xD;
                 );&#xD;
         }&#xD;
     }&#xD;
@@ -45,7 +45,7 @@
                 "",&#xD;
                 "",&#xD;
                 "Yes",&#xD;
-                item.Value.Replace("\r\n","&lt;br&gt;")&#xD;
+                item.Value&#xD;
                 );&#xD;
         }&#xD;
     }&#xD;
