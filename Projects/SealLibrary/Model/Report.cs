@@ -463,6 +463,12 @@ namespace Seal.Model
                 view.InitFromReferenceView();
             }
 
+            foreach (var model in Models)
+            {
+                model.ExecResultTableLoaded = false;
+                model.ExecResultPagesBuilt = false;
+            }
+
             if (ForOutput)
             {
                 //Check custom Output Parameters 

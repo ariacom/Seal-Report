@@ -220,6 +220,12 @@ namespace Seal.Model
         [XmlIgnore]
         public int Progression = 0;
 
+        /// <summary>
+        /// The current report execution executing the task
+        /// </summary>
+        [XmlIgnore]
+        public ReportExecution Execution;
+
         #region Helpers
 
         /// <summary>

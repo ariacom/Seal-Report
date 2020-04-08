@@ -547,5 +547,18 @@ namespace Seal.Model
         SCP,
     }
 
+    public enum ModelBuildStep
+    {
+        FillResultTable,
+        BuildPages,
+        BuildTables,
+        BuildTotals,
+        HandleCellScript,
+        BuildSeries,
+        FinalSort,
+        BuildSubTotals,
+        HandleFinalScript,
+    }
+
 }
 

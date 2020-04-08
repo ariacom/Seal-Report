@@ -607,9 +607,26 @@ if (cell.IsTitle)
                 report.LogMessage(""Setting connection '{0}' to '{1}'"", connection.Name, model.Name);
                 //Set it to the model
                 model.ConnectionGUID = connection.GUID;
-           }
+           },
         }
     }
+"
+                ),
+            new Tuple<string, string>(
+                "Load a report model Result Table and/or build its Result Pages",
+@"ReportTask task = Model;
+    Report report = task.Report;
+    var model = report.Models[0];
+    
+    report.LogMessage(""Loading model Result Table for model '{0}'"", model.Name);
+    task.Execution.LoadResultTableModel(model);   
+   
+    report.LogMessage(""Building model Pages Result for model '{0}'"", model.Name);
+    task.Execution.BuildResultPagesModel(model);       
+
+    //If the task is executed after the standard models generation, these 2 flags may be reset before calling the methods
+    //model.ExecResultTableLoaded = false; for LoadResultTableModel() to force the Load
+    //model.ExecResultPagesBuilt =false; for BuildResultPagesModel to force the build
 "
                 ),
             new Tuple<string, string>(
