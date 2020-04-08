@@ -241,19 +241,34 @@ namespace Seal.Model
             if (Sql != null && Sql.Length > 5 && Sql.ToLower().Trim().StartsWith("with"))
             {
                 var startIndex = Sql.IndexOf("(");
+                var depth = 1;
                 if (startIndex > 0)
                 {
                     bool inComment = false, inQuote = false;
-                    for (int i = 0; i < Sql.Length - 5; i++)
+                    for (int i = startIndex+1; i < Sql.Length - 5; i++)
                     {
                         switch (Sql[i])
                         {
                             case ')':
                                 if (!inComment && !inQuote)
                                 {
-                                    CTE = Sql.Substring(0, i + 1).Trim() + "\r\n";
-                                    sql = Sql.Substring(i + 1).Trim();
-                                    i = Sql.Length;
+                                    depth--;
+                                    if (depth == 0)
+                                    {
+                                        CTE = Sql.Substring(0, i + 1).Trim() + "\r\n";
+                                        sql = Sql.Substring(i + 1).Trim();
+                                        if (sql.ToLower().StartsWith("select"))
+                                        {
+                                            //end of CTE
+                                            i = Sql.Length;
+                                        }
+                                    }
+                                }
+                                break;
+                            case '(':
+                                if (!inComment && !inQuote)
+                                {
+                                    depth++;
                                 }
                                 break;
                             case '\'':
@@ -272,9 +287,9 @@ namespace Seal.Model
                                 }
                                 break;
                             case '-':
-                                if (inComment && Sql[i + 1] == '-')
+                                if (!inComment && Sql[i + 1] == '-')
                                 {
-                                    while (i < Sql.Length - 5 && (Sql[i] != '\r' || Sql[i] != '\n')) i++;
+                                    while (i < Sql.Length - 5 && Sql[i] != '\r' && Sql[i] != '\n') i++;
                                 }
                                 break;
                         }

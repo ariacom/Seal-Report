@@ -630,32 +630,43 @@ namespace Seal.Model
             if (!string.IsNullOrEmpty(Report.ExecutionErrors)) Report.Cancel = true;
         }
 
+        /// <summary>
+        /// List of models being executed
+        /// </summary>
+        Dictionary<string, ReportModel> _runningModels = new Dictionary<string, ReportModel>();
+
         void buildModels()
         {
             Report.LogMessage("Starting to build models...");
             List<Thread> threads = new List<Thread>();
 
-            ReportModel.RunningModels.Clear();
+            _runningModels.Clear();
             //Build SQL and Fill Result table
-            foreach (ReportModel model in Report.ExecutionModels)
+            var sets = (from model in Report.ExecutionModels orderby model.ExecutionSet select model.ExecutionSet).Distinct();
+            foreach (var set in sets)
             {
-                Thread thread = new Thread(ModelBuildResultTableThread);
-                thread.Start(model);
-                threads.Add(thread);
-            }
-
-            //Check if finished
-            bool stillRunning = true;
-            while (stillRunning && !Report.Cancel)
-            {
-                stillRunning = false;
-                foreach (var thread in threads)
+                Report.LogMessage("Build models of Execution Set {0}...", set);
+                foreach (ReportModel model in Report.ExecutionModels.Where(i => i.ExecutionSet == set))
                 {
-                    if (thread.IsAlive) stillRunning = true;
+                    Thread thread = new Thread(ModelBuildResultTableThread);
+                    thread.Start(model);
+                    threads.Add(thread);
                 }
-                Thread.Sleep(50);
+
+                //Check if finished
+                bool stillRunning = true;
+                while (stillRunning && !Report.Cancel)
+                {
+                    stillRunning = false;
+                    foreach (var thread in threads)
+                    {
+                        if (thread.IsAlive) stillRunning = true;
+                    }
+                    Thread.Sleep(50);
+                }
             }
             Report.RenderOnly = false;
+            _runningModels.Clear();
 
             //Cancel execution
             if (Report.Cancel)
@@ -676,50 +687,70 @@ namespace Seal.Model
 
         private void ModelBuildResultTableThread(object modelParam)
         {
-            ReportModel model = modelParam as ReportModel;
+            LoadResultTableModel(modelParam as ReportModel);
+            BuildResultPagesModel(modelParam as ReportModel);
+        }
+
+        public void LoadResultTableModel(ReportModel model)
+        {
             try
             {
-                //Handle render only
-                if (model.ResultTable == null || !Report.RenderOnly)
+                if (!model.ExecResultTableLoaded)
                 {
-                    Report.LogMessage("Model '{0}': Building result set from database...", model.Name);
-                    model.FillResultTable();
-                    if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
+                    //Handle render only
+                    if (model.ResultTable == null || !Report.RenderOnly)
+                    {
+                        Report.LogMessage("Model '{0}': Loading result set...", model.Name);
+                        model.FillResultTable(_runningModels);
+                        if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
+                    }
+                    model.ExecResultTableLoaded = true;
                 }
 
 #if DEBUG
                 //Thread.Sleep(5000); //For DEV: Simulate long query
 #endif
+            }
+            catch (Exception ex)
+            {
+                if (string.IsNullOrEmpty(model.ExecutionError)) model.ExecutionError = ex.Message;
+                SetError("Error in model '{0}': {1}", model.Name, ex.Message);
+            }
+        }
+
+
+        public void BuildResultPagesModel(ReportModel model)
+        {
+            try
+            {
+                if (model.ResultTable == null) throw new Exception("The Result Table of the model was not loaded. Call BuildResultTableModel() first...");
+
                 model.SetColumnsName();
 
-                if (Report.ExecutionTasks.Exists(i => i.Step == ExecutionStep.BeforeModel))
+                if (!model.ExecResultPagesBuilt)
                 {
-                    Report.LogMessage("Model '{0}': Waiting for all models to be executed...", model.Name);
-                    //Wait for all models to be executed
-                    Thread.Sleep(100);
-                    while (Report.ExecutionModels.Exists(i => !i.ResultTableAvailable && string.IsNullOrEmpty(i.ExecutionError))) Thread.Sleep(200);
+                    Report.LogMessage("Model '{0}': Building pages...", model.Name);
+                    if (!Report.Cancel) buildPages(model);
+                    model.Progression = 75; //75% 
+                    Report.LogMessage("Model '{0}': Building tables...", model.Name);
+                    if (!Report.Cancel) buildTables(model);
+                    model.Progression = 80; //80% 
+                    Report.LogMessage("Model '{0}': Building totals...", model.Name);
+                    if (!Report.Cancel) buildTotals(model);
+                    model.Progression = 85; //85% 
+                                            //Scripts
+                    if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
+                    //Series 
+                    if (!Report.Cancel && model.HasSerie) buildSeries(model);
+                    //Final sort
+                    if (!Report.Cancel) finalSort(model);
+                    //Sub-totals
+                    if (!Report.Cancel) buildSubTotals(model);
+                    //Final script
+                    if (!Report.Cancel) handleFinalScript(model);
+                    model.Progression = 100; //100% 
+                    model.ExecResultPagesBuilt = true;
                 }
-
-                Report.LogMessage("Model '{0}': Building pages...", model.Name);
-                if (!Report.Cancel) buildPages(model);
-                model.Progression = 75; //75% 
-                Report.LogMessage("Model '{0}': Building tables...", model.Name);
-                if (!Report.Cancel) buildTables(model);
-                model.Progression = 80; //80% 
-                Report.LogMessage("Model '{0}': Building totals...", model.Name);
-                if (!Report.Cancel) buildTotals(model);
-                model.Progression = 85; //85% 
-                //Scripts
-                if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
-                //Series 
-                if (!Report.Cancel && model.HasSerie) buildSeries(model);
-                //Final sort
-                if (!Report.Cancel) finalSort(model);
-                //Sub-totals
-                if (!Report.Cancel) buildSubTotals(model);
-                //Final script
-                if (!Report.Cancel) handleFinalScript(model);
-                model.Progression = 100; //100% 
             }
             catch (Exception ex)
             {
@@ -730,7 +761,7 @@ namespace Seal.Model
 
         void executeTasks(ExecutionStep step)
         {
-            var tasks = Report.ExecutionTasks.Where(i => i.Step == step).OrderBy(i => i.SortOrder).ToList();
+            var tasks = Report.ExecutionTasks.Where(i => i.Step == step && i.Enabled).OrderBy(i => i.SortOrder).ToList();
             if (tasks.Count > 0)
             {
                 Report.LogMessage("Executing report tasks for step '{0}'...", Helper.GetEnumDescription(typeof(ExecutionStep), step));
@@ -742,9 +773,9 @@ namespace Seal.Model
                 try
                 {
                     if (Report.TaskToExecute != null && task != Report.TaskToExecute) continue; //Exec only one task
-                    if (!task.Enabled) continue;
-
                     Report.LogMessage("Starting task '{0}'", task.Name);
+                    task.Execution = this;
+
                     Thread thread = new Thread(TaskExecuteThread);
                     thread.Start(task);
 

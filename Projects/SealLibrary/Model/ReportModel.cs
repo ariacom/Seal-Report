@@ -48,6 +48,8 @@ namespace Seal.Model
                 GetProperty("PreLoadScript").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("LoadScript").SetIsBrowsable(true);
                 GetProperty("FinalScript").SetIsBrowsable(true);
+                GetProperty("ExecutionSet").SetIsBrowsable(true);
+                GetProperty("ShareResultTable").SetIsBrowsable(true);
                 if (Source.IsNoSQL)
                 {
                     GetProperty("LoadScript").SetDisplayName("Load Script");
@@ -176,9 +178,24 @@ namespace Seal.Model
         public string FinalScript { get; set; }
 
         /// <summary>
+        /// During the models generation, the models of the same Set Number are generated in parallel at the same time. The models with Set 1 are executed first at the same time, then models with Set 2, etc. This can be used if models depends on other models.
+        /// </summary>
+        [Category("Model Definition"), DisplayName("Execution Set"), Description("During the models generation, the models of the same Set Number are generated in parallel at the same time. The models with Set 1 are executed first at the same time, then models with Set 2, etc. This can be used if models depends on other models."), Id(7, 1)]
+        [DefaultValue(1)]
+        public int ExecutionSet { get; set; } = 1;
+
+        /// <summary>
+        /// If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization).
+        /// </summary>
+        [Category("Model Definition"), DisplayName("Share result table"), Description("If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization)."), Id(8, 1)]
+        [DefaultValue(true)]
+        public bool ShareResultTable { get; set; } = true;
+
+
+        /// <summary>
         /// If true and the table has column values, the first line used for titles is generated in the table header
         /// </summary>
-        [Category("Model Definition"), DisplayName("Show First Header Line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(7, 1)]
+        [Category("Model Definition"), DisplayName("Show First Header Line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(10, 1)]
         [DefaultValue(true)]
         public bool ShowFirstLine { get; set; } = true;
 
@@ -586,18 +603,11 @@ namespace Seal.Model
             get { return Table != null; }
         }
 
-
-        //Execution
-        private string _sql;
         /// <summary>
         /// SELECT Sql used for the model
         /// </summary>
         [XmlIgnore]
-        public string Sql
-        {
-            get { return _sql; }
-            set { _sql = value; }
-        }
+        public string Sql { get; set; }
         public bool ShouldSerializeSql() { return IsSQLModel; }
 
         /// <summary>
@@ -720,6 +730,18 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public string ExecChartJSType;
+
+        /// <summary>
+        /// True if the source result table has been loaded
+        /// </summary>
+        [XmlIgnore]
+        public bool ExecResultTableLoaded = false;
+
+        /// <summary>
+        /// True if the result pages have been built
+        /// </summary>
+        [XmlIgnore]
+        public bool ExecResultPagesBuilt = false;
 
         /// <summary>
         /// Check NVD3 Chart and set the ExecNVD3ChartType property
@@ -1262,12 +1284,12 @@ namespace Seal.Model
             try
             {
                 ExecutionError = "";
-                _sql = "";
+                Sql = "";
 
                 if (IsSQLModel && UseRawSQL)
                 {
-                    _sql = Table.Sql;
-                    _sql = ParseCommonRestrictions(_sql);
+                    Sql = Table.Sql;
+                    Sql = ParseCommonRestrictions(Sql);
                     return;
                 }
 
@@ -1625,27 +1647,27 @@ namespace Seal.Model
                     //Get CTE first
                     execSelect = execGroupByClause.Length > 0 ? "SELECT\r\n" : "SELECT DISTINCT\r\n";
                     execSelect = !string.IsNullOrEmpty(SqlSelect) ? SqlSelect : execSelect;
-                    _sql = !string.IsNullOrEmpty(SqlCTE) ? SqlCTE : execCTEClause;
-                    _sql += execSelect;
-                    _sql += string.Format("{0}\r\n", execSelectClause);
-                    _sql += !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("FROM {0}", execFromClause);
-                    if (execWhereClause.Length > 0) _sql += string.Format("WHERE {0}\r\n", execWhereClause);
-                    if (execGroupByClause.Length > 0 || !string.IsNullOrEmpty(SqlGroupBy)) _sql += (!string.IsNullOrEmpty(SqlGroupBy) ? SqlGroupBy : string.Format("GROUP BY {0}", execGroupByClause)) + "\r\n";
-                    if (execHavingClause.Length > 0) _sql += string.Format("HAVING {0}\r\n", execHavingClause);
-                    if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) _sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
+                    Sql = !string.IsNullOrEmpty(SqlCTE) ? SqlCTE : execCTEClause;
+                    Sql += execSelect;
+                    Sql += string.Format("{0}\r\n", execSelectClause);
+                    Sql += !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("FROM {0}", execFromClause);
+                    if (execWhereClause.Length > 0) Sql += string.Format("WHERE {0}\r\n", execWhereClause);
+                    if (execGroupByClause.Length > 0 || !string.IsNullOrEmpty(SqlGroupBy)) Sql += (!string.IsNullOrEmpty(SqlGroupBy) ? SqlGroupBy : string.Format("GROUP BY {0}", execGroupByClause)) + "\r\n";
+                    if (execHavingClause.Length > 0) Sql += string.Format("HAVING {0}\r\n", execHavingClause);
+                    if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) Sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
 
                     //Finally inject common restriction values
-                    if (!forConversion) _sql = ParseCommonRestrictions(_sql);
+                    if (!forConversion) Sql = ParseCommonRestrictions(Sql);
                 }
             }
             catch (TemplateCompilationException ex)
             {
-                _sql = "";
+                Sql = "";
                 ExecutionError = string.Format("Got unexpected error when building the SQL statement:\r\n{0}", Helper.GetExceptionMessage(ex));
             }
             catch (Exception ex)
             {
-                _sql = "";
+                Sql = "";
                 ExecutionError = string.Format("Got unexpected error when building the SQL statement:\r\n{0}", ex.Message);
             }
         }
@@ -1868,48 +1890,47 @@ namespace Seal.Model
             }
         }
 
-        /// <summary>
-        /// List of models being executed
-        /// </summary>
-        public static Dictionary<string, ReportModel> RunningModels = new Dictionary<string, ReportModel>();
-        void checkRunningModels(string key)
+        void checkRunningModels(string key, Dictionary<string, ReportModel> runningModels)
         {
-            lock (RunningModels)
+            if (ShareResultTable)
             {
-                if (RunningModels.ContainsKey(key))
+                lock (runningModels)
                 {
-                    //check if we can reuse the current running query: same source, same connection string and same pre/Post SQL
-                    ReportModel runningModel = RunningModels[key];
-                    if (Source == runningModel.Source
-                        && Connection.ConnectionType == runningModel.Connection.ConnectionType
-                        && Connection.FullConnectionString == runningModel.Connection.FullConnectionString
-                        && string.IsNullOrEmpty(runningModel.ExecutionError)
-                        && ((PreSQL == null && runningModel.PreSQL == null) || (PreSQL.Trim() == runningModel.PreSQL.Trim()))
-                        && ((PostSQL == null && runningModel.PostSQL == null) || (PostSQL.Trim() == runningModel.PostSQL.Trim()))
-                        && ((PreLoadScript == null && runningModel.PreLoadScript == null) || (PreLoadScript.Trim() == runningModel.PreLoadScript.Trim()))
-                        && ((LoadScript == null && runningModel.LoadScript == null) || (LoadScript.Trim() == runningModel.LoadScript.Trim()))
-                        && ((FinalScript == null && runningModel.FinalScript == null) || (FinalScript.Trim() == runningModel.FinalScript.Trim()))
-                        )
+                    if (runningModels.ContainsKey(key))
                     {
-                        //we can wait to get the same data table 
-                        Report.LogMessage("Model '{0}': Getting result table from '{1}'...", Name, runningModel.Name);
-                        while (!Report.Cancel && !runningModel.ResultTableAvailable)
+                        //check if we can reuse the current running query: same source, same connection string and same pre/Post SQL
+                        ReportModel runningModel = runningModels[key];
+                        if (Source == runningModel.Source
+                            && Connection.ConnectionType == runningModel.Connection.ConnectionType
+                            && Connection.FullConnectionString == runningModel.Connection.FullConnectionString
+                            && string.IsNullOrEmpty(runningModel.ExecutionError)
+                            && ((PreSQL == null && runningModel.PreSQL == null) || (PreSQL.Trim() == runningModel.PreSQL.Trim()))
+                            && ((PostSQL == null && runningModel.PostSQL == null) || (PostSQL.Trim() == runningModel.PostSQL.Trim()))
+                            && ((PreLoadScript == null && runningModel.PreLoadScript == null) || (PreLoadScript.Trim() == runningModel.PreLoadScript.Trim()))
+                            && ((LoadScript == null && runningModel.LoadScript == null) || (LoadScript.Trim() == runningModel.LoadScript.Trim()))
+                            && ((FinalScript == null && runningModel.FinalScript == null) || (FinalScript.Trim() == runningModel.FinalScript.Trim()))
+                            )
                         {
-                            if (!string.IsNullOrEmpty(runningModel.ExecutionError)) break;
-                            Thread.Sleep(100);
-                        }
+                            //we can wait to get the same data table 
+                            Report.LogMessage("Model '{0}': Getting result table from '{1}'...", Name, runningModel.Name);
+                            while (!Report.Cancel && !runningModel._resultTableAvailable)
+                            {
+                                if (!string.IsNullOrEmpty(runningModel.ExecutionError)) break;
+                                Thread.Sleep(100);
+                            }
 
-                        if (runningModel.ResultTable != null)
-                        {
-                            //Set the result table
-                            ResultTable = Source.IsNoSQL ? runningModel._rawNoSQLTable : runningModel.ResultTable;
-                            ExecutionDuration = runningModel.ExecutionDuration;
+                            if (runningModel.ResultTable != null)
+                            {
+                                //Set the result table
+                                ResultTable = Source.IsNoSQL ? runningModel._rawNoSQLTable : runningModel.ResultTable;
+                                ExecutionDuration = runningModel.ExecutionDuration;
+                            }
                         }
                     }
-                }
-                else
-                {
-                    RunningModels.Add(key, this);
+                    else
+                    {
+                        runningModels.Add(key, this);
+                    }
                 }
             }
         }
@@ -1917,18 +1938,18 @@ namespace Seal.Model
         [XmlIgnore]
         private DataTable _rawNoSQLTable = null;
         [XmlIgnore]
-        public bool ResultTableAvailable = false;
+        private bool _resultTableAvailable = false;
 
         /// <summary>
         /// Build the ResultTable for the model
         /// </summary>
-        public void FillResultTable()
+        public void FillResultTable(Dictionary<string, ReportModel> runningModels)
         {
             bool isMaster = false;
             Progression = 0;
 
             ExecutionDuration = 0;
-            ResultTableAvailable = false;
+            _resultTableAvailable = false;
             Pages.Clear();
 
             //Pre-load script
@@ -1952,7 +1973,7 @@ namespace Seal.Model
                     string key = !string.IsNullOrEmpty(LoadScript) ? LoadScript : "_Master_" + Source.MetaData.MasterTable.LoadScript;
 
                     //Check if we can use a data table from another model
-                    checkRunningModels(key);
+                    checkRunningModels(key, runningModels);
 
                     if (ResultTable == null)
                     {
@@ -1984,7 +2005,7 @@ namespace Seal.Model
                     throw new Exception(string.Format("Got unexpected error when building NoSQL Table:\r\n{0}\r\n", ex.Message));
                 }
             }
-            else if (!string.IsNullOrEmpty(_sql) && !Report.Cancel)
+            else if (!string.IsNullOrEmpty(Sql) && !Report.Cancel)
             {
                 //Normal SQL
                 try
@@ -1993,7 +2014,7 @@ namespace Seal.Model
                     _command = null;
 
                     //Check if we can use a data table from another model
-                    checkRunningModels(_sql);
+                    checkRunningModels(Sql, runningModels);
 
                     if (ResultTable == null)
                     {
@@ -2023,7 +2044,7 @@ namespace Seal.Model
                         executePrePostStatements(true);
                         executePrePostStatement(PreSQL, "Pre", Name, IgnorePrePostError, this);
                         Report.LogMessage("Model '{0}': Executing main query...", Name);
-                        _command.CommandText = _sql;
+                        _command.CommandText = Sql;
 
                         ResultTable = new DataTable();
                         DbDataAdapter adapter = null;
@@ -2041,7 +2062,7 @@ namespace Seal.Model
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(string.Format("Unexpected error when executing the following SQL statement:\r\n{0}\r\n\r\nError detail:\r\n{1}", _sql, ex.Message));
+                    throw new Exception(string.Format("Unexpected error when executing the following SQL statement:\r\n{0}\r\n\r\nError detail:\r\n{1}", Sql, ex.Message));
                 }
 
                 if (Report.Cancel) return;
@@ -2101,7 +2122,7 @@ namespace Seal.Model
             }
 
             Progression = 70; //70% after getting result set
-            ResultTableAvailable = true;
+            _resultTableAvailable = true;
         }
 
         /// <summary>
