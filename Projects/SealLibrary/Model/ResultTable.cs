@@ -110,7 +110,7 @@ namespace Seal.Model
                         for (int col = 0; col < line.Length && !filtered; col++)
                         {
                             ResultCell cell = line[col];
-                            var cellValue = !string.IsNullOrEmpty(cell.FinalValue) ? cell.FinalValue : cell.DisplayValue;
+                            var cellValue = cell.HTMLValue;
                             if (!string.IsNullOrEmpty(search) && cellValue.ToLower().Contains(search2))
                             {
                                 filtered = true;
@@ -178,7 +178,7 @@ namespace Seal.Model
                 {
                     if (view.IsColumnHidden(col) || IsColumnHidden(col)) { continue; }
                     ResultCell cell = line[col];
-                    var cellValue = !string.IsNullOrEmpty(cell.FinalValue) ? cell.FinalValue : cell.DisplayValue;
+                    var cellValue = cell.HTMLValue;
                     var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
                     sb.AppendFormat("\"{0}\",", fullValue);
                 }

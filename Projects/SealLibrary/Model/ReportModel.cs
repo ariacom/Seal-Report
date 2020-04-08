@@ -1893,7 +1893,7 @@ namespace Seal.Model
                     {
                         //we can wait to get the same data table 
                         Report.LogMessage("Model '{0}': Getting result table from '{1}'...", Name, runningModel.Name);
-                        while (!Report.Cancel && !runningModel._resultTableAvailable)
+                        while (!Report.Cancel && !runningModel.ResultTableAvailable)
                         {
                             if (!string.IsNullOrEmpty(runningModel.ExecutionError)) break;
                             Thread.Sleep(100);
@@ -1917,7 +1917,7 @@ namespace Seal.Model
         [XmlIgnore]
         private DataTable _rawNoSQLTable = null;
         [XmlIgnore]
-        private bool _resultTableAvailable = false;
+        public bool ResultTableAvailable = false;
 
         /// <summary>
         /// Build the ResultTable for the model
@@ -1928,7 +1928,7 @@ namespace Seal.Model
             Progression = 0;
 
             ExecutionDuration = 0;
-            _resultTableAvailable = false;
+            ResultTableAvailable = false;
             Pages.Clear();
 
             //Pre-load script
@@ -2101,7 +2101,7 @@ namespace Seal.Model
             }
 
             Progression = 70; //70% after getting result set
-            _resultTableAvailable = true;
+            ResultTableAvailable = true;
         }
 
         /// <summary>
