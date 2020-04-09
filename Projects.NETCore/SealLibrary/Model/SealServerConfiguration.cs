@@ -41,11 +41,6 @@ namespace Seal.Model
         public bool ForPublication = false;
 
         /// <summary>
-        /// The OLE DB Default Connection String used when a new Data Source is created
-        /// </summary>
-        public string DefaultConnectionString { get; set; } = "Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;";
-
-        /// <summary>
         /// The logo file name used by the report templates
         /// </summary>
         public string LogoName { get; set; } = "logo.png";

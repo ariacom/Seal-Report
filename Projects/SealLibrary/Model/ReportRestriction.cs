@@ -670,7 +670,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Enumerated values chosen by default for the restriction
+        /// Enumerated values for the restriction
         /// </summary>
         public List<string> EnumValues { get; set; } = new List<string>();
         public bool ShouldSerializeEnumValues() { return EnumValues.Count > 0; }

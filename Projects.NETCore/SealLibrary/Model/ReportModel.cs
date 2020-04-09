@@ -104,12 +104,12 @@ namespace Seal.Model
         public string FinalScript { get; set; }
 
         /// <summary>
-        /// Optional Razor Script to modify the model after its generation
+        /// During the models generation, the models of the same Set Number are generated in parallel at the same time. The models with Set 1 are executed first at the same time, then models with Set 2, etc. This can be used if models depends on other models.
         /// </summary>
         public int ExecutionSet { get; set; } = 1;
 
         /// <summary>
-        /// If true and the table has column values, the first line used for titles is generated in the table header
+        /// If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization).
         /// </summary>
         public bool ShareResultTable { get; set; } = true;
 

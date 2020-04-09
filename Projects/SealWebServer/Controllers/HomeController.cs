@@ -129,7 +129,7 @@ namespace SealWebServer.Controllers
 #if DEBUG
             var content = Content(string.Format("<b>Sorry, we got an unexpected exception.</b><br>{0}<br>{1}<br>{2}", ex.Message, RequestUrl, ex.StackTrace));
 #else
-            var content = Content("<b>Sorry, we got an unexpected exception.</b><br>Please consult the Windows Event Log on the server machine to have more information...");
+            var content = Content("<p style='font-family:Helvetica,Arial,sans-serif;'><b>Sorry, we got an unexpected exception.</b><br>Please consult log files on the server machine to have more information (Logs Repository folder and Windows Event Logs on Windows machine)...");
 #endif
             content.ContentType = "text/html";
             return content;
