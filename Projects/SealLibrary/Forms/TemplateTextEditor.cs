@@ -33,7 +33,7 @@ namespace Seal.Forms
     Report report = Model;
     string result = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + "" "" + DateTime.Now.ToShortDateString();
     //result = report.ExecutionView.Name;
-    //result = report.Models[0].GetRestrictionByName(""A restriction name"").DisplayValue1;
+    //result = report.GetReportModel(""aModelName"").GetRestrictionByName(""A restriction name"").DisplayValue1;
 }
 @Raw(result)";
 
@@ -410,15 +410,15 @@ if (cell.IsTitle)
 
     //Script executed when the report is initialized
     log.LogMessage(""Executing Init Script"");
-    //report.Models[0].Restrictions[0].Value1 = ""1994""; 
-    //report.Models[0].Restrictions[0].Date1 = DateTime.Now.AddYears(-20);
-    //report.Models[0].GetRestrictionByName(""Order Year"").Value1 = ""2015"";
-    //report.Models[0].GetRestrictionByName(""Category"").EnumValues.Add(""1"");
+    //report.GetReportModel(""aModelName"").Restrictions[0].Value1 = ""1994""; 
+    //report.GetReportModel(""aModelName"").Restrictions[0].Date1 = DateTime.Now.AddYears(-20);
+    //report.GetReportModel(""aModelName"").GetRestrictionByName(""Order Year"").Value1 = ""2015"";
+    //report.GetReportModel(""aModelName"").GetRestrictionByName(""Category"").EnumValues.Add(""1"");
 
     //report.DisplayName = System.IO.Path.GetFileNameWithoutExtension(report.FilePath) + ""-"" + DateTime.Now.ToShortDateString();
     
     //Set the last value of an enum
-    //var restr = report.Models[0].GetRestrictionByName(""Category"");
+    //var restr = report.GetReportModel(""aModelName"").GetRestrictionByName(""Category"");
     //restr.EnumValues.Clear();
     //restr.EnumValues.Add(restr.EnumRE.Values[restr.EnumRE.Values.Count-1].Id);
 
@@ -616,7 +616,7 @@ if (cell.IsTitle)
                 "Load a report model Result Table and/or build its Result Pages",
 @"ReportTask task = Model;
     Report report = task.Report;
-    var model = report.Models[0];
+    var model = report.GetReportModel(""aModelName"");
     
     //If loaded in a task, the model will not be loaded during the standard models generation process
     report.LogMessage(""Loading model Result Table for model '{0}'"", model.Name);
