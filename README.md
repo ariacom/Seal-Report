@@ -52,9 +52,9 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 **For use:**
 * Windows 7, 2008, Windows 8, 2012, Windows 10 or greater
 * .Net Framework 4.5
-* Database OLE DB or ODBC Drivers
+* Database OLE DB, ODBC or SQLServer Drivers
 * For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater
-* .NETCore 3.1 for the Web Report Server (limitations: no Report Schedules, no Zip options for Email Output) 
+* .NETCore 3.1 for the Web Report Server (limitations: use of the Web Report Scheduler only) 
 
 
 **For development:**
