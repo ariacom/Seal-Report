@@ -266,6 +266,8 @@ namespace Seal.Model
                 }
                 path = Path.GetDirectoryName(path);
             }
+
+            if (!Directory.Exists(path) || path == Path.GetPathRoot(path)) path = "";
 #endif
             if (string.IsNullOrEmpty(path))
             {

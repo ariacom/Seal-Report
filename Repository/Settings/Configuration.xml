@@ -23,4 +23,4 @@ _ed.common.js</ScriptFiles><UseWebScheduler>true</UseWebScheduler><TaskFolderNam
         }&#xD;
     }&#xD;
 }&#xD;
-</Script></CommonScript></CommonScripts><PdfUseClient>true</PdfUseClient><PdfServicePassword>popol</PdfServicePassword><PdfWebServiceURL /><DefaultCulture /><CsvSeparator /><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebApplicationName>/seal</WebApplicationName><WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>
+</Script></CommonScript></CommonScripts><PdfUseClient>true</PdfUseClient><PdfServicePassword>popol</PdfServicePassword><PdfWebServiceURL /><DefaultCulture /><CsvSeparator /><WebApplicationName>/seal</WebApplicationName><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>

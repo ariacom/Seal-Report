@@ -24,6 +24,7 @@ namespace Seal.Model
         public int[] Weekdays { get; set; } = new int[] { 1 };
         public int[] Months { get; set; } = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
         public int[] Days { get; set; } = new int[] { 1 };
+
         [XmlIgnore]
         public TimeSpan RepeatInterval { get; set; } = TimeSpan.Zero;
         public long RepeatIntervalTicks

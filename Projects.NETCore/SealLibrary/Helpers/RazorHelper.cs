@@ -21,6 +21,7 @@ using System.Data.Odbc;
 using System.Data.SqlClient;
 using Renci.SshNet;
 using System.Net;
+using System.Net.Http;
 
 namespace Seal.Helpers
 {
@@ -40,6 +41,7 @@ namespace Seal.Helpers
         static SqlConnection dummy13 = null;
         static SftpClient dummy14 = null;
         static WebRequest dummy15 = null;
+        static HttpClient dummy16 = null;
 
         static bool _loadDone = false;
         static public void LoadRazorAssemblies()
@@ -66,6 +68,7 @@ namespace Seal.Helpers
                     if (dummy13 == null) dummy13 = new SqlConnection();
                     if (dummy14 == null) dummy14 = new SftpClient("", "a", "");
                     if (dummy15 == null) dummy15 = WebRequest.Create("ftp://dummy.com");
+                    if (dummy16 == null) dummy16 = new HttpClient();
                 }
                 catch (Exception ex)
                 {

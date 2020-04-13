@@ -86,6 +86,7 @@ namespace Seal.Model
                     PdfConverter.InitEditor();
                 }
 
+                GetProperty("WebNETCore").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
                 GetProperty("WebApplicationName").SetIsBrowsable(ForPublication);
                 GetProperty("WebPublicationDirectory").SetIsBrowsable(ForPublication);
@@ -466,21 +467,28 @@ namespace Seal.Model
         public string CsvSeparator { get; set; } = "";
 
         /// <summary>
-        /// The name of the IIS Application pool used by the web application
+        /// If true, the Web site is published with the NET Core distribution.
         /// </summary>
-        [Category("Web Server IIS Publication"), DisplayName("Application Pool Name"), Description("The name of the IIS Application pool used by the web application."), Id(2, 3)]
-        public string WebApplicationPoolName { get; set; } = Repository.SealRootProductName + " Application Pool";
+        [Category("Web Server IIS Publication"), DisplayName("Use NET Core Distribution"), Description("If true, the Web site is published with the NET Core distribution.") ,Id(1, 3)]
+        [DefaultValue(false)]
+        public bool WebNETCore { get; set; } = false;
 
         /// <summary>
         /// The name of the IIS Web application. Use '/' to publish on 'Default Web Site'
         /// </summary>
-        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application. Use '/' to publish on 'Default Web Site'."), Id(1, 3)]
+        [Category("Web Server IIS Publication"), DisplayName("Application Name"), Description("The name of the IIS Web application. Use '/' to publish on 'Default Web Site'."), Id(2, 3)]
         public string WebApplicationName { get; set; } = "/Seal";
+
+        /// <summary>
+        /// The name of the IIS Application pool used by the web application
+        /// </summary>
+        [Category("Web Server IIS Publication"), DisplayName("Application Pool Name"), Description("The name of the IIS Application pool used by the web application."), Id(3, 3)]
+        public string WebApplicationPoolName { get; set; } = Repository.SealRootProductName + " Application Pool";
 
         /// <summary>
         /// The directory were the web site files are published
         /// </summary>
-        [Category("Web Server IIS Publication"), DisplayName("Publication directory"), Description("The directory were the web site files are published."), Id(3, 3)]
+        [Category("Web Server IIS Publication"), DisplayName("Publication Directory"), Description("The directory were the web site files are published."), Id(4, 3)]
         [EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor))]
         public string WebPublicationDirectory { get; set; } = "";
 
