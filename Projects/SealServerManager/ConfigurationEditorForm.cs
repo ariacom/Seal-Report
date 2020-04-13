@@ -46,8 +46,6 @@ namespace Seal.Forms
 
             ShowIcon = true;
             Icon = Properties.Resources.serverManager;
-
-  //          PropertyGridHelper.AddResetMenu(mainPropertyGrid);
         }
 
         private void ConfigurationEditorForm_Load(object sender, EventArgs e)
@@ -135,9 +133,13 @@ New parameter values may require a restart of the Report Designer or the Web Ser
             try
             {
                 string publicationDirectory = _configuration.WebPublicationDirectory;
-                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Web");
+                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), _configuration.WebNETCore ? "Web.NETCore" : "Web");
 #if DEBUG
-                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\SealWebServer\";
+                sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\";
+                if (_configuration.WebNETCore)
+                {
+                    sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\..\Projects.NETCore\SealWebServer\bin\Release\netcoreapp3.1\publish\";
+                }
 #endif
 
                 //Copy installation directory
@@ -150,11 +152,13 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                     File.Copy(path, Path.Combine(Path.Combine(publicationDirectory, "bin"), Path.GetFileName(path)), true);
                 }
 
-                //Check web config...
-                if (!filesOnly || (!File.Exists(Path.Combine(publicationDirectory, "web.config")) && File.Exists(Path.Combine(publicationDirectory, "web.release.config"))))
+                //Check config...
+                var currentConfig = Path.Combine(publicationDirectory, _configuration.WebNETCore ? "appsettings.json" : "web.config");
+                var releaseConfig = Path.Combine(publicationDirectory, _configuration.WebNETCore ? "appsettings.Release.json" : "web.release.config");
+                if (!File.Exists(currentConfig) && File.Exists(releaseConfig))
                 {
-                    log.Log("Creating web.config file");
-                    File.Copy(Path.Combine(publicationDirectory, "web.release.config"), Path.Combine(publicationDirectory, "web.config"), true);
+                    log.Log("Creating Config file from '{0}'", releaseConfig);
+                    File.Copy(releaseConfig, currentConfig, true);
                 }
 
                 if (!filesOnly && !log.IsJobCancelled())
@@ -176,7 +180,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                         log.Log("Creating Application Pool");
                         pool = serverMgr.ApplicationPools.Add(_configuration.WebApplicationPoolName);
                     }
-                    pool.ManagedRuntimeVersion = "v4.0";
+                    pool.ManagedRuntimeVersion = _configuration.WebNETCore ?  "" : "v4.0";
                     if (Marshal.SizeOf(typeof(IntPtr)) != 8) pool.Enable32BitAppOnWin64 = true; //Test if 32bit
 
                     pool.ProcessModel.IdentityType = Microsoft.Web.Administration.ProcessModelIdentityType.LocalSystem;

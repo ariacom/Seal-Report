@@ -347,14 +347,19 @@ namespace Seal.Model
         public string CsvSeparator { get; set; } = "";
 
         /// <summary>
-        /// The name of the IIS Application pool used by the web application
+        /// If true, the Web site is published with the NETCore distribution.
         /// </summary>
-        public string WebApplicationPoolName { get; set; } = Repository.SealRootProductName + " Application Pool";
+        public bool WebNETCore { get; set; } = false;
 
         /// <summary>
         /// The name of the IIS Web application. Use '/' to publish on 'Default Web Site'
         /// </summary>
         public string WebApplicationName { get; set; } = "/Seal";
+
+        /// <summary>
+        /// The name of the IIS Application pool used by the web application
+        /// </summary>
+        public string WebApplicationPoolName { get; set; } = Repository.SealRootProductName + " Application Pool";
 
         /// <summary>
         /// The directory were the web site files are published
