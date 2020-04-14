@@ -347,7 +347,7 @@ namespace Seal.Model
         public string CsvSeparator { get; set; } = "";
 
         /// <summary>
-        /// If true, the Web site is published with the NETCore distribution.
+        /// If true, the Web site is published with the NET Core distribution.
         /// </summary>
         public bool WebNETCore { get; set; } = false;
 

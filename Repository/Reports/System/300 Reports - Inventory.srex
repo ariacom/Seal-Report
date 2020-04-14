@@ -234,7 +234,7 @@ AND [945c75d3-0332-4906-9d36-84b54547fefe]</Restriction><Restrictions><ReportRes
     &#xD;
         var log = currentReport;&#xD;
         Repository repository = currentReport.Repository;&#xD;
-        foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))&#xD;
+        foreach (string reportPath in Directory.GetFiles(folder, "*.srex"))&#xD;
         {&#xD;
             try {&#xD;
                 Report report = Report.LoadFromFile(reportPath, repository);&#xD;

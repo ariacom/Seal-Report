@@ -58,7 +58,7 @@
     &#xD;
         var log = currentReport;&#xD;
         Repository repository = currentReport.Repository;&#xD;
-        foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))&#xD;
+        foreach (string reportPath in Directory.GetFiles(folder, "*.srex"))&#xD;
         {&#xD;
             try {&#xD;
                 if (!Path.GetFileName(reportPath).Contains(" Widget - ")) {&#xD;
