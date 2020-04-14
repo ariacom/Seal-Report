@@ -116,7 +116,7 @@ AND [3f5b1047-6130-4d34-84f9-248148fbb695]</Restriction><Restrictions><ReportRes
         var execTasks = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Execute tasks"));&#xD;
         var execTimeout = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Execution timeout"));&#xD;
 &#xD;
-        foreach (string reportPath in Directory.GetFiles(folder, "*." + Repository.SealReportFileExtension))&#xD;
+        foreach (string reportPath in Directory.GetFiles(folder, "*.srex"))&#xD;
         {&#xD;
             string scriptName = "";&#xD;
             try&#xD;
@@ -214,7 +214,7 @@ AND [3f5b1047-6130-4d34-84f9-248148fbb695]</Restriction><Restrictions><ReportRes
             }&#xD;
             catch (RazorEngine.Templating.TemplateCompilationException ex)&#xD;
             {&#xD;
-                var message =  "&lt;b&gt;" + scriptName + "&lt;/b&gt;\r\n" + Helper.GetExceptionMessage(ex);&#xD;
+                var message =  scriptName + "\r\n" + Helper.GetExceptionMessage(ex);&#xD;
                 ((Dictionary&lt;string,string&gt;) rootReport.Tag2).Add(reportPath, message);&#xD;
                 rootReport.LogMessage("Error:");&#xD;
                 rootReport.LogMessage(message);&#xD;
