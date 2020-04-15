@@ -15,12 +15,12 @@
         <div class="panel-group" role="tablist">
             @Raw(view.GetValue("restrictions_header"))
             <!--rows of xx restrictions -->
-            @for (int row = 0; row <= report.ExecutionCommonRestrictions.Count / restrictionPerRow; row++)
+            @for (int row = 0; row <= report.ExecutionPromptedRestrictions.Count / restrictionPerRow; row++)
             {
                 <div class="row">
-                    @for (int i = restrictionPerRow * row; i < report.ExecutionCommonRestrictions.Count && i < restrictionPerRow * (row + 1); i++)
+                    @for (int i = restrictionPerRow * row; i < report.ExecutionPromptedRestrictions.Count && i < restrictionPerRow * (row + 1); i++)
                     {
-                        var restriction = report.ExecutionCommonRestrictions[i];
+                        var restriction = report.ExecutionPromptedRestrictions[i];
                         <div class="col-sm-@(12 / restrictionPerRow)">
                             <div class="form-group">
                                 <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select" style="display:@(restriction.HasOperator ? "inline" : "none");">

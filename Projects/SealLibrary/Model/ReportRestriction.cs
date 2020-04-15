@@ -48,6 +48,7 @@ namespace Seal.Model
                 GetProperty("ChangeOperator").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
                 GetProperty("DisplayOrderRE").SetIsBrowsable(true);
+                GetProperty("AllowAPI").SetIsBrowsable(true);
                 //Conditional
                 if (IsEnum)
                 {
@@ -147,7 +148,8 @@ namespace Seal.Model
         /// </summary>
         public static ReportRestriction CreateReportRestriction()
         {
-            return new ReportRestriction() {
+            return new ReportRestriction()
+            {
                 GUID = Guid.NewGuid().ToString(),
                 _type = ColumnType.Default,
                 _numericStandardFormat = NumericStandardFormat.Default,
@@ -305,6 +307,14 @@ namespace Seal.Model
             get { return DisplayOrder; }
             set { DisplayOrder = value; }
         }
+
+        /// <summary>
+        /// If True, the restriction can be modified through the Web API, even if the restriction is not prompted.
+        /// </summary>
+        [DefaultValue(false)]
+        [Category("Advanced"), DisplayName("Allow modifications through API"), Description("If True, the restriction can be modified through the Web API, even if the restriction is not prompted."), Id(10, 3)]
+        public bool AllowAPI { get; set; } = false;
+
         Operator _operator = Operator.Equal;
         /// <summary>
         /// The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator).
