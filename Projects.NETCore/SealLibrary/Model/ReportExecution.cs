@@ -597,6 +597,9 @@ namespace Seal.Model
                        UseDefaultRestrictions
                        );
             }
+
+            //Disable Allow API to avoid reset of the values...
+            if (restriction.Prompt == PromptType.None && restriction.AllowAPI) restriction.AllowAPI = false;
         }
 
         /// <summary>
@@ -606,7 +609,7 @@ namespace Seal.Model
         {
             try
             {
-                foreach (ReportRestriction restriction in Report.ExecutionInputValues.Where(i => i.Prompt != PromptType.None))
+                foreach (ReportRestriction restriction in Report.ExecutionInputValues.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                 {
                     setRestriction(restriction);
                 }
@@ -614,9 +617,9 @@ namespace Seal.Model
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
                     foreach (ReportRestriction restriction in model
-                        .ExecutionRestrictions.Where(i => i.Prompt != PromptType.None)
-                        .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None))
-                        .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None))
+                        .ExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI)
+                        .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
+                        .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                         )
                     {
                         setRestriction(restriction);
@@ -725,7 +728,7 @@ namespace Seal.Model
         {
             try
             {
-                if (model.ResultTable == null) throw new Exception("The Result Table of the model was not loaded. Call BuildResultTableModel() first...");
+                if (model.ResultTable == null && string.IsNullOrEmpty(model.ExecutionError)) throw new Exception("The Result Table of the model was not loaded. Call BuildResultTableModel() first...");
 
                 model.SetColumnsName();
 

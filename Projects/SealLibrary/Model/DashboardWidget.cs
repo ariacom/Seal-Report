@@ -56,7 +56,8 @@ namespace Seal.Model
         /// The widget name
         /// </summary>
         [DisplayName("Name"), Description("The widget name."), Id(1, 1)]
-        public string Name { get => _name;
+        public string Name { 
+            get => _name;
             set {
                 _name = value;
                 //Create guid for the first time

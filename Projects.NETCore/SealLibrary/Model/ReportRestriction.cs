@@ -46,7 +46,8 @@ namespace Seal.Model
         /// </summary>
         public static ReportRestriction CreateReportRestriction()
         {
-            return new ReportRestriction() {
+            return new ReportRestriction()
+            {
                 GUID = Guid.NewGuid().ToString(),
                 _type = ColumnType.Default,
                 _numericStandardFormat = NumericStandardFormat.Default,
@@ -176,6 +177,12 @@ namespace Seal.Model
             get { return DisplayOrder; }
             set { DisplayOrder = value; }
         }
+
+        /// <summary>
+        /// If True, the restriction can be modified through the Web API, even if the restriction is not prompted.
+        /// </summary>
+        public bool AllowAPI { get; set; } = false;
+
         Operator _operator = Operator.Equal;
         /// <summary>
         /// The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator).

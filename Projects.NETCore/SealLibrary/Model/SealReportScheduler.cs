@@ -70,20 +70,22 @@ namespace Seal.Model
             {
                 //Report has been moved or renamed: search report from its GUID in the report folder
                 report = Repository.Instance.FindReport(Repository.Instance.ReportsFolder, refSchedule.ReportGUID);
-                if (report == null)
+            }
+
+            if (report == null)
+            {
+                //Remove the schedules of the report
+                var reportSchedules = _schedules.Values.Where(i => i.ReportGUID == refSchedule.ReportGUID).ToList();
+                foreach (var schedule in reportSchedules)
                 {
-                    //Remove the schedules of the report
-                    var reportSchedules = _schedules.Values.Where(i => i.ReportGUID == refSchedule.ReportGUID).ToList();
-                    foreach (var schedule in reportSchedules)
+                    File.Delete(schedule.FilePath);
+                    lock (_schedules)
                     {
-                        File.Delete(schedule.FilePath);
-                        lock (_schedules)
-                        {
-                            _schedules.Remove(schedule.GUID);
-                        }
+                        _schedules.Remove(schedule.GUID);
                     }
                 }
             }
+
             return report;
         }
 
@@ -110,20 +112,23 @@ namespace Seal.Model
         {
             var schedule = param as SealSchedule;
             var report = getScheduledReport(schedule);
-            var reportSchedule = getReportSchedule(report, schedule.GUID);
-            ReportExecution.ExecuteReportSchedule(schedule.GUID, report, reportSchedule);
+            if (report != null)
+            {
+                var reportSchedule = getReportSchedule(report, schedule.GUID);
+                ReportExecution.ExecuteReportSchedule(schedule.GUID, report, reportSchedule);
 
-            if (File.GetLastWriteTime(schedule.FilePath) == schedule.LastModification)
-            {
-                schedule.CalculateNextExecution();
-                SaveSchedule(schedule);
-                schedule.BeingExecuted = false;
-            }
-            else
-            {
-                //Schedule modified from another editor...
-                schedule.BeingExecuted = false;
-                loadSchedules();
+                if (File.GetLastWriteTime(schedule.FilePath) == schedule.LastModification)
+                {
+                    schedule.CalculateNextExecution();
+                    SaveSchedule(schedule);
+                    schedule.BeingExecuted = false;
+                }
+                else
+                {
+                    //Schedule modified from another editor...
+                    schedule.BeingExecuted = false;
+                    loadSchedules();
+                }
             }
         }
 
