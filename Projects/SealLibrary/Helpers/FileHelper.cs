@@ -134,14 +134,16 @@ namespace Seal.Helpers
             return result;
         }
 
-        public static void CopyDirectory(string source, string destination, bool recursive)
+        public static void CopyDirectory(string source, string destination, bool recursive, ReportExecutionLog log = null, string searchPattern = "")
         {
             if (!Directory.Exists(destination)) Directory.CreateDirectory(destination);
-            foreach (string file in Directory.GetFiles(source))
+            foreach (string file in Directory.GetFiles(source, searchPattern))
             {
                 try
                 {
-                    File.Copy(file, Path.Combine(destination, Path.GetFileName(file)), true);
+                    var destinationFile = Path.Combine(destination, Path.GetFileName(file));
+                    if (log != null) log.LogMessage("Copy '{0}' to '{1}'", file, destinationFile);
+                    File.Copy(file, destinationFile, true);
                 }
                 catch (Exception ex)
                 {
@@ -153,11 +155,10 @@ namespace Seal.Helpers
             {
                 foreach (string directory in Directory.GetDirectories(source))
                 {
-                    CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), true);
+                    CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), true, log, searchPattern);
                 }
             }
         }
-
 
         public static string CreateAndGetDirectory(string root, string subFolder)
         {

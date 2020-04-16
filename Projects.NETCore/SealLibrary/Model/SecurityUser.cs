@@ -213,6 +213,26 @@ namespace Seal.Model
             }
         }
 
+        private bool? _widgetPublication = null;
+        /// <summary>
+        /// True if the user has right to publish Dashboard Widgets
+        /// </summary>
+        public bool WidgetPublication
+        {
+            get
+            {
+                if (_widgetPublication == null)
+                {
+                    _widgetPublication = false;
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (group.WidgetPublication) _widgetPublication = true;
+                    }
+                }
+                return _widgetPublication.Value;
+            }
+        }
+
         private ViewType? _viewType = null;
         /// <summary>
         /// Views allowed for the user: reports and/or dashboards

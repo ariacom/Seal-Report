@@ -37,7 +37,8 @@ namespace Seal.Model
         /// <summary>
         /// The widget name
         /// </summary>
-        public string Name { get => _name;
+        public string Name { 
+            get => _name;
             set {
                 _name = value;
                 //Create guid for the first time
