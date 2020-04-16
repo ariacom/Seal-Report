@@ -46,6 +46,11 @@ namespace Seal.Model
         public bool SqlModel { get; set; } = false;
 
         /// <summary>
+        /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.
+        /// </summary>
+        public bool WidgetPublication { get; set; } = true;
+
+        /// <summary>
         /// For the Web Report Designer: Device rights for the group. Set rights to devices through their names. By default, all devices can be selected.
         /// </summary>
         public List<SecurityDevice> Devices { get; set; } = new List<SecurityDevice>();
