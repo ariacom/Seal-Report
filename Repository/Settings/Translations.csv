@@ -171,6 +171,8 @@ Web;Custom SQL;;SQL Spécifique
 Web;Custom;;Spécifique
 Web;Cut;;Couper
 Web;Dashboard name;;Nom du Dashboard
+Web;Dashboard Widget publication name;;Nom du Widget publié
+Web;Dashboard Widget description;;Description du Widget
 Web;Days;;Jours
 Web;Days of the week;;Jours de la semaine
 Web;Default body;;Message par défaut

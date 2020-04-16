@@ -28,6 +28,7 @@ namespace Seal.Model
                 GetProperty("Folders").SetIsBrowsable(true);
                 GetProperty("Columns").SetIsBrowsable(true);
                 GetProperty("SqlModel").SetIsBrowsable(true);
+                GetProperty("WidgetPublication").SetIsBrowsable(true);
                 GetProperty("Devices").SetIsBrowsable(true);
                 GetProperty("Connections").SetIsBrowsable(true);
                 GetProperty("Sources").SetIsBrowsable(true);
@@ -92,9 +93,16 @@ namespace Seal.Model
         public bool SqlModel { get; set; } = false;
 
         /// <summary>
+        /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.
+        /// </summary>
+        [Category("Web Report Designer Security"), DisplayName("\t\t\tWidget Publication"), Description("For the Web Report Designer: If true, a report edited can be published as a Dashboard Widget. Note that a Logout/Login is required after a publication to refresh the list of Widgets available in the Dashboard Manager"), Id(2, 2)]
+        [DefaultValue(true)]
+        public bool WidgetPublication { get; set; } = true;
+
+        /// <summary>
         /// For the Web Report Designer: Device rights for the group. Set rights to devices through their names. By default, all devices can be selected.
         /// </summary>
-        [Category("Web Report Designer Security"), DisplayName("\t\tDevices"), Description("For the Web Report Designer: Device rights for the group. Set rights to devices through their names. By default, all devices can be selected."), Id(2, 2)]
+        [Category("Web Report Designer Security"), DisplayName("\t\tDevices"), Description("For the Web Report Designer: Device rights for the group. Set rights to devices through their names. By default, all devices can be selected."), Id(3, 2)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityDevice> Devices { get; set; } = new List<SecurityDevice>();
         public bool ShouldSerializeDevices() { return Devices.Count > 0; }
@@ -102,7 +110,7 @@ namespace Seal.Model
         /// <summary>
         /// For the Web Report Designer: Data sources rights for the group. Set rights to data source through their names. By default, all sources can be selected.
         /// </summary>
-        [Category("Web Report Designer Security"), DisplayName("\t\tSources"), Description("For the Web Report Designer: Data sources rights for the group. Set rights to data source through their names. By default, all sources can be selected."), Id(3, 2)]
+        [Category("Web Report Designer Security"), DisplayName("\t\tSources"), Description("For the Web Report Designer: Data sources rights for the group. Set rights to data source through their names. By default, all sources can be selected."), Id(4, 2)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecuritySource> Sources { get; set; } = new List<SecuritySource>();
         public bool ShouldSerializeSources() { return Sources.Count > 0; }
@@ -110,7 +118,7 @@ namespace Seal.Model
         /// <summary>
         /// For the Web Report Designer: Connections rights for the group. Set rights to connections through their names. By default, all connections can be selected.
         /// </summary>
-        [Category("Web Report Designer Security"), DisplayName("\tConnections"), Description("For the Web Report Designer: Connections rights for the group. Set rights to connections through their names. By default, all connections can be selected."), Id(4, 2)]
+        [Category("Web Report Designer Security"), DisplayName("\tConnections"), Description("For the Web Report Designer: Connections rights for the group. Set rights to connections through their names. By default, all connections can be selected."), Id(5, 2)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityConnection> Connections { get; set; } = new List<SecurityConnection>();
         public bool ShouldSerializeConnections() { return Connections.Count > 0; }
@@ -118,7 +126,7 @@ namespace Seal.Model
         /// <summary>
         /// For the Web Report Designer: Columns rights for the group. Set rights to columns through the security tags or categories assigned. By default, all columns can be selected.
         /// </summary>
-        [Category("Web Report Designer Security"), DisplayName("Columns"), Description("For the Web Report Designer: Columns rights for the group. Set rights to columns through the security tags or categories assigned. By default, all columns can be selected."), Id(5, 2)]
+        [Category("Web Report Designer Security"), DisplayName("Columns"), Description("For the Web Report Designer: Columns rights for the group. Set rights to columns through the security tags or categories assigned. By default, all columns can be selected."), Id(6, 2)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityColumn> Columns { get; set; } = new List<SecurityColumn>();
         public bool ShouldSerializeColumns() { return Columns.Count > 0; }

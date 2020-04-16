@@ -1444,7 +1444,7 @@ namespace Seal.Model
             else if (device is OutputFileServerDevice)
             {
                 result.FolderPath = "/";
-                if(!string.IsNullOrEmpty(((OutputFileServerDevice)device).Directories)) result.FolderPath = ((OutputFileServerDevice)device).DirectoriesArray[0];
+                if (!string.IsNullOrEmpty(((OutputFileServerDevice)device).Directories)) result.FolderPath = ((OutputFileServerDevice)device).DirectoriesArray[0];
                 result.FileName = Repository.SealReportDisplayNameKeyword;
             }
 
@@ -1801,7 +1801,7 @@ namespace Seal.Model
 
                     int index = 0;
                     _executionCommonRestrictions = new List<ReportRestriction>();
-                    foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None).OrderBy(i => i.DisplayOrder))
+                    foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI).OrderBy(i => i.DisplayOrder))
                     {
                         if (
                             restriction.IsInputValue ||
@@ -1829,6 +1829,18 @@ namespace Seal.Model
             set
             {
                 _executionCommonRestrictions = value;
+            }
+        }
+
+        /// <summary>
+        /// List of restrictions prompted at execution from the Report Result
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportRestriction> ExecutionPromptedRestrictions
+        {
+            get
+            {
+                return ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None).OrderBy(i => i.DisplayOrder).ToList();
             }
         }
 
