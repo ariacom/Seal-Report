@@ -161,6 +161,8 @@ namespace Seal.Helpers
                             }
                             table.Rows.Add(dataRow);
                         }
+
+                        dr.Close();
                     }
                 }
                 finally

@@ -1109,7 +1109,7 @@ namespace Seal.Model
                         for (int i = 0; i < value2.Length; i++)
                         {
                             string unicode = BitConverter.ToString(Encoding.Unicode.GetBytes(value2[i].ToString())).Replace("-", "");
-                            result += Path.DirectorySeparatorChar.ToString() + unicode.Substring(2, 2) + unicode.Substring(0, 2);
+                            result += Path.DirectorySeparatorChar + unicode.Substring(2, 2) + unicode.Substring(0, 2);
                         }
                         result = "UNISTR(" + Helper.QuoteSingle(result) + ")";
                     }

@@ -419,7 +419,8 @@ namespace Seal.Model
                     var command = connection.CreateCommand();
                     finalSQL = Helper.ClearAllSQLKeywords(sql, model);
                     command.CommandText = finalSQL;
-                    command.ExecuteReader();
+                    var reader = command.ExecuteReader();
+                    reader.Close();
                     if (isPrePost && model != null) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(model.PostSQL, model), model, model.IgnorePrePostError);
                     if (tables != null) foreach (var table in tables) Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(table.PostSQL, model), table, table.IgnorePrePostError);
                     Helper.ExecutePrePostSQL(connection, Helper.ClearAllSQLKeywords(PostSQL, model), this, this.IgnorePrePostError);
