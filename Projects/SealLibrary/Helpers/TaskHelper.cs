@@ -120,6 +120,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Load tables from Excel tabs (one table per tab)
+        /// </summary>
         public bool LoadTablesFromExcel(string loadFolder, string sourceExcelPath, string[] sourceTabNames, string[] destTableNames = null, bool useAllConnections = false)
         {
             bool result = false;
@@ -149,14 +152,17 @@ namespace Seal.Helpers
         }
 
 
-        public bool LoadTableFromExcel(string loadFolder, string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false)
+        /// <summary>
+        /// Load a table from an Excel tab into the database. A start row, and/or colum can be specified. An end column can be specified. 
+        /// </summary>
+        public bool LoadTableFromExcel(string loadFolder, string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0)
         {
             bool result = false;
             try
             {
                 if (CheckForNewFileSource(loadFolder, sourceExcelPath))
                 {
-                    LoadTableFromExcel(sourceExcelPath, sourceTabName, destinationTableName, useAllConnections);
+                    LoadTableFromExcel(sourceExcelPath, sourceTabName, destinationTableName, useAllConnections, startRow, startColumn, endColumnIndex);
                     File.Copy(sourceExcelPath, Path.Combine(loadFolder, Path.GetFileName(sourceExcelPath)), true);
                     result = true;
                 }
@@ -172,13 +178,13 @@ namespace Seal.Helpers
             return result;
         }
 
-        public void LoadTableFromExcel(string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false)
+        public void LoadTableFromExcel(string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0)
         {
             try
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceExcelPath);
                 LogMessage("Starting Loading Excel Table from '{0}'", sourcePath);
-                DataTable table = DatabaseHelper.LoadDataTableFromExcel(sourcePath, sourceTabName);
+                DataTable table = DatabaseHelper.LoadDataTableFromExcel(sourcePath, sourceTabName, startRow, startColumn, endColumnIndex);
                 table.TableName = destinationTableName;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
@@ -196,6 +202,7 @@ namespace Seal.Helpers
                 LogDebug();
             }
         }
+
 
         public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = true)
         {
@@ -226,7 +233,7 @@ namespace Seal.Helpers
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceCsvPath);
                 LogMessage("Starting Loading CSV Table from '{0}'", sourcePath);
-                DataTable table = (!useVBParser ? DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator) : DatabaseHelper.LoadDataTableFromCSV2(sourcePath, separator));
+                DataTable table = (!useVBParser ? DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator) : DatabaseHelper.LoadDataTableFromCSVUsingVBParser(sourcePath, separator));
                 table.TableName = destinationTableName;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {
@@ -416,6 +423,7 @@ namespace Seal.Helpers
         {
             return DatabaseHelper.LoadDataTable(connection, sql);
         }
+
 
         public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)
         {

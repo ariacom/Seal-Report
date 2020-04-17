@@ -341,6 +341,112 @@ namespace Seal.Model
             get { return "<Click to test the connection>"; }
         }
 
+
+        #region FtpHelpers
+        /// <summary>
+        /// Delegate to create a FtpWebRequest
+        /// </summary>
+        public delegate FtpWebRequest CustomFtpGetRequest(string destination, string method);
+
+        /// <summary>
+        /// Put directories and file to an FTP Server
+        /// </summary>
+        public void FtpPutDirectory(string source, string destination, bool recursive, ReportExecutionLog log, CustomFtpGetRequest ftpGetRequest, string searchPattern = "*")
+        {
+            if (ftpGetRequest == null) ftpGetRequest = FtpGetRequest;
+
+            if (!FtpDirectoryExists(destination, ftpGetRequest)) { 
+                if (log != null) log.LogMessage("Creating remote directory: " + destination);
+                var request = ftpGetRequest(destination, WebRequestMethods.Ftp.MakeDirectory);
+                request.GetResponse();
+            }
+
+            foreach (string file in Directory.GetFiles(source, searchPattern))
+            {
+                try
+                {
+                    var destinationFile = Path.Combine(destination, Path.GetFileName(file)).Replace("\\", "/");
+                    if (log != null) log.LogMessage("Copy '{0}' to '{1}'", file, destinationFile);
+                    FtpPutFile(file, destinationFile, ftpGetRequest);
+                }
+                catch (Exception ex)
+                {
+                    if (log != null) log.LogMessage(ex.Message);
+                }
+            }
+
+            if (recursive)
+            {
+                foreach (string directory in Directory.GetDirectories(source))
+                {
+                    FtpPutDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)).Replace("\\", "/"), recursive, log, ftpGetRequest, searchPattern);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Put a file on a FTP server
+        /// </summary>
+        public void FtpPutFile(string source, string destination, CustomFtpGetRequest ftpGetRequest)
+        {
+            if (ftpGetRequest == null) ftpGetRequest = FtpGetRequest;
+            FtpWebRequest request = ftpGetRequest(destination, WebRequestMethods.Ftp.UploadFile);
+            byte[] fileContents = File.ReadAllBytes(source);
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                requestStream.Write(fileContents, 0, fileContents.Length);
+            }
+            request.GetResponse();
+        }
+
+        /// <summary>
+        /// True if the directory exists on the server
+        /// </summary>
+        public bool FtpDirectoryExists(string destination, CustomFtpGetRequest ftpGetRequest)
+        {
+            if (ftpGetRequest == null) ftpGetRequest = FtpGetRequest;
+            FtpWebRequest request = ftpGetRequest(destination, WebRequestMethods.Ftp.ListDirectory);
+            try
+            {
+                request.GetResponse();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// True if the file exists on the server
+        /// </summary>
+        public bool FtpFileExists(string destination, CustomFtpGetRequest ftpGetRequest)
+        {
+            if (ftpGetRequest == null) ftpGetRequest = FtpGetRequest;
+            FtpWebRequest request = ftpGetRequest(destination, WebRequestMethods.Ftp.GetFileSize);
+            try
+            {
+                request.GetResponse();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Get the FtpWebRequest (default function)
+        /// </summary>
+        public FtpWebRequest FtpGetRequest(string destination, string method)
+        {
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Format("ftp://{0}:{1}{2}", HostName, PortNumber, destination));
+            request.KeepAlive = true;
+            request.Method = method;
+            request.Credentials = new NetworkCredential(UserName, ClearPassword);
+            return request;
+        }
     }
+    #endregion
 }
 
