@@ -14,6 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic.FileIO;
 using System.Data.SqlClient;
+using OfficeOpenXml;
 
 namespace Seal.Helpers
 {
@@ -27,7 +28,7 @@ namespace Seal.Helpers
     public delegate string CustomGetTableColumnValue(DataRow row, DataColumn col, string datetimeFormat);
 
     public delegate DataTable CustomLoadDataTable(ConnectionType connectionType, string connectionString, string sql);
-    public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "");
+    public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endColIndex = 0);
     public delegate DataTable CustomLoadDataTableFromCSV(string csvPath, char? separator = null);
 
     public class TaskDatabaseHelper
@@ -160,6 +161,8 @@ namespace Seal.Helpers
                             }
                             table.Rows.Add(dataRow);
                         }
+
+                        dr.Close();
                     }
                 }
                 finally
@@ -175,136 +178,44 @@ namespace Seal.Helpers
             return table;
         }
 
-        public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "")
+        public bool IsRowEmpty(ExcelWorksheet worksheet, int row, int startCol, int colCount)
         {
-            if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(excelPath, tabName);
-
-            //Copy the Excel file if it is open...
-            FileHelper.PurgeTempApplicationDirectory();
-            string newPath = FileHelper.GetTempUniqueFileName(excelPath);
-            File.Copy(excelPath, newPath, true);
-            File.SetLastWriteTime(newPath, DateTime.Now);
-
-            string connectionString = string.Format(ExcelOdbcDriver, newPath);
-            string sql = string.Format("select * from [{0}$]", Helper.IfNullOrEmpty(tabName, "Sheet1"));
-            return OdbcLoadDataTable(connectionString, sql);
+            bool rowEmpty = true;
+            for (int i = startCol; i <= startCol + colCount; i++)
+            {
+                if (worksheet.Cells[row, i].Value != null)
+                {
+                    rowEmpty = false;
+                    break;
+                }
+            }
+            return rowEmpty;
         }
+
+        /// <summary>
+        /// Load a DataTable from an Excel tab into the database. A start row, and/or colum can be specified. An end column can be specified. 
+        /// </summary>
+        public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endColIndex = 0)
+        {
+            if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endColIndex);
+
+            return ExcelHelper.LoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endColIndex);
+        }
+
 
         public DataTable LoadDataTableFromCSV(string csvPath, char? separator = null)
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            DataTable result = null;
-            bool isHeader = true;
-            Regex regexp = null;
-
-            string[] lines = null;
-            try
-            {
-                lines = File.ReadAllLines(csvPath, DefaultEncoding);
-            }
-            catch
-            {
-                //Try by copying the file...
-                string newPath = FileHelper.GetTempUniqueFileName(csvPath);
-                File.Copy(csvPath, newPath);
-                lines = File.ReadAllLines(newPath, DefaultEncoding);
-                FileHelper.PurgeTempApplicationDirectory();
-            }
-
-
-            foreach (string line in lines)
-            {
-                var line2 = line.Trim();
-                if (string.IsNullOrWhiteSpace(line2)) continue;
-
-                if (regexp == null)
-                {
-                    if (separator == null)
-                    {
-                        //use the first line to determine the separator between , and ;
-                        separator = ',';
-                        if (line2.Split(';').Length > line2.Split(',').Length) separator = ';';
-                    }
-                    var sep2 = (separator.Value == '|' || separator.Value == ':' ? Path.DirectorySeparatorChar.ToString() : "") + separator.Value;
-                    string exp = "(?<=^|" + sep2 + ")(\"(?:[^\"]|\"\")*\"|[^" + sep2 + "]*)";
-                    regexp = new Regex(exp);
-                }
-
-                MatchCollection collection = regexp.Matches(line2);
-                if (isHeader)
-                {
-                    result = new DataTable();
-                    for (int i = 0; i < collection.Count; i++)
-                    {
-                        result.Columns.Add(new DataColumn(ExcelHelper.FromCsv(collection[i].Value), typeof(string)));
-                    }
-                    isHeader = false;
-                }
-                else
-                {
-                    var row = result.Rows.Add();
-                    for (int i = 0; i < collection.Count && i < result.Columns.Count; i++)
-                    {
-                        row[i] = ExcelHelper.FromCsv(collection[i].Value);
-                        if (row[i].ToString().Contains("\0")) row[i] = "";
-                    }
-                }
-            }
-
-            return result;
+            return ExcelHelper.LoadDataTableFromCSV(csvPath, separator, DefaultEncoding);
         }
 
 
-        public DataTable LoadDataTableFromCSV2(string csvPath, char? separator = null)
+        public DataTable LoadDataTableFromCSVUsingVBParser(string csvPath, char? separator = null)
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            DataTable result = null;
-            bool isHeader = true;
-            TextFieldParser csvParser = null;
-            try
-            {
-                csvParser = new TextFieldParser(csvPath, DefaultEncoding);
-            }
-            catch
-            {
-                //Try by copying the file...
-                string newPath = FileHelper.GetTempUniqueFileName(csvPath);
-                File.Copy(csvPath, newPath);
-                csvParser = new TextFieldParser(newPath, DefaultEncoding);
-                FileHelper.PurgeTempApplicationDirectory();
-            }
-            if (separator == null) separator = ',';
-            //csvParser.CommentTokens = new string[] { "#" };
-            csvParser.SetDelimiters(new string[] { separator.ToString() });
-            csvParser.HasFieldsEnclosedInQuotes = true;
-
-            while (!csvParser.EndOfData)
-            {
-                string[] fields = csvParser.ReadFields();
-                if (isHeader)
-                {
-                    result = new DataTable();
-                    for (int i = 0; i < fields.Length; i++)
-                    {
-                        result.Columns.Add(new DataColumn(fields[i], typeof(string)));
-                    }
-                    isHeader = false;
-                }
-                else
-                {
-                    var row = result.Rows.Add();
-                    for (int i = 0; i < fields.Length && i < result.Columns.Count; i++)
-                    {
-                        row[i] = fields[i];
-                        if (row[i].ToString().Contains("\0")) row[i] = "";
-                    }
-                }
-            }
-            csvParser.Close();
-
-            return result;
+            return ExcelHelper.LoadDataTableFromCSVUsingVBParser(csvPath, separator, DefaultEncoding);
         }
 
         public DatabaseType DatabaseType = DatabaseType.MSSQLServer;

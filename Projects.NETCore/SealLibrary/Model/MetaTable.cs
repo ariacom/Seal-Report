@@ -402,7 +402,7 @@ namespace Seal.Model
                 int position = 1;
                 foreach (DataColumn column in defTable.Columns)
                 {
-                    string fullColumnName = (IsSQL && !IsForSQLModel ? Source.GetTableName(AliasName) + "." : "") + Source.GetColumnName(column.ColumnName);
+                    string fullColumnName = (IsSQL && !IsForSQLModel ? Source.GetTableName(AliasName) + "." : "") + (IsSQL ? Source.GetColumnName(column.ColumnName) : column.ColumnName);
                     MetaColumn newColumn = Columns.FirstOrDefault(i => i.Name.ToLower() == fullColumnName.ToLower());
                     column.ColumnName = fullColumnName; //Set it here to clear the columns later
                     ColumnType type = Helper.NetTypeConverter(column.DataType);

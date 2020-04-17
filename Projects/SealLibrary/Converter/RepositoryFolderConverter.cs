@@ -38,7 +38,7 @@ namespace Seal.Forms
                 }
                 else
                 {
-                    prefix = Repository.SealRepositoryKeyword + Path.DirectorySeparatorChar.ToString() + "Reports";
+                    prefix = Repository.SealRepositoryKeyword + Path.DirectorySeparatorChar + "Reports";
                 }
             }
             choices.Add(prefix + Path.DirectorySeparatorChar);

@@ -134,7 +134,7 @@ namespace Seal.Helpers
             return result;
         }
 
-        public static void CopyDirectory(string source, string destination, bool recursive, ReportExecutionLog log = null, string searchPattern = "")
+        public static void CopyDirectory(string source, string destination, bool recursive, ReportExecutionLog log = null, string searchPattern = "*")
         {
             if (!Directory.Exists(destination)) Directory.CreateDirectory(destination);
             foreach (string file in Directory.GetFiles(source, searchPattern))
@@ -155,7 +155,7 @@ namespace Seal.Helpers
             {
                 foreach (string directory in Directory.GetDirectories(source))
                 {
-                    CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), true, log, searchPattern);
+                    CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), recursive, log, searchPattern);
                 }
             }
         }

@@ -395,7 +395,7 @@ namespace Seal.Model
         /// <summary>
         /// Put directories and file to an FTP Server
         /// </summary>
-        public void FtpPutDirectory(string source, string destination, bool recursive, ReportExecutionLog log, CustomFtpGetRequest ftpGetRequest, string searchPattern)
+        public void FtpPutDirectory(string source, string destination, bool recursive, ReportExecutionLog log, CustomFtpGetRequest ftpGetRequest, string searchPattern = "*")
         {
             if (ftpGetRequest == null) ftpGetRequest = FtpGetRequest;
 
@@ -423,7 +423,7 @@ namespace Seal.Model
             {
                 foreach (string directory in Directory.GetDirectories(source))
                 {
-                    FtpPutDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)).Replace("\\", "/"), true, log, ftpGetRequest, searchPattern);
+                    FtpPutDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)).Replace("\\", "/"), recursive, log, ftpGetRequest, searchPattern);
                 }
             }
         }
