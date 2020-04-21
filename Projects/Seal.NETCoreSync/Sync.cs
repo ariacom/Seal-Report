@@ -67,11 +67,7 @@ namespace Seal.NETCoreSync
 
             result = result.Replace("Properties.Settings.Default.RepositoryPath", "\"\"");
 
-            if (fileName =="RazorHelper")
-            {
-                result = result.Replace("using Jose;", "using Microsoft.AspNetCore.Html;");
-            }
-            else if (fileName == "RootEditor")
+            if (fileName == "RootEditor")
             {
                 result = result.Replace("protected DynamicCustomTypeDescriptor _dctd", "protected object _dctd");
             }

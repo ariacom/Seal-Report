@@ -191,10 +191,18 @@ namespace Seal.Helpers
                     if (_task.CancelReport) break;
                     LogMessage("Importing table for connection '{0}'.", connection.Name);
                     DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                    LogMessage("Dropping and creating table '{0}'", destinationTableName);
-                    DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
-                    LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
-                    DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
+                    var dbCommand = _task.GetDbCommand(connection);
+                    try
+                    {
+                        LogMessage("Dropping and creating table '{0}'", destinationTableName);
+                        DatabaseHelper.CreateTable(dbCommand, table);
+                        LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                        DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
+                    }
+                    finally
+                    {
+                        dbCommand.Connection.Close();
+                    }
                 }
             }
             finally
@@ -240,10 +248,18 @@ namespace Seal.Helpers
                     if (_task.CancelReport) break;
                     LogMessage("Importing table for connection '{0}'.", connection.Name);
                     DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                    LogMessage("Dropping and creating table '{0}'", destinationTableName);
-                    DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
-                    LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
-                    DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
+                    var dbCommand = _task.GetDbCommand(connection);
+                    try
+                    {
+                        LogMessage("Dropping and creating table '{0}'", destinationTableName);
+                        DatabaseHelper.CreateTable(dbCommand, table);
+                        LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                        DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
+                    }
+                    finally
+                    {
+                        dbCommand.Connection.Close();
+                    }
                 }
             }
             finally
@@ -305,15 +321,23 @@ namespace Seal.Helpers
                                 if (table.Rows.Count == 0) break;
 
                                 table.TableName = destinationTableName;
-                                if (lastIndex == 0)
+                                var dbCommand = _task.GetDbCommand(connection);
+                                try
                                 {
-                                    LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
-                                    DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                                    DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
+                                    if (lastIndex == 0)
+                                    {
+                                        LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
+                                        DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
+                                        DatabaseHelper.CreateTable(dbCommand, table);
+                                    }
+                                    LogMessage("Copying {0} rows in '{1}' for index {2} to {3}", table.Rows.Count, destinationTableName, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
+                                    DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
+                                    lastIndex += DatabaseHelper.LoadBurstSize;
                                 }
-                                LogMessage("Copying {0} rows in '{1}' for index {2} to {3}", table.Rows.Count, destinationTableName, lastIndex, lastIndex + DatabaseHelper.LoadBurstSize);
-                                DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
-                                lastIndex += DatabaseHelper.LoadBurstSize;
+                                finally
+                                {
+                                    dbCommand.Connection.Close();
+                                }
                             }
                         }
                         else
@@ -325,11 +349,20 @@ namespace Seal.Helpers
                                 table.TableName = destinationTableName;
                             }
 
-                            LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
-                            DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
-                            DatabaseHelper.CreateTable(_task.GetDbCommand(connection), table);
-                            LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
-                            DatabaseHelper.InsertTable(_task.GetDbCommand(connection), table, connection.DateTimeFormat, false);
+                            var dbCommand = _task.GetDbCommand(connection);
+                            try
+                            {
+                                LogMessage("Dropping and creating table '{1}' in '{0}'", connection.Name, destinationTableName);
+                                DatabaseHelper.SetDatabaseDefaultConfiguration(connection.DatabaseType);
+                                DatabaseHelper.CreateTable(dbCommand, table);
+                                LogMessage("Copying {0} rows in '{1}'", table.Rows.Count, destinationTableName);
+                                DatabaseHelper.InsertTable(dbCommand, table, connection.DateTimeFormat, false);
+                            }
+                            finally
+                            {
+                                dbCommand.Connection.Close();
+                            }
+
                         }
                     }
                     else
@@ -625,8 +658,15 @@ namespace Seal.Helpers
             {
                 var newPath = path.Replace("@", "").Replace("\"", "").Replace(";", "");
                 var command = task.GetDbCommand(task.Connection);
-                command.CommandText = File.ReadAllText(newPath);
-                command.ExecuteScalar();
+                try
+                {
+                    command.CommandText = File.ReadAllText(newPath);
+                    command.ExecuteScalar();
+                }
+                finally
+                {
+                    command.Connection.Close();
+                }
             }
         }
     }
