@@ -396,7 +396,26 @@ namespace Seal.Model
             {
                 requestStream.Write(fileContents, 0, fileContents.Length);
             }
-            request.GetResponse();
+            var response = request.GetResponse();
+            response.Close();
+        }
+
+        /// <summary>
+        /// Read a file from a FTP server
+        /// </summary>
+        public string FtpReadFile(string source, CustomFtpGetRequest ftpGetRequest)
+        {
+            if (ftpGetRequest == null) ftpGetRequest = FtpGetRequest;
+            FtpWebRequest request = ftpGetRequest(source, WebRequestMethods.Ftp.DownloadFile);
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+            Stream responseStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(responseStream);
+            var result = reader.ReadToEnd();
+            reader.Close();
+            response.Close();
+
+            return result;
         }
 
         /// <summary>
@@ -408,7 +427,8 @@ namespace Seal.Model
             FtpWebRequest request = ftpGetRequest(destination, WebRequestMethods.Ftp.ListDirectory);
             try
             {
-                request.GetResponse();
+                var response = request.GetResponse();
+                response.Close();
             }
             catch
             {
@@ -426,7 +446,8 @@ namespace Seal.Model
             FtpWebRequest request = ftpGetRequest(destination, WebRequestMethods.Ftp.GetFileSize);
             try
             {
-                request.GetResponse();
+                var response = request.GetResponse();
+                response.Close();
             }
             catch
             {

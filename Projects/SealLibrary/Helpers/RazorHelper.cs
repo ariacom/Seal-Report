@@ -16,13 +16,15 @@ using Seal.Model;
 using System.DirectoryServices.AccountManagement;
 using Jose;
 using Newtonsoft.Json.Linq;
-using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Data.Odbc;
 using System.Data.SqlClient;
 using Renci.SshNet;
 using System.Net;
 using System.Net.Http;
+#if NETCOREAPP
+    using Microsoft.AspNetCore.Html;
+#endif 
 
 namespace Seal.Helpers
 {
@@ -37,7 +39,7 @@ namespace Seal.Helpers
         static XDocument dummy6 = null;
         static Control dummy7 = null; //!NETCore
         static PrincipalContext dummy8 = null;
-        static JwtSettings dummy9 = null; //!NETCore
+        static JwtSettings dummy9 = null; 
         static JObject dummy10 = null;
         static FastZip dummy11 = null;
         static OdbcConnection dummy12 = null;
@@ -66,7 +68,7 @@ namespace Seal.Helpers
                     if (dummy6 == null) dummy6 = new XDocument();
                     if (dummy7 == null) dummy7 = new Control(); //!NETCore
                     if (dummy8 == null) dummy8 = new PrincipalContext(ContextType.Machine);
-                    if (dummy9 == null) dummy9 = JWT.DefaultSettings; //!NETCore
+                    if (dummy9 == null) dummy9 = JWT.DefaultSettings; 
                     if (dummy10 == null) dummy10 = JObject.Parse("{}");
                     if (dummy11 == null) dummy11 = new FastZip();
                     if (dummy12 == null) dummy12 = new OdbcConnection();
