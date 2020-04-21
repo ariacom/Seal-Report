@@ -133,7 +133,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
             try
             {
                 string publicationDirectory = _configuration.WebPublicationDirectory;
-                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), _configuration.WebNETCore ? "Web.NETCore" : "Web");
+                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), _configuration.WebNETCore ? "Web.NETCore" : "Web.Net");
 #if DEBUG
                 sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\";
                 if (_configuration.WebNETCore)
@@ -158,7 +158,11 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                 if (!File.Exists(currentConfig) && File.Exists(releaseConfig))
                 {
                     log.Log("Creating Config file from '{0}'", releaseConfig);
-                    File.Copy(releaseConfig, currentConfig, true);
+                    //Replace repository path
+                    var configText = File.ReadAllText(releaseConfig);
+                    if (_configuration.WebNETCore) configText = configText.Replace("./Repository", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\"));
+                    else configText = configText.Replace(@"C:\ProgramData\Seal Report Repository", _configuration.Repository.RepositoryPath);
+                    File.WriteAllText(currentConfig, configText);
                 }
 
                 if (!filesOnly && !log.IsJobCancelled())
