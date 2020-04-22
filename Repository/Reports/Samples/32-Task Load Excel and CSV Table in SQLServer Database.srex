@@ -7,7 +7,8 @@
     
 	ReportTask task = Model;
 	var helper = new TaskHelper(task);
-	/* configuration of the database helper may be changed to control the table creation and load...	
+	// configuration of the database helper may be changed to control the table creation and load...&#xD;
+	/*
 	helper.DatabaseHelper.ColumnCharType = "";
 	helper.DatabaseHelper.ColumnNumericType = "";
 	helper.DatabaseHelper.ColumnIntegerType = "";
@@ -15,7 +16,7 @@
 	
 	helper.DatabaseHelper.ColumnCharLength = 400; //0 means auto-size
 	helper.DatabaseHelper.InsertBurstSize = 500;
-	helper.DatabaseHelper.DefaultEncoding = Encoding.Default;
+	helper.DatabaseHelper.DefaultEncoding = System.Text.Encoding.Default;
 	helper.DatabaseHelper.TrimText = true;
 	helper.DatabaseHelper.DebugMode = false;
 	
@@ -28,14 +29,15 @@
 		return res;
 	});
 		
-	helper.DatabaseHelper.MyLoadDataTableFromExcel = new CustomLoadDataTableFromExcel(delegate(string excelPath, string tabName)
+	helper.DatabaseHelper.MyLoadDataTableFromExcel = new CustomLoadDataTableFromExcel(delegate(string excelPath, string tabName, int startRow, int startCol, int endColIndex)
 	{
 		DataTable res = null;
 		//TODO return the datatable
 		return res;
-	});	
+	});	&#xD;
+    */
 	
-    public delegate string CustomGetTableCreateCommand(DataTable table);
+   // public delegate string CustomGetTableCreateCommand(DataTable table);
 
 	//List of delegates (from TaskDatabaseHelper.cs):
     //public delegate string CustomGetTableColumnNames(DataTable table);
@@ -48,11 +50,12 @@
     //public delegate DataTable CustomLoadDataTable(string connectionString, string sql);
     //public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endColIndex = 0);
     //public delegate DataTable CustomLoadDataTableFromCSV(string csvPath, char? separator = null);		
-	*/&#xD;
+	&#xD;
 &#xD;
     var loadFolder = Path.GetTempPath() + "loadFolder";&#xD;
-    task.LogMessage("Load Folder: "+ loadFolder); 
-	helper.LoadTableFromExcel(
+    task.LogMessage("Load Folder: "+ loadFolder); &#xD;
+    &#xD;
+    helper.LoadTableFromExcel(
 		loadFolder, //Load folder used to store the Excel file loaded and to check if a new version is available
         Path.Combine(Repository.Instance.RepositoryPath, "Databases" + Path.DirectorySeparatorChar + "databank.worldbank.org_health_population.xlsx"),&#xD;
 		"Data",  //Tab name in Excel
@@ -61,5 +64,16 @@
         1, //startRow: row of the Sheet to start &#xD;
         1, //startColumn: column of the Sheet to start &#xD;
         0 //endColumnIndex: index of the last column loaded (0 = last column not empty) 
-	);
+	);&#xD;
+    &#xD;
+    &#xD;
+	helper.LoadTableFromCSV(&#xD;
+		loadFolder, //Load folder used to store the Excel file loaded and to check if a new version is available&#xD;
+        Path.Combine(Repository.Instance.RepositoryPath, "Settings" + Path.DirectorySeparatorChar + "Translations.csv"),&#xD;
+        "sr_translations", //Name of the destination table&#xD;
+		';',  //Separator, if null the separator is auto detected&#xD;
+		false, //if true the load is done for all connections&#xD;
+        false //if true, use the Visual Basic Parser&#xD;
+	);&#xD;
+    
 }</Script><SortOrder>1</SortOrder></ReportTask></Tasks><Views><ReportView><GUID>d5c29a44-1e4f-4962-a1de-0550bb60aaf5</GUID><Name>view</Name><TemplateName>Report</TemplateName><Parameters><Parameter><Name>messages_mode</Name><Value>enabledshown</Value></Parameter></Parameters><SortOrder>0</SortOrder></ReportView></Views></Report>

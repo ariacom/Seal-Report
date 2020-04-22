@@ -826,7 +826,7 @@ if (cell.IsTitle)
         return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
     });
 
-    dbHelper.MyLoadDataTableFromExcel = new CustomLoadDataTableFromExcel(delegate(string excelPath, string tabName, int startRow = 1, int startCol = 1, int endColIndex = 0) {
+    dbHelper.MyLoadDataTableFromExcel = new CustomLoadDataTableFromExcel(delegate(string excelPath, string tabName, int startRow, int startCol, int endColIndex) {
         return new DataTable(); //Check current source implementation in TaskDatabaseHelper.cs
     });
 

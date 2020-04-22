@@ -241,7 +241,7 @@ namespace Seal.Helpers
             {
                 string sourcePath = _task.Repository.ReplaceRepositoryKeyword(sourceCsvPath);
                 LogMessage("Starting Loading CSV Table from '{0}'", sourcePath);
-                DataTable table = (!useVBParser ? DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator) : DatabaseHelper.LoadDataTableFromCSVUsingVBParser(sourcePath, separator));
+                DataTable table = (!useVBParser ? DatabaseHelper.LoadDataTableFromCSV(sourcePath, separator) : DatabaseHelper.LoadDataTableFromCSVVBParser(sourcePath, separator));
                 table.TableName = destinationTableName;
                 foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
                 {

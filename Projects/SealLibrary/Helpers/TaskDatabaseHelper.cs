@@ -211,11 +211,11 @@ namespace Seal.Helpers
         }
 
 
-        public DataTable LoadDataTableFromCSVUsingVBParser(string csvPath, char? separator = null)
+        public DataTable LoadDataTableFromCSVVBParser(string csvPath, char? separator = null)
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
 
-            return ExcelHelper.LoadDataTableFromCSVUsingVBParser(csvPath, separator, DefaultEncoding);
+            return ExcelHelper.LoadDataTableFromCSVVBParser(csvPath, separator, DefaultEncoding);
         }
 
         public DatabaseType DatabaseType = DatabaseType.MSSQLServer;
