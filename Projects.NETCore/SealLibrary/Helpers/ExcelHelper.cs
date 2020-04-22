@@ -211,7 +211,7 @@ namespace Seal.Helpers
         }
 
 
-        static public DataTable LoadDataTableFromCSVUsingVBParser(string csvPath, char? separator, Encoding encoding)
+        static public DataTable LoadDataTableFromCSVVBParser(string csvPath, char? separator, Encoding encoding)
         {
             DataTable result = null;
             bool isHeader = true;

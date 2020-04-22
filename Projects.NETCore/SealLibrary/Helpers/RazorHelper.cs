@@ -21,6 +21,7 @@ using System.Data.SqlClient;
 using Renci.SshNet;
 using System.Net;
 using System.Net.Http;
+using FluentFTP;
 #if NETCOREAPP
     using Microsoft.AspNetCore.Html;
 #endif 
@@ -43,7 +44,7 @@ namespace Seal.Helpers
         static OdbcConnection dummy12 = null;
         static SqlConnection dummy13 = null;
         static SftpClient dummy14 = null;
-        static WebRequest dummy15 = null;
+        static FtpClient dummy15 = null;
         static HttpClient dummy16 = null;
 
         static bool _loadDone = false;
@@ -71,7 +72,7 @@ namespace Seal.Helpers
                     if (dummy12 == null) dummy12 = new OdbcConnection();
                     if (dummy13 == null) dummy13 = new SqlConnection();
                     if (dummy14 == null) dummy14 = new SftpClient("", "a", "");
-                    if (dummy15 == null) dummy15 = WebRequest.Create("ftp://dummy.com");
+                    if (dummy15 == null) dummy15 = new FtpClient();
                     if (dummy16 == null) dummy16 = new HttpClient();
                 }
                 catch (Exception ex)
