@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealWebServer.NETCore", "Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SealLibrary", "SealLibrary\SealLibrary.csproj", "{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SealScheduler", "SealScheduler\SealScheduler.csproj", "{56C8685C-316A-4535-A4BA-5A06C3247073}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5} = {2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +26,10 @@ Global
 		{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2856CD48-12F3-4A4D-98E8-CEDE0CA8CFA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56C8685C-316A-4535-A4BA-5A06C3247073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56C8685C-316A-4535-A4BA-5A06C3247073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56C8685C-316A-4535-A4BA-5A06C3247073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56C8685C-316A-4535-A4BA-5A06C3247073}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

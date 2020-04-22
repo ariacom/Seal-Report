@@ -44,7 +44,6 @@
 &#xD;
 </LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>a1185e44-a25f-4b8a-8638-2a6b79ede69d</GUID><Name>Year</Name><Type>Numeric</Type><Category>Master</Category><DisplayName>Year</DisplayName><DisplayOrder>5</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>3091a454-a929-4acd-b942-7586b4bc9cee</GUID><Name>YearCode</Name><Type>Text</Type><Category>Master</Category><DisplayName>Year Code</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>765f6dd8-5aa0-4124-b358-8bf3226eab30</GUID><Name>Value</Name><Type>Numeric</Type><Category>Master</Category><DisplayName>Value</DisplayName><DisplayOrder>7</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>06809b0c-f988-48d6-a165-06d66bcd5bad</GUID><Name>Country Name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Country Name</DisplayName><DisplayOrder>1</DisplayOrder></MetaColumn><MetaColumn><GUID>e03acb5f-667f-4a46-8736-bfba4b341028</GUID><Name>Country Code</Name><Type>Text</Type><Category>Master</Category><DisplayName>Country Code</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>33295eff-1b3d-490c-8e16-cfe78248a0f0</GUID><Name>Indicator Name</Name><Type>Text</Type><Category>Master</Category><DisplayName>Indicator Name</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>97314810-cf6a-469b-a28f-33a36ff954b0</GUID><Name>Indicator Code</Name><Type>Text</Type><Category>Master</Category><DisplayName>Indicator Code</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource><ReportSource><GUID>962b8c75-af85-4fd5-865f-e8f0df7009dc</GUID><Name>CSV Source</Name><Connections><MetaConnection><GUID>96f50bd7-fd2d-43fd-8e6c-6269add83ff5</GUID><Name>connection</Name><ConnectionString>Provider=SQLOLEDB;data source=localhost;initial catalog=adb;Integrated Security=SSPI;</ConnectionString></MetaConnection></Connections><ConnectionGUID>96f50bd7-fd2d-43fd-8e6c-6269add83ff5</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>0481b5b8-e838-48af-ba59-a22c12d0ec9b</GUID><DefinitionScript>@using System.Data&#xD;
 @using System.IO&#xD;
-@using System.Text&#xD;
 @{&#xD;
     MetaTable metaTable = Model;&#xD;
 	ReportExecutionLog log = metaTable;&#xD;
@@ -52,14 +51,13 @@
     metaTable.NoSQLTable = ExcelHelper.LoadDataTableFromCSV(&#xD;
         Path.Combine(Repository.Instance.RepositoryPath, "Settings" + Path.DirectorySeparatorChar + "Translations.csv"),&#xD;
 		';',  //Separator, if null the separator is auto detected&#xD;
-        Encoding.UTF8&#xD;
+        System.Text.Encoding.UTF8&#xD;
     );&#xD;
         &#xD;
     log.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);&#xD;
 }&#xD;
 </DefinitionScript><LoadScript>@using System.Data&#xD;
 @using System.IO&#xD;
-@using System.Text&#xD;
 &#xD;
 @{&#xD;
     MetaTable metaTable = Model;&#xD;
@@ -71,7 +69,7 @@
     metaTable.NoSQLTable =  metaTable.NoSQLTable = ExcelHelper.LoadDataTableFromCSV(&#xD;
         Path.Combine(Repository.Instance.RepositoryPath, "Settings" + Path.DirectorySeparatorChar + "Translations.csv"),&#xD;
 		';',  //Separator, if null the separator is auto detected&#xD;
-        Encoding.UTF8&#xD;
+        System.Text.Encoding.UTF8&#xD;
     );&#xD;
      &#xD;
     log.LogMessage("{0} record(s) loaded", metaTable.NoSQLTable.Rows.Count);&#xD;

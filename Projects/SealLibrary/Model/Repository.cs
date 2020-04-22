@@ -184,7 +184,8 @@ namespace Seal.Model
                 }
                 return _configuration;
             }
-            set {
+            set
+            {
                 _configuration = value;
             }
         }
@@ -269,25 +270,30 @@ namespace Seal.Model
 
             if (!Directory.Exists(path) || path == Path.GetPathRoot(path)) path = "";
 #endif
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
             {
+                //Missing repository, try in wwwroot (to easy Azure deployment...)
+                path = Repository.DefaultRepository;
                 if (!Directory.Exists(path) || path == Path.GetPathRoot(path))
                 {
-                    //Missing repository, try in wwwroot (to easy Azure deployment...)
-#if !NETCOREAPP
-                    path = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", ""))), SealDefaultRepository);
-#else
-                    path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "")), "Repository");
-#endif
-                    if (!Directory.Exists(path) || path == Path.GetPathRoot(path))
-                    {
-                        //Set default
-                        if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData))) Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
-                        path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SealDefaultRepository);
-                    }
+                    //Set default
+                    if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData))) Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
+                    path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), SealDefaultRepository);
                 }
             }
             return path;
+        }
+
+        public static string DefaultRepository
+        {
+            get
+            {
+#if !NETCOREAPP
+                return Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", ""))), "Repository");
+#else
+                return Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", "")), "Repository");
+#endif
+            }
         }
 
 
@@ -331,7 +337,7 @@ namespace Seal.Model
                 result = new Repository();
                 result.Init(path);
             }
-            if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'. Please check your configuration file.", RepositoryConfigurationPath));
+            if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'. Please check your configuration file or copy your repository files in '{1}'.", RepositoryConfigurationPath, Repository.DefaultRepository));
 
             return result;
         }
@@ -725,7 +731,7 @@ namespace Seal.Model
             return inputFolder.Replace(Repository.SealRepositoryKeyword, RepositoryPath).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
         }
 
-#region Translations
+        #region Translations
 
         //Translations, one dictionary per context
         Dictionary<string, RepositoryTranslation> _translations = null;
@@ -1064,9 +1070,9 @@ namespace Seal.Model
             return result;
         }
 
-#endregion
+        #endregion
 
-#region Web publishing
+        #region Web publishing
         /// <summary>
         /// Current web application apth
         /// </summary>
@@ -1083,9 +1089,9 @@ namespace Seal.Model
             }
         }
 
-#endregion
+        #endregion
 
-#region Helpers
+        #region Helpers
         //Helpers
         /// <summary>
         /// Find and load report form its identifier
@@ -1123,6 +1129,6 @@ namespace Seal.Model
             return result;
         }
 
-#endregion
+        #endregion
     }
 }

@@ -16,9 +16,9 @@
     /*&#xD;
     device = new OutputFileServerDevice() { &#xD;
         Protocol = FileServerProtocol.FTP, &#xD;
-        HostName = "127.0.0.1", //"waws-prod-dm1-163.ftp.azurewebsites.windows.net" (e.g. for Azure)&#xD;
+        HostName = "127.0.0.1", //"waws-prod-dm1-163.ftp.azurewebsites.windows.net", // (e.g. for Azure)&#xD;
         PortNumber = 21,&#xD;
-        UserName = "tester", //"sealcore\$sealcore" (e.g. for Azure)&#xD;
+        UserName = "tester", //"sealcore\\$sealcore", // (e.g. for Azure)&#xD;
         ClearPassword = "password",&#xD;
     };&#xD;
     */&#xD;
@@ -34,7 +34,7 @@
     if (device != null) {&#xD;
         ftpGetRequest = new OutputFileServerDevice.CustomFtpGetRequest(delegate(string destination, string method) {&#xD;
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Format("ftp://{0}:{1}{2}", device.HostName, device.PortNumber, destination));&#xD;
-            request.KeepAlive = true;&#xD;
+            request.KeepAlive = false;&#xD;
             request.Method = method;&#xD;
             request.Credentials = new NetworkCredential(device.UserName, device.ClearPassword);&#xD;
 &#xD;
@@ -111,7 +111,7 @@
     var foldersEnum = report.Sources[0].MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Source Folders");&#xD;
     if (foldersEnum != null &amp;&amp; foldersEnum.Values.Count == 0) {&#xD;
         foldersEnum.Values.Add(new MetaEV() { Id = report.Repository.Configuration.InstallationDirectory + "\\Web.NETCore", Val = string.Format(".NETCore ({0})", report.Repository.ApplicationPath + "\\Web.NETCore") });&#xD;
-        foldersEnum.Values.Add(new MetaEV() { Id = report.Repository.Configuration.InstallationDirectory + "\\Web", Val = string.Format(".NET ({0})", report.Repository.ApplicationPath + "\\Web") });&#xD;
+        foldersEnum.Values.Add(new MetaEV() { Id = report.Repository.Configuration.InstallationDirectory + "\\Web.Net", Val = string.Format(".NET ({0})", report.Repository.ApplicationPath + "\\Web") });&#xD;
     }&#xD;
 }&#xD;
 </InitScript></Report>

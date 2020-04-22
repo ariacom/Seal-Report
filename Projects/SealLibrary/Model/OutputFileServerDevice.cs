@@ -3,6 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
 using DynamicTypeDescriptor;
+using FluentFTP;
 using Renci.SshNet;
 using Seal.Forms;
 using Seal.Helpers;
@@ -12,8 +13,6 @@ using System.ComponentModel.Design;
 using System.Drawing.Design;
 using System.IO;
 using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -27,8 +26,9 @@ namespace Seal.Model
         static string PasswordKey = "?d_*er)wien?,édl+25.()à,";
 
         public const string ProcessingScriptTemplate = @"@using Renci.SshNet
+@using FluentFTP
 @using System.IO
-@using System.Net
+@using System.Security.Authentication
 @{
     //Upload the file to the server
     Report report = Model;
@@ -43,25 +43,31 @@ namespace Seal.Model
 
     if (device.Protocol == FileServerProtocol.FTP)
     {
-        FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Format(""ftp://{0}:{1}{2}"", device.HostName, device.PortNumber, remotePath));
-        request.KeepAlive = true;
-        request.Method = WebRequestMethods.Ftp.UploadFile;
-        request.Credentials = new NetworkCredential(device.UserName, device.ClearPassword);
-
-        //SSL Management: Accept all certificates or add the certificate to the request
-        //request.EnableSsl = true;
-        //ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-        //request.ClientCertificates = new X509CertificateCollection() { X509Certificate.CreateFromCertFile(@""C:\_dev\Tests\FileZillaKeys\c1.crt"") } ;
-
-        byte[] fileContents = File.ReadAllBytes(report.ResultFilePath);
-        using (Stream requestStream = request.GetRequestStream())
-        {
-            requestStream.Write(fileContents, 0, fileContents.Length);
+        //Refer to https://github.com/robinrodricks/FluentFTP
+        using (var client = new FtpClient(device.HostName, device.UserName, device.ClearPassword)) {
+            if (device.PortNumber == 0) {
+                client.AutoConnect();
+            }
+            else {
+                client.Port = device.PortNumber;
+                //SSL Configuration can be defined here
+                /*
+                client.EncryptionMode = FtpEncryptionMode.Explicit;
+                client.SslProtocols = SslProtocols.Tls12;
+                client.ValidateCertificate += new FtpSslValidation(delegate(FtpClient control, FtpSslValidationEventArgs e) {
+                    // add logic to test if certificate is valid here
+                    e.Accept = true;
+                });
+                */
+                client.Connect();
+            }
+            client.UploadFile(report.ResultFilePath, remotePath);
+            client.Disconnect();
         }
-        request.GetResponse();
     }
     else if (device.Protocol == FileServerProtocol.SFTP)
     {
+        //Refer to https://github.com/sshnet/SSH.NET
         using (var sftp = new SftpClient(device.HostName, device.PortNumber, device.UserName, device.ClearPassword))
         {
             sftp.Connect();
@@ -75,6 +81,7 @@ namespace Seal.Model
     }
     else if (device.Protocol == FileServerProtocol.SCP)
     {
+        //Refer to https://github.com/sshnet/SSH.NET
         using (var scp = new ScpClient(device.HostName, device.PortNumber, device.UserName, device.ClearPassword))
         {
             scp.Connect();
@@ -166,9 +173,9 @@ namespace Seal.Model
         /// <summary>
         /// Port number used to connect to the server (e.g. 21 for FTP, 22 for SFTP, 990 for FTPS, etc.)
         /// </summary>
-        [Category("Definition"), DisplayName("Port number"), Description("Port number used to connect to the server (e.g. 21 for FTP or implicit FTPS, 22 for SFTP or SCP, 990 for FTPS, etc.)"), Id(3, 1)]
-        [DefaultValue(21)]
-        public int PortNumber { get; set; } = 21;
+        [Category("Definition"), DisplayName("Port number"), Description("For FTP Protocol, port number used to connect to the server (e.g. 21 for FTP or implicit FTPS, 990 for FTPS, etc.). A value of 0 means an automatic detection and connection."), Id(3, 1)]
+        [DefaultValue(0)]
+        public int PortNumber { get; set; } = 0;
 
 
         /// <summary>
@@ -345,10 +352,15 @@ namespace Seal.Model
 
                 if (Protocol == FileServerProtocol.FTP)
                 {
-                    FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Format("ftp://{0}:{1}", HostName, PortNumber));
-                    request.Method = WebRequestMethods.Ftp.PrintWorkingDirectory;
-                    request.Credentials = new NetworkCredential(UserName, ClearPassword);
-                    request.GetResponse();
+                    FtpClient client = new FtpClient(HostName, UserName, ClearPassword);
+                    client.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+
+                    if (PortNumber == 0) client.AutoConnect();
+                    else {
+                        client.Port = PortNumber;
+                        client.Connect();
+                    }
+                    client.Disconnect();
                 }
                 else if (Protocol == FileServerProtocol.SFTP)
                 {
@@ -356,6 +368,7 @@ namespace Seal.Model
                     {
                         sftp.Connect();
                         sftp.Disconnect();
+
                     }
                 }
                 else if (Protocol == FileServerProtocol.SCP)
@@ -402,7 +415,8 @@ namespace Seal.Model
             if (!FtpDirectoryExists(destination, ftpGetRequest)) { 
                 if (log != null) log.LogMessage("Creating remote directory: " + destination);
                 var request = ftpGetRequest(destination, WebRequestMethods.Ftp.MakeDirectory);
-                request.GetResponse();
+                var response = request.GetResponse();
+                response.Close();
             }
 
             foreach (string file in Directory.GetFiles(source, searchPattern))
@@ -506,7 +520,7 @@ namespace Seal.Model
         public FtpWebRequest FtpGetRequest(string destination, string method)
         {
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Format("ftp://{0}:{1}{2}", HostName, PortNumber, destination));
-            request.KeepAlive = true;
+            request.KeepAlive = false;
             request.Method = method;
             request.Credentials = new NetworkCredential(UserName, ClearPassword);
             return request;
