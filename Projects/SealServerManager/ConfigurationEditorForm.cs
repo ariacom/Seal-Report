@@ -133,7 +133,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
             try
             {
                 string publicationDirectory = _configuration.WebPublicationDirectory;
-                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), _configuration.WebNETCore ? "Web.NETCore" : "Web.Net");
+                string sourceDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), _configuration.WebNETCore ? "NETCore" : "Web.Net");
 #if DEBUG
                 sourceDirectory = Path.GetDirectoryName(Application.ExecutablePath) + @"\..\..\..\..\SealWebServer\";
                 if (_configuration.WebNETCore)
