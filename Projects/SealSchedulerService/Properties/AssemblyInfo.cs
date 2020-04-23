@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SealScheduler")]
+[assembly: AssemblyTitle("SealSchedulerService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SealScheduler")]
+[assembly: AssemblyProduct("SealSchedulerService")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("39faa9d7-59ed-41c8-8b53-614be741ed90")]
+[assembly: Guid("f4f80028-673d-4431-92c7-5246ae7ef056")]
 
 // Version information for an assembly consists of the following four values:
 //

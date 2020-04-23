@@ -46,9 +46,9 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                GetProperty("UseWebScheduler").SetIsBrowsable(!ForPublication);
+                GetProperty("UseSealScheduler").SetIsBrowsable(!ForPublication);
                 GetProperty("TaskFolderName").SetIsBrowsable(!ForPublication);
-                GetProperty("TaskFolderName").SetIsReadOnly(UseWebScheduler);
+                GetProperty("TaskFolderName").SetIsReadOnly(UseSealScheduler);
 
                 GetProperty("DefaultCulture").SetIsBrowsable(!ForPublication);
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
@@ -165,21 +165,21 @@ namespace Seal.Model
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string ScriptFiles { get; set; } = null;
 
-        bool _useWebScheduler = false;
+        bool _useSealScheduler = false;
         /// <summary>
         /// If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). This allows schedules for .NETCore or Azure installations.
         /// </summary>
-        [Category("Report Scheduler Settings"), DisplayName("Use Web Report Server Scheduler"), Description("If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). This allows schedules for .NETCore or Azure installations."), Id(1, 2)]
+        [Category("Report Scheduler Settings"), DisplayName("Use Seal Report Scheduler"), Description("If true, the Seal Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). The scheduler is either run in a dedicated Process (Service on Windows) or in the Web Report Server (check web.config or appsettings.json). This allows schedules for .NETCore or Azure installations."), Id(1, 2)]
         [DefaultValue(false)]
-        public bool UseWebScheduler
+        public bool UseSealScheduler
         {
             get
             {
-                return _useWebScheduler;
+                return _useSealScheduler;
             }
             set
             {
-                _useWebScheduler = value;
+                _useSealScheduler = value;
                 UpdateEditor(); //!NETCore
             }
         }

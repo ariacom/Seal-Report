@@ -89,19 +89,19 @@ namespace Seal.Model
         /// </summary>
         public string ScriptFiles { get; set; } = null;
 
-        bool _useWebScheduler = false;
+        bool _useSealScheduler = false;
         /// <summary>
         /// If true, the Web Report Server Scheduler is used instead of the Windows Task Scheduler. The schedules are stored in the 'SpecialFolders\\Schedules' repository folder (one file per schedule). This allows schedules for .NETCore or Azure installations.
         /// </summary>
-        public bool UseWebScheduler
+        public bool UseSealScheduler
         {
             get
             {
-                return _useWebScheduler;
+                return _useSealScheduler;
             }
             set
             {
-                _useWebScheduler = value;
+                _useSealScheduler = value;
             }
         }
 

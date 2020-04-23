@@ -43,7 +43,7 @@ namespace Seal.Model
             }
         }
 
-        static bool Running = true;
+        public static bool Running = true;
 
         static SealReportScheduler _instance = null;
         /// <summary>
