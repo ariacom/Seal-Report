@@ -160,7 +160,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                     log.Log("Creating Config file from '{0}'", releaseConfig);
                     //Replace repository path
                     var configText = File.ReadAllText(releaseConfig);
-                    if (_configuration.WebNETCore) configText = configText.Replace("./Repository", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\"));
+                    if (_configuration.WebNETCore) configText = configText.Replace("\"RepositoryPath\": \"\",", string.Format("\"RepositoryPath\": \"{0}\",", _configuration.Repository.RepositoryPath.Replace("\\", "\\\\")));
                     else configText = configText.Replace(@"C:\ProgramData\Seal Report Repository", _configuration.Repository.RepositoryPath);
                     File.WriteAllText(currentConfig, configText);
                 }

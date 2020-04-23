@@ -311,10 +311,13 @@ namespace Seal.Model
                 if (Protocol == FileServerProtocol.FTP)
                 {
                     FtpClient client = new FtpClient(HostName, UserName, ClearPassword);
-                    client.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
 
-                    if (PortNumber == 0) client.AutoConnect();
-                    else {
+                    if (PortNumber == 0)
+                    {
+                        client.AutoConnect();
+                    }
+                    else
+                    {
                         client.Port = PortNumber;
                         client.Connect();
                     }

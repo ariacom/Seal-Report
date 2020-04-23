@@ -31,16 +31,18 @@ namespace SealWebServer
             //Set repository path
             Repository.RepositoryConfigurationPath = Configuration.GetValue<string>("SealConfiguration:RepositoryPath");
             DebugMode = Configuration.GetValue<Boolean>("SealConfiguration:DebugMode", false);
+            RunScheduler = Configuration.GetValue<Boolean>("SealConfiguration:RunScheduler", false);
             SessionTimeout = Configuration.GetValue<int>("SealConfiguration:SessionTimeout", 60);
 
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventServer, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");
 
-            if (Repository.Instance.Configuration.UseWebScheduler)
+            if (RunScheduler && Repository.Instance.Configuration.UseSealScheduler)
             {
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Scheduler from the Web Report Server");
                 //Run scheduler
-                var schedulerThread = new Thread(RunScheduler);
+                var schedulerThread = new Thread(StartScheduler);
                 schedulerThread.Start();
             }
         }
@@ -51,6 +53,7 @@ namespace SealWebServer
 
         public static int SessionTimeout = 60;
         public static bool DebugMode = false;
+        public static bool RunScheduler = false;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -104,14 +107,17 @@ namespace SealWebServer
 
         private void OnShutdown()
         {
-            if (Repository.Instance.Configuration.UseWebScheduler) SealReportScheduler.Instance.Shutdown();
+            if (RunScheduler && Repository.Instance.Configuration.UseSealScheduler)
+            {
+                SealReportScheduler.Instance.Shutdown();
+            }
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Ending Web Report Server");
             Audit.LogEventAudit(AuditType.EventServer, "Ending Web Report Server");
             Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");
 
         }
 
-        private void RunScheduler()
+        private void StartScheduler()
         {
             try
             {

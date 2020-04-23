@@ -196,7 +196,7 @@ namespace Seal.Model
         {
             get
             {
-                return Configuration.UseWebScheduler;
+                return Configuration.UseSealScheduler;
             }
         }
 

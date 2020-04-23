@@ -39,8 +39,10 @@ namespace SealWebServer
                 preloadThread.Start();
             }
 
-            if (Repository.Instance.Configuration.UseWebScheduler)
+            var runScheduler = ConfigurationManager.AppSettings["RunScheduler"];
+            if (runScheduler != null && runScheduler.ToLower() == "true" && Repository.Instance.Configuration.UseSealScheduler)
             {
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Scheduler from the Web Report Server");
                 //Run scheduler
                 var schedulerThread = new Thread(RunScheduler);
                 schedulerThread.Start();
