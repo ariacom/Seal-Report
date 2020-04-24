@@ -688,7 +688,7 @@ namespace Seal.Forms
                 {
                     DataTable schemaTables = connection.GetSchema("Tables");
                     List<MetaTable> tables = new List<MetaTable>();
-                    addSchemaTables(connection.GetSchema("Tables"), tables, source);
+                    addSchemaTables(schemaTables, tables, source);
                     if (connection is OdbcConnection)
                     {
                         //Add views for odbc connections..
@@ -797,6 +797,10 @@ namespace Seal.Forms
 
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
