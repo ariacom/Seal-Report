@@ -44,6 +44,9 @@ namespace Seal.Model
             get { return string.IsNullOrEmpty(OutputGUID); }
         }
 
+        /// <summary>
+        /// True if the schedule is enabled
+        /// </summary>
         [XmlIgnore]
         public bool SealEnabled
         {
@@ -57,6 +60,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Start date and time of the schedule
+        /// </summary>
         [XmlIgnore]
         public DateTime SealStart
         {
@@ -70,6 +76,10 @@ namespace Seal.Model
                 SealSchedule.CalculateNextExecution();
             }
         }
+
+        /// <summary>
+        /// End date and time of the schedule
+        /// </summary>
         [XmlIgnore]
         public DateTime SealEnd
         {
@@ -84,7 +94,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Type of schedule trigger
+        /// </summary>
         [XmlIgnore]
         public TriggerType SealType
         {
@@ -99,6 +111,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Number of days
+        /// </summary>
         [XmlIgnore]
         public int SealDaysInterval
         {
@@ -113,6 +128,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Number of weeks
+        /// </summary>
         [XmlIgnore]
         public int SealWeeksInterval
         {
@@ -127,6 +145,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Days of the week to execute the schedule
+        /// </summary>
         [XmlIgnore]
         public int[] SealWeekdays
         {
@@ -141,6 +162,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Months to execute the schedule
+        /// </summary>
         [XmlIgnore]
         public int[] SealMonths
         {
@@ -155,6 +179,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Days of the month to execute the schedule
+        /// </summary>
         [XmlIgnore]
         public int[] SealDays
         {
@@ -169,7 +196,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Interval of the schedule repetition
+        /// </summary>
         [XmlIgnore]
         public string SealRepeatInterval
         {
@@ -184,6 +213,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Duration of the schedule repetition
+        /// </summary>
         [XmlIgnore]
         public string SealRepeatDuration
         {
@@ -198,6 +230,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Next execution planned for the schedule
+        /// </summary>
         [XmlIgnore]
         public DateTime? SealNextExecution
         {
@@ -241,7 +276,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Weekdays in string
+        /// Days of the Seal Schedule in a text
         /// </summary>
         [XmlIgnore]
         public string SealDaysString
@@ -255,7 +290,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Weekdays in string
+        /// Weekdays of the Seal Schedule a text
         /// </summary>
         [XmlIgnore]
         public string SealWeekdaysString
@@ -271,7 +306,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Weekdays in string
+        /// Months of the Seal Schedule a text
         /// </summary>
         [XmlIgnore]
         public string SealMonthsString

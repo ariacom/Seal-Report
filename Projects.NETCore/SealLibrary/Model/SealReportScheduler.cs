@@ -8,6 +8,9 @@ using System.Threading;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Main Scheduler to execute the report schedules defined in a repository.
+    /// </summary>
     public class SealReportScheduler
     {
         Dictionary<string, SealSchedule> _schedules = null;
@@ -53,11 +56,14 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the scheduler is running
+        /// </summary>
         public static bool Running = true;
 
         static SealReportScheduler _instance = null;
         /// <summary>
-        /// A general static instance of the repository
+        /// A general static instance of the Scheduler.
         /// </summary>
         public static SealReportScheduler Instance
         {
@@ -155,6 +161,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Run the scheduler
+        /// </summary>
         public void Run()
         {
             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Report Scheduler");
@@ -198,6 +207,10 @@ namespace Seal.Model
                 Audit.LogEventAudit(AuditType.EventServer, "Report Scheduler is stopped");
             }
         }
+
+        /// <summary>
+        /// Stop the scheduler
+        /// </summary>
         public void Shutdown()
         {
             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Ending Report Scheduler");
@@ -205,6 +218,9 @@ namespace Seal.Model
             Thread.Sleep(4000);
         }
 
+        /// <summary>
+        /// Save a schedule in the repository
+        /// </summary>
         public void SaveSchedule(SealSchedule schedule, Report report)
         {
             loadSchedules();
@@ -226,6 +242,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Delete a schedule from the repository
+        /// </summary>
         public void DeleteSchedule(string guid)
         {
             loadSchedules();
@@ -239,6 +258,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Get a schedule from its identifier
+        /// </summary>
         public SealSchedule GetSchedule(string guid)
         {
             loadSchedules();
@@ -252,6 +274,9 @@ namespace Seal.Model
             return null;
         }
 
+        /// <summary>
+        /// Create a new schedule for a report
+        /// </summary>
         public SealSchedule CreateSchedule(string guid, string name, Report report)
         {
             var sealSchedule = new SealSchedule() { GUID = guid };
@@ -261,6 +286,9 @@ namespace Seal.Model
             return sealSchedule;
         }
 
+        /// <summary>
+        /// List of repository schedules
+        /// </summary>
         public List<SealSchedule> GetSchedules()
         {
             loadSchedules();
