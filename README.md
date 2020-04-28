@@ -54,7 +54,7 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 * .Net Framework 4.5
 * Database OLE DB, ODBC or SQLServer Drivers
 * For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater
-* .NET Core 3.1 for the .NET Core deployment Web Report Server and the Seal Report Scheduler
+* .NET Core 3.1 for the .NET Core deployment (Web Report Server and the Seal Report Scheduler).
 
 
 **For development:**
