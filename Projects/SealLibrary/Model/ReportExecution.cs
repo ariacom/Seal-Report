@@ -1801,7 +1801,8 @@ namespace Seal.Model
                 {
                     Report.Cancel = true;
                     var extraMessage = "";
-                    if (output.Device is OutputEmailDevice) extraMessage = string.Format("\r\n\r\nUsing the Server Manager, check the configuration of the device: '{0}'", output.Device.FullName);
+                    if (ex.InnerException != null) extraMessage += "\r\n" + ex.InnerException.Message;
+                    if (output.Device is OutputEmailDevice) extraMessage += string.Format("\r\n\r\nUsing the Server Manager, check the configuration of the device: '{0}'", output.Device.FullName);
 
                     SetError("Error processing output '{0}'\r\n{1}{2}", output.Name, ex.Message, extraMessage);
                 }
