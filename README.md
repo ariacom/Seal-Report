@@ -17,7 +17,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **No SQL Data Sources:**
 Fill up your source Data Tables from your own code and display them in a report.
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
-* **NETCore** projects and distribution for the Web Report Server and the Seal Report Scheduler to run on Linux and Azure.
+* **.NET Core** projects and distribution for the Web Report Server and the Seal Report Scheduler to run on Linux OS and Azure Platform.
 
 A **live demonstration** of the <a href="https://sealreport.org/demo" target=_blank>Web Report Server</a> is available.
 
