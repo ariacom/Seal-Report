@@ -9,31 +9,100 @@ using System.Xml.Serialization;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// SealSchedule defines a schedule when the Seal Report Scheduler is active.
+    /// </summary>
     public class SealSchedule
     {
+        /// <summary>
+        /// Unique identifier of the schedule
+        /// </summary>
         public string GUID { get; set; }
+
+        /// <summary>
+        /// File path of the report scheduled 
+        /// </summary>
         public string ReportPath { get; set; }
+
+        /// <summary>
+        /// GUID of the report scheduled
+        /// </summary>
         public string ReportGUID { get; set; }
+
+        /// <summary>
+        /// Next execution date time of the schedule
+        /// </summary>
         public DateTime NextExecution { get; set; } = DateTime.MaxValue;
+
+        /// <summary>
+        /// True if the schedule is enable
+        /// </summary>
         public bool Enabled { get; set; } = false;
+
+        /// <summary>
+        /// Start date time of the schedule
+        /// </summary>
         public DateTime Start { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// End date time of the schedule
+        /// </summary>
         public DateTime End { get; set; } = DateTime.MinValue;
+
+        /// <summary>
+        /// Trigger type of the schedule
+        /// </summary>
         public TriggerType Type { get; set; } = TriggerType.Daily;
+
+        /// <summary>
+        /// Number of days for the interval
+        /// </summary>
         public int DaysInterval { get; set; } = 1;
+
+        /// <summary>
+        /// Number of weeks for the interval
+        /// </summary>
         public int WeeksInterval { get; set; } = 1;
+
+        /// <summary>
+        /// Weekdays of the schedule
+        /// </summary>
         public int[] Weekdays { get; set; } = new int[] { 1 };
+
+        /// <summary>
+        /// Months of the schedule
+        /// </summary>
         public int[] Months { get; set; } = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+
+        /// <summary>
+        /// Days of the schedule
+        /// </summary>
         public int[] Days { get; set; } = new int[] { 1 };
 
+        /// <summary>
+        /// Repeat interval in TimeSpan
+        /// </summary>
         [XmlIgnore]
         public TimeSpan RepeatInterval { get; set; } = TimeSpan.Zero;
+
+        /// <summary>
+        /// Repeat interval in ticks
+        /// </summary>
         public long RepeatIntervalTicks
         {
             get { return RepeatInterval.Ticks; }
             set { RepeatInterval = new TimeSpan(value); }
         }
+
+        /// <summary>
+        /// Repeat duration in TimeSpan
+        /// </summary>
         [XmlIgnore]
         public TimeSpan RepeatDuration { get; set; } = TimeSpan.Zero;
+
+        /// <summary>
+        /// Repeat duration in ticks
+        /// </summary>
         public long RepeatDurationTicks
         {
             get { return RepeatDuration.Ticks; }
@@ -107,6 +176,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Calculate and update the next schedule execution
+        /// </summary>
         public void CalculateNextExecution()
         {
             NextExecution = Start;
@@ -274,6 +346,10 @@ namespace Seal.Model
             if (NextExecution < DateTime.Now) NextExecution = DateTime.MaxValue;
         }
 
+        /// <summary>
+        /// True is the next execution is reached
+        /// </summary>
+        /// <returns></returns>
         public bool IsReached()
         {
             bool result = (

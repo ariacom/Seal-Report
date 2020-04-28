@@ -107,6 +107,9 @@ namespace Seal.Model
             get { return string.IsNullOrEmpty(OutputGUID); }
         }
 
+        /// <summary>
+        /// True if the schedule is enabled
+        /// </summary>
         [Category("Definition"), DisplayName("Is enabled"), Description("True if the schedule is enabled."), Id(2, 1)]
         [XmlIgnore]
         [DefaultValue(false)]
@@ -122,6 +125,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Start date and time of the schedule
+        /// </summary>
         [Category("Definition"), DisplayName("Start date"), Description("Start date and time of the schedule."), Id(3, 1)]
         [XmlIgnore]
         public DateTime SealStart
@@ -137,6 +143,10 @@ namespace Seal.Model
                 UpdateEditor(); //!NETCore
             }
         }
+
+        /// <summary>
+        /// End date and time of the schedule
+        /// </summary>
         [Category("Definition"), DisplayName("End date"), Description("End date and time of the schedule."), Id(4, 1)]
         [XmlIgnore]
         public DateTime SealEnd
@@ -153,7 +163,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Type of schedule trigger
+        /// </summary>
         [Category("Definition"), DisplayName("Trigger type"), Description("Type of schedule trigger."), Id(5, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(TriggerType.Daily)]
@@ -172,6 +184,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Number of days
+        /// </summary>
         [Category("Definition"), DisplayName("Recur every (days)"), Description("Number of days."), Id(6, 1)]
         [XmlIgnore]
         public int SealDaysInterval
@@ -188,6 +203,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Number of weeks
+        /// </summary>
         [Category("Definition"), DisplayName("Recur every (weeks)"), Description("Number of weeks."), Id(7, 1)]
         [XmlIgnore]
         public int SealWeeksInterval
@@ -204,6 +222,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Days of the week to execute the schedule
+        /// </summary>
         [Category("Definition"), DisplayName("Week days"), Description("Days of the week to execute the schedule."), Id(8, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
@@ -221,6 +242,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Months to execute the schedule
+        /// </summary>
         [Category("Definition"), DisplayName("Months"), Description("Months to execute the schedule."), Id(9, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
@@ -238,6 +262,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Days of the month to execute the schedule
+        /// </summary>
         [Category("Definition"), DisplayName("Days of the month"), Description("Days of the month to execute the schedule."), Id(10, 1)]
         [Editor(typeof(ScheduleCollectionEditor), typeof(UITypeEditor))]
         [XmlIgnore]
@@ -255,7 +282,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Interval of the schedule repetition
+        /// </summary>
         [Category("Definition"), DisplayName("Repeat schedule every"), Description("Interval of the schedule repetition."), Id(11, 1)]
         [XmlIgnore]
         [DefaultValue("None")]
@@ -274,6 +303,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Duration of the schedule repetition
+        /// </summary>
         [Category("Definition"), DisplayName("For a duration of"), Description("Duration of the schedule repetition."), Id(12, 1)]
         [XmlIgnore]
         [DefaultValue("Indefinitely")]
@@ -292,6 +324,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Next execution planned for the schedule
+        /// </summary>
         [Category("Definition"), DisplayName("Next execution"), Description("Next execution planned for the schedule."), Id(13, 1)]
         [XmlIgnore]
         public DateTime? SealNextExecution
@@ -336,7 +371,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Weekdays in string
+        /// Days of the Seal Schedule in a text
         /// </summary>
         [XmlIgnore]
         public string SealDaysString
@@ -350,7 +385,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Weekdays in string
+        /// Weekdays of the Seal Schedule a text
         /// </summary>
         [XmlIgnore]
         public string SealWeekdaysString
@@ -366,7 +401,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Weekdays in string
+        /// Months of the Seal Schedule a text
         /// </summary>
         [XmlIgnore]
         public string SealMonthsString
