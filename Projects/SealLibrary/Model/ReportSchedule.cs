@@ -572,7 +572,7 @@ namespace Seal.Model
                         SealSchedule.FilePath = newPath;
                     }
                 }
-                SealReportScheduler.Instance.SaveSchedule(SealSchedule);
+                SealReportScheduler.Instance.SaveSchedule(SealSchedule, Report);
             }
             else
             {

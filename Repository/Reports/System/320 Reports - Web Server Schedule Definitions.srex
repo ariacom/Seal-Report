@@ -78,6 +78,7 @@ AND [d26d8287-9da5-46f5-b149-fc921428f563]</Restriction><Restrictions><ReportRes
     Report report = task.Report;&#xD;
 &#xD;
     report.Tag = new List&lt;Report&gt;();&#xD;
+    &#xD;
     SearchReports(report, report.Repository.ReportsFolder);&#xD;
 }&#xD;
 &#xD;
@@ -108,4 +109,16 @@ AND [d26d8287-9da5-46f5-b149-fc921428f563]</Restriction><Restrictions><ReportRes
     }&#xD;
 } &#xD;
 &#xD;
-</Script><SortOrder>1</SortOrder></ReportTask></Tasks><Views><ReportView><GUID>45fd6778-be90-47f5-aebc-4918670d22de</GUID><Name>View</Name><Views><ReportView><GUID>1a3226be-a830-4ccd-bb90-45f2b312e5ea</GUID><Name>Model</Name><Views><ReportView><GUID>97b4a744-dff5-450a-8f3d-0ceb66d76f99</GUID><Name>Model Container</Name><Views><ReportView><GUID>49ea9f97-907b-4fd7-afb9-557df6f6dffb</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>e76707a8-3ba1-477d-bcc2-ace385891a0f</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>06736083-1a64-4e07-bcf7-5c56956cfa63</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>a1774539-3011-4cdb-aa03-db06a704212f</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>7345a8fd-491f-4c8d-b27a-a95057ff724e</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>3149ae09-076e-4a13-919f-909d83f6751e</ModelGUID><SortOrder>1</SortOrder><WidgetDefinition><GUID>a802bc75-69e9-4709-a2df-84105828edda</GUID><Name>System: Outputs &amp; Schedules</Name><Icon>glyphicon glyphicon-education</Icon><Color>danger</Color><ExecViewGUID>634f6de4-c728-4651-805f-2c5f3497b4f1</ExecViewGUID></WidgetDefinition></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>messages_mode</Name><Value>enabledshownexec</Value></Parameter><Parameter><Name>force_execution</Name><Value>True</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views></Report>
+</Script><SortOrder>1</SortOrder></ReportTask></Tasks><Views><ReportView><GUID>45fd6778-be90-47f5-aebc-4918670d22de</GUID><Name>View</Name><Views><ReportView><GUID>1a3226be-a830-4ccd-bb90-45f2b312e5ea</GUID><Name>Model</Name><Views><ReportView><GUID>97b4a744-dff5-450a-8f3d-0ceb66d76f99</GUID><Name>Model Container</Name><Views><ReportView><GUID>49ea9f97-907b-4fd7-afb9-557df6f6dffb</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>e76707a8-3ba1-477d-bcc2-ace385891a0f</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>06736083-1a64-4e07-bcf7-5c56956cfa63</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>a1774539-3011-4cdb-aa03-db06a704212f</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>7345a8fd-491f-4c8d-b27a-a95057ff724e</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>3149ae09-076e-4a13-919f-909d83f6751e</ModelGUID><SortOrder>2</SortOrder><WidgetDefinition><GUID>a802bc75-69e9-4709-a2df-84105828edda</GUID><Name>System: Outputs &amp; Schedules</Name><Icon>glyphicon glyphicon-education</Icon><Color>danger</Color><ExecViewGUID>634f6de4-c728-4651-805f-2c5f3497b4f1</ExecViewGUID></WidgetDefinition></ReportView><ReportView><GUID>a68a2256-1dc9-426c-9108-2fce10638236</GUID><Name>Warning</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@using Seal.Model&#xD;
+@{&#xD;
+    Report report = Model;&#xD;
+    if (!report.Repository.Configuration.UseSealScheduler) {&#xD;
+    &lt;text&gt;&#xD;
+        &lt;b&gt;&lt;font color=red&gt;Warning:&lt;/font&gt;&lt;/b&gt;&#xD;
+        &lt;br&gt;The Server Configuration property 'Use Seal Report Scheduler' is set to 'false', thus the schedules defined below will not be valid as the Windows Task Scheduler is used...&#xD;
+        &lt;br&gt;&#xD;
+        &lt;br&gt;&#xD;
+    &lt;/text&gt;    &#xD;
+    }    &#xD;
+}&#xD;
+</CustomTemplate><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>messages_mode</Name><Value>enabledshownexec</Value></Parameter><Parameter><Name>force_execution</Name><Value>True</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views></Report>

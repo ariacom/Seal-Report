@@ -743,7 +743,7 @@ namespace Seal.Model
                     Report.LogMessage("Model '{0}': Building totals...", model.Name);
                     if (!Report.Cancel) buildTotals(model);
                     model.Progression = 85; //85% 
-                                            //Scripts
+                    //Scripts
                     if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
                     //Series 
                     if (!Report.Cancel && model.HasSerie) buildSeries(model);
@@ -835,10 +835,11 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Report.LogMessage("Error in task '{0}': {1}\r\n", task.Name, ex.Message);
+                var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
+                Report.LogMessage("Error in task '{0}': {1}\r\n", task.Name, message);
                 if (!task.IgnoreError)
                 {
-                    Report.ExecutionErrors = ex.Message;
+                    Report.ExecutionErrors = message;
                     Report.ExecutionErrorStackTrace = ex.StackTrace;
                     task.CancelReport = true;
                 }

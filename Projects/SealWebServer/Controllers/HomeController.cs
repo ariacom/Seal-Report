@@ -66,6 +66,7 @@ namespace SealWebServer.Controllers
         {
             Repository repository = Repository.Create();
             repository.WebApplicationPath = RequestPhysicalApplicationPath;
+            if (string.IsNullOrEmpty(Repository.Instance.WebApplicationPath)) Repository.Instance.WebApplicationPath = RequestPhysicalApplicationPath;
             //Set culture from cookie
             string culture = getCookie(SealCultureCookieName);
             if (!string.IsNullOrEmpty(culture)) repository.SetCultureInfo(culture);

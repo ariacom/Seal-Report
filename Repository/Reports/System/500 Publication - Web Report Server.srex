@@ -53,22 +53,10 @@
     &#xD;
     &#xD;
     if (client == null) {&#xD;
-        report.LogMessage("Copying directory '{0}' to '{1}' using File Sytem", sourcePath, destPath, client != null ? "FTP Client": "File System");       &#xD;
         FileHelper.CopyDirectory(sourcePath, destPath, true, report);&#xD;
     }&#xD;
     else {&#xD;
-        foreach (var folder in Directory.GetDirectories(sourcePath))&#xD;
-        {&#xD;
-            var dest = destPath + Path.GetFileName(folder);&#xD;
-            report.LogMessage("Copying directory '{0}' to '{1}' using FTP Client", folder, dest);       &#xD;
-            client.UploadDirectory(folder, dest, FtpFolderSyncMode.Update, FtpRemoteExists.Overwrite);&#xD;
-        }&#xD;
-        foreach (var file in Directory.GetFiles(sourcePath))&#xD;
-        {&#xD;
-            var dest = destPath + Path.GetFileName(file);&#xD;
-            report.LogMessage("Copying file '{0}' to '{1}' using FTP Client", file, dest);       &#xD;
-            client.UploadFile(file, dest);&#xD;
-        }&#xD;
+        FileHelper.FtpCopyDirectory(client, sourcePath, destPath, true, report);&#xD;
     }&#xD;
         &#xD;
     //Check config&#xD;
@@ -119,7 +107,7 @@
     var foldersEnum = report.Sources[0].MetaData.Enums.FirstOrDefault(i =&gt; i.Name == "Source Folders");&#xD;
     if (foldersEnum != null &amp;&amp; foldersEnum.Values.Count == 0) {&#xD;
         foldersEnum.Values.Add(new MetaEV() { Id = report.Repository.Configuration.InstallationDirectory + "\\NETCore", Val = string.Format(".NETCore ({0})", report.Repository.ApplicationPath + "\\NETCore") });&#xD;
-        foldersEnum.Values.Add(new MetaEV() { Id = report.Repository.Configuration.InstallationDirectory + "\\Web.Net", Val = string.Format(".NET ({0})", report.Repository.ApplicationPath + "\\Web") });&#xD;
+        foldersEnum.Values.Add(new MetaEV() { Id = report.Repository.Configuration.InstallationDirectory + "\\Web.Net", Val = string.Format(".NET ({0})", report.Repository.ApplicationPath + "\\Web.Net") });&#xD;
     }&#xD;
 }&#xD;
 </InitScript></Report>
