@@ -17,7 +17,7 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **No SQL Data Sources:**
 Fill up your source Data Tables from your own code and display them in a report.
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
-* **NETCore**: From 5.5, a NETCore version is available for the Web Report Server.
+* **NETCore** projects and distribution for the Web Report Server and the Seal Report Scheduler to run on Linux and Azure.
 
 A **live demonstration** of the <a href="https://sealreport.org/demo" target=_blank>Web Report Server</a> is available.
 
@@ -54,7 +54,7 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 * .Net Framework 4.5
 * Database OLE DB, ODBC or SQLServer Drivers
 * For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater
-* .NETCore 3.1 for the Web Report Server (limitations: use of the Web Report Scheduler only) 
+* .NET Core 3.1 for the .NET Core deployment Web Report Server and the Seal Report Scheduler
 
 
 **For development:**
