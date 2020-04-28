@@ -743,7 +743,7 @@ namespace Seal.Model
                     Report.LogMessage("Model '{0}': Building totals...", model.Name);
                     if (!Report.Cancel) buildTotals(model);
                     model.Progression = 85; //85% 
-                                            //Scripts
+                    //Scripts
                     if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
                     //Series 
                     if (!Report.Cancel && model.HasSerie) buildSeries(model);
@@ -1801,7 +1801,8 @@ namespace Seal.Model
                 {
                     Report.Cancel = true;
                     var extraMessage = "";
-                    if (output.Device is OutputEmailDevice) extraMessage = string.Format("\r\n\r\nUsing the Server Manager, check the configuration of the device: '{0}'", output.Device.FullName);
+                    if (ex.InnerException != null) extraMessage += "\r\n" + ex.InnerException.Message;
+                    if (output.Device is OutputEmailDevice) extraMessage += string.Format("\r\n\r\nUsing the Server Manager, check the configuration of the device: '{0}'", output.Device.FullName);
 
                     SetError("Error processing output '{0}'\r\n{1}{2}", output.Name, ex.Message, extraMessage);
                 }
