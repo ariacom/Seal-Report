@@ -25,6 +25,15 @@ namespace Seal.Model
                         try
                         {
                             schedule = SealSchedule.LoadFromFile(file);
+                            //Adjust report path if necessary (case of copy between Windows OS to Linux OS)    
+                            if (!File.Exists(schedule.ReportPath))
+                            {
+                                var newReportPath = Repository.Instance.ReportsFolder + schedule.ReportPath;
+                                if (Path.DirectorySeparatorChar == '/' && newReportPath.Contains("\\")) newReportPath = newReportPath.Replace("\\", "/");
+                                else if (Path.DirectorySeparatorChar == '\\' && newReportPath.Contains("/")) newReportPath = newReportPath.Replace("/", "\\");
+                                if (File.Exists(newReportPath)) schedule.ReportPath = newReportPath;
+                            }
+
                             if (_schedules.ContainsKey(schedule.GUID)) _schedules[schedule.GUID] = schedule;
                             else _schedules.Add(schedule.GUID, schedule);
                         }
@@ -37,7 +46,8 @@ namespace Seal.Model
                 }
 
                 //Remove lost schedules
-                foreach (var schedule in _schedules.Values.Where( i => !File.Exists(i.FilePath)).ToList()) {
+                foreach (var schedule in _schedules.Values.Where(i => !File.Exists(i.FilePath)).ToList())
+                {
                     _schedules.Remove(schedule.GUID);
                 }
             }
@@ -64,21 +74,31 @@ namespace Seal.Model
         Report getScheduledReport(SealSchedule refSchedule)
         {
             Report report = null;
-            if (File.Exists(refSchedule.ReportPath)) report = Report.LoadFromFile(refSchedule.ReportPath, Repository.Instance);
+            var reportPath = refSchedule.ReportPath;
+            if (!File.Exists(reportPath)) reportPath = Repository.Instance.ReportsFolder + reportPath;
 
-            if (!File.Exists(refSchedule.ReportPath) || (report != null && report.GUID != refSchedule.ReportGUID))
+            if (File.Exists(reportPath)) report = Report.LoadFromFile(reportPath, Repository.Instance);
+
+            if (!File.Exists(reportPath) || (report != null && report.GUID != refSchedule.ReportGUID))
             {
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, "The report of schedule '{0}' does not exists ('{1}').\r\nSearching for the report in the repository...", refSchedule.FilePath, refSchedule.ReportPath);
+
                 //Report has been moved or renamed: search report from its GUID in the report folder
                 report = Repository.Instance.FindReport(Repository.Instance.ReportsFolder, refSchedule.ReportGUID);
+                if (report != null)
+                {
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, "Report of schedule '{0}' has changed to '{1}'", refSchedule.FilePath, report.FilePath);
+                }
             }
 
             if (report == null)
             {
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, "Report of schedule '{0}' not found, removing all schedules for the report GUID '{1}'", refSchedule.FilePath, refSchedule.ReportGUID);
                 //Remove the schedules of the report
                 var reportSchedules = _schedules.Values.Where(i => i.ReportGUID == refSchedule.ReportGUID).ToList();
                 foreach (var schedule in reportSchedules)
                 {
-                    File.Delete(schedule.FilePath);
+                    if (File.Exists(schedule.FilePath)) File.Delete(schedule.FilePath);
                     lock (_schedules)
                     {
                         _schedules.Remove(schedule.GUID);
@@ -115,19 +135,22 @@ namespace Seal.Model
             if (report != null)
             {
                 var reportSchedule = getReportSchedule(report, schedule.GUID);
-                ReportExecution.ExecuteReportSchedule(schedule.GUID, report, reportSchedule);
+                if (reportSchedule != null)
+                {
+                    ReportExecution.ExecuteReportSchedule(schedule.GUID, report, reportSchedule);
 
-                if (File.GetLastWriteTime(schedule.FilePath) == schedule.LastModification)
-                {
-                    schedule.CalculateNextExecution();
-                    SaveSchedule(schedule);
-                    schedule.BeingExecuted = false;
-                }
-                else
-                {
-                    //Schedule modified from another editor...
-                    schedule.BeingExecuted = false;
-                    loadSchedules();
+                    if (File.GetLastWriteTime(schedule.FilePath) == schedule.LastModification)
+                    {
+                        schedule.CalculateNextExecution();
+                        SaveSchedule(schedule, report);
+                        schedule.BeingExecuted = false;
+                    }
+                    else
+                    {
+                        //Schedule modified from another editor...
+                        schedule.BeingExecuted = false;
+                        loadSchedules();
+                    }
                 }
             }
         }
@@ -137,18 +160,25 @@ namespace Seal.Model
             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Report Scheduler");
             Audit.LogEventAudit(AuditType.EventServer, "Starting Report Scheduler");
             DateTime lastLoad = DateTime.MinValue;
-            while(Running)
-            {
-                try
-                {
-                    if (DateTime.Now > lastLoad.AddMinutes(1))
-                    {
-                        loadSchedules();
-                        lastLoad = DateTime.Now;
-                    }
 
-                    foreach (var schedule in _schedules.Values.Where(i => !i.BeingExecuted))
+            if (!Repository.Instance.Configuration.UseSealScheduler)
+            {
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "WARNING: The current Server Configuration is not set to 'Use Seal Report Scheduler'. This Scheduler will not run any report. Please check your configuration.");
+            }
+            else
+            {
+                while (Running)
+                {
+                    try
                     {
+                        if (DateTime.Now > lastLoad.AddMinutes(1))
+                        {
+                            loadSchedules();
+                            lastLoad = DateTime.Now;
+                        }
+
+                        foreach (var schedule in _schedules.Values.Where(i => !i.BeingExecuted))
+                        {
                             if (schedule.IsReached())
                             {
                                 Debug.WriteLine("Running " + schedule.FilePath);
@@ -156,16 +186,17 @@ namespace Seal.Model
                                 Thread thread = new Thread(ExecuteThread);
                                 thread.Start(schedule);
                             }
+                        }
+                        Thread.Sleep(1000);
                     }
-                    Thread.Sleep(1000);
+                    catch (Exception ex)
+                    {
+                        Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
-                }
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Report Scheduler is stopped");
+                Audit.LogEventAudit(AuditType.EventServer, "Report Scheduler is stopped");
             }
-            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Report Scheduler is stopped");
-            Audit.LogEventAudit(AuditType.EventServer, "Report Scheduler is stopped");
         }
         public void Shutdown()
         {
@@ -174,7 +205,7 @@ namespace Seal.Model
             Thread.Sleep(4000);
         }
 
-        public void SaveSchedule(SealSchedule schedule)
+        public void SaveSchedule(SealSchedule schedule, Report report)
         {
             loadSchedules();
             lock (_schedules)
@@ -188,6 +219,9 @@ namespace Seal.Model
                 {
                     _schedules.Add(schedule.GUID, schedule);
                 }
+
+                //Remove repository path
+                schedule.ReportPath = report.FilePath.Replace(Repository.Instance.ReportsFolder, "");
                 schedule.SaveToFile();
             }
         }

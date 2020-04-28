@@ -759,8 +759,8 @@ namespace Seal.Model
             {
                 if (_pdfConverter == null)
                 {
-                    _pdfConverter = SealPdfConverter.Create(Report.Repository.ApplicationPath);
-                    if (PdfConfigurations.Count == 0) PdfConfigurations = Report.Repository.Configuration.PdfConfigurations.ToList();
+                    _pdfConverter = SealPdfConverter.Create(Repository.Instance.ApplicationPath);
+                    if (PdfConfigurations.Count == 0) PdfConfigurations = Repository.Instance.Configuration.PdfConfigurations.ToList();
                     _pdfConverter.SetConfigurations(PdfConfigurations, this);
                     
                 }
@@ -814,8 +814,8 @@ namespace Seal.Model
             {
                 if (_excelConverter == null)
                 {
-                    _excelConverter = SealExcelConverter.Create(Report.Repository.ApplicationPath);
-                    if (ExcelConfigurations.Count == 0) ExcelConfigurations = Report.Repository.Configuration.ExcelConfigurations.ToList();
+                    _excelConverter = SealExcelConverter.Create(Repository.Instance.ApplicationPath);
+                    if (ExcelConfigurations.Count == 0) ExcelConfigurations = Repository.Instance.Configuration.ExcelConfigurations.ToList();
 
                     _excelConverter.SetConfigurations(ExcelConfigurations, this);
                     

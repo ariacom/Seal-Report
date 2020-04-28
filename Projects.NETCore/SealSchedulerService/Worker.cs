@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,8 @@ namespace SealSchedulerService
     {
         public Worker(IConfiguration configuration)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             //Set repository path
             Repository.RepositoryConfigurationPath = configuration.GetValue<string>("SealConfiguration:RepositoryPath");
 

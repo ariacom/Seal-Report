@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using FluentFTP;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using Seal.Model;
@@ -136,6 +138,8 @@ namespace Seal.Helpers
 
         public static void CopyDirectory(string source, string destination, bool recursive, ReportExecutionLog log = null, string searchPattern = "*")
         {
+            if (log != null) log.LogMessage("Copying directory '{0}' to '{1}'", source, destination);
+
             if (!Directory.Exists(destination)) Directory.CreateDirectory(destination);
             foreach (string file in Directory.GetFiles(source, searchPattern))
             {
@@ -147,6 +151,7 @@ namespace Seal.Helpers
                 }
                 catch (Exception ex)
                 {
+                    if (log != null) log.LogMessage(ex.Message);
                     Debug.WriteLine(ex.Message);
                 }
             }
@@ -156,6 +161,48 @@ namespace Seal.Helpers
                 foreach (string directory in Directory.GetDirectories(source))
                 {
                     CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), recursive, log, searchPattern);
+                }
+            }
+        }
+
+        public static void FtpCopyDirectory(FtpClient client, string source, string destination, bool recursive, ReportExecutionLog log = null)
+        {
+            if (log != null) log.LogMessage("Copying directory '{0}' to '{1}'", source, destination);
+
+            if (!destination.EndsWith("/")) destination += "/";
+
+            if (recursive)
+            {
+                foreach (var folder in Directory.GetDirectories(source))
+                {
+                    var dest = destination + Path.GetFileName(folder);
+                    if (log != null) log.LogMessage("Copying directory '{0}' to '{1}'", folder, dest);
+                    var results = client.UploadDirectory(folder, dest, FtpFolderSyncMode.Update, FtpRemoteExists.Overwrite);
+
+                    if (log != null)
+                    {
+                        foreach (var result in results.Where(i => i.IsSuccess))
+                        {
+                            log.LogMessage("'{0}'", result.RemotePath);
+                        }
+                        foreach (var result in results.Where(i => i.Exception != null))
+                        {
+                            log.LogMessage("'{0}' Error: {1}", result.RemotePath, result.Exception.Message + (result.Exception.InnerException != null ? " " + result.Exception.InnerException.Message : ""));
+                        }
+                    }
+                }
+            }
+            foreach (var file in Directory.GetFiles(source))
+            {
+                var dest = destination + Path.GetFileName(file);
+                if (log != null) log.LogMessage("Copying file '{0}' to '{1}'", file, dest);
+                try
+                {
+                    client.UploadFile(file, dest);
+                }
+                catch (Exception ex)
+                {
+                    if (log != null) log.LogMessage("'{0}' Error: '{1}'", file, ex.Message + (ex.InnerException != null ? " " + ex.InnerException.Message : ""));
                 }
             }
         }
