@@ -9,15 +9,15 @@ The product focuses on **easy installation** and **report design**: Once setup, 
 * **Native Pivot Tables**: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
 * **HTML 5 Charts**: Define and display Chart Series in two mouse clicks (Support of ChartJS, NVD3 and Plotly libraries).
 * **Fully Responsive and HTML Rendering using Razor engine**: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
+* **Web Report Server**: Publish and edit your reports on the web (Support of Windows and Linux OS with .NET Core).
+* **Report scheduler**: Schedule your report executions and generate results in folders, FTP or send them by emails (integrated with the Windows Tasks Scheduler or available as a service)
 * **Drill Down navigation and Sub Reports:** Navigate in your report result to drill to a detail or to execute another report.
-* **Web Report Server**: Publish and edit your reports on the web (requires Internet Information Server 7 or 8 with MVC4).
 * **Dashboards View**: Display your KPIs or published Widgets in a single view.
-* **Task scheduler**: Schedule your report executions and generate results in folders or send them by emails (integrated with the Windows Tasks Scheduler).
 * **Report Tasks:** Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
 * **No SQL Data Sources:**
 Fill up your source Data Tables from your own code and display them in a report.
 * **Low TCO (total cost of ownership)**: The product is designed for minimal ongoing maintenance.
-* **NETCore**: From 5.5, a NETCore version is available for the Web Report Server.
+* **.NET Core** projects and distribution for the Web Report Server and the Seal Report Scheduler to run on Linux OS and Azure Platform.
 
 A **live demonstration** of the <a href="https://sealreport.org/demo" target=_blank>Web Report Server</a> is available.
 
@@ -54,7 +54,7 @@ In addition to the Open Source version, **<a href="https://ariacom.com" target=_
 * .Net Framework 4.5
 * Database OLE DB, ODBC or SQLServer Drivers
 * For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater
-* .NETCore 3.1 for the Web Report Server (limitations: use of the Web Report Scheduler only) 
+* .NET Core 3.1 for the .NET Core deployment (Web Report Server and the Seal Report Scheduler).
 
 
 **For development:**
