@@ -134,6 +134,9 @@
                                 You can also override the default SQL generated with the following properties :
                                 <code>Select Clause</code>,<code>From Clause</code>,<code>Order By Clause</code>,<code>Group By Clause</code>,<code>Common Table Expression Clause</code><br />
                             </p>
+                            <p>
+                                As a model can depend on other model generation (e.g. you may update the ResultTable from another modelin one of the model <code>Scripts</code>), the <code>Execution Set</code>property allows to define when the model is generated during the report execution.<br />
+</p>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Samples</h4>
                                 In MS MSQLServer, set the <code>Select Clause</code> to <b>SELECT TOP 100</b> to limit the result to 100 records.<br />
@@ -536,7 +539,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                A <strong>Report Output</strong> defines how to generate the report result of a root <strong>View</strong> to an <strong>Output Device</strong> (Folder or Email).<br />
+                                A <strong>Report Output</strong> defines how to generate the report result of a root <strong>View</strong> to an <strong>Output Device</strong> (Folder, File Server or Email).<br />
                                 A report can have several outputs on different devices.<br>
                             </p>
                             <p>
@@ -571,6 +574,11 @@
                                 <li>
                                     <b>Folder</b>: To generate the report result into a file on the file system.<br />
                                     The Folder device is always available.
+                                </li>
+                                <li>
+                                    <b>File Server</b>: To generate the report result into a remote directory of a file server.<br />
+                                    File Server devices are edited and configured using the <b>Server Manager</b> and are stored in a file (*.scfx) in the <i>/Devices/FileServer</i> Repository sub-folder.<br />
+                                    The following protocols are supported: FTP, FTPS, SFTP, SCP.
                                 </li>
                                 <li>
                                     <b>Email</b>: To send the report result by email through a SMTP server.<br />

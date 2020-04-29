@@ -795,7 +795,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the report is cancel
+        /// True if the report has been cancelled
         /// </summary>
         [XmlIgnore]
         public bool Cancel = false;
@@ -2372,8 +2372,9 @@ namespace Seal.Model
                 }
                 else
                 {
-                    Debug.WriteLine(string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args)));
-                    ExecutionMessages += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(message, args));
+                    var msg = string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), (args.Length == 0 ? message : string.Format(message, args)));
+                    Debug.WriteLine(msg);
+                    ExecutionMessages += msg;
                 }
             }
             catch (Exception ex)

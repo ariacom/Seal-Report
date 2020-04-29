@@ -93,7 +93,7 @@
                             <p>
                                 Setting up a connection is the first thing to do after creating a <strong>Data Source</strong>.<br />
 
-                                A <strong>Connection</strong> defines how to connect to the database to be queried by using an OLEDB or ODBC Driver.<br />
+                                A <strong>Connection</strong> defines how to connect to the database to be queried by using an OLEDB, ODBC or MS SQLServer Driver.<br />
                                 A <strong>Data Source</strong> can have one to many Connections (<eg>e.g. dev, test, production, etc.</eg>).
                             </p>
                             <div class="bs-callout bs-callout-danger">
@@ -151,7 +151,9 @@
                             <h4>Additional WHERE Clause</h4>
                             <p>
                                 An <code>Additional WHERE Clause</code> can also be defined to filter at run-time the records of the table.<br />
-                                This feature may be interesting to apply filter based on the person logged (<eg>e.g. a saleman can see only the orders he made</eg>).<br /><br />
+                                This feature may be interesting to apply filter based on the person logged (<eg>e.g. a saleman can see only the orders he made</eg>).<br />
+                                <ck>Check <a href="~/Recipes.cshtml#lineDynamicSecurity">Filtering records based on security</a> for more information</ck>.<br />
+                                <br />
                             </p>
                         </div>
                         <!-- end col -->
@@ -383,6 +385,8 @@
                         <div class="col-md-12">
                             <div class="bs-callout bs-callout-demo">
                                 <h4>No SQL Source Sample</h4>
+                                <a class="btn btn-primary live-sample">Live Sample: 40-No SQL Source - Excel and CSV Sources</a><br />
+                                This report defines two No SQL Sources: One loaded from an Excel Sheet, one from a CSV file.<br /><br />
                                 <a class="btn btn-primary live-sample">Live Sample: 41-No SQL Source RSS</a><br />
                                 This report shows how to read RSS BBC Feeds to fill the DataTable.<br />
                                 A simple model is defined with 3 elements and 3 restrictions.<br />

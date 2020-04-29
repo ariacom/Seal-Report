@@ -74,16 +74,16 @@
                                             <b>Fully Responsive and HTML Rendering using Razor engine</b>: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
                                         </li>
                                         <li>
+                                            <b>Web Report Server</b>: Publish and edit your reports on the web (Support of Windows and Linux OS with .NET Core).
+                                        </li>
+                                        <li>
+                                            <b>Report scheduler</b>: Schedule your report executions and generate results in folders, FTP, SFTP server or send them by emails (integrated with the Windows Tasks Scheduler or available as a service).
+                                        </li>
+                                        <li>
                                             <b>Drill Down navigation and Sub Reports</b>: Navigate in your report result to drill to a detail or to execute another report.
                                         </li>
                                         <li>
-                                            <b>Web Report Server</b>: Publish and edit your reports on the web (requires Internet Information Server with ASP.Net).
-                                        </li>
-                                        <li>
                                             <b>Dashboards View</b>: Display your KPIs or published Widgets in a single view.
-                                        </li>
-                                        <li>
-                                            <b>Task scheduler</b>: Schedule your report executions and generate results in folders or send them by emails (integrated with the Windows Tasks Scheduler).
                                         </li>
                                         <li>
                                             <b>Report Tasks</b>: Define tasks to perform your batch operations (data load, excel load, backup, data processing, etc.) or to trigger procedures from external assemblies.
@@ -124,6 +124,7 @@
                                 <li>.Net Framework 4.5</li>
                                 <li>Database OLE DB or ODBC Drivers</li>
                                 <li>For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater</li>
+                                <li>.NET Core 3.1 for the .NET Core deployment (Web Report Server and the Seal Report Scheduler).</li>
                             </ul>
                             <strong>For development:</strong>
                             <ul>
@@ -154,7 +155,8 @@
                             <h2>Installation</h2>
                             <p>
                                 Just run the setup executable file to install <strong>Seal Report</strong> on your computer.<br />
-                                The setup will install the <b>Report Designer</b>, the <b>Server Manager</b> and the <b>Task Scheduler</b> with a default repository located at <i>"C:\ProgramData\Seal Report Repository"</i>.
+                                The setup will install the <b>Report Designer</b>, the <b>Server Manager</b> and the <b>Task Scheduler</b> with a default repository located at <i>"C:\ProgramData\Seal Report Repository"</i>.<br />
+                                Two subfolders named <i>/Web.Net</i> and <i>/NETCore</i> contain the files required to publish the Web Report Server (and the Seal Report Scheduler for .NET Core).
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 To publish the <b>Web Report Server</b>, run the <b>Server Manager</b> and select the menu <srmenu>Configuration->Publish Web Site on IIS...</srmenu> to execute the Web Server Publisher wizard.
@@ -169,8 +171,21 @@
                                 <li><b>SealReportDesigner:</b> Report Designer executable.</li>
                                 <li><b>SealServerManager:</b> Server Manager executable.</li>
                                 <li><b>SealTaskScheduler:</b> Console application invoked by the Windows Task Scheduler to execute report in batch.</li>
-                                <li><b>SealWebServer:</b> Asp.Net appplication for Web Report Server.</li>
+                                <li><b>SealWebServer:</b> Asp.Net application for Web Report Server.</li>
+                                <li><b>SealSchedulerService:</b> Seal Report Scheduler executable for the Windows Service.</li>
                                 <li><b>TestsAndSamples:</b> Contains unitary tests and basic samples.</li>
+                                <li><b>Seal.NETCoreSync:</b> Utility to synchronize the code sources of the .NETCore projects.</li>
+                                <li><b>SealDocumentation:</b> sealreport.org Web site.</li>
+                            </ul>
+                            <p>
+                                The <strong>Seal.NETCore.sln</strong> contains projects dedicated to NETCore.<br>
+                                Most of the source code files are overwriten by the previous <b>Seal.NETCoreSync</b> project and <b>should never be edited</b>.<br />
+                                The solution contains the following projects:
+                            </p>
+                            <ul>
+                                <li><b>SealLibrary:</b> Main library shared by all the executables compiled for .NET Core.</li>
+                                <li><b>SealSchedulerService:</b> Seal Report Scheduler executable for the .NET Core Worker Service.</li>
+                                <li><b>SealWebServer.NETCore:</b> Asp.Net Core application for Web Report Server.</li>
                             </ul>
                         </div>
                         <!-- end col -->
@@ -368,6 +383,7 @@
                                 <li>The <strong>Report Designer</strong> (a Windows application) creates, edits and executes reports.</li>
                                 <li>The <strong>Web Report Server</strong> (an ASP.Net Web application published on IIS) allows the end-users to edit and execute the reports and dashboards published from the Web.</li>
                                 <li>The <strong>Task Scheduler</strong> (a console application) is invoked by the Windows Task Scheduler to schedule report execution on a Device (folder or email).</li>
+                                <li>The <strong>Seal Report Scheduler</strong> (a Windows Service application or .NET Core Worker Service) to execute the report schedules defined in the repository (folder, file server or email).</li>
                             </ul>
                         </div>
                         <!-- end col -->
@@ -393,13 +409,16 @@
                                     <strong>Assemblies:</strong> additional DLL (*.dll) that can be referenced in all Razor scripts. You can add your own assemblies in this folder and call them from any script compiled and executed during a report execution (e.g. in a Task).
                                 </li>
                                 <li>
+                                    <strong>Dashboards:</strong> dashboards files(*.sdax) edited and published by the Web Report Server.
+                                </li>
+                                <li>
                                     <strong>Databases:</strong> dedicated folder for local database files (e.g. an MS Access file).
                                 </li>
                                 <li>
-                                    <strong>Devices:</strong> the device configurations (*.scfx) used by the report output. 2 types of devices are available: Folder to generate a report result in a file, or Email to send it to a user by SMTP.
+                                    <strong>Devices:</strong> the device configurations (*.scfx) used by the report output. 3 types of devices are available: Folder, File Server (FTP, SFTP), Email to send it to a user by SMTP.
                                 </li>
                                 <li>
-                                    <strong>Logs:</strong> the daily log files (*.txt). All execution messages are logged in a daily file (files are auto-purged).
+                                    <strong>Logs:</strong> the daily log files (*.txt). All events, executions and schedules messages are logged in a daily file (files are auto-purged).
                                 </li>
                                 <li>
                                     <strong>Reports:</strong> the reports (*.srex), files and sub-folders published by the Web Report Server. The Reports root folder is the parent of all folders, files and reports published.
@@ -414,10 +433,10 @@
                                     <strong>Sources:</strong> the data source files (*.scfx) available for the reports. These data sources are shared amongst all the reports.
                                 </li>
                                 <li>
-                                    <strong>Dashboards:</strong> dashboards files(*.sdax) edited and published by the Web Report Server.
+                                    <strong>SpecialFolders\Personal:</strong> dedicated folder to store personal folders for each user. The folder contains reports, dashboards, files and the user's profile (_profile.xml).
                                 </li>
                                 <li>
-                                    <strong>SpecialFolders\Personal:</strong> dedicated folder to store personal folders for each user. The folder contains reports, dashboards, files and the user's profile (_profile.xml).
+                                    <strong>SpecialFolders\Schedules:</strong> report schedules (*.xml) when the Seal Report Scheduler is used. One file per schedule.
                                 </li>
                                 <li>
                                     <strong>SubReports:</strong> the sub-reports (*.srex) referenced by an element in a data source. Sub-Reports allow master-detail navigation from a report result.
@@ -480,7 +499,7 @@
                         <div class="col-md-12">
                             Here is the list of the major Open Source components (Thank you so much !) used in <strong>Seal Report</strong>:
                             <ul>
-                                <li> <a href="https://getbootstrap.com/docs/3.4/" target="_blank">Bootstrap 3.4</a> for the Web Report Server and report rendering</li>
+                                <li> <a href="https://getbootstrap.com/docs/3.4/" target="_blank">Bootstrap 3</a> for the Web Report Server and report rendering</li>
                                 <li> <a href="https://github.com/Antaris/RazorEngine" target="_blank">Razor engine</a> for the rendering and dynamic options</li>
                                 <li><a href="http://www.chartjs.org/" target="_blank">ChartJS</a> for the charts JS</li>
                                 <li><a href="http://nvd3.org/" target="_blank">NVD3</a> for the NVD3 charts</li>
@@ -491,10 +510,12 @@
                                 <li> <a href="https://datatables.net" target="_blank">Data Tables</a> to enhance HTML tables</li>
                                 <li> <a href="https://github.com/Eonasdan/bootstrap-datetimepicker" target="_blank">Datetime Picker</a> component for the report restrictions</li>
                                 <li> <a href="https://github.com/silviomoreto/bootstrap-select" target="_blank">Multiple Select</a> component for the report restrictions</li>
-                                <li><a href="http://www.jrsoftware.org" target="_blank"> InnoSetup</a> for the setup</li>
+                                <li> <a href="https://github.com/robinrodricks/FluentFTP" target="_blank">Fluent FTP</a> library for Output File Server with the FTP protocol</li>
+                                <li> <a href="https://github.com/sshnet/SSH.NET/" target="_blank">SS.NET</a> library for Output File Server with the SFTP and SCP protocol</li>
+                                <li> <a href="https://github.com/icsharpcode/SharpZipLib" target="_blank">SharpZipLib</a> to Zip report result files</li>
+                                <li> <a href="https://github.com/JanKallman/EPPlus" target="_blank">EPPlus</a> to process Excel source files</li>
+                                <li> <a href="http://www.jrsoftware.org" target="_blank"> InnoSetup</a> for the setup</li>
                                 <li> <a href="http://yetanotherforum.net" target="_blank">Yet Another Forum</a> (YAF) for the forum</li>
-                                <li> <a href="https://dotnetzip.codeplex.com" target="_blank">DotNetZip</a> to Zip email attachments</li>
-                                <li> <a href="https://github.com/JanKallman/EPPlus" target="_blank">EPPlus</a> for the Excel converter</li>
                                 <li> <a href="https://github.com/haltu/muuri" target="_blank">Muuri</a> for the Dashboard layout</li>
                                 <li> <a href="https://github.com/EWSoftware/SHFB" target="_blank">Sand Castle Help File Builder</a> for the documentation generation</li>
                             </ul>

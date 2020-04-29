@@ -136,28 +136,35 @@ namespace Seal.Model
 
         private void ExecuteThread(object param)
         {
-            var schedule = param as SealSchedule;
-            var report = getScheduledReport(schedule);
-            if (report != null)
+            try
             {
-                var reportSchedule = getReportSchedule(report, schedule.GUID);
-                if (reportSchedule != null)
+                var schedule = param as SealSchedule;
+                var report = getScheduledReport(schedule);
+                if (report != null)
                 {
-                    ReportExecution.ExecuteReportSchedule(schedule.GUID, report, reportSchedule);
+                    var reportSchedule = getReportSchedule(report, schedule.GUID);
+                    if (reportSchedule != null)
+                    {
+                        ReportExecution.ExecuteReportSchedule(schedule.GUID, report, reportSchedule);
 
-                    if (File.GetLastWriteTime(schedule.FilePath) == schedule.LastModification)
-                    {
-                        schedule.CalculateNextExecution();
-                        SaveSchedule(schedule, report);
-                        schedule.BeingExecuted = false;
-                    }
-                    else
-                    {
-                        //Schedule modified from another editor...
-                        schedule.BeingExecuted = false;
-                        loadSchedules();
+                        if (File.GetLastWriteTime(schedule.FilePath) == schedule.LastModification)
+                        {
+                            schedule.CalculateNextExecution();
+                            SaveSchedule(schedule, report);
+                            schedule.BeingExecuted = false;
+                        }
+                        else
+                        {
+                            //Schedule modified from another editor...
+                            schedule.BeingExecuted = false;
+                            loadSchedules();
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Unexpected Scheduler Error:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 
@@ -166,45 +173,52 @@ namespace Seal.Model
         /// </summary>
         public void Run()
         {
-            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Report Scheduler");
-            Audit.LogEventAudit(AuditType.EventServer, "Starting Report Scheduler");
-            DateTime lastLoad = DateTime.MinValue;
+            try
+            {
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Report Scheduler");
+                Audit.LogEventAudit(AuditType.EventServer, "Starting Report Scheduler");
+                DateTime lastLoad = DateTime.MinValue;
 
-            if (!Repository.Instance.Configuration.UseSealScheduler)
-            {
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "WARNING: The current Server Configuration is not set to 'Use Seal Report Scheduler'. This Scheduler will not run any report. Please check your configuration.");
-            }
-            else
-            {
-                while (Running)
+                if (!Repository.Instance.Configuration.UseSealScheduler)
                 {
-                    try
-                    {
-                        if (DateTime.Now > lastLoad.AddMinutes(1))
-                        {
-                            loadSchedules();
-                            lastLoad = DateTime.Now;
-                        }
-
-                        foreach (var schedule in _schedules.Values.Where(i => !i.BeingExecuted))
-                        {
-                            if (schedule.IsReached())
-                            {
-                                Debug.WriteLine("Running " + schedule.FilePath);
-                                schedule.BeingExecuted = true;
-                                Thread thread = new Thread(ExecuteThread);
-                                thread.Start(schedule);
-                            }
-                        }
-                        Thread.Sleep(1000);
-                    }
-                    catch (Exception ex)
-                    {
-                        Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
-                    }
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "WARNING: The current Server Configuration is not set to 'Use Seal Report Scheduler'. This Scheduler will not run any report. Please check your configuration.");
                 }
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Report Scheduler is stopped");
-                Audit.LogEventAudit(AuditType.EventServer, "Report Scheduler is stopped");
+                else
+                {
+                    while (Running)
+                    {
+                        try
+                        {
+                            if (DateTime.Now > lastLoad.AddMinutes(1))
+                            {
+                                loadSchedules();
+                                lastLoad = DateTime.Now;
+                            }
+
+                            foreach (var schedule in _schedules.Values.Where(i => !i.BeingExecuted))
+                            {
+                                if (schedule.IsReached())
+                                {
+                                    Debug.WriteLine("Running " + schedule.FilePath);
+                                    schedule.BeingExecuted = true;
+                                    Thread thread = new Thread(ExecuteThread);
+                                    thread.Start(schedule);
+                                }
+                            }
+                            Thread.Sleep(1000);
+                        }
+                        catch (Exception ex)
+                        {
+                            Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
+                        }
+                    }
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Report Scheduler is stopped");
+                    Audit.LogEventAudit(AuditType.EventServer, "Report Scheduler is stopped");
+                }
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Unexpected Scheduler Error:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 

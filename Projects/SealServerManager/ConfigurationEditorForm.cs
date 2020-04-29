@@ -149,7 +149,7 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                 //Copy license files if any
                 foreach (var path in Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "*.slc"))
                 {
-                    File.Copy(path, Path.Combine(Path.Combine(publicationDirectory, "bin"), Path.GetFileName(path)), true);
+                    File.Copy(path, Path.Combine((_configuration.WebNETCore ? publicationDirectory : Path.Combine(publicationDirectory, "bin")), Path.GetFileName(path)), true);
                 }
 
                 //Check config...

@@ -293,7 +293,14 @@ namespace Seal.Model
         {
             get
             {
-                var client = new SmtpClient() { Host = Server, Port = Port, DeliveryMethod = DeliveryMethod, EnableSsl = EnableSsl, Timeout = Timeout, UseDefaultCredentials = UseDefaultCredentials };
+                var client = new SmtpClient() { 
+                    Host = Server, 
+                    Port = Port, 
+                    DeliveryMethod = DeliveryMethod, 
+                    EnableSsl = EnableSsl, 
+                    Timeout = Timeout, 
+                    UseDefaultCredentials = UseDefaultCredentials 
+                };
                 if (!string.IsNullOrEmpty(UserName)) client.Credentials = new System.Net.NetworkCredential(UserName, ClearPassword);
                 return client;
             }

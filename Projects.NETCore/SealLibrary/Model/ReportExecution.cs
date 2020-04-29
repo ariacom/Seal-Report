@@ -1767,7 +1767,7 @@ namespace Seal.Model
                         }
                         else if (result != null)
                         {
-                            Report.LogMessage("The script returns:" + result);
+                            Report.LogMessage("The script returns:" + result.Trim());
                         }
                     }
 
@@ -1877,7 +1877,7 @@ namespace Seal.Model
             if (device == null) device = report.Repository.Devices.OfType<OutputEmailDevice>().FirstOrDefault();
             if (device == null)
             {
-                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "No email device is defined in the repository to send the error. Please use the server manager to define at least an email device.");
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "No email device is defined in the repository to send the error. Please use the Server Manager application to define at least an Email Device.");
             }
             else
             {
@@ -1893,7 +1893,7 @@ namespace Seal.Model
                 }
                 catch (Exception emailEx)
                 {
-                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Error got trying sending notification email.\r\n{0}", emailEx.Message);
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Error got trying sending notification email using device '{0}'.\r\n{1}", device.FullName, emailEx.Message + (emailEx.InnerException != null ? "\r\n" + emailEx.InnerException.Message : ""));
                 }
             }
         }
@@ -1946,6 +1946,12 @@ namespace Seal.Model
 
                     while (report.IsExecuting)
                     {
+                        if (useSealScheduler && !SealReportScheduler.Running)
+                        {
+                            Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Schedule '{0}': Cancelling report execution...", schedule.Name);
+                            report.CancelExecution();
+                            break;
+                        }
                         Thread.Sleep(100);
                     }
 
@@ -1980,7 +1986,16 @@ namespace Seal.Model
                             var newDate = DateTime.Now.AddMinutes(schedule.ErrorMinutesBetweenRetries);
                             report = null;
                             schedule = null;
-                            while (DateTime.Now < newDate) Thread.Sleep(1000); //Future: waiting for a notification to die...
+                            while (DateTime.Now < newDate)
+                            {
+                                if (useSealScheduler && !SealReportScheduler.Running)
+                                {
+                                    retries = 0;
+                                    message = string.Format("Schedule '{0}': Cancelling report execution retries...", refSchedule.Name); ;
+                                    break;
+                                }
+                                Thread.Sleep(1000);
+                            }
                             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, message);
                         }
                     }

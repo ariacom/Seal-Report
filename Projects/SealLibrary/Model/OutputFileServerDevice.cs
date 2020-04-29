@@ -19,7 +19,7 @@ using System.Xml.Serialization;
 namespace Seal.Model
 {
     /// <summary>
-    /// OutputFileServerDevice is an implementation of device that save the report result to a file server (FTP,SFTP,etc.).
+    /// OutputFileServerDevice is an implementation of device that save the report result to a file server (FTP, SFTP, etc.).
     /// </summary>
     public class OutputFileServerDevice : OutputDevice
     {
