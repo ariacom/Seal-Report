@@ -60,6 +60,9 @@ namespace SealWebServer.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Return the full Web URL
+        /// </summary>
         public static string GetWebUrl(HttpRequest request, HttpResponse response)
         {
             var appPath = request.ApplicationPath + (request.ApplicationPath.EndsWith("/") ? "" : "/");
@@ -89,7 +92,7 @@ namespace SealWebServer.Controllers
             return result.ToString();
         }
 
-        public string getIPAddress(HttpRequest request)
+        string getIPAddress(HttpRequest request)
         {
             string ipAddress = request.ServerVariables["HTTP_X_FORWARDED_FOR"];
             if (!string.IsNullOrEmpty(ipAddress))
@@ -103,7 +106,7 @@ namespace SealWebServer.Controllers
             return request.ServerVariables["REMOTE_ADDR"];
         }
 
-        public void writeDebug(string message)
+        void writeDebug(string message)
         {
             if (MvcApplication.DebugMode)
             {

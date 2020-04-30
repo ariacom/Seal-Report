@@ -12,8 +12,14 @@ using System.Web.Mvc;
 
 namespace SealWebServer.Controllers
 {
+    /// <summary>
+    /// Helper to log messages from the HomeController
+    /// </summary>
     public class WebHelper
     {
+        /// <summary>
+        /// Log an Exception
+        /// </summary>
         public static void WriteWebException(Exception ex, string detail)
         {
             var currentEx = ex;
@@ -31,16 +37,25 @@ namespace SealWebServer.Controllers
             Helper.WriteLogEntry("Seal Web Server", EventLogEntryType.Error, message.ToString());
         }
 
+        /// <summary>
+        /// Log a message with optional parameters
+        /// </summary>
         public static void WriteLogEntryWeb(EventLogEntryType type, string message, params object[] args)
         {
             Helper.WriteLogEntry("Seal Web Server", type, message, args);
         }
 
+        /// <summary>
+        /// Log a message with a detail
+        /// </summary>
         public static void WriteLogEntryWebDetail(EventLogEntryType type, string message, string detail)
         {
             Helper.WriteLogEntry("Seal Web Server", type, message + detail);
         }
 
+        /// <summary>
+        /// Log a debug message with a detail
+        /// </summary>
         public static void WriteLogEntryWebDebug(string message, string detail)
         {
             Helper.WriteLogEntry("Seal Web Server", EventLogEntryType.Information, message + detail);

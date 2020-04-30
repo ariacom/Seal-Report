@@ -175,7 +175,7 @@ namespace SealWebServer.Controllers
             return result.ToString();
         }
 
-        public void writeDebug(string message)
+        void writeDebug(string message)
         {
             if (Startup.DebugMode)
             {
