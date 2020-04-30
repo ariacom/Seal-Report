@@ -13,13 +13,6 @@
                     <ul class="nav">
                         <li><a href="#lineRequirements">Requirements, License</a></li>
                         <li><a href="#lineCompilation">Installation, Compilation</a></li>
-                        <li>
-                            <a href="#lineTutorials">Quick Tutorials</a>
-                            <ul class="nav">
-                                <li><a href="#lineTutorials_1">Report from a SQL Select</a></li>
-                                <li><a href="#lineTutorials_2">First Data Source and report</a></li>
-                            </ul>
-                        </li>
                         <li><a href="#lineOverview">Overview</a></li>
                         <li><a href="#lineEntities">Main Entities</a></li>
                         <li><a href="#lineComponents">Product Components</a></li>
@@ -155,11 +148,15 @@
                             <h2>Installation</h2>
                             <p>
                                 Just run the setup executable file to install <strong>Seal Report</strong> on your computer.<br />
-                                The setup will install the <b>Report Designer</b>, the <b>Server Manager</b> and the <b>Task Scheduler</b> with a default repository located at <i>"C:\ProgramData\Seal Report Repository"</i>.<br />
-                                Two subfolders named <i>/Web.Net</i> and <i>/NETCore</i> contain the files required to publish the Web Report Server (and the Seal Report Scheduler for .NET Core).
+                                The setup will install the <b>Report Designer</b>, the <b>Server Manager</b>, the <b>Seal Scheduler Service</b> and the <b>Task Scheduler</b> with a default repository.<br /><br />
+                                <b>All executables, libraries and configuration files</b> are installed by default in <i>C:\Program Files\Seal Report</i>.<br />
+                                <b>All repository files</b> are installed by default in <i>C:\ProgramData\Seal Report Repository</i>.<br /><br />
+                                <strong>Web Report Server Distribution:</strong><br />
+                                Two sub-folders <i>C:\Program Files\Seal Report\Web.Net</i> and <i>C:\Program Files\Seal Report\NETCore</i> contain the files required to publish the Web Report Server (and the Seal Report Scheduler for .NET Core).
                             </p>
                             <div class="bs-callout bs-callout-warning">
-                                To publish the <b>Web Report Server</b>, run the <b>Server Manager</b> and select the menu <srmenu>Configuration->Publish Web Site on IIS...</srmenu> to execute the Web Server Publisher wizard.
+                                To publish the <b>Web Report Server</b> on IIS, run the <b>Server Manager</b> and select the menu <srmenu>Configuration->Publish Web Site on IIS...</srmenu> to execute the Web Server Publisher wizard.<br /><br />
+                                To publish the <b>Web Report Server</b> on Linux or Azure, <ck>Check dedicated deployment <a href="~/Tutorials.cshtml">tutorials</a></ck>.
                             </div>
                             <h2>Compilation</h2>
                             <p>
@@ -174,12 +171,12 @@
                                 <li><b>SealWebServer:</b> Asp.Net application for Web Report Server.</li>
                                 <li><b>SealSchedulerService:</b> Seal Report Scheduler executable for the Windows Service.</li>
                                 <li><b>TestsAndSamples:</b> Contains unitary tests and basic samples.</li>
-                                <li><b>Seal.NETCoreSync:</b> Utility to synchronize the code sources of the .NETCore projects.</li>
+                                <li><b>Seal.NETCoreSync:</b> Utility to synchronize the code sources of the .NET Core projects.</li>
                                 <li><b>SealDocumentation:</b> sealreport.org Web site.</li>
                             </ul>
                             <p>
                                 The <strong>Seal.NETCore.sln</strong> contains projects dedicated to NETCore.<br>
-                                Most of the source code files are overwriten by the previous <b>Seal.NETCoreSync</b> project and <b>should never be edited</b>.<br />
+                                Most of the source code files are overwritten by the previous <b>Seal.NETCoreSync</b> project and <b>should never be edited</b>.<br />
                                 The solution contains the following projects:
                             </p>
                             <ul>
@@ -187,127 +184,6 @@
                                 <li><b>SealSchedulerService:</b> Seal Report Scheduler executable for the .NET Core Worker Service.</li>
                                 <li><b>SealWebServer.NETCore:</b> Asp.Net Core application for Web Report Server.</li>
                             </ul>
-                        </div>
-                        <!-- end col -->
-                    </div>
-                    <!-- end row -->
-                </section>
-                <!-- end section -->
-
-                <section id="lineTutorials" class="section">
-                    <div class="row">
-                        <div class="col-md-12 left-align">
-                            <h2 class="dark-text">Quick Tutorials <hr></h2>
-                        </div>
-                        <!-- end col -->
-                    </div>
-                    <!-- end row -->
-                    <div id="lineTutorials_1" class="row" style="padding-top:35px">
-                        <div class="col-md-12">
-                            <h4>Build a report from a simple SQL statement (2 minutes)</h4>
-                            <div class="row">
-                                <div class="col-md-12 bs-callout bs-callout-info">
-                                    This guide shows how to create and execute a report from a simple SQL statement and a database connection.
-                                </div>
-                            </div>
-                            <ol class="sans">
-                                <li>
-                                    In the Start menu, point to <srmenu>Programs->Seal Report</srmenu> and then click <b>Report Designer</b>.
-                                </li>
-                                <li>
-                                    Click on New (top-left in the toolbar)
-                                </li>
-                                <li>
-                                    In the left tree view, right-click on the root node named <i>"Sources"</i> and select <strong>[Add Data Source]</strong> in the contextual menu.<br />A new source is created and the source connection is displayed.
-                                </li>
-                                <li>
-                                    Edit the <code>Connection String</code> property with the OLE DB Wizard and verify the connection is working using the <strong>[Check Connection]</strong> helper or <strong>[F7]</strong>.
-                                </li>
-                                <li>
-                                    In the left tree view, right-click on the root node named <i>"Models"</i> and select <strong>[Add a SQL Model]</strong> in the contextual menu.<br />A new SQL Model named "Model2" is created and the SQL Editor is displayed. Click <strong>[Cancel]</strong> to close the dialog.
-                                </li>
-                                <li>
-                                    In the model definition, set the <code>Source</code> property to a the Data Source called <i>"Data Source"</i> that you have previously created.
-                                </li>
-                                <li>
-                                    In the text box, type your SQL statement (e.g. "select * from products") and click <strong>[OK]</strong>. The Source tree view displays the columns of the Select.
-                                </li>
-                                <li>
-                                    In the elements tree view, drag and drop the elements you want to see in the Row panel.
-                                </li>
-                                <li>
-                                    If necessary, drag and drop elements in the restrictions panel to filter data.
-                                </li>
-                                <li>
-                                    In the left tree view, click on the view node named <i>"Views\View\Model"</i> and set the <code>Current Model</code> property to "Model2".
-                                </li>
-                                <li>
-                                    Click <strong>[Execute]</strong> or press <strong>[F5]</strong>.<br />The report is executed.
-                                </li>
-                                <li>
-                                    Click <strong>[Close]</strong> then <strong>[Save]</strong> to save the report in the repository.
-                                </li>
-                            </ol>
-                        </div>
-                    </div>
-                    <div id="lineTutorials_2" class="row" style="padding-top:35px">
-                        <div class="col-md-12">
-                            <h4>Build a first repository Data Source and then Reports based on your database schema (5 minutes)</h4>
-                            <div class="row">
-                                <div class="col-md-12 bs-callout bs-callout-info">
-                                    This guide shows how to create a first Data Source describing your database metadata. Based on this Data Source, reports can be easily built and executed using dynamic SQL generation.
-                                </div>
-                            </div>
-
-                            <h3><strong>Step 1:</strong> Create your first Data Source.</h3>
-                            <ol class="sans">
-                                <li>
-                                    In the Start menu, point to <srmenu>Programs->Seal Report</srmenu> and then click <b>Server Manager</b>.
-                                </li>
-                                <li>
-                                    On the File menu, click <srmenu>New->Data Source</srmenu>.<br />A new Data Source is created and the connection is selected.
-                                </li>
-                                <li>
-                                    Edit the <code>Connection String</code> property with the OLE DB Wizard and check the connection configured using the <strong>[Check Connection]</strong> helper or <strong>[F7]</strong>.
-                                </li>
-                                <li>
-                                    In the left tree view, right-click on the root node called <i>"Tables"</i> and select <strong>[Add Tables from Catalog...]</strong> in the contextual menu.<br />A dialog box appears.
-                                </li>
-                                <li>
-                                    Select the tables in your Data Source and click <strong>[OK]</strong>.<br />Tables, columns and joins have been automatically added.
-                                </li>
-                                <li>
-                                    Click <strong>[Save]</strong> to save the Data Source in the repository.
-                                </li>
-                            </ol>
-                            <h3><strong>Step 2:</strong> Create, execute and store your first reports.</h3>
-                            <ol class="sans">
-                                <li>
-                                    On the Start menu, point to <srmenu>Programs->Seal Report</srmenu> and then click <b>Report Designer</b>.
-                                </li>
-                                <li>
-                                    Click on <strong>[New]</strong> (top-left in the toolbar).
-                                </li>
-                                <li>
-                                    In the left tree view, click on the Model node called <i>"Model"</i>.<br />The model is displayed.
-                                </li>
-                                <li>
-                                    In the model definition, select the Data Source you have previously created.
-                                </li>
-                                <li>
-                                    In the elements tree view, expand the nodes with the table names, then drag and drop the elements you want to see in the Row panel.
-                                </li>
-                                <li>
-                                    If necessary, drag and drop elements in the restrictions panel to filter data.
-                                </li>
-                                <li>
-                                    Click <strong>[Execute]</strong> or press <strong>[F5]</strong>.<br />The report is executed.
-                                </li>
-                                <li>
-                                    Click <strong>[Close]</strong> then <strong>[Save]</strong> to save the report in the repository.
-                                </li>
-                            </ol>
-
                         </div>
                         <!-- end col -->
                     </div>
@@ -327,6 +203,7 @@
                     <!-- end row -->
                 </section>
                 <!-- end section -->
+
                 <section id="lineEntities" class="section">
                     <div class="row">
                         <div class="col-md-12 left-align">

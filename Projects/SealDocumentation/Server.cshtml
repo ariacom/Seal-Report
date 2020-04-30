@@ -38,14 +38,23 @@
                                 <div class="col-md-12 full">
                                     <div>
                                         <p>
-                                            Seal Report includes a <b>Web Report Server</b> to publish and edit your reports and dashboards on the Web.<br />
-                                            The server must have Internet Information Server (IIS) installed with the option <b>Application Development/ASP.Net 4.5</b> or greater.
+                                            Seal Report includes a <b>Web Report Server</b> to publish and edit your reports and dashboards on the Web.<br /><br />
+                                            On <strong>Windows OS</strong>, the server must have Internet Information Server (IIS) installed with the option <b>Application Development/ASP.Net 4.5</b> or greater.<br /><br />
+                                            On <strong>Linux OS</strong>, the server must have ASP .NET Core installed (Refer to <a href="https://docs.microsoft.com/en-us/dotnet/core/install/" target="_blank">https://docs.microsoft.com/en-us/dotnet/core/install/</a>).
+                                        </p>
+                                        <p>
+                                            Note that the Web Report Server may also act as a <b>Report Scheduler</b> if necessary.<br />
+                                            <ck>Check <a href="~/Reports.cshtml#lineOutput_2">Report Schedules</a> for more information</ck>.
                                         </p>
                                     </div>
                                     <div class="bs-callout bs-callout-warning">
-                                        <h4>Web Server Publication Wizard</h4>
+                                        <h4>Web Report Server Publication Wizard (IIS)</h4>
                                         To publish the <b>Web Report Server</b>, run the <b>Server Manager</b> and select the menu <srmenu>Configuration->Publish Web Site on IIS...</srmenu> to execute the Web Server Publisher wizard.<br />
                                         If the site was previously published, use the button <b>Publish only files</b> to update the current site.
+                                    </div>
+                                    <div class="bs-callout bs-callout-warning">
+                                        <h4>Web Report Server Publication on Linux or Azure</h4>
+                                        <ck>Check dedicated deployment <a href="~/Tutorials.cshtml">tutorials</a></ck>.
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +132,7 @@
                                 <h4>System Reports</h4>
                                 Several useful reports are available in the <i>Reports/System</i> Repository sub-folder to show the current <b>security implementation</b>, to <b>inventory the reports</b>, to <b> check the reports executions</b>, to <b> query the audit database</b>, etc.<br />
                                 <a class="btn btn-primary live-system">System: 100 Configuration - Security Summary</a>
-                                <a class="btn btn-primary live-system">System: 220 Audit - Summary</a>
+                                <a class="btn btn-primary live-system">System: 200 Audit - Search</a>
                                 <a class="btn btn-primary live-system">System: 300 Reports - Inventory</a>
                             </div>
                         </div>
@@ -173,7 +182,7 @@
                     <div class="bs-callout bs-callout-danger">
                         <h4>Web Report Designer and Dashboard Manager</h4>
                         The <b>Dashboard Manager</b> is a commercial component available at <a href="https://ariacom.com/sealweblicense.cshtml" target="_blank">https://ariacom.com</a> and is not part of the Open Source version.<br />
-                        If you are interested in using the designer to create your dashboards from a Web interface, please contact <a href="https://ariacom.com/contact.cshtml" target="_blank">Ariacom</a> to request a demonstration login.
+                        If you are interested in using the designer to create your dashboards from the Web Report Server, please contact <a href="https://ariacom.com/contact.cshtml" target="_blank">Ariacom</a> to request a demonstration login.
                     </div>
                 </section>
                 <!-- end section -->
