@@ -54,7 +54,7 @@
                                         <p>
                                             A <strong>Data Source</strong> defines the database connections and description (table, catalog and joins).<br>
                                             Use the <b>Server Manager</b> to create and edit your <strong>Data Sources</strong>.<br>
-                                            A <strong>Repository Data Source</strong> is stored in the <i>/Sources</i> Repository sub-folder in a XML file (*.scfgx).
+                                            A <strong>Repository Data Source</strong> is stored in the <i>/Sources</i> Repository sub-folder in a XML file (*.scfx).
                                         </p>
                                     </div>
                                     <div class="bs-callout bs-callout-danger">
@@ -151,7 +151,7 @@
                             <h4>Additional WHERE Clause</h4>
                             <p>
                                 An <code>Additional WHERE Clause</code> can also be defined to filter at run-time the records of the table.<br />
-                                This feature may be interesting to apply filter based on the person logged (<eg>e.g. a saleman can see only the orders he made</eg>).<br />
+                                This feature may be interesting to apply filter based on the person logged (<eg>e.g. a salesman can see only the orders he made</eg>).<br />
                                 <ck>Check <a href="~/Recipes.cshtml#lineDynamicSecurity">Filtering records based on security</a> for more information</ck>.<br />
                                 <br />
                             </p>
@@ -325,7 +325,7 @@
                             <h4>Dynamic display for prompted restrictions</h4>
                             <p>
                                 For huge list of values or for list having dependencies with other enums, a dynamic display is possible to allow the server to query live the database before showing the values to the user.<br />
-                                In this case, you must define the <code>SQL Select Statement for prompted restriction</code>property.<br />
+                                In this case, you must define the <code>SQL Select Statement for prompted restriction</code> property.<br />
                                 This dedicated SQL can contain the keyword <b>'{EnumFilter}'</b> to specify the text typed by the user and/or <b>'{EnumValues_&#60;OtherEnumName&#62;}'</b> to use the values checked for another enumerated list.
                             </p>
                             <div class="bs-callout bs-callout-demo">

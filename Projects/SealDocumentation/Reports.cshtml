@@ -63,7 +63,7 @@
                             <div class="row">
                                 <div class="col-md-12 full">
                                     <p>
-                                        A <strong>Report</strong> is edited with the <b>Report Designer</b> and stored in a file (*.srex) either in the <i>/Reports</i> Repository sub-folder or on the file system.<br>
+                                        A <strong>Report</strong> is edited with the <b>Report Designer</b> and stored in a file (*.srex) either in the <i>\Reports</i> Repository sub-folder or on the file system.<br>
                                         A report references repository <strong>Data Sources</strong> but it may have its own Data Sources definitions.<br />
                                         A report contains <strong>Models</strong> to define how to generate the Result Set (Data Table) and Series from the database.<br />
                                         Once the result got from the database, report <strong>Views</strong> are used to generate a HTML document using Razor parsing and rendering.<br />
@@ -135,8 +135,8 @@
                                 <code>Select Clause</code>,<code>From Clause</code>,<code>Order By Clause</code>,<code>Group By Clause</code>,<code>Common Table Expression Clause</code><br />
                             </p>
                             <p>
-                                As a model can depend on other model generation (e.g. you may update the ResultTable from another modelin one of the model <code>Scripts</code>), the <code>Execution Set</code>property allows to define when the model is generated during the report execution.<br />
-</p>
+                                As a model can depend on other model generation (<eg>e.g. you may use the ResultTable of another model in one of the <code>Load Scripts</code>, but you want to be sure that is has been executed</eg>), the <code>Execution Set</code> property allows to define when the model is generated during the report execution.<br />
+                            </p>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Samples</h4>
                                 In MS MSQLServer, set the <code>Select Clause</code> to <b>SELECT TOP 100</b> to limit the result to 100 records.<br />
@@ -366,7 +366,7 @@
                         <div class="col-md-12">
                             <h4>Templates</h4>
                             <p>
-                                All <b>View Templates</b> are defined in files located in the <i>/Views</i> Repository sub-folder.<br>
+                                All <b>View Templates</b> are defined in files located in the <i>\Views</i> Repository sub-folder.<br>
                                 Here is the list of the current view templates supported:
                             </p>
                             <ul>
@@ -387,7 +387,7 @@
                                 <li><b>Chart JS:</b> Render the Chart JS Series of the page result</li>
                                 <li><b>NVD3 Chart</b>: Render the NVD3 Series of the page result</li>
                                 <li><b>Plotly Chart</b>: Render the Plotly Series of the page result</li>
-                                <li><b>KPI</b>: Display a Key Performance Indicator. The KPI is built from a data table result with at least 2 columns: 1 for the dimension, 1 for the measure (with optionals columns to define the goal if the column name has the _GOAL suffix).</li>
+                                <li><b>KPI</b>: Display a Key Performance Indicator. The KPI is built from a data table result with at least 2 columns: 1 for the dimension, 1 for the measure (with optional columns to define the goal if the column name has the _GOAL suffix).</li>
                                 <li><b>Model Container</b>: A grid container for the page result (refer to Bootstrap 3 grid at <a href="https://getbootstrap.com/docs/3.4/css/#grid" target="_blank">https://getbootstrap.com/docs/3.4/css/#grid</a>). </li>
                             </ul>
 
@@ -410,7 +410,7 @@
                                 Other useful parameters of a <b>Data Table</b> View:
                                 <ul>
                                     <li><code>Options: Invert data table</code> to swap the columns and rows of the data table from their original presentation. This is valid only if the server pagination parameter is disabled in the root view.</li>
-                                    <li><code>Options: Columns to hide</code> to to hide columns in the table (<eg>e.g. the column is only used for a sort or for a calculation</eg>).</li>
+                                    <li><code>Options: Columns to hide</code> to hide columns in the table (<eg>e.g. the column is only used for a sort or for a calculation</eg>).</li>
                                 </ul>
                             </div>
 
@@ -423,7 +423,7 @@
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Create your own View Template</h4>
                                 It is easy to create your own view templates.<br />
-                                Just add two  *.cshtml files in the <i>/Views</i> Repository sub-folder: one for the main script and one for the configuration.
+                                Just add two  *.cshtml files in the <i>\Views</i> Repository sub-folder: one for the main script and one for the configuration.
                             </div>
                         </div>
                         <!-- end col -->
@@ -447,7 +447,7 @@
                                     </li>
                                     <li>
                                         <b>Create the Dashboard file</b><br />
-                                        Using a text editor, create a dashboard definition file (*.sdax) into one sub-folder of the <i>/Dashboards</i> Repository sub-folder with the following content:
+                                        Using a text editor, create a dashboard definition file (*.sdax) into one sub-folder of the <i>\Dashboards</i> Repository sub-folder with the following content:
                                         <pre class="brush: xml; highlight: [3,4]">
                                     &lt;?xml version="1.0" encoding="utf-8" ?>
                                     &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -462,7 +462,7 @@
                                     <li>
                                         <b>Get Widget GUID</b><br />
                                         Using the <b>Report Designer</b>, open the report and browse to a Widget Definition (<srmenu>Tools->Go to next widget in the report</srmenu> menu or <srmenu>CTRL+W</srmenu>), then copy and paste the <code>Dashboard XML</code> text into the <b>&lt;Items&gt;</b> XML tag.
-                                                                                                                                                                                                                                                                                        <pre class="brush: xml; highlight: [6,7,8]">
+                                        <pre class="brush: xml; highlight: [6,7,8]">
                                     &lt;?xml version="1.0" encoding="utf-8" ?>
                                     &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
                                     &lt;GUID>yourDashboardGUID&lt;/GUID>
@@ -478,7 +478,7 @@
                                     <li>
                                         <b>Add the item GUID</b><br />
                                         Add a unique &lt;GUID> value to the &lt;DashboardItem> element.
-                                                                <pre class="brush: xml; highlight: [7]">
+                                        <pre class="brush: xml; highlight: [7]">
                                     &lt;?xml version="1.0" encoding="utf-8" ?>
                                     &lt;Dashboard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
                                     &lt;GUID>yourDashboardGUID&lt;/GUID>
@@ -577,12 +577,12 @@
                                 </li>
                                 <li>
                                     <b>File Server</b>: To generate the report result into a remote directory of a file server.<br />
-                                    File Server devices are edited and configured using the <b>Server Manager</b> and are stored in a file (*.scfx) in the <i>/Devices/FileServer</i> Repository sub-folder.<br />
+                                    File Server devices are edited and configured using the <b>Server Manager</b> and are stored in a file (*.scfx) in the <i>\Devices\FileServer</i> Repository sub-folder.<br />
                                     The following protocols are supported: FTP, FTPS, SFTP, SCP.
                                 </li>
                                 <li>
                                     <b>Email</b>: To send the report result by email through a SMTP server.<br />
-                                    Email devices are edited and configured using the <b>Server Manager</b> and are stored in a file (*.scfx) in the <i>/Devices/EMail</i> Repository sub-folder.<br />
+                                    Email devices are edited and configured using the <b>Server Manager</b> and are stored in a file (*.scfx) in the <i>\Devices\EMail</i> Repository sub-folder.<br />
                                     The configuration contains all parameters required to send an email through a SMTP server.
                                 </li>
                             </ul>
@@ -598,13 +598,22 @@
                             <h4>Schedules</h4>
                             <p>
                                 A <b>Schedule</b> is a regular execution of a report output.<br />
-                                The execution is done through the standard Windows Task Scheduler via the batch executable <b>Task Scheduler</b>.<br />
-                                All the schedules can be managed by the <b>MMC (Microsoft Management Console) Task Scheduler</b> under the dedicated folder <b>Seal Report</b>.<br />
                                 A report output can have several schedules.<br />
-                                Several properties allow the configuration of the notifications and fail-over procedure (<eg>e.g. an email sent in case of success or failure, the execution can be retried several times, etc.</eg>).
+                                Several properties allow the configuration of the notifications and fail-over procedures (<eg>e.g. an email sent in case of success or failure, the execution can be retried several times, etc.</eg>).
+                            </p>
+                            <h5><i>Windows Task Scheduler</i></h5>
+                            <p>
+                                By default on Windows OS, the execution is done through the standard <b>Windows Task Scheduler</b> via the batch executable <b>Task Scheduler</b> located in the installation directory.<br />
+                                All the schedules can then be managed by the <b>MMC (Microsoft Management Console) Task Scheduler</b> under the dedicated folder <b>Seal Report</b>.<br />
+                            </p>
+                            <h5><i>Seal Report Scheduler</i></h5>
+                            <p>
+                                On <strong>Linux OS</strong> or <strong>Azure Platform</strong>, a dedicated <b>Seal Report Scheduler</b> may be used instead of the <b>Windows Task Scheduler</b>.<br />
+                                Schedule definitions are stored in the dedicated repository folder: <i>\SpecialFolders\Schedules</i> and are executed by either another process or an worker thread in the Web Report Server.<br />
+                                <ck>Check dedicated  <a href="~/Tutorials.cshtml#lineScheduler">tutorials</a> for running the <b>Seal Report Scheduler</b></ck>.
                             </p>
                             <div class="bs-callout bs-callout-danger">
-                                <h4>Check users and synchronization</h4>
+                                <h4>Windows Task Scheduler: Check users and synchronization</h4>
                                 A Schedule is created by a Windows Users (the one running the <strong>Report Designer</strong> or the <strong>Web Report Server</strong>) but can be executed by another Windows User.<br />
                                 Be sure that the Windows User has the <b>rights</b> to execute the report and process the output.<br /><br />
                                 You can synchronize schedules from the Server Manager if reports have been moved/copied with the Windows Explorer.<br />
@@ -620,11 +629,20 @@
                             <div class="bs-callout bs-callout-info">
                                 To change the default folder name containing the schedules, run the <strong>Server Manager</strong> and select the menu <srmenu>Configuration->Configure Server...</srmenu>, then modify the <code>Task Folder Name</code> property.
                             </div>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>System Reports for Schedules</h4>
+                                Use dedicated schedule reports from the <i>\Reports\System</i> Repository sub-folder:
+                                <ul>
+                                    <li>320 Reports - Web Server Schedule Definitions (only valid if the <b>Seal Report Scheduler</b> is used)</li>
+                                    <li>360 Reports - Last Schedules Executions (only valid if the Audit database is enabled)</li>
+                                </ul>
+                            </div>
                         </div>
                         <!-- end col -->
                     </div>
                     <!-- end row -->
                 </section>
+                <!-- end section -->
                 <section id="lineTasks" class="section">
                     <div class="row">
                         <div class="col-md-12 left-align">
@@ -636,14 +654,14 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                A <strong>Report Task</strong> is a SQL or a Razor Script executed before the report models are loaded and the report result is generated.<br />
+                                A <strong>Report Task</strong> is a SQL or a Razor Script executed at a given step of the report execution.<br />
                                 A task references one <strong>Data Source</strong> and on <strong>Connection</strong>.<br />
                                 A report can have several tasks executed sequentially from the top to the bottom.<br />
                                 A task can be executed at different <strong>step</strong> of the report generation (<eg>e.g. A task can be executed after the model generation and before the rendering to modify the result tables</eg>)<br />
-                                If a task is a Razor Script, it can stop the report execution by returning the "0" value or by setting the <code>CancelReport</code> flag to true.<br /> Thus, simple workflows can be implemented with tasks (<eg>e.g if a given condition fails, the report is cancelled</eg>).<br />
+                                If a task is a Razor Script, it can stop the report execution by setting the <code>CancelReport</code> flag to true.<br /> Thus, simple workflows can be implemented with tasks (<eg>e.g if a given condition fails, the report is cancelled</eg>).<br />
                                 Using the <code>Execute for each connection</code> property, a task can be executed for all connections defined in the <strong>Data Source</strong>.<br /><br />
 
-                                As Tasks executes a Razor Script, they can reference, instantiate and use objects from any .Net Assemblies located in the <strong>/Assemblies</strong> Repository sub-folder.<br />
+                                As Tasks executes a Razor Script, they can reference, instantiate and use objects from any .Net/.NET Core Assemblies located in the <b>\Assemblies</b> Repository sub-folder.<br />
                             </p>
                             <div class="bs-callout bs-callout-info">
                                 <h4>Schedule your tasks</h4>
@@ -653,14 +671,14 @@
 
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Tasks Samples</h4>
-                                Check the Repository Samples from the <strong>/Reports/Samples</strong> Repository sub-folder:
+                                Check the Repository Samples from the <i>\Reports\Samples</i> Repository sub-folder:
                                 <ul>
                                     <li>30-Task Refresh Enumerated Lists</li>
                                     <li>31-Task Backup SQLServer Database</li>
-                                    <li>32-Task Load Excel Table in SQLServer Database</li>
+                                    <li>32-Task Load Excel and CSV Table in SQLServer Database</li>
                                     <li>33-Task Load Table in SQLServer Database</li>
                                     <li>34-Task Generate several Report Results</li>
-                                    <li>35-Task Search Reports</li>
+                                    <li>35-Task Update Navigation Link Text</li>
                                 </ul>
                             </div>
                         </div>
@@ -720,7 +738,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                The <b>Excel and PDF Converter</b> is a commercial component available at <a href="https://ariacom.com" target="_blank">https://ariacom.com</a> that allow the generation of the report result in native PDF and Excel files.
+                                The <b>Excel and PDF Converter</b> is a commercial component available at <a href="https://ariacom.com" target="_blank">https://ariacom.com</a> that allows the generation of the report result in native PDF and Excel files.
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 Download the <a href=" https://ariacom.com/sealdemodownload.cshtml" target="_blank">Evaluation Version</a> of the Converter and start converting...<br />
@@ -833,7 +851,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                When a report is executed, the following process is done.
+                                When a report is executed, the following process is done:
                             </p>
 
                             <h4>Step 1: Execute Report Tasks having step 'Before models generation'</h4>
@@ -846,7 +864,8 @@
                                 Step 2: Build Models
                             </h4>
                             <p>
-                                Models are executed in parallel (one model per thread).<br>
+                                Models are grouped and executed sequentially using the <code>Execution Set</code> property.<br />
+                                Models having the same <code>Execution Set</code> are executed in parallel (one model per thread).<br>
                                 For each model:
                             </p>
                             <ul>
