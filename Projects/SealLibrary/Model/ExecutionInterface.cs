@@ -8,13 +8,34 @@ using System.Text;
 
 namespace Seal.Model
 {
+    /// <summary>
+    /// Log interface used during the report execution
+    /// </summary>
     public interface ExecutionLogInterface
     {
+        /// <summary>
+        /// True if the Job is cancelled
+        /// </summary>
+        /// <returns></returns>
         bool IsJobCancelled();
+
+        /// <summary>
+        /// Log the text with optional parameters
+        /// </summary>
         void Log(string text, params object[] args);
+
+        /// <summary>
+        /// Log the text with optional parameters with no Carriage Return/Line Feed
         void LogNoCR(string text, params object[] args);
+
+        /// <summary>
+        /// Log the text with optional parameters without any Timestamp
         void LogRaw(string text, params object[] args);
     }
+
+    /// <summary>
+    /// Dummy implementation of the Log interface
+    /// </summary>
     public class DummyLogInterface : ExecutionLogInterface
     {
         public bool IsJobCancelled() { return false; }
@@ -23,6 +44,9 @@ namespace Seal.Model
         public void LogRaw(string text, params object[] args) { }
     }
 
+    /// <summary>
+    /// Console implementation of the Log interface
+    /// </summary>
     public class ConsoleLog : ExecutionLogInterface
     {
         public bool IsJobCancelled() { return false; }
@@ -37,6 +61,9 @@ namespace Seal.Model
         }
     }
 
+    /// <summary>
+    /// String implementation of the Log interface
+    /// </summary>
     public class StringLog : ExecutionLogInterface
     {
         public StringBuilder Result = new StringBuilder("");

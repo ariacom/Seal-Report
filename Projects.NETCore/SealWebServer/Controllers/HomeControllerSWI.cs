@@ -597,6 +597,10 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Return the list of Cultures available
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult SWIGetCultures()
         {
@@ -666,6 +670,10 @@ namespace SealWebServer.Controllers
             return d;
         }
 
+        /// <summary>
+        /// Return the dashboards available for the logged user
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult SWIGetUserDashboards()
         {
@@ -682,6 +690,8 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Return the dashboards in the current view of the logged user
         [HttpPost]
         public ActionResult SWIGetDashboards()
         {
@@ -698,6 +708,10 @@ namespace SealWebServer.Controllers
                 return HandleSWIException(ex);
             }
         }
+
+        /// <summary>
+        /// Return the list of dashboard items for a dashboard
+        /// </summary>
 
         [HttpPost]
         public ActionResult SWIGetDashboardItems(string guid)
@@ -721,6 +735,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Return a dashboard item
+        /// </summary>
         [HttpPost]
         public ActionResult SWIGetDashboardItem(string guid, string itemguid)
         {
@@ -759,6 +776,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Add Dashboards to the current logged user
+        /// </summary>
         [HttpPost]
         public ActionResult SWIAddDashboard(string[] guids)
         {
@@ -811,6 +831,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Change the order between two dashboards in the current logged user view
+        /// </summary>
         [HttpPost]
         public ActionResult SWISwapDashboardOrder(string guid1, string guid2)
         {
@@ -859,6 +882,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Return the result of a dashboard item
+        /// </summary>
         [HttpPost]
         public ActionResult SWIGetDashboardResult(string guid, string itemguid, bool force)
         {

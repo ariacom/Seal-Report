@@ -56,6 +56,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Translate text using the current Repository Locale
+        /// </summary>
         public string Translate(string reference)
         {
             if (Repository == null) return reference;
@@ -182,6 +185,9 @@ namespace SealWebServer.Controllers
             return Content(System.IO.File.ReadAllText(filePath));
         }
 
+        /// <summary>
+        /// Main entry of the Controller
+        /// </summary>
         public ActionResult Main()
         {
             ActionResult result;
@@ -198,7 +204,9 @@ namespace SealWebServer.Controllers
             return result;
         }
 
-
+        /// <summary>
+        /// Execute a report initiated in a previous execution
+        /// </summary>
         public ActionResult ActionExecuteReport(string execution_guid)
         {
             writeDebug("ActionExecuteReport");
@@ -226,6 +234,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Navigate to a new report execution: Either for Drill or SubReport
+        /// </summary>
         public ActionResult ActionNavigate(string execution_guid)
         {
             writeDebug("ActionNavigate");
@@ -315,6 +326,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Return the current Navigation links for a report execution
+        /// </summary>
         public ActionResult ActionGetNavigationLinks(string execution_guid)
         {
             writeDebug("ActionGetNavigationLinks");
@@ -337,6 +351,9 @@ namespace SealWebServer.Controllers
             return new EmptyResult();
         }
 
+        /// <summary>
+        /// Refresh the report for a report execution
+        /// </summary>
         public ActionResult ActionRefreshReport(string execution_guid)
         {
             writeDebug("ActionRefreshReport");
@@ -392,6 +409,9 @@ namespace SealWebServer.Controllers
             return Json(new { error = error });
         }
 
+        /// <summary>
+        /// Return the Result of a report execution
+        /// </summary>
         public ActionResult Result(string execution_guid)
         {
             writeDebug("Result");
@@ -421,6 +441,9 @@ namespace SealWebServer.Controllers
         }
 
 
+        /// <summary>
+        /// Return the result output of a report execution
+        /// </summary>
         public ActionResult OutputResult(string execution_guid)
         {
             writeDebug("OutputResult");
@@ -444,6 +467,9 @@ namespace SealWebServer.Controllers
         }
 
 
+        /// <summary>
+        /// Cancel a report execution
+        /// </summary>
         public ActionResult ActionCancelReport(string execution_guid)
         {
             writeDebug("ActionCancelReport");
@@ -468,6 +494,9 @@ namespace SealWebServer.Controllers
             return new EmptyResult();
         }
 
+        /// <summary>
+        /// Update the value of a view parameter of a report execution
+        /// </summary>
         public ActionResult ActionUpdateViewParameter(string execution_guid, string parameter_view_id, string parameter_view_name, string parameter_view_value)
         {
             writeDebug("ActionUpdateViewParameter");
@@ -495,7 +524,9 @@ namespace SealWebServer.Controllers
             return Content(_noReportFoundMessage);
         }
 
-
+        /// <summary>
+        /// Return the Html result of a report execution
+        /// </summary>
         public ActionResult HtmlResult(string execution_guid)
         {
             writeDebug("HtmlResult");
@@ -518,6 +549,9 @@ namespace SealWebServer.Controllers
             return Content(_noReportFoundMessage);
         }
 
+        /// <summary>
+        /// Return the Html result of a report execution as a file
+        /// </summary>
         public ActionResult HtmlResultFile(string execution_guid)
         {
             writeDebug("HtmlResultFile {0}");
@@ -540,6 +574,9 @@ namespace SealWebServer.Controllers
         }
 
 
+        /// <summary>
+        /// Return the Print HTML result of a report execution
+        /// </summary>
         public ActionResult PrintResult(string execution_guid)
         {
             writeDebug("PrintResult");
@@ -562,6 +599,9 @@ namespace SealWebServer.Controllers
             return Content(_noReportFoundMessage);
         }
 
+        /// <summary>
+        /// Return the PDF result of a report execution
+        /// </summary>
         public ActionResult PDFResult(string execution_guid)
         {
             writeDebug("PDFResult");
@@ -595,6 +635,9 @@ namespace SealWebServer.Controllers
             return Content(_noReportFoundMessage);
         }
 
+        /// <summary>
+        /// Return the Excel result of a report execution
+        /// </summary>
         public ActionResult ExcelResult(string execution_guid)
         {
             writeDebug("ExcelResult");
@@ -628,7 +671,9 @@ namespace SealWebServer.Controllers
             return Content(_noReportFoundMessage);
         }
 
-
+        /// <summary>
+        /// Return the CSV result of a report execution
+        /// </summary>
         public ActionResult CSVResult(string execution_guid)
         {
             writeDebug("CSVResult");
@@ -652,7 +697,9 @@ namespace SealWebServer.Controllers
             return Content(_noReportFoundMessage);
         }
 
-
+        /// <summary>
+        /// Return the table data of a Page (for DataTables server Pagination)
+        /// </summary>
         public ActionResult ActionGetTableData(string execution_guid, string viewid, string pageid, string parameters)
         {
             writeDebug("ActionGetTableData");
@@ -682,7 +729,9 @@ namespace SealWebServer.Controllers
             return Content(_noReportFoundMessage);
         }
 
-
+        /// <summary>
+        /// Update values chosen for an Enum in a report execution
+        /// </summary>
         public ActionResult ActionUpdateEnumValues(string execution_guid, string enum_id, string values)
         {
             writeDebug("ActionUpdateEnumValues");
@@ -703,6 +752,9 @@ namespace SealWebServer.Controllers
             return Json(new { });
         }
 
+        /// <summary>
+        /// Return the list of values for a Enumerated list with a filter for a report execution
+        /// </summary>
         public ActionResult ActionGetEnumValues(string execution_guid, string enum_id, string filter)
         {
             writeDebug("ActionGetEnumValues");
