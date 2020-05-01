@@ -329,7 +329,7 @@ class SWIDashboard {
                 menu.attr("title", dashboard.FullName);
                 var li = $("<li>");
 
-                if (_main._profile.manageDashboards) {
+                if (_main._profile.managedashboards) {
                     //Drag and drop for menu
                     li.on("dragstart", function (e) {
                         _da._lastGUID = $(this).children("a").attr("did");
@@ -341,7 +341,6 @@ class SWIDashboard {
                     });
                     li.on("drop", function (e) {
                         _da._dragType = "";
-                        var sourceid = _da._dashboard.GUID;
                         var did = $(this).children("a").attr("did");
                         _gateway.SwapDashboardOrder(_da._lastGUID, did, function (data) {
                             _da.init();

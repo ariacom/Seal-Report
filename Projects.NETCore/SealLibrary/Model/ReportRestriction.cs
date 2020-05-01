@@ -182,6 +182,8 @@ namespace Seal.Model
         /// If True, the restriction can be modified through the Web API, even if the restriction is not prompted.
         /// </summary>
         public bool AllowAPI { get; set; } = false;
+        public bool ShouldSerializeAllowAPI() { return AllowAPI; }
+
 
         Operator _operator = Operator.Equal;
         /// <summary>

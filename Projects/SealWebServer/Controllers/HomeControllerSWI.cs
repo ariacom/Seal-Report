@@ -567,7 +567,8 @@ namespace SealWebServer.Controllers
                     name = WebUser.Name,
                     group = WebUser.SecurityGroupsDisplay,
                     culture = Repository.CultureInfo.EnglishName,
-                    viewtype = WebUser.ViewType
+                    viewtype = WebUser.ViewType,
+                    managedashboards = WebUser.ManageDashboards
                 });
             }
             catch
@@ -810,8 +811,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Remove the dashboard from the logged user view
         /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
         [HttpPost]
         public ActionResult SWIRemoveDashboard(string guid)
         {
