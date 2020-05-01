@@ -566,7 +566,8 @@ namespace SealWebServer.Controllers
                     name = WebUser.Name,
                     group = WebUser.SecurityGroupsDisplay,
                     culture = Repository.CultureInfo.EnglishName,
-                    viewtype = WebUser.ViewType
+                    viewtype = WebUser.ViewType,
+                    managedashboards = WebUser.ManageDashboards
                 });
             }
             catch
@@ -692,6 +693,7 @@ namespace SealWebServer.Controllers
 
         /// <summary>
         /// Return the dashboards in the current view of the logged user
+        /// </summary>
         [HttpPost]
         public ActionResult SWIGetDashboards()
         {
@@ -805,6 +807,9 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Remove the dashboard from the logged user view
+        /// </summary>
         [HttpPost]
         public ActionResult SWIRemoveDashboard(string guid)
         {
@@ -864,7 +869,9 @@ namespace SealWebServer.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Set the last dashboard viewed by the logged user
+        /// </summary>
         [HttpPost]
         public ActionResult SWISetLastDashboard(string guid)
         {

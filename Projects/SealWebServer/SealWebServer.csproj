@@ -156,7 +156,6 @@
     <Content Include="Scripts\i18n\selectpicker.pt.min.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\datetime-moment.js" />
-    <Content Include="Scripts\swi.js" />
     <Content Include="Scripts\web-animations.min.js" />
     <Content Include="Scripts\hammer.min.js" />
     <Content Include="Scripts\muuri.min.js" />
