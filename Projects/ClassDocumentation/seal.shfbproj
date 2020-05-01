@@ -45,154 +45,158 @@
     <WarnOnMissingSourceContext>False</WarnOnMissingSourceContext>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="DynamicTypeDescriptor" isExposed="False" />
-      <Filter entryType="Namespace" fullName="Seal.Converter" isExposed="False">
-        <Filter entryType="Class" fullName="Seal.Converter.ExcelConverter" filterName="ExcelConverter" isExposed="True" />
-        <Filter entryType="Enumeration" fullName="Seal.Converter.NewSheetMode" filterName="NewSheetMode" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfBookmarkOptionsCfg" filterName="PdfBookmarkOptionsCfg" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfConfigurationEditor" filterName="PdfConfigurationEditor" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfConfigurationEditorForm" filterName="PdfConfigurationEditorForm" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfConverter" filterName="PdfConverter" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfConverterCfg" filterName="PdfConverterCfg" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfDocumentInfoCfg" filterName="PdfDocumentInfoCfg" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfDocumentOptionsCfg" filterName="PdfDocumentOptionsCfg" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfFooterOptionsCfg" filterName="PdfFooterOptionsCfg" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfHeaderOptionsCfg" filterName="PdfHeaderOptionsCfg" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfSecurityOptionsCfg" filterName="PdfSecurityOptionsCfg" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.PdfViewerPreferencesCfg" filterName="PdfViewerPreferencesCfg" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.SealExcelCfg" filterName="SealExcelCfg" isExposed="True" />
-        <Filter entryType="Class" fullName="Seal.Converter.SealPdfCfg" filterName="SealPdfCfg" isExposed="True" />
-      </Filter>
-      <Filter entryType="Namespace" fullName="Seal.Forms" isExposed="False" />
-      <Filter entryType="Namespace" fullName="Seal.LicenseManager" isExposed="False" />
-      <Filter entryType="Namespace" fullName="Seal.Model" isExposed="True">
-        <Filter entryType="Class" fullName="Seal.Model.DashboardItem" filterName="DashboardItem" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeColor" filterName="ShouldSerializeColor" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeDynamic" filterName="ShouldSerializeDynamic" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeHeight" filterName="ShouldSerializeHeight" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeIcon" filterName="ShouldSerializeIcon" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeName" filterName="ShouldSerializeName" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeRefresh" filterName="ShouldSerializeRefresh" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeWidth" filterName="ShouldSerializeWidth" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.EditorColumnDefinition" filterName="EditorColumnDefinition" isExposed="False" />
-        <Filter entryType="Enumeration" fullName="Seal.Model.EditorRight" filterName="EditorRight" isExposed="False" />
-        <Filter entryType="Class" fullName="Seal.Model.EditorTableDefinition" filterName="EditorTableDefinition" isExposed="False" />
-        <Filter entryType="Delegate" fullName="Seal.Model.EditorTableDefinition.CustomFieldValidator" filterName="EditorTableDefinition.CustomFieldValidator" isExposed="False" />
-        <Filter entryType="Delegate" fullName="Seal.Model.EditorTableDefinition.CustomMainValidator" filterName="EditorTableDefinition.CustomMainValidator" isExposed="False" />
-        <Filter entryType="Class" fullName="Seal.Model.MetaColumn" filterName="MetaColumn" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeDateTimeStandardFormat" filterName="ShouldSerializeDateTimeStandardFormat" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeDisplayOrder" filterName="ShouldSerializeDisplayOrder" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeDrillChildren" filterName="ShouldSerializeDrillChildren" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeEnumGUID" filterName="ShouldSerializeEnumGUID" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeFormat" filterName="ShouldSerializeFormat" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeIsAggregate" filterName="ShouldSerializeIsAggregate" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeNumericStandardFormat" filterName="ShouldSerializeNumericStandardFormat" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeSubReports" filterName="ShouldSerializeSubReports" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeTag" filterName="ShouldSerializeTag" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.MetaConnection" filterName="MetaConnection" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.MetaConnection.ShouldSerializePassword" filterName="ShouldSerializePassword" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.MetaData" filterName="MetaData" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.MetaData.ShouldSerializeEnums" filterName="ShouldSerializeEnums" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaData.ShouldSerializeJoins" filterName="ShouldSerializeJoins" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaData.ShouldSerializeTables" filterName="ShouldSerializeTables" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.MetaEnum" filterName="MetaEnum" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.MetaEnum.ShouldSerializeFilterChars" filterName="ShouldSerializeFilterChars" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaEnum.ShouldSerializeValues" filterName="ShouldSerializeValues" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.MetaJoin" filterName="MetaJoin" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.MetaJoin.ShouldSerializeClause" filterName="ShouldSerializeClause" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.MetaSource" filterName="MetaSource" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.MetaSource.ShouldSerializeConnections" filterName="ShouldSerializeConnections" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaSource.ShouldSerializeInitScript" filterName="ShouldSerializeInitScript" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaSource.ShouldSerializePostSQL" filterName="ShouldSerializePostSQL" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaSource.ShouldSerializePreSQL" filterName="ShouldSerializePreSQL" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.MetaTable" filterName="MetaTable" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.MetaTable.ShouldSerializeColumns" filterName="ShouldSerializeColumns" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaTable.ShouldSerializeDynamicColumns" filterName="ShouldSerializeDynamicColumns" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaTable.ShouldSerializeIgnorePrePostError" filterName="ShouldSerializeIgnorePrePostError" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.MetaTable.ShouldSerializeMustRefresh" filterName="ShouldSerializeMustRefresh" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.Report" filterName="Report" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeCommonScripts" filterName="ShouldSerializeCommonScripts" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeDisplayName" filterName="ShouldSerializeDisplayName" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeInitScript" filterName="ShouldSerializeInitScript" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeInputValues" filterName="ShouldSerializeInputValues" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeModels" filterName="ShouldSerializeModels" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeOutputs" filterName="ShouldSerializeOutputs" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeSchedules" filterName="ShouldSerializeSchedules" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeSources" filterName="ShouldSerializeSources" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeTasks" filterName="ShouldSerializeTasks" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeWidgetCache" filterName="ShouldSerializeWidgetCache" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.ReportElement" filterName="ReportElement" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.ReportElement.ShouldSerializeHasAggregate" filterName="ShouldSerializeHasAggregate" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.ReportModel" filterName="ReportModel" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeAggregateRestriction" filterName="ShouldSerializeAggregateRestriction" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeAggregateRestrictions" filterName="ShouldSerializeAggregateRestrictions" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeAlias" filterName="ShouldSerializeAlias" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeCommonRestrictions" filterName="ShouldSerializeCommonRestrictions" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeElements" filterName="ShouldSerializeElements" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeJoinsToUse" filterName="ShouldSerializeJoinsToUse" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeKeepColNames" filterName="ShouldSerializeKeepColNames" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeRestriction" filterName="ShouldSerializeRestriction" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeRestrictions" filterName="ShouldSerializeRestrictions" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeSql" filterName="ShouldSerializeSql" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeTable" filterName="ShouldSerializeTable" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeUseRawSQL" filterName="ShouldSerializeUseRawSQL" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.ReportOutput" filterName="ReportOutput" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.ReportOutput.ShouldSerializeRestrictions" filterName="ShouldSerializeRestrictions" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportOutput.ShouldSerializeViewParameters" filterName="ShouldSerializeViewParameters" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.ReportRestriction" filterName="ReportRestriction" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeDate1" filterName="ShouldSerializeDate1" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeDate2" filterName="ShouldSerializeDate2" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeDate3" filterName="ShouldSerializeDate3" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeDate4" filterName="ShouldSerializeDate4" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeEnumValues" filterName="ShouldSerializeEnumValues" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeFormatRe" filterName="ShouldSerializeFormatRe" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.ReportSchedule" filterName="ReportSchedule" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.ReportSchedule.ShouldSerializeErrorEmailSendMode" filterName="ShouldSerializeErrorEmailSendMode" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.ReportView" filterName="ReportView" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeCultureName" filterName="ShouldSerializeCultureName" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeExcelConfigurations" filterName="ShouldSerializeExcelConfigurations" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeModelGUID" filterName="ShouldSerializeModelGUID" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeParameters" filterName="ShouldSerializeParameters" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializePartialTemplates" filterName="ShouldSerializePartialTemplates" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializePdfConfigurations" filterName="ShouldSerializePdfConfigurations" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeViews" filterName="ShouldSerializeViews" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeWidgetDefinition" filterName="ShouldSerializeWidgetDefinition" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.SealSecurity" filterName="SealSecurity" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.SealSecurity.ShouldSerializeGroups" filterName="ShouldSerializeGroups" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.SealSecurity.ShouldSerializeParameters" filterName="ShouldSerializeParameters" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.SealServerConfiguration" filterName="SealServerConfiguration" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.SealServerConfiguration.ShouldSerializeExcelConfigurations" filterName="ShouldSerializeExcelConfigurations" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.SealServerConfiguration.ShouldSerializeFileReplacePatterns" filterName="ShouldSerializeFileReplacePatterns" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.SealServerConfiguration.ShouldSerializePdfConfigurations" filterName="ShouldSerializePdfConfigurations" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.SecurityGroup" filterName="SecurityGroup" isExposed="True">
-          <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeColumns" filterName="ShouldSerializeColumns" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeConnections" filterName="ShouldSerializeConnections" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeDashboardFolders" filterName="ShouldSerializeDashboardFolders" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeDevices" filterName="ShouldSerializeDevices" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeFolders" filterName="ShouldSerializeFolders" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeSources" filterName="ShouldSerializeSources" isExposed="False" />
-          <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeWidgets" filterName="ShouldSerializeWidgets" isExposed="False" />
-        </Filter>
-        <Filter entryType="Class" fullName="Seal.Model.ServerOptions" filterName="ServerOptions" isExposed="False" />
-      </Filter>
-      <Filter entryType="Namespace" fullName="SealWebServer" isExposed="False" />
-    </ApiFilter>
+<Filter entryType="Namespace" fullName="Seal.Converter" isExposed="False">
+  <Filter entryType="Class" fullName="Seal.Converter.ExcelConverter" filterName="ExcelConverter" isExposed="True" />
+  <Filter entryType="Enumeration" fullName="Seal.Converter.NewSheetMode" filterName="NewSheetMode" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfBookmarkOptionsCfg" filterName="PdfBookmarkOptionsCfg" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfConfigurationEditor" filterName="PdfConfigurationEditor" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfConfigurationEditorForm" filterName="PdfConfigurationEditorForm" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfConverter" filterName="PdfConverter" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfConverterCfg" filterName="PdfConverterCfg" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfDocumentInfoCfg" filterName="PdfDocumentInfoCfg" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfDocumentOptionsCfg" filterName="PdfDocumentOptionsCfg" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfFooterOptionsCfg" filterName="PdfFooterOptionsCfg" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfHeaderOptionsCfg" filterName="PdfHeaderOptionsCfg" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfSecurityOptionsCfg" filterName="PdfSecurityOptionsCfg" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.PdfViewerPreferencesCfg" filterName="PdfViewerPreferencesCfg" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.SealExcelCfg" filterName="SealExcelCfg" isExposed="True" />
+  <Filter entryType="Class" fullName="Seal.Converter.SealPdfCfg" filterName="SealPdfCfg" isExposed="True" />
+</Filter>
+<Filter entryType="Namespace" fullName="Seal.Forms" isExposed="False" />
+<Filter entryType="Namespace" fullName="Seal.LicenseManager" isExposed="False" />
+<Filter entryType="Namespace" fullName="Seal.Model" isExposed="True">
+  <Filter entryType="Class" fullName="Seal.Model.DashboardItem" filterName="DashboardItem" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeColor" filterName="ShouldSerializeColor" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeDynamic" filterName="ShouldSerializeDynamic" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeHeight" filterName="ShouldSerializeHeight" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeIcon" filterName="ShouldSerializeIcon" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeName" filterName="ShouldSerializeName" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeRefresh" filterName="ShouldSerializeRefresh" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.DashboardItem.ShouldSerializeWidth" filterName="ShouldSerializeWidth" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.EditorColumnDefinition" filterName="EditorColumnDefinition" isExposed="False" />
+  <Filter entryType="Enumeration" fullName="Seal.Model.EditorRight" filterName="EditorRight" isExposed="False" />
+  <Filter entryType="Class" fullName="Seal.Model.EditorTableDefinition" filterName="EditorTableDefinition" isExposed="False" />
+  <Filter entryType="Delegate" fullName="Seal.Model.EditorTableDefinition.CustomFieldValidator" filterName="EditorTableDefinition.CustomFieldValidator" isExposed="False" />
+  <Filter entryType="Delegate" fullName="Seal.Model.EditorTableDefinition.CustomMainValidator" filterName="EditorTableDefinition.CustomMainValidator" isExposed="False" />
+  <Filter entryType="Class" fullName="Seal.Model.MetaColumn" filterName="MetaColumn" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeDateTimeStandardFormat" filterName="ShouldSerializeDateTimeStandardFormat" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeDisplayOrder" filterName="ShouldSerializeDisplayOrder" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeDrillChildren" filterName="ShouldSerializeDrillChildren" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeEnumGUID" filterName="ShouldSerializeEnumGUID" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeFormat" filterName="ShouldSerializeFormat" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeIsAggregate" filterName="ShouldSerializeIsAggregate" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeNumericStandardFormat" filterName="ShouldSerializeNumericStandardFormat" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeSubReports" filterName="ShouldSerializeSubReports" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaColumn.ShouldSerializeTag" filterName="ShouldSerializeTag" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.MetaConnection" filterName="MetaConnection" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.MetaConnection.ShouldSerializePassword" filterName="ShouldSerializePassword" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.MetaData" filterName="MetaData" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.MetaData.ShouldSerializeEnums" filterName="ShouldSerializeEnums" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaData.ShouldSerializeJoins" filterName="ShouldSerializeJoins" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaData.ShouldSerializeTables" filterName="ShouldSerializeTables" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.MetaEnum" filterName="MetaEnum" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.MetaEnum.ShouldSerializeFilterChars" filterName="ShouldSerializeFilterChars" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaEnum.ShouldSerializeValues" filterName="ShouldSerializeValues" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.MetaJoin" filterName="MetaJoin" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.MetaJoin.ShouldSerializeClause" filterName="ShouldSerializeClause" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.MetaSource" filterName="MetaSource" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.MetaSource.ShouldSerializeConnections" filterName="ShouldSerializeConnections" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaSource.ShouldSerializeInitScript" filterName="ShouldSerializeInitScript" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaSource.ShouldSerializePostSQL" filterName="ShouldSerializePostSQL" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaSource.ShouldSerializePreSQL" filterName="ShouldSerializePreSQL" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.MetaTable" filterName="MetaTable" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.MetaTable.ShouldSerializeColumns" filterName="ShouldSerializeColumns" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaTable.ShouldSerializeDynamicColumns" filterName="ShouldSerializeDynamicColumns" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaTable.ShouldSerializeIgnorePrePostError" filterName="ShouldSerializeIgnorePrePostError" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.MetaTable.ShouldSerializeMustRefresh" filterName="ShouldSerializeMustRefresh" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.Report" filterName="Report" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeCommonScripts" filterName="ShouldSerializeCommonScripts" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeDisplayName" filterName="ShouldSerializeDisplayName" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeInitScript" filterName="ShouldSerializeInitScript" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeInputValues" filterName="ShouldSerializeInputValues" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeModels" filterName="ShouldSerializeModels" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeNavigationScript" filterName="ShouldSerializeNavigationScript" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeOutputs" filterName="ShouldSerializeOutputs" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeSchedules" filterName="ShouldSerializeSchedules" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeSources" filterName="ShouldSerializeSources" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeTasks" filterName="ShouldSerializeTasks" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.Report.ShouldSerializeWidgetCache" filterName="ShouldSerializeWidgetCache" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.ReportElement" filterName="ReportElement" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.ReportElement.ShouldSerializeForceAggregate" filterName="ShouldSerializeForceAggregate" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportElement.ShouldSerializeSetNullToZero" filterName="ShouldSerializeSetNullToZero" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.ReportModel" filterName="ReportModel" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeAggregateRestriction" filterName="ShouldSerializeAggregateRestriction" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeAggregateRestrictions" filterName="ShouldSerializeAggregateRestrictions" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeAlias" filterName="ShouldSerializeAlias" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeCommonRestrictions" filterName="ShouldSerializeCommonRestrictions" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeElements" filterName="ShouldSerializeElements" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeJoinsToUse" filterName="ShouldSerializeJoinsToUse" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeKeepColNames" filterName="ShouldSerializeKeepColNames" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeRestriction" filterName="ShouldSerializeRestriction" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeRestrictions" filterName="ShouldSerializeRestrictions" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeSql" filterName="ShouldSerializeSql" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeTable" filterName="ShouldSerializeTable" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportModel.ShouldSerializeUseRawSQL" filterName="ShouldSerializeUseRawSQL" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.ReportOutput" filterName="ReportOutput" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.ReportOutput.ShouldSerializeRestrictions" filterName="ShouldSerializeRestrictions" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportOutput.ShouldSerializeViewParameters" filterName="ShouldSerializeViewParameters" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.ReportRestriction" filterName="ReportRestriction" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeAllowAPI" filterName="ShouldSerializeAllowAPI" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeDate1" filterName="ShouldSerializeDate1" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeDate2" filterName="ShouldSerializeDate2" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeDate3" filterName="ShouldSerializeDate3" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeDate4" filterName="ShouldSerializeDate4" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeEnumValues" filterName="ShouldSerializeEnumValues" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportRestriction.ShouldSerializeFormatRe" filterName="ShouldSerializeFormatRe" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.ReportSchedule" filterName="ReportSchedule" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.ReportSchedule.ShouldSerializeErrorEmailSendMode" filterName="ShouldSerializeErrorEmailSendMode" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.ReportView" filterName="ReportView" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeCultureName" filterName="ShouldSerializeCultureName" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeExcelConfigurations" filterName="ShouldSerializeExcelConfigurations" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeModelGUID" filterName="ShouldSerializeModelGUID" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeParameters" filterName="ShouldSerializeParameters" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializePartialTemplates" filterName="ShouldSerializePartialTemplates" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializePdfConfigurations" filterName="ShouldSerializePdfConfigurations" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeReferenceViewGUID" filterName="ShouldSerializeReferenceViewGUID" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeViews" filterName="ShouldSerializeViews" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.ReportView.ShouldSerializeWidgetDefinition" filterName="ShouldSerializeWidgetDefinition" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.SealSecurity" filterName="SealSecurity" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.SealSecurity.ShouldSerializeGroups" filterName="ShouldSerializeGroups" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SealSecurity.ShouldSerializeParameters" filterName="ShouldSerializeParameters" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.SealServerConfiguration" filterName="SealServerConfiguration" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.SealServerConfiguration.ShouldSerializeCommonScripts" filterName="ShouldSerializeCommonScripts" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SealServerConfiguration.ShouldSerializeExcelConfigurations" filterName="ShouldSerializeExcelConfigurations" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SealServerConfiguration.ShouldSerializeFileReplacePatterns" filterName="ShouldSerializeFileReplacePatterns" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SealServerConfiguration.ShouldSerializePdfConfigurations" filterName="ShouldSerializePdfConfigurations" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.SecurityGroup" filterName="SecurityGroup" isExposed="True">
+    <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeColumns" filterName="ShouldSerializeColumns" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeConnections" filterName="ShouldSerializeConnections" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeDashboardFolders" filterName="ShouldSerializeDashboardFolders" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeDevices" filterName="ShouldSerializeDevices" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeFolders" filterName="ShouldSerializeFolders" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeSources" filterName="ShouldSerializeSources" isExposed="False" />
+    <Filter entryType="Method" fullName="Seal.Model.SecurityGroup.ShouldSerializeWidgets" filterName="ShouldSerializeWidgets" isExposed="False" />
+  </Filter>
+  <Filter entryType="Class" fullName="Seal.Model.ServerOptions" filterName="ServerOptions" isExposed="False" />
+</Filter>
+<Filter entryType="Namespace" fullName="SealWebServer" isExposed="False" /></ApiFilter>
     <MissingTags>AutoDocumentCtors, AutoDocumentDispose</MissingTags>
     <HeaderText>
     </HeaderText>
