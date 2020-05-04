@@ -3,6 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Configurations>Debug;Release</Configurations>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Company>Ariacom</Company>
+    <Product>Seal Report</Product>
+    <PackageProjectUrl>https://sealreport.org</PackageProjectUrl>
+    <Description>.NET Core distribution of the Seal Report Library.</Description>
+    <PackageId>SealReportLibrary.NETCore</PackageId>
+    <PackageReleaseNotes>First Nuget package publication.</PackageReleaseNotes>
+    <Copyright>Copyright (c) Seal Report (sealreport@gmail.com)</Copyright>
+    <PackageIcon>sealNugetLogo.png</PackageIcon>
+    <PackageTags>Seal Report SealReport SealLibrary</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Authors>Ariacom</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -38,6 +51,13 @@
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
     <PackageReference Include="TaskScheduler" Version="2.8.18" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Projects\SealLibrary\sealNugetLogo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

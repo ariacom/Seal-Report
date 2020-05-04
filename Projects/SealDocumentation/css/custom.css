@@ -297,3 +297,11 @@ srmenu {
     color: #1b809e;
     font-style: italic;
 }
+
+th, td {
+    text-align: center;
+}
+
+td span {
+	color: green;
+}

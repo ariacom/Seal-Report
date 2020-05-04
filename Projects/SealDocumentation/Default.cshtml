@@ -13,7 +13,14 @@
                     <ul class="nav">
                         <li><a href="#lineRequirements">Requirements, License</a></li>
                         <li><a href="#lineCompilation">Installation, Compilation</a></li>
-                        <li><a href="#lineOverview">Overview</a></li>
+                        <li>
+                            <a href="#lineOverview">Overview</a>
+                            <ul class="nav">
+                                <li><a href="#lineOverview_1">Entities and components</a></li>
+                                <li><a href="#lineOverview_2">Features per distribution</a></li>
+                                <li><a href="#lineOverview_3">Deployment and publication</a></li>
+                            </ul>
+                        </li>
                         <li><a href="#lineEntities">Main Entities</a></li>
                         <li><a href="#lineComponents">Product Components</a></li>
                         <li><a href="#lineFolders">Repository Folders</a></li>
@@ -195,10 +202,115 @@
                         <div class="col-md-12 left-align">
                             <h2 class="dark-text">Overview <hr></h2>
                         </div>
-                        <div class="col-md-12 text-center">
-                            <img src="images/overViewSeal.png" alt="" class="img-thumbnail img-rounded">
+                        <div id="lineOverview_1" class="row" style="padding-top:35px">
+                            <div class="col-md-12">
+                                <h4>Entities and components</h4>
+                                <img src="images/overViewSeal.png" alt="" class="img-thumbnail img-rounded">
+                            </div>
+                            <!-- end col -->
                         </div>
-                        <!-- end col -->
+                        <div id="lineOverview_2" class="row" style="padding-top:35px">
+                            <div class="col-md-12">
+                                <h4>Features by distribution</h4>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Platform</th>
+                                            <th>32bit support<sup>1</sup></th>
+                                            <th>Server Manager</th>
+                                            <th>Report Designer</th>
+                                            <th>Task Scheduler</th>
+                                            <th>Scheduler Service</th>
+                                            <th>Web Report Server</th>
+                                            <th>Web Report Designer<sup>2</sup></th>
+                                            <th>Dashboard Manager<sup>2</sup></th>
+                                            <th>PDF and Excel Converter<sup>3</sup></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><b>Windows<br />.Net</b></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Windows<br />.NET Core</b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Linux<br />.NET Core</b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"><sup> 4</sup></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Azure (Windows)<br />.Net</b></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Azure (Linux)<br />.NET Core</b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span class="glyphicon glyphicon-ok"><sup> 4</sup></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <b>Remarks:</b>
+                                <i>
+                                    <ol>
+                                        <li>Support execution of all the <b>Northwind</b> Samples reports.</li>
+                                        <li>Requires the <a href="https://ariacom.com" target="_blank">Web Report Designer and Dashboard Manager</a> commercial component.</li>
+                                        <li>Requires the <a href="https://ariacom.com" target="_blank">PDF and Excel Converter</a> commercial component.</li>
+                                        <li>Requires a separate <a href="https://ariacom.com" target="_blank">PDF Server</a> on a Windows computer.</li>
+                                    </ol>
+                                </i>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+                        <div id="lineOverview_3" class="row" style="padding-top:35px">
+                            <div class="col-md-12">
+                                <h4>Deployment and publication</h4>
+                                <img src="images/platforms.png" alt="" class="img-thumbnail img-rounded">
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
                     </div>
                     <!-- end row -->
                 </section>
@@ -254,11 +366,11 @@
                     <!-- end row -->
                     <div class="row">
                         <div class="col-md-12 left-align">
-                            <p>Seal Report is composed of the <b>Server Manager</b> application, the <b>Report Designer</b> application, the <b>Web Report Server</b> and the <b>Task Scheduler</b>.</p>
+                            <p>Seal Report is composed of the <b>Server Manager</b> application, the <b>Report Designer</b> application, the <b>Web Report Server</b>, the <b>Task Scheduler</b> and the <b>Seal Report Scheduler</b>.</p>
                             <ul>
                                 <li>The <strong>Server Manager</strong> (a Windows application) edits repository Data Sources, Devices and is used to perform administrative tasks (checking sources and reports, publishing web site, configuring the server, editing the security, etc.).</li>
                                 <li>The <strong>Report Designer</strong> (a Windows application) creates, edits and executes reports.</li>
-                                <li>The <strong>Web Report Server</strong> (an ASP.Net Web application published on IIS) allows the end-users to edit and execute the reports and dashboards published from the Web.</li>
+                                <li>The <strong>Web Report Server</strong> (an ASP.Net or .NET Core Web application) allows the end-users to edit and execute the reports and dashboards published from the Web.</li>
                                 <li>The <strong>Task Scheduler</strong> (a console application) is invoked by the Windows Task Scheduler to schedule report execution on a Device (folder or email).</li>
                                 <li>The <strong>Seal Report Scheduler</strong> (a Windows Service application or .NET Core Worker Service) to execute the report schedules defined in the repository (folder, file server or email).</li>
                             </ul>
