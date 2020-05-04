@@ -23,6 +23,9 @@ namespace Seal.Model
     {
         static string PasswordKey = "?d_*er)wien?,édl+25.()à,";
 
+        /// <summary>
+        /// Default processing script template
+        /// </summary>
         public const string ProcessingScriptTemplate = @"@using Renci.SshNet
 @using FluentFTP
 @using System.IO
@@ -96,11 +99,6 @@ namespace Seal.Model
 }
 ";
 
-
-        /// <summary>
-        /// Default device identifier
-        /// </summary>
-        public static string DefaultGUID = "c428a6ba-061b-4a47-b9bc-f3f02442ab4b";
 
         /// <summary>
         /// Last modification date time
