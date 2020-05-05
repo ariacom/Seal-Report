@@ -72,6 +72,9 @@
     <Reference Include="AeroWizard, Version=2.2.3.0, Culture=neutral, PublicKeyToken=915e74f5d64b8f37, processorArchitecture=MSIL">
       <HintPath>..\packages\AeroWizard.2.2.3\lib\net45\AeroWizard.dll</HintPath>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.10.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.10.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="GroupControls, Version=1.8.0.0, Culture=neutral, PublicKeyToken=3726d9da21b6ac8f, processorArchitecture=MSIL">
       <HintPath>..\packages\GroupControls.1.8.0\lib\net45\GroupControls.dll</HintPath>
     </Reference>
@@ -106,6 +109,7 @@
     <Reference Include="TimeSpan2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=0f30172e1249faac, processorArchitecture=MSIL">
       <HintPath>..\packages\TimeSpan2.2.2.0\lib\net45\TimeSpan2.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Control\ElementPanel.cs">

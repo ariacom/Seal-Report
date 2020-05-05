@@ -16,7 +16,6 @@ namespace Seal.Model
         /// <summary>
         /// True if the Job is cancelled
         /// </summary>
-        /// <returns></returns>
         bool IsJobCancelled();
 
         /// <summary>
@@ -26,6 +25,7 @@ namespace Seal.Model
 
         /// <summary>
         /// Log the text with optional parameters with no Carriage Return/Line Feed
+        /// 
         void LogNoCR(string text, params object[] args);
 
         /// <summary>
