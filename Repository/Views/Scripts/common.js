@@ -1,5 +1,8 @@
 ﻿
 function restrictionSelectChange(source) {
+    var group = $(source).closest(".main_restriction").parent();
+    if (group.length === 0) group = $(source).closest(".view_restriction").parent();
+
     var idSelect = "#" + $(source).attr('id');
 
     if ($(source).attr('opid') != null) {
@@ -9,8 +12,12 @@ function restrictionSelectChange(source) {
     if ($(idSelect).val() == null) return;
 
     var idValue = idSelect.replace("Operator", "Value");
+    var value1 = group.find(idValue + "_1");
+    var value2 = group.find(idValue + "_2");
+    var value3 = group.find(idValue + "_3");
+    var value4 = group.find(idValue + "_4");
 
-    var op = $(idSelect).val().toLowerCase();
+    var op = group.find(idSelect).val().toLowerCase();
     var display1 = "inline", display2 = "inline", display3 = "inline", display4 = "inline";
     if (op == 'isnull' || op == 'isnotnull' || op == 'isempty' || op == 'isnotempty') {
         display1 = "none", display2 = "none"; display3 = "none"; display4 = "none";
@@ -22,22 +29,22 @@ function restrictionSelectChange(source) {
         display3 = "none"; display4 = "none";
     }
     else {
-        if ($(idValue + "_3").val() == "" && $(idValue + "_4").val() == "") display4 = "none";
-        if ($(idValue + "_2").val() == "" && display4 == "none") display3 = "none";
-        if ($(idValue + "_1").val() == "" && display3 == "none" && display4 == "none") display2 = "none";
+        if (value3.val() == "" && value4.val() == "") display4 = "none";
+        if (value2.val() == "" && display4 == "none") display3 = "none";
+        if (value1.val() == "" && display3 == "none" && display4 == "none") display2 = "none";
     }
 
-    if ($(idValue + "_1").parent().hasClass("date")) { //date
-        $(idValue + "_1").parent().parent().css("display", display1);
-        $(idValue + "_2").parent().parent().css("display", display2);
-        $(idValue + "_3").parent().parent().css("display", display3);
-        $(idValue + "_4").parent().parent().css("display", display4);
+    if (value1.parent().hasClass("date")) { //date
+        value1.parent().parent().css("display", display1);
+        value2.parent().parent().css("display", display2);
+        value3.parent().parent().css("display", display3);
+        value4.parent().parent().css("display", display4);
     }
     else { //numeric or text
-        $(idValue + "_1").css("display", display1);
-        $(idValue + "_2").css("display", display2);
-        $(idValue + "_3").css("display", display3);
-        $(idValue + "_4").css("display", display4);
+        value1.css("display", display1);
+        value2.css("display", display2);
+        value3.css("display", display3);
+        value4.css("display", display4);
     }
 }
 
@@ -91,24 +98,6 @@ function showNavMenu() {
             left: $("#nav_button").offset().left,
             top: $("#nav_button").offset().top + 2 * $("#nav_button").height()
         });
-}
-
-function realMouseCoords(event) {
-    var totalOffsetX = 0;
-    var totalOffsetY = 0;
-    var canvasX = 0;
-    var canvasY = 0;
-    var currentElement = this;
-
-    do {
-        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-    }
-    while (currentElement = currentElement.offsetParent);
-
-    canvasX = event.pageX - totalOffsetX;
-    canvasY = event.pageY - totalOffsetY;
-    return { x: canvasX, y: canvasY }
 }
 
 //message menu
@@ -261,10 +250,7 @@ function executeReport(nav) {
         form.submit();
     }
     //disable controls during execution
-    $('#restrictions_div input').prop("disabled", true);
-    $('#restrictions_div select').attr("disabled", true);
-    $('#restrictions_div textarea').prop("disabled", true);
-    $('#restrictions_div select').selectpicker('refresh');
+    $('#restrictions_div').addClass("disabled");
     $('.view').css("display", "none");
     $("#nav_button").attr("disabled", "disabled");
 
@@ -284,7 +270,7 @@ function requestEnumData(filter, forceNoMessage) {
     var result;
 
     if (urlPrefix != "") {
-        $.post(urlPrefix + "ActionGetEnumValues", { execution_guid: $("#execution_guid").val(), enum_id: $("#id_enumload").val(), filter: filter })
+        $.post(urlPrefix + "ActionGetEnumValues", { execution_guid: $("#execution_guid").val(), enum_id: $("#id_load").val(), filter: filter })
             .done(function (data) {
                 result = jQuery.parseJSON(data);
                 fillEnumSelect(result, forceNoMessage || result.length > 0);
@@ -302,13 +288,13 @@ function requestEnumData(filter, forceNoMessage) {
 
 
 function fillEnumSelect(data, noMessage) {
-    var id = "#" + $("#id_enumload").val();
+    var id = "#" + $("#id_load").val();
 
     //Add selected items
     $(id + " option:selected").each(function () {
         var found = false;
         for (var i = 0; !found && i < data.length; i++) {
-            if ($(this).val() == data[i].v) {
+            if ($(this).val() === data[i].v) {
                 data[i].Selected = true;
                 found = true;
             }
@@ -342,32 +328,108 @@ function fillEnumSelect(data, noMessage) {
     }
 }
 
-function initEnums() {
+var inTrigger = false;
+function executeFromTrigger(container) {
+    if (inTrigger) return;
+    inTrigger = true;
+    if (container.hasClass("main_restriction")) { //Trigger from main panel
+        executeReport();
+    }
+    else {
+        var action = "ActionExecuteFromTrigger";
+        var form = container.parent().parent().parent().parent().parent();
+        container.addClass("disabled");
+        container.children(".glyphicon").css("display", "inline");
+        if (urlPrefix !== "") {
+            $.post(urlPrefix + action, form.serialize() + "&execution_guid=" + $("#execution_guid").val())
+                .done(function (data) {
+                    container.removeClass("disabled");
+                    container.children(".glyphicon").css("display", "none");
+                    //Update each view involved
+                    data.forEach(function (value) {
+                        var viewId = "#" + $(value).attr("id");
+                        $(viewId).html($(value).html());
+                    });
+                    inTrigger = false;
+                });
+        }
+        else {
+            $("#id_load").val(form.attr("id"));
+            $("#header_form").attr("action", action);
+            $("#header_form").submit();
+        }
+    }
+}
+
+function initRestrictions() {
     $(".enum").selectpicker({
-        "liveSearch": true,
         "actionsBox": true
     });
 
-    $(".enum").on('hide.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-        //send current values
-        var ids = "";
-        $("#" + $(this).attr("id") + " option:selected").each(function () {
-            ids += $(this).val() + ",";
-        });
-        if (urlPrefix != "") {
-            $.post(urlPrefix + "ActionUpdateEnumValues", { execution_guid: $("#execution_guid").val(), enum_id: $(this).attr("id"), values: ids });
-        }
-        else {
-            $("#id_enumload").val($(this).attr("id"));
-            $("#values_enumload").val(ids);
-            $("#header_form").attr("action", "ActionUpdateEnumValues");
-            $("#header_form").submit();
+    //enum from select
+    $(".enum").on('hide.bs.select', function () {
+        if ($(this).attr("id")) {
+            if ($(this).hasClass("trigger_enum")) {
+                executeFromTrigger($(this).parent().parent());
+            }
+            else {
+                var action = "ActionUpdateEnumValues";
+                //send current values
+                var id = $(this).attr("id");
+                var ids = "";
+                $("#" + id + " option:selected").each(function () {
+                    ids += $(this).val() + "\n";
+                });
+                if (urlPrefix !== "") {
+                    $.post(urlPrefix + action, { execution_guid: $("#execution_guid").val(), id: id, values: values, operator_value: operator })
+                        .done(function (data) {
+                        });
+                }
+                else {
+                    $("#id_load").val(id);
+                    $("#values_load").val(ids);
+                    $("#header_form").attr("action", action);
+                    $("#header_form").submit();
+                }
+            }
         }
     });
 
-    $(".enum_dynamic").on('shown.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+    //enum from buttons
+    $("input.trigger_enum").change(function () {
+        if ($(this).attr("name")) {
+            executeFromTrigger($(this).parent().parent().parent());
+        }
+    });
+
+    //input: text, date, numeric
+    $("input.trigger,textarea.trigger").change(function (e) {
+        if ($(this).attr("name")) {
+            if ($(this).parent().hasClass("date")) executeFromTrigger($(this).parent().parent().parent());
+            else executeFromTrigger($(this).parent());
+        }
+    });
+
+    //input numeric: force if empty
+    $(".numeric_input.trigger").blur(function () {
+        if ($(this).val() === "" && $(this).attr("name")) {
+            executeFromTrigger($(this).parent());
+        }
+    })
+    //input: date picker
+    setTimeout(function () {
+        $('.datepicker_date.trigger,.datepicker_datetime.trigger').on("dp.change", function (e) {
+            var input = $(this.children[0]);
+            if (input && e.oldDate && e.date !== e.oldDate && input.attr("name") && input.val()) {
+                executeFromTrigger($(this).parent().parent());
+            }
+        });
+    }, 500);
+
+    //dynamic filter for enums
+    $(".enum_dynamic").on('shown.bs.select', function () {
         if ($(this).attr("id")) {
-            $("#id_enumload").val($(this).attr("id"));
+            $("#id_load").val($(this).attr("id"));
 
             var data = [];
             if ($(this).attr("dependencies")) requestEnumData("", false);
@@ -377,12 +439,43 @@ function initEnums() {
                 var $search = $(evt.target);
                 if ($search.val() !== filter) { // search value is changed
                     filter = $search.val();
-                    if (filter.length >= $("#" + $("#id_enumload").val()).attr("filterchars")) { // more than xx characters
+                    if (filter.length >= $("#" + $("#id_load").val()).attr("filterchars")) { // more than xx characters
                         requestEnumData(filter, true);
                     }
                 }
             });
         }
+    });
+
+    //Update view restrictions
+    $(".update_view_restrictions").click(function () {
+        var formId = $(this).attr("id").replace("button_", "form_");
+        var form = $("#" + formId);
+        var action = "ActionExecuteFromTrigger";
+        form.addClass("disabled");
+        if (urlPrefix !== "") {
+            $.post(urlPrefix + action, form.serialize())
+                .done(function (data) {
+                    form.removeClass("disabled");
+                    //                form.children(".glyphicon").css("display", "none");
+                    //Update each view involved
+                    data.forEach(function (value) {
+                        $(viewId).html("#" + $(value).attr("id"));
+                    });
+                    //Then information
+                    inTrigger = false;
+                });
+        }
+        else {
+            setTimeout(function () {
+                if (inTrigger) return false;
+                inTrigger = true;
+                $("#id_load").val(formId);
+                $("#header_form").attr("action", action);
+                $("#header_form").submit();
+            }, 200);
+        }
+        return false;
     });
 }
 
@@ -394,15 +487,35 @@ function mainInit() {
 
     $("#execute_button").click(function () {
         //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+        if ($('.navbar-toggle').css('display') !== 'none') $('.navbar-toggle').click();
         executeReport();
     });
 
     $("#restrictions_button").click(function () {
-        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "restriction_button", !$("#restrictions_div").hasClass("in"));
-        $("#restrictions_button").toggleClass("active");
-        //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+        var showRestriction = !$("#restrictions_div").hasClass("in");
+        var hasContentDiv = $("#content_div").length > 0;
+        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "restriction_button", showRestriction);
+
+        if (hasContentDiv) {
+            setTimeout(function () {
+                $("#restrictions_div").collapse('toggle');
+                $("#restrictions_button").toggleClass("active");
+            }, showRestriction ? 400 : 10);
+
+            setTimeout(function () {
+                $("#content_div").removeClass();
+                if (!showRestriction) {
+                    $("#content_div").addClass("col-md-12");
+                }
+                else {
+                    $("#content_div").addClass($("#content_div").attr("classori"));
+                }
+            }, showRestriction ? 10 : 400);
+        }
+        else {
+            $("#restrictions_div").collapse('toggle');
+            $("#restrictions_button").toggleClass("active");
+        }
     });
 
     //print layout
@@ -414,7 +527,7 @@ function mainInit() {
     //tabs buttons
     $(".sr_tab").click(function () {
         var buttonId = $(this).attr("id");
-        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), "information_button", buttonId == "information_button");
+        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "information_button", buttonId == "information_button");
         if ($("#message_button").length) {
             var messageMode = "enabled";
             if (buttonId == "message_button") {
@@ -488,11 +601,14 @@ function mainInit() {
 $(document).ready(function () {
     mainInit();
 
-    if ((forceExecution || !hasRestrictions) && !isExecuting && !isCancel) executeReport();
+    //Execute if force execution or no restriction 
+    if ((forceExecution || !hasRestrictions) && !isExecuting && !isCancel) {
+        executeReport();
+    }
 
     //Select Picker
     $(".operator_select").selectpicker('refresh');
-    initEnums();
+    initRestrictions();
 
     //Date Picker
     $(".datepicker_datetime").datetimepicker({

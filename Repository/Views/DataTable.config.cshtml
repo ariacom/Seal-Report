@@ -3,7 +3,7 @@
     ReportViewTemplate Template = Model;
 
     //Template Name
-    Template.Name = ReportViewTemplate.DataTableName; //"Data Table"; for load perf.
+    Template.Name = ReportViewTemplate.DataTableName;
     Template.Description = "Render the Data Table of the page result.";
 
     //If true, the view can be configured for a report modelbtotals
@@ -32,7 +32,7 @@
     Template.Parameters.Add(new Parameter() { Name = "data_tables_fixcolright", DisplayName = "Data tables (Extension): Fixed right columns", NumericValue = 0, Description = "Freeze one or more columns to the right of a horizontally scrolling table. Horizontal scrolling must be enabled. Not compatible with fixed headers.", Enums = new string[] { "0", "1", "2", "3" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "data_tables_scroller", DisplayName = "Data tables (Extension): Scroller", BoolValue = false, Description = "If true, the table draws only the small visible section of the table (plus a small overlap for smooth scrolling). Pagination must be enabled and a Vertical Scrolling value must be set. Not compatible with fixed headers." });
     Template.Parameters.Add(new Parameter() { Name = "data_table_class", Value = "table-responsive table table-striped table-hover table-condensed", DisplayName = "Table CSS Class", Description = "CSS class attribute of the table.", Enums = new string[] { "table table-striped table-hover table-bordered table-responsive table-condensed" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "data_table_css", Value = "", DisplayName = "Table CSS Style", Description = "CSS style attribute of the table.", Enums = new string[] { "margin: 10px;", "padding: 10px;", "font-size: 10px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "data_table_css", Value = "", DisplayName = "Table CSS Style", Description = "CSS style attribute of the table.", Enums = new string[] { "margin:10px;", "padding:10px;", "font-size:10px;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "data_table_header_class", Value = "active", DisplayName = "Header row CSS class", Description = "CSS class attribute of the header rows.", Enums = new string[] { "success", "info", "warning", "danger" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "data_table_header_css", Value = "", DisplayName = "Header row CSS Style", Description = "CSS style attribute of the header rows.", Enums = new string[] { "color:red;font-size:15pt;" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "data_table_body_class", Value = "", DisplayName = "Body row CSS class", Description = "CSS class attribute of the body rows.", Enums = new string[] { "success", "info", "warning", "danger" }, UseOnlyEnumValues = false });

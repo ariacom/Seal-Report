@@ -1,0 +1,18 @@
+﻿@using Seal.Model
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+}
+    <form id="form_@view.IdSuffix" method="post" action="">
+        @Include(view.GetPartialTemplateKey("Restrictions.iShared", view), view)
+        @if (view.ExecutionPromptedRestrictions.Exists(i => !i.TriggerExecution))
+        {
+            <div class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button id="button_@view.IdSuffix" class="update_view_restrictions btn btn-success">@report.Translate("Update")</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </form>

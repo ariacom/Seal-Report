@@ -7,7 +7,7 @@
     ReportModel reportModel = modelView.Model;
     ResultPage page = report.CurrentPage;
     bool enabled = view.GetBoolValue("data_tables_enabled");
-    view.IdSuffix = Guid.NewGuid().ToString().Replace("-", "");
+    view.IdSuffix = Helper.NewGUID();
 
     if (view.GetBoolValue("invert_data_tables") && modelView.GetBoolValue("show_data_tables") && !report.ExecutionView.GetBoolValue(Parameter.ServerPaginationParameter))
     {

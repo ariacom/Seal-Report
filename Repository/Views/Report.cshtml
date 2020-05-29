@@ -77,7 +77,7 @@
     }
     @Raw(report.AttachScriptFiles(repository.Configuration.ScriptFiles))
 
-    <script type="text/javascript">
+<script type="text/javascript">
             var inReport = true;
             var generateHTMLDisplay =  @Helper.ToJS(report.GenerateHTMLDisplay);
 
@@ -194,7 +194,7 @@
                     } catch (e) {}
                 }
         });
-    </script>
+</script>
     @Raw(report.AttachScriptFile("helpers.js"))
     @Raw(report.AttachScriptFile("common.js"))
     @Raw(report.AttachScriptFile("custom.js"))
@@ -209,73 +209,38 @@
     @Include(view.GetPartialTemplateKey("Report.iHeader", view), view)
 
     <div id="main_container" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")" style="display:none;">
-        <form id="header_form" method="post" action="">
-            <input type="hidden" name="execution_guid" id="execution_guid" value="@report.ExecutionGUID" />
-            <input type="hidden" name="navigation_id" id="navigation_id" value="" />
-            <input type="hidden" name="navigation_parameters" id="navigation_parameters" value="" />
-            <input type="hidden" name="navigation_result" id="navigation_result" value="" />
-            <input type="hidden" name="viewid_tableload" id="viewid_tableload" value="" />
-            <input type="hidden" name="pageid_tableload" id="pageid_tableload" value="" />
-            <input type="hidden" name="id_enumload" id="id_enumload" value="" />
-            <input type="hidden" name="values_enumload" id="values_enumload" value="" />
-            <input type="hidden" name="filter_enumload" id="filter_enumload" value="" />
-
-            <input type="hidden" name="parameter_view_id" id="parameter_view_id" value="" />
-            <input type="hidden" name="parameter_view_name" id="parameter_view_name" value="" />
-            <input type="hidden" name="parameter_view_value" id="parameter_view_value" value="" />
-
-            <span style="display: none;" id="parameter_tableload"></span>
-            <span style="display: none;" id="parameter_enumload"></span>
-            @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
-        </form>
-
-        <!-- status-->
-        <div id="alert_status">
-            @if (report.Cancel)
-            {
-                <div class="alert alert-danger" role="alert">
-                    @Raw(Helper.ToHtml(report.Translate("Report has been cancelled")))
-                </div>
-            }
-            @if (!string.IsNullOrEmpty(report.WebExecutionErrors))
-            {
-                <div class="alert alert-danger" role="alert">
-                    @Raw(Helper.ToHtml(report.WebExecutionErrors))
-                </div>
-            }
-        </div>
-
-        <!--progress-->
-        <div id="progress_panel" class="panel panel-default hidden">
-            <div class="panel-body" style="padding-bottom:0px;">
-                <div class="progress hidden">
-                    <div id="progress_bar" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">
-                    </div>
-                </div>
-                @if (report.ExecutionTasks.Count > 0)
-                {
-                    <div class="progress hidden">
-                        <div id="progress_bar_tasks" class="progress-bar progress-bar-primary progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">
-                        </div>
-                    </div>
-                }
-                @if (report.ExecutionModels.Count > 0)
-                {
-                    <div class="progress hidden">
-                        <div id="progress_bar_models" class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">
-                        </div>
-                    </div>
-                }
+        @if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "right")
+        {
+        <div class="row">
+            <div id="content_div" class="col-md-@(12-view.GetNumericValue("restrictions_width"))" classori="col-md-@(12-view.GetNumericValue("restrictions_width"))">
+                @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
+            </div>
+            <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "in": "") col-md-@view.GetNumericValue("restrictions_width")">
+                @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
             </div>
         </div>
-
-        <div class="tab-content">
-            @Include(view.GetPartialTemplateKey("Report.iInformation", view), view)
-            @Include(view.GetPartialTemplateKey("Report.iMessages", view), view)
-            @Include(view.GetPartialTemplateKey("Report.iViews", view), view)
-        </div>
+        }
+        else if (report.GenerateHTMLDisplay && !report.PrintLayout && view.GetValue("restrictions_position") == "left")
+        {
+            <div class="row">
+                <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "in": "") col-md-@view.GetNumericValue("restrictions_width")">
+                    @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
+                </div>
+                <div id="content_div" class="col-md-@(12-view.GetNumericValue("restrictions_width"))" classori="col-md-@(12-view.GetNumericValue("restrictions_width"))">
+                    @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
+                </div>
+            </div>
+        }
+        else
+        {
+            <div id="restrictions_div" class="collapse @(view.GetBoolValue("restriction_button") ? "in": "")">
+                @Include(view.GetPartialTemplateKey("Report.iRestrictions", view), view)
+            </div>
+            <div>
+                @Include(view.GetPartialTemplateKey("Report.iContent", view), view)
+            </div>
+        }
     </div>
-
     <!--back to top-->
     <a id="back-to-top" href="#" class="btn btn-warning btn-lg back-to-top" role="button" title="@report.Translate("Back to top")" data-toggle="tooltip" data-placement="top">
         <span>&#916;</span>

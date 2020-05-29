@@ -11,6 +11,7 @@
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "tab_description", Type = ViewParameterType.Text, DisplayName = "Tab page description", Description = "An optional description displayed in the tab page." });
+    Template.Parameters.Add(new Parameter() { Name = "tab_page_css", Value = "", DisplayName = "Pill CSS Style", Description = "CSS style attribute of the pill generated in the Tab Control.", Enums = new string[] { "background-color:red;", "font-size:20px;" }, UseOnlyEnumValues = false });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Tab Control" };

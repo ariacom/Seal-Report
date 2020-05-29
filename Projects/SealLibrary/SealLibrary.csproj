@@ -125,6 +125,7 @@
     <Compile Include="Converter\ReportViewConverter.cs" />
     <Compile Include="Converter\ViewParameterEnumConverter.cs" />
     <Compile Include="Converter\CultureNameConverter.cs" />
+    <Compile Include="Forms\RestrictionsEditor.cs" />
     <Compile Include="Forms\PartialTemplatesEditor.cs" />
     <Compile Include="Forms\ScheduleCollectionEditor.cs" />
     <Compile Include="Helpers\HelperForms.cs" />
@@ -140,7 +141,7 @@
     <Compile Include="Forms\ConnectionStringEditor.cs" />
     <Compile Include="Forms\FormHelper.cs" />
     <Compile Include="Forms\InformationErrorUITypeEditor.cs" />
-    <Compile Include="Forms\JoinsValuesEditor.cs" />
+    <Compile Include="Forms\JoinsEditor.cs" />
     <Compile Include="Forms\SmartCopyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -352,6 +353,15 @@
     <None Include="..\..\Repository\Views\KPI.cshtml">
       <Link>Views\KPI.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Views\Restrictions.cshtml">
+      <Link>Views\Restrictions.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Restrictions.config.cshtml">
+      <Link>Views\Restrictions.config.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Restrictions.iShared.partial.cshtml">
+      <Link>Views\Restrictions.iShared.partial.cshtml</Link>
+    </None>
     <None Include="..\..\Repository\Views\Model.iCSV.partial.cshtml">
       <Link>Views\Model.iCSV.partial.cshtml</Link>
     </None>
@@ -393,6 +403,9 @@
     </None>
     <None Include="..\..\Repository\Views\Report.iHeader.partial.cshtml">
       <Link>Views\Report.iHeader.partial.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Views\Report.iContent.partial.cshtml">
+      <Link>Views\Report.iContent.partial.cshtml</Link>
     </None>
     <None Include="..\..\Repository\Views\Report.iInformation.partial.cshtml">
       <Link>Views\Report.iInformation.partial.cshtml</Link>

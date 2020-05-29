@@ -335,7 +335,7 @@ namespace Seal.Model
         /// Helper to select Join Preferences
         /// </summary>
         [Category("Join Preferences"), DisplayName("Joins to use"), Description("If specified, Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used."), Id(2, 4)]
-        [Editor(typeof(JoinsValuesEditor), typeof(UITypeEditor))]
+        [Editor(typeof(JoinsEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public string JoinsToSelect
         {
@@ -1312,7 +1312,6 @@ namespace Seal.Model
                 RestrictionText = "";
                 foreach (ReportRestriction restriction in ExecutionRestrictions)
                 {
-                    if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                     execWhereClause = execWhereClause.Replace("[" + restriction.GUID + "]", restriction.SQLText);
                 }
                 if (Report.CheckingExecution)
@@ -1323,13 +1322,14 @@ namespace Seal.Model
 
                 foreach (ReportRestriction restriction in ExecutionAggregateRestrictions)
                 {
-                    if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                     execHavingClause = execHavingClause.Replace("[" + restriction.GUID + "]", restriction.SQLText);
                 }
-                foreach (ReportRestriction restriction in ExecutionCommonRestrictions)
+
+                foreach (ReportRestriction restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions).Union(ExecutionCommonRestrictions).OrderBy(i => i.DisplayOrderRE)) 
                 {
                     if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                 }
+
 
                 if (Elements.Count > 0)
                 {
@@ -1446,7 +1446,7 @@ namespace Seal.Model
                             rootPath.tablesToUse = new List<MetaTable>(FromTables.Where(i => i.GUID != leftTable.GUID));
                             JoinTables(rootPath, resultPaths);
                         }
-                        Console.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
+                        Debug.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
 
                         if (JoinPaths != null)
                         {
@@ -1525,7 +1525,7 @@ namespace Seal.Model
                                 }
                             }
 
-                            Console.WriteLine("Indirect Joins: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths2.Count, _indirectCount);
+                            Debug.WriteLine("Indirect Joins: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths2.Count, _indirectCount);
 
                             if (JoinPaths != null)
                             {

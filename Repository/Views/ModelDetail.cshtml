@@ -12,7 +12,7 @@
 }
 else
 {
-<div @Raw(view.AddAttribute("class", "modeldetail_class")) @Raw(view.AddAttribute("style", "modeldetail_css"))>
+<div id='@("model_" + view.IdSuffix)' @Raw(view.AddAttribute("class", "modeldetail_class")) @Raw(view.AddAttribute("style", "modeldetail_css"))>
 
     @foreach (ResultPage page in reportModel.Pages)
     {

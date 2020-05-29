@@ -36,7 +36,7 @@ namespace Seal.Forms
         {
 
             List<ReportView> result = null;
-            if (descriptor.Name == "ReferenceViewGUID") result = report.FullViewList;
+            if (descriptor.Name == "ReferenceViewGUID") result = report.AllViews;
             else result = report.Views;
             return result;
         }

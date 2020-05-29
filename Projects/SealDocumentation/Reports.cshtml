@@ -252,6 +252,11 @@
                                 When the report is executed, the restriction value can be prompted to end-user by modifying the <code>Prompt Restriction</code> property.<br />
                                 In this case, the flags <code>Is Required</code> and <code>Can Change Operator</code> can be set.<br />
                             </p>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Sharing prompted restrictions amongst models</h4>
+                                If several restrictions have the <b>same display name and the same metadata source column</b>, only one restriction will be prompted (the one with the lowest display order) and the values will be dispatched to all model restrictions.<br />
+                                This is also applied for common restrictions (but only the <b>name</b> is used as common restriction does not have source column).
+                            </div>
                             <p>
                                 <strong>Flags 'Value only'</strong><br />
                                 If the <code>Operator</code> is <b>'Value Only'</b>, the SQL generated for the restriction will not include the column name and operator and set only the value.<br />
