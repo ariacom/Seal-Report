@@ -458,7 +458,7 @@ namespace Seal.Model
             foreach (var view in Views) view.InitParameters(false);
 
             //Copy values from reference views
-            foreach (var view in FullViewList.Where(i => i.ReferenceView != null))
+            foreach (var view in AllViews.Where(i => i.ReferenceView != null))
             {
                 view.InitFromReferenceView();
             }
@@ -520,6 +520,25 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(fileFolder) && OutputToExecute != null && !string.IsNullOrEmpty(OutputToExecute.FolderPath)) fileFolder = OutputToExecute.FolderPath;
                 ExecutionErrors += string.Format("Error initializing report Path, check your report execution or output Path '{0}'\r\n{1}\r\n", Path.Combine(fileFolder, fileName), ex.Message);
                 ExecutionErrorStackTrace = ex.StackTrace;
+            }
+
+            //First selection for enum values
+            foreach (var restriction in AllRestrictions.Where(i => i.IsEnumRE && i.FirstSelection != FirstEnumSelection.None))
+            {
+                restriction.EnumValues.Clear();
+                if (restriction.FirstSelection == FirstEnumSelection.All)
+                {
+                    restriction.EnumValues.AddRange(from v in restriction.EnumRE.Values select v.Id);
+                }
+                else if (restriction.FirstSelection == FirstEnumSelection.First && restriction.EnumRE.Values.Count > 0)
+                {
+                    restriction.EnumValues.Add(restriction.EnumRE.Values.First().Id);
+                }
+                if (restriction.FirstSelection == FirstEnumSelection.Last && restriction.EnumRE.Values.Count > 0)
+                {
+                    restriction.EnumValues.Add(restriction.EnumRE.Values.Last().Id);
+                }
+                restriction.FirstSelection = FirstEnumSelection.None;
             }
 
             //Init scripts
@@ -683,6 +702,20 @@ namespace Seal.Model
                 List<ReportModel> result = new List<ReportModel>();
                 if (ExecutionView.GetBoolValue(Parameter.ForceModelsLoad)) result = Models.ToList();
                 else GetModelsToExecute(ExecutionView, result);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// List of all views to parse during the report execution.
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportView> ExecutionViews
+        {
+            get
+            {
+                List<ReportView> result = new List<ReportView>() { ExecutionView };
+                fillFullViewList(ExecutionView.Views, result);
                 return result;
             }
         }
@@ -1224,7 +1257,7 @@ namespace Seal.Model
 
             var newValues = new Dictionary<string, string>();
 
-            foreach (var view in FullViewList)
+            foreach (var view in AllViews)
             {
                 var newGUID = Guid.NewGuid().ToString();
                 newValues.Add(view.GUID, newGUID);
@@ -1234,7 +1267,7 @@ namespace Seal.Model
             }
 
             //Reference views
-            foreach (var view in FullViewList.Where(i => !string.IsNullOrEmpty(i.ReferenceViewGUID)))
+            foreach (var view in AllViews.Where(i => !string.IsNullOrEmpty(i.ReferenceViewGUID)))
             {
                 view.ReferenceViewGUID = newValues[view.ReferenceViewGUID];
                 if (!string.IsNullOrEmpty(view.WidgetDefinition.ExecViewGUID)) view.WidgetDefinition.ExecViewGUID = newValues[view.WidgetDefinition.ExecViewGUID];
@@ -1628,7 +1661,7 @@ namespace Seal.Model
         /// </summary>
         public void RemoveView(ReportView parent, ReportView view)
         {
-            foreach (var refView in FullViewList.Where(i => !string.IsNullOrEmpty(i.ReferenceViewGUID)))
+            foreach (var refView in AllViews.Where(i => !string.IsNullOrEmpty(i.ReferenceViewGUID)))
             {
                 var v1 = FindView(view.Views, refView.GUID);
                 if (v1 == null)
@@ -1650,7 +1683,7 @@ namespace Seal.Model
                     if (output.ViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is used by the output '{1}'.", view.Name, output.Name));
                 }
 
-                foreach (var refView in FullViewList)
+                foreach (var refView in AllViews)
                 {
                     if (refView.WidgetDefinition.IsPublished && refView.WidgetDefinition.ExecViewGUID == view.GUID) throw new Exception(string.Format("Unable to remove the view '{0}': This view is referenced by the Widget in the view '{1}'.", view.Name, refView.Name));
                 }
@@ -1839,29 +1872,31 @@ namespace Seal.Model
             {
                 if (_executionCommonRestrictions == null)
                 {
-
-                    int index = 0;
                     _executionCommonRestrictions = new List<ReportRestriction>();
                     foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI).OrderBy(i => i.DisplayOrder))
                     {
-                        if (
-                            restriction.IsInputValue ||
-                            !_executionCommonRestrictions.Exists(i => (i.IsCommonRestrictionValue && i.Name == restriction.Name) || (!i.IsCommonRestrictionValue && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl))
-                            )
+                        if (restriction.IsInputValue || !_executionCommonRestrictions.Exists(i => i.IsIdenticalForPrompt(restriction)))
                         {
-                            restriction.HtmlIndex = index.ToString();
+                            //Check that the restriction is not displayed in a restriction view
+                            if (AllViews.Exists(i => i.Template.ForViewRestrictions && i.RestrictionsGUID.Contains(restriction.GUID)))
+                            {
+                                continue;
+                            }
+
                             _executionCommonRestrictions.Add(restriction);
-                            index++;
                         }
                     }
 
-                    //Set index in all models
+                    //Set same index in all models
                     foreach (ReportModel model in ExecutionModels)
                     {
                         foreach (ReportRestriction restriction in _executionCommonRestrictions)
                         {
-                            ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions).FirstOrDefault(i => (i.IsCommonRestrictionValue && i.Name == restriction.Name) || (!i.IsCommonRestrictionValue && i.MetaColumnGUID == restriction.MetaColumnGUID && i.DisplayNameEl == restriction.DisplayNameEl));
-                            if (modelRestriction != null) modelRestriction.HtmlIndex = restriction.HtmlIndex;
+                            ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions).FirstOrDefault(i => i != restriction && i.IsIdenticalForPrompt(restriction));
+                            if (modelRestriction != null)
+                            {
+                                modelRestriction.HtmlIndex = restriction.HtmlIndex;
+                            }
                         }
                     }
                 }
@@ -1882,6 +1917,68 @@ namespace Seal.Model
             get
             {
                 return ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None).OrderBy(i => i.DisplayOrder).ToList();
+            }
+        }
+
+        private List<ReportRestriction> _executionViewRestrictions = null;
+        /// <summary>
+        /// List of all view restrictions prompted at execution
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportRestriction> ExecutionViewRestrictions
+        {
+            get
+            {
+                if (_executionViewRestrictions == null)
+                {
+                    _executionViewRestrictions = new List<ReportRestriction>();
+
+                    foreach (var view in AllViews.Where(i => i.Template.ForViewRestrictions))
+                    {
+                        foreach (ReportRestriction restriction in view.Restrictions)
+                        {
+                            if (restriction.IsInputValue || !_executionViewRestrictions.Exists(i => i.IsIdenticalForPrompt(restriction)))
+                            {
+                                //Force prompt if the restriction is involved in a view
+                                if (restriction.Prompt == PromptType.None) restriction.Prompt = PromptType.Prompt;
+                                _executionViewRestrictions.Add(restriction);
+                            }
+                        }
+
+                    }
+
+                    //Copy similar restriction in all models
+                    foreach (ReportModel model in ExecutionModels)
+                    {
+                        foreach (ReportRestriction restriction in _executionViewRestrictions)
+                        {
+                            ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions).FirstOrDefault(i => i != restriction && i.IsIdenticalForPrompt(restriction));
+                            if (modelRestriction != null)
+                            {
+                                modelRestriction.HtmlIndex = restriction.HtmlIndex;
+                                modelRestriction.Prompt = restriction.Prompt;
+                                modelRestriction.Operator = restriction.Operator;
+                                modelRestriction.Value1 = restriction.Value1;
+                                modelRestriction.Date1 = restriction.Date1;
+                                modelRestriction.Date1Keyword = restriction.Date1Keyword;
+                                modelRestriction.Value2 = restriction.Value2;
+                                modelRestriction.Date2 = restriction.Date2;
+                                modelRestriction.Date2Keyword = restriction.Date2Keyword;
+                                modelRestriction.Value3 = restriction.Value3;
+                                modelRestriction.Date3 = restriction.Date3;
+                                modelRestriction.Date3Keyword = restriction.Date3Keyword;
+                                modelRestriction.Value4 = restriction.Value4;
+                                modelRestriction.Date4 = restriction.Date4;
+                                modelRestriction.Date4Keyword = restriction.Date4Keyword;
+                            }
+                        }
+                    }
+                }
+                return _executionViewRestrictions;
+            }
+            set
+            {
+                _executionViewRestrictions = value;
             }
         }
 
@@ -2233,7 +2330,7 @@ namespace Seal.Model
         /// Helper to list of all the views of the report
         /// </summary>
         [XmlIgnore]
-        public List<ReportView> FullViewList
+        public List<ReportView> AllViews
         {
             get
             {

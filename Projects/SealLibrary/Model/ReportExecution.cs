@@ -44,6 +44,7 @@ namespace Seal.Model
         public const string ActionGetTableData = "ActionGetTableData";
         public const string ActionGetEnumValues = "ActionGetEnumValues";
         public const string ActionUpdateEnumValues = "ActionUpdateEnumValues";
+        public const string ActionExecuteFromTrigger = "ActionExecuteFromTrigger";
 
         //Html Ids Keywords
         public const string HtmlId_header_form = "header_form";
@@ -61,8 +62,8 @@ namespace Seal.Model
         public const string HtmlId_parameter_tableload = "parameter_tableload";
         public const string HtmlId_viewid_tableload = "viewid_tableload";
         public const string HtmlId_pageid_tableload = "pageid_tableload";
-        public const string HtmlId_id_enumload = "id_enumload";
-        public const string HtmlId_values_enumload = "values_enumload";
+        public const string HtmlId_id_load = "id_load";
+        public const string HtmlId_values_load = "values_load";
         public const string HtmlId_filter_enumload = "filter_enumload";
         public const string HtmlId_parameter_enumload = "parameter_enumload";
 
@@ -85,11 +86,6 @@ namespace Seal.Model
         /// Object that can be used at run-time for any purpose
         /// </summary>
         public object Tag;
-
-        /// <summary>
-        /// If true, default report restriction values not specified are kept when the report is executed from SWI 
-        /// </summary>
-        public bool UseDefaultRestrictions = false;
 
         Thread _executeThread;
 
@@ -252,6 +248,11 @@ namespace Seal.Model
                 if (Report.SecurityContext != null) userInfo = string.Format("User:'{0}' Groups:'{1}'", Report.SecurityContext.Name, Report.SecurityContext.SecurityGroupsDisplay);
                 Report.LogMessage("Starting execution of '{0}' ({1})...", Path.GetFileNameWithoutExtension(Report.FilePath), userInfo);
                 Report.ExecutionCommonRestrictions = null;
+                Report.ExecutionViewRestrictions = null;
+                //Force rebuild of the lists and values shared
+                var commonRestrictions = Report.ExecutionCommonRestrictions;
+                var viewRestrictions = Report.ExecutionViewRestrictions;
+
                 Report.Status = ReportStatus.Executing;
                 Report.Cancel = false;
                 Report.ExecutionStartDate = DateTime.Now;
@@ -269,7 +270,7 @@ namespace Seal.Model
                 {
                     if (Report.InputRestrictions.Count > 0 && Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution && !Report.IsNavigating)
                     {
-                        //check input restrictions
+                        //check input restrictions if report has already been executed
                         CheckInputRestrictions();
                     }
 
@@ -390,34 +391,19 @@ namespace Seal.Model
         /// <summary>
         /// Set restriction values from input 1,2,3,4
         /// </summary>
-        public static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired, bool useDefaultRestrictions)
+        public static void SetRestrictions(Report report, ReportRestriction restriction, string val1, string val2, string val3, string val4, bool checkRequired)
         {
             string dateMessage = report.Translate("Use the date format '{0}' or one of the following keywords:", report.CultureInfo.DateTimeFormat.ShortDatePattern) + " " + report.DateKeywordsList;
 
             DateTime dt;
-
-            if (useDefaultRestrictions && string.IsNullOrEmpty(val1))
-                val1 = restriction.Value1;
 
             string val = val1;
             if (restriction.IsDateTime)
             {
                 if (string.IsNullOrEmpty(val))
                 {
-                    if (useDefaultRestrictions)
-                    {
-                        if (DateTime.MinValue.Equals(restriction.Date1))
-                            restriction.Date1Keyword = "";
-                        else
-                            val = restriction.Date1.ToString();
-                    }
-                    else
-                    {
-                        restriction.Date1 = DateTime.MinValue;
-                        restriction.Date1Keyword = "";
-                    }
-
-
+                    restriction.Date1 = DateTime.MinValue;
+                    restriction.Date1Keyword = "";
                 }
                 else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                 {
@@ -441,14 +427,6 @@ namespace Seal.Model
 
             if (restriction.Prompt != PromptType.PromptOneValue)
             {
-                if (useDefaultRestrictions && string.IsNullOrEmpty(val2))
-                    val2 = restriction.Value2;
-
-                if (useDefaultRestrictions && string.IsNullOrEmpty(val3))
-                    val3 = restriction.Value3;
-                if (useDefaultRestrictions && string.IsNullOrEmpty(val4))
-                    val4 = restriction.Value4;
-
                 val = val2;
                 //check required flag
                 if (restriction.Prompt == PromptType.PromptTwoValues && checkRequired && restriction.Required && string.IsNullOrEmpty(val))
@@ -461,16 +439,8 @@ namespace Seal.Model
                 {
                     if (string.IsNullOrEmpty(val))
                     {
-                        if (useDefaultRestrictions)
-                        {
-                            if (DateTime.MinValue.Equals(restriction.Date2))
-                                restriction.Date2Keyword = "";
-                        }
-                        else
-                        {
-                            restriction.Date2 = DateTime.MinValue;
-                            restriction.Date2Keyword = "";
-                        }
+                        restriction.Date2 = DateTime.MinValue;
+                        restriction.Date2Keyword = "";
                     }
                     else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                     {
@@ -492,16 +462,8 @@ namespace Seal.Model
                     {
                         if (string.IsNullOrEmpty(val))
                         {
-                            if (useDefaultRestrictions)
-                            {
-                                if (DateTime.MinValue.Equals(restriction.Date3))
-                                    restriction.Date3Keyword = "";
-                            }
-                            else
-                            {
-                                restriction.Date3 = DateTime.MinValue;
-                                restriction.Date3Keyword = "";
-                            }
+                            restriction.Date3 = DateTime.MinValue;
+                            restriction.Date3Keyword = "";
                         }
                         else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                         {
@@ -521,17 +483,9 @@ namespace Seal.Model
                     {
                         if (string.IsNullOrEmpty(val))
                         {
-                            if (useDefaultRestrictions)
-                            {
-                                if (DateTime.MinValue.Equals(restriction.Date4))
-                                    restriction.Date4Keyword = "";
-                            }
-                            else
-                            {
-                                restriction.Date4 = DateTime.MinValue;
-                                restriction.Date4Keyword = "";
-                            }
-                        }
+                            restriction.Date4 = DateTime.MinValue;
+                            restriction.Date4Keyword = "";
+                    }
                         else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                         {
                             restriction.Date4Keyword = "";
@@ -551,51 +505,55 @@ namespace Seal.Model
 
         void setRestriction(ReportRestriction restriction)
         {
-            string val = Report.GetInputRestriction(restriction.OperatorHtmlId);
-            if (!string.IsNullOrEmpty(val) && restriction.ChangeOperator)
+            string op = Report.GetInputRestriction(restriction.OperatorHtmlId);
+            if (!string.IsNullOrEmpty(op) && restriction.ChangeOperator)
             {
                 //Change operator only if allowed and not value only
-                if (val != Operator.ValueOnly.ToString()) restriction.Operator = (Operator)Enum.Parse(typeof(Operator), val);
+                if (op != Operator.ValueOnly.ToString()) restriction.Operator = (Operator)Enum.Parse(typeof(Operator), op);
             }
-            if (restriction.IsEnum)
-            {
-                List<string> selected_enum = new List<string>();
-                foreach (var enumVal in restriction.EnumRE.Values)
-                {
-                    if (string.IsNullOrEmpty(enumVal.HtmlId)) restriction.SetEnumHtmlIds();
 
-                    val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
-                    if (val.ToLower() == "true")
+            //change values only if operator is specified
+            if (!string.IsNullOrEmpty(op))
+            {
+                if (restriction.IsEnum)
+                {
+                    List<string> selected_enum = new List<string>();
+                    foreach (var enumVal in restriction.EnumRE.Values)
                     {
-                        selected_enum.Add(enumVal.Id);
-                        //Only one restriction
-                        if (restriction.Prompt == PromptType.PromptOneValue) break;
-                        //Only 2 restrictions
-                        if (restriction.Prompt == PromptType.PromptTwoValues && selected_enum.Count == 2) break;
+                        if (string.IsNullOrEmpty(enumVal.HtmlId)) restriction.SetEnumHtmlIds();
+
+                        var val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
+                        if (val.ToLower() == "true")
+                        {
+                            selected_enum.Add(enumVal.Id);
+                            //Only one restriction
+                            if (restriction.Prompt == PromptType.PromptOneValue) break;
+                            //Only 2 restrictions
+                            if (restriction.Prompt == PromptType.PromptTwoValues && selected_enum.Count == 2) break;
+                        }
+                    }
+                    if (selected_enum.Count > 0)
+                        restriction.EnumValues = selected_enum;
+                    else 
+                        restriction.EnumValues.Clear();
+
+                    //check required flag
+                    if (restriction.EnumValues.Count == 0 && restriction.Required)
+                    {
+                        Report.HasValidationErrors = true;
+                        Report.ExecutionErrors += string.Format("{0} '{1}'\r\n", Report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
                     }
                 }
-                if (selected_enum.Count > 0)
-                    restriction.EnumValues = selected_enum;
-                else if (!UseDefaultRestrictions)
-                    restriction.EnumValues.Clear();
-
-                //check required flag
-                if (restriction.EnumValues.Count == 0 && restriction.Required)
+                else
                 {
-                    Report.HasValidationErrors = true;
-                    Report.ExecutionErrors += string.Format("{0} '{1}'\r\n", Report.Translate("A value is required for"), restriction.DisplayNameElTranslated);
+                    SetRestrictions(Report, restriction,
+                           Report.GetInputRestriction(restriction.ValueHtmlId + "_1"),
+                           Report.GetInputRestriction(restriction.ValueHtmlId + "_2"),
+                           Report.GetInputRestriction(restriction.ValueHtmlId + "_3"),
+                           Report.GetInputRestriction(restriction.ValueHtmlId + "_4"),
+                           true
+                           );
                 }
-            }
-            else
-            {
-                SetRestrictions(Report, restriction,
-                       Report.GetInputRestriction(restriction.ValueHtmlId + "_1"),
-                       Report.GetInputRestriction(restriction.ValueHtmlId + "_2"),
-                       Report.GetInputRestriction(restriction.ValueHtmlId + "_3"),
-                       Report.GetInputRestriction(restriction.ValueHtmlId + "_4"),
-                       true,
-                       UseDefaultRestrictions
-                       );
             }
 
             //Disable Allow API to avoid reset of the values...
@@ -616,8 +574,8 @@ namespace Seal.Model
 
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
-                    foreach (ReportRestriction restriction in model
-                        .ExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI)
+                    foreach (ReportRestriction restriction in 
+                        model.ExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI)
                         .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                         .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                         )
@@ -696,6 +654,9 @@ namespace Seal.Model
             BuildResultPagesModel(modelParam as ReportModel);
         }
 
+        /// <summary>
+        /// Load the result table of a report model
+        /// </summary>
         public void LoadResultTableModel(ReportModel model)
         {
             try
@@ -723,7 +684,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Build the result pages of a report model
+        /// </summary>
         public void BuildResultPagesModel(ReportModel model)
         {
             try
@@ -1813,6 +1776,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Return the report of a given schedule GUID
+        /// </summary>
         public static Report GetScheduledReport(TaskFolder taskFolder, string reportPath, string reportGUID, string scheduleGUID, Repository repository)
         {
             Report report = null;
@@ -1835,6 +1801,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Return the report of a given schedule GUID
+        /// </summary>
         public static ReportSchedule GetReportSchedule(TaskFolder taskFolder, Report report, string scheduleGUID)
         {
             ReportSchedule schedule = report.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
@@ -1898,7 +1867,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Execute a report schedule
+        /// </summary>
         public static void ExecuteReportSchedule(string scheduleGUID, Report refReport = null, ReportSchedule refSchedule = null)
         {
             try
@@ -2022,7 +1993,9 @@ namespace Seal.Model
             }
         }
 
-
+        /// <summary>
+        /// Generate the HTML result of the current execution
+        /// </summary>
         public string GenerateHTMLResult()
         {
             Report.IsNavigating = false;
@@ -2053,6 +2026,9 @@ namespace Seal.Model
             return newPath;
         }
 
+        /// <summary>
+        /// Generate the CSV result of the current execution
+        /// </summary>
         public string GenerateCSVResult()
         {
             Report.IsNavigating = false;
@@ -2078,6 +2054,9 @@ namespace Seal.Model
             return newPath;
         }
 
+        /// <summary>
+        /// Generate the HTML Print result of the current execution
+        /// </summary>
         public string GeneratePrintResult()
         {
             Report.IsNavigating = false;
@@ -2102,6 +2081,9 @@ namespace Seal.Model
             return newPath;
         }
 
+        /// <summary>
+        /// Generate the PDF result of the current execution
+        /// </summary>
         public string GeneratePDFResult()
         {
             string newPath = "";
@@ -2124,6 +2106,9 @@ namespace Seal.Model
             return newPath;
         }
 
+        /// <summary>
+        /// Generate the Excel result of the current execution
+        /// </summary>
         public string GenerateExcelResult()
         {
             var result = "";
@@ -2145,18 +2130,28 @@ namespace Seal.Model
         public bool IsConvertingToPDF = false; //If true, do not run conversion again
         public bool IsConvertingToExcel = false; //If true, do not run the report again as we are using the result tables...
 
-        //Dynamic Enums 
+        /// <summary>
+        /// Dynamic enum values selected during the report execution
+        /// </summary>
         public Dictionary<MetaEnum, string> CurrentEnumValues = new Dictionary<MetaEnum, string>();
 
-        public void UpdateEnumValues(string enumId, string values)
+        /// <summary>
+        /// Update the current selected enum values during the report execution
+        /// </summary>
+        public ReportRestriction UpdateEnumValues(string enumId, string values, bool checkAllRestrictions = false)
         {
             var restriction = Report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
+            if (restriction == null && checkAllRestrictions)
+            {
+                restriction = Report.AllRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
+            }
+
             if (restriction != null && restriction.EnumRE != null)
             {
                 if (!CurrentEnumValues.ContainsKey(restriction.EnumRE)) CurrentEnumValues.Add(restriction.EnumRE, null);
                 //Build the SQL value
                 restriction.EnumValues.Clear();
-                foreach (var v in values.Split(',').Where(i => !string.IsNullOrEmpty(i)))
+                foreach (var v in values.Split('\n').Where(i => !string.IsNullOrEmpty(i)))
                 {
                     foreach (var ev in restriction.EnumRE.Values)
                     {
@@ -2165,8 +2160,12 @@ namespace Seal.Model
                 }
                 CurrentEnumValues[restriction.EnumRE] = restriction.EnumSQLValue;
             }
+            return restriction;
         }
 
+        /// <summary>
+        /// Return the new enum values with a filter applied
+        /// </summary>
         public string GetEnumValues(string enumId, string filter)
         {
             var restriction = Report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);

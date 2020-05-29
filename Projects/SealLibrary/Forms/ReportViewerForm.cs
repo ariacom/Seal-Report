@@ -11,6 +11,7 @@ using Seal.Model;
 using System.IO;
 using Seal.Helpers;
 using System.Web;
+using System.Threading;
 
 namespace Seal.Forms
 {
@@ -188,6 +189,27 @@ namespace Seal.Forms
 
         }
 
+        void initFromForm(HtmlElement form)
+        {
+            _report.InputRestrictions.Clear();
+            if (form != null)
+            {
+                foreach (HtmlElement element in form.All)
+                {
+                    if (element.Id != null)
+                    {
+                        var tag = element.TagName.ToLower();
+                        var val = element.GetAttribute("value");
+                        if (tag == "option") val = element.GetAttribute("selected"); //Select
+                        else if (tag == "input" && val == element.Id) val = element.GetAttribute("checked"); //Button toggle and check box 
+
+                        _report.InputRestrictions.Add(element.Id, val);
+                        Debug.WriteLine("{0} {1} {2} {3} {4} {5}", element.Id, element.Name, element.TagName, element.GetAttribute("value"), element.GetAttribute("selected"), element.GetAttribute("checked"));
+                    }
+                }
+            }
+        }
+
         private bool processAction(string action)
         {
             bool cancelNavigation = false;
@@ -201,18 +223,7 @@ namespace Seal.Forms
                         _reportDone = false;
                         if (webBrowser.Document != null)
                         {
-                            _report.InputRestrictions.Clear();
-                            if (HeaderForm != null)
-                            {
-                                foreach (HtmlElement element in HeaderForm.All)
-                                {
-                                    if (element.Id != null)
-                                    {
-                                        _report.InputRestrictions.Add(element.Id, element.TagName.ToLower() == "option" ? element.GetAttribute("selected") : element.GetAttribute("value"));
-                                        //Debug.WriteLine("{0} {1} {2} {3}", element.Id, element.Name, element.GetAttribute("value"), element.GetAttribute("selected"));
-                                    }
-                                }
-                            }
+                            initFromForm(HeaderForm);
                         }
                         _report.IsNavigating = false;
                         Execute();
@@ -333,20 +344,17 @@ namespace Seal.Forms
                     case ReportExecution.ActionGetTableData:
                         cancelNavigation = true;
                         string guid = webBrowser.Document.All[ReportExecution.HtmlId_execution_guid].GetAttribute("value");
-                        if (_navigation.Navigations.ContainsKey(guid))
+                        Report report = _navigation.Navigations.ContainsKey(guid) ? _navigation.Navigations[guid].Execution.Report : _report;
+                        string viewid = webBrowser.Document.All[ReportExecution.HtmlId_viewid_tableload].GetAttribute("value");
+                        string pageid = webBrowser.Document.All[ReportExecution.HtmlId_pageid_tableload].GetAttribute("value");
+                        HtmlElement newLoad = webBrowser.Document.All[ReportExecution.HtmlId_parameter_tableload];
+                        var view = report.ExecutionView.GetView(viewid);
+                        if (view != null && view.ModelView != null)
                         {
-                            var report = _navigation.Navigations[guid].Execution.Report;
-                            string viewid = webBrowser.Document.All[ReportExecution.HtmlId_viewid_tableload].GetAttribute("value");
-                            string pageid = webBrowser.Document.All[ReportExecution.HtmlId_pageid_tableload].GetAttribute("value");
-                            HtmlElement dataload = webBrowser.Document.All[ReportExecution.HtmlId_parameter_tableload];
-                            var view = report.ExecutionView.GetView(viewid);
-                            if (view != null && view.ModelView != null)
+                            var page = view.ModelView.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
+                            if (page != null)
                             {
-                                var page = view.ModelView.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
-                                if (page != null)
-                                {
-                                    dataload.InnerText = page.DataTable.GetLoadTableData(view, dataload.InnerText);
-                                }
+                                newLoad.InnerText = page.DataTable.GetLoadTableData(view, newLoad.InnerText);
                             }
                         }
                         break;
@@ -354,8 +362,8 @@ namespace Seal.Forms
                     case ReportExecution.ActionUpdateEnumValues:
                         {
                             cancelNavigation = true;
-                            string enumId = webBrowser.Document.All[ReportExecution.HtmlId_id_enumload].GetAttribute("value");
-                            string values = webBrowser.Document.All[ReportExecution.HtmlId_values_enumload].GetAttribute("value");
+                            string enumId = webBrowser.Document.All[ReportExecution.HtmlId_id_load].GetAttribute("value");
+                            string values = webBrowser.Document.All[ReportExecution.HtmlId_values_load].GetAttribute("value");
                             _execution.UpdateEnumValues(enumId, values);
                         }
                         break;
@@ -363,10 +371,32 @@ namespace Seal.Forms
                     case ReportExecution.ActionGetEnumValues:
                         {
                             cancelNavigation = true;
-                            string enumId = webBrowser.Document.All[ReportExecution.HtmlId_id_enumload].GetAttribute("value");
+                            string enumId = webBrowser.Document.All[ReportExecution.HtmlId_id_load].GetAttribute("value");
                             string filter = webBrowser.Document.All[ReportExecution.HtmlId_filter_enumload].GetAttribute("value");
                             HtmlElement enumValues = webBrowser.Document.All[ReportExecution.HtmlId_parameter_enumload];
                             enumValues.InnerText = _execution.GetEnumValues(enumId, filter);
+                        }
+                        break;
+
+                    case ReportExecution.ActionExecuteFromTrigger:
+                        {
+                            setCurrentExecution();
+                            cancelNavigation = true;
+                            lock (_execution)
+                            {
+                                string formId = webBrowser.Document.All[ReportExecution.HtmlId_id_load].GetAttribute("value");
+                                var form = webBrowser.Document.Forms[formId];
+                                initFromForm(form);
+
+                                _report.IsNavigating = false;
+                                _execution.Execute();
+                                while (_report.IsExecuting) Thread.Sleep(100);
+
+                                _url = "file:///" + _report.HTMLDisplayFilePath;
+                                _navigation.SetNavigation(_execution);
+
+                                webBrowser.Navigate(_url);
+                            }
                         }
                         break;
 

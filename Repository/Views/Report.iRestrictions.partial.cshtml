@@ -1,80 +1,24 @@
 ﻿@using Seal.Model
-@using Seal.Helpers
 @{
     ReportView view = Model;
-    Report report = view.Report;
-    Repository repository = report.Repository;
-    var restrictionPerRow = view.GetNumericValue("restrictions_per_row");
-    if  (restrictionPerRow == 0) { restrictionPerRow = 1; }
 }
 
-<!--restrictions_div-->
-@if (report.GenerateHTMLDisplay)
-{
-    <div id="restrictions_div" class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "") collapse @((report.HasRestrictions && view.GetBoolValue("restriction_button")) ? "in" : "")">
-        <div class="panel-group" role="tablist">
-            @Raw(view.GetValue("restrictions_header"))
-            <!--rows of xx restrictions -->
-            @for (int row = 0; row <= report.ExecutionPromptedRestrictions.Count / restrictionPerRow; row++)
-            {
-                <div class="row">
-                    @for (int i = restrictionPerRow * row; i < report.ExecutionPromptedRestrictions.Count && i < restrictionPerRow * (row + 1); i++)
-                    {
-                        var restriction = report.ExecutionPromptedRestrictions[i];
-                        <div class="col-sm-@(12 / restrictionPerRow)">
-                            <div class="form-group">
-                                <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select" style="display:@(restriction.HasOperator ? "inline" : "none");">
-                                    @foreach (Operator op in restriction.AllowedDisplayOperators)
-                                    {
-                                        if (restriction.ChangeOperator || restriction.Operator == op)
-                                        {
-                                            <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(op)))</option>
-                                        }
-                                    }
-                                </select>
-                                @if (restriction.IsEnumRE)
-                                {
-                                    <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum @(restriction.EnumRE.HasDynamicDisplay ? "enum_dynamic"  :"")" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple") dependencies="@restriction.EnumRE.HasDependencies" filterchars="@restriction.EnumRE.FilterChars" message="@Raw(restriction.GetEnumMessage())">
-                                        @foreach (var enumDef in restriction.PromptedEnumValues)
-                                        {
-                                            <option id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
-                                        }
-                                    </select>
-                                }
-                                else
-                                {
-                                    for (int j = 1; j <= 4; j++)
-                                    {
-                                        if (restriction.IsDateTime)
-                                        {
-                                            <div class="form-group">
-                                                <div class='input-group date @(restriction.HasTimeRe ? "datepicker_datetime" : "datepicker_date")'>
-                                                    <input type='text' class="form-control" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
-                                                    <span class="input-group-addon">
-                                                        <span class="glyphicon glyphicon-calendar"></span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        }
-                                        else if (j == 1 && restriction.InputRows1 > 0)
-                                        {
-                                            <textarea class="form-control" rows="@restriction.InputRows1" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId">@restriction.GetHtmlValue(j)</textarea>
-                                        }
-                                        else
-                                        {
-                                            <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
-                                        }
-                                        if ((restriction.Prompt == PromptType.PromptOneValue) || (restriction.Prompt == PromptType.PromptTwoValues && j == 2))
-                                        {
-                                            break;
-                                        }
-                                    }
-                                }
-                            </div>
-                        </div> <!--col-->}
-                </div> <!--row-->}
-                @Raw(view.GetValue("restrictions_footer"))
-        </div>
-    </div>
-}
+    <form id="header_form" method="post" action="">
+        <input type="hidden" name="execution_guid" id="execution_guid" value="@view.Report.ExecutionGUID" />
+        <input type="hidden" name="navigation_id" id="navigation_id" value="" />
+        <input type="hidden" name="navigation_parameters" id="navigation_parameters" value="" />
+        <input type="hidden" name="navigation_result" id="navigation_result" value="" />
+        <input type="hidden" name="viewid_tableload" id="viewid_tableload" value="" />
+        <input type="hidden" name="pageid_tableload" id="pageid_tableload" value="" />
+        <input type="hidden" name="id_load" id="id_load" value="" />
+        <input type="hidden" name="values_load" id="values_load" value="" />
+        <input type="hidden" name="filter_enumload" id="filter_enumload" value="" />
 
+        <input type="hidden" name="parameter_view_id" id="parameter_view_id" value="" />
+        <input type="hidden" name="parameter_view_name" id="parameter_view_name" value="" />
+        <input type="hidden" name="parameter_view_value" id="parameter_view_value" value="" />
+
+        <span style="display: none;" id="parameter_tableload"></span>
+        <span style="display: none;" id="parameter_enumload"></span>
+        @Include(view.GetPartialTemplateKey("Restrictions.iShared", view), view)
+    </form>

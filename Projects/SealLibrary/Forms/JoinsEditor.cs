@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Seal.Forms
 {
-    public class JoinsValuesEditor : UITypeEditor
+    public class JoinsEditor : UITypeEditor
     {
         ReportModel _model;
 

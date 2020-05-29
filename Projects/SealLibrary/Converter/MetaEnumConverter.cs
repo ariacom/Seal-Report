@@ -13,6 +13,7 @@ namespace Seal.Forms
 {
     internal class MetaEnumConverter : StringConverter
     {
+        string noEnumLabel = "<No Enumerated List>";
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {
             return true; //true means show a combobox
@@ -30,6 +31,8 @@ namespace Seal.Forms
             MetaColumn column = context.Instance as MetaColumn;
             if (column != null && column.Source != null)
             {
+                //Add no enum for element or restriction having a meta column
+                if (column is ReportElement && ((ReportElement)column).MetaColumn != null) choices.Add(noEnumLabel);
                 choices.AddRange(from s in column.Source.MetaData.Enums select s.Name);
             }
             else
@@ -61,12 +64,13 @@ namespace Seal.Forms
                 {
                     if (value != null)
                     {
+                        if (value.ToString() == ReportElement.kClearEnumGUID) return noEnumLabel;
                         MetaEnum enumItem = column.Source.MetaData.Enums.FirstOrDefault(i => i.GUID == value.ToString());
                         if (enumItem != null) return enumItem.Name;
                     }
                 }
                 else
-                {
+                { //For input values
                     var element = context.Instance as ReportElement;
                     if (element != null && element.Report != null)
                     {
@@ -95,12 +99,14 @@ namespace Seal.Forms
             MetaColumn column = context.Instance as MetaColumn;
             if (column != null && column.Source != null)
             {
+                if (value.ToString() == noEnumLabel) return ReportElement.kClearEnumGUID;
+
                 MetaEnum enumItem = column.Source.MetaData.Enums.FirstOrDefault(i => i.Name == value.ToString());
                 if (enumItem != null) return enumItem.GUID;
 
             }
             else
-            {
+            { //For input values
                 var element = context.Instance as ReportElement;
                 if (element != null && element.Report != null)
                 {

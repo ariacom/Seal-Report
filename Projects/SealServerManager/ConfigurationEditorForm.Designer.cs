@@ -117,7 +117,7 @@
             this.browseToolStripButton.Name = "browseToolStripButton";
             this.browseToolStripButton.Size = new System.Drawing.Size(98, 22);
             this.browseToolStripButton.Text = "Browse Web Site";
-            this.browseToolStripButton.ToolTipText = "View the Seal Web Server site in a browser..";
+            this.browseToolStripButton.ToolTipText = "View the Web Report Server site in a browser..";
             this.browseToolStripButton.Click += new System.EventHandler(this.browseToolStripButton_Click);
             // 
             // iisToolStripButton

@@ -3,11 +3,15 @@
     ReportViewTemplate Template = Model;
 
     //Template Name
-    Template.Name = ReportViewTemplate.ReportName; //"Report"; for load perf.
+    Template.Name = ReportViewTemplate.ReportName;
     Template.Description = "Root view containing all the code necessary for the report execution.";
 
     //If true, the view can be configured for a report model
     Template.ForReportModel = false;
+
+    //Shared template
+    Template.SharedPartialTemplates = new string[] { "Restrictions.iShared" };
+
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = Parameter.ReportFormatParameter, Value = "html", Enums = new string[] { "html|HTML", "print|HTML Print", "csv|CSV Excel", "pdf|PDF", "excel|Excel", "custom|Custom" }, DisplayName = "Report format", Description = "Format of the report result. If format is Custom, Report.ResultFilePath must be specified in a child script template." });
@@ -17,9 +21,12 @@
     Template.Parameters.Add(new Parameter() { Name = "messages_mode", DisplayName = "Display: Execution messages", Description = "Defines if the execution messages panel is enabled and if messages are shown first when the report is initialized.", Value = "enabled", Enums = new string[] { "enabled|Messages enabled", "enabledshown|Messages enabled and shown", "enabledshownexec|Messages enabled and shown only during execution", "disabled|Messages disabled" } });
     Template.Parameters.Add(new Parameter() { Name = Parameter.AutoScrollParameter, DisplayName = "Display: Autoscroll enabled for execution messages", BoolValue = true, Description = "If true, the top of the messages is always displayed."});
     Template.Parameters.Add(new Parameter() { Name = "converter_button", DisplayName = "Display: Enable converter menus", BoolValue = true, Description = "If true, the PDF and Excel converter menus are displayed." });
-    Template.Parameters.Add(new Parameter() { Name = "restrictions_per_row", DisplayName = "Display: Restrictions per row", NumericValue = 4, Description = "Defines the number of prompted restrictions to be displayed per row (between 1 and 12)." });
-    Template.Parameters.Add(new Parameter() { Name = "restrictions_header", DisplayName = "Display: Restrictions header", Description = "Additional HTML added before the restrictions.", Enums = new string[] { "", "<h4>Please enter restriction values</h4>" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "restrictions_footer", DisplayName = "Display: Restrictions footer", Description = "Additional HTML added after the restrictions.", Enums = new string[] { "", "<p>Execute this report to view the result expected...</p>" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "execute_button", DisplayName = "Display: Show Execute button", BoolValue = true, Description = "If true, the Execute button is shown. The button could be hidden if restrictions trigger report execution." });
+    Template.Parameters.Add(new Parameter() { Name = "restrictions_position", DisplayName = "Restrictions: Panel position", Value = "top", Enums = new string[] { "top|Top", "left|Left", "right|Right" }, Description = "The position of the restrictions panel (default is on the top). For Left or Right position, set 'Number of restrictions per row' to 1 to force a line break." });
+    Template.Parameters.Add(new Parameter() { Name = "restrictions_width", DisplayName = "Restrictions: Panel width", NumericValue = 3, Description = "If restrictions have a on Left or Right position, the width of the panel between 1 and 11 on 12 spans (default is 3)." });
+    Template.Parameters.Add(new Parameter() { Name = "restrictions_per_row", DisplayName = "Restrictions: Number of restrictions per row", NumericValue = 4, Description = "Defines the number of prompted restrictions to be displayed per row (between 1 and 12). Set this value to 1 for Left or Right panel position." });
+    Template.Parameters.Add(new Parameter() { Name = "restrictions_header", DisplayName = "Restrictions: Header", Description = "Additional HTML added before the restrictions.", Enums = new string[] { "", "<h4>Please enter restriction values</h4>" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "restrictions_footer", DisplayName = "Restrictions: Footer", Description = "Additional HTML added after the restrictions.", Enums = new string[] { "", "<p>Execute this report to view the result expected...</p>" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = Parameter.DrillEnabledParameter, DisplayName = "Navigation: Drill Enabled", BoolValue = true, Description = "If true, the Drill navigation is enabled." });
     Template.Parameters.Add(new Parameter() { Name = Parameter.DrillAllParameter, DisplayName = "Navigation: Drill all elements of the hierarchy", BoolValue = true, Description = "If true, the Drill navigation is applied to all elements involved in the hierarchy (e.g. 'Day' is replaced by 'Month' and 'Month' by 'Year' in the same model). If several parents or children can be chosen, the one with the smallest display order is taken." });
     Template.Parameters.Add(new Parameter() { Name = Parameter.SubReportsEnabledParameter, DisplayName = "Navigation: Sub-Reports Enabled", BoolValue = true, Description = "If true, the Sub-Reports navigation is enabled." });

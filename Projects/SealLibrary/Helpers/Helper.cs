@@ -83,6 +83,11 @@ namespace Seal.Helpers
             }
         }
 
+        static public string NewGUID()
+        {
+            return Guid.NewGuid().ToString().Replace("-","");
+        } 
+
         static public string QuoteDouble(string input)
         {
             if (input == null) input = "";

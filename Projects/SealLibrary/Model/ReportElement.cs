@@ -27,6 +27,9 @@ namespace Seal.Model
         public const string kAscendantSortKeyword = "Ascendant";
         public const string kDescendantSortKeyword = "Descendant";
 
+        public const string kClearEnumGUID = "CLEAR";
+
+
         #region Editor
 
         /// <summary>
@@ -196,6 +199,18 @@ namespace Seal.Model
             {
                 DisplayName = value;
                 if (MetaColumn != null && RawDisplayName == DisplayName) DisplayName = "";
+            }
+        }
+
+        /// <summary>
+        /// Name of the element with the model name
+        /// </summary>
+        [XmlIgnore]
+        public string DisplayNameWithModel
+        {
+            get
+            {
+                return Model != null ? string.Format("{0} ({1})", DisplayNameEl, Model.Name) : DisplayNameEl;
             }
         }
 
@@ -664,7 +679,10 @@ namespace Seal.Model
         public string EnumGUIDEL
         {
             get { return _enumGUID; }
-            set { _enumGUID = value; }
+            set { 
+                _enumGUID = value;
+                UpdateEditorAttributes();
+            }
         }
 
         /// <summary>
@@ -726,6 +744,7 @@ namespace Seal.Model
         {
             get
             {
+                if (_enumGUID == kClearEnumGUID) return null;
                 if (Enum != null) return Enum;
                 if (IsCommonRestrictionValue) return null;
                 return MetaColumn.Enum;
