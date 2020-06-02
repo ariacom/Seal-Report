@@ -3,7 +3,7 @@
     ReportView view = Model;
 }
 
-    <form id="header_form" method="post" action="">
+    <form id="header_form" method="post" execguid="@view.Report.ExecutionGUID" action="">
         <input type="hidden" name="execution_guid" id="execution_guid" value="@view.Report.ExecutionGUID" />
         <input type="hidden" name="navigation_id" id="navigation_id" value="" />
         <input type="hidden" name="navigation_parameters" id="navigation_parameters" value="" />
