@@ -1,53 +1,4 @@
 ﻿
-function restrictionSelectChange(source) {
-    var group = $(source).closest(".main_restriction").parent();
-    if (group.length === 0) group = $(source).closest(".view_restriction").parent();
-
-    var idSelect = "#" + $(source).attr('id');
-
-    if ($(source).attr('opid') != null) {
-        idSelect = "#" + $(source).attr('opid');
-    }
-    if ($(source).attr('id') == null && $(source).attr('opid') !== null) return;
-    if ($(idSelect).val() == null) return;
-
-    var idValue = idSelect.replace("Operator", "Value");
-    var value1 = group.find(idValue + "_1");
-    var value2 = group.find(idValue + "_2");
-    var value3 = group.find(idValue + "_3");
-    var value4 = group.find(idValue + "_4");
-
-    var op = group.find(idSelect).val().toLowerCase();
-    var display1 = "inline", display2 = "inline", display3 = "inline", display4 = "inline";
-    if (op == 'isnull' || op == 'isnotnull' || op == 'isempty' || op == 'isnotempty') {
-        display1 = "none", display2 = "none"; display3 = "none"; display4 = "none";
-    }
-    else if (op == 'greater' || op == 'greaterequal' || op == 'smaller' || op == 'smallerequal') {
-        display2 = "none"; display3 = "none"; display4 = "none";
-    }
-    else if (op == 'between' || op == 'notbetween') {
-        display3 = "none"; display4 = "none";
-    }
-    else {
-        if (value3.val() == "" && value4.val() == "") display4 = "none";
-        if (value2.val() == "" && display4 == "none") display3 = "none";
-        if (value1.val() == "" && display3 == "none" && display4 == "none") display2 = "none";
-    }
-
-    if (value1.parent().hasClass("date")) { //date
-        value1.parent().parent().css("display", display1);
-        value2.parent().parent().css("display", display2);
-        value3.parent().parent().css("display", display3);
-        value4.parent().parent().css("display", display4);
-    }
-    else { //numeric or text
-        value1.css("display", display1);
-        value2.css("display", display2);
-        value3.css("display", display3);
-        value4.css("display", display4);
-    }
-}
-
 function initNavMenu() {
     var $menu = $('#nav_menu');
     if (!$menu.length) {
@@ -129,7 +80,7 @@ function initMessageMenu() {
 
     //autoscroll
     $("#message_autoscroll").click(function () {
-        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "messages_autoscroll", $('#message_autoscroll').is(":checked"));
+        if (generateHTMLDisplay) submitViewParameter(executionGUID, rootViewId, "messages_autoscroll", $('#message_autoscroll').is(":checked"));
     });
 
     //message options
@@ -145,11 +96,11 @@ function executeTimer() {
         var $form = $("#header_form");
         $form.attr("action", urlPrefix + "ActionRefreshReport");
         if (urlPrefix != "") {
-            $.post(urlPrefix + "ActionRefreshReport", { execution_guid: $("#execution_guid").val() })
+            $.post(urlPrefix + "ActionRefreshReport", { execution_guid: executionGUID })
                 .done(function (data) {
                     if (data.result_ready) {
                         clearInterval(executionTimer);
-                        if ($("#execution_guid").val() != null) {
+                        if (executionGUID != null) {
                             $form.attr("action", urlPrefix + "Result");
                             $form.submit();
                         }
@@ -270,7 +221,7 @@ function requestEnumData(filter, forceNoMessage) {
     var result;
 
     if (urlPrefix != "") {
-        $.post(urlPrefix + "ActionGetEnumValues", { execution_guid: $("#execution_guid").val(), enum_id: $("#id_load").val(), filter: filter })
+        $.post(urlPrefix + "ActionGetEnumValues", { execution_guid: executionGUID, enum_id: $("#id_load").val(), filter: filter })
             .done(function (data) {
                 result = jQuery.parseJSON(data);
                 fillEnumSelect(result, forceNoMessage || result.length > 0);
@@ -328,157 +279,6 @@ function fillEnumSelect(data, noMessage) {
     }
 }
 
-var inTrigger = false;
-function executeFromTrigger(container) {
-    if (inTrigger) return;
-    inTrigger = true;
-    if (container.hasClass("main_restriction")) { //Trigger from main panel
-        executeReport();
-    }
-    else {
-        var action = "ActionExecuteFromTrigger";
-        var form = container.parent().parent().parent().parent().parent();
-        container.addClass("disabled");
-        container.children(".glyphicon").css("display", "inline");
-        if (urlPrefix !== "") {
-            $.post(urlPrefix + action, form.serialize() + "&execution_guid=" + $("#execution_guid").val())
-                .done(function (data) {
-                    container.removeClass("disabled");
-                    container.children(".glyphicon").css("display", "none");
-                    //Update each view involved
-                    data.forEach(function (value) {
-                        var viewId = "#" + $(value).attr("id");
-                        $(viewId).html($(value).html());
-                    });
-                    inTrigger = false;
-                });
-        }
-        else {
-            $("#id_load").val(form.attr("id"));
-            $("#header_form").attr("action", action);
-            $("#header_form").submit();
-        }
-    }
-}
-
-function initRestrictions() {
-    $(".enum").selectpicker({
-        "actionsBox": true
-    });
-
-    //enum from select
-    $(".enum").on('hide.bs.select', function () {
-        if ($(this).attr("id")) {
-            if ($(this).hasClass("trigger_enum")) {
-                executeFromTrigger($(this).parent().parent());
-            }
-            else {
-                var action = "ActionUpdateEnumValues";
-                //send current values
-                var id = $(this).attr("id");
-                var ids = "";
-                $("#" + id + " option:selected").each(function () {
-                    ids += $(this).val() + "\n";
-                });
-                if (urlPrefix !== "") {
-                    $.post(urlPrefix + action, { execution_guid: $("#execution_guid").val(), id: id, values: values, operator_value: operator })
-                        .done(function (data) {
-                        });
-                }
-                else {
-                    $("#id_load").val(id);
-                    $("#values_load").val(ids);
-                    $("#header_form").attr("action", action);
-                    $("#header_form").submit();
-                }
-            }
-        }
-    });
-
-    //enum from buttons
-    $("input.trigger_enum").change(function () {
-        if ($(this).attr("name")) {
-            executeFromTrigger($(this).parent().parent().parent());
-        }
-    });
-
-    //input: text, date, numeric
-    $("input.trigger,textarea.trigger").change(function (e) {
-        if ($(this).attr("name")) {
-            if ($(this).parent().hasClass("date")) executeFromTrigger($(this).parent().parent().parent());
-            else executeFromTrigger($(this).parent());
-        }
-    });
-
-    //input numeric: force if empty
-    $(".numeric_input.trigger").blur(function () {
-        if ($(this).val() === "" && $(this).attr("name")) {
-            executeFromTrigger($(this).parent());
-        }
-    })
-    //input: date picker
-    setTimeout(function () {
-        $('.datepicker_date.trigger,.datepicker_datetime.trigger').on("dp.change", function (e) {
-            var input = $(this.children[0]);
-            if (input && e.oldDate && e.date !== e.oldDate && input.attr("name") && input.val()) {
-                executeFromTrigger($(this).parent().parent());
-            }
-        });
-    }, 500);
-
-    //dynamic filter for enums
-    $(".enum_dynamic").on('shown.bs.select', function () {
-        if ($(this).attr("id")) {
-            $("#id_load").val($(this).attr("id"));
-
-            var data = [];
-            if ($(this).attr("dependencies")) requestEnumData("", false);
-
-            var filter = "";
-            $(".bs-searchbox input").on("input", function (evt) {
-                var $search = $(evt.target);
-                if ($search.val() !== filter) { // search value is changed
-                    filter = $search.val();
-                    if (filter.length >= $("#" + $("#id_load").val()).attr("filterchars")) { // more than xx characters
-                        requestEnumData(filter, true);
-                    }
-                }
-            });
-        }
-    });
-
-    //Update view restrictions
-    $(".update_view_restrictions").click(function () {
-        var formId = $(this).attr("id").replace("button_", "form_");
-        var form = $("#" + formId);
-        var action = "ActionExecuteFromTrigger";
-        form.addClass("disabled");
-        if (urlPrefix !== "") {
-            $.post(urlPrefix + action, form.serialize())
-                .done(function (data) {
-                    form.removeClass("disabled");
-                    //                form.children(".glyphicon").css("display", "none");
-                    //Update each view involved
-                    data.forEach(function (value) {
-                        $(viewId).html("#" + $(value).attr("id"));
-                    });
-                    //Then information
-                    inTrigger = false;
-                });
-        }
-        else {
-            setTimeout(function () {
-                if (inTrigger) return false;
-                inTrigger = true;
-                $("#id_load").val(formId);
-                $("#header_form").attr("action", action);
-                $("#header_form").submit();
-            }, 200);
-        }
-        return false;
-    });
-}
-
 function mainInit() {
     //force execute
     $("input").keydown(function (event) {
@@ -491,10 +291,11 @@ function mainInit() {
         executeReport();
     });
 
+    //restriction button
     $("#restrictions_button").click(function () {
         var showRestriction = !$("#restrictions_div").hasClass("in");
         var hasContentDiv = $("#content_div").length > 0;
-        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "restriction_button", showRestriction);
+        if (generateHTMLDisplay) submitViewParameter(executionGUID, rootViewId, "restriction_button", showRestriction);
 
         if (hasContentDiv) {
             setTimeout(function () {
@@ -527,14 +328,14 @@ function mainInit() {
     //tabs buttons
     $(".sr_tab").click(function () {
         var buttonId = $(this).attr("id");
-        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "information_button", buttonId == "information_button");
+        if (generateHTMLDisplay) submitViewParameter(executionGUID, rootViewId, "information_button", buttonId == "information_button");
         if ($("#message_button").length) {
             var messageMode = "enabled";
             if (buttonId == "message_button") {
                 messageMode = "enabledshown";
                 scrollMessages();
             }
-            if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "messages_mode", messageMode);
+            if (generateHTMLDisplay) submitViewParameter(executionGUID, rootViewId, "messages_mode", messageMode);
         }
         redrawDataTables();
 
@@ -551,29 +352,12 @@ function mainInit() {
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
     });
 
-    //operator change
-    $(".form-control").change(function () {
-        restrictionSelectChange(this);
-    }).change();
-
-    $(".form-control").keyup(function () {
-        restrictionSelectChange(this);
-    });
-
-    //validation
-    $(".numeric_input").keyup(function () {
-        var v = this.value;
-        if (!$.isNumeric(v)) {
-            this.value = this.value.slice(0, -1);
-        }
-    });
-
     //navigation
     if (hasNavigation) {
         $("#nav_button")
             .mouseenter(function () {
                 if (urlPrefix != "") {
-                    $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: $("#execution_guid").val() })
+                    $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: executionGUID })
                         .done(function (data) {
                             if (data.links != null && data.links != "") {
                                 initNavMenu();
@@ -606,32 +390,7 @@ $(document).ready(function () {
         executeReport();
     }
 
-    //Select Picker
-    $(".operator_select").selectpicker('refresh');
     initRestrictions();
-
-    //Date Picker
-    $(".datepicker_datetime").datetimepicker({
-        showClose: true,
-        showClear: true,
-        format: shortDateTimeFormat,
-        tooltips: dtTooltips
-    });
-
-    $(".datepicker_date").datetimepicker({
-        showClose: true,
-        showClear: true,
-        format: shortDateFormat,
-        tooltips: dtTooltips
-    });
-
-    $('.datepicker_date,.datepicker_datetime').datetimepicker({
-        locale: languageName
-    });
-
-    $('.datepicker_date,.datepicker_datetime').on("dp.change", function (e) {
-        restrictionSelectChange(this.children[0]);
-    });
 
     //resize handler
     $(window).on('resize', function () {

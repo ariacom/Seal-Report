@@ -14,6 +14,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Collections.Specialized;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace SealWebServer.Controllers
 {
@@ -788,7 +789,7 @@ namespace SealWebServer.Controllers
             {
                 if (!CheckAuthentication()) return _loginContentResult;
 
-                var execution = getReportExecution(execution_guid);
+                ReportExecution execution = getExecution(execution_guid);
                 if (execution != null)
                 {
                     lock (execution)
@@ -797,24 +798,65 @@ namespace SealWebServer.Controllers
                         var report = execution.Report;
                         initInputRestrictions(execution, report);
 
+                        //Get all restrictions involved
+                        bool hasInputValue = false;
+                        foreach (ReportRestriction restriction in report.ExecutionInputValues.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
+                        {
+                            if (!string.IsNullOrEmpty(report.GetInputRestriction(restriction.OperatorHtmlId)))
+                            {
+                                hasInputValue = true;
+                                break;
+                            }
+                        }
+
+                        var restrictions = new List<string>();
+                        foreach (ReportModel model in report.ExecutionModels)
+                        {
+                            foreach (ReportRestriction restriction in
+                                model.ExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI)
+                                .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
+                                .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
+                                )
+                            {
+                                if (!string.IsNullOrEmpty(report.GetInputRestriction(restriction.OperatorHtmlId)))
+                                {
+                                    restrictions.Add(restriction.GUID);
+                                }
+                            }
+                        }
+
+                        //Execute the report
                         report.IsNavigating = false;
                         execution.Execute();
                         while (report.IsExecuting) Thread.Sleep(100);
 
-                        //TODO limit to views involved...and parse also other restriction views...
-
-                        foreach (var view in execution.Report.AllViews.Where(i => i.Model != null /*&& i.Model.Restrictions.Exists(j => j.GUID == restriction.GUID)*/))
+                        foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0)) //*&& i.Model.Restrictions.Exists(j => j.GUID == restriction.GUID)*))
                         {
-                            try
-                            {
-                                report.Status = ReportStatus.RenderingDisplay;
-                                report.CurrentModelView = view;
-                                views.Add(view.Parse());
+                            bool parseView = hasInputValue; //Parse all if input value involved
 
-                            }
-                            finally
+                            if (!parseView && view.Model != null) //Parse if one restriction in the model
                             {
-                                report.Status = ReportStatus.Executed;
+                                parseView = view.Model.Restrictions.Exists(i => restrictions.Contains(i.GUID));
+                            }
+
+                            if (!parseView && view.RestrictionsGUID != null) //Parse restriction views having the restriction                            
+                            {
+                                parseView = view.RestrictionsGUID.Exists(i => restrictions.Contains(i));
+                            }
+
+                            if (parseView)
+                            {
+                                try
+                                {
+                                    report.Status = ReportStatus.RenderingDisplay;
+                                    report.CurrentModelView = view;
+                                    views.Add(view.Parse());
+
+                                }
+                                finally
+                                {
+                                    report.Status = ReportStatus.Executed;
+                                }
                             }
                         }
 

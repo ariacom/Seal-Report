@@ -1,5 +1,268 @@
-﻿function getTopLeft(item) {
-    var rect = item.getBoundingClientRect();
+﻿//Restrictions
+function restrictionSelectChange(source) {
+    var group = $(source).closest(".restrictions_group").parent();
+
+    var idSelect = "#" + $(source).attr('id');
+
+    if ($(source).attr('opid') != null) {
+        idSelect = "#" + $(source).attr('opid');
+    }
+    if ($(source).attr('id') == null && $(source).attr('opid') !== null) return;
+    if ($(idSelect).val() == null) return;
+
+    var idValue = idSelect.replace("Operator", "Value");
+    var value1 = group.find(idValue + "_1");
+    var value2 = group.find(idValue + "_2");
+    var value3 = group.find(idValue + "_3");
+    var value4 = group.find(idValue + "_4");
+
+    var op = group.find(idSelect).val();
+    if (op) {
+        op = op.toLowerCase();
+        var display1 = "inline", display2 = "inline", display3 = "inline", display4 = "inline";
+        if (op == 'isnull' || op == 'isnotnull' || op == 'isempty' || op == 'isnotempty') {
+            display1 = "none", display2 = "none"; display3 = "none"; display4 = "none";
+        }
+        else if (op == 'greater' || op == 'greaterequal' || op == 'smaller' || op == 'smallerequal') {
+            display2 = "none"; display3 = "none"; display4 = "none";
+        }
+        else if (op == 'between' || op == 'notbetween') {
+            display3 = "none"; display4 = "none";
+        }
+        else {
+            if (value3.val() == "" && value4.val() == "") display4 = "none";
+            if (value2.val() == "" && display4 == "none") display3 = "none";
+            if (value1.val() == "" && display3 == "none" && display4 == "none") display2 = "none";
+        }
+
+        if (value1.parent().hasClass("date")) { //date
+            value1.parent().parent().css("display", display1);
+            value2.parent().parent().css("display", display2);
+            value3.parent().parent().css("display", display3);
+            value4.parent().parent().css("display", display4);
+        }
+        else { //numeric or text
+            value1.css("display", display1);
+            value2.css("display", display2);
+            value3.css("display", display3);
+            value4.css("display", display4);
+        }
+    }
+}
+
+var inTrigger = false;
+function executeFromTrigger(source) {
+    if (inTrigger) return;
+    inTrigger = true;
+    var container = source.closest(".restrictions_group");
+    if (container.hasClass("main_restriction")) { //Trigger from main panel
+        executeReport();
+    }
+    else {
+        var action = "ActionExecuteFromTrigger";
+        var form = container.closest("form");
+        container.addClass("disabled");
+        container.children(".glyphicon").css("display", "inline");
+        if (urlPrefix !== "") {
+            $.post(urlPrefix + action, form.serialize() + "&execution_guid=" + form.attr("execguid"))
+                .done(function (data) {
+                    //Update each view involved
+                    data.forEach(function (value) {
+                        if (form.attr("id") != $(value).attr("id")) {
+                            var viewId = "#" + $(value).attr("id");
+                            $(viewId).html($(value).html());
+                            initRestrictions(viewId);
+                        }
+                    });
+                    container.removeClass("disabled");
+                    container.children(".glyphicon").css("display", "none");
+                    inTrigger = false;
+                });
+        }
+        else {
+            $("#id_load").val(form.attr("id"));
+            $("#header_form").attr("action", action);
+            $("#header_form").submit();
+        }
+    }
+}
+
+function initRestrictions(parent) {
+    if (!parent) parent = "";
+    else parent += " ";
+
+    //operator change
+    $(parent + ".form-control").change(function () {
+        restrictionSelectChange(this);
+    }).change();
+
+    $(parent + ".form-control").keyup(function () {
+        restrictionSelectChange(this);
+    });
+
+    //validation
+    $(parent + ".numeric_input").keyup(function () {
+        var v = this.value;
+        if (!$.isNumeric(v)) {
+            this.value = this.value.slice(0, -1);
+        }
+    });
+
+    //Select All button
+    $(parent + ".enum").selectpicker({
+        "actionsBox": true
+    });
+
+    //Select Picker
+    $(parent + ".operator_select").selectpicker('refresh');
+
+    //Date Picker
+    $(parent + ".datepicker_datetime").datetimepicker({
+        showClose: true,
+        showClear: true,
+        format: shortDateTimeFormat,
+        tooltips: dtTooltips,
+        useCurrent: false
+    });
+
+    $(parent + ".datepicker_date").datetimepicker({
+        showClose: true,
+        showClear: true,
+        format: shortDateFormat,
+        tooltips: dtTooltips,
+        useCurrent: false
+    });
+
+    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").datetimepicker({
+        locale: languageName,
+    });
+
+    $(parent + ".datepicker_date," + parent + ".datepicker_datetime").on("dp.change", function (e) {
+        restrictionSelectChange(this.children[0]);
+    });
+
+    //trigger enum from select
+    $(parent + ".enum").on('hide.bs.select', function () {
+        if ($(this).attr("id")) {
+            if ($(this).hasClass("trigger_enum")) {
+                executeFromTrigger($(this));
+            }
+            else {
+                var action = "ActionUpdateEnumValues";
+                var form = $(this).closest("form");
+
+                //send current values
+                var id = $(this).attr("id");
+                var ids = "";
+                $("#" + id + " option:selected").each(function () {
+                    ids += $(this).val() + "\n";
+                });
+                if (urlPrefix !== "") {
+                    $.post(urlPrefix + action, { execution_guid: form.attr("execguid"), id: id, values: ids })
+                        .done(function (data) {
+                        });
+                }
+                else {
+                    $("#id_load").val(id);
+                    $("#values_load").val(ids);
+                    $("#header_form").attr("action", action);
+                    $("#header_form").submit();
+                }
+            }
+        }
+    });
+
+    //trigger enum from buttons
+    $(parent + "input.trigger_enum").change(function () {
+        if ($(this).attr("name")) {
+            executeFromTrigger($(this));
+        }
+    });
+
+    //trigger input: text, date, numeric
+    $(parent + "input.trigger," + parent + "textarea.trigger").change(function (e) {
+        if ($(this).attr("name")) {
+            if ($(this).parent().hasClass("date")) executeFromTrigger($(this));
+            else executeFromTrigger($(this));
+        }
+    });
+
+    //trigger input numeric: force if empty
+    $(parent + ".numeric_input.trigger").blur(function () {
+        if ($(this).val() === "" && $(this).attr("name")) {
+            executeFromTrigger($(this));
+        }
+    })
+    //trigger input: date picker
+    setTimeout(function () {
+        $(parent + ".datepicker_date.trigger," + parent + ".datepicker_datetime.trigger").on("dp.change", function (e) {
+            var input = $(this.children[0]);
+            if (input && (!e.date || e.date !== e.oldDate) && input.attr("name")) {
+                executeFromTrigger($(this));
+            }
+        });
+    }, 500);
+
+    //dynamic filter for enums
+    $(parent + ".enum_dynamic").on('shown.bs.select', function () {
+        if ($(this).attr("id")) {
+            $("#id_load").val($(this).attr("id"));
+
+            var data = [];
+            if ($(this).attr("dependencies")) requestEnumData("", false);
+
+            var filter = "";
+            $(parent + ".bs-searchbox input").on("input", function (evt) {
+                var $search = $(evt.target);
+                if ($search.val() !== filter) { // search value is changed
+                    filter = $search.val();
+                    if (filter.length >= $("#" + $("#id_load").val()).attr("filterchars")) { // more than xx characters
+                        requestEnumData(filter, true);
+                    }
+                }
+            });
+        }
+    });
+
+    //Update button for view restrictions
+    $(parent + ".update_view_restrictions").click(function () {
+        var formId = $(this).attr("id").replace("button_", "form_");
+        var form = $("#" + formId);
+        var button = $(this);
+        var action = "ActionExecuteFromTrigger";
+        form.addClass("disabled");
+        button.removeClass("btn-success").addClass("btn-warning");
+        if (urlPrefix !== "") {
+            $.post(urlPrefix + action, form.serialize() + "&execution_guid=" + form.attr("execguid"))
+                .done(function (data) {
+                    //Update each view involved
+                    data.forEach(function (value) {
+                        if (form.attr("id") != $(value).attr("id")) {
+                            var viewId = "#" + $(value).attr("id");
+                            $(viewId).html($(value).html());
+                            initRestrictions(viewId);
+                        }
+                    });
+                    form.removeClass("disabled");
+                    button.removeClass("btn-warning").addClass("btn-success");
+                    inTrigger = false;
+                });
+        }
+        else {
+            setTimeout(function () {
+                if (inTrigger) return false;
+                inTrigger = true;
+                $("#id_load").val(formId);
+                $("#header_form").attr("action", action);
+                $("#header_form").submit();
+            }, 200);
+        }
+        return false;
+    });
+}
+
+
+function getTopLeft(item) {
     var obj = item;
     var curleft = 0;
     var curtop = 0;
@@ -98,7 +361,7 @@ function initNavCells(executionguid, parentSelector) {
 
 //redraw datatables
 function redrawDataTables() {
-    setTimeout(function () { 
+    setTimeout(function () {
         try {
             $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
             $.fn.dataTable.tables({ visible: true, api: true }).responsive.recalc();

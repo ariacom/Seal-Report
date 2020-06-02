@@ -301,7 +301,7 @@
         <script type='text/javascript' src='~/Scripts/@fileName'></script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
         //server
         var WebApplicationName = '@HomeController.GetWebUrl(Context.Request, Context.Response)';
         var urlPrefix = WebApplicationName;
@@ -382,6 +382,35 @@
             stateSave: false,
         });
 
+        var dtTooltips = {
+            today: '@repository.TranslateReportToJS("Go to today"))',
+            clear: '@repository.TranslateReportToJS("Clear selection")',
+            close: '@repository.TranslateReportToJS("Close")',
+            selectMonth: '@repository.TranslateReportToJS("Select Month")',
+            prevMonth: '@repository.TranslateReportToJS("Previous Month")',
+            nextMonth: '@repository.TranslateReportToJS("Next Month")',
+            selectYear: '@repository.TranslateReportToJS("Select Year")',
+            prevYear: '@repository.TranslateReportToJS("Previous Year")',
+            nextYear: '@repository.TranslateReportToJS("Next Year")',
+            selectDecade: '@repository.TranslateReportToJS("Select Decade")',
+            prevDecade: '@repository.TranslateReportToJS("Previous Decade")',
+            nextDecade: '@repository.TranslateReportToJS("Next Decade")',
+            prevCentury: '@repository.TranslateReportToJS("Previous Century")',
+            nextCentury: '@repository.TranslateReportToJS("Next Century")',
+            pickHour: '@repository.TranslateReportToJS("Pick Hour")',
+            incrementHour: '@repository.TranslateReportToJS("Increment")',
+            decrementHour: '@repository.TranslateReportToJS("Decrement")',
+            pickMinute: '@repository.TranslateReportToJS("Pick Minute")',
+            incrementMinute: '@repository.TranslateReportToJS("Increment")',
+            decrementMinute: '@repository.TranslateReportToJS("Decrement")',
+            pickSecond: '@repository.TranslateReportToJS("Pick Second")',
+            incrementSecond: '@repository.TranslateReportToJS("Increment")',
+            decrementSecond: '@repository.TranslateReportToJS("Decrement")',
+            togglePeriod: '@repository.TranslateReportToJS("Toggle Period")',
+            selectTime: '@repository.TranslateReportToJS("Select Time")'
+        };
+
+
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
 
@@ -395,7 +424,7 @@
             }
             return text;
         }
-    </script>
+</script>
 
     @if (!ServerOptions.HasMinifiedScripts())
     {

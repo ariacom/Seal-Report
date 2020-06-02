@@ -847,6 +847,14 @@ namespace Seal.Model
             return Translate(CultureInfo.TwoLetterISOLanguageName, "Report", reference);
         }
 
+        /// <summary>
+        /// Translate a reference text in a Report context for JavaScript use
+        /// </summary>
+        public string TranslateReportToJS(string reference)
+        {
+            return Helper.ToJS(Translate(CultureInfo.TwoLetterISOLanguageName, "Report", reference));
+        }
+
         Dictionary<string, RepositoryTranslation> _repositoryTranslations = null;
         /// <summary>
         /// Current repository translations
