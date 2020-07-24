@@ -142,10 +142,13 @@ namespace Seal.Forms
             TreeViewHelper.InitCategoryTreeNode(categoryTN.Nodes, source.MetaData.Tables);
             categoryTN.Expand();
 
-            //Table links
-            TreeNode tableLinksTN = new TreeNode("Table Links") { Tag = source.TableLinksFolder, ImageIndex = 2, SelectedImageIndex = 2 };
-            sourceTableTN.Nodes.Add(tableLinksTN);
-            TreeViewHelper.InitTablesLinksTreeNode(tableLinksTN.Nodes, source.MetaData.TableLinks);
+            if (source.IsNoSQL)
+            {
+                //Table links
+                TreeNode tableLinksTN = new TreeNode("Table Links") { Tag = source.TableLinksFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+                sourceTableTN.Nodes.Add(tableLinksTN);
+                TreeViewHelper.InitTablesLinksTreeNode(tableLinksTN.Nodes, source.MetaData.TableLinks);
+            }
 
             //Joins
             TreeNode sourceJoinTN = new TreeNode("Joins") { Tag = source.JoinFolder, ImageIndex = 2, SelectedImageIndex = 2 };
@@ -856,6 +859,8 @@ namespace Seal.Forms
                                 MetaTable table = (MetaTable)item;
                                 var link = new MetaTableLink() { TableGUID = table.GUID, SourceGUID = table.Source.GUID, Source = table.Source };
                                 source.MetaData.TableLinks.Add(link);
+
+                                if (source.Report != null) source.Report.CheckLinkedTablesSources();
                             }
                             else if (item is MetaColumn)
                             {
