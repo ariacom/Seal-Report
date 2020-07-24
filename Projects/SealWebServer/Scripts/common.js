@@ -137,6 +137,10 @@ function setProgressBarMessage(selector, progression, message, classname) {
 }
 
 function executeReport(nav) {
+    //check execution triggers
+    if (inExecution) return;
+    inExecution = true;
+
     var form = $("#header_form");
     if (nav != null && nav.startsWith("HL:")) { //Hyperlink
         window.open(nav.replace("HL:", ""), '_blank');
@@ -288,6 +292,7 @@ function mainInit() {
     $("#execute_button").click(function () {
         //Collapse navbar
         if ($('.navbar-toggle').css('display') !== 'none') $('.navbar-toggle').click();
+        inExecution = false;
         executeReport();
     });
 

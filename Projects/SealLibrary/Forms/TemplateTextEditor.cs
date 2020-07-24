@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Seal.Model;
 using Seal.Helpers;
 using ScintillaNET;
+using System.Text;
 
 namespace Seal.Forms
 {
@@ -213,22 +214,31 @@ if (cell.IsTitle)
 @{
     MetaTable metaTable = Model;
 	ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
 
     //Script executed to define the result table columns that will be loaded by the 'Load Script'
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    DataTable table = new DataTable();
-    table.Columns.Add(new DataColumn(""numberCol"", typeof(int)));
-    table.Columns.Add(new DataColumn(""stringCol"", typeof(string)));
-    table.Columns.Add(new DataColumn(""dateCol"", typeof(DateTime)));
-    metaTable.NoSQLTable = table;
-    log.LogMessage(""{0} column(s) defined"", table.Columns.Count);
+    //NOTE 1: Other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    //NOTE 2: This script can also insert values in the table, in this case the 'Default Load Script' must remain empty/blank.
+    metaTable.NoSQLTable = new DataTable();
+    metaTable.NoSQLTable.Columns.Add(new DataColumn(""numberCol"", typeof(int)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn(""stringCol"", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn(""dateCol"", typeof(DateTime)));
+
+    //OR for a full table load ('Default Load Script' is not necessary)
+    //metaTable.NoSQLTable = ExcelHelper.LoadDataTableFromExcel(
+    //    System.IO.Path.Combine(Repository.Instance.RepositoryPath, ""Databases"" + System.IO.Path.DirectorySeparatorChar + ""databank.worldbank.org_health_population.xlsx""),
+    //    ""Data""  //Tab name in Excel
+    //);
+
+    log.LogMessage(""{0} column(s) defined"", metaTable.NoSQLTable.Columns.Count);
 }
 ";
 
         const string razorTableLoadScriptTemplate = @"@using System.Data
 @{
     MetaTable metaTable = Model;
-    DataTable table = metaTable.NoSQLTable;
 	ReportExecutionLog log = metaTable;
     ReportModel reportModel = metaTable.NoSQLModel;
     Report report = (reportModel != null ? reportModel.Report : null);
@@ -236,11 +246,12 @@ if (cell.IsTitle)
 
     //Default Script executed to fill the model result table from a non SQL source (if the model 'Load Script' is empty)
     //Insert values in the table, values must match the table columns defined in 'Definition Script'
-    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    //NOTE 1: Other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    //NOTE 2: This script should remain empty/blank if the 'Definition Script' insert the data in the table.
     log.LogMessage(""Adding table rows with the default table 'Load Script'..."");
-    table.Rows.Add(123, ""a string value"", DateTime.Now);
-    table.Rows.Add(124, ""another string value"", DateTime.Now);
-    log.LogMessage(""{0} record(s) loaded"", table.Rows.Count);
+    metaTable.NoSQLTable.Rows.Add(123, ""a string value"", DateTime.Now);
+    metaTable.NoSQLTable.Rows.Add(124, ""another string value"", DateTime.Now);
+    log.LogMessage(""{0} record(s) loaded"", metaTable.NoSQLTable.Rows.Count);
 }
 ";
 
@@ -1044,14 +1055,18 @@ if (cell.IsTitle)
                 {
                     if (context.PropertyDescriptor.Name == "DefinitionScript")
                     {
-                        template = razorTableDefinitionScriptTemplate;
+                        var table = context.Instance as MetaTable;
+                        template = table.TableTemplate != null ? table.TableTemplate.DefaultDefinitionScript : razorTableDefinitionScriptTemplate;
+
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script to define the table";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                     else if (context.PropertyDescriptor.Name == "LoadScript")
                     {
-                        template = razorTableLoadScriptTemplate;
+                        var table = context.Instance as MetaTable;
+                        template = table.TableTemplate != null ? table.TableTemplate.DefaultLoadScript : razorTableLoadScriptTemplate;
+
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the default script to load the table";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
@@ -1075,7 +1090,8 @@ if (cell.IsTitle)
                     }
                     else if (context.PropertyDescriptor.Name == "LoadScript")
                     {
-                        if (((ReportModel)context.Instance).Source.IsNoSQL)
+                        var model = (ReportModel)context.Instance;
+                        if (!model.Source.IsNoSQL)
                         {
                             frm.Text = "Edit the script executed after table load";
                             template = razorModelLoadScriptTemplateNoSQL;
@@ -1084,6 +1100,8 @@ if (cell.IsTitle)
                         {
                             frm.Text = "Edit the script to load the table";
                             template = razorModelLoadScriptTemplate;
+                            model.BuildSQL();
+                            template = model.LINQLoadScript;
                         }
                         frm.ObjectForCheckSyntax = context.Instance;
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);

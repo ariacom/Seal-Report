@@ -123,7 +123,7 @@
             // 
             this.dataSourceToolStripMenuItem.Image = global::Seal.Properties.Resources.database;
             this.dataSourceToolStripMenuItem.Name = "dataSourceToolStripMenuItem";
-            this.dataSourceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.dataSourceToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.dataSourceToolStripMenuItem.Text = "Data Source";
             this.dataSourceToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -131,20 +131,20 @@
             // 
             this.noSQLdataSourceToolStripMenuItem.Image = global::Seal.Properties.Resources.nosql;
             this.noSQLdataSourceToolStripMenuItem.Name = "noSQLdataSourceToolStripMenuItem";
-            this.noSQLdataSourceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.noSQLdataSourceToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.noSQLdataSourceToolStripMenuItem.Text = "No SQL Data Source";
             this.noSQLdataSourceToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(179, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(203, 6);
             // 
             // emailOutputDeviceToolStripMenuItem
             // 
             this.emailOutputDeviceToolStripMenuItem.Image = global::Seal.Properties.Resources.device;
             this.emailOutputDeviceToolStripMenuItem.Name = "emailOutputDeviceToolStripMenuItem";
-            this.emailOutputDeviceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.emailOutputDeviceToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.emailOutputDeviceToolStripMenuItem.Text = "Email Output Device";
             this.emailOutputDeviceToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -152,7 +152,7 @@
             // 
             this.fileServerDeviceToolStripMenuItem.Image = global::Seal.Properties.Resources.fileserver;
             this.fileServerDeviceToolStripMenuItem.Name = "fileServerDeviceToolStripMenuItem";
-            this.fileServerDeviceToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.fileServerDeviceToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.fileServerDeviceToolStripMenuItem.Text = "File Server Output Device";
             this.fileServerDeviceToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -332,6 +332,7 @@
             this.mainImageList.Images.SetKeyName(8, "device.png");
             this.mainImageList.Images.SetKeyName(9, "nosql.png");
             this.mainImageList.Images.SetKeyName(10, "fileserver.png");
+            this.mainImageList.Images.SetKeyName(11, "link.png");
             // 
             // mainSplitContainer
             // 

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Seal.Model;
 using Seal.Helpers;
 using Seal.Forms;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace Seal.Controls
 {
@@ -206,6 +207,9 @@ namespace Seal.Controls
         {
             Button button = new Button() { Text = element.DisplayNameEl };
             button.Tag = element;
+            //Add tool tip
+            var toolTip = new ToolTip();
+            toolTip.SetToolTip(button, element.DisplayNameEl);
 
             button.MouseDown += new MouseEventHandler(btn_MouseDown);
             panel.Controls.Add(button);
@@ -398,7 +402,7 @@ namespace Seal.Controls
 
         void initTreeView()
         {
-            var tableList = Model.Source.MetaData.Tables;
+            var tableList = Model.Source.MetaData.AllTables;
             if (Model.IsSQLModel)
             {
                 tableList = new List<MetaTable>();

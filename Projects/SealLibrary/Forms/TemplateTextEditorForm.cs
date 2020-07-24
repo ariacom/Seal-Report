@@ -100,7 +100,7 @@ namespace Seal.Forms
         {
             if (textBox.Modified && ObjectForCheckSyntax != null)
             {
-                var error = checkSyntax();
+                var error = CheckSyntax();
                 if (!string.IsNullOrEmpty(error))
                 {
                     if (MessageBox.Show("The Razor syntax is incorrect. Do you really want to save this script and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
@@ -120,7 +120,7 @@ namespace Seal.Forms
             toolStripStatusLabel.Image = null;
         }
 
-        private string checkSyntax()
+        public string CheckSyntax()
         {
             string error = "";
             try
@@ -154,7 +154,7 @@ namespace Seal.Forms
 
         private void checkSyntaxToolStripButton_Click(object sender, EventArgs e)
         {
-            string error = checkSyntax();
+            string error = CheckSyntax();
             if (!string.IsNullOrEmpty(error))
             {
                 MessageBox.Show(error, "Check syntax", MessageBoxButtons.OK, MessageBoxIcon.Error);

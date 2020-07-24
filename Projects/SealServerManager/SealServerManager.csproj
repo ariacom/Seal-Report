@@ -225,7 +225,6 @@
     <Content Include="Resources\enum.png" />
     <Content Include="Resources\execute.png" />
     <Content Include="Resources\exit.png" />
-    <None Include="Resources\fileserver.bmp" />
     <None Include="Resources\fileserver.png" />
     <Content Include="Resources\filter.png" />
     <Content Include="Resources\folder.png" />

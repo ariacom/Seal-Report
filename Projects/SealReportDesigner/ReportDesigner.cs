@@ -686,6 +686,8 @@ namespace Seal
             if (entry != null) entry.Expanded = true;
             entry = Helper.GetGridEntry(mainPropertyGrid, "schedule definition");
             if (entry != null) entry.Expanded = true;
+            entry = Helper.GetGridEntry(mainPropertyGrid, "table parameters");
+            if (entry != null) entry.Expanded = true;
 
             toolStripHelper.SetHelperButtons(selectedEntity);
             enableControls();
@@ -954,7 +956,7 @@ namespace Seal
                 }
                 else
                 {
-                    treeViewHelper.treeContextMenuStrip_Opening(sender, e);
+                    treeViewHelper.treeContextMenuStrip_Opening(sender, e, new EventHandler(addToolStripMenuItem_Click));
                 }
             }
             finally
@@ -977,18 +979,8 @@ namespace Seal
                     newSource.LoadRepositoryMetaSources(_repository);
                     newEntity = newSource;
                 }
-                if (newSource.IsNoSQL)
-                {
-                    //Add master table
-                    MetaTable master = MetaTable.Create();
-                    master.DynamicColumns = true;
-                    master.IsEditable = true;
-                    master.Alias = MetaData.MasterTableName;
-                    master.Source = newSource;
-                    newSource.MetaData.Tables.Add(master);
-                }
                 if (!newSource.IsNoSQL) newEntity = newSource.Connection;
-                else newEntity = newSource.MetaData.MasterTable;
+                else newEntity = newSource;
             }
             else if (selectedEntity is ModelFolder)
             {
@@ -1113,7 +1105,7 @@ namespace Seal
                 metaSource.Connections.AddRange(source.Connections);
                 metaSource.MetaData.Joins.AddRange(source.MetaData.Joins);
                 metaSource.MetaData.Tables.Clear();
-                metaSource.MetaData.Tables.AddRange(source.MetaData.Tables.Where(i => !i.IsMasterTable || source.IsNoSQL));
+                metaSource.MetaData.Tables.AddRange(source.MetaData.Tables.Where(i => source.IsNoSQL));
                 metaSource.MetaData.Enums.AddRange(source.MetaData.Enums);
                 metaSource.ConnectionGUID = source.ConnectionGUID;
                 metaSource.PreSQL = source.PreSQL;

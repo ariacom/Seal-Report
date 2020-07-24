@@ -1,5 +1,5 @@
 ﻿//
-// Copyright 2015 (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
+// Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0
 //
 
@@ -21,7 +21,7 @@ using System.Diagnostics;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Data.SqlClient;
-using System.IO;
+using System.Threading.Tasks;
 
 namespace Seal.Model
 {
@@ -78,9 +78,9 @@ namespace Seal.Model
                 GetProperty("KeepColNames").SetIsBrowsable(IsSQLModel);
                 GetProperty("UseRawSQL").SetIsBrowsable(IsSQLModel);
 
-                GetProperty("JoinsToSelect").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
+                GetProperty("JoinsToSelect").SetIsBrowsable(!IsSQLModel);
 
-                GetProperty("HelperViewJoins").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
+                GetProperty("HelperViewJoins").SetIsBrowsable(!IsSQLModel);
                 GetProperty("HelperViewJoins").SetIsReadOnly(true);
 
                 TypeDescriptor.Refresh(this);
@@ -347,12 +347,24 @@ namespace Seal.Model
         /// <summary>
         /// Helper to view joins evaluated for the model
         /// </summary>
-        [Category("Join Preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(4,4)]
+        [Category("Join Preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(4, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperViewJoins
         {
             get { return "<Click to view the joins evaluated for the model>"; }
         }
+
+        /// <summary>
+        /// List of SQL Sub-models involved in a LINQ Model 
+        /// </summary>
+        public List<ReportModel> LINQSubModels { get; set; } = new List<ReportModel>();
+        public bool ShouldSerializeLINQSubModels() { return LINQSubModels != null && LINQSubModels.Count > 0; }
+
+        /// <summary>
+        /// List of SQL Sub-tables involved in a LINQ Model 
+        /// </summary>
+        public List<MetaTable> LINQSubTables { get; set; } = new List<MetaTable>();
+        public bool ShouldSerializeLINQSubTables() { return LINQSubTables != null && LINQSubTables.Count > 0; }
 
         /// <summary>
         /// Current report source
@@ -372,6 +384,12 @@ namespace Seal.Model
                 return result;
             }
         }
+
+        /// <summary>
+        /// Master model if the model is a sub-model for LINQ source
+        /// </summary>
+        [XmlIgnore]
+        public ReportModel MasterModel;
 
         /// <summary>
         /// True if the model has series defined
@@ -552,7 +570,7 @@ namespace Seal.Model
             get { return string.IsNullOrEmpty(_aggregateRestriction) ? "" : _aggregateRestriction; }
             set { _aggregateRestriction = value; }
         }
-        public bool ShouldSerializeAggregateRestriction() { return!string.IsNullOrEmpty(_aggregateRestriction); }
+        public bool ShouldSerializeAggregateRestriction() { return !string.IsNullOrEmpty(_aggregateRestriction); }
 
         /// <summary>
         /// List of aggregate restrictions of the model
@@ -604,11 +622,47 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True is it is a Model based on a LINQ source
+        /// </summary>
+        public bool IsLINQ
+        {
+            get { return Table == null && Source.IsNoSQL; }
+        }
+
+        /// <summary>
         /// SELECT Sql used for the model
         /// </summary>
         [XmlIgnore]
         public string Sql { get; set; }
         public bool ShouldSerializeSql() { return IsSQLModel; }
+
+        /// <summary>
+        /// LINQ SELECT used for the model
+        /// </summary>
+        [XmlIgnore]
+        public string LINQSelect;
+
+        /// <summary>
+        /// Default LINQ Load Script used for the model
+        /// </summary>
+        [XmlIgnore]
+        public string LINQLoadScript
+        {
+            get
+            {
+                return string.Format(@"@using System.Data
+@{{
+  ReportModel model = Model;
+
+var query =
+{0};
+
+  model.ResultTable = query.CopyToDataTable2();
+}}
+", LINQSelect);
+            }
+        }
+
 
         /// <summary>
         /// List of tables involved in the model
@@ -670,7 +724,7 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public bool ExecChartIsNumericAxis;
-        
+
         /// <summary>
         /// True if chart is date time axis
         /// </summary>
@@ -1028,10 +1082,16 @@ namespace Seal.Model
         {
             if (Source.MetaData == null) return;
 
+            foreach (var subModel in LINQSubModels)
+            {
+                subModel.MasterModel = this;
+                subModel.Report = Report;
+            }
+
             foreach (var element in Elements)
             {
                 element.SetSourceReference(Source);
-                element.Report= Report;
+                element.Report = Report;
                 element.Model = this;
             }
 
@@ -1228,7 +1288,7 @@ namespace Seal.Model
         public void SetColumnsName()
         {
             int colIndex = 0;
-            foreach (ReportElement element in Elements) element.SQLColumnName = Source.IsNoSQL || UseRawSQL ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
+            foreach (ReportElement element in Elements) element.SQLColumnName = UseRawSQL ? element.MetaColumn.Name : string.Format("C{0}", colIndex++);
         }
 
         /// <summary>
@@ -1312,9 +1372,9 @@ namespace Seal.Model
                 RestrictionText = "";
                 foreach (ReportRestriction restriction in ExecutionRestrictions)
                 {
-                    execWhereClause = execWhereClause.Replace("[" + restriction.GUID + "]", restriction.SQLText);
+                    execWhereClause = execWhereClause.Replace("[" + restriction.GUID + "]", IsLINQ ? restriction.LINQText : restriction.SQLText);
                 }
-                if (Report.CheckingExecution)
+                if (Report.CheckingExecution && !IsLINQ)
                 {
                     if (execWhereClause.ToString().Trim().Length == 0) execWhereClause.Append("1=0");
                     else execWhereClause.Append(" AND (1=0)");
@@ -1325,22 +1385,21 @@ namespace Seal.Model
                     execHavingClause = execHavingClause.Replace("[" + restriction.GUID + "]", restriction.SQLText);
                 }
 
-                foreach (ReportRestriction restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions).Union(ExecutionCommonRestrictions).OrderBy(i => i.DisplayOrderRE)) 
+                foreach (ReportRestriction restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions).Union(ExecutionCommonRestrictions).OrderBy(i => i.DisplayOrderRE))
                 {
                     if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                 }
 
-
+                //build select
                 if (Elements.Count > 0)
                 {
                     FromTables = new List<MetaTable>();
-                    List<MetaJoin> joins = new List<MetaJoin>();
                     List<string> selectColumns = new List<string>();
                     List<string> groupByColumns = new List<string>();
                     if (!forConversion) SetColumnsName();
                     foreach (ReportElement element in Elements)
                     {
-                        string sqlColumn = element.SQLColumn + " AS " + element.SQLColumnName;
+                        string sqlColumn = !IsLINQ ? element.SQLColumn + " AS " + element.SQLColumnName : string.Format("{0}={1}", element.SQLColumnName, element.LINQColumnName);
                         if (!selectColumns.Contains(sqlColumn))
                         {
                             Helper.AddValue(ref execSelectClause, ",\r\n", "  " + sqlColumn);
@@ -1363,8 +1422,15 @@ namespace Seal.Model
                         if (table != null && !FromTables.Contains(table) && restriction.HasValue && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
                     }
 
+                    //For LINQ, keep only SQL tables having joins defined...
+                    if (IsLINQ)
+                    {
+                        FromTables.RemoveAll(i => i.IsSQL && !Source.MetaData.Joins.Exists(j => j.LeftTableGUID == i.GUID || j.RightTableGUID == i.GUID));
+                        if (FromTables.Count == 0) throw new Exception("Please select an element from a No SQL table or from a joined SQL table... ");
+                    }
+
                     //Clear group by clause if not necessary
-                    if (GetElements(PivotPosition.Data).Count() == 0 && Elements.Count(i => i.IsAggregateEl) == 0 &&  execHavingClause.Length == 0) execGroupByClause = new StringBuilder();
+                    if (GetElements(PivotPosition.Data).Count() == 0 && Elements.Count(i => i.IsAggregateEl) == 0 && execHavingClause.Length == 0) execGroupByClause = new StringBuilder();
 
                     List<string> orderColumns = new List<string>();
                     UpdateFinalSortOrders();
@@ -1373,302 +1439,361 @@ namespace Seal.Model
                     buildOrderClause(GetElements(PivotPosition.Column), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
                     buildOrderClause(GetElements(PivotPosition.Data), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
 
-                    List<MetaTable> extraWhereTables = FromTables.Where(i => !string.IsNullOrEmpty(i.WhereSQL)).ToList();
-                    if (FromTables.Count == 1)
+                    buildFromClause();
+
+                    if (!IsLINQ)
                     {
-                        string CTE = "", name = "";
-                        FromTables[0].GetExecSQLName(ref CTE, ref name);
-                        execCTEClause = Helper.AddCTE(execCTEClause, CTE);
-                        execFromClause.Append(name + "\r\n");
-                        if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
+                        //Get CTE first
+                        execSelect = execGroupByClause.Length > 0 ? "SELECT\r\n" : "SELECT DISTINCT\r\n";
+                        execSelect = !string.IsNullOrEmpty(SqlSelect) ? SqlSelect : execSelect;
+                        Sql = !string.IsNullOrEmpty(SqlCTE) ? SqlCTE : execCTEClause;
+                        Sql += execSelect;
+                        Sql += string.Format("{0}\r\n", execSelectClause);
+                        Sql += !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("FROM {0}", execFromClause);
+                        if (execWhereClause.Length > 0) Sql += string.Format("WHERE {0}\r\n", execWhereClause);
+                        if (execGroupByClause.Length > 0 || !string.IsNullOrEmpty(SqlGroupBy)) Sql += (!string.IsNullOrEmpty(SqlGroupBy) ? SqlGroupBy : string.Format("GROUP BY {0}", execGroupByClause)) + "\r\n";
+                        if (execHavingClause.Length > 0) Sql += string.Format("HAVING {0}\r\n", execHavingClause);
+                        if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) Sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
+
+                        //Finally inject common restriction values
+                        if (!forConversion) Sql = ParseCommonRestrictions(Sql);
                     }
                     else
                     {
-                        //multiple tables, find joins...
-                        List<MetaTable> tablesToUse = FromTables.ToList();
-                        List<JoinPath> resultPaths = new List<JoinPath>();
-                        JoinPath bestPath = null;
+                        initSubModelsAndTables();
 
-                        //Build the list of joins to use: for each table, joins related
-                        var joinsToUse = new Dictionary<string, List<MetaJoin>>();
-                        foreach (var join in Source.MetaData.Joins.Where(i => i.LeftTableGUID != null))
-                        {
-                            //Filter in joins to use here
-                            if (JoinsToUse.Count > 0 && !JoinsToUse.Contains(join.GUID)) continue;
-
-                            if (!joinsToUse.Keys.Contains(join.LeftTableGUID)) joinsToUse.Add(join.LeftTableGUID, new List<MetaJoin>() { join });
-                            else
-                            {
-                                var list = joinsToUse[join.LeftTableGUID];
-                                if (!list.Exists(i => i.LeftTableGUID == join.LeftTableGUID && i.RightTableGUID == join.RightTableGUID)) joinsToUse[join.LeftTableGUID].Add(join);
-                            }
-
-                            if (join.IsBiDirectional)
-                            {
-                                //Create a new join having the other left-right
-                                var newJoin = MetaJoin.Create();
-                                newJoin.IsBiDirectional = false;
-                                newJoin.GUID = join.GUID;
-                                newJoin.Source = join.Source;
-                                newJoin.LeftTableGUID = join.RightTableGUID;
-                                newJoin.RightTableGUID = join.LeftTableGUID;
-
-                                //Bug 131: Invert left and right
-                                if (join.JoinType == JoinType.LeftOuter) newJoin.JoinType = JoinType.RightOuter;
-                                else if (join.JoinType == JoinType.RightOuter) newJoin.JoinType = JoinType.LeftOuter;
-                                else newJoin.JoinType = join.JoinType;
-
-                                newJoin.Clause = join.Clause;
-
-                                if (!joinsToUse.Keys.Contains(newJoin.LeftTableGUID)) joinsToUse.Add(newJoin.LeftTableGUID, new List<MetaJoin>() { newJoin });
-                                else
-                                {
-                                    var list = joinsToUse[newJoin.LeftTableGUID];
-                                    if (!list.Exists(i => i.LeftTableGUID == newJoin.LeftTableGUID && i.RightTableGUID == newJoin.RightTableGUID)) joinsToUse[newJoin.LeftTableGUID].Add(newJoin);
-                                }
-                            }
-                        }
-
-                        _buildTimer = DateTime.Now;
-                        _directCount = 0;
-                        _indirectCount = 0;
-                        _bestJoinsCount = joinsToUse.Count;
-
-                        foreach (var leftTable in FromTables)
-                        {
-                            JoinPath rootPath = new JoinPath() { currentTable = leftTable, joinsToUse = new Dictionary<string, MetaJoin[]>() };
-                            //Copy the list of joins to use from the reference
-                            foreach (var key in joinsToUse.Keys)
-                            {
-                                rootPath.joinsToUse.Add(key, joinsToUse[key].Where(i => i.RightTableGUID != leftTable.GUID).ToArray());
-                            }
-
-                            rootPath.tablesToUse = new List<MetaTable>(FromTables.Where(i => i.GUID != leftTable.GUID));
-                            JoinTables(rootPath, resultPaths);
-                        }
-                        Debug.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
-
-                        if (JoinPaths != null)
-                        {
-                            JoinPaths.AppendFormat("Time elapsed after Direct Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                            JoinPaths.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
-                            int index = 1;
-                            foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
-                            {
-                                JoinPaths.AppendFormat("Direct Join {0}: ", index++);
-                                path.print(JoinPaths);
-                            }
-                        }
-
-                        //Choose the path having all tables, then preferred, then less joins...
-                        if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
-                        bool checkIndirectJoin = false;
-                        if (bestPath == null) checkIndirectJoin = true;
-                        else if (bestPath.joins.Count > tablesToUse.Count - 1) checkIndirectJoin = true;
-                        // otherwise it means that a direct join with a minimum joins have been found, no need to check indirect joins 
-
-                        if (checkIndirectJoin)
-                        {
-                            List<JoinPath> resultPaths2 = new List<JoinPath>();
-                            //no direct joins found or more than 3 joins...try using several path...
-                            foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count))
-                            {
-                                JoinPath newPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse) };
-                                //newPath.print();
-                                foreach (var join in path.joins)
-                                {
-                                    if (newPath.joins.Count >= _bestJoinsCount) break;
-                                    //search a path starting from RightTable and finishing by a remaining table
-                                    foreach (var path2 in resultPaths.OrderBy(i => i.tablesToUse.Count).Where(i => i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)))
-                                    {
-                                        if (newPath.joins.Count >= _bestJoinsCount) break;
-                                        //ok add joins to the newPath and remove tables to use
-                                        foreach (var join2 in path2.joins)
-                                        {
-                                            if (newPath.joins.Count >= _bestJoinsCount) break;
-                                            _indirectCount++;
-
-                                            //Add the join to the path
-                                            if (!newPath.joins.Exists(i => i.GUID == join2.GUID))
-                                            {
-                                                newPath.joins.Insert(0, join2); // Fix 108
-                                                //newPath.print();
-                                            }
-                                            newPath.tablesToUse.Remove(join2.LeftTable);
-                                            newPath.tablesToUse.Remove(join2.RightTable);
-                                        }
-
-                                        if (newPath.tablesToUse.Count == 0)
-                                        {
-                                            //got one
-                                            resultPaths2.Add(newPath);
-
-                                            if (newPath.joins.Count < _bestJoinsCount)
-                                            {
-                                                _bestJoinsCount = newPath.joins.Count;
-                                            }
-                                            break;
-                                        }
-                                    }
-
-                                    if (newPath.tablesToUse.Count == 0) break;
-                                }
-
-                                if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout)
-                                {
-                                    var bestPathIndirect = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
-                                    if (bestPath != null || bestPathIndirect != null)
-                                    {
-                                        if (JoinPaths != null) JoinPaths.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            Debug.WriteLine("Indirect Joins: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths2.Count, _indirectCount);
-
-                            if (JoinPaths != null)
-                            {
-                                JoinPaths.AppendFormat("\r\nTime elapsed after Indirect Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                                JoinPaths.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
-                                int index = 1;
-                                foreach (var path in resultPaths2.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
-                                {
-                                    JoinPaths.AppendFormat("Indirect Join {0}: ", index++);
-                                    path.print(JoinPaths);
-                                }
-                            }
-
-                            var bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
-                            if (bestPath != null && bestPath2 != null)
-                            {
-                                //Choose here between direct best path or indirect best path
-                                if (bestPath2.joins.Count < bestPath.joins.Count) bestPath = bestPath2;
-                            }
-                            else if (bestPath == null) {
-                                bestPath = bestPath2;
-                            }
-                        }
-
-                        if (JoinPaths != null && bestPath != null)
-                        {
-                            JoinPaths.AppendFormat("\r\nTime elapsed: {0:F0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
-                            JoinPaths.AppendLine("\r\nAND THE WINNER IS:");
-                            bestPath.print(JoinPaths);
-                        }
-
-                        if (bestPath == null)
-                        {
-                            var errMessage = "Unable to link all elements using the joins defined...\r\nAdd Joins to your Data Source\r\nOR remove elements or restrictions in your model\r\nOR add relevant elements or restrictions in your model.";
-                            if (JoinPaths != null) JoinPaths.AppendLine("\r\n" + errMessage);
-                            throw new Exception(errMessage);
-                        }
-                        if (bestPath.joins.Count == 0)
-                        {
-                            //only one table
-                            string CTE = "", name = "";
-                            bestPath.currentTable.GetExecSQLName(ref CTE, ref name);
-                            execCTEClause = Helper.AddCTE(execCTEClause, CTE);
-                            execFromClause.Append(name + "\r\n");
-
-                            if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
-                        }
-                        else
-                        {
-                            string lastTable = null;
-                            List<MetaTable> tablesUsed = new List<MetaTable>();
-                            for (int i = bestPath.joins.Count - 1; i >= 0; i--)
-                            {
-                                MetaJoin join = bestPath.joins[i];
-                                if (string.IsNullOrEmpty(lastTable))
-                                {
-                                    string CTE2 = "", name2 = "";
-                                    join.RightTable.GetExecSQLName(ref CTE2, ref name2);
-                                    execCTEClause = Helper.AddCTE(execCTEClause, CTE2);
-                                    lastTable = name2 + "\r\n";
-                                    tablesUsed.Add(join.RightTable);
-                                }
-
-                                //check if tables are already in the join
-                                var leftTable = join.LeftTable;
-                                if (tablesUsed.Contains(leftTable)) leftTable = join.RightTable;
-                                if (tablesUsed.Contains(leftTable)) continue;
-
-                                string joinClause = join.Clause.Trim();
-                                //For outer join, add the extra restriction in the ON clause -> hopefully they are not defined as bi-directional
-                                MetaTable extraWhereTable = null;
-                                if (join.JoinType == JoinType.LeftOuter && !string.IsNullOrEmpty(join.RightTable.WhereSQL)) extraWhereTable = join.RightTable;
-                                else if (join.JoinType == JoinType.RightOuter && !string.IsNullOrWhiteSpace(join.LeftTable.WhereSQL)) extraWhereTable = join.LeftTable;
-                                else if (!string.IsNullOrWhiteSpace(leftTable.WhereSQL) && !extraWhereTables.Contains(leftTable))
-                                {
-                                    extraWhereTables.Add(leftTable);
-                                }
-
-                                if (extraWhereTable != null)
-                                {
-                                    string where = RazorHelper.CompileExecute(extraWhereTable.WhereSQL, extraWhereTable);
-                                    if (!string.IsNullOrEmpty(where)) joinClause += " AND " + where;
-                                    extraWhereTables.Remove(extraWhereTable);
-                                }
-
-                                //finally build the clause
-                                string CTE = "", name = "";
-                                leftTable.GetExecSQLName(ref CTE, ref name);
-                                execCTEClause = Helper.AddCTE(execCTEClause, CTE);
-
-                                if (join.JoinType != JoinType.Cross) lastTable = string.Format("\r\n({0} {1} {2} ON {3})\r\n", name, join.SQLJoinType, lastTable, joinClause);
-                                else lastTable = string.Format("\r\n({0} {1} {2})\r\n", name, join.SQLJoinType, lastTable);
-
-                                tablesUsed.Add(leftTable);
-                            }
-                            execFromClause = new StringBuilder(lastTable);
-                        }
-                        if (JoinPaths != null)
-                        {
-                            JoinPaths.Append("\r\nSQL Generated:");
-                            JoinPaths.Append(execFromClause.ToString());
-                        }
+                        LINQSelect = !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("from {0}", execFromClause);
+                        if (execWhereClause.Length > 0) LINQSelect += string.Format("\r\nwhere\r\n{0}\r\n", execWhereClause);
+                        if (execOrderByClause.Length > 0) LINQSelect += string.Format("orderby {0}\r\n", execOrderByClause);
+                        LINQSelect += string.Format("\r\nselect new {{\r\n{0}\r\n}}", execSelectClause);
                     }
-
-                    //add extra where clause
-                    foreach (var table in extraWhereTables)
-                    {
-                        if (!string.IsNullOrWhiteSpace(table.WhereSQL))
-                        {
-                            string where = RazorHelper.CompileExecute(table.WhereSQL, table);
-                            if (!string.IsNullOrWhiteSpace(where))
-                            {
-                                if (execWhereClause.Length != 0) execWhereClause.Append("\r\nAND ");
-                                execWhereClause.AppendFormat("({0})", where);
-                            }
-                        }
-                    }
-
-                    //Get CTE first
-                    execSelect = execGroupByClause.Length > 0 ? "SELECT\r\n" : "SELECT DISTINCT\r\n";
-                    execSelect = !string.IsNullOrEmpty(SqlSelect) ? SqlSelect : execSelect;
-                    Sql = !string.IsNullOrEmpty(SqlCTE) ? SqlCTE : execCTEClause;
-                    Sql += execSelect;
-                    Sql += string.Format("{0}\r\n", execSelectClause);
-                    Sql += !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("FROM {0}", execFromClause);
-                    if (execWhereClause.Length > 0) Sql += string.Format("WHERE {0}\r\n", execWhereClause);
-                    if (execGroupByClause.Length > 0 || !string.IsNullOrEmpty(SqlGroupBy)) Sql += (!string.IsNullOrEmpty(SqlGroupBy) ? SqlGroupBy : string.Format("GROUP BY {0}", execGroupByClause)) + "\r\n";
-                    if (execHavingClause.Length > 0) Sql += string.Format("HAVING {0}\r\n", execHavingClause);
-                    if (!forConversion && (execOrderByClause.Length > 0 || !string.IsNullOrEmpty(SqlOrderBy))) Sql += (!string.IsNullOrEmpty(SqlOrderBy) ? SqlOrderBy : string.Format("ORDER BY {0}", execOrderByClause)) + "\r\n";
-
-                    //Finally inject common restriction values
-                    if (!forConversion) Sql = ParseCommonRestrictions(Sql);
                 }
             }
             catch (TemplateCompilationException ex)
             {
                 Sql = "";
-                ExecutionError = string.Format("Got unexpected error when building the SQL statement:\r\n{0}", Helper.GetExceptionMessage(ex));
+                ExecutionError = string.Format("Got unexpected error when building the statement:\r\n{0}", Helper.GetExceptionMessage(ex));
             }
             catch (Exception ex)
             {
                 Sql = "";
-                ExecutionError = string.Format("Got unexpected error when building the SQL statement:\r\n{0}", ex.Message);
+                ExecutionError = string.Format("Got unexpected error when building the statement:\r\n{0}", ex.Message);
+            }
+        }
+
+
+        void buildFromClause()
+        {
+            List<MetaTable> extraWhereTables = FromTables.Where(i => !string.IsNullOrEmpty(i.WhereSQL)).ToList();
+            ExecTableJoins = new List<MetaJoin>();
+            if (FromTables.Count == 1)
+            {
+                if (!IsLINQ)
+                {
+                    string CTE = "", name = "";
+                    FromTables[0].GetExecSQLName(ref CTE, ref name);
+                    execCTEClause = Helper.AddCTE(execCTEClause, CTE);
+                    execFromClause.Append(name + "\r\n");
+                }
+                else
+                {
+                    execFromClause.Append(FromTables[0].LINQExpressionName + "\r\n");
+                }
+                if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
+            }
+            else
+            {
+                //multiple tables, find joins...
+                List<MetaTable> tablesToUse = FromTables.ToList();
+                List<JoinPath> resultPaths = new List<JoinPath>();
+                JoinPath bestPath = null;
+
+                //Build the list of joins to use: for each table, joins related
+                var joinsToUse = new Dictionary<string, List<MetaJoin>>();
+                foreach (var join in Source.MetaData.Joins.Where(i => i.LeftTableGUID != null))
+                {
+                    //Filter in joins to use here
+                    if (JoinsToUse.Count > 0 && !JoinsToUse.Contains(join.GUID)) continue;
+
+                    if (!joinsToUse.Keys.Contains(join.LeftTableGUID)) joinsToUse.Add(join.LeftTableGUID, new List<MetaJoin>() { join });
+                    else
+                    {
+                        var list = joinsToUse[join.LeftTableGUID];
+                        if (!list.Exists(i => i.LeftTableGUID == join.LeftTableGUID && i.RightTableGUID == join.RightTableGUID)) joinsToUse[join.LeftTableGUID].Add(join);
+                    }
+
+                    if (!IsLINQ && join.IsBiDirectional)
+                    {
+                        //Create a new join having the other left-right
+                        var newJoin = MetaJoin.Create();
+                        newJoin.IsBiDirectional = false;
+                        newJoin.GUID = join.GUID;
+                        newJoin.Source = join.Source;
+                        newJoin.LeftTableGUID = join.RightTableGUID;
+                        newJoin.RightTableGUID = join.LeftTableGUID;
+
+                        //Bug 131: Invert left and right
+                        if (join.JoinType == JoinType.LeftOuter) newJoin.JoinType = JoinType.RightOuter;
+                        else if (join.JoinType == JoinType.RightOuter) newJoin.JoinType = JoinType.LeftOuter;
+                        else newJoin.JoinType = join.JoinType;
+
+                        newJoin.Clause = join.Clause;
+
+                        if (!joinsToUse.Keys.Contains(newJoin.LeftTableGUID)) joinsToUse.Add(newJoin.LeftTableGUID, new List<MetaJoin>() { newJoin });
+                        else
+                        {
+                            var list = joinsToUse[newJoin.LeftTableGUID];
+                            if (!list.Exists(i => i.LeftTableGUID == newJoin.LeftTableGUID && i.RightTableGUID == newJoin.RightTableGUID)) joinsToUse[newJoin.LeftTableGUID].Add(newJoin);
+                        }
+                    }
+                }
+
+                _buildTimer = DateTime.Now;
+                _directCount = 0;
+                _indirectCount = 0;
+                _bestJoinsCount = joinsToUse.Count;
+
+                foreach (var leftTable in FromTables)
+                {
+                    JoinPath rootPath = new JoinPath() { currentTable = leftTable, joinsToUse = new Dictionary<string, MetaJoin[]>() };
+                    //Copy the list of joins to use from the reference
+                    foreach (var key in joinsToUse.Keys)
+                    {
+                        rootPath.joinsToUse.Add(key, joinsToUse[key].Where(i => i.RightTableGUID != leftTable.GUID).ToArray());
+                    }
+
+                    rootPath.tablesToUse = new List<MetaTable>(FromTables.Where(i => i.GUID != leftTable.GUID));
+                    JoinTables(rootPath, resultPaths);
+                }
+                Debug.WriteLine("Direct Join: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths.Count, _directCount);
+
+                if (JoinPaths != null)
+                {
+                    JoinPaths.AppendFormat("Time elapsed after Direct Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                    JoinPaths.AppendLine("DIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
+                    int index = 1;
+                    foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
+                    {
+                        JoinPaths.AppendFormat("Direct Join {0}: ", index++);
+                        path.print(JoinPaths);
+                    }
+                }
+
+                //Choose the path having all tables, then preferred, then less joins...
+                if (bestPath == null) bestPath = resultPaths.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
+                bool checkIndirectJoin = false;
+                if (bestPath == null) checkIndirectJoin = true;
+                else if (bestPath.joins.Count > tablesToUse.Count - 1) checkIndirectJoin = true;
+                // otherwise it means that a direct join with a minimum joins have been found, no need to check indirect joins 
+
+                if (checkIndirectJoin)
+                {
+                    List<JoinPath> resultPaths2 = new List<JoinPath>();
+                    //no direct joins found or more than 3 joins...try using several path...
+                    foreach (var path in resultPaths.OrderBy(i => i.tablesToUse.Count))
+                    {
+                        JoinPath newPath = new JoinPath() { joins = new List<MetaJoin>(path.joins), tablesToUse = new List<MetaTable>(path.tablesToUse) };
+                        //newPath.print();
+                        foreach (var join in path.joins)
+                        {
+                            if (newPath.joins.Count >= _bestJoinsCount) break;
+                            //search a path starting from RightTable and finishing by a remaining table
+                            foreach (var path2 in resultPaths.OrderBy(i => i.tablesToUse.Count).Where(i => i.startTable == join.RightTable && path.tablesToUse.Contains(i.finalTable)))
+                            {
+                                if (newPath.joins.Count >= _bestJoinsCount) break;
+                                //ok add joins to the newPath and remove tables to use
+                                foreach (var join2 in path2.joins)
+                                {
+                                    if (newPath.joins.Count >= _bestJoinsCount) break;
+                                    _indirectCount++;
+
+                                    //Add the join to the path
+                                    if (!newPath.joins.Exists(i => i.GUID == join2.GUID))
+                                    {
+                                        newPath.joins.Insert(0, join2); // Fix 108
+                                                                        //newPath.print();
+                                    }
+                                    newPath.tablesToUse.Remove(join2.LeftTable);
+                                    newPath.tablesToUse.Remove(join2.RightTable);
+                                }
+
+                                if (newPath.tablesToUse.Count == 0)
+                                {
+                                    //got one
+                                    resultPaths2.Add(newPath);
+
+                                    if (newPath.joins.Count < _bestJoinsCount)
+                                    {
+                                        _bestJoinsCount = newPath.joins.Count;
+                                    }
+                                    break;
+                                }
+                            }
+
+                            if (newPath.tablesToUse.Count == 0) break;
+                        }
+
+                        if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout)
+                        {
+                            var bestPathIndirect = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
+                            if (bestPath != null || bestPathIndirect != null)
+                            {
+                                if (JoinPaths != null) JoinPaths.AppendFormat("Exiting the joins search after {0:F0} milliseconds\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                                break;
+                            }
+                        }
+                    }
+
+                    Debug.WriteLine("Indirect Joins: {0:F0}ms {1} {2}", (DateTime.Now - _buildTimer).TotalMilliseconds, resultPaths2.Count, _indirectCount);
+
+                    if (JoinPaths != null)
+                    {
+                        JoinPaths.AppendFormat("\r\nTime elapsed after Indirect Joins: {0:F0} ms\r\n\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                        JoinPaths.AppendLine("INDIRECT Joins found by priority order (The first one may be used if all tables are joined, maximum 100 are shown):\r\n");
+                        int index = 1;
+                        foreach (var path in resultPaths2.OrderBy(i => i.tablesToUse.Count).ThenBy(i => i.joins.Count).Take(100))
+                        {
+                            JoinPaths.AppendFormat("Indirect Join {0}: ", index++);
+                            path.print(JoinPaths);
+                        }
+                    }
+
+                    var bestPath2 = resultPaths2.Where(i => i.tablesToUse.Count == 0).OrderBy(i => i.joins.Count).FirstOrDefault();
+                    if (bestPath != null && bestPath2 != null)
+                    {
+                        //Choose here between direct best path or indirect best path
+                        if (bestPath2.joins.Count < bestPath.joins.Count) bestPath = bestPath2;
+                    }
+                    else if (bestPath == null)
+                    {
+                        bestPath = bestPath2;
+                    }
+                }
+
+                if (JoinPaths != null && bestPath != null)
+                {
+                    JoinPaths.AppendFormat("\r\nTime elapsed: {0:F0} ms\r\n", (DateTime.Now - _buildTimer).TotalMilliseconds);
+                    JoinPaths.AppendLine("\r\nAND THE WINNER IS:");
+                    bestPath.print(JoinPaths);
+                }
+
+                //Handle the best path
+                if (bestPath == null)
+                {
+                    var errMessage = "Unable to link all elements using the joins defined...\r\nAdd Joins to your Data Source\r\nOR remove elements or restrictions in your model\r\nOR add relevant elements or restrictions in your model.";
+                    if (JoinPaths != null) JoinPaths.AppendLine("\r\n" + errMessage);
+                    throw new Exception(errMessage);
+                }
+
+                ExecTableJoins = bestPath.joins;
+                if (bestPath.joins.Count == 0)
+                {
+                    //only one table
+                    if (!IsLINQ)
+                    {
+                        string CTE = "", name = "";
+                        bestPath.currentTable.GetExecSQLName(ref CTE, ref name);
+                        execCTEClause = Helper.AddCTE(execCTEClause, CTE);
+                        execFromClause.Append(name + "\r\n");
+                    }
+                    else
+                    {
+                        execFromClause.Append(bestPath.currentTable.LINQExpressionName + "\r\n");
+                    }
+
+                    if (JoinPaths != null) JoinPaths.AppendLine("Only one table: No join required.");
+                }
+                else
+                {
+                    string lastTable = null;
+                    List<MetaTable> tablesUsed = new List<MetaTable>();
+                    for (int i = bestPath.joins.Count - 1; i >= 0; i--)
+                    {
+                        MetaJoin join = bestPath.joins[i];
+                        if (string.IsNullOrEmpty(lastTable))
+                        {
+                            if (!IsLINQ)
+                            {
+                                string CTE2 = "", name2 = "";
+                                join.RightTable.GetExecSQLName(ref CTE2, ref name2);
+                                execCTEClause = Helper.AddCTE(execCTEClause, CTE2);
+                                lastTable = name2 + "\r\n";
+                                tablesUsed.Add(join.RightTable);
+                            }
+                            else
+                            {
+                                lastTable = join.LeftTable.LINQExpressionName + "\r\n";
+                            }
+                        }
+
+                        //check if tables are already in the join
+                        var leftTable = join.LeftTable;
+                        if (tablesUsed.Contains(leftTable)) leftTable = join.RightTable;
+                        if (tablesUsed.Contains(leftTable)) continue;
+
+                        string joinClause = join.Clause.Trim();
+                        //For outer join, add the extra restriction in the ON clause -> hopefully they are not defined as bi-directional
+                        MetaTable extraWhereTable = null;
+                        if (join.JoinType == JoinType.LeftOuter && !string.IsNullOrEmpty(join.RightTable.WhereSQL)) extraWhereTable = join.RightTable;
+                        else if (join.JoinType == JoinType.RightOuter && !string.IsNullOrWhiteSpace(join.LeftTable.WhereSQL)) extraWhereTable = join.LeftTable;
+                        else if (!string.IsNullOrWhiteSpace(leftTable.WhereSQL) && !extraWhereTables.Contains(leftTable))
+                        {
+                            extraWhereTables.Add(leftTable);
+                        }
+
+                        if (extraWhereTable != null)
+                        {
+                            string where = RazorHelper.CompileExecute(extraWhereTable.WhereSQL, extraWhereTable);
+                            if (!string.IsNullOrEmpty(where)) joinClause += " AND " + where;
+                            extraWhereTables.Remove(extraWhereTable);
+                        }
+
+                        //finally build the clause
+                        if (!IsLINQ)
+                        {
+                            string CTE = "", name = "";
+                            leftTable.GetExecSQLName(ref CTE, ref name);
+                            execCTEClause = Helper.AddCTE(execCTEClause, CTE);
+
+                            if (join.JoinType != JoinType.Cross) lastTable = string.Format("\r\n({0} {1} {2} ON {3})\r\n", name, join.SQLJoinType, lastTable, joinClause);
+                            else lastTable = string.Format("\r\n({0} {1} {2})\r\n", name, join.SQLJoinType, lastTable);
+                        }
+                        else
+                        {
+                            //Replace table name in the Join clause
+                            foreach (var col in join.RightTable.Columns.Union(join.LeftTable.Columns))
+                            {
+                                joinClause = joinClause.Replace(string.Format("{0}[\"", col.MetaTable.Name), string.Format("{0}[\"", col.MetaTable.LINQResultName));
+                            }
+
+
+                            lastTable = string.Format("{0}join {1} on {2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
+                            //TODO detect columns to add for SQL table...to be able to perform the join...
+                        }
+
+                        tablesUsed.Add(leftTable);
+                    }
+                    execFromClause = new StringBuilder(lastTable);
+                }
+                if (JoinPaths != null)
+                {
+                    JoinPaths.Append("\r\n" + (IsLINQ ? "LINQ" : "SQL") + " Generated:\r\n");
+                    JoinPaths.Append(execFromClause.ToString());
+                }
+            }
+
+            //add extra where clause
+            foreach (var table in extraWhereTables)
+            {
+                if (!string.IsNullOrWhiteSpace(table.WhereSQL))
+                {
+                    string where = RazorHelper.CompileExecute(table.WhereSQL, table);
+                    if (!string.IsNullOrWhiteSpace(where))
+                    {
+                        if (execWhereClause.Length != 0) execWhereClause.Append("\r\nAND ");
+                        execWhereClause.AppendFormat("({0})", where);
+                    }
+                }
             }
         }
 
@@ -1692,17 +1817,17 @@ namespace Seal.Model
             {
                 if (joinPaths == null) return;
                 joinPaths.AppendFormat("Tables left: {0} , Joins used:{1}\r\n", tablesToUse.Count, joins.Count);
-                for (int i=0; i<joins.Count; i++)
+                for (int i = 0; i < joins.Count; i++)
                 {
                     var join = joins[i];
-                    if (i==0) joinPaths.Append(join.LeftTable.DisplayName + "->");
-                    if (i > 0 && join.LeftTableGUID != joins[i-1].RightTableGUID)
+                    if (i == 0) joinPaths.Append(join.LeftTable.DisplayName + "->");
+                    if (i > 0 && join.LeftTableGUID != joins[i - 1].RightTableGUID)
                     {
                         //Break
                         joinPaths.Append("\r\n" + join.LeftTable.DisplayName + "->");
                     }
                     joinPaths.Append(join.RightTable.DisplayName);
-                    if (i < joins.Count - 1 && join.RightTableGUID == joins[i+1].LeftTableGUID)
+                    if (i < joins.Count - 1 && join.RightTableGUID == joins[i + 1].LeftTableGUID)
                     {
                         joinPaths.Append("->");
                     }
@@ -1808,9 +1933,10 @@ namespace Seal.Model
             {
                 if (!orderColumns.Contains(element.SQLColumn) && element.IsSorted)
                 {
-                    string ascdesc = element.SortOrder.Contains(ReportElement.kAscendantSortKeyword) ? " ASC" : " DESC";
-                    Helper.AddValue(ref orderClause, ",", (Source.IsNoSQL ? element.SQLColumnName : element.SQLColumn) + ascdesc); //If NoSQL, the Data View can not be sorted with aggregate...
-                    Helper.AddValue(ref orderClauseName, ",", element.SQLColumnName + ascdesc);
+                    string SQLascdesc = element.SortOrder.Contains(ReportElement.kAscendantSortKeyword) ? " ASC" : " DESC";
+                    string LINQascdesc = element.SortOrder.Contains(ReportElement.kAscendantSortKeyword) ? "" : " descending";
+                    Helper.AddValue(ref orderClause, ",", IsLINQ ? element.LINQColumnName + LINQascdesc : element.SQLColumn + SQLascdesc);
+                    Helper.AddValue(ref orderClauseName, ",", element.SQLColumnName + SQLascdesc);
                     orderColumns.Add(element.SQLColumn);
                 }
             }
@@ -1822,22 +1948,11 @@ namespace Seal.Model
         /// </summary>
         public void CancelCommand()
         {
-            if (_commandMutex.WaitOne(1000))
+            if (_command != null)
             {
-                try
-                {
-                    if (_command != null)
-                    {
-                        _command.Cancel();
-                    }
-                }
-                finally
-                {
-                    _commandMutex.ReleaseMutex();
-                }
+                _command.Cancel();
             }
         }
-        Mutex _commandMutex = new Mutex();
 
         void executePrePostStatement(string sql, string prefix, string name, bool ignoreErrors, object model)
         {
@@ -1908,11 +2023,12 @@ namespace Seal.Model
                             && ((PostSQL == null && runningModel.PostSQL == null) || (PostSQL.Trim() == runningModel.PostSQL.Trim()))
                             && ((PreLoadScript == null && runningModel.PreLoadScript == null) || (PreLoadScript.Trim() == runningModel.PreLoadScript.Trim()))
                             && ((LoadScript == null && runningModel.LoadScript == null) || (LoadScript.Trim() == runningModel.LoadScript.Trim()))
-                            && ((FinalScript == null && runningModel.FinalScript == null) || (FinalScript.Trim() == runningModel.FinalScript.Trim()))
                             )
                         {
                             //we can wait to get the same data table 
-                            Report.LogMessage("Model '{0}': Getting result table from '{1}'...", Name, runningModel.Name);
+                            var runningName = runningModel.MasterModel != null ? runningModel.MasterModel.Name + " > " + runningModel.Name : runningModel.Name;
+                            if (MasterModel == null) Report.LogMessage("Model '{0}': Getting result table from model '{1}'...", Name, runningName);
+                            else Report.LogMessage("Model '{0}': Getting result table of sub-model '{1}' from model '{2}'...", MasterModel.Name, Name, runningName);
                             while (!Report.Cancel && !runningModel._resultTableAvailable)
                             {
                                 if (!string.IsNullOrEmpty(runningModel.ExecutionError)) break;
@@ -1921,9 +2037,8 @@ namespace Seal.Model
 
                             if (runningModel.ResultTable != null)
                             {
-                                //Set the result table
-                                ResultTable = Source.IsNoSQL ? runningModel._rawNoSQLTable : runningModel.ResultTable;
-                                ExecutionDuration = runningModel.ExecutionDuration;
+                                //Set the result table in the model
+                                ResultTable = runningModel.ResultTable;
                             }
                         }
                     }
@@ -1935,21 +2050,298 @@ namespace Seal.Model
             }
         }
 
+        void checkRunningSubTables(MetaTable subTable, Dictionary<string, MetaTable> runningSubTables)
+        {
+            if (ShareResultTable)
+            {
+                lock (runningSubTables)
+                {
+                    if (runningSubTables.ContainsKey(subTable.GUID))
+                    {
+                        //check if we can reuse the current running No SQL: same source, same connection string and same definition
+                        MetaTable runningTable = runningSubTables[subTable.GUID];
+                        if (subTable.Source == runningTable.Source
+                            && subTable.Model.Connection.ConnectionType == runningTable.Model.Connection.ConnectionType
+                            && subTable.Model.Connection.FullConnectionString == runningTable.Model.Connection.FullConnectionString
+                            && string.IsNullOrEmpty(runningTable.Model.ExecutionError)
+                            && subTable.IsIdentical(runningTable)
+                            )
+                        {
+                            //we can wait to get the same data table 
+                            Report.LogMessage("Model '{0}': Getting result table of No SQL table '{1}' from model '{2}'...", Name, subTable.Name, runningTable.Model.Name);
+                            while (!Report.Cancel && runningTable.NoSQLTable == null)
+                            {
+                                if (!string.IsNullOrEmpty(runningTable.Model.ExecutionError)) break;
+                                Thread.Sleep(100);
+                            }
+
+                            if (runningTable.NoSQLTable != null)
+                            {
+                                //Set the result table
+                                subTable.NoSQLTable = runningTable.NoSQLTable;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        runningSubTables.Add(subTable.GUID, subTable);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Current list of tables used for the join
+        /// </summary>
         [XmlIgnore]
-        private DataTable _rawNoSQLTable = null;
+        public List<MetaJoin> ExecTableJoins = null;
+
+        /// <summary>
+        /// Current list of result tables for the model execution
+        /// </summary>
+        [XmlIgnore]
+        public Dictionary<string, DataTable> ExecResultTables = null;
+
+        void initSubModelsAndTables()
+        {
+            //Build current sub-models
+            if (LINQSubModels == null) LINQSubModels = new List<ReportModel>();
+
+            var currentSubModels = LINQSubModels.ToList();
+            LINQSubModels.Clear();
+            foreach (var table in FromTables.Where(i => i.IsSQL))
+            {
+                var subModel = currentSubModels.FirstOrDefault(i => i.SourceGUID == table.Source.GUID);
+                if (subModel == null)
+                {
+                    subModel = new ReportModel();
+                }
+                subModel.MasterModel = this;
+                subModel.Report = Report;
+                subModel.SourceGUID = table.Source.GUID;
+                subModel.Name = table.Source.Name;
+                LINQSubModels.Add(subModel);
+            }
+
+            //Add elements involved
+            foreach (var subModel in LINQSubModels)
+            {
+                subModel.Elements.Clear();
+                var source = subModel.Source;
+
+                //Elements in the select
+                foreach (var element in Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.Source.GUID == subModel.SourceGUID))
+                {
+                    if (!subModel.Elements.Exists(i => i.MetaColumnGUID == element.MetaColumnGUID))
+                    {
+                        //Add the element
+                        ReportElement element2 = ReportElement.Create();
+                        element2.Name = element.Name;
+                        element2.MetaColumnGUID = element.MetaColumnGUID;
+                        element2.PivotPosition = element.PivotPosition;
+                        element2.SortOrder = element.SortOrder;
+                        subModel.Elements.Add(element2);
+                    }
+                }
+
+                //elements used to perform the LINQ joins
+                foreach (var join in ExecTableJoins)
+                {
+                    foreach (var col in join.LeftTable.Columns.Union(join.RightTable.Columns).Where(i => i.Source.GUID == source.GUID))
+                    {
+                        if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
+                        {
+                            if (!subModel.Elements.Exists(i => i.MetaColumnGUID == col.GUID))
+                            {
+                                //Add the element
+                                ReportElement element = ReportElement.Create();
+                                element.Name = col.Name;
+                                element.MetaColumnGUID = col.GUID;
+                                element.PivotPosition = PivotPosition.Hidden;
+                                element.IsForNavigation = true;
+                                element.SortOrder = ReportElement.kNoSortKeyword;
+                                subModel.Elements.Add(element);
+                            }
+                        }
+                    }
+                }
+
+                //elements used to perform the LINQ restrictions
+                foreach (var restr in Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.Source.GUID == subModel.SourceGUID))
+                {
+                    if (!subModel.Elements.Exists(i => i.MetaColumnGUID == restr.MetaColumnGUID))
+                    {
+                        //Add the element
+                        ReportElement element = ReportElement.Create();
+                        element.Name = restr.Name;
+                        element.MetaColumnGUID = restr.MetaColumnGUID;
+                        element.PivotPosition = PivotPosition.Hidden;
+                        element.IsForNavigation = true;
+                        element.SortOrder = ReportElement.kNoSortKeyword;
+                        subModel.Elements.Add(element);
+                    }
+                }
+
+                subModel.InitReferences();
+            }
+
+            //Current sub-tables                    
+            if (LINQSubTables == null) LINQSubTables = new List<MetaTable>();
+            var currentSubTables = LINQSubTables.ToList();
+            LINQSubTables.Clear();
+            foreach (var table in FromTables.Where(i => !i.IsSQL))
+            {
+                var subTable = currentSubTables.FirstOrDefault(i => i.GUID == table.GUID);
+                if (subTable == null)
+                {
+                    subTable = new MetaTable();
+                }
+                subTable.Model = this;
+                subTable.GUID = table.GUID;
+                subTable.Source = table.Source;
+                subTable.Name = table.Name;
+                //Copy default properties
+                if (subTable.LoadScript == null) subTable.LoadScript = table.LoadScript;
+                if (subTable.Parameters.Count == 0)
+                {
+                    subTable.InitParameters();
+                    foreach (var parameter in subTable.Parameters) parameter.Value = table.GetValue(parameter.Name);
+                }
+                LINQSubTables.Add(subTable);
+            }
+        }
+
         [XmlIgnore]
         private bool _resultTableAvailable = false;
+
+        private async Task<DataTable> GetModelResultTableAsync(Dictionary<string, ReportModel> runningModels)
+        {
+            return await Task.Run(() =>
+            {
+                ResultTable = null;
+                _resultTableAvailable = false;
+                var source = Source;
+                BuildSQL();
+                if (FromTables != null)
+                {
+                    fillResultTableFromDatabase(runningModels);
+                    //Rename columns
+                    foreach (var element in Elements)
+                    {
+                        var newName = element.MetaColumn.Name.Replace("\"", "\\\"");
+                        if (ResultTable.Columns.IndexOf(newName) == -1) ResultTable.Columns[element.SQLColumnName].ColumnName = newName;
+                    }
+                    ResultTable.TableName = FromTables[0].LINQResultName;
+                    _resultTableAvailable = true;
+                }
+                else
+                {
+                    throw new Exception("No elements selected for this model");
+                }
+                return ResultTable;
+            });
+        }
+
+        private async Task<DataTable> GetNoSQLResultTableAsync(MetaTable subTable, Dictionary<string, MetaTable> runningSubTables)
+        {
+            return await Task.Run(() =>
+            {
+                DataTable dataTable = null;
+
+                //Check if we can use a data table from another sub-table
+                checkRunningSubTables(subTable, runningSubTables);
+
+                if (subTable.NoSQLTable == null)
+                {
+                    var table = Source.MetaData.Tables.FirstOrDefault(i => i.GUID == subTable.GUID);
+                    if (table != null)
+                    {
+                        table.Log = Report;
+                        table.NoSQLModel = this;
+                        Report.LogMessage("Model '{0}': Building No SQL Table '{1}'", Name, table.Name);
+
+                        if (!string.IsNullOrEmpty(table.LoadScript))
+                        {
+                            dataTable = table.BuildNoSQLTable(false);
+                            RazorHelper.CompileExecute(table.LoadScript, table);
+                        }
+                        else
+                        {
+                            dataTable = table.BuildNoSQLTable(true);
+                        }
+
+                        //Thread.Sleep(5000); //For DEV
+
+                        dataTable.TableName = table.AliasName;
+                        subTable.NoSQLTable = dataTable;
+                    }
+                }
+                return dataTable;
+            });
+        }
+
+        bool fillResultTableFromDatabase(Dictionary<string, ReportModel> runningModels)
+        {
+            bool isMaster = false;
+            //Normal SQL
+            try
+            {
+                if (string.IsNullOrEmpty(Connection.FullConnectionString)) throw new Exception("The connection string is not defined for this Model.");
+                _command = null;
+
+                //Check if we can use a data table from another model
+                checkRunningModels(Sql, runningModels);
+
+                if (ResultTable == null)
+                {
+                    isMaster = true; //This model is the master for the Result table
+                    DbConnection connection = null;
+                    connection = Connection.GetOpenConnection();
+                    if (connection is OdbcConnection) _command = ((OdbcConnection)connection).CreateCommand();
+                    else if (connection is SqlConnection) _command = ((SqlConnection)connection).CreateCommand();
+                    else _command = ((OleDbConnection)connection).CreateCommand();
+
+                    _command.CommandTimeout = 0;
+                    executePrePostStatement(Source.PreSQL, "Pre", Source.Name, Source.IgnorePrePostError, Source);
+                    executePrePostStatements(true);
+                    executePrePostStatement(PreSQL, "Pre", Name, IgnorePrePostError, this);
+
+                    if (MasterModel == null) Report.LogMessage("Model '{0}': Executing main query...", Name);
+                    else Report.LogMessage("Model '{0}': Executing query for sub-model '{1}'...", MasterModel.Name, Name);
+                    _command.CommandText = Sql;
+
+                    DbDataAdapter adapter = null;
+                    if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
+                    else if (connection is SqlConnection) adapter = new SqlDataAdapter((SqlCommand)_command);
+                    else adapter = new OleDbDataAdapter((OleDbCommand)_command);
+                    ResultTable = new DataTable();
+                    adapter.Fill(ResultTable);
+
+                    //Thread.Sleep(3000); //For DEV
+
+                    executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);
+                    executePrePostStatements(false);
+                    executePrePostStatement(Source.PostSQL, "Post", Source.Name, Source.IgnorePrePostError, Source);
+                    connection.Close();
+                    _command = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Unexpected error when executing the following SQL statement:\r\n{0}\r\n\r\nError detail:\r\n{1}", Sql, ex.Message));
+            }
+
+            return isMaster;
+        }
 
         /// <summary>
         /// Build the ResultTable for the model
         /// </summary>
-        public void FillResultTable(Dictionary<string, ReportModel> runningModels)
+        public async Task FillResultTableAsync(Dictionary<string, ReportModel> runningModels, Dictionary<string, MetaTable> runningSubTables)
         {
-            bool isMaster = false;
             Progression = 0;
-
             ExecutionDuration = 0;
-            _resultTableAvailable = false;
+            ExecutionDate = DateTime.Now;
             Pages.Clear();
 
             //Pre-load script
@@ -1965,39 +2357,41 @@ namespace Seal.Model
 
             if (Source.IsNoSQL && Elements.Count > 0 && !Report.Cancel)
             {
-                //No SQL
+                //No SQL = LINQ
                 try
                 {
-                    Source.MetaData.MasterTable.Log = Report;
-                    Source.MetaData.MasterTable.NoSQLModel = this;
-                    string key = !string.IsNullOrEmpty(LoadScript) ? LoadScript : "_Master_" + Source.MetaData.MasterTable.LoadScript;
-
-                    //Check if we can use a data table from another model
-                    checkRunningModels(key, runningModels);
-
                     if (ResultTable == null)
                     {
-                        if (!string.IsNullOrEmpty(LoadScript))
+                        ExecResultTables = new Dictionary<string, DataTable>();
+                        var tasks = new List<Task>();
+                        //Tables execution
+                        foreach (var subModel in LINQSubModels)
                         {
-                            ResultTable = Source.MetaData.MasterTable.BuildNoSQLTable(false);
-                            RazorHelper.CompileExecute(LoadScript, this);
+                            tasks.Add(subModel.GetModelResultTableAsync(runningModels));
                         }
-                        else
-                        {
-                            ResultTable = Source.MetaData.MasterTable.BuildNoSQLTable(true);
-                        }
-                        _rawNoSQLTable = ResultTable;
-                    }
 
-                    //apply filters using DataView
-                    if (execWhereClause.Length > 0 || execOrderByClause.Length > 0)
-                    {
-                        //make a copy first
-                        ResultTable = ResultTable.Copy();
-                        var dataView = new DataView(ResultTable);
-                        dataView.RowFilter = execWhereClause.ToString();
-                        dataView.Sort = execOrderByClause.ToString();
-                        ResultTable = dataView.ToTable();
+                        foreach (var subTable in LINQSubTables)
+                        {
+                            tasks.Add(GetNoSQLResultTableAsync(subTable, runningSubTables));
+                        }
+
+                        //Wait for the result tables
+                        await Task.WhenAll(tasks);
+
+                        foreach (var subModel in LINQSubModels)
+                        {
+                            ExecResultTables.Add(subModel.ResultTable.TableName, subModel.ResultTable);
+                        }
+
+                        foreach (var subTable in LINQSubTables)
+                        {
+                            ExecResultTables.Add(subTable.NoSQLTable.TableName, subTable.NoSQLTable);
+                        }
+
+                        //Finally LINQ query
+                        RazorHelper.CompileExecute(LoadScript ?? LINQLoadScript, this);
+
+                        handleEnums();
                     }
                 }
                 catch (Exception ex)
@@ -2008,121 +2402,71 @@ namespace Seal.Model
             else if (!string.IsNullOrEmpty(Sql) && !Report.Cancel)
             {
                 //Normal SQL
-                try
-                {
-                    if (string.IsNullOrEmpty(Connection.FullConnectionString)) throw new Exception("The connection string is not defined for this Model.");
-                    _command = null;
-
-                    //Check if we can use a data table from another model
-                    checkRunningModels(Sql, runningModels);
-
-                    if (ResultTable == null)
-                    {
-                        isMaster = true; //This model is the master for the Result table
-                        DbConnection connection = null;
-                        if (_commandMutex.WaitOne(1000))
-                        {
-                            try
-                            {
-                                connection = Connection.GetOpenConnection();
-                                if (connection is OdbcConnection) _command = ((OdbcConnection)connection).CreateCommand();
-                                else if (connection is SqlConnection) _command = ((SqlConnection)connection).CreateCommand();
-                                else _command = ((OleDbConnection)connection).CreateCommand();
-                                _command.CommandTimeout = 0;
-                                ExecutionDate = DateTime.Now;
-                            }
-                            finally
-                            {
-                                _commandMutex.ReleaseMutex();
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception("Unable to get command mutex...");
-                        }
-                        executePrePostStatement(Source.PreSQL, "Pre", Source.Name, Source.IgnorePrePostError, Source);
-                        executePrePostStatements(true);
-                        executePrePostStatement(PreSQL, "Pre", Name, IgnorePrePostError, this);
-                        Report.LogMessage("Model '{0}': Executing main query...", Name);
-                        _command.CommandText = Sql;
-
-                        ResultTable = new DataTable();
-                        DbDataAdapter adapter = null;
-                        if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
-                        else if (connection is SqlConnection) adapter = new SqlDataAdapter((SqlCommand)_command);
-                        else adapter = new OleDbDataAdapter((OleDbCommand)_command);
-                        adapter.Fill(ResultTable);
-                        executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);
-                        executePrePostStatements(false);
-                        executePrePostStatement(Source.PostSQL, "Post", Source.Name, Source.IgnorePrePostError, Source);
-                        connection.Close();
-                        _command = null;
-                        ExecutionDuration = Convert.ToInt32((DateTime.Now - ExecutionDate).TotalSeconds);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(string.Format("Unexpected error when executing the following SQL statement:\r\n{0}\r\n\r\nError detail:\r\n{1}", Sql, ex.Message));
-                }
+                ResultTable = null;
+                _resultTableAvailable = false;
+                var isMaster = fillResultTableFromDatabase(runningModels);
 
                 if (Report.Cancel) return;
 
-                //If enum, set enum values directly in the table
-                if (isMaster)
-                {
-                    bool hasEnum = false;
-                    List<ReportElement> specialSortByPositionElements = new List<ReportElement>();
-                    foreach (var element in Elements)
-                    {
-                        if (element.IsEnum)
-                        {
-                            lock (ResultTable)
-                            {
-                                hasEnum = true;
-                                DataColumn col = ResultTable.Columns[element.SQLColumnName];
-                                DataColumn newcol = new DataColumn("_seal_dummy_temp_col_", typeof(string));
-                                ResultTable.Columns.Add(newcol);
-
-                                foreach (DataRow row in ResultTable.Rows)
-                                {
-                                    //to sort by position, we add 6 digits as a prefix
-                                    if (element.IsSorted && element.EnumEL.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
-                                    row[newcol] = element.GetEnumSortValue(row[col].ToString(), false);
-                                }
-                                ResultTable.Columns.Remove(col);
-                                newcol.ColumnName = element.SQLColumnName;
-                            }
-                        }
-                    }
-
-                    if (Report.Cancel) return;
-
-                    if (hasEnum)
-                    {
-                        //this re-sort the result with enum values...
-                        DataView dv = new DataView(ResultTable, null, execOrderByNameClause.ToString(), DataViewRowState.CurrentRows);
-                        ResultTable = dv.ToTable();
-
-                        if (Report.Cancel) return;
-
-                        //remove the 6 digits used for special sort
-                        foreach (var element in specialSortByPositionElements)
-                        {
-                            DataColumn col = ResultTable.Columns[element.SQLColumnName];
-                            foreach (DataRow row in ResultTable.Rows)
-                            {
-                                string newValue = row[col].ToString();
-                                if (newValue.Length > 5) row[col] = newValue.Substring(6);
-                            }
-                        }
-                    }
-                }
+                //If enum, set enum values directly in the table, only for master model
+                if (isMaster && MasterModel == null) handleEnums();
 
                 ExecuteLoadScript(LoadScript, "Post Load Script", this);
+                _resultTableAvailable = true;
             }
 
+            ExecutionDuration = Convert.ToInt32((DateTime.Now - ExecutionDate).TotalSeconds);
             Progression = 70; //70% after getting result set
-            _resultTableAvailable = true;
+        }
+
+        void handleEnums()
+        {
+            bool hasEnum = false;
+            List<ReportElement> specialSortByPositionElements = new List<ReportElement>();
+            foreach (var element in Elements)
+            {
+                if (element.IsEnum)
+                {
+                    lock (ResultTable)
+                    {
+                        hasEnum = true;
+                        DataColumn col = ResultTable.Columns[element.SQLColumnName];
+                        DataColumn newcol = new DataColumn("_seal_dummy_temp_col_", typeof(string));
+                        ResultTable.Columns.Add(newcol);
+
+                        foreach (DataRow row in ResultTable.Rows)
+                        {
+                            //to sort by position, we add 6 digits as a prefix
+                            if (element.IsSorted && element.EnumEL.UsePosition && !specialSortByPositionElements.Contains(element)) specialSortByPositionElements.Add(element);
+                            row[newcol] = element.GetEnumSortValue(row[col].ToString(), false);
+                        }
+                        ResultTable.Columns.Remove(col);
+                        newcol.ColumnName = element.SQLColumnName;
+                    }
+                }
+            }
+
+            if (Report.Cancel) return;
+
+            if (hasEnum)
+            {
+                //this re-sort the result with enum values...
+                DataView dv = new DataView(ResultTable, null, execOrderByNameClause.ToString(), DataViewRowState.CurrentRows);
+                ResultTable = dv.ToTable();
+
+                if (Report.Cancel) return;
+
+                //remove the 6 digits used for special sort
+                foreach (var element in specialSortByPositionElements)
+                {
+                    DataColumn col = ResultTable.Columns[element.SQLColumnName];
+                    foreach (DataRow row in ResultTable.Rows)
+                    {
+                        string newValue = row[col].ToString();
+                        if (newValue.Length > 5) row[col] = newValue.Substring(6);
+                    }
+                }
+            }
         }
 
         /// <summary>

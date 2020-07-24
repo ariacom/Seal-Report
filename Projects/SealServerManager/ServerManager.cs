@@ -54,12 +54,12 @@ namespace Seal
 
         public ServerManager()
         {
-     /*       if (Properties.Settings.Default.CallUpgrade)
-            {
-                Properties.Settings.Default.Upgrade();
-                Properties.Settings.Default.CallUpgrade = false;
-                Properties.Settings.Default.Save();
-            }*/
+            /*       if (Properties.Settings.Default.CallUpgrade)
+                   {
+                       Properties.Settings.Default.Upgrade();
+                       Properties.Settings.Default.CallUpgrade = false;
+                       Properties.Settings.Default.Save();
+                   }*/
 
             InitializeComponent();
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
@@ -121,7 +121,7 @@ namespace Seal
 
         bool HasValidRepositoryDirectory(string path)
         {
-            return (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower() 
+            return (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower()
                 || Path.GetDirectoryName(path).ToLower() == _repository.DevicesEmailFolder.ToLower()
                 || Path.GetDirectoryName(path).ToLower() == _repository.DevicesFileServerFolder.ToLower()
                 );
@@ -246,7 +246,7 @@ namespace Seal
                 ToolStripMenuItem item = new ToolStripMenuItem(Path.GetFileNameWithoutExtension(file));
                 item.Image = image;
                 item.Tag = file;
-                item.Click += new EventHandler(delegate(object sender, EventArgs e)
+                item.Click += new EventHandler(delegate (object sender, EventArgs e)
                 {
                     if (!checkModified()) return;
                     openFile((string)((ToolStripMenuItem)sender).Tag);
@@ -413,7 +413,7 @@ namespace Seal
                     MessageBox.Show("The configuration file must be in a repository folder.\r\nA sub-folder of " + _repository.RepositoryPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 openOK = false;
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -440,21 +440,7 @@ namespace Seal
             {
                 _source = MetaSource.Create(_repository);
                 _source.IsNoSQL = sender == noSQLdataSourceToolStripMenuItem;
-                if (_source.IsNoSQL)
-                {
-                    //Add master table
-                    MetaTable master = MetaTable.Create();
-                    master.DynamicColumns = true;
-                    master.IsEditable = true;
-                    master.Alias = MetaData.MasterTableName;
-                    master.Source = _source;
-                    _source.MetaData.Tables.Add(master);
-                    entityToSelect = master;
-                }
-                else
-                {
-                    entityToSelect = _source.Connection;
-                }
+                entityToSelect = _source.Connection;
             }
             else if (sender == emailOutputDeviceToolStripMenuItem)
             {
@@ -562,6 +548,10 @@ namespace Seal
                 mainPropertyGrid.SelectedObject = selectedEntity;
             }
 
+            var entry = Helper.GetGridEntry(mainPropertyGrid, "table parameters");
+            if (entry != null) entry.Expanded = true;
+
+
             toolStripHelper.SetHelperButtons(selectedEntity);
         }
 
@@ -571,7 +561,7 @@ namespace Seal
 
         private void treeContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            sourceHelper.treeContextMenuStrip_Opening(sender, e);
+            sourceHelper.treeContextMenuStrip_Opening(sender, e, new EventHandler(addToolStripMenuItem_Click));
         }
 
 

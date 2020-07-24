@@ -9,6 +9,8 @@ using System.ComponentModel;
 using System.Windows.Forms.Design;
 using System.Windows.Forms;
 using Seal.Model;
+using ScintillaNET;
+using Seal.Helpers;
 
 namespace Seal.Forms
 {
@@ -52,6 +54,7 @@ namespace Seal.Forms
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
             var svc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+            bool isLINQ = false;
             if (svc != null)
             {
                 var frm = new SQLEditorForm();
@@ -66,10 +69,10 @@ namespace Seal.Forms
                 {
                     ReportModel model = context.Instance as ReportModel;
                     model.BuildSQL();
-                    if (!string.IsNullOrEmpty(model.ExecutionError)) 
+                    if (!string.IsNullOrEmpty(model.ExecutionError))
                     {
-                        throw new Exception("Error building the SQL Statement...\r\nPlease fix these errors first.\r\n" + model.ExecutionError); 
-                    } 
+                        throw new Exception("Error building the SQL Statement...\r\nPlease fix these errors first.\r\n" + model.ExecutionError);
+                    }
 
                     if (context.PropertyDescriptor.Name == "PreSQL" || context.PropertyDescriptor.Name == "PostSQL")
                     {
@@ -97,12 +100,20 @@ namespace Seal.Forms
                 {
                     frm.clearToolStripButton.Visible = false;
                     MetaJoin join = context.Instance as MetaJoin;
+                    isLINQ = join.Source.IsNoSQL;
 
                     if (join.LeftTable != null && join.RightTable != null && join.LeftTable.Columns.Count > 0 && join.RightTable.Columns.Count > 0)
                     {
-                        for (int i=0; i< join.LeftTable.Columns.Count && i < join.RightTable.Columns.Count; i++)
+                        for (int i = 0; i < join.LeftTable.Columns.Count && i < join.RightTable.Columns.Count; i++)
                         {
-                            samples.Add(string.Format("{0} = {1}", join.LeftTable.Columns[i].Name, join.RightTable.Columns[i].Name));
+                            if (join.Source.IsSQL)
+                            {
+                                samples.Add(string.Format("{0}={1}", join.LeftTable.Columns[i].Name, join.RightTable.Columns[i].Name));
+                            }
+                            else
+                            {
+                                samples.Add(string.Format("{0}[{1}] equals {2}[{3}]", join.LeftTable.AliasName, Helper.QuoteDouble(join.LeftTable.Columns[i].Name), join.RightTable.AliasName, Helper.QuoteDouble(join.RightTable.Columns[i].Name)));
+                            }
                         }
                     }
 
@@ -110,7 +121,15 @@ namespace Seal.Forms
                     if ((value == null || string.IsNullOrEmpty(value.ToString())) && join.LeftTable != null && join.RightTable != null)
                     {
                         forceValueToEdit = true;
-                        valueToEdit = string.Format("{0}.<ColumnName> = {1}.<ColumnName>", join.LeftTable.AliasName, join.RightTable.AliasName);
+                        if (join.Source.IsSQL)
+                        {
+                            valueToEdit = string.Format("{0}.<ColumnName> = {1}.<ColumnName>", join.LeftTable.AliasName, join.RightTable.AliasName);
+                        }
+                        else
+                        {
+                            valueToEdit = string.Format("{0}[\"<ColumnName>\"] equals {1}[\"<ColumnName>\"]", join.LeftTable.AliasName, join.RightTable.AliasName);
+                        }
+
                     }
                 }
                 else if (context.Instance is MetaEnum)
@@ -178,11 +197,14 @@ namespace Seal.Forms
                 if (value != null || forceValueToEdit) frm.sqlTextBox.Text = valueToEdit.ToString();
 
                 if (context.PropertyDescriptor.IsReadOnly) frm.SetReadOnly();
-                else 
+                else
                 {
                     frm.SetSamples(samples);
                     if (!string.IsNullOrEmpty(description)) frm.errorTextBox.Text = description;
                 }
+
+                frm.Text = isLINQ ? "LINQ Editor" : "SQL Editor";
+                frm.InitLexer(isLINQ ? Lexer.Cpp : Lexer.Sql);
 
                 if (svc.ShowDialog(frm) == DialogResult.OK)
                 {

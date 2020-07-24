@@ -13,8 +13,9 @@ using RazorEngine.Templating;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.Mail;
-using Microsoft.Win32.TaskScheduler;
 using System.Text;
+using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace Seal.Model
 {
@@ -86,8 +87,6 @@ namespace Seal.Model
         /// Object that can be used at run-time for any purpose
         /// </summary>
         public object Tag;
-
-        Thread _executeThread;
 
         /// <summary>
         /// Render the report and returns the result
@@ -250,19 +249,17 @@ namespace Seal.Model
                 Report.ExecutionCommonRestrictions = null;
                 Report.ExecutionViewRestrictions = null;
                 //Force rebuild of the lists and values shared
-                var commonRestrictions = Report.ExecutionCommonRestrictions;
-                var viewRestrictions = Report.ExecutionViewRestrictions;
+                _ = Report.ExecutionCommonRestrictions;
+                _ = Report.ExecutionViewRestrictions;
 
                 Report.Status = ReportStatus.Executing;
                 Report.Cancel = false;
                 Report.ExecutionStartDate = DateTime.Now;
-
-                _executeThread = new Thread(ExecuteThread);
-                _executeThread.Start();
+                Task.Run(() => ExecuteAsync());
             }
         }
 
-        private void ExecuteThread()
+        private async void ExecuteAsync()
         {
             try
             {
@@ -281,7 +278,10 @@ namespace Seal.Model
                     if (!Report.Cancel) executeTasks(ExecutionStep.BeforeModel);
 
                     //Build models
-                    if (!Report.Cancel) buildModels();
+                    if (!Report.Cancel)
+                    {
+                        await buildModelsAsync();
+                    }
 
                     //Tasks before rendering
                     if (!Report.Cancel) executeTasks(ExecutionStep.BeforeRendering);
@@ -485,7 +485,7 @@ namespace Seal.Model
                         {
                             restriction.Date4 = DateTime.MinValue;
                             restriction.Date4Keyword = "";
-                    }
+                        }
                         else if (DateTime.TryParse(val, report.CultureInfo, DateTimeStyles.None, out dt))
                         {
                             restriction.Date4Keyword = "";
@@ -534,7 +534,7 @@ namespace Seal.Model
                     }
                     if (selected_enum.Count > 0)
                         restriction.EnumValues = selected_enum;
-                    else 
+                    else
                         restriction.EnumValues.Clear();
 
                     //check required flag
@@ -574,7 +574,7 @@ namespace Seal.Model
 
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
-                    foreach (ReportRestriction restriction in 
+                    foreach (ReportRestriction restriction in
                         model.ExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI)
                         .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                         .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
@@ -598,38 +598,32 @@ namespace Seal.Model
         /// </summary>
         Dictionary<string, ReportModel> _runningModels = new Dictionary<string, ReportModel>();
 
-        void buildModels()
+        /// <summary>
+        /// List of No SQL subtables being executed
+        /// </summary>
+        Dictionary<string, MetaTable> _runningSubTables = new Dictionary<string, MetaTable>();
+
+        async Task buildModelsAsync()
         {
             Report.LogMessage("Starting to build models...");
-            List<Thread> threads = new List<Thread>();
 
             _runningModels.Clear();
+            _runningSubTables.Clear();
             //Build SQL and Fill Result table
             var sets = (from model in Report.ExecutionModels orderby model.ExecutionSet select model.ExecutionSet).Distinct();
             foreach (var set in sets)
             {
                 Report.LogMessage("Build models of Execution Set {0}...", set);
+                var tasks = new List<Task>();
                 foreach (ReportModel model in Report.ExecutionModels.Where(i => i.ExecutionSet == set))
                 {
-                    Thread thread = new Thread(ModelBuildResultTableThread);
-                    thread.Start(model);
-                    threads.Add(thread);
+                    tasks.Add(buildResultTables(model));
                 }
-
-                //Check if finished
-                bool stillRunning = true;
-                while (stillRunning && !Report.Cancel)
-                {
-                    stillRunning = false;
-                    foreach (var thread in threads)
-                    {
-                        if (thread.IsAlive) stillRunning = true;
-                    }
-                    Thread.Sleep(50);
-                }
+                await Task.WhenAll(tasks);
             }
             Report.RenderOnly = false;
             _runningModels.Clear();
+            _runningSubTables.Clear();
 
             //Cancel execution
             if (Report.Cancel)
@@ -638,26 +632,19 @@ namespace Seal.Model
                 {
                     model.CancelCommand();
                 }
-
-                Thread.Sleep(1000);
-                //Aborting resisting threads...
-                foreach (var thread in threads)
-                {
-                    if (thread.IsAlive) thread.Abort();
-                }
             }
         }
 
-        private void ModelBuildResultTableThread(object modelParam)
+        private async Task buildResultTables(ReportModel model)
         {
-            LoadResultTableModel(modelParam as ReportModel);
-            BuildResultPagesModel(modelParam as ReportModel);
+            await LoadResultTableModel(model);
+            BuildResultPagesModel(model);
         }
 
         /// <summary>
         /// Load the result table of a report model
         /// </summary>
-        public void LoadResultTableModel(ReportModel model)
+        public async Task LoadResultTableModel(ReportModel model)
         {
             try
             {
@@ -666,16 +653,13 @@ namespace Seal.Model
                     //Handle render only
                     if (model.ResultTable == null || !Report.RenderOnly)
                     {
-                        Report.LogMessage("Model '{0}': Loading result set...", model.Name);
-                        model.FillResultTable(_runningModels);
+                        Report.LogMessage("Model '{0}': Loading result table...", model.Name);
+                        await model.FillResultTableAsync(_runningModels, _runningSubTables);
+
                         if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
                     }
                     model.ExecResultTableLoaded = true;
                 }
-
-#if DEBUG
-                //Thread.Sleep(5000); //For DEV: Simulate long query
-#endif
             }
             catch (Exception ex)
             {
@@ -691,20 +675,29 @@ namespace Seal.Model
         {
             try
             {
-                if (model.ResultTable == null && string.IsNullOrEmpty(model.ExecutionError)) throw new Exception("The Result Table of the model was not loaded. Call BuildResultTableModel() first...");
+                if (!Report.Cancel && model.ResultTable == null && string.IsNullOrEmpty(model.ExecutionError)) throw new Exception("The Result Table of the model was not loaded. Call BuildResultTableModel() first...");
 
                 model.SetColumnsName();
 
                 if (!model.ExecResultPagesBuilt)
                 {
-                    Report.LogMessage("Model '{0}': Building pages...", model.Name);
-                    if (!Report.Cancel) buildPages(model);
+                    if (!Report.Cancel)
+                    {
+                        Report.LogMessage("Model '{0}': Building pages...", model.Name);
+                        buildPages(model);
+                    }
                     model.Progression = 75; //75% 
-                    Report.LogMessage("Model '{0}': Building tables...", model.Name);
-                    if (!Report.Cancel) buildTables(model);
+                    if (!Report.Cancel)
+                    {
+                        Report.LogMessage("Model '{0}': Building tables...", model.Name);
+                        buildTables(model);
+                    }
                     model.Progression = 80; //80% 
-                    Report.LogMessage("Model '{0}': Building totals...", model.Name);
-                    if (!Report.Cancel) buildTotals(model);
+                    if (!Report.Cancel)
+                    {
+                        Report.LogMessage("Model '{0}': Building totals...", model.Name);
+                        buildTotals(model);
+                    }
                     model.Progression = 85; //85% 
                     //Scripts
                     if (!Report.Cancel && model.HasCellScript) handleCellScript(model);
@@ -744,26 +737,21 @@ namespace Seal.Model
                     Report.LogMessage("Starting task '{0}'", task.Name);
                     task.Execution = this;
 
-                    Thread thread = new Thread(TaskExecuteThread);
-                    thread.Start(task);
+                    var threadTask = Task.Run(() => TaskExecuteAsync(task));
 
                     while (!Report.Cancel)
                     {
-                        if (!thread.IsAlive) break;
+                        if (threadTask.IsCompleted) break;
                         Thread.Sleep(50);
                     }
                     //Cancel execution
                     if (Report.Cancel)
                     {
-                        if (thread.IsAlive)
-                        {
-                            task.Cancel();
-                            int cnt = 5;
-                            while (--cnt >= 0 && thread.IsAlive) Thread.Sleep(1000);
-                            //Kill it if necessary...
-                            if (thread.IsAlive) thread.Abort();
-                        }
+                        task.Cancel();
+                        int cnt = 10; //Wait up to 5 seconds
+                        while (--cnt >= 0 && !threadTask.IsCompleted) Thread.Sleep(500);
                     }
+
                     if (!string.IsNullOrEmpty(task.DbInfoMessage.ToString()))
                     {
                         Report.LogMessage("Database information message:\r\n{0}", task.DbInfoMessage.ToString().Trim());
@@ -788,10 +776,8 @@ namespace Seal.Model
             }
         }
 
-
-        private void TaskExecuteThread(object taskParam)
+        private void TaskExecuteAsync(ReportTask task)
         {
-            ReportTask task = taskParam as ReportTask;
             try
             {
                 task.Execute();
@@ -808,6 +794,29 @@ namespace Seal.Model
                 }
             }
         }
+
+        /*
+        private async Task TaskExecuteAsync(ReportTask task, CancellationToken cancellationToken)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    task.Execute();
+                }
+                catch (Exception ex)
+                {
+                    var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");
+                    Report.LogMessage("Error in task '{0}': {1}\r\n", task.Name, message);
+                    if (!task.IgnoreError)
+                    {
+                        Report.ExecutionErrors = message;
+                        Report.ExecutionErrorStackTrace = ex.StackTrace;
+                        task.CancelReport = true;
+                    }
+                }
+            });
+        }*/
 
         private void setSubReportNavigation(ResultCell[] cellsToAssign, ResultCell[] cellValues)
         {
@@ -1779,7 +1788,7 @@ namespace Seal.Model
         /// <summary>
         /// Return the report of a given schedule GUID
         /// </summary>
-        public static Report GetScheduledReport(TaskFolder taskFolder, string reportPath, string reportGUID, string scheduleGUID, Repository repository)
+        public static Report GetScheduledReport(Microsoft.Win32.TaskScheduler.TaskFolder taskFolder, string reportPath, string reportGUID, string scheduleGUID, Repository repository)
         {
             Report report = null;
             if (File.Exists(reportPath)) report = Report.LoadFromFile(reportPath, repository);
@@ -1791,7 +1800,7 @@ namespace Seal.Model
                 if (report == null)
                 {
                     //Remove the schedules of the report
-                    foreach (Task oldTask in taskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID)))
+                    foreach (var oldTask in taskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID)))
                     {
                         taskFolder.DeleteTask(oldTask.Name);
                     }
@@ -1804,13 +1813,13 @@ namespace Seal.Model
         /// <summary>
         /// Return the report of a given schedule GUID
         /// </summary>
-        public static ReportSchedule GetReportSchedule(TaskFolder taskFolder, Report report, string scheduleGUID)
+        public static ReportSchedule GetReportSchedule(Microsoft.Win32.TaskScheduler.TaskFolder taskFolder, Report report, string scheduleGUID)
         {
             ReportSchedule schedule = report.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
             if (schedule == null)
             {
                 //Remove the schedule
-                foreach (Task oldTask in taskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID)))
+                foreach (var oldTask in taskFolder.GetTasks().Where(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID)))
                 {
                     taskFolder.DeleteTask(oldTask.Name);
                 }
@@ -1823,11 +1832,11 @@ namespace Seal.Model
             if (string.IsNullOrEmpty(scheduleGUID)) throw new Exception("No schedule GUID specified !\r\n");
             Repository repository = Repository.Instance;
 
-            TaskService taskService = new TaskService();
-            TaskFolder taskFolder = taskService.RootFolder.SubFolders.FirstOrDefault(i => i.Name == repository.Configuration.TaskFolderName);
+            var taskService = new Microsoft.Win32.TaskScheduler.TaskService();
+            var taskFolder = taskService.RootFolder.SubFolders.FirstOrDefault(i => i.Name == repository.Configuration.TaskFolderName);
             if (taskFolder == null) throw new Exception(string.Format("Unable to find schedule task folder '{0}'\r\nCheck your configuration...", repository.Configuration.TaskFolderName));
 
-            Task task = taskFolder.GetTasks().FirstOrDefault(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID));
+            var task = taskFolder.GetTasks().FirstOrDefault(i => i.Definition.RegistrationInfo.Source.EndsWith(scheduleGUID));
             if (task == null) throw new Exception(string.Format("Unable to find schedule '{0}'\r\n", scheduleGUID));
 
             string reportPath = ReportSchedule.GetTaskSourceDetail(task.Definition.RegistrationInfo.Source, 0);

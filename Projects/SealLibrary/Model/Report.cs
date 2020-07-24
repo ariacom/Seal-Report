@@ -831,7 +831,8 @@ namespace Seal.Model
         /// True if the report has been cancelled
         /// </summary>
         [XmlIgnore]
-        public bool Cancel = false;
+        private bool _cancel = false;
+        public bool Cancel { get => _cancel; set => _cancel = value; }
 
         /// <summary>
         /// True if the report has only to be rendered
@@ -1394,12 +1395,16 @@ namespace Seal.Model
                 {
                     source.TempConnections = source.Connections.ToList();
                     source.TempTables = source.MetaData.Tables.ToList();
+                    source.TempLinks = source.MetaData.TableLinks.ToList();
                     source.TempJoins = source.MetaData.Joins.ToList();
                     source.TempEnums = source.MetaData.Enums.ToList();
                     source.Connections.RemoveAll(i => !i.IsEditable);
                     source.MetaData.Tables.RemoveAll(i => !i.IsEditable);
+                    source.MetaData.TableLinks.RemoveAll(i => !i.IsEditable);
                     source.MetaData.Joins.RemoveAll(i => !i.IsEditable);
                     source.MetaData.Enums.RemoveAll(i => !i.IsEditable);
+
+                    foreach (var table in source.MetaData.Tables) table.BeforeSerialization();
                 }
                 XmlSerializer serializer = new XmlSerializer(typeof(Report));
                 XmlWriterSettings ws = new XmlWriterSettings();
@@ -1413,8 +1418,12 @@ namespace Seal.Model
             {
                 foreach (ReportSource source in Sources)
                 {
+
+                    foreach (var table in source.MetaData.Tables) table.AfterSerialization();
+
                     source.Connections = source.TempConnections;
                     source.MetaData.Tables = source.TempTables;
+                    source.MetaData.TableLinks = source.TempLinks;
                     source.MetaData.Joins = source.TempJoins;
                     source.MetaData.Enums = source.TempEnums;
                 }
@@ -1456,6 +1465,12 @@ namespace Seal.Model
                 if (model.Elements.Count > 0 || !string.IsNullOrEmpty(model.RestrictionText)) throw new Exception(string.Format("The source '{0}' is already used by a model.", source.Name));
                 model.SourceGUID = Sources.First(i => i.GUID != source.GUID).GUID;
             }
+
+            foreach (var reportSource in Sources.Where(i => i != source))
+            {
+                reportSource.MetaData.TableLinks.RemoveAll(i => i.SourceGUID == source.GUID);
+            }
+
             Sources.Remove(source);
         }
 
@@ -2505,7 +2520,6 @@ namespace Seal.Model
                 return FilePath.Replace(Repository.ReportsFolder, "").Replace(Repository.SubReportsFolder, string.Format("{1}..{1}{0}", Path.GetFileNameWithoutExtension(Repository.SubReportsFolder), Path.DirectorySeparatorChar));
             }
         }
-
 
         //Helpers for translations
 

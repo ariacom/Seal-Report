@@ -3,8 +3,6 @@
     MetaTable metaTable = Model;&#xD;
     ReportExecutionLog log = metaTable;&#xD;
 &#xD;
-    log.LogMessage("ep");&#xD;
-&#xD;
     DataTable table = new DataTable();&#xD;
     table.Columns.Add(new DataColumn("group_name", typeof(string)));&#xD;
     table.Columns.Add(new DataColumn("view_type", typeof(string)));&#xD;

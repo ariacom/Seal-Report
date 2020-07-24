@@ -50,10 +50,9 @@ function restrictionSelectChange(source) {
     }
 }
 
-var inTrigger = false;
+var inExecution = false;
 function executeFromTrigger(source) {
-    if (inTrigger) return;
-    inTrigger = true;
+    if (inExecution) return;
     var container = source.closest(".restrictions_group");
     if (container.hasClass("main_restriction")) { //Trigger from main panel
         executeReport();
@@ -76,7 +75,7 @@ function executeFromTrigger(source) {
                     });
                     container.removeClass("disabled");
                     container.children(".glyphicon").css("display", "none");
-                    inTrigger = false;
+                    inExecution = false;
                 });
         }
         else {
@@ -85,6 +84,7 @@ function executeFromTrigger(source) {
             $("#header_form").submit();
         }
     }
+    inExecution = true;
 }
 
 function initRestrictions(parent) {
@@ -245,13 +245,13 @@ function initRestrictions(parent) {
                     });
                     form.removeClass("disabled");
                     button.removeClass("btn-warning").addClass("btn-success");
-                    inTrigger = false;
+                    inExecution = false;
                 });
         }
         else {
             setTimeout(function () {
-                if (inTrigger) return false;
-                inTrigger = true;
+                if (inExecution) return false;
+                inExecution = true;
                 $("#id_load").val(formId);
                 $("#header_form").attr("action", action);
                 $("#header_form").submit();

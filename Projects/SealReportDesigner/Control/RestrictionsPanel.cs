@@ -357,7 +357,7 @@ namespace Seal.Controls
                 if (restrictionsTextBox.TextLength > 0 && restrictionsTextBox.CurrentPosition >= restrictionsTextBox.TextLength)
                 {
                     if (restrictionsTextBox.Text.Last() != '\n') insertedText = "\r\n";
-                    insertedText += "AND ";
+                    insertedText += restriction.Source.IsSQL ? "AND " : "&& ";
                 }
                 insertedText += ReportRestriction.kStartRestrictionChar + restriction.DisplayRestrictionForEditor + ReportRestriction.kStopRestrictionChar;
 
