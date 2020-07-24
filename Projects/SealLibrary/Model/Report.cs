@@ -1172,6 +1172,8 @@ namespace Seal.Model
                     source.LoadRepositoryMetaSources(repository);
                 }
 
+                result.CheckLinkedTablesSources();
+
                 if (result.Views.Count == 0)
                 {
                     var view = result.AddRootView();
@@ -1433,6 +1435,26 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Check report sources to have all sources referenced by linked tables 
+        /// </summary>
+        public void CheckLinkedTablesSources()
+        {
+            foreach (var source in Sources.Where(i => i.IsNoSQL).ToList())
+            {
+                //Add linked sources referenced if necessary
+                foreach (var sourceGUID in (from s in source.MetaData.TableLinks select s.SourceGUID).Distinct())
+                {
+                    if (!Sources.Exists(j => j.GUID == sourceGUID || j.MetaSourceGUID == sourceGUID))
+                    {
+                        var newSource = AddSource(Repository.Sources.FirstOrDefault(i => i.GUID == sourceGUID));
+                        newSource.LoadRepositoryMetaSources(Repository);
+                        if (newSource.IsNoSQL) CheckLinkedTablesSources();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Add a default source to the report
         /// </summary>
         /// <param name="source"></param>
@@ -1449,6 +1471,8 @@ namespace Seal.Model
             }
             result.Name = Helper.GetUniqueName(result.Name, (from i in Sources select i.Name).ToList());
             Sources.Add(result);
+
+            if (source != null && source.IsNoSQL) CheckLinkedTablesSources();
             return result;
         }
 
@@ -1468,7 +1492,9 @@ namespace Seal.Model
 
             foreach (var reportSource in Sources.Where(i => i != source))
             {
-                reportSource.MetaData.TableLinks.RemoveAll(i => i.SourceGUID == source.GUID);
+                if (reportSource.MetaData.TableLinks.Exists(i => i.SourceGUID == source.GUID || i.SourceGUID == source.MetaSourceGUID)) throw new Exception(string.Format("The source '{0}' is referenced by a table link in '{1}'.", source.Name, reportSource.Name));
+
+//                reportSource.MetaData.TableLinks.RemoveAll(i => i.SourceGUID == source.GUID);
             }
 
             Sources.Remove(source);

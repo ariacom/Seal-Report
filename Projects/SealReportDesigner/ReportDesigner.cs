@@ -977,7 +977,6 @@ namespace Seal
                 if (source != null)
                 {
                     newSource.LoadRepositoryMetaSources(_repository);
-                    newEntity = newSource;
                 }
                 if (!newSource.IsNoSQL) newEntity = newSource.Connection;
                 else newEntity = newSource;

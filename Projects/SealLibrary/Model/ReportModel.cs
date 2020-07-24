@@ -97,13 +97,20 @@ namespace Seal.Model
             return new ReportModel() { GUID = Guid.NewGuid().ToString() };
         }
 
+        private string _sourceGUID;
         /// <summary>
         /// The source used to build the model
         /// </summary>
         [DefaultValue(null)]
         [Category("Model Definition"), DisplayName("Source"), Description("The source used to build the model."), Id(1, 1)]
         [TypeConverter(typeof(MetaSourceConverter))]
-        public string SourceGUID { get; set; }
+        public string SourceGUID {
+            get { return _sourceGUID; } 
+            set { 
+                _source = null;
+                _sourceGUID = value;
+            }
+        }
 
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
         /// <summary>
@@ -366,6 +373,8 @@ namespace Seal.Model
         public List<MetaTable> LINQSubTables { get; set; } = new List<MetaTable>();
         public bool ShouldSerializeLINQSubTables() { return LINQSubTables != null && LINQSubTables.Count > 0; }
 
+        private ReportSource _source = null;
+
         /// <summary>
         /// Current report source
         /// </summary>
@@ -374,14 +383,19 @@ namespace Seal.Model
         {
             get
             {
-                ReportSource result = _report.Sources.FirstOrDefault(i => i.GUID == SourceGUID);
-                if (result == null)
+                if (_report.Sources.Count == 0) throw new Exception("This report has no source defined");
+
+                if (_source == null)
                 {
-                    if (_report.Sources.Count == 0) throw new Exception("This report has no source defined");
-                    result = _report.Sources[0];
-                    SourceGUID = result.GUID;
+                    _source = _report.Sources.FirstOrDefault(i => i.GUID == SourceGUID);
+                    if (_source == null)
+                    {
+                        _source = _report.Sources[0];
+                        SourceGUID = _source.GUID;
+                    }
                 }
-                return result;
+
+                return _source;
             }
         }
 
@@ -1425,8 +1439,11 @@ var query =
                     //For LINQ, keep only SQL tables having joins defined...
                     if (IsLINQ)
                     {
-                        FromTables.RemoveAll(i => i.IsSQL && !Source.MetaData.Joins.Exists(j => j.LeftTableGUID == i.GUID || j.RightTableGUID == i.GUID));
-                        if (FromTables.Count == 0) throw new Exception("Please select an element from a No SQL table or from a joined SQL table... ");
+                        foreach (var table in FromTables.Where(i => i.IsSQL && !Source.MetaData.Joins.Exists(j => j.LeftTableGUID == i.GUID || j.RightTableGUID == i.GUID)).ToList())
+                        {
+                            //but we need at least one table per source
+                            if (FromTables.Exists(i => i != table && i.Source == table.Source)) FromTables.Remove(table);
+                        }
                     }
 
                     //Clear group by clause if not necessary
@@ -1768,7 +1785,6 @@ var query =
 
 
                             lastTable = string.Format("{0}join {1} on {2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
-                            //TODO detect columns to add for SQL table...to be able to perform the join...
                         }
 
                         tablesUsed.Add(leftTable);
@@ -2119,7 +2135,7 @@ var query =
                 subModel.MasterModel = this;
                 subModel.Report = Report;
                 subModel.SourceGUID = table.Source.GUID;
-                subModel.Name = table.Source.Name;
+                subModel.Name = subModel.Source.Name;
                 LINQSubModels.Add(subModel);
             }
 
