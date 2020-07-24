@@ -22,9 +22,10 @@ using Renci.SshNet;
 using System.Net;
 using System.Net.Http;
 using FluentFTP;
+using Microsoft.AnalysisServices.AdomdClient;
 #if NETCOREAPP
     using Microsoft.AspNetCore.Html;
-#endif 
+#endif
 
 namespace Seal.Helpers
 {
@@ -46,6 +47,7 @@ namespace Seal.Helpers
         static SftpClient dummy14 = null;
         static FtpClient dummy15 = null;
         static HttpClient dummy16 = null;
+        static AdomdConnection dummy17 = null;
 
         static bool _loadDone = false;
         static public void LoadRazorAssemblies()
@@ -74,6 +76,7 @@ namespace Seal.Helpers
                     if (dummy14 == null) dummy14 = new SftpClient("", "a", "");
                     if (dummy15 == null) dummy15 = new FtpClient();
                     if (dummy16 == null) dummy16 = new HttpClient();
+                    if (dummy17 == null) dummy17 = new AdomdConnection();
                 }
                 catch (Exception ex)
                 {
@@ -179,8 +182,8 @@ namespace Seal.Helpers
             if (!string.IsNullOrEmpty(result))
             {
                 //Add default using
-                if (!result.Contains("@using Seal.Model")) result += "@using Seal.Model\r\n";
-                if (!result.Contains("@using Seal.Helpers")) result += "@using Seal.Helpers\r\n";
+                if (!result.Contains("@using Seal.Model")) result += "\r\n@using Seal.Model\r\n";
+                if (!result.Contains("@using Seal.Helpers")) result += "\r\n@using Seal.Helpers\r\n";
             }
             return result;
         }

@@ -28,7 +28,7 @@ namespace Seal.Helpers
     public delegate string CustomGetTableColumnValue(DataRow row, DataColumn col, string datetimeFormat);
 
     public delegate DataTable CustomLoadDataTable(ConnectionType connectionType, string connectionString, string sql);
-    public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endColIndex = 0);
+    public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true);
     public delegate DataTable CustomLoadDataTableFromCSV(string csvPath, char? separator = null);
 
     public class TaskDatabaseHelper
@@ -192,14 +192,11 @@ namespace Seal.Helpers
             return rowEmpty;
         }
 
-        /// <summary>
-        /// Load a DataTable from an Excel tab into the database. A start row, and/or colum can be specified. An end column can be specified. 
-        /// </summary>
-        public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endColIndex = 0)
+        public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true)
         {
-            if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endColIndex);
+            if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endCol, endRow, hasHeader);
 
-            return ExcelHelper.LoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endColIndex);
+            return ExcelHelper.LoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endCol, endRow, hasHeader);
         }
 
 

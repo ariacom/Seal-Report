@@ -560,5 +560,36 @@ namespace Seal.Model
         HandleFinalScript,
     }
 
+    public enum FirstEnumSelection
+    {
+        [Description("Use selected values")]
+        None,
+        [Description("Select all values")]
+        All,
+        [Description("Select first value")]
+        First,
+        [Description("Select last value")]
+        Last,
+    }
+
+    public enum RestrictionLayout
+    {
+        [Description("Select with filter")]
+        SelectWithFilter,
+        [Description("Select without filter")]
+        SelectNoFilter,
+        [Description("Radio or toggle buttons")]
+        RadioToggleButton,
+    }
+
+    public enum RestrictionOperatorStyle
+    {
+        [Description("Visible and modifiable")]
+        Visible,
+        [Description("Visible but not modifiable")]
+        NotModifiable,
+        [Description("Not visible")]
+        NotVisible,
+    }
 }
 

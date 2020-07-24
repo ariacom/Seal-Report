@@ -294,14 +294,7 @@ namespace Seal.Model
             {
                 if (_metaTable == null && _source != null)
                 {
-                    foreach (MetaTable table in _source.MetaData.Tables)
-                    {
-                        if (table.Columns.Exists(i => i.GUID == GUID))
-                        {
-                            _metaTable = table;
-                            break;
-                        }
-                    }
+                    _metaTable = _source.MetaData.Tables.FirstOrDefault(i => i.Columns.Exists(j => j.GUID == GUID));
                 }
                 return _metaTable;
             }
@@ -343,6 +336,7 @@ namespace Seal.Model
         {
             get { return Name.Split('.').Last(); }
         }
+
 
         /// <summary>
         /// Defines the child columns to navigate from this column with the drill feature

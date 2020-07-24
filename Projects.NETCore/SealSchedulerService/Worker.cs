@@ -21,8 +21,7 @@ namespace SealSchedulerService
 
             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Scheduler from the Scheduler Service");
             //Run scheduler
-            var schedulerThread = new Thread(StartScheduler);
-            schedulerThread.Start();
+            Task.Run(() => StartScheduler());
         }
 
         private void StartScheduler()

@@ -24,6 +24,7 @@ using System.Net.Mail;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Microsoft.AnalysisServices.AdomdClient;
 
 namespace Seal.Helpers
 {
@@ -81,6 +82,11 @@ namespace Seal.Helpers
                 if (item.GetValue(destObject) == item.GetValue(defaultObject)) item.SetValue(destObject, item.GetValue(referenceObject));
             }
         }
+
+        static public string NewGUID()
+        {
+            return Guid.NewGuid().ToString().Replace("-","");
+        } 
 
         static public string QuoteDouble(string input)
         {
@@ -252,6 +258,7 @@ namespace Seal.Helpers
             if (result.Length > 0) result = result.Substring(0, 1).ToUpper() + result.Substring(1);
             return result.Trim();
         }
+
 
         static public ColumnType DatabaseToNetTypeConverter(object dbValue)
         {

@@ -24,10 +24,10 @@ namespace SealSchedulerService
         {
             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, "Starting Scheduler from the Scheduler Service");
             //Run scheduler
-            Task.Run(() => RunScheduler());
+            Task.Run(() => StartScheduler());
         }
 
-        private void RunScheduler()
+        private void StartScheduler()
         {
             try
             {

@@ -10,6 +10,7 @@ using System.ComponentModel;
 using Seal.Helpers;
 using System.Globalization;
 using System.Drawing.Design;
+using System.Text.RegularExpressions;
 
 namespace Seal.Model
 {
@@ -23,6 +24,9 @@ namespace Seal.Model
         public const string kNoSortKeyword = "Not sorted";
         public const string kAscendantSortKeyword = "Ascendant";
         public const string kDescendantSortKeyword = "Descendant";
+
+        public const string kClearEnumGUID = "CLEAR";
+
 
 
         /// <summary>
@@ -133,6 +137,18 @@ namespace Seal.Model
             {
                 DisplayName = value;
                 if (MetaColumn != null && RawDisplayName == DisplayName) DisplayName = "";
+            }
+        }
+
+        /// <summary>
+        /// Name of the element with the model name
+        /// </summary>
+        [XmlIgnore]
+        public string DisplayNameWithModel
+        {
+            get
+            {
+                return Model != null ? string.Format("{0} ({1})", DisplayNameEl, Model.Name) : DisplayNameEl;
             }
         }
 
@@ -466,6 +482,7 @@ namespace Seal.Model
             _numericStandardFormat = NumericStandardFormat.Default;
             _datetimeStandardFormat = DateTimeStandardFormat.Default;
             _displayName = "";
+            _name = null;
         }
 
         MetaColumn _metaColumn = null;
@@ -545,7 +562,10 @@ namespace Seal.Model
         public string EnumGUIDEL
         {
             get { return _enumGUID; }
-            set { _enumGUID = value; }
+            set { 
+                _enumGUID = value;
+                
+            }
         }
 
         /// <summary>
@@ -603,6 +623,7 @@ namespace Seal.Model
         {
             get
             {
+                if (_enumGUID == kClearEnumGUID) return null;
                 if (Enum != null) return Enum;
                 if (IsCommonRestrictionValue) return null;
                 return MetaColumn.Enum;
@@ -652,6 +673,43 @@ namespace Seal.Model
             set { _SQLColumnName = value; }
         }
 
+
+
+        /// <summary>
+        /// LINQ Select Column name of the element
+        /// </summary>
+        [XmlIgnore]
+        public string LINQColumnName
+        {
+            get
+            {
+                var converter = "String";
+//                if (!IsEnum)
+  //              {
+                    if (IsDateTime) converter = "DateTime";
+                    else if (IsNumeric) converter = "Double";
+    //            }
+                return string.Format("Convert.To{0}({1}[\"{2}\"])", converter, MetaColumn.MetaTable.LINQResultName, (Name ?? MetaColumn.Name).Replace("\"", "\\\""));
+            }
+        }
+
+        /// <summary>
+        /// LINQ Select Column name of the element
+        /// </summary>
+        [XmlIgnore]
+        public string LINQSelectColumnName
+        {
+            get
+            {
+                var converter = "String";
+                                if (!IsEnum)
+                              {
+                if (IsDateTime) converter = "DateTime";
+                else if (IsNumeric) converter = "Double";
+                            }
+                return string.Format("Convert.To{0}({1}[\"{2}\"])", converter, MetaColumn.MetaTable.LINQResultName, (Name ?? MetaColumn.Name).Replace("\"", "\\\""));
+            }
+        }
         /// <summary>
         /// Current report
         /// </summary>

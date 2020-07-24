@@ -35,7 +35,7 @@ namespace SealWebServer.Controllers
                     WebUser.WebUserName = user;
                     WebUser.WebPassword = password;
                     WebUser.Token = token;
-                    WebUser.Request = Request; //!NETCore
+                    WebUser.Request = Request;
                     Authenticate();
 
                     if (!WebUser.IsAuthenticated) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);

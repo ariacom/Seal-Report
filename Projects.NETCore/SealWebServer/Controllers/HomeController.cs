@@ -15,6 +15,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Collections.Specialized;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace SealWebServer.Controllers
 {
@@ -148,7 +149,7 @@ namespace SealWebServer.Controllers
                 return content;
             }
         }
-        
+
         bool CheckAuthentication()
         {
             if (WebUser == null) CreateWebUser();
@@ -732,7 +733,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Update values chosen for an Enum in a report execution
         /// </summary>
-        public ActionResult ActionUpdateEnumValues(string execution_guid, string enum_id, string values)
+        public ActionResult ActionUpdateEnumValues(string execution_guid, string id, string values)
         {
             writeDebug("ActionUpdateEnumValues");
             try
@@ -742,7 +743,7 @@ namespace SealWebServer.Controllers
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
                 {
-                    execution.UpdateEnumValues(enum_id, values);
+                    execution.UpdateEnumValues(id, values);
                 }
             }
             catch (Exception ex)
@@ -776,8 +777,112 @@ namespace SealWebServer.Controllers
             return Json(result);
         }
 
+        /// <summary>
+        /// Return the list of values for a Enumerated list with a filter for a report execution
+        /// </summary>
+        public ActionResult ActionExecuteFromTrigger(string execution_guid)
+        {
+            writeDebug("ActionExecuteFromTrigger");
+            var views = new List<string>();
+            try
+            {
+                if (!CheckAuthentication()) return _loginContentResult;
 
-#region private methods
+                ReportExecution execution = getExecution(execution_guid);
+                if (execution != null)
+                {
+                    lock (execution)
+                    {
+
+                        var report = execution.Report;
+                        initInputRestrictions(execution, report);
+
+                        //Get all restrictions involved
+                        bool hasInputValue = false;
+                        foreach (ReportRestriction restriction in report.ExecutionInputValues.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
+                        {
+                            if (!string.IsNullOrEmpty(report.GetInputRestriction(restriction.OperatorHtmlId)))
+                            {
+                                hasInputValue = true;
+                                break;
+                            }
+                        }
+
+                        var restrictions = new List<string>();
+                        foreach (ReportModel model in report.ExecutionModels)
+                        {
+                            foreach (ReportRestriction restriction in
+                                model.ExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI)
+                                .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
+                                .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
+                                )
+                            {
+                                if (!string.IsNullOrEmpty(report.GetInputRestriction(restriction.OperatorHtmlId)))
+                                {
+                                    restrictions.Add(restriction.GUID);
+                                }
+                            }
+                        }
+
+                        //Execute the report
+                        report.IsNavigating = false;
+                        execution.Execute();
+                        while (report.IsExecuting) Thread.Sleep(100);
+
+                        foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0)) //*&& i.Model.Restrictions.Exists(j => j.GUID == restriction.GUID)*))
+                        {
+                            bool parseView = hasInputValue; //Parse all if input value involved
+
+                            if (!parseView && view.Model != null) //Parse if one restriction in the model
+                            {
+                                parseView = view.Model.Restrictions.Exists(i => restrictions.Contains(i.GUID));
+                            }
+
+                            if (!parseView && view.RestrictionsGUID != null) //Parse restriction views having the restriction                            
+                            {
+                                parseView = view.RestrictionsGUID.Exists(i => restrictions.Contains(i));
+                            }
+
+                            if (parseView)
+                            {
+                                try
+                                {
+                                    report.Status = ReportStatus.RenderingDisplay;
+                                    report.CurrentModelView = view;
+                                    views.Add(view.Parse());
+
+                                }
+                                finally
+                                {
+                                    report.Status = ReportStatus.Executed;
+                                }
+                            }
+                        }
+
+                        //parse information and messages...
+                        try
+                        {
+                            var key = report.ExecutionView.GetPartialTemplateKey("Report.iInformation", report.ExecutionView);
+                            views.Add(RazorHelper.CompileExecute(report.ExecutionView.Template.GetPartialTemplateText("Report.iInformation"), report.ExecutionView, key));
+                            key = report.ExecutionView.GetPartialTemplateKey("Report.iMessages", report.ExecutionView);
+                            views.Add(RazorHelper.CompileExecute(report.ExecutionView.Template.GetPartialTemplateText("Report.iMessages"), report.ExecutionView, key));
+                        }
+                        finally
+                        {
+                            report.Status = ReportStatus.Executed;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+            return Json(views);
+        }
+
+
+        #region private methods
 
         void checkSWIAuthentication()
         {
@@ -912,10 +1017,6 @@ namespace SealWebServer.Controllers
 
             //Do not use input restrictions for navigation...
             if (report.IsNavigating) return;
-
-            // If we receive the "use_default_restrictions" field we define the field
-            execution.UseDefaultRestrictions = false; //flag not set 
-            if (report.PreInputRestrictions.ContainsKey("use_default_restrictions")) execution.UseDefaultRestrictions = Convert.ToBoolean(report.PreInputRestrictions["use_default_restrictions"]);
 
             if (report.PreInputRestrictions.Count > 0)
             {
@@ -1096,6 +1197,6 @@ namespace SealWebServer.Controllers
             return result;
         }
 
-#endregion
+        #endregion
     }
 }

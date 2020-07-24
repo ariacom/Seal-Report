@@ -377,6 +377,9 @@ namespace Seal.Model
         public void Init(string path)
         {
             RepositoryPath = path;
+            RepositoryServer.ViewsFolder = ViewsFolder;
+            RepositoryServer.TableTemplatesFolder = TableTemplatesFolder;
+
             CheckFolders();
             //Data sources
             if (Sources.Count == 0)
@@ -523,6 +526,15 @@ namespace Seal.Model
         {
             get { return Path.Combine(RepositoryPath, "Sources"); }
         }
+
+        /// <summary>
+        /// Table templates folder
+        /// </summary>
+        public string TableTemplatesFolder
+        {
+            get { return Path.Combine(SourcesFolder, "TableTemplates"); }
+        }
+
 
         /// <summary>
         /// Devices folder
@@ -844,6 +856,14 @@ namespace Seal.Model
         public string TranslateReport(string reference)
         {
             return Translate(CultureInfo.TwoLetterISOLanguageName, "Report", reference);
+        }
+
+        /// <summary>
+        /// Translate a reference text in a Report context for JavaScript use
+        /// </summary>
+        public string TranslateReportToJS(string reference)
+        {
+            return Helper.ToJS(Translate(CultureInfo.TwoLetterISOLanguageName, "Report", reference));
         }
 
         Dictionary<string, RepositoryTranslation> _repositoryTranslations = null;

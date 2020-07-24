@@ -15,6 +15,7 @@ using RazorEngine.Templating;
 using System.Globalization;
 using System.Web;
 using System.Data;
+using System.Security.Policy;
 
 namespace Seal.Model
 {
@@ -70,14 +71,7 @@ namespace Seal.Model
 
                 parameters.Add(parameter);
                 if (resetValues) parameter.Value = configParameter.Value;
-                parameter.Enums = configParameter.Enums;
-                parameter.Description = configParameter.Description;
-                parameter.Type = configParameter.Type;
-                parameter.UseOnlyEnumValues = configParameter.UseOnlyEnumValues;
-                parameter.DisplayName = configParameter.DisplayName;
-                parameter.ConfigValue = configParameter.Value;
-                parameter.EditorLanguage = configParameter.EditorLanguage;
-                parameter.TextSamples = configParameter.TextSamples;
+                parameter.InitFromConfiguration(configParameter);
             }
 
             if (TemplateName == "Report")
@@ -434,6 +428,46 @@ namespace Seal.Model
             }
         }
         public bool ShouldSerializeModelGUID() { return !string.IsNullOrEmpty(_modelGUID); }
+
+
+        /// <summary>
+        /// List of Restrictions GUID to display for a Restrictions view.
+        /// </summary>
+        public List<string> RestrictionsGUID { get; set; } = new List<string>();
+        public bool ShouldSerializeRestrictionsGUID() { return RestrictionsGUID.Count > 0; }
+
+        [XmlIgnore]
+        public List<ReportRestriction> Restrictions { 
+            get
+            {
+                return Report.AllRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i =>i.DisplayOrderRE).ToList();
+            }
+        }
+
+
+        /// <summary>
+        /// List of restrictions prompted to display in the view
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportRestriction> ExecutionPromptedRestrictions
+        {
+            get
+            {
+                return Report.ExecutionViewRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i => i.DisplayOrder).ToList();
+            }
+        }
+
+
+        /// <summary>
+        /// Helper to select Join Preferences
+        /// </summary>
+        [XmlIgnore]
+        public string RestrictionsToSelect
+        {
+            get { return "<Click to select restrictions>"; }
+            set { } //keep set for modification handler
+        }
+
         /// <summary>
         /// If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
         /// </summary>
@@ -447,9 +481,12 @@ namespace Seal.Model
         public void InitPartialTemplates()
         {
             //Init partial templates
-            foreach (var partialPath in Template.PartialTemplatesPath)
+            var partialTemplateNames = (from n in Template.PartialTemplatesPath select Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(n))).ToList();
+            //Add optional shared template
+            if (Template.SharedPartialTemplates != null) partialTemplateNames.AddRange(Template.SharedPartialTemplates);           
+
+            foreach (var partialName in partialTemplateNames)
             {
-                var partialName = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(partialPath));
                 var pt = PartialTemplates.FirstOrDefault(i => i.Name == partialName);
                 if (pt == null)
                 {
@@ -459,7 +496,7 @@ namespace Seal.Model
                 pt.View = this;
             }
             //Remove unused
-            PartialTemplates.RemoveAll(i => !Template.PartialTemplatesPath.Exists(j => Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(j)) == i.Name));
+            PartialTemplates.RemoveAll(i => !partialTemplateNames.Exists(j => j == i.Name));
         }
 
         ReportViewTemplate _template = null;
@@ -713,11 +750,24 @@ namespace Seal.Model
         [XmlIgnore]
         public object Tag;
 
+
+        private string _idSuffix = null;
         /// <summary>
-        /// Suffix that can be used to build JS identifier (e.g. for datatables)
+        /// Unique identifier for execution used to build JS identifier (e.g. for datatables)
         /// </summary>
         [XmlIgnore]
-        public string IdSuffix;
+        public string IdSuffix
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_idSuffix)) _idSuffix = Helper.NewGUID();
+                return _idSuffix;
+            }
+            set
+            {
+                _idSuffix = value;
+            }
+        }
 
 
         #region PDF and Excel Converters
