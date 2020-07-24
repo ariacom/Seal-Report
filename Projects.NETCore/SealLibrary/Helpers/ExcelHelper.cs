@@ -8,6 +8,7 @@ using OfficeOpenXml;
 using System;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -46,11 +47,10 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-        /// Load a DataTable from an Excel tab into the database. A start row, and/or colum can be specified. An end column can be specified. 
+        /// Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic. 
         /// </summary>
-        static public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endColIndex = 0)
+        static public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endRow = 0, int endCol = 0, bool hasHeader = true)
         {
-            bool hasColNames = (endColIndex == 0);
             ExcelPackage package;
             try
             {
@@ -65,6 +65,7 @@ namespace Seal.Helpers
             }
             var workbook = package.Workbook;
             ExcelWorksheet worksheet = null;
+            if (workbook.Worksheets.Count == 0) throw new Exception("No sheet in the workbook.");
             if (!string.IsNullOrEmpty(tabName))
             {
                 foreach (ExcelWorksheet ws in workbook.Worksheets)
@@ -75,21 +76,24 @@ namespace Seal.Helpers
                         break;
                     }
                 }
-                if (workbook.Worksheets.Count == 0) throw new Exception("No sheet in the workbook.");
                 if (worksheet == null) throw new Exception("Unable to find tab name specified.");
             }
-            else worksheet = workbook.Worksheets[0];
+            else worksheet = workbook.Worksheets.First();
 
             DataTable result = new DataTable();
             int colTitle = startCol;
-            int colCount = 0;
-            while ((hasColNames && (worksheet.Cells[startRow, colCount + 1].Value != null)) || colCount < endColIndex) colCount++;
+            int colCount = 0, index = startCol;
+            while ((endCol == 0 && worksheet.Cells[startRow, index + 1].Value != null) || colCount < endCol)
+            {
+                colCount++;
+                index++;
+            }
 
-            while ((hasColNames && (worksheet.Cells[startRow, colTitle].Value != null)) || colTitle <= endColIndex)
+            while ((endCol == 0 && (worksheet.Cells[startRow, colTitle].Value != null)) || colTitle <= endCol)
             {
                 int rowTitle = startRow;
                 string colName = worksheet.Cells[startRow, colTitle].Address;
-                if (hasColNames)
+                if (hasHeader)
                 {
                     colName = worksheet.Cells[startRow, colTitle].Text;
                     if (string.IsNullOrEmpty(colName)) colName = worksheet.Cells[startRow, colTitle].Value.ToString();
@@ -122,8 +126,8 @@ namespace Seal.Helpers
 
             //copy values
             int rowValue = startRow;
-            if (hasColNames) rowValue++;
-            while (!IsRowEmpty(worksheet, rowValue, startCol, result.Columns.Count))
+            if (hasHeader) rowValue++;
+            while ((endRow == 0 && !IsRowEmpty(worksheet, rowValue, startCol, result.Columns.Count)) || rowValue < endRow)
             {
                 DataRow dr = result.Rows.Add();
                 for (int colValue = startCol; colValue < startCol + result.Columns.Count; colValue++)

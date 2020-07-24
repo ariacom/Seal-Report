@@ -15,16 +15,18 @@ namespace Seal.Model
     public class MetaData
     {
         /// <summary>
-        /// Master Table Name
-        /// </summary>
-        public static string MasterTableName = "SealMasterTable";
-
-        /// <summary>
         /// List of Tables
         /// </summary>
         [Browsable(false)]
         public List<MetaTable> Tables { get; set; } = new List<MetaTable>();
         public bool ShouldSerializeTables() { return Tables.Count > 0; }
+
+        /// <summary>
+        /// List of Table Links
+        /// </summary>
+        [Browsable(false)]
+        public List<MetaTableLink> TableLinks { get; set; } = new List<MetaTableLink>();
+        public bool ShouldSerializeTableLinks() { return TableLinks.Count > 0; }
 
         /// <summary>
         /// List of Joins
@@ -50,7 +52,7 @@ namespace Seal.Model
             get
             {
                 var result = new List<MetaColumn>();
-                foreach (var table in Tables)
+                foreach (var table in AllTables)
                 {
                     result.AddRange(table.Columns);
                 }
@@ -59,12 +61,29 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// All tables including links
+        /// </summary>
+        [XmlIgnore]
+        public virtual List<MetaTable> AllTables
+        {
+            get
+            {
+                var result = new List<MetaTable>();
+                result.AddRange(Tables);
+                result.AddRange(from i in TableLinks select i.MetaTable);
+                return result;
+            }
+        }
+
+
+
+        /// <summary>
         /// Returns a column from its GUID
         /// </summary>
         public MetaColumn GetColumnFromGUID(string guid)
         {
             MetaColumn result = null;
-            foreach (MetaTable table in Tables)
+            foreach (MetaTable table in AllTables)
             {
                 result = table.Columns.FirstOrDefault(i => i.GUID == guid);
                 if (result != null) break;
@@ -78,7 +97,7 @@ namespace Seal.Model
         public MetaColumn GetColumnFromName(string tableName, string columnName)
         {
             MetaColumn result = null;
-            MetaTable table = Tables.FirstOrDefault(i => i.AliasName == tableName);
+            MetaTable table = AllTables.FirstOrDefault(i => i.AliasName == tableName);
             if (table != null) result = table.Columns.FirstOrDefault(i => i.Name == columnName);
             return result;
         }
@@ -89,26 +108,12 @@ namespace Seal.Model
         public MetaColumn GetColumnFromDisplayPath(string displayPath)
         {
             MetaColumn result = null;
-            foreach (MetaTable table in Tables)
+            foreach (MetaTable table in AllTables)
             {
                 result = table.Columns.FirstOrDefault(i => i.Category + "/" + i.DisplayName ==  displayPath);
                 if (result != null) break;
             }
             return result;
-        }
-
-        /// <summary>
-        /// The master table of the MetaData.
-        /// </summary>
-        [XmlIgnore]
-        public MetaTable MasterTable
-        {
-            get
-            {
-                MetaTable result = Tables.FirstOrDefault(i => i.Alias == MasterTableName);
-                if (result == null && Tables.Count > 0) result = Tables[0]; 
-                return result;
-            }
         }
     }
 }

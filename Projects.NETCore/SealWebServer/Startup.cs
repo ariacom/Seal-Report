@@ -42,8 +42,7 @@ namespace SealWebServer
             {
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Scheduler from the Web Report Server");
                 //Run scheduler
-                var schedulerThread = new Thread(StartScheduler);
-                schedulerThread.Start();
+                Task.Run(() => StartScheduler());
             }
         }
 

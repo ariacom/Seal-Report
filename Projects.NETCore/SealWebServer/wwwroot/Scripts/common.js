@@ -1,46 +1,4 @@
 ﻿
-function restrictionSelectChange(source) {
-    var idSelect = "#" + $(source).attr('id');
-
-    if ($(source).attr('opid') != null) {
-        idSelect = "#" + $(source).attr('opid');
-    }
-    if ($(source).attr('id') == null && $(source).attr('opid') !== null) return;
-    if ($(idSelect).val() == null) return;
-
-    var idValue = idSelect.replace("Operator", "Value");
-
-    var op = $(idSelect).val().toLowerCase();
-    var display1 = "inline", display2 = "inline", display3 = "inline", display4 = "inline";
-    if (op == 'isnull' || op == 'isnotnull' || op == 'isempty' || op == 'isnotempty') {
-        display1 = "none", display2 = "none"; display3 = "none"; display4 = "none";
-    }
-    else if (op == 'greater' || op == 'greaterequal' || op == 'smaller' || op == 'smallerequal') {
-        display2 = "none"; display3 = "none"; display4 = "none";
-    }
-    else if (op == 'between' || op == 'notbetween') {
-        display3 = "none"; display4 = "none";
-    }
-    else {
-        if ($(idValue + "_3").val() == "" && $(idValue + "_4").val() == "") display4 = "none";
-        if ($(idValue + "_2").val() == "" && display4 == "none") display3 = "none";
-        if ($(idValue + "_1").val() == "" && display3 == "none" && display4 == "none") display2 = "none";
-    }
-
-    if ($(idValue + "_1").parent().hasClass("date")) { //date
-        $(idValue + "_1").parent().parent().css("display", display1);
-        $(idValue + "_2").parent().parent().css("display", display2);
-        $(idValue + "_3").parent().parent().css("display", display3);
-        $(idValue + "_4").parent().parent().css("display", display4);
-    }
-    else { //numeric or text
-        $(idValue + "_1").css("display", display1);
-        $(idValue + "_2").css("display", display2);
-        $(idValue + "_3").css("display", display3);
-        $(idValue + "_4").css("display", display4);
-    }
-}
-
 function initNavMenu() {
     var $menu = $('#nav_menu');
     if (!$menu.length) {
@@ -93,24 +51,6 @@ function showNavMenu() {
         });
 }
 
-function realMouseCoords(event) {
-    var totalOffsetX = 0;
-    var totalOffsetY = 0;
-    var canvasX = 0;
-    var canvasY = 0;
-    var currentElement = this;
-
-    do {
-        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-    }
-    while (currentElement = currentElement.offsetParent);
-
-    canvasX = event.pageX - totalOffsetX;
-    canvasY = event.pageY - totalOffsetY;
-    return { x: canvasX, y: canvasY }
-}
-
 //message menu
 function initMessageMenu() {
     var messages = $("#execution_messages");
@@ -140,7 +80,7 @@ function initMessageMenu() {
 
     //autoscroll
     $("#message_autoscroll").click(function () {
-        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "messages_autoscroll", $('#message_autoscroll').is(":checked"));
+        if (generateHTMLDisplay) submitViewParameter(executionGUID, rootViewId, "messages_autoscroll", $('#message_autoscroll').is(":checked"));
     });
 
     //message options
@@ -156,11 +96,11 @@ function executeTimer() {
         var $form = $("#header_form");
         $form.attr("action", urlPrefix + "ActionRefreshReport");
         if (urlPrefix != "") {
-            $.post(urlPrefix + "ActionRefreshReport", { execution_guid: $("#execution_guid").val() })
+            $.post(urlPrefix + "ActionRefreshReport", { execution_guid: executionGUID })
                 .done(function (data) {
                     if (data.result_ready) {
                         clearInterval(executionTimer);
-                        if ($("#execution_guid").val() != null) {
+                        if (executionGUID != null) {
                             $form.attr("action", urlPrefix + "Result");
                             $form.submit();
                         }
@@ -197,6 +137,10 @@ function setProgressBarMessage(selector, progression, message, classname) {
 }
 
 function executeReport(nav) {
+    //check execution triggers
+    if (inExecution) return;
+    inExecution = true;
+
     var form = $("#header_form");
     if (nav != null && nav.startsWith("HL:")) { //Hyperlink
         window.open(nav.replace("HL:", ""), '_blank');
@@ -261,10 +205,7 @@ function executeReport(nav) {
         form.submit();
     }
     //disable controls during execution
-    $('#restrictions_div input').prop("disabled", true);
-    $('#restrictions_div select').attr("disabled", true);
-    $('#restrictions_div textarea').prop("disabled", true);
-    $('#restrictions_div select').selectpicker('refresh');
+    $('#restrictions_div').addClass("disabled");
     $('.view').css("display", "none");
     $("#nav_button").attr("disabled", "disabled");
 
@@ -284,7 +225,7 @@ function requestEnumData(filter, forceNoMessage) {
     var result;
 
     if (urlPrefix != "") {
-        $.post(urlPrefix + "ActionGetEnumValues", { execution_guid: $("#execution_guid").val(), enum_id: $("#id_enumload").val(), filter: filter })
+        $.post(urlPrefix + "ActionGetEnumValues", { execution_guid: executionGUID, enum_id: $("#id_load").val(), filter: filter })
             .done(function (data) {
                 result = jQuery.parseJSON(data);
                 fillEnumSelect(result, forceNoMessage || result.length > 0);
@@ -302,13 +243,13 @@ function requestEnumData(filter, forceNoMessage) {
 
 
 function fillEnumSelect(data, noMessage) {
-    var id = "#" + $("#id_enumload").val();
+    var id = "#" + $("#id_load").val();
 
     //Add selected items
     $(id + " option:selected").each(function () {
         var found = false;
         for (var i = 0; !found && i < data.length; i++) {
-            if ($(this).val() == data[i].v) {
+            if ($(this).val() === data[i].v) {
                 data[i].Selected = true;
                 found = true;
             }
@@ -342,50 +283,6 @@ function fillEnumSelect(data, noMessage) {
     }
 }
 
-function initEnums() {
-    $(".enum").selectpicker({
-        "liveSearch": true,
-        "actionsBox": true
-    });
-
-    $(".enum").on('hide.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-        //send current values
-        var ids = "";
-        $("#" + $(this).attr("id") + " option:selected").each(function () {
-            ids += $(this).val() + ",";
-        });
-        if (urlPrefix != "") {
-            $.post(urlPrefix + "ActionUpdateEnumValues", { execution_guid: $("#execution_guid").val(), enum_id: $(this).attr("id"), values: ids });
-        }
-        else {
-            $("#id_enumload").val($(this).attr("id"));
-            $("#values_enumload").val(ids);
-            $("#header_form").attr("action", "ActionUpdateEnumValues");
-            $("#header_form").submit();
-        }
-    });
-
-    $(".enum_dynamic").on('shown.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-        if ($(this).attr("id")) {
-            $("#id_enumload").val($(this).attr("id"));
-
-            var data = [];
-            if ($(this).attr("dependencies")) requestEnumData("", false);
-
-            var filter = "";
-            $(".bs-searchbox input").on("input", function (evt) {
-                var $search = $(evt.target);
-                if ($search.val() !== filter) { // search value is changed
-                    filter = $search.val();
-                    if (filter.length >= $("#" + $("#id_enumload").val()).attr("filterchars")) { // more than xx characters
-                        requestEnumData(filter, true);
-                    }
-                }
-            });
-        }
-    });
-}
-
 function mainInit() {
     //force execute
     $("input").keydown(function (event) {
@@ -394,15 +291,37 @@ function mainInit() {
 
     $("#execute_button").click(function () {
         //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+        if ($('.navbar-toggle').css('display') !== 'none') $('.navbar-toggle').click();
+        inExecution = false;
         executeReport();
     });
 
+    //restriction button
     $("#restrictions_button").click(function () {
-        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "restriction_button", !$("#restrictions_div").hasClass("in"));
-        $("#restrictions_button").toggleClass("active");
-        //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+        var showRestriction = !$("#restrictions_div").hasClass("in");
+        var hasContentDiv = $("#content_div").length > 0;
+        if (generateHTMLDisplay) submitViewParameter(executionGUID, rootViewId, "restriction_button", showRestriction);
+
+        if (hasContentDiv) {
+            setTimeout(function () {
+                $("#restrictions_div").collapse('toggle');
+                $("#restrictions_button").toggleClass("active");
+            }, showRestriction ? 400 : 10);
+
+            setTimeout(function () {
+                $("#content_div").removeClass();
+                if (!showRestriction) {
+                    $("#content_div").addClass("col-md-12");
+                }
+                else {
+                    $("#content_div").addClass($("#content_div").attr("classori"));
+                }
+            }, showRestriction ? 10 : 400);
+        }
+        else {
+            $("#restrictions_div").collapse('toggle');
+            $("#restrictions_button").toggleClass("active");
+        }
     });
 
     //print layout
@@ -414,14 +333,14 @@ function mainInit() {
     //tabs buttons
     $(".sr_tab").click(function () {
         var buttonId = $(this).attr("id");
-        if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), "information_button", buttonId == "information_button");
+        if (generateHTMLDisplay) submitViewParameter(executionGUID, rootViewId, "information_button", buttonId == "information_button");
         if ($("#message_button").length) {
             var messageMode = "enabled";
             if (buttonId == "message_button") {
                 messageMode = "enabledshown";
                 scrollMessages();
             }
-            if (generateHTMLDisplay) submitViewParameter($("#execution_guid").val(), rootViewId, "messages_mode", messageMode);
+            if (generateHTMLDisplay) submitViewParameter(executionGUID, rootViewId, "messages_mode", messageMode);
         }
         redrawDataTables();
 
@@ -438,29 +357,12 @@ function mainInit() {
         if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
     });
 
-    //operator change
-    $(".form-control").change(function () {
-        restrictionSelectChange(this);
-    }).change();
-
-    $(".form-control").keyup(function () {
-        restrictionSelectChange(this);
-    });
-
-    //validation
-    $(".numeric_input").keyup(function () {
-        var v = this.value;
-        if (!$.isNumeric(v)) {
-            this.value = this.value.slice(0, -1);
-        }
-    });
-
     //navigation
     if (hasNavigation) {
         $("#nav_button")
             .mouseenter(function () {
                 if (urlPrefix != "") {
-                    $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: $("#execution_guid").val() })
+                    $.post(urlPrefix + "ActionGetNavigationLinks", { execution_guid: executionGUID })
                         .done(function (data) {
                             if (data.links != null && data.links != "") {
                                 initNavMenu();
@@ -488,34 +390,12 @@ function mainInit() {
 $(document).ready(function () {
     mainInit();
 
-    if ((forceExecution || !hasRestrictions) && !isExecuting && !isCancel) executeReport();
+    //Execute if force execution or no restriction 
+    if ((forceExecution || !hasRestrictions) && !isExecuting && !isCancel) {
+        executeReport();
+    }
 
-    //Select Picker
-    $(".operator_select").selectpicker('refresh');
-    initEnums();
-
-    //Date Picker
-    $(".datepicker_datetime").datetimepicker({
-        showClose: true,
-        showClear: true,
-        format: shortDateTimeFormat,
-        tooltips: dtTooltips
-    });
-
-    $(".datepicker_date").datetimepicker({
-        showClose: true,
-        showClear: true,
-        format: shortDateFormat,
-        tooltips: dtTooltips
-    });
-
-    $('.datepicker_date,.datepicker_datetime').datetimepicker({
-        locale: languageName
-    });
-
-    $('.datepicker_date,.datepicker_datetime').on("dp.change", function (e) {
-        restrictionSelectChange(this.children[0]);
-    });
+    initRestrictions();
 
     //resize handler
     $(window).on('resize', function () {

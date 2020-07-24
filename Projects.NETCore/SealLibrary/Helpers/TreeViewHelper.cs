@@ -58,6 +58,20 @@ namespace Seal.Helpers
             }
         }
 
+
+        public static void InitTablesLinksTreeNode(TreeNodeCollection tableLinksNodes, List<MetaTableLink> tableLinks)
+        {
+            tableLinksNodes.Clear();
+            if (tableLinks.Count > 0)
+            {
+                foreach (var link  in tableLinks)
+                {
+                    var tn = new TreeNode(link.DisplayName) { Tag = link, ImageIndex = 4, SelectedImageIndex = 4 };
+                    tableLinksNodes.Add(tn);
+                }
+            }
+        }
+
         public static void SelectNode(TreeView mainTreeView, TreeNodeCollection nodes, object entity)
         {
             if (mainTreeView.SelectedNode != null && mainTreeView.SelectedNode.Tag == entity) return;

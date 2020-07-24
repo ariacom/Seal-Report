@@ -86,6 +86,10 @@ namespace Seal.Model
             {
                 table.IsEditable = true;
             }
+            foreach (var link in MetaData.TableLinks)
+            {
+                link.IsEditable = true;
+            }
             foreach (var join in MetaData.Joins)
             {
                 join.IsEditable = true;
@@ -113,6 +117,11 @@ namespace Seal.Model
                     {
                         item.IsEditable = false;
                         MetaData.Tables.Add(item);
+                    }
+                    foreach (var item in source.MetaData.TableLinks)
+                    {
+                        item.IsEditable = false;
+                        MetaData.TableLinks.Add(item);
                     }
                     foreach (var item in source.MetaData.Joins)
                     {
@@ -159,6 +168,8 @@ namespace Seal.Model
         public List<MetaConnection> TempConnections = new List<MetaConnection>();
         [XmlIgnore]
         public List<MetaTable> TempTables = new List<MetaTable>();
+        [XmlIgnore]
+        public List<MetaTableLink> TempLinks = new List<MetaTableLink>();
         [XmlIgnore]
         public List<MetaJoin> TempJoins = new List<MetaJoin>();
         [XmlIgnore]

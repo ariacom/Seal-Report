@@ -50,8 +50,11 @@ namespace Seal.Helpers
             {
                 foreach (GridItem item in entries)
                 {
-                    string label2 = item.Label.Replace("\t", "").ToLower();
-                    if (label2 == label) return item;
+                    if (!string.IsNullOrEmpty(item.Label))
+                    {
+                        string label2 = item.Label.Replace("\t", "").ToLower();
+                        if (label2 == label) return item;
+                    }
                 }
             }
             return null;

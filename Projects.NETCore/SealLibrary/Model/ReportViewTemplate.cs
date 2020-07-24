@@ -18,6 +18,7 @@ namespace Seal.Model
         public const string ReportName = "Report";
         public const string ModelName = "Model";
         public const string ModelDetailName = "Model Detail";
+        public const string RestrictionsName = "Restrictions";
         public const string DataTableName = "Data Table";
         public const string DataTableEditorName = "Data Table Editor";
         public const string PageTableName = "Page Table";
@@ -63,6 +64,16 @@ namespace Seal.Model
         /// True if the template is for a report model
         /// </summary>
         public bool ForReportModel { get; set; } = false;
+
+        /// <summary>
+        /// True if the template is for view restrictions
+        /// </summary>
+        public bool ForViewRestrictions { get; set; } = false;
+
+        /// <summary>
+        /// Additional partial templates to add to the template: Name of the partial template 
+        /// </summary>
+        public string[] SharedPartialTemplates = null;
 
         /// <summary>
         /// Text of the template
@@ -168,7 +179,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Flag for optimization, by default the template is not parsed...until it is used
+        /// Flag for optimization, by default the template is not parsed... until it is used
         /// </summary>
         public bool IsParsed = false; 
 

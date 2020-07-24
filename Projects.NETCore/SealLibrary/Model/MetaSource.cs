@@ -15,6 +15,7 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.Xml;
 using System.Data.SqlClient;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace Seal.Model
 {
@@ -61,9 +62,15 @@ namespace Seal.Model
         public bool IsDefault { get; set; } = false;
 
         /// <summary>
-        /// If true, this source contains only a table built from a Razor script. The SQL engine will not be used to fill the models.
+        /// If true, this source contains only a table built from a Razor script. The LINQ engine will be used to fill the models.
         /// </summary>
         public bool IsNoSQL { get; set; } = false;
+
+        /// <summary>
+        /// If true, this source contains only a table built from a database. The SQL engine will be used to fill the models.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsSQL { get { return !IsNoSQL; } }
 
         /// <summary>
         /// If set, the script is executed when a report is initialized for an execution. This may be useful to change dynamically components of the source (e.g. modifying connections, tables, columns, enums, etc.).
@@ -167,7 +174,7 @@ namespace Seal.Model
         {
             MetaTable result = MetaTable.Create();
             result.Name = "NewTable";
-            result.DynamicColumns = forReport;
+            result.DynamicColumns = forReport || IsNoSQL;
             result.Source = this;
             result.Name = Helper.GetUniqueName(result.Name, (from i in MetaData.Tables select i.Name).ToList());
             MetaData.Tables.Add(result);
@@ -182,6 +189,14 @@ namespace Seal.Model
             //remove joins related
             MetaData.Joins.RemoveAll(i => i.LeftTableGUID == item.GUID || i.RightTableGUID == item.GUID);
             MetaData.Tables.Remove(item);
+        }
+
+        /// <summary>
+        /// Remove a MetaTableLink from the source
+        /// </summary>
+        public void RemoveTableLink(MetaTableLink item)
+        {
+            MetaData.TableLinks.Remove(item);
         }
 
         /// <summary>
@@ -208,6 +223,7 @@ namespace Seal.Model
             result.Name = Repository.JoinAutoName;
             result.Name = Helper.GetUniqueName(result.Name, (from i in MetaData.Joins select i.Name).ToList());
             result.Source = this;
+            result.IsBiDirectional = IsSQL;
             MetaData.Joins.Add(result);
             return result;
         }
@@ -294,7 +310,19 @@ namespace Seal.Model
                 {
                     column.Source = this;
                 }
+                table.InitParameters();
             }
+            foreach (var link in MetaData.TableLinks)
+            {
+                link.Source = repository.Sources.FirstOrDefault(i => i.GUID == link.SourceGUID);
+                if (link.Source == null && Report != null)
+                {
+                    link.Source = Report.Sources.FirstOrDefault(i => i.GUID == link.SourceGUID);
+                }
+            }
+            //remove lost links
+            MetaData.TableLinks.RemoveAll(i => i.Source == null);
+
             foreach (var join in MetaData.Joins)
             {
                 join.Source = this;
@@ -377,16 +405,26 @@ namespace Seal.Model
                     throw new Exception("Unable to save the Data Source file. The file has been modified by another user.");
                 }
             }
-            Name = Path.GetFileNameWithoutExtension(path);
-            XmlSerializer serializer = new XmlSerializer(typeof(MetaSource));
-            XmlWriterSettings ws = new XmlWriterSettings();
-            ws.NewLineHandling = NewLineHandling.Entitize;
-            using (XmlWriter xw = XmlWriter.Create(path, ws))
+
+            try
             {
-                serializer.Serialize(xw, this);
+                foreach (var table in MetaData.Tables) table.BeforeSerialization();
+
+                Name = Path.GetFileNameWithoutExtension(path);
+                XmlSerializer serializer = new XmlSerializer(typeof(MetaSource));
+                XmlWriterSettings ws = new XmlWriterSettings();
+                ws.NewLineHandling = NewLineHandling.Entitize;
+                using (XmlWriter xw = XmlWriter.Create(path, ws))
+                {
+                    serializer.Serialize(xw, this);
+                }
+                FilePath = path;
+                LastModification = File.GetLastWriteTime(path);
             }
-            FilePath = path;
-            LastModification = File.GetLastWriteTime(path);
+            finally
+            {
+                foreach (var table in MetaData.Tables) table.AfterSerialization();
+            }
         }
 
 
@@ -435,6 +473,28 @@ namespace Seal.Model
 
             return result;
         }
+
+        /// <summary>
+        /// Check a LINQ statement
+        /// </summary>
+        public string CheckLINQ(string linq, List<MetaTable> tables, ReportModel model)
+        {
+            string result = "";
+            if (!string.IsNullOrEmpty(linq))
+            {
+                try
+                {
+                    RazorHelper.Compile(linq, typeof(MetaJoin), Helper.NewGUID());
+                }
+                catch (Exception ex)
+                {
+                    result = ex.Message;
+                }
+            }
+
+            return result;
+        }
+
 
         /// <summary>
         /// Returns an open DbConnection

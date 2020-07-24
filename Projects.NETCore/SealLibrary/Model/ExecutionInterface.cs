@@ -25,11 +25,12 @@ namespace Seal.Model
 
         /// <summary>
         /// Log the text with optional parameters with no Carriage Return/Line Feed
-        /// 
+        /// </summary>
         void LogNoCR(string text, params object[] args);
 
         /// <summary>
         /// Log the text with optional parameters without any Timestamp
+        /// </summary>
         void LogRaw(string text, params object[] args);
     }
 

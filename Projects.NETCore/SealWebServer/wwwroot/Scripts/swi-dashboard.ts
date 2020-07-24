@@ -11,6 +11,7 @@ declare function redrawNVD3Charts();
 declare function redrawDataTables();
 declare function getTopLeft(item: any);
 declare function initNavCells(executionGUID: string, parentSelector: string);
+declare function initRestrictions(parent: any);
 
 //Muuri layout
 function loadLayout(grid, serializedLayout) {
@@ -150,6 +151,7 @@ class SWIDashboard {
         }
 
         initNavCells(data.executionguid, "#" + data.itemguid);
+        initRestrictions("#" + data.itemguid);
     }
 
     private refreshDashboardItem(guid: string, itemguid: string, force : boolean) {

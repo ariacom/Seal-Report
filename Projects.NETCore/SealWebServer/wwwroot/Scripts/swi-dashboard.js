@@ -128,6 +128,7 @@ var SWIDashboard = /** @class */ (function () {
             _da._grids[i].refreshItems().layout();
         }
         initNavCells(data.executionguid, "#" + data.itemguid);
+        initRestrictions("#" + data.itemguid);
     };
     SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force) {
         clearTimeout(_da._refreshTimers[itemguid]);
@@ -387,4 +388,3 @@ var SWIDashboard = /** @class */ (function () {
     };
     return SWIDashboard;
 }());
-//# sourceMappingURL=swi-dashboard.js.map

@@ -60,131 +60,6 @@ namespace Seal.Model
         /// </summary>
         public PromptType Prompt { get; set; } = PromptType.None;
 
-        /// <summary>
-        /// If true and the restriction is prompted, a value is required to execute the report
-        /// </summary>
-        public bool Required { get; set; } = false;
-
-        /// <summary>
-        /// If not empty, overwrite the default SQL used for the restriction in the WHERE clause
-        /// </summary>
-        public new string SQL
-        {
-            get
-            {
-                return _SQL;
-            }
-            set { _SQL = value; }
-        }
-
-        /// <summary>
-        /// Data type of the restriction
-        /// </summary>
-        public ColumnType TypeRe
-        {
-            get { return _type; }
-            set
-            {
-                Type = value;
-                
-            }
-        }
-
-        /// <summary>
-        /// Standard display format applied to the restriction display value
-        /// </summary>
-        public DateTimeStandardFormat DateTimeStandardFormatRe
-        {
-            get { return _datetimeStandardFormat; }
-            set
-            {
-                if (_dctd != null && _datetimeStandardFormat != value)
-                {
-                    _datetimeStandardFormat = value;
-                    SetStandardFormat();
-                    
-                }
-                else
-                    _datetimeStandardFormat = value;
-            }
-        }
-
-        /// <summary>
-        /// Standard display format applied to the restriction display value
-        /// </summary>
-        public NumericStandardFormat NumericStandardFormatRe
-        {
-            get { return _numericStandardFormat; }
-            set
-            {
-                if (_dctd != null && _numericStandardFormat != value)
-                {
-                    _numericStandardFormat = value;
-                    SetStandardFormat();
-                    
-                }
-                else
-                    _numericStandardFormat = value;
-            }
-        }
-
-        /// <summary>
-        /// If not empty, specify the format of the restriction display values (.Net Format Strings)
-        /// </summary>
-        public string FormatRe
-        {
-            get
-            {
-                SetDefaultFormat();
-                return _format;
-            }
-            set
-            {
-                _format = value;
-            }
-        }
-        public bool ShouldSerializeFormatRe() { return !string.IsNullOrEmpty(_format); }
-
-        /// <summary>
-        /// If not empty, overwrite the operator display text
-        /// </summary>
-        public string OperatorLabel { get; set; }
-
-        /// <summary>
-        /// If greater than 0, specifies the number of lines available to edit the first restriction value (only valid for text or numeric when the restriction is prompted)
-        /// </summary>
-        public int InputRows { get; set; } = 0;
-
-        /// <summary>
-        /// If true, the operator can be changed when the restriction is prompted
-        /// </summary>
-        public bool ChangeOperator { get; set; } = true;
-
-        /// <summary>
-        /// If defined, the restriction values are selected using the enumerated list
-        /// </summary>
-        public string EnumGUIDRE
-        {
-            get { return _enumGUID; }
-            set { _enumGUID = value; }
-        }
-
-        /// <summary>
-        /// Sort order used for the display of the prompted restrictions when the report is executed.
-        /// </summary>
-        public int DisplayOrderRE
-        {
-            get { return DisplayOrder; }
-            set { DisplayOrder = value; }
-        }
-
-        /// <summary>
-        /// If True, the restriction can be modified through the Web API, even if the restriction is not prompted.
-        /// </summary>
-        public bool AllowAPI { get; set; } = false;
-        public bool ShouldSerializeAllowAPI() { return AllowAPI; }
-
-
         Operator _operator = Operator.Equal;
         /// <summary>
         /// The Operator used for the restriction. If Value Only is selected, the restriction is replaced by the value only (with no column name and operator).
@@ -197,6 +72,65 @@ namespace Seal.Model
                 _operator = value;
                 
             }
+        }
+
+
+        /// <summary>
+        /// If not empty, overwrite the operator display text
+        /// </summary>
+        public string OperatorLabel { get; set; }
+
+        bool _changeOperator = true;
+        /// <summary>
+        /// If true, the operator can be changed when the restriction is prompted. Deprecated, kept for backward compatibility and will be removed in future versions, if false -> OperatorStyle is set to RestrictionOperatorStyle.NotModifiable
+        /// </summary>
+        public bool ChangeOperator
+        {
+            get { return _changeOperator; }
+            set
+            {
+                if (!value)
+                {
+                    OperatorStyle = RestrictionOperatorStyle.NotModifiable;
+                }
+                _changeOperator = true; //Back to default
+            }
+        }
+
+        /// <summary>
+        /// How the element name and restriction operator is displayed or not.
+        /// </summary>
+        public RestrictionOperatorStyle OperatorStyle { get; set; } = RestrictionOperatorStyle.Visible;
+        public bool ShouldSerializeOperatorStyle() { return OperatorStyle != RestrictionOperatorStyle.Visible; }
+
+
+        /// <summary>
+        /// Control of the OperatorStyle dedicated for Input Values or Common Restrictions
+        /// </summary>
+        [XmlIgnore]
+        public bool ShowName
+        {
+            get { return OperatorStyle != RestrictionOperatorStyle.NotVisible; }
+            set
+            {
+                OperatorStyle = value ? RestrictionOperatorStyle.NotModifiable : RestrictionOperatorStyle.NotVisible;
+            }
+        }
+
+
+        /// <summary>
+        /// If true and the restriction is prompted, a value is required to execute the report
+        /// </summary>
+        public bool Required { get; set; } = false;
+
+
+        /// <summary>
+        /// Sort order used for the display of the prompted restrictions when the report is executed.
+        /// </summary>
+        public int DisplayOrderRE
+        {
+            get { return DisplayOrder; }
+            set { DisplayOrder = value; }
         }
 
         /// <summary>
@@ -291,18 +225,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the restriction has an operator
-        /// </summary>
-        [XmlIgnore]
-        public bool HasOperator
-        {
-            get
-            {
-                return !(Operator == Operator.ValueOnly && string.IsNullOrEmpty(OperatorLabel));
-            }
-        }
-
-        /// <summary>
         /// Number of lines for the first input
         /// </summary>
         [XmlIgnore]
@@ -369,6 +291,7 @@ namespace Seal.Model
                 List<Operator> result = new List<Operator>();
                 result.Add(Operator.Equal);
                 result.Add(Operator.NotEqual);
+
                 if (IsText && !IsEnum)
                 {
                     result.Add(Operator.Contains);
@@ -378,7 +301,8 @@ namespace Seal.Model
                     result.Add(Operator.IsEmpty);
                     result.Add(Operator.IsNotEmpty);
                 }
-                if (!IsEnum)
+
+                if ((IsSQL && !IsEnum) || (!IsSQL && (IsNumeric || IsDateTime)))
                 {
                     result.Add(Operator.Between);
                     result.Add(Operator.NotBetween);
@@ -387,6 +311,7 @@ namespace Seal.Model
                     result.Add(Operator.Greater);
                     result.Add(Operator.GreaterEqual);
                 }
+
                 result.Add(Operator.IsNull);
                 result.Add(Operator.IsNotNull);
                 result.Add(Operator.ValueOnly);
@@ -604,6 +529,127 @@ namespace Seal.Model
 
 
         /// <summary>
+        /// Layout of the restriction for the values of the enumerated list: Either a select list or buttons (for a small number of values).
+        /// </summary>
+        public RestrictionLayout EnumLayout { get; set; } = RestrictionLayout.SelectWithFilter;
+        public bool ShouldSerializeEnumLayout() { return EnumLayout != RestrictionLayout.SelectWithFilter; }
+
+        /// <summary>
+        /// If set, the values are selected for the first report execution: All values, first or last value. This may be used for dynamic list.
+        /// </summary>
+        public FirstEnumSelection FirstSelection { get; set; } = FirstEnumSelection.None;
+        public bool ShouldSerializeFirstSelection() { return FirstSelection != FirstEnumSelection.None; }
+
+        /// <summary>
+        /// If set, the values are selected for the first report execution: All values, first or last value. This may be used for dynamic list.
+        /// </summary>
+        public bool TriggerExecution { get; set; } = false;
+        public bool ShouldSerializeTriggerExecution() { return TriggerExecution; }
+
+        /// <summary>
+        /// If not empty, overwrite the default SQL used for the restriction in the WHERE clause
+        /// </summary>
+        public new string SQL
+        {
+            get
+            {
+                return _SQL;
+            }
+            set { _SQL = value; }
+        }
+
+        /// <summary>
+        /// Data type of the restriction
+        /// </summary>
+        public ColumnType TypeRe
+        {
+            get { return _type; }
+            set
+            {
+                Type = value;
+                
+            }
+        }
+        public bool ShouldSerializeTypeRe() { return _type != ColumnType.Default; }
+
+        /// <summary>
+        /// Standard display format applied to the restriction display value
+        /// </summary>
+        public DateTimeStandardFormat DateTimeStandardFormatRe
+        {
+            get { return _datetimeStandardFormat; }
+            set
+            {
+                if (_dctd != null && _datetimeStandardFormat != value)
+                {
+                    _datetimeStandardFormat = value;
+                    SetStandardFormat();
+                    
+                }
+                else
+                    _datetimeStandardFormat = value;
+            }
+        }
+        public bool ShouldSerializeDateTimeStandardFormatRe() { return _datetimeStandardFormat != DateTimeStandardFormat.Default; }
+
+        /// <summary>
+        /// Standard display format applied to the restriction display value
+        /// </summary>
+        public NumericStandardFormat NumericStandardFormatRe
+        {
+            get { return _numericStandardFormat; }
+            set
+            {
+                if (_dctd != null && _numericStandardFormat != value)
+                {
+                    _numericStandardFormat = value;
+                    SetStandardFormat();
+                    
+                }
+                else
+                    _numericStandardFormat = value;
+            }
+        }
+
+        /// <summary>
+        /// If not empty, specify the format of the restriction display values (.Net Format Strings)
+        /// </summary>
+        public string FormatRe
+        {
+            get
+            {
+                SetDefaultFormat();
+                return _format;
+            }
+            set
+            {
+                _format = value;
+            }
+        }
+        public bool ShouldSerializeFormatRe() { return !string.IsNullOrEmpty(_format); }
+
+        /// <summary>
+        /// If greater than 0, specifies the number of lines available to edit the first restriction value (only valid for text or numeric when the restriction is prompted)
+        /// </summary>
+        public int InputRows { get; set; } = 0;
+
+        /// <summary>
+        /// If defined, the restriction values are selected using the enumerated list
+        /// </summary>
+        public string EnumGUIDRE
+        {
+            get { return _enumGUID; }
+            set { _enumGUID = value; }
+        }
+
+        /// <summary>
+        /// If True, the restriction can be modified through the Web API, even if the restriction is not prompted.
+        /// </summary>
+        public bool AllowAPI { get; set; } = false;
+        public bool ShouldSerializeAllowAPI() { return AllowAPI; }
+
+
+        /// <summary>
         /// True if the restriction has a value
         /// </summary>
         public bool HasValue
@@ -615,10 +661,10 @@ namespace Seal.Model
                     || Operator == Operator.IsEmpty
                     || Operator == Operator.IsNotEmpty
                     || (IsEnum && EnumValues.Count > 0)
-                    || HasValue1
-                    || (HasValue2 && !IsGreaterSmallerOperator)
-                    || (HasValue3 && !IsGreaterSmallerOperator && !IsBetweenOperator)
-                    || (HasValue4 && !IsGreaterSmallerOperator && !IsBetweenOperator);
+                    || (!IsEnum && HasValue1)
+                    || (!IsEnum && HasValue2 && !IsGreaterSmallerOperator)
+                    || (!IsEnum && HasValue3 && !IsGreaterSmallerOperator && !IsBetweenOperator)
+                    || (!IsEnum && HasValue4 && !IsGreaterSmallerOperator && !IsBetweenOperator);
             }
         }
 
@@ -1097,7 +1143,6 @@ namespace Seal.Model
                 if (op == Operator.Contains || op == Operator.NotContains) value2 = string.Format("%{0}%", value);
                 else if (op == Operator.StartsWith) value2 = string.Format("{0}%", value);
                 else if (op == Operator.EndsWith) value2 = string.Format("%{0}", value);
-                result = Helper.QuoteSingle(value2);
                 if (TypeEl == ColumnType.UnicodeText)
                 {
                     if (Model == null)
@@ -1124,6 +1169,44 @@ namespace Seal.Model
                 {
                     result = Helper.QuoteSingle(value2);
                 }
+            }
+            return result;
+        }
+
+        string GetLINQValue(string value, DateTime date, Operator op)
+        {
+            string result = "";
+           /* if (IsEnum)
+            {
+                result = Helper.QuoteDouble(Model.Report.EnumDisplayValue(EnumRE, value, true));
+            }
+            else**/ if (IsNumeric)
+            {
+                if (string.IsNullOrEmpty(value)) result = "0";
+                else
+                {
+                    var vals = GetVals(value);
+                    if (vals.Length > 0)
+                    {
+                        double d;
+                        if (!Helper.ValidateNumeric(vals[0], out d))
+                        {
+                            throw new Exception("Invalid numeric value: " + vals[0]);
+                        }
+                        result = d.ToString(CultureInfo.InvariantCulture.NumberFormat);
+                    }
+                }
+            }
+            else if (IsDateTime)
+            {
+                if (date == DateTime.MinValue) date = DateTime.Now;
+                result = string.Format("new DateTime({0},{1},{2},{3},{4},{5})", date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+            }
+            else
+            {
+                string value2 = value;
+                if (string.IsNullOrEmpty(value)) value2 = "";
+                result = Helper.QuoteDouble(value2);
             }
             return result;
         }
@@ -1158,12 +1241,26 @@ namespace Seal.Model
             string separator = (_operator == Operator.NotContains ? " AND " : " OR ");
             Helper.AddValue(ref displayText, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
             Helper.AddValue(ref displayRestriction, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayRestriction(value, dateKeyword, date));
-            if (IsDateTime) Helper.AddValue(ref sqlText, separator, string.Format("{0} {1}{2}", SQLColumn, sqlOperator, GetSQLValue(value, finalDate, _operator)));
+            if (IsDateTime) Helper.AddValue(ref sqlText, separator, string.Format("{0}{1}{2}", SQLColumn, sqlOperator, GetSQLValue(value, finalDate, _operator)));
             else
             {
                 foreach (var val in GetVals(value))
                 {
                     Helper.AddValue(ref sqlText, separator, string.Format("{0} {1}{2}", SQLColumn, sqlOperator, GetSQLValue(val, finalDate, _operator)));
+                }
+            }
+        }
+
+        void addLINQOperator(ref string LINQText, string value, DateTime finalDate, string LINQOperator, string LINQSuffix)
+        {
+            string separator = (_operator == Operator.NotContains || _operator == Operator.NotEqual ? " && " : " || ");
+            string prefix = _operator == Operator.NotContains ? "!" : "";
+            if (IsDateTime) Helper.AddValue(ref LINQText, separator, string.Format("{0} {1}{2}", LINQColumnName, LINQOperator, GetLINQValue(value, finalDate, _operator)));
+            else
+            {
+                foreach (var val in GetVals(value))
+                {
+                    Helper.AddValue(ref LINQText, separator, string.Format("{0}{1}{2}{3}{4}", prefix, LINQColumnName, LINQOperator, GetLINQValue(val, finalDate, _operator), LINQSuffix));
                 }
             }
         }
@@ -1187,6 +1284,7 @@ namespace Seal.Model
                     _displayText = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue1 ? GetDisplayValue(Value1, FinalDate1) : "?");
                     _displayRestriction = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue1 ? GetDisplayRestriction(Value1, Date1Keyword, Date1) : "?");
                 }
+                if (!IsSQL) BuildLINQText();
                 return;
             }
 
@@ -1202,6 +1300,7 @@ namespace Seal.Model
                 _SQLText = "(1=1)";
                 _displayText += " ?";
                 _displayRestriction += " ?";
+                if (!IsSQL) BuildLINQText();
                 return;
             }
 
@@ -1245,18 +1344,9 @@ namespace Seal.Model
 
                     _displayText += " " + Report.Translate("and") + " " + GetDisplayValue(Value2, FinalDate2);
                     _displayRestriction += " " + Report.Translate("and") + " " + GetDisplayRestriction(Value2, Date2Keyword, Date2);
-                    if (IsNoSQL)
-                    {
-                        //Between is not supported for NoSQL
-                        _SQLText += "(" + SQLColumn + ">=" + GetSQLValue(Value1, FinalDate1, _operator);
-                        _SQLText += " AND " + SQLColumn + "<=" + GetSQLValue(Value2, FinalDate2, _operator) + ")";
-                    }
-                    else
-                    {
-                        _SQLText += "(" + SQLColumn + " " + sqlOperator + " ";
-                        _SQLText += GetSQLValue(Value1, FinalDate1, _operator);
-                        _SQLText += " AND " + GetSQLValue(Value2, FinalDate2, _operator) + ")";
-                    }
+                    _SQLText += "(" + SQLColumn + " " + sqlOperator + " ";
+                    _SQLText += GetSQLValue(Value1, FinalDate1, _operator);
+                    _SQLText += " AND " + GetSQLValue(Value2, FinalDate2, _operator) + ")";
                 }
                 else if (_operator == Operator.Equal || _operator == Operator.NotEqual)
                 {
@@ -1270,10 +1360,10 @@ namespace Seal.Model
                     }
                     else
                     {
-                        if (HasValue1 && !IsEnum) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value1, FinalDate1, Date1Keyword, Date1);
-                        if (HasValue2 && !IsEnum) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value2, FinalDate2, Date2Keyword, Date2);
-                        if (HasValue3 && !IsEnum) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value3, FinalDate3, Date3Keyword, Date3);
-                        if (HasValue4 && !IsEnum) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value4, FinalDate4, Date4Keyword, Date4);
+                        if (HasValue1) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value1, FinalDate1, Date1Keyword, Date1);
+                        if (HasValue2) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value2, FinalDate2, Date2Keyword, Date2);
+                        if (HasValue3) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value3, FinalDate3, Date3Keyword, Date3);
+                        if (HasValue4) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value4, FinalDate4, Date4Keyword, Date4);
                     }
                     _displayText += " " + displayText;
                     _displayRestriction += " " + displayRestriction;
@@ -1300,6 +1390,105 @@ namespace Seal.Model
                     _displayText += " " + GetDisplayValue(Value1, FinalDate1);
                     _displayRestriction += " " + GetDisplayRestriction(Value1, Date1Keyword, Date1);
                     _SQLText += GetSQLValue(Value1, FinalDate1, _operator);
+                }
+            }
+
+            if (!IsSQL) BuildLINQText();
+        }
+
+        void BuildLINQText()
+        {
+            if (_operator == Operator.ValueOnly)
+            {
+                if (IsEnum)
+                {
+                    _LINQText = string.Format("({0})", (HasValue ? GetLINQValue(EnumValues[0], DateTime.Now, _operator) : "null"));
+                }
+                else
+                {
+                    if (!HasValue1 && IsText) _LINQText = GetLINQValue("", FinalDate1, _operator);
+                    else _LINQText = (HasValue1 ? GetLINQValue(Value1, FinalDate1, _operator) : "null");
+                }
+                return;
+            }
+
+            _LINQText = "";
+
+            if (!HasValue)
+            {
+                _LINQText = "    true";
+                return;
+            }
+
+            string LINQOperator = "", LINQSuffix = "";
+            if (_operator == Operator.IsNull || _operator == Operator.IsNotNull)
+            {
+                //Not or Not Null
+                _LINQText += LINQColumnName + (_operator == Operator.IsNull ? "==" : "!=") + "null";
+            }
+            else if (_operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty)
+            {
+                _LINQText += (_operator == Operator.IsNotEmpty ? "" : "!") + string.Format("string.IsNullOrEmpty({0})", LINQColumnName);
+            }
+            else
+            {
+                //Other cases
+                if (_operator == Operator.Contains)
+                {
+                    LINQOperator =  ".Contains(";
+                    LINQSuffix = ")";
+                }
+                else if (_operator == Operator.NotContains)
+                {
+                    LINQOperator = ".Contains(";
+                    LINQSuffix = ")";
+                }
+                else if (_operator == Operator.StartsWith)
+                {
+                    LINQOperator = ".StartsWith(";
+                    LINQSuffix = ")";
+                }
+                else if (_operator == Operator.EndsWith)
+                {
+                    LINQOperator = ".EndsWith(";
+                    LINQSuffix = ")";
+                }
+                else if (_operator == Operator.Equal) LINQOperator = "==";
+                else if (_operator == Operator.NotEqual) LINQOperator = "!=";
+                else if (_operator == Operator.Smaller) LINQOperator = "<";
+                else if (_operator == Operator.SmallerEqual) LINQOperator = "<=";
+                else if (_operator == Operator.Greater) LINQOperator = ">";
+                else if (_operator == Operator.GreaterEqual) LINQOperator = ">=";
+
+                if (_operator == Operator.Between || _operator == Operator.NotBetween)
+                {
+                    _LINQText += (_operator == Operator.NotBetween ? "!" : "") + "(" + LINQColumnName + ">=" + GetLINQValue(Value1, FinalDate1, _operator);
+                    _LINQText += " && " + LINQColumnName + "<=" + GetLINQValue(Value2, FinalDate2, _operator) + ")";
+                }
+                else if (_operator == Operator.Equal || _operator == Operator.NotEqual || IsContainOperator)
+                {
+                    _LINQText += "(";
+                    string val = "";
+                    if (IsEnum)
+                    {
+                        foreach (var ev in EnumValues)
+                        {
+                            addLINQOperator(ref val, ev, FinalDate1, LINQOperator, LINQSuffix);
+                        }
+                    }
+                    else
+                    {                        
+                        if (HasValue1) addLINQOperator(ref val, Value1, FinalDate1, LINQOperator, LINQSuffix);
+                        if (HasValue2) addLINQOperator(ref val, Value2, FinalDate2, LINQOperator, LINQSuffix);
+                        if (HasValue3) addLINQOperator(ref val, Value3, FinalDate3, LINQOperator, LINQSuffix);
+                        if (HasValue4) addLINQOperator(ref val, Value4, FinalDate4, LINQOperator, LINQSuffix);
+                    }
+                    _LINQText += val+")";
+                }
+                else
+                {
+                    _LINQText += LINQColumnName + LINQOperator;
+                    _LINQText += GetLINQValue(Value1, FinalDate1, _operator);
                 }
             }
         }
@@ -1359,6 +1548,20 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        string _LINQText;
+        /// <summary>
+        /// LINQ of the restriction 
+        /// </summary>
+        public string LINQText
+        {
+            get
+            {
+                BuildTexts();
+                return _LINQText;
+            }
+        }
+
         /// <summary>
         /// Html identifier for the restriction operator
         /// </summary>
@@ -1407,11 +1610,23 @@ namespace Seal.Model
             }
         }
 
+        string _htmlIndex;
         /// <summary>
         /// Helper to build the HTML index
         /// </summary>
         [XmlIgnore]
-        public string HtmlIndex { get; set; }
+        public string HtmlIndex
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_htmlIndex)) _htmlIndex = Helper.NewGUID();
+                return _htmlIndex;
+            }
+            set
+            {
+                _htmlIndex = value;
+            }
+        }
 
         /// <summary>
         /// True if the restriction has time
@@ -1483,6 +1698,15 @@ namespace Seal.Model
             if (index == 3) return GetHtmlValue(Value3, Date3Keyword, Date3, forEdition);
             if (index == 4) return GetHtmlValue(Value4, Date4Keyword, Date4, forEdition);
             return GetHtmlValue(Value1, Date1Keyword, Date1, forEdition);
+        }
+
+        /// <summary>
+        /// True if the restriction is consider as identical for prompt: only one restriction will be generated in the report
+        /// Same name and same source column
+        /// </summary>
+        public bool IsIdenticalForPrompt(ReportRestriction restriction)
+        {
+            return (IsCommonRestrictionValue && restriction.IsCommonRestrictionValue && Name == restriction.Name) || (!IsCommonRestrictionValue && !restriction.IsCommonRestrictionValue && MetaColumnGUID == restriction.MetaColumnGUID && DisplayNameEl == restriction.DisplayNameEl);
         }
     }
 }

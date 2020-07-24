@@ -44,11 +44,11 @@ namespace SealWebServer
             {
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Scheduler from the Web Report Server");
                 //Run scheduler
-                Task.Run(() => RunScheduler());
+                Task.Run(() => StartScheduler());
             }
         }
 
-        private void RunScheduler()
+        private void StartScheduler()
         {
             try
             {
