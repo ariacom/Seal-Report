@@ -179,7 +179,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Flag for optimization, by default the template is not parsed...until it is used
+        /// Flag for optimization, by default the template is not parsed... until it is used
         /// </summary>
         public bool IsParsed = false; 
 

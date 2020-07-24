@@ -17,6 +17,11 @@ namespace Seal.Model
     {
         private static List<ReportViewTemplate> _viewTemplates = null;
         private static object _viewLock = new object();
+        private static List<MetaTableTemplate> _tableTemplates = null;
+        private static object _tableLock = new object();
+
+        public static string ViewsFolder = "";
+        public static string TableTemplatesFolder = "";
 
         public static void PreLoadTemplates()
         {
@@ -50,7 +55,7 @@ namespace Seal.Model
                 //used from the Report Designer, load and parse all...
                 if (_viewTemplates == null)
                 {
-                    _viewTemplates = ReportViewTemplate.LoadTemplates(Repository.Instance.ViewsFolder);
+                    _viewTemplates = ReportViewTemplate.LoadTemplates(ViewsFolder);
                 }
                 foreach (var template in _viewTemplates.Where(i => !i.IsParsed)) template.ParseConfiguration();
                 return _viewTemplates;
@@ -66,7 +71,7 @@ namespace Seal.Model
             {
                 if (_viewTemplates == null)
                 {
-                    _viewTemplates = ReportViewTemplate.LoadTemplates(Repository.Instance.ViewsFolder);
+                    _viewTemplates = ReportViewTemplate.LoadTemplates(ViewsFolder);
                 }
             }
 
@@ -123,6 +128,22 @@ namespace Seal.Model
             }
 
             return result;
+        }
+
+
+        /// <summary>
+        /// Current list of MetaTableTemplate
+        /// </summary>
+        public static List<MetaTableTemplate> TableTemplates
+        {
+            get
+            {
+                if (_tableTemplates == null)
+                {
+                    _tableTemplates = MetaTableTemplate.LoadTemplates(TableTemplatesFolder);
+                }
+                return _tableTemplates;
+            }
         }
     }
 }

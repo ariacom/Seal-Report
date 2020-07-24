@@ -59,6 +59,12 @@
     <Reference Include="jose-jwt, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\jose-jwt.2.5.0\lib\net40\jose-jwt.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=19.2.0.2, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AnalysisServices.AdomdClient.retail.amd64.19.2.0.2\lib\net45\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AnalysisServices.SPClient.Interfaces, Version=19.2.0.2, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AnalysisServices.AdomdClient.retail.amd64.19.2.0.2\lib\net45\Microsoft.AnalysisServices.SPClient.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.8.18.0, Culture=neutral, PublicKeyToken=c416bc1b32d97233, processorArchitecture=MSIL">
@@ -128,7 +134,9 @@
     <Compile Include="Forms\RestrictionsEditor.cs" />
     <Compile Include="Forms\PartialTemplatesEditor.cs" />
     <Compile Include="Forms\ScheduleCollectionEditor.cs" />
+    <Compile Include="Helpers\DataTableLoader.cs" />
     <Compile Include="Helpers\HelperForms.cs" />
+    <Compile Include="Helpers\ObjectShredder.cs" />
     <Compile Include="Model\Audit.cs" />
     <Compile Include="Model\EditorTableDefinition.cs" />
     <Compile Include="Forms\AboutBoxForm.cs">
@@ -227,6 +235,8 @@
     <Compile Include="Model\DashboardItem.cs" />
     <Compile Include="Model\Dashboard.cs" />
     <Compile Include="Model\DashboardWidgetsPool.cs" />
+    <Compile Include="Model\MetaTableTemplate.cs" />
+    <Compile Include="Model\MetaTableLink.cs" />
     <Compile Include="Model\Navigation.cs" />
     <Compile Include="Model\NavigationContext.cs" />
     <Compile Include="Model\NavigationLink.cs" />

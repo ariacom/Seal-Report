@@ -16,6 +16,7 @@ using RazorEngine.Templating;
 using System.Globalization;
 using System.Data.Common;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Seal.Model
 {
@@ -33,13 +34,15 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                GetProperty("Name").SetIsBrowsable(IsSQL);
+                GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Type").SetIsBrowsable(IsSQL);
                 GetProperty("Alias").SetIsBrowsable(IsSQL);
                 GetProperty("DynamicColumns").SetIsBrowsable(IsSQL);
                 GetProperty("KeepColumnNames").SetIsBrowsable(true);
                 GetProperty("PreSQL").SetIsBrowsable(IsSQL);
                 GetProperty("Sql").SetIsBrowsable(IsSQL);
+                GetProperty("TemplateName").SetIsBrowsable(!IsSQL);
+                GetProperty("ParameterValues").SetIsBrowsable(!IsSQL && Parameters.Count > 0);
                 GetProperty("DefinitionScript").SetIsBrowsable(!IsSQL);
                 GetProperty("LoadScript").SetIsBrowsable(!IsSQL);
                 GetProperty("PostSQL").SetIsBrowsable(IsSQL);
@@ -51,10 +54,12 @@ namespace Seal.Model
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
 
-                GetProperty("Name").SetIsReadOnly(IsMasterTable);
+                //Readonly
+                //                GetProperty("Name").SetIsReadOnly(IsMasterTable);
+                GetProperty("TemplateName").SetIsReadOnly(true);
                 GetProperty("Type").SetIsReadOnly(true);
-                GetProperty("DynamicColumns").SetIsReadOnly(IsMasterTable);
-                GetProperty("Alias").SetIsReadOnly(IsMasterTable);
+                //                GetProperty("DynamicColumns").SetIsReadOnly(IsMasterTable);
+                //                GetProperty("Alias").SetIsReadOnly(IsMasterTable);
 
                 GetProperty("HelperRefreshColumns").SetIsReadOnly(true);
                 GetProperty("HelperCheckTable").SetIsReadOnly(true);
@@ -91,7 +96,7 @@ namespace Seal.Model
         /// <summary>
         /// Name of the table in the database. The name can be empty if an SQL Statement is specified.
         /// </summary>
-        [Category("Definition"), DisplayName("Name"), Description("Name of the table in the database. The name can be empty if an SQL Statement is specified."), Id(1, 1)]
+        [Category("Definition"), DisplayName("Name"), Description("Name of the table in the database or for the No Sql source. The name can be empty if an SQL Statement is specified."), Id(1, 1)]
         public override string Name
         {
             get { return _name; }
@@ -120,6 +125,140 @@ namespace Seal.Model
         /// <summary>
         /// The Razor Script used to built the DataTable object that defines the table
         /// </summary>
+        [Category("Definition"), DisplayName("Template"), Description("The Template used to define the NoSQL table."), Id(1, 1)]
+        public string TemplateName { get; set; }
+
+
+        private MetaTableTemplate _tableTemplate = null;
+        [XmlIgnore]
+        public MetaTableTemplate TableTemplate
+        {
+            get
+            {
+                if (IsSQL) return null;
+                if (_tableTemplate == null)
+                {
+                    if (!string.IsNullOrEmpty(TemplateName)) _tableTemplate = RepositoryServer.TableTemplates.FirstOrDefault(i => i.Name == TemplateName);
+                    if (_tableTemplate == null) _tableTemplate = RepositoryServer.TableTemplates.FirstOrDefault(i => i.Name == MetaTableTemplate.GenericName);
+
+                    InitParameters();
+                }
+                return _tableTemplate;
+            }
+        }
+
+        /// <summary>
+        /// List of Table Parameters
+        /// </summary>
+        public List<Parameter> Parameters { get; set; } = new List<Parameter>();
+        public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
+
+        /// <summary>
+        /// Init the  parameters from the template
+        /// </summary>
+        public void InitParameters()
+        {
+            if (TableTemplate != null)
+            {
+                var initialParameters = Parameters.ToList();
+                Parameters.Clear();
+                foreach (var configParameter in TableTemplate.DefaultParameters)
+                {
+                    Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
+                    if (parameter == null) parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
+                    Parameters.Add(parameter);
+                    parameter.InitFromConfiguration(configParameter);
+                }
+
+                if (DefinitionScript == null) DefinitionScript = TableTemplate.DefaultDefinitionScript;
+                if (LoadScript == null) LoadScript = TableTemplate.DefaultLoadScript;
+            }
+        }
+
+        /// <summary>
+        /// Helper to check if the 2 MetaTable have the same definition
+        /// </summary>
+        public bool IsIdentical(MetaTable table)
+        {
+            bool result =
+                TemplateName == table.TemplateName &&
+                DefinitionScript.Trim() == table.DefinitionScript.Trim() &&
+                (LoadScript == null && table.LoadScript == null) || (LoadScript.Trim() == table.LoadScript.Trim())
+             ;
+
+            if (result)
+            {
+                foreach (var parameter in Parameters)
+                {
+                    if (parameter.Value !=  table.GetValue(parameter.Value))
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        //Temporary variables to help for report serialization...
+        private List<Parameter> _tempParameters;
+
+        /// <summary>
+        /// Operations performed before the serialization
+        /// </summary>
+        public void BeforeSerialization()
+        {
+            InitParameters();
+            _tempParameters = Parameters.ToList();
+            //Remove parameters identical to config
+            Parameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
+
+            if (DefinitionScript.Trim().Replace("\r\n","\n") == TableTemplate.DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
+            if (LoadScript.Trim().Replace("\r\n", "\n") == TableTemplate.DefaultLoadScript.Trim().Replace("\r\n", "\n")) LoadScript = null;
+        }
+
+        /// <summary>
+        /// Operations performed after the serialization
+        /// </summary>
+        public void AfterSerialization()
+        {
+            Parameters = _tempParameters;
+
+            if (DefinitionScript == null) DefinitionScript = TableTemplate.DefaultDefinitionScript;
+            if (LoadScript == null) LoadScript = TableTemplate.DefaultLoadScript;
+        }
+
+        /// <summary>
+        /// Returns the parameter value
+        /// </summary>
+        public string GetValue(string name)
+        {
+            Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
+            return parameter == null ? "" : parameter.Value;
+        }
+
+        /// <summary>
+        /// Returns a parameter boolean value with a default if it does not exist
+        /// </summary>
+        public bool GetBoolValue(string name, bool defaultValue)
+        {
+            Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
+            return parameter == null ? defaultValue : parameter.BoolValue;
+        }
+
+        /// <summary>
+        /// Returns a paramter ineteger value
+        /// </summary>
+        public int GetNumericValue(string name)
+        {
+            Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
+            return parameter == null ? 0 : parameter.NumericValue;
+        }
+
+        /// <summary>
+        /// The Razor Script used to built the DataTable object that defines the table
+        /// </summary>
         [Category("Definition"), DisplayName("Definition Script"), Description("The Razor Script used to built the DataTable object that defines the table."), Id(1, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string DefinitionScript { get; set; }
@@ -127,7 +266,7 @@ namespace Seal.Model
         /// <summary>
         /// The Default Razor Script used to load the data in the table. This can be overwritten in the model.
         /// </summary>
-        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model. If the definition script includes also the load of the data, this script should be left empty/blank."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string LoadScript { get; set; }
 
@@ -166,6 +305,24 @@ namespace Seal.Model
         /// </summary>
         [Category("Definition"), DisplayName("Table Type"), Description("Type of the table got from database catalog."), Id(8, 1)]
         public string Type { get; set; }
+
+#if !NETCOREAPP
+        /// <summary>
+        /// The parameter values for edition.
+        /// </summary>
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [DisplayName("Table Parameters"), Description("The table parameter values."), Category("Definition"), Id(10, 1)]
+        [XmlIgnore]
+        public ParametersEditor ParameterValues
+        {
+            get
+            {
+                var editor = new ParametersEditor();
+                editor.Init(Parameters);
+                return editor;
+            }
+        }
+#endif
 
         /// <summary>
         /// If true, the table must be refreshed for dynamic columns
@@ -217,10 +374,36 @@ namespace Seal.Model
         {
             get
             {
-                if (!string.IsNullOrEmpty(Alias)) return Alias;
-                return string.Format("{0}", _name);
+                if ((IsSQL || string.IsNullOrEmpty(_name)) && !string.IsNullOrEmpty(Alias)) return Alias;
+                return _name;
             }
         }
+
+        /// <summary>
+        /// Name of the DataTable LINQ Result: Source name for SQL, table name for No SQL
+        /// </summary>
+        [XmlIgnore, Browsable(false)]
+        public string LINQResultName
+        {
+            get
+            {
+                return string.Format("{0}", IsSQL ? Regex.Replace(Source.Name, "[^A-Za-z]", "") : AliasName);
+            }
+        }
+
+
+        /// <summary>
+        /// LINQ expression of the table name
+        /// </summary>
+        [XmlIgnore, Browsable(false)]
+        public string LINQExpressionName
+        {
+            get
+            {
+                return string.Format("{0} in model.ExecResultTables[\"{0}\"].AsEnumerable()", LINQResultName);
+            }
+        }
+
 
         /// <summary>
         /// Full SQL name of the table
@@ -256,17 +439,17 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if table is the master table
+        /// Display name including the type and the source name
         /// </summary>
         [XmlIgnore]
-        public bool IsMasterTable
+        public string FullDisplayName
         {
             get
             {
-                return (Alias == MetaData.MasterTableName);
+                if (string.IsNullOrEmpty(Type)) return string.Format("{0}: {1}", Source.Name, AliasName);
+                return string.Format("{0}: {1} ({2})", Source.Name, AliasName, Type);
             }
         }
-
         /// <summary>
         /// True if the table is editable
         /// </summary>
@@ -400,9 +583,12 @@ namespace Seal.Model
         {
             lock (this)
             {
-                if (string.IsNullOrEmpty(DefinitionScript)) throw new Exception("No Definition Script for the table.");
-                RazorHelper.CompileExecute(DefinitionScript, this);
-                if (withLoad && !string.IsNullOrEmpty(LoadScript)) RazorHelper.CompileExecute(LoadScript, this);
+                if (!string.IsNullOrEmpty(DefinitionScript))
+                {
+                    RazorHelper.CompileExecute(DefinitionScript, this);
+                    if (withLoad && !string.IsNullOrEmpty(LoadScript)) RazorHelper.CompileExecute(LoadScript, this);
+                }
+                else NoSQLTable = new DataTable(Name);
             }
             return NoSQLTable;
         }
@@ -477,7 +663,7 @@ namespace Seal.Model
                         newColumn = MetaColumn.Create(fullColumnName);
                         newColumn.Source = _source;
                         newColumn.DisplayName = (KeepColumnNames ? column.ColumnName.Trim() : Helper.DBNameToDisplayName(column.ColumnName.Trim()));
-                        newColumn.Category = (Alias == MetaData.MasterTableName ? "Master" : AliasName);
+                        newColumn.Category = AliasName;
                         newColumn.DisplayOrder = GetLastDisplayOrder();
                         Columns.Add(newColumn);
                         newColumn.Type = type;
@@ -570,14 +756,14 @@ namespace Seal.Model
             Information = "";
             Error = "";
 
-            if (IsMasterTable && IsSQL && string.IsNullOrEmpty(Sql))
+            if (IsSQL && string.IsNullOrEmpty(Sql))
             {
-                Information = Helper.FormatMessage("No SQL Select Statement defined for the Master table...");
+                Information = Helper.FormatMessage("No SQL Select Statement defined for the table...");
                 return;
             }
-            if (IsMasterTable && !IsSQL && string.IsNullOrEmpty(DefinitionScript))
+            if (!IsSQL && string.IsNullOrEmpty(DefinitionScript))
             {
-                Information = Helper.FormatMessage("No Script defined for the Master table...");
+                Information = Helper.FormatMessage("No Script defined for the table...");
                 return;
             }
 
@@ -708,7 +894,7 @@ namespace Seal.Model
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCheckTable
         {
-            get { return "<Click to check the table in the database>"; }
+            get { return IsSQL ? "<Click to check the table in the database>" : "<Click to check the table>"; }
         }
 
         /// <summary>

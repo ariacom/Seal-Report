@@ -133,14 +133,7 @@ namespace Seal.Model
 
                 parameters.Add(parameter);
                 if (resetValues) parameter.Value = configParameter.Value;
-                parameter.Enums = configParameter.Enums;
-                parameter.Description = configParameter.Description;
-                parameter.Type = configParameter.Type;
-                parameter.UseOnlyEnumValues = configParameter.UseOnlyEnumValues;
-                parameter.DisplayName = configParameter.DisplayName;
-                parameter.ConfigValue = configParameter.Value;
-                parameter.EditorLanguage = configParameter.EditorLanguage;
-                parameter.TextSamples = configParameter.TextSamples;
+                parameter.InitFromConfiguration(configParameter);
             }
 
             if (TemplateName == "Report")

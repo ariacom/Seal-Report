@@ -15,7 +15,6 @@ using Seal.Helpers;
 using System.Collections;
 using System.Data.Common;
 using System.Data.Odbc;
-using System.Data.SqlClient;
 
 namespace Seal.Forms
 {
@@ -33,6 +32,7 @@ namespace Seal.Forms
 
     public class ConnectionFolder : ITreeSort { public int GetSort() { return 0; } }
     public class TableFolder : ITreeSort { public int GetSort() { return 1; } }
+    public class TableLinkFolder { };
     public class JoinFolder : ITreeSort { public int GetSort() { return 2; } }
     public class EnumFolder : ITreeSort { public int GetSort() { return 3; } }
     public class LabelFolder : ITreeSort { public int GetSort() { return 1; } }
@@ -52,10 +52,8 @@ namespace Seal.Forms
             if (tx.Tag is CategoryFolder && ty.Tag is CategoryFolder) return (string.Compare(((CategoryFolder)tx.Tag).Path, ((CategoryFolder)ty.Tag).Path));
             if (tx.Tag is CategoryFolder) return 1;
             if (ty.Tag is CategoryFolder) return -1;
-
-            //Master table top
-            if (tx.Tag is MetaTable && ((MetaTable)tx.Tag).IsMasterTable) return -1;
-            if (ty.Tag is MetaTable && ((MetaTable)ty.Tag).IsMasterTable) return 1;
+            if (tx.Tag is TableLinkFolder) return 1;
+            if (ty.Tag is TableLinkFolder) return -1;
 
             if (tx.Tag is ITreeSort && ty.Tag is ITreeSort)
             {
@@ -94,7 +92,7 @@ namespace Seal.Forms
             }
         }
 
-        private MetaSource GetSource(TreeNode node)
+        public MetaSource GetSource(TreeNode node)
         {
             MetaSource result;
             TreeNode currentNode = node;
@@ -144,17 +142,20 @@ namespace Seal.Forms
             TreeViewHelper.InitCategoryTreeNode(categoryTN.Nodes, source.MetaData.Tables);
             categoryTN.Expand();
 
-            if (!source.IsNoSQL)
+            //Table links
+            TreeNode tableLinksTN = new TreeNode("Table Links") { Tag = source.TableLinksFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+            sourceTableTN.Nodes.Add(tableLinksTN);
+            TreeViewHelper.InitTablesLinksTreeNode(tableLinksTN.Nodes, source.MetaData.TableLinks);
+
+            //Joins
+            TreeNode sourceJoinTN = new TreeNode("Joins") { Tag = source.JoinFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+            mainTN.Nodes.Add(sourceJoinTN);
+            foreach (var item in source.MetaData.Joins.OrderByDescending(i => i.IsEditable).ThenBy(i => i.Name))
             {
-                TreeNode sourceJoinTN = new TreeNode("Joins") { Tag = source.JoinFolder, ImageIndex = 2, SelectedImageIndex = 2 };
-                mainTN.Nodes.Add(sourceJoinTN);
-                foreach (var item in source.MetaData.Joins.OrderByDescending(i => i.IsEditable).ThenBy(i => i.Name))
-                {
-                    TreeNode tn = new TreeNode(item.Name + (!item.IsEditable ? " (Repository)" : "")) { Tag = item, ImageIndex = 5, SelectedImageIndex = 5 };
-                    sourceJoinTN.Nodes.Add(tn);
-                }
-                if (!ForReport) sourceJoinTN.ExpandAll();
+                TreeNode tn = new TreeNode(item.Name + (!item.IsEditable ? " (Repository)" : "")) { Tag = item, ImageIndex = 5, SelectedImageIndex = 5 };
+                sourceJoinTN.Nodes.Add(tn);
             }
+            if (!ForReport) sourceJoinTN.ExpandAll();
 
             TreeNode sourceEnumTN = new TreeNode("Enumerated Lists") { Tag = source.EnumFolder, ImageIndex = 2, SelectedImageIndex = 2 };
             mainTN.Nodes.Add(sourceEnumTN);
@@ -212,6 +213,14 @@ namespace Seal.Forms
             else if (entity is TableFolder && source != null)
             {
                 newEntity = source.AddTable(ForReport);
+                var item = sender as ToolStripMenuItem;
+                if (item != null && item.Tag is MetaTableTemplate)
+                {
+                    //NoSQL from template
+                    ((MetaTableTemplate)item.Tag).ParseConfiguration((MetaTable)newEntity);
+                    ((MetaTable)newEntity).TemplateName = ((MetaTableTemplate)item.Tag).Name;
+                    ((MetaTable)newEntity).InitParameters();
+                }
             }
             else if (entity is JoinFolder && source != null)
             {
@@ -225,6 +234,7 @@ namespace Seal.Forms
             {
                 newEntity = source.AddEnum();
             }
+
             return newEntity;
         }
 
@@ -254,6 +264,7 @@ namespace Seal.Forms
                 string oldName = !string.IsNullOrEmpty(table.Alias) ? table.Alias : table.Name;
                 string newName = oldName + "Copy";
                 ((MetaTable)newEntity).Alias = newName;
+                if (!table.IsSQL) ((MetaTable)newEntity).Name = newName;
                 //Change the table name in the columns 
                 changeTableColumnNames((MetaTable)newEntity, oldName, newName);
                 foreach (MetaColumn col in ((MetaTable)newEntity).Columns)
@@ -303,6 +314,10 @@ namespace Seal.Forms
             {
                 source.RemoveTable((MetaTable)entity);
             }
+            else if (entity is MetaTableLink && source != null)
+            {
+                source.RemoveTableLink((MetaTableLink)entity);
+            }
             else if (entity is MetaColumn && source != null)
             {
                 ((MetaColumn)entity).MetaTable.Columns.Remove((MetaColumn)entity);
@@ -339,6 +354,11 @@ namespace Seal.Forms
             else if (entity is TableFolder && source != null)
             {
                 selectSource = source.MetaData.Tables.Where(i => i.IsEditable).OrderBy(i => i.AliasName).ToList();
+                displayName = "DisplayName";
+            }
+            else if (entity is TableLinkFolder && source != null)
+            {
+                selectSource = source.MetaData.TableLinks.Where(i => i.IsEditable).OrderBy(i => i.DisplayName).ToList();
                 displayName = "DisplayName";
             }
             else if (entity is JoinFolder && source != null)
@@ -430,6 +450,10 @@ namespace Seal.Forms
                             {
                                 source.RemoveTable((MetaTable)item);
                             }
+                            else if (item is MetaTableLink)
+                            {
+                                source.RemoveTableLink((MetaTableLink)item);
+                            }
                             else if (item is MetaJoin)
                             {
                                 source.RemoveJoin((MetaJoin)item);
@@ -480,20 +504,25 @@ namespace Seal.Forms
 
 
 
-        public void treeContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        public void treeContextMenuStrip_Opening(object sender, CancelEventArgs e, EventHandler addHandler)
         {
             string entityName = null, copyEntityName = null;
             object entity = mainTreeView.SelectedNode.Tag;
-            MetaSource metaSource = null;
+            var source = GetSource(mainTreeView.SelectedNode);
 
             if (entity is ConnectionFolder) entityName = "Connection";
             else if (entity is TableFolder)
             {
                 entityName = "Table";
-                metaSource = mainTreeView.SelectedNode.Parent.Tag as MetaSource;
             }
-            else if (entity is JoinFolder) entityName = "Join";
-            else if (entity is EnumFolder) entityName = "Enum";
+            else if (entity is JoinFolder)
+            {
+                entityName = "Join";
+            }
+            else if (entity is EnumFolder)
+            {
+                entityName = "Enum";
+            }
             else if (entity is MetaConnection)
             {
                 copyEntityName = ((MetaConnection)entity).Name;
@@ -502,12 +531,10 @@ namespace Seal.Forms
             {
                 entityName = "Column";
                 copyEntityName = ((MetaTable)entity).DisplayName;
-                metaSource = ((MetaTable)entity).Source;
             }
             else if (entity is MetaColumn)
             {
                 copyEntityName = ((MetaColumn)entity).Name;
-                metaSource = ((MetaColumn)entity).Source;
             }
             else if (entity is MetaJoin)
             {
@@ -518,13 +545,27 @@ namespace Seal.Forms
                 copyEntityName = ((MetaEnum)entity).Name;
             }
 
-            bool isNoSQL = (metaSource != null && metaSource.IsNoSQL);
-
             treeContextMenuStrip.Items.Clear();
-            if (!string.IsNullOrEmpty(entityName) && !isNoSQL)
+
+            if (!string.IsNullOrEmpty(entityName))
             {
-                addToolStripMenuItem.Text = string.Format("Add {0}", entityName);
-                treeContextMenuStrip.Items.Add(addToolStripMenuItem);
+                if (entity is TableFolder && source != null && source.IsNoSQL)
+                {
+                    //Add from No SQL Templates
+                    foreach (var template in RepositoryServer.TableTemplates)
+                    {
+                        ToolStripMenuItem ts = new ToolStripMenuItem();
+                        ts.Click += addHandler;
+                        ts.Tag = template;
+                        ts.Text = "Add a " + template.Name + " Table";
+                        treeContextMenuStrip.Items.Add(ts);
+                    }
+                }
+                else
+                {
+                    addToolStripMenuItem.Text = string.Format("Add {0}", entityName);
+                    treeContextMenuStrip.Items.Add(addToolStripMenuItem);
+                }
 
                 treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                 removeToolStripMenuItem.Text = string.Format("Remove {0}s...", entityName);
@@ -534,30 +575,37 @@ namespace Seal.Forms
                 IList selectSource = getRemoveSource(ref displayName);
                 removeToolStripMenuItem.Enabled = (selectSource.Count > 0);
 
-                if (entity is TableFolder || entity is JoinFolder || entity is MetaTable)
+                if (source != null && !source.IsNoSQL && (entity is TableFolder || entity is JoinFolder || entity is MetaTable))
                 {
                     treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                     addFromToolStripMenuItem.Text = string.Format("Add {0}s from Catalog...", entityName);
                     treeContextMenuStrip.Items.Add(addFromToolStripMenuItem);
                 }
             }
+
             //Disable menu for repository tables in report designer
             if (entity is MetaTable && !((MetaTable)entity).IsEditable) treeContextMenuStrip.Items.Clear();
 
             //Copy....
-            if (!string.IsNullOrEmpty(copyEntityName) && !isNoSQL)
+            if (!string.IsNullOrEmpty(copyEntityName))
             {
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                 copyToolStripMenuItem.Text = string.Format("Copy {0}", Helper.QuoteSingle(copyEntityName));
                 treeContextMenuStrip.Items.Add(copyToolStripMenuItem);
             }
 
+            //Remove
+            if (entity is MetaTableLink)
+            {
+                copyEntityName = ((MetaTableLink)entity).DisplayName;
+            }
+
             //Disable remove for repository elements in Report Designer
             if (entity is MetaTable && !((MetaTable)entity).IsEditable) copyEntityName = null;
+            if (entity is MetaTableLink && !((MetaTableLink)entity).IsEditable) copyEntityName = null;
             if (entity is MetaJoin && !((MetaJoin)entity).IsEditable) copyEntityName = null;
             if (entity is MetaEnum && !((MetaEnum)entity).IsEditable) copyEntityName = null;
-            //Remove....
-            if (!string.IsNullOrEmpty(copyEntityName) && !isNoSQL)
+            if (!string.IsNullOrEmpty(copyEntityName))
             {
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
                 removeRootToolStripMenuItem.Text = string.Format("Remove {0}", Helper.QuoteSingle(copyEntityName));
@@ -569,6 +617,15 @@ namespace Seal.Forms
 
 
             //Special menus
+            //Table Links
+            if (entity is TableLinkFolder)
+            {
+                addFromToolStripMenuItem.Text = "Add Table Links from current Data Sources...";
+                treeContextMenuStrip.Items.Add(addFromToolStripMenuItem);
+                treeContextMenuStrip.Items.Add(new ToolStripSeparator());
+                removeToolStripMenuItem.Text = "Remove Table Links...";
+                treeContextMenuStrip.Items.Add(removeToolStripMenuItem);
+            }
             if (entity is MetaTable && ((MetaTable)entity).IsEditable)
             {
                 if (treeContextMenuStrip.Items.Count > 0) treeContextMenuStrip.Items.Add(new ToolStripSeparator());
@@ -636,6 +693,7 @@ namespace Seal.Forms
                         join.LeftTableGUID = table1.GUID;
                         join.RightTableGUID = table2.GUID;
                         join.Source = source;
+                        join.IsBiDirectional = source.IsSQL;
                         joins.Add(join);
                     }
 
@@ -671,8 +729,6 @@ namespace Seal.Forms
             MetaSource source = GetSource(mainTreeView.SelectedNode);
             if (source == null) return isModified;
 
-            DbConnection connection = source.GetOpenConnection();
-
             object selectSource = null;
             string name = "";
             List<CheckBox> options = new List<CheckBox>();
@@ -686,6 +742,7 @@ namespace Seal.Forms
                 Cursor.Current = Cursors.WaitCursor;
                 if (entity is TableFolder)
                 {
+                    DbConnection connection = source.GetOpenConnection();
                     DataTable schemaTables = connection.GetSchema("Tables");
                     List<MetaTable> tables = new List<MetaTable>();
                     addSchemaTables(schemaTables, tables, source);
@@ -704,11 +761,30 @@ namespace Seal.Forms
                     if (tables.Count > 0 && tables[0].Name.Contains(".")) options.Add(useTableSchemaName);
                     if (tables.Count > 0) options.Add(keepColumnNames);
                 }
+                else if (entity is TableLinkFolder)
+                {
+                    List<MetaTable> links = new List<MetaTable>();
+                    if (source.Report != null)
+                    {
+                        foreach (var newSource in source.Report.Sources.Where(i => i != source))
+                        {
+                            links.AddRange(newSource.MetaData.Tables.Where(i => !source.MetaData.Tables.Contains(i)));
+                        }
+                    }
+
+                    foreach (var newSource in source.Repository.Sources.Where(i => i != source))
+                    {
+                        links.AddRange(newSource.MetaData.Tables.Where(i => !links.Contains(i) && !source.MetaData.Tables.Contains(i)));
+                    }
+                    selectSource = links.OrderBy(i => i.FullDisplayName).ToList();
+                    name = "FullDisplayName";
+                }
                 else if (entity is MetaTable)
                 {
                     options.Add(autoCreateJoins);
                     autoCreateJoins.Checked = false;
 
+                    DbConnection connection = source.GetOpenConnection();
                     List<MetaColumn> columns = new List<MetaColumn>();
                     source.AddColumnsFromCatalog(columns, connection, ((MetaTable)entity));
                     selectSource = columns.OrderBy(i => i.Name).ToList();
@@ -716,6 +792,7 @@ namespace Seal.Forms
                 }
                 else if (entity is JoinFolder)
                 {
+                    DbConnection connection = source.GetOpenConnection();
                     List<MetaJoin> joins = GetJoins(connection, source);
                     if (joins.Count == 0)
                     {
@@ -746,7 +823,7 @@ namespace Seal.Forms
                         isModified = true;
                         foreach (var item in frm.CheckedItems)
                         {
-                            if (item is MetaTable)
+                            if (entity is TableFolder && item is MetaTable)
                             {
                                 MetaTable table = (MetaTable)item;
                                 if (!useTableSchemaName.Checked)
@@ -765,13 +842,20 @@ namespace Seal.Forms
                                     table.KeepColumnNames = true;
                                 }
 
-                                if (autoCreateColumns.Checked)
+                                if (autoCreateColumns.Checked && source.IsSQL)
                                 {
+                                    DbConnection connection = source.GetOpenConnection();
                                     source.AddColumnsFromCatalog(table.Columns, connection, table);
                                 }
 
 
                                 source.MetaData.Tables.Add(table);
+                            }
+                            else if (entity is TableLinkFolder && item is MetaTable)
+                            {
+                                MetaTable table = (MetaTable)item;
+                                var link = new MetaTableLink() { TableGUID = table.GUID, SourceGUID = table.Source.GUID, Source = table.Source };
+                                source.MetaData.TableLinks.Add(link);
                             }
                             else if (item is MetaColumn)
                             {
@@ -786,8 +870,9 @@ namespace Seal.Forms
                             }
                         }
 
-                        if (autoCreateJoins.Checked)
+                        if (autoCreateJoins.Checked && source.IsSQL)
                         {
+                            DbConnection connection = source.GetOpenConnection();
                             foreach (var join in GetJoins(connection, source))
                             {
                                 join.Name = Helper.GetUniqueName(join.Name, (from i in source.MetaData.Joins select i.Name).ToList());
@@ -836,7 +921,7 @@ namespace Seal.Forms
             if (selectedEntity is MetaSource && propertyName == "ConnectionGUID")
             {
                 var entity = selectedEntity as MetaSource;
-                if (e.OldValue != null &&  newValue != ReportSource.DefaultRepositoryConnectionGUID &&
+                if (e.OldValue != null && newValue != ReportSource.DefaultRepositoryConnectionGUID &&
                     newValue != ReportSource.DefaultReportConnectionGUID &&
                     !entity.Connections.Exists(i => i.GUID == newValue)) entity.ConnectionGUID = e.OldValue.ToString();
             }
@@ -887,12 +972,12 @@ namespace Seal.Forms
             else if (selectedEntity is MetaJoin && propertyName == "LeftTableGUID")
             {
                 var entity = selectedEntity as MetaJoin;
-                if (e.OldValue != null && !entity.Source.MetaData.Tables.Exists(i => i.GUID == newValue)) entity.LeftTableGUID = e.OldValue.ToString();
+                if (e.OldValue != null && !entity.Source.MetaData.AllTables.Exists(i => i.GUID == newValue)) entity.LeftTableGUID = e.OldValue.ToString();
             }
             else if (selectedEntity is MetaJoin && propertyName == "RightTableGUID")
             {
                 var entity = selectedEntity as MetaJoin;
-                if (e.OldValue != null && !entity.Source.MetaData.Tables.Exists(i => i.GUID == newValue)) entity.RightTableGUID = e.OldValue.ToString();
+                if (e.OldValue != null && !entity.Source.MetaData.AllTables.Exists(i => i.GUID == newValue)) entity.RightTableGUID = e.OldValue.ToString();
             }
         }
 

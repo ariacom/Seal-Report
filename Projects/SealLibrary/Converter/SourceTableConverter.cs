@@ -37,7 +37,7 @@ namespace Seal.Forms
             }
             if (metadata != null)
             {
-                choices.AddRange((from s in metadata.Tables select s.AliasName));
+                choices.AddRange((from s in metadata.AllTables select s.FullDisplayName));
             }
             else
             {
@@ -61,8 +61,8 @@ namespace Seal.Forms
                 if (context.Instance is ReportModel) metadata = ((ReportModel)context.Instance).Source.MetaData;
                 if (metadata != null)
                 {
-                    MetaTable table = metadata.Tables.FirstOrDefault(i => i.GUID == value.ToString());
-                    if (table != null) return table.AliasName;
+                    MetaTable table = metadata.AllTables.FirstOrDefault(i => i.GUID == value.ToString());
+                    if (table != null) return table.FullDisplayName;
                 }
             }
             return base.ConvertTo(context, culture, value, destType);
@@ -80,7 +80,7 @@ namespace Seal.Forms
             if (context.Instance is ReportModel) metadata = ((ReportModel)context.Instance).Source.MetaData;
             if (metadata != null)
             {
-                MetaTable table = metadata.Tables.FirstOrDefault(i => i.AliasName == value.ToString());
+                MetaTable table = metadata.AllTables.FirstOrDefault(i => i.FullDisplayName == value.ToString());
                 if (table != null) return table.GUID;
             }
             return base.ConvertFrom(context, culture, value);

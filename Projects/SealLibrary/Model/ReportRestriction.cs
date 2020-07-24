@@ -413,6 +413,7 @@ namespace Seal.Model
                 List<Operator> result = new List<Operator>();
                 result.Add(Operator.Equal);
                 result.Add(Operator.NotEqual);
+
                 if (IsText && !IsEnum)
                 {
                     result.Add(Operator.Contains);
@@ -422,7 +423,8 @@ namespace Seal.Model
                     result.Add(Operator.IsEmpty);
                     result.Add(Operator.IsNotEmpty);
                 }
-                if (!IsEnum)
+
+                if ((IsSQL && !IsEnum) || (!IsSQL && (IsNumeric || IsDateTime)))
                 {
                     result.Add(Operator.Between);
                     result.Add(Operator.NotBetween);
@@ -431,6 +433,7 @@ namespace Seal.Model
                     result.Add(Operator.Greater);
                     result.Add(Operator.GreaterEqual);
                 }
+
                 result.Add(Operator.IsNull);
                 result.Add(Operator.IsNotNull);
                 result.Add(Operator.ValueOnly);
@@ -1313,7 +1316,6 @@ namespace Seal.Model
                 if (op == Operator.Contains || op == Operator.NotContains) value2 = string.Format("%{0}%", value);
                 else if (op == Operator.StartsWith) value2 = string.Format("{0}%", value);
                 else if (op == Operator.EndsWith) value2 = string.Format("%{0}", value);
-                result = Helper.QuoteSingle(value2);
                 if (TypeEl == ColumnType.UnicodeText)
                 {
                     if (Model == null)
@@ -1340,6 +1342,44 @@ namespace Seal.Model
                 {
                     result = Helper.QuoteSingle(value2);
                 }
+            }
+            return result;
+        }
+
+        string GetLINQValue(string value, DateTime date, Operator op)
+        {
+            string result = "";
+           /* if (IsEnum)
+            {
+                result = Helper.QuoteDouble(Model.Report.EnumDisplayValue(EnumRE, value, true));
+            }
+            else**/ if (IsNumeric)
+            {
+                if (string.IsNullOrEmpty(value)) result = "0";
+                else
+                {
+                    var vals = GetVals(value);
+                    if (vals.Length > 0)
+                    {
+                        double d;
+                        if (!Helper.ValidateNumeric(vals[0], out d))
+                        {
+                            throw new Exception("Invalid numeric value: " + vals[0]);
+                        }
+                        result = d.ToString(CultureInfo.InvariantCulture.NumberFormat);
+                    }
+                }
+            }
+            else if (IsDateTime)
+            {
+                if (date == DateTime.MinValue) date = DateTime.Now;
+                result = string.Format("new DateTime({0},{1},{2},{3},{4},{5})", date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+            }
+            else
+            {
+                string value2 = value;
+                if (string.IsNullOrEmpty(value)) value2 = "";
+                result = Helper.QuoteDouble(value2);
             }
             return result;
         }
@@ -1374,12 +1414,26 @@ namespace Seal.Model
             string separator = (_operator == Operator.NotContains ? " AND " : " OR ");
             Helper.AddValue(ref displayText, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayValue(value, finalDate));
             Helper.AddValue(ref displayRestriction, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetDisplayRestriction(value, dateKeyword, date));
-            if (IsDateTime) Helper.AddValue(ref sqlText, separator, string.Format("{0} {1}{2}", SQLColumn, sqlOperator, GetSQLValue(value, finalDate, _operator)));
+            if (IsDateTime) Helper.AddValue(ref sqlText, separator, string.Format("{0}{1}{2}", SQLColumn, sqlOperator, GetSQLValue(value, finalDate, _operator)));
             else
             {
                 foreach (var val in GetVals(value))
                 {
                     Helper.AddValue(ref sqlText, separator, string.Format("{0} {1}{2}", SQLColumn, sqlOperator, GetSQLValue(val, finalDate, _operator)));
+                }
+            }
+        }
+
+        void addLINQOperator(ref string LINQText, string value, DateTime finalDate, string LINQOperator, string LINQSuffix)
+        {
+            string separator = (_operator == Operator.NotContains || _operator == Operator.NotEqual ? " && " : " || ");
+            string prefix = _operator == Operator.NotContains ? "!" : "";
+            if (IsDateTime) Helper.AddValue(ref LINQText, separator, string.Format("{0} {1}{2}", LINQColumnName, LINQOperator, GetLINQValue(value, finalDate, _operator)));
+            else
+            {
+                foreach (var val in GetVals(value))
+                {
+                    Helper.AddValue(ref LINQText, separator, string.Format("{0}{1}{2}{3}{4}", prefix, LINQColumnName, LINQOperator, GetLINQValue(val, finalDate, _operator), LINQSuffix));
                 }
             }
         }
@@ -1403,6 +1457,7 @@ namespace Seal.Model
                     _displayText = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue1 ? GetDisplayValue(Value1, FinalDate1) : "?");
                     _displayRestriction = displayLabel + " " + (string.IsNullOrEmpty(OperatorLabel) ? "" : OperatorLabel + " ") + (HasValue1 ? GetDisplayRestriction(Value1, Date1Keyword, Date1) : "?");
                 }
+                if (!IsSQL) BuildLINQText();
                 return;
             }
 
@@ -1418,6 +1473,7 @@ namespace Seal.Model
                 _SQLText = "(1=1)";
                 _displayText += " ?";
                 _displayRestriction += " ?";
+                if (!IsSQL) BuildLINQText();
                 return;
             }
 
@@ -1461,18 +1517,9 @@ namespace Seal.Model
 
                     _displayText += " " + Report.Translate("and") + " " + GetDisplayValue(Value2, FinalDate2);
                     _displayRestriction += " " + Report.Translate("and") + " " + GetDisplayRestriction(Value2, Date2Keyword, Date2);
-                    if (IsNoSQL)
-                    {
-                        //Between is not supported for NoSQL
-                        _SQLText += "(" + SQLColumn + ">=" + GetSQLValue(Value1, FinalDate1, _operator);
-                        _SQLText += " AND " + SQLColumn + "<=" + GetSQLValue(Value2, FinalDate2, _operator) + ")";
-                    }
-                    else
-                    {
-                        _SQLText += "(" + SQLColumn + " " + sqlOperator + " ";
-                        _SQLText += GetSQLValue(Value1, FinalDate1, _operator);
-                        _SQLText += " AND " + GetSQLValue(Value2, FinalDate2, _operator) + ")";
-                    }
+                    _SQLText += "(" + SQLColumn + " " + sqlOperator + " ";
+                    _SQLText += GetSQLValue(Value1, FinalDate1, _operator);
+                    _SQLText += " AND " + GetSQLValue(Value2, FinalDate2, _operator) + ")";
                 }
                 else if (_operator == Operator.Equal || _operator == Operator.NotEqual)
                 {
@@ -1486,10 +1533,10 @@ namespace Seal.Model
                     }
                     else
                     {
-                        if (HasValue1 && !IsEnum) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value1, FinalDate1, Date1Keyword, Date1);
-                        if (HasValue2 && !IsEnum) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value2, FinalDate2, Date2Keyword, Date2);
-                        if (HasValue3 && !IsEnum) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value3, FinalDate3, Date3Keyword, Date3);
-                        if (HasValue4 && !IsEnum) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value4, FinalDate4, Date4Keyword, Date4);
+                        if (HasValue1) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value1, FinalDate1, Date1Keyword, Date1);
+                        if (HasValue2) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value2, FinalDate2, Date2Keyword, Date2);
+                        if (HasValue3) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value3, FinalDate3, Date3Keyword, Date3);
+                        if (HasValue4) addEqualOperator(ref displayText, ref displayRestriction, ref sqlText, Value4, FinalDate4, Date4Keyword, Date4);
                     }
                     _displayText += " " + displayText;
                     _displayRestriction += " " + displayRestriction;
@@ -1516,6 +1563,105 @@ namespace Seal.Model
                     _displayText += " " + GetDisplayValue(Value1, FinalDate1);
                     _displayRestriction += " " + GetDisplayRestriction(Value1, Date1Keyword, Date1);
                     _SQLText += GetSQLValue(Value1, FinalDate1, _operator);
+                }
+            }
+
+            if (!IsSQL) BuildLINQText();
+        }
+
+        void BuildLINQText()
+        {
+            if (_operator == Operator.ValueOnly)
+            {
+                if (IsEnum)
+                {
+                    _LINQText = string.Format("({0})", (HasValue ? GetLINQValue(EnumValues[0], DateTime.Now, _operator) : "null"));
+                }
+                else
+                {
+                    if (!HasValue1 && IsText) _LINQText = GetLINQValue("", FinalDate1, _operator);
+                    else _LINQText = (HasValue1 ? GetLINQValue(Value1, FinalDate1, _operator) : "null");
+                }
+                return;
+            }
+
+            _LINQText = "";
+
+            if (!HasValue)
+            {
+                _LINQText = "    true";
+                return;
+            }
+
+            string LINQOperator = "", LINQSuffix = "";
+            if (_operator == Operator.IsNull || _operator == Operator.IsNotNull)
+            {
+                //Not or Not Null
+                _LINQText += LINQColumnName + (_operator == Operator.IsNull ? "==" : "!=") + "null";
+            }
+            else if (_operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty)
+            {
+                _LINQText += (_operator == Operator.IsNotEmpty ? "" : "!") + string.Format("string.IsNullOrEmpty({0})", LINQColumnName);
+            }
+            else
+            {
+                //Other cases
+                if (_operator == Operator.Contains)
+                {
+                    LINQOperator =  ".Contains(";
+                    LINQSuffix = ")";
+                }
+                else if (_operator == Operator.NotContains)
+                {
+                    LINQOperator = ".Contains(";
+                    LINQSuffix = ")";
+                }
+                else if (_operator == Operator.StartsWith)
+                {
+                    LINQOperator = ".StartsWith(";
+                    LINQSuffix = ")";
+                }
+                else if (_operator == Operator.EndsWith)
+                {
+                    LINQOperator = ".EndsWith(";
+                    LINQSuffix = ")";
+                }
+                else if (_operator == Operator.Equal) LINQOperator = "==";
+                else if (_operator == Operator.NotEqual) LINQOperator = "!=";
+                else if (_operator == Operator.Smaller) LINQOperator = "<";
+                else if (_operator == Operator.SmallerEqual) LINQOperator = "<=";
+                else if (_operator == Operator.Greater) LINQOperator = ">";
+                else if (_operator == Operator.GreaterEqual) LINQOperator = ">=";
+
+                if (_operator == Operator.Between || _operator == Operator.NotBetween)
+                {
+                    _LINQText += (_operator == Operator.NotBetween ? "!" : "") + "(" + LINQColumnName + ">=" + GetLINQValue(Value1, FinalDate1, _operator);
+                    _LINQText += " && " + LINQColumnName + "<=" + GetLINQValue(Value2, FinalDate2, _operator) + ")";
+                }
+                else if (_operator == Operator.Equal || _operator == Operator.NotEqual || IsContainOperator)
+                {
+                    _LINQText += "(";
+                    string val = "";
+                    if (IsEnum)
+                    {
+                        foreach (var ev in EnumValues)
+                        {
+                            addLINQOperator(ref val, ev, FinalDate1, LINQOperator, LINQSuffix);
+                        }
+                    }
+                    else
+                    {                        
+                        if (HasValue1) addLINQOperator(ref val, Value1, FinalDate1, LINQOperator, LINQSuffix);
+                        if (HasValue2) addLINQOperator(ref val, Value2, FinalDate2, LINQOperator, LINQSuffix);
+                        if (HasValue3) addLINQOperator(ref val, Value3, FinalDate3, LINQOperator, LINQSuffix);
+                        if (HasValue4) addLINQOperator(ref val, Value4, FinalDate4, LINQOperator, LINQSuffix);
+                    }
+                    _LINQText += val+")";
+                }
+                else
+                {
+                    _LINQText += LINQColumnName + LINQOperator;
+                    _LINQText += GetLINQValue(Value1, FinalDate1, _operator);
                 }
             }
         }
@@ -1575,6 +1721,20 @@ namespace Seal.Model
             }
         }
 
+        [XmlIgnore]
+        string _LINQText;
+        /// <summary>
+        /// LINQ of the restriction 
+        /// </summary>
+        public string LINQText
+        {
+            get
+            {
+                BuildTexts();
+                return _LINQText;
+            }
+        }
+
         /// <summary>
         /// Html identifier for the restriction operator
         /// </summary>
@@ -1628,7 +1788,8 @@ namespace Seal.Model
         /// Helper to build the HTML index
         /// </summary>
         [XmlIgnore]
-        public string HtmlIndex { 
+        public string HtmlIndex
+        {
             get
             {
                 if (string.IsNullOrEmpty(_htmlIndex)) _htmlIndex = Helper.NewGUID();

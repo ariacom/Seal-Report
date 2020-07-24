@@ -12,6 +12,7 @@ using DynamicTypeDescriptor;
 using System.Globalization;
 using Seal.Forms;
 using System.Drawing.Design;
+using System.Text.RegularExpressions;
 
 namespace Seal.Model
 {
@@ -590,6 +591,7 @@ namespace Seal.Model
             _numericStandardFormat = NumericStandardFormat.Default;
             _datetimeStandardFormat = DateTimeStandardFormat.Default;
             _displayName = "";
+            _name = null;
         }
 
         MetaColumn _metaColumn = null;
@@ -794,6 +796,43 @@ namespace Seal.Model
             set { _SQLColumnName = value; }
         }
 
+
+
+        /// <summary>
+        /// LINQ Select Column name of the element
+        /// </summary>
+        [XmlIgnore, Browsable(false)]
+        public string LINQColumnName
+        {
+            get
+            {
+                var converter = "String";
+//                if (!IsEnum)
+  //              {
+                    if (IsDateTime) converter = "DateTime";
+                    else if (IsNumeric) converter = "Double";
+    //            }
+                return string.Format("Convert.To{0}({1}[\"{2}\"])", converter, MetaColumn.MetaTable.LINQResultName, (Name ?? MetaColumn.Name).Replace("\"", "\\\""));
+            }
+        }
+
+        /// <summary>
+        /// LINQ Select Column name of the element
+        /// </summary>
+        [XmlIgnore, Browsable(false)]
+        public string LINQSelectColumnName
+        {
+            get
+            {
+                var converter = "String";
+                                if (!IsEnum)
+                              {
+                if (IsDateTime) converter = "DateTime";
+                else if (IsNumeric) converter = "Double";
+                            }
+                return string.Format("Convert.To{0}({1}[\"{2}\"])", converter, MetaColumn.MetaTable.LINQResultName, (Name ?? MetaColumn.Name).Replace("\"", "\\\""));
+            }
+        }
         /// <summary>
         /// Current report
         /// </summary>

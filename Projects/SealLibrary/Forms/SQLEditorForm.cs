@@ -29,7 +29,6 @@ namespace Seal.Forms
         public SQLEditorForm()
         {
             InitializeComponent();
-            ScintillaHelper.Init(sqlTextBox, Lexer.Sql);
             toolStripStatusLabel.Image = null;
 
             ShowIcon = true;
@@ -40,6 +39,11 @@ namespace Seal.Forms
             this.FormClosing += SQLEditorForm_FormClosing;
             this.sqlTextBox.KeyDown += TextBox_KeyDown;
             this.KeyDown += TextBox_KeyDown;
+        }
+
+        public void InitLexer(Lexer lex)
+        {
+            ScintillaHelper.Init(sqlTextBox, lex);
         }
 
         void SQLEditorForm_Load(object sender, EventArgs e)
@@ -59,7 +63,7 @@ namespace Seal.Forms
         {
             if (sqlTextBox.Modified)
             {
-                if (MessageBox.Show("The SQL has been modified. Do you really want to exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return false;
+                if (MessageBox.Show("The script has been modified. Do you really want to exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return false;
             }
             return true;
         }
@@ -111,7 +115,7 @@ namespace Seal.Forms
                 checkSQL();
                 if (!string.IsNullOrEmpty(errorTextBox.Text))
                 {
-                    if (MessageBox.Show("The SQL is incorrect. Do you really want to save this SQL and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
+                    if (MessageBox.Show("The script is incorrect. Do you really want to save it and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
                 }
             }
 
@@ -141,7 +145,8 @@ namespace Seal.Forms
                     else
                     {
                         var sql = !string.IsNullOrEmpty(SqlToCheck) ? SqlToCheck : sqlTextBox.Text;
-                        error = model.Source.CheckSQL(sql, model.FromTables, model, false);
+                        if (model.IsLINQ) error = model.Source.CheckLINQ(sql, model.FromTables, model);
+                        else error = model.Source.CheckSQL(sql, model.FromTables, model, false);
                     }
                 }
                 if (Instance is MetaEnum)
@@ -235,7 +240,7 @@ namespace Seal.Forms
             }
             else
             {
-                toolStripStatusLabel.Text = "SQL checked successfully";
+                toolStripStatusLabel.Text = "Script checked successfully";
                 toolStripStatusLabel.Image = global::Seal.Properties.Resources.checkedGreen;
             }
         }

@@ -26,7 +26,7 @@ namespace Seal.Model
         public string FilePath { get; set; }
 
         /// <summary>
-        /// Razor script used to perfrom the login
+        /// Razor script used to perform the login
         /// </summary>
         public string Script { get; set; } = "";
 
@@ -112,7 +112,5 @@ namespace Seal.Model
                 Error = string.Format("Unexpected error got when parsing security provider.\r\n{0}", ex.Message);
             }
         }
-
-
     }
 }

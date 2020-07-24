@@ -1,0 +1,30 @@
+﻿@{
+    MetaTable table = Model;
+
+    //Parameters for this table
+    table.Parameters.Add(new Parameter() { Name = "mdx_connection", Value="Data Source=localhost;Catalog=AdventureWorksDW2014", DisplayName = "Connection String", Description = "The connection string of the OLAP Analysis Server" });
+    table.Parameters.Add(new Parameter() { Name = "mdx_query", Value="SELECT NON EMPTY ([Measures].[Internet Sales Amount],[Date].[Calendar Year].MEMBERS) ON COLUMNS,\r\nNON EMPTY {[Customer].[Customer Geography].[Country]} ON ROWS\r\nFROM [Mined Customers]\r\nWHERE [Product].[Category].[Category].[Bikes]", DisplayName = "MDX Query", Description = "The MDX query sent to the server" });
+		
+    table.DefinitionScript = @"@using System.Data
+@using Microsoft.AnalysisServices.AdomdClient
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
+
+    using (var conn = new AdomdConnection(metaTable.GetValue(""mdx_connection"")))
+    {
+        conn.Open();
+        AdomdCommand cmd = new AdomdCommand(metaTable.GetValue(""mdx_query""), conn);
+        metaTable.NoSQLTable = DataTableLoader.FromAdomdCommand(cmd);
+        conn.Close();
+    }
+}
+";    
+
+	table.LoadScript = @"";
+}
+

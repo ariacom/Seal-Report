@@ -10,6 +10,7 @@ using System.Threading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SealWebServer
 {
@@ -35,8 +36,7 @@ namespace SealWebServer
             if (preload == null || preload.ToLower() == "true")
             {
                 //Preload templates and dashboard widgets
-                var preloadThread = new Thread(PreLoadThread);
-                preloadThread.Start();
+                Task.Run(() => PreLoadThread());
             }
 
             var runScheduler = ConfigurationManager.AppSettings["RunScheduler"];
@@ -44,8 +44,7 @@ namespace SealWebServer
             {
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Scheduler from the Web Report Server");
                 //Run scheduler
-                var schedulerThread = new Thread(RunScheduler);
-                schedulerThread.Start();
+                Task.Run(() => RunScheduler());
             }
         }
 

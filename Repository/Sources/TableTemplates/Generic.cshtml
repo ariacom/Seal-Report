@@ -1,0 +1,48 @@
+﻿@using Seal.Model;
+@{
+    MetaTable table = Model;
+
+    //Parameters for this table
+    table.DefinitionScript = @"@using System.Data
+@{
+    MetaTable metaTable = Model;
+	ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
+
+    //Script executed to define the result table columns that will be loaded by the 'Load Script'
+    //NOTE 1: Other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    //NOTE 2: This script can also insert values in the table, in this case the 'Default Load Script' must remain empty/blank.
+    metaTable.NoSQLTable = new DataTable();
+    metaTable.NoSQLTable.Columns.Add(new DataColumn(""numberCol"", typeof(int)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn(""stringCol"", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn(""dateCol"", typeof(DateTime)));
+
+    //OR for a full table load ('Default Load Script' is not necessary)
+    //metaTable.NoSQLTable = ExcelHelper.LoadDataTableFromExcel(
+    //    System.IO.Path.Combine(Repository.Instance.RepositoryPath, ""Databases"" + System.IO.Path.DirectorySeparatorChar + ""databank.worldbank.org_health_population.xlsx""),
+    //    ""Data""  //Tab name in Excel
+    //);
+
+    log.LogMessage(""{0} column(s) defined"", metaTable.NoSQLTable.Columns.Count);
+}";    
+
+	table.LoadScript = @"@using System.Data
+@{
+    MetaTable metaTable = Model;
+	ReportExecutionLog log = metaTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
+
+    //Default Script executed to fill the model result table from a non SQL source (if the model 'Load Script' is empty)
+    //Insert values in the table, values must match the table columns defined in 'Definition Script'
+    //NOTE 1: Other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
+    //NOTE 2: This script should remain empty/blank if the 'Definition Script' insert the data in the table.
+    log.LogMessage(""Adding table rows with the default table 'Load Script'..."");
+    metaTable.NoSQLTable.Rows.Add(123, ""a string value"", DateTime.Now);
+    metaTable.NoSQLTable.Rows.Add(124, ""another string value"", DateTime.Now);
+    log.LogMessage(""{0} record(s) loaded"", metaTable.NoSQLTable.Rows.Count);
+}";
+}

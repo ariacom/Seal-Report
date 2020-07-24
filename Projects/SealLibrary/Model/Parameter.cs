@@ -288,6 +288,22 @@ namespace Seal.Model
             if (index >= 0 && index < EnumValues.Length) return EnumValues[index];
             return display;
         }
+
+        /// <summary>
+        /// Init parameter values from a reference 
+        /// </summary>
+        public void InitFromConfiguration(Parameter configuration)
+        {
+            Name = configuration.Name;
+            Enums = configuration.Enums;
+            Description = configuration.Description;
+            Type = configuration.Type;
+            UseOnlyEnumValues = configuration.UseOnlyEnumValues;
+            DisplayName = configuration.DisplayName;
+            ConfigValue = configuration.Value;
+            EditorLanguage = configuration.EditorLanguage;
+            TextSamples = configuration.TextSamples;
+        }
     }
 
     /// <summary>
@@ -316,7 +332,7 @@ namespace Seal.Model
     }
 
     /// <summary>
-    /// SecurityParameter are Parameter used to define the security
+    /// SecurityParameter are Parameters used to define the security
     /// </summary>
     public class SecurityParameter : Parameter
     {
