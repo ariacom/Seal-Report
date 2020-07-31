@@ -62,7 +62,7 @@ namespace Seal.Controls
                 {
                     ReportElement element = button.Tag as ReportElement;
                     button.Text = element.DisplayNameEl;
-                    button.BackColor = System.Drawing.SystemColors.Control; 
+                    button.BackColor = System.Drawing.SystemColors.Control;
                     button.UseVisualStyleBackColor = true;
                     if (button == _modelPanel.SelectedButton) button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     else button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -97,8 +97,8 @@ namespace Seal.Controls
             Point point = PointToClient(new Point(e.X, e.Y));
             for (int i = 0; i < Controls.Count; i++)
             {
-                if ((i == 0 && point.Y < Controls[i].Location.Y + Controls[i].Height)  ||
-                    (point.Y > Controls[i].Location.Y && point.Y < Controls[i].Location.Y + Controls[i].Height)  ||
+                if ((i == 0 && point.Y < Controls[i].Location.Y + Controls[i].Height) ||
+                    (point.Y > Controls[i].Location.Y && point.Y < Controls[i].Location.Y + Controls[i].Height) ||
                     (i == Controls.Count - 1 && point.Y > Controls[i].Location.Y)
                     )
                 {
@@ -120,7 +120,20 @@ namespace Seal.Controls
                 button = _modelPanel.AddElement(this, (MetaColumn)elementNode.Tag, true);
                 _modelPanel.MainForm.IsModified = true;
                 _modelPanel.MainForm.CannotRenderAnymore();
+
+                if (_modelPanel.Model.IsLINQ)
+                {
+                    if (!string.IsNullOrEmpty(_modelPanel.Model.LoadScript))
+                    {
+                        MessageBox.Show("A custom 'Load Script' has been defined for this model. Adding or removing elements may not work during the report execution...", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    //Check submodels and tables
+                    _modelPanel.Model.BuildSQL();
+
+                    _modelPanel.MainForm.UpdateModelNode();
+                }
             }
+
             if (e.Data.GetDataPresent(typeof(Button)))
             {
                 button = (Button)e.Data.GetData(typeof(Button));

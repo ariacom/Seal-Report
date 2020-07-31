@@ -1472,7 +1472,7 @@ var query =
 
                         LINQSelect = !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("from {0}", execFromClause);
                         if (execWhereClause.Length > 0) LINQSelect += string.Format("\r\nwhere\r\n{0}\r\n", execWhereClause);
-                        if (execOrderByClause.Length > 0) LINQSelect += string.Format("orderby {0}\r\n", execOrderByClause);
+                        if (execOrderByClause.Length > 0) LINQSelect += string.Format("\r\norderby {0}\r\n", execOrderByClause);
                         LINQSelect += string.Format("\r\nselect new {{\r\n{0}\r\n}}", execSelectClause);
                     }
                 }
