@@ -17,6 +17,7 @@ using System.Globalization;
 using System.Data.Common;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace Seal.Model
 {
@@ -190,7 +191,7 @@ namespace Seal.Model
             {
                 foreach (var parameter in Parameters)
                 {
-                    if (parameter.Value !=  table.GetValue(parameter.Value))
+                    if (parameter.Value != table.GetValue(parameter.Value))
                     {
                         result = false;
                         break;
@@ -214,7 +215,7 @@ namespace Seal.Model
             //Remove parameters identical to config
             Parameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
 
-            if (DefinitionScript.Trim().Replace("\r\n","\n") == TableTemplate.DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
+            if (DefinitionScript.Trim().Replace("\r\n", "\n") == TableTemplate.DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
             if (LoadScript.Trim().Replace("\r\n", "\n") == TableTemplate.DefaultLoadScript.Trim().Replace("\r\n", "\n")) LoadScript = null;
         }
 
@@ -494,7 +495,7 @@ namespace Seal.Model
                 if (startIndex > 0)
                 {
                     bool inComment = false, inQuote = false;
-                    for (int i = startIndex+1; i < Sql.Length - 5; i++)
+                    for (int i = startIndex + 1; i < Sql.Length - 5; i++)
                     {
                         switch (Sql[i])
                         {
@@ -565,6 +566,21 @@ namespace Seal.Model
         {
             get { return _source; }
             set { _source = value; }
+        }
+
+        /// <summary>
+        /// Source GUID for the LINQ Sub-models
+        /// </summary>
+        public string LINQSourceGUID
+        {
+            get
+            {
+                if (Source is ReportSource)
+                {
+                    return ((ReportSource)Source).MetaSourceGUID ?? Source.GUID;
+                }
+                return Source.GUID;
+            }
         }
 
         /// <summary>

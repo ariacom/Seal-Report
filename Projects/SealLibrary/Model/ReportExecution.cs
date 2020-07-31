@@ -16,6 +16,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace Seal.Model
 {
@@ -606,6 +607,21 @@ namespace Seal.Model
         async Task buildModelsAsync()
         {
             Report.LogMessage("Starting to build models...");
+
+            /* EPF
+            foreach (ReportModel model in Report.ExecutionModels.Where(i => !i.IsSQLModel))
+            {
+                foreach (var element in model.Elements.Where(i => i.MetaColumn != null && i.MetaColumn.Source.GUID != model.Source.GUID))
+                {
+                    element.ResetMetaColumn();
+                    element.Source = model.Source;
+
+                    var col = element.MetaColumn;
+
+                }
+            }
+            */
+
 
             _runningModels.Clear();
             _runningSubTables.Clear();

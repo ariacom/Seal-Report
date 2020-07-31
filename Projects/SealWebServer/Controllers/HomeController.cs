@@ -397,6 +397,10 @@ namespace SealWebServer.Controllers
                     {
                         return Json(new { result_ready = true }); ;
                     }
+                    else if (!string.IsNullOrEmpty(report.ExecutionErrors))
+                    {
+                        throw new Exception(report.ExecutionErrors);
+                    }
                 }
                 else
                 {
@@ -408,7 +412,7 @@ namespace SealWebServer.Controllers
                 HandleException(ex);
                 error = ex.Message;
             }
-            return Json(new { error = error });
+            return Json(new { error });
         }
 
         /// <summary>

@@ -97,20 +97,13 @@ namespace Seal.Model
             return new ReportModel() { GUID = Guid.NewGuid().ToString() };
         }
 
-        private string _sourceGUID;
         /// <summary>
         /// The source used to build the model
         /// </summary>
         [DefaultValue(null)]
         [Category("Model Definition"), DisplayName("Source"), Description("The source used to build the model."), Id(1, 1)]
         [TypeConverter(typeof(MetaSourceConverter))]
-        public string SourceGUID {
-            get { return _sourceGUID; } 
-            set { 
-                _source = null;
-                _sourceGUID = value;
-            }
-        }
+        public string SourceGUID { get; set; }
 
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
         /// <summary>
@@ -373,8 +366,6 @@ namespace Seal.Model
         public List<MetaTable> LINQSubTables { get; set; } = new List<MetaTable>();
         public bool ShouldSerializeLINQSubTables() { return LINQSubTables != null && LINQSubTables.Count > 0; }
 
-        private ReportSource _source = null;
-
         /// <summary>
         /// Current report source
         /// </summary>
@@ -385,17 +376,17 @@ namespace Seal.Model
             {
                 if (_report.Sources.Count == 0) throw new Exception("This report has no source defined");
 
-                if (_source == null)
+                ReportSource result = _report.Sources.FirstOrDefault(i => i.GUID == SourceGUID);
+                if (result == null)
                 {
-                    _source = _report.Sources.FirstOrDefault(i => i.GUID == SourceGUID);
-                    if (_source == null)
+                    result = _report.Sources.FirstOrDefault(i => i.MetaSourceGUID == SourceGUID);
+                    if (result == null)
                     {
-                        _source = _report.Sources[0];
-                        SourceGUID = _source.GUID;
+                        result = _report.Sources[0];
+                        SourceGUID = result.GUID;
                     }
                 }
-
-                return _source;
+                return result;
             }
         }
 
@@ -2125,16 +2116,16 @@ var query =
 
             var currentSubModels = LINQSubModels.ToList();
             LINQSubModels.Clear();
+
             foreach (var table in FromTables.Where(i => i.IsSQL))
             {
-                var subModel = currentSubModels.FirstOrDefault(i => i.SourceGUID == table.Source.GUID);
+                var subModel = currentSubModels.FirstOrDefault(i => i.SourceGUID == table.LINQSourceGUID);
                 if (subModel == null)
                 {
-                    subModel = new ReportModel();
+                    subModel = new ReportModel() { SourceGUID = table.LINQSourceGUID };
                 }
                 subModel.MasterModel = this;
                 subModel.Report = Report;
-                subModel.SourceGUID = table.Source.GUID;
                 subModel.Name = subModel.Source.Name;
                 LINQSubModels.Add(subModel);
             }
@@ -2146,7 +2137,7 @@ var query =
                 var source = subModel.Source;
 
                 //Elements in the select
-                foreach (var element in Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.Source.GUID == subModel.SourceGUID))
+                foreach (var element in Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))
                 {
                     if (!subModel.Elements.Exists(i => i.MetaColumnGUID == element.MetaColumnGUID))
                     {
@@ -2183,7 +2174,7 @@ var query =
                 }
 
                 //elements used to perform the LINQ restrictions
-                foreach (var restr in Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.Source.GUID == subModel.SourceGUID))
+                foreach (var restr in Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))
                 {
                     if (!subModel.Elements.Exists(i => i.MetaColumnGUID == restr.MetaColumnGUID))
                     {
