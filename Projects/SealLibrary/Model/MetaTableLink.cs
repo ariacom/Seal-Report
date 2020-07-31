@@ -22,7 +22,10 @@ namespace Seal.Model
         public MetaSource Source
         {
             get { return _source; }
-            set { _source = value; }
+            set {
+                _metaTable = null;
+                _source = value; 
+            }
         }
 
         MetaTable _metaTable = null;

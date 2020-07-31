@@ -353,6 +353,7 @@ namespace Seal.Model
         }
 
         protected MetaSource _source;
+
         /// <summary>
         /// Current MetaSource
         /// </summary>
@@ -360,10 +361,7 @@ namespace Seal.Model
         public MetaSource Source
         {
             get { return _source; }
-            set
-            {
-                _source = value;
-            }
+            set { _source = value; }
         }
 
         /// <summary>

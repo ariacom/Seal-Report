@@ -374,10 +374,14 @@ namespace Seal.Model
             }
             foreach (var link in MetaData.TableLinks)
             {
-                link.Source = repository.Sources.FirstOrDefault(i => i.GUID == link.SourceGUID);
-                if (link.Source == null && Report != null)
+                //First report GUID
+                if (Report != null)
                 {
                     link.Source = Report.Sources.FirstOrDefault(i => i.GUID == link.SourceGUID);
+                }
+                if (link.Source == null)
+                {
+                    link.Source = repository.Sources.FirstOrDefault(i => i.GUID == link.SourceGUID);
                 }
             }
             //remove lost links

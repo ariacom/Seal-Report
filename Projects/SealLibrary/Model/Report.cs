@@ -1493,8 +1493,6 @@ namespace Seal.Model
             foreach (var reportSource in Sources.Where(i => i != source))
             {
                 if (reportSource.MetaData.TableLinks.Exists(i => i.SourceGUID == source.GUID || i.SourceGUID == source.MetaSourceGUID)) throw new Exception(string.Format("The source '{0}' is referenced by a table link in '{1}'.", source.Name, reportSource.Name));
-
-//                reportSource.MetaData.TableLinks.RemoveAll(i => i.SourceGUID == source.GUID);
             }
 
             Sources.Remove(source);

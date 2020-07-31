@@ -95,7 +95,7 @@ namespace Seal.Model
         /// <returns></returns>
         public static ReportElement Create()
         {
-            return new ReportElement() { GUID = Guid.NewGuid().ToString() };                                                           
+            return new ReportElement() { GUID = Guid.NewGuid().ToString() };
         }
 
         /// <summary>
@@ -595,6 +595,7 @@ namespace Seal.Model
         }
 
         MetaColumn _metaColumn = null;
+
         /// <summary>
         /// The MetaColumn of the element
         /// </summary>
@@ -603,7 +604,7 @@ namespace Seal.Model
         {
             get
             {
-                if (_metaColumn == null && !string.IsNullOrEmpty(MetaColumnGUID))
+                if (/*_metaColumn == null &&*/ !string.IsNullOrEmpty(MetaColumnGUID))
                 {
                     if (Model != null && Model.IsSQLModel) _metaColumn = Model.Table.Columns.FirstOrDefault(i => i.GUID == MetaColumnGUID);
                     else if (Source != null && Source.MetaData != null) _metaColumn = Source.MetaData.GetColumnFromGUID(MetaColumnGUID);
