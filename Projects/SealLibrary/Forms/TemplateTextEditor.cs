@@ -992,7 +992,7 @@ if (cell.IsTitle)
                     }
                     else if (context.PropertyDescriptor.Name == "SQL")
                     {
-                        frm.Text = "Edit custom SQL";
+                        frm.Text = element.Source.IsNoSQL ? "Edit custom Expression" : "Edit custom SQL";
                         ScintillaHelper.Init(frm.textBox, Lexer.Sql);
                         template = element.RawSQLColumn;
                         List<string> samples = new List<string>();

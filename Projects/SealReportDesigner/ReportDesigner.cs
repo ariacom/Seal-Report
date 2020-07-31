@@ -225,6 +225,7 @@ namespace Seal
                     TreeNode tn = new TreeNode(model.Name) { Tag = model, ImageIndex = model.IsSQLModel ? 15 : 10, SelectedImageIndex = model.IsSQLModel ? 15 : 10 };
                     tn.Tag = model;
                     modelTN.Nodes.Add(tn);
+                    UpdateModelNode(tn);
                 }
                 modelTN.Expand();
 
@@ -354,6 +355,35 @@ namespace Seal
         void selectNode(object entity)
         {
             TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, entity);
+        }
+
+        public void UpdateModelNode(TreeNode currentNode = null)
+        {
+            if (currentNode == null) currentNode = mainTreeView.SelectedNode;
+
+            var model = currentNode.Tag as ReportModel;
+            if (model != null && model.IsLINQ)
+            {
+                foreach (var subModel in model.LINQSubModels)
+                {
+                    TreeNode node = null;
+                    foreach (TreeNode subNode in currentNode.Nodes)
+                    {
+                        if (subNode.Tag == subModel)
+                        {
+                            node = subNode;
+                            break;
+                        }
+                    }
+
+
+                    if (node == null)
+                    {
+                        node = new TreeNode(subModel.Name) { Tag = subModel, ImageIndex = 10, SelectedImageIndex = 10 };
+                        currentNode.Nodes.Add(node);
+                    }
+                }
+            }
         }
 
         #endregion

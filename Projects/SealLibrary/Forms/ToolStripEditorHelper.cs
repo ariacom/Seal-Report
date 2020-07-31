@@ -196,25 +196,33 @@ namespace Seal.Forms
                             if (model.IsLINQ)
                             {
                                 var frm = new TemplateTextEditorForm();
-                                frm.Text = "LINQ Editor";
+                                frm.Text = "LINQ Editor" + (!string.IsNullOrEmpty(model.LoadScript) ? " (WARNING: Script got from the 'Load Script' property of the model)" : "");
                                 frm.ObjectForCheckSyntax = model;
                                 ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                                model.Report.CheckingExecution = true;
-                                try
+
+                                if (string.IsNullOrEmpty(model.LoadScript))
                                 {
-                                    model.BuildSQL();
+                                    model.Report.CheckingExecution = true;
+                                    try
+                                    {
+                                        model.BuildSQL();
+                                        frm.textBox.Text = model.LINQLoadScript;
+                                        model.Report.CheckingExecution = false;
+                                        model.BuildSQL();
+                                    }
+                                    finally
+                                    {
+                                        model.Report.CheckingExecution = false;
+                                    }
+                                    if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
+
                                     frm.textBox.Text = model.LINQLoadScript;
-                                    model.Report.CheckingExecution = false;
-                                    model.BuildSQL();
                                 }
-                                finally
+                                else
                                 {
-                                    model.Report.CheckingExecution = false;
+                                    frm.textBox.Text = model.LoadScript;
                                 }
 
-                                if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
-
-                                frm.textBox.Text = model.LINQLoadScript;
                                 if (key == Keys.F8) frm.CheckSyntax();
                                 frm.textBox.ReadOnly = true;
                                 frm.okToolStripButton.Visible = false;

@@ -42,9 +42,13 @@ namespace Seal.Model
                 GetProperty("OperatorStyle").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("ShowName").SetIsBrowsable(IsInputValue || IsCommonValue);
                 GetProperty("DisplayNameEl").SetIsBrowsable(true);
-                GetProperty("SQL").SetIsBrowsable(!IsInputValue && !IsCommonValue && !IsNoSQL);
+                GetProperty("SQL").SetIsBrowsable(!IsInputValue && !IsCommonValue);
+                GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom Expression");
+                GetProperty("SQL").SetDescription(IsSQL ? "If not empty, overwrite the default SQL used for the restriction in the WHERE clause." : "If not empty, overwrite the default LINQ Expression used for the restriction in the LINQ query.");
+
+
                 GetProperty("FormatRe").SetIsBrowsable(!IsEnum);
-                GetProperty("TypeRe").SetIsBrowsable(!IsNoSQL);
+                GetProperty("TypeRe").SetIsBrowsable(true);
                 GetProperty("OperatorLabel").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("EnumGUIDRE").SetIsBrowsable(true);
                 GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);

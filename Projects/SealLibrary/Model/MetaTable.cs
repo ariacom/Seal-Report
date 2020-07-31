@@ -463,7 +463,7 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsSQL
         {
-            get { return !_source.IsNoSQL; }
+            get { return !Source.IsNoSQL; }
         }
 
         /// <summary>
@@ -557,16 +557,11 @@ namespace Seal.Model
             }
         }
 
-        protected MetaSource _source;
         /// <summary>
         /// Current MetaSource
         /// </summary>
         [XmlIgnore, Browsable(false)]
-        public MetaSource Source
-        {
-            get { return _source; }
-            set { _source = value; }
-        }
+        public MetaSource Source { get; set; }
 
         /// <summary>
         /// Source GUID for the LINQ Sub-models
@@ -617,7 +612,7 @@ namespace Seal.Model
             {
                 if (IsSQL)
                 {
-                    DbConnection connection = _source.GetOpenConnection();
+                    DbConnection connection = Source.GetOpenConnection();
 
                     Helper.ExecutePrePostSQL(connection, Model == null ? ReportModel.ClearCommonRestrictions(PreSQL) : Model.ParseCommonRestrictions(PreSQL), this, IgnorePrePostError);
                     finalSQL = Model == null ? ReportModel.ClearCommonRestrictions(sql) : Model.ParseCommonRestrictions(sql);
@@ -643,7 +638,7 @@ namespace Seal.Model
         /// </summary>
         public void Refresh()
         {
-            if (_source == null || !DynamicColumns) return;
+            if (Source == null || !DynamicColumns) return;
 
             try
             {
@@ -677,7 +672,7 @@ namespace Seal.Model
                     if (newColumn == null)
                     {
                         newColumn = MetaColumn.Create(fullColumnName);
-                        newColumn.Source = _source;
+                        newColumn.Source = Source;
                         newColumn.DisplayName = (KeepColumnNames ? column.ColumnName.Trim() : Helper.DBNameToDisplayName(column.ColumnName.Trim()));
                         newColumn.Category = AliasName;
                         newColumn.DisplayOrder = GetLastDisplayOrder();
@@ -685,7 +680,7 @@ namespace Seal.Model
                         newColumn.Type = type;
                         newColumn.SetStandardFormat();
                     }
-                    newColumn.Source = _source;
+                    newColumn.Source = Source;
                     if (type != newColumn.Type)
                     {
                         newColumn.Type = type;
@@ -717,7 +712,7 @@ namespace Seal.Model
         /// </summary>
         public void SortColumns(bool byPosition)
         {
-            if (_source == null) return;
+            if (Source == null) return;
 
             try
             {
@@ -767,7 +762,7 @@ namespace Seal.Model
         /// </summary>
         public void CheckTable(MetaColumn column)
         {
-            if (_source == null) return;
+            if (Source == null) return;
 
             Information = "";
             Error = "";
@@ -809,7 +804,7 @@ namespace Seal.Model
                     {
                         sql += string.Format("\r\nGROUP BY {0}", groupByNames);
                     }
-                    Error = _source.CheckSQL(sql, new List<MetaTable>() { this }, null, false);
+                    Error = Source.CheckSQL(sql, new List<MetaTable>() { this }, null, false);
                 }
                 else
                 {
@@ -853,7 +848,7 @@ namespace Seal.Model
                 {
                     string sql = string.Format("SELECT {0} FROM {1}", column.Name, FullSQLName);
                     result = string.Format("{0}\r\n\r\n{1}:\r\n", sql, column.DisplayName);
-                    DbConnection connection = _source.GetOpenConnection();
+                    DbConnection connection = Source.GetOpenConnection();
                     DbCommand command = connection.CreateCommand();
                     command.CommandText = sql;
                     var reader = command.ExecuteReader();
@@ -865,7 +860,7 @@ namespace Seal.Model
                         {
                             object value = reader[0];
 
-                            CultureInfo culture = (_source.Report != null ? _source.Report.ExecutionView.CultureInfo : _source.Repository.CultureInfo);
+                            CultureInfo culture = (Source.Report != null ? Source.Report.ExecutionView.CultureInfo : Source.Repository.CultureInfo);
                             if (value is IFormattable) valueStr = ((IFormattable)value).ToString(column.Format, culture);
                             else valueStr = value.ToString();
                         }
