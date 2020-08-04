@@ -575,13 +575,20 @@ namespace Seal.Model
 
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
-                    foreach (ReportRestriction restriction in
-                        model.ExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI)
-                        .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
-                        .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
-                        )
+                    foreach (ReportRestriction restriction in model.AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                     {
                         setRestriction(restriction);
+                    }
+
+                    if (model.IsLINQ)
+                    {
+                        foreach (ReportModel subModel in model.LINQSubModels)
+                        {
+                            foreach (ReportRestriction restriction in subModel.AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
+                            {
+                                setRestriction(restriction);
+                            }
+                        }
                     }
                 }
             }
@@ -607,21 +614,6 @@ namespace Seal.Model
         async Task buildModelsAsync()
         {
             Report.LogMessage("Starting to build models...");
-
-            /* EPF
-            foreach (ReportModel model in Report.ExecutionModels.Where(i => !i.IsSQLModel))
-            {
-                foreach (var element in model.Elements.Where(i => i.MetaColumn != null && i.MetaColumn.Source.GUID != model.Source.GUID))
-                {
-                    element.ResetMetaColumn();
-                    element.Source = model.Source;
-
-                    var col = element.MetaColumn;
-
-                }
-            }
-            */
-
 
             _runningModels.Clear();
             _runningSubTables.Clear();

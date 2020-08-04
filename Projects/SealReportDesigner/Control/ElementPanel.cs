@@ -121,17 +121,7 @@ namespace Seal.Controls
                 _modelPanel.MainForm.IsModified = true;
                 _modelPanel.MainForm.CannotRenderAnymore();
 
-                if (_modelPanel.Model.IsLINQ)
-                {
-                    if (!string.IsNullOrEmpty(_modelPanel.Model.LoadScript))
-                    {
-                        MessageBox.Show("A custom 'Load Script' has been defined for this model. Adding or removing elements may not work during the report execution...", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    //Check submodels and tables
-                    _modelPanel.Model.BuildSQL();
-
-                    _modelPanel.MainForm.UpdateModelNode();
-                }
+                _modelPanel.UpdateLINQModel();
             }
 
             if (e.Data.GetDataPresent(typeof(Button)))

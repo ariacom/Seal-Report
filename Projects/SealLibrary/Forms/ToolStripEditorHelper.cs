@@ -39,15 +39,16 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is MetaTable)
             {
-                if (!((MetaTable)SelectedEntity).IsSQL) AddHelperButton("Edit Load Script", "Edit the default load script", Keys.F12);
-                if (((MetaTable)SelectedEntity).IsEditable)
+                var table = (MetaTable)SelectedEntity;
+                if (!table.IsSQL) AddHelperButton("Edit Load Script", "Edit the default load script", Keys.F12);
+                if (table.IsEditable && !table.IsSubTable)
                 {
                     ToolStripButton button = AddHelperButton("Refresh columns", "Create or update dynamic columns for this table", Keys.F9);
-                    button.Enabled = ((MetaTable)SelectedEntity).DynamicColumns;
+                    button.Enabled = table.DynamicColumns;
                 }
 
-                if (((MetaTable)SelectedEntity).IsSQL) AddHelperButton("Edit SQL", "Edit the SQL Select Statement", Keys.F8);
-                else AddHelperButton("Edit Definition Script", "Edit the definition script for the table", Keys.F8);
+                if (table.IsSQL) AddHelperButton("Edit SQL", "Edit the SQL Select Statement", Keys.F8);
+                else if (!table.IsSubTable) AddHelperButton("Edit Definition Script", "Edit the definition script for the table", Keys.F8);
                 AddHelperButton("Check table", "Check the table definition", Keys.F7);
 
             }

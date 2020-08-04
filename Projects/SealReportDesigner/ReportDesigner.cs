@@ -376,13 +376,41 @@ namespace Seal
                         }
                     }
 
-
                     if (node == null)
                     {
                         node = new TreeNode(subModel.Name) { Tag = subModel, ImageIndex = 10, SelectedImageIndex = 10 };
                         currentNode.Nodes.Add(node);
                     }
                 }
+
+
+                foreach (var subTable in model.LINQSubTables)
+                {
+                    TreeNode node = null;
+                    foreach (TreeNode subNode in currentNode.Nodes)
+                    {
+                        if (subNode.Tag == subTable)
+                        {
+                            node = subNode;
+                            break;
+                        }
+                    }
+
+                    if (node == null)
+                    {
+                        node = new TreeNode(subTable.Name) { Tag = subTable, ImageIndex = 4, SelectedImageIndex = 4 };
+                        currentNode.Nodes.Add(node);
+                    }
+                }
+
+                //remove unused nodes
+                int j = currentNode.Nodes.Count;
+                while (--j >= 0)
+                {
+                    if (!model.LINQSubModels.Exists(i => i == currentNode.Nodes[j].Tag) && !model.LINQSubTables.Exists(i => i == currentNode.Nodes[j].Tag)) currentNode.Nodes.RemoveAt(j);
+                }
+
+                currentNode.Expand();
             }
         }
 

@@ -35,32 +35,29 @@ namespace Seal.Model
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
                 //Then enable
-                GetProperty("Name").SetIsBrowsable(true);
+                GetProperty("Name").SetIsBrowsable(!IsSubTable);
                 GetProperty("Type").SetIsBrowsable(IsSQL);
                 GetProperty("Alias").SetIsBrowsable(IsSQL);
                 GetProperty("DynamicColumns").SetIsBrowsable(IsSQL);
-                GetProperty("KeepColumnNames").SetIsBrowsable(true);
+                GetProperty("KeepColumnNames").SetIsBrowsable(IsSQL);
                 GetProperty("PreSQL").SetIsBrowsable(IsSQL);
                 GetProperty("Sql").SetIsBrowsable(IsSQL);
                 GetProperty("TemplateName").SetIsBrowsable(!IsSQL);
                 GetProperty("ParameterValues").SetIsBrowsable(!IsSQL && Parameters.Count > 0);
-                GetProperty("DefinitionScript").SetIsBrowsable(!IsSQL);
+                GetProperty("DefinitionScript").SetIsBrowsable(!IsSQL && !IsSubTable);
                 GetProperty("LoadScript").SetIsBrowsable(!IsSQL);
                 GetProperty("PostSQL").SetIsBrowsable(IsSQL);
                 GetProperty("IgnorePrePostError").SetIsBrowsable(IsSQL);
                 GetProperty("WhereSQL").SetIsBrowsable(IsSQL);
 
-                GetProperty("HelperRefreshColumns").SetIsBrowsable(true);
+                GetProperty("HelperRefreshColumns").SetIsBrowsable(!IsSubTable);
                 GetProperty("HelperCheckTable").SetIsBrowsable(true);
                 GetProperty("Information").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
 
                 //Readonly
-                //                GetProperty("Name").SetIsReadOnly(IsMasterTable);
                 GetProperty("TemplateName").SetIsReadOnly(true);
                 GetProperty("Type").SetIsReadOnly(true);
-                //                GetProperty("DynamicColumns").SetIsReadOnly(IsMasterTable);
-                //                GetProperty("Alias").SetIsReadOnly(IsMasterTable);
 
                 GetProperty("HelperRefreshColumns").SetIsReadOnly(true);
                 GetProperty("HelperCheckTable").SetIsReadOnly(true);
@@ -464,6 +461,15 @@ namespace Seal.Model
         public bool IsSQL
         {
             get { return !Source.IsNoSQL; }
+        }
+
+        /// <summary>
+        /// True if the table is a sub-table of a model
+        /// </summary>
+        [XmlIgnore]
+        public bool IsSubTable
+        {
+            get { return Model != null && Model.IsLINQ; }
         }
 
         /// <summary>

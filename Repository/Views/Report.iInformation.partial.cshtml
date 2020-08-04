@@ -57,6 +57,21 @@
                         <td class="text-center">@item.ExecutionDuration</td>
                         <td>@Raw(Helper.ToHtml(item.RestrictionText))</td>
                     </tr>
+
+                    if (item.IsLINQ)
+                    {
+                        foreach (var subModel in item.LINQSubModels)
+                        {
+                            <tr>
+                                <td>@(item.Name)>@(subModel.Name) (@subModel.Connection.Name)</td>
+                                <td class="text-center">@subModel.ResultTable.Rows.Count</td>
+                                <td class="text-center">@subModel.Pages.Count</td>
+                                <td class="text-center">@subModel.ExecutionDuration</td>
+                                <td>@Raw(Helper.ToHtml(subModel.RestrictionText))</td>
+                            </tr>
+
+                        }
+                    }
                 }
             </tbody>
         </table>

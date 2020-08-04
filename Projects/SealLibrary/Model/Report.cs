@@ -1994,21 +1994,23 @@ namespace Seal.Model
                             ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions).FirstOrDefault(i => i != restriction && i.IsIdenticalForPrompt(restriction));
                             if (modelRestriction != null)
                             {
-                                modelRestriction.HtmlIndex = restriction.HtmlIndex;
-                                modelRestriction.Prompt = restriction.Prompt;
-                                modelRestriction.Operator = restriction.Operator;
-                                modelRestriction.Value1 = restriction.Value1;
-                                modelRestriction.Date1 = restriction.Date1;
-                                modelRestriction.Date1Keyword = restriction.Date1Keyword;
-                                modelRestriction.Value2 = restriction.Value2;
-                                modelRestriction.Date2 = restriction.Date2;
-                                modelRestriction.Date2Keyword = restriction.Date2Keyword;
-                                modelRestriction.Value3 = restriction.Value3;
-                                modelRestriction.Date3 = restriction.Date3;
-                                modelRestriction.Date3Keyword = restriction.Date3Keyword;
-                                modelRestriction.Value4 = restriction.Value4;
-                                modelRestriction.Date4 = restriction.Date4;
-                                modelRestriction.Date4Keyword = restriction.Date4Keyword;
+                                modelRestriction.CopyForPrompt(restriction);
+                            }
+                        }
+
+                        if (model.IsLINQ)
+                        {
+                            foreach (ReportModel subModel in model.LINQSubModels)
+                            {
+                                foreach (ReportRestriction restriction in _executionViewRestrictions)
+                                {
+                                    ReportRestriction modelRestriction = subModel.Restrictions.Union(subModel.AggregateRestrictions).Union(subModel.CommonRestrictions).FirstOrDefault(i => i != restriction && i.IsIdenticalForPrompt(restriction));
+                                    if (modelRestriction != null)
+                                    {
+                                        modelRestriction.CopyForPrompt(restriction);
+                                    }
+                                }
+
                             }
                         }
                     }
@@ -2052,6 +2054,10 @@ namespace Seal.Model
                 foreach (ReportModel model in ExecutionModels)
                 {
                     result.AddRange(model.ExecutionRestrictions.Union(model.ExecutionAggregateRestrictions).Union(model.ExecutionCommonRestrictions));
+                    if (model.IsLINQ)
+                    {
+                        foreach (var subModel in model.LINQSubModels) result.AddRange(subModel.ExecutionRestrictions.Union(subModel.ExecutionAggregateRestrictions).Union(subModel.ExecutionCommonRestrictions));
+                    }
                 }
                 return result;
             }

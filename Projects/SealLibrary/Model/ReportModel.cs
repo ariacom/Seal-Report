@@ -22,6 +22,7 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Seal.Model
 {
@@ -42,6 +43,8 @@ namespace Seal.Model
 
                 //Then enable
                 GetProperty("SourceGUID").SetIsBrowsable(true);
+                GetProperty("SourceGUID").SetIsReadOnly(MasterModel != null);
+
                 GetProperty("ConnectionGUID").SetIsBrowsable(true);
 
                 GetProperty("CommonRestrictions").SetIsBrowsable(!Source.IsNoSQL);
@@ -958,6 +961,7 @@ var query =
                     }
                     result.Add(newRestriction);
                 }
+
                 return result;
             }
         }
@@ -981,6 +985,12 @@ var query =
                     }
                     result.Add(newRestriction);
                 }
+
+                if (IsLINQ)
+                {
+                    foreach (var subModel in LINQSubModels) result.AddRange(subModel.ExecutionAggregateRestrictions);
+                }
+
                 return result;
             }
         }
@@ -1005,6 +1015,19 @@ var query =
                     result.Add(newRestriction);
                 }
                 return result;
+            }
+        }
+
+
+        /// <summary>
+        /// List of all restrictions of the model (including aggregate and common restrictions)
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportRestriction> AllExecutionRestrictions
+        {
+            get
+            {
+                return ExecutionRestrictions.Union(ExecutionAggregateRestrictions).Union(ExecutionCommonRestrictions).ToList();
             }
         }
 
@@ -1091,6 +1114,13 @@ var query =
             {
                 subModel.MasterModel = this;
                 subModel.Report = Report;
+                subModel.InitReferences();
+            }
+
+            foreach (var subTable in LINQSubTables)
+            {
+                subTable.Model = this;
+                subTable.Source = Source;
             }
 
             foreach (var element in Elements)
@@ -1308,21 +1338,26 @@ var query =
                 {
                     foreach (var guid in subreport.Restrictions)
                     {
-                        if (!Elements.Exists(i => i.MetaColumnGUID == guid))
-                        {
-                            //Add the element
-                            ReportElement element = ReportElement.Create();
-                            element.Source = Source;
-                            element.Report = Report;
-                            element.Model = this;
-                            element.MetaColumnGUID = guid;
-                            element.PivotPosition = PivotPosition.Hidden;
-                            element.IsForNavigation = true;
-                            element.SortOrder = ReportElement.kNoSortKeyword;
-                            Elements.Add(element);
-                        }
+                        addHiddenElement(guid);
                     }
                 }
+            }
+        }
+
+        void addHiddenElement(string MetaColumnGUID)
+        {
+            if (!Elements.Exists(i => i.MetaColumnGUID == MetaColumnGUID))
+            {
+                //Add the element
+                ReportElement element = ReportElement.Create();
+                element.Source = Source;
+                element.Report = Report;
+                element.Model = this;
+                element.MetaColumnGUID = MetaColumnGUID;
+                element.PivotPosition = PivotPosition.Hidden;
+                element.IsForNavigation = true;
+                element.SortOrder = ReportElement.kNoSortKeyword;
+                Elements.Add(element);
             }
         }
 
@@ -1341,10 +1376,23 @@ var query =
         [XmlIgnore]
         public StringBuilder JoinPaths = null;
 
+        void filterLINQFromTables()
+        {
+            //For LINQ, keep only SQL tables having joins defined...
+            if (IsLINQ)
+            {
+                foreach (var table in FromTables.Where(i => i.IsSQL && !Source.MetaData.Joins.Exists(j => j.LeftTableGUID == i.GUID || j.RightTableGUID == i.GUID)).ToList())
+                {
+                    //but we need at least one table per source
+                    if (FromTables.Exists(i => i != table && i.Source == table.Source)) FromTables.Remove(table);
+                }
+            }
+        }
+
         /// <summary>
         /// Build the SQL for the model
         /// </summary>
-        public void BuildSQL(bool forConversion = false)
+        public void BuildSQL(bool forConversion = false, bool forceRestrictionsTables = false)
         {
             try
             {
@@ -1396,9 +1444,9 @@ var query =
                 }
 
                 //build select
+                FromTables = new List<MetaTable>();
                 if (Elements.Count > 0)
                 {
-                    FromTables = new List<MetaTable>();
                     List<string> selectColumns = new List<string>();
                     List<string> groupByColumns = new List<string>();
                     if (!forConversion) SetColumnsName();
@@ -1424,18 +1472,11 @@ var query =
                     foreach (ReportRestriction restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions))
                     {
                         MetaTable table = restriction.MetaColumn.MetaTable;
-                        if (table != null && !FromTables.Contains(table) && restriction.HasValue && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
+                        if (table != null && !FromTables.Contains(table) && (restriction.HasValue || forceRestrictionsTables) && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
                     }
 
                     //For LINQ, keep only SQL tables having joins defined...
-                    if (IsLINQ)
-                    {
-                        foreach (var table in FromTables.Where(i => i.IsSQL && !Source.MetaData.Joins.Exists(j => j.LeftTableGUID == i.GUID || j.RightTableGUID == i.GUID)).ToList())
-                        {
-                            //but we need at least one table per source
-                            if (FromTables.Exists(i => i != table && i.Source == table.Source)) FromTables.Remove(table);
-                        }
-                    }
+                    filterLINQFromTables();
 
                     //Clear group by clause if not necessary
                     if (GetElements(PivotPosition.Data).Count() == 0 && Elements.Count(i => i.IsAggregateEl) == 0 && execHavingClause.Length == 0) execGroupByClause = new StringBuilder();
@@ -1476,14 +1517,78 @@ var query =
                         LINQSelect += string.Format("\r\nselect new {{\r\n{0}\r\n}}", execSelectClause);
                     }
                 }
+                else
+                {
+                    if (IsLINQ) initSubModelsAndTables();
+                }
             }
             catch (TemplateCompilationException ex)
             {
+                LINQSelect = "";
                 Sql = "";
                 ExecutionError = string.Format("Got unexpected error when building the statement:\r\n{0}", Helper.GetExceptionMessage(ex));
             }
             catch (Exception ex)
             {
+                if (IsLINQ && ex.Message.StartsWith("Unable to link all elements") && FromTables.Count > 0)
+                {
+                    //Try to add SQL tables joins from the same source...
+                    var newTables = new List<MetaTable>();
+                    var joinClause = "";
+                    foreach (var join in Source.MetaData.Joins)
+                    {
+                        //Filter in joins to use here
+                        if (JoinsToUse.Count > 0 && !JoinsToUse.Contains(join.GUID)) continue;
+
+                        if (!FromTables.Contains(join.LeftTable) && join.LeftTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.LeftTable.LINQSourceGUID))
+                        {
+                            newTables.Add(join.LeftTable);
+                            joinClause += join.Clause + "\r\n";
+                        }
+                        if (!FromTables.Contains(join.RightTable) && join.RightTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.RightTable.LINQSourceGUID))
+                        {
+                            newTables.Add(join.RightTable);
+                            joinClause += join.Clause + "\r\n";
+                        }
+                    }
+
+                    //Try to join again...
+                    if (newTables.Count > 0)
+                    {
+                        foreach (var newTable in newTables)
+                        {
+                            if (!FromTables.Contains(newTable))
+                            {
+                                FromTables.Add(newTable);
+                                //Add elements used to perform the LINQ joins
+                                foreach (var col in newTable.Columns)
+                                {
+                                    if (joinClause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
+                                    {
+                                        addHiddenElement(col.GUID);
+                                    }
+                                }
+                            }
+                        }
+
+                        try
+                        {
+                            if (JoinPaths != null) JoinPaths = new StringBuilder();
+                            filterLINQFromTables();
+                            buildFromClause();
+                            //No exception -> Joins are ok
+                            BuildSQL(false, true);
+                            return;
+                        }
+                        catch (Exception ex2)
+                        {
+                            FromTables.Clear();
+                            ex = ex2;
+                        }
+                    }
+                }
+
+                LINQSelect = "";
                 Sql = "";
                 ExecutionError = string.Format("Got unexpected error when building the statement:\r\n{0}", ex.Message);
             }
@@ -1715,9 +1820,13 @@ var query =
                 {
                     string lastTable = null;
                     List<MetaTable> tablesUsed = new List<MetaTable>();
-                    for (int i = bestPath.joins.Count - 1; i >= 0; i--)
+                    var joins = bestPath.joins;
+                    //Reverse join orders for LINQ
+                    if (IsLINQ) joins.Reverse();
+
+                    for (int i = joins.Count - 1; i >= 0; i--)
                     {
-                        MetaJoin join = bestPath.joins[i];
+                        MetaJoin join = joins[i];
                         if (string.IsNullOrEmpty(lastTable))
                         {
                             if (!IsLINQ)
@@ -1773,7 +1882,6 @@ var query =
                             {
                                 joinClause = joinClause.Replace(string.Format("{0}[\"", col.MetaTable.Name), string.Format("{0}[\"", col.MetaTable.LINQResultName));
                             }
-
 
                             lastTable = string.Format("{0}join {1} on {2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
                         }
@@ -1852,7 +1960,7 @@ var query =
         void JoinTables(JoinPath path, List<JoinPath> resultPath)
         {
             //no need to find another path as it will be worth...
-            if (path.joins.Count >= _bestJoinsCount) return;
+            if (path.tablesToUse.Count != 0 && path.joins.Count >= _bestJoinsCount) return;
 
             //If the search is longer than xx seconds, we exit with the first path found...
             if ((DateTime.Now - _buildTimer).TotalMilliseconds > BuildTimeout)
@@ -2122,11 +2230,11 @@ var query =
                 var subModel = currentSubModels.FirstOrDefault(i => i.SourceGUID == table.LINQSourceGUID);
                 if (subModel == null)
                 {
-                    subModel = new ReportModel() { SourceGUID = table.LINQSourceGUID };
+                    subModel = new ReportModel() { SourceGUID = table.LINQSourceGUID, Name = Source.Name };
                 }
                 subModel.MasterModel = this;
                 subModel.Report = Report;
-                subModel.Name = subModel.Source.Name;
+                subModel.InitReferences();
                 LINQSubModels.Add(subModel);
             }
 
@@ -2158,17 +2266,7 @@ var query =
                     {
                         if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
                         {
-                            if (!subModel.Elements.Exists(i => i.MetaColumnGUID == col.GUID))
-                            {
-                                //Add the element
-                                ReportElement element = ReportElement.Create();
-                                element.Name = col.Name;
-                                element.MetaColumnGUID = col.GUID;
-                                element.PivotPosition = PivotPosition.Hidden;
-                                element.IsForNavigation = true;
-                                element.SortOrder = ReportElement.kNoSortKeyword;
-                                subModel.Elements.Add(element);
-                            }
+                            subModel.addHiddenElement(col.GUID);
                         }
                     }
                 }
@@ -2176,17 +2274,7 @@ var query =
                 //elements used to perform the LINQ restrictions
                 foreach (var restr in Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))
                 {
-                    if (!subModel.Elements.Exists(i => i.MetaColumnGUID == restr.MetaColumnGUID))
-                    {
-                        //Add the element
-                        ReportElement element = ReportElement.Create();
-                        element.Name = restr.Name;
-                        element.MetaColumnGUID = restr.MetaColumnGUID;
-                        element.PivotPosition = PivotPosition.Hidden;
-                        element.IsForNavigation = true;
-                        element.SortOrder = ReportElement.kNoSortKeyword;
-                        subModel.Elements.Add(element);
-                    }
+                    subModel.addHiddenElement(restr.MetaColumnGUID);
                 }
 
                 subModel.InitReferences();
@@ -2196,17 +2284,23 @@ var query =
             if (LINQSubTables == null) LINQSubTables = new List<MetaTable>();
             var currentSubTables = LINQSubTables.ToList();
             LINQSubTables.Clear();
-            foreach (var table in FromTables.Where(i => !i.IsSQL))
+
+            var tables = FromTables.Where(i => !i.IsSQL).ToList();
+            //Add other No SQL tables involved in Joins...
+            foreach (var join in ExecTableJoins)
+            {
+                if (!join.LeftTable.IsSQL && !tables.Contains(join.LeftTable)) tables.Add(join.LeftTable);
+            }
+
+            foreach (var table in tables)
             {
                 var subTable = currentSubTables.FirstOrDefault(i => i.GUID == table.GUID);
                 if (subTable == null)
                 {
-                    subTable = new MetaTable();
+                    subTable = new MetaTable() { Name = table.Name, GUID = table.GUID };
                 }
                 subTable.Model = this;
-                subTable.GUID = table.GUID;
                 subTable.Source = table.Source;
-                subTable.Name = table.Name;
                 //Copy default properties
                 if (subTable.LoadScript == null) subTable.LoadScript = table.LoadScript;
                 if (subTable.Parameters.Count == 0)
@@ -2362,7 +2456,7 @@ var query =
             ResultTable = null;
             _command = null;
 
-            if (Source.IsNoSQL && Elements.Count > 0 && !Report.Cancel)
+            if (Source.IsNoSQL && !string.IsNullOrEmpty(LINQSelect) && !Report.Cancel)
             {
                 //No SQL = LINQ
                 try
