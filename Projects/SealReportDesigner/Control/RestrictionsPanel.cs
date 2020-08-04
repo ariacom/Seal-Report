@@ -47,7 +47,6 @@ namespace Seal.Controls
         {
             ModelPanel = modelPanel;
             ModelToRestrictionText();
-
         }
 
         public void ClearSelection()
@@ -82,19 +81,24 @@ namespace Seal.Controls
             if (IsAggregate)
             {
                 ModelPanel.Model.AggregateRestriction = text;
+                //If a restriction is removed, update the LINQ model
+                if (ModelPanel.Model.AggregateRestrictions.Exists(i => !restrictions.Contains(i))) ModelPanel.UpdateLINQModel();
                 ModelPanel.Model.AggregateRestrictions = restrictions;
             }
             else
             {
                 ModelPanel.Model.Restriction = text;
+                //If a restriction is removed, update the LINQ model
+                if (ModelPanel.Model.Restrictions.Exists(i => !restrictions.Contains(i))) ModelPanel.UpdateLINQModel();
                 ModelPanel.Model.Restrictions = restrictions;
             }
+
         }
 
         public void ModelToRestrictionText()
         {
             bool isModified = ModelPanel.MainForm.IsModified;
-            
+
             int startPos = 0, endPos = 0;
             string text = Restriction;
             if (!string.IsNullOrEmpty(text))
@@ -115,6 +119,8 @@ namespace Seal.Controls
             ModelPanel.MainForm.IsModified = isModified;
             restrictionsTextBox.CurrentPosition = 0;
             restrictionsTextBox.ScrollCaret();
+
+            restrictionsTextBox.SetSavePoint();
         }
 
         public void UpdateRestrictionText()
@@ -207,21 +213,21 @@ namespace Seal.Controls
             }
             if (restriction != null)
             {
-                restrictionsTextBox.SelectionStart = startPos; 
-                restrictionsTextBox.SelectionEnd = endPos+1; 
+                restrictionsTextBox.SelectionStart = startPos;
+                restrictionsTextBox.SelectionEnd = endPos + 1;
                 restrictionsTextBox.Focus();
 
                 MenuItem item = new MenuItem("Smart copy...");
-                item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     SmartCopyForm form = new SmartCopyForm("Smart copy of " + restriction.DisplayNameEl, restriction, restriction.Model.Report);
-                     form.ShowDialog();
-                     if (form.IsReportModified)
-                     {
-                         ModelPanel.MainForm.IsModified = true;
-                         ModelPanel.MainForm.CannotRenderAnymore();
-                         ModelToRestrictionText();
-                     }
+                    form.ShowDialog();
+                    if (form.IsReportModified)
+                    {
+                        ModelPanel.MainForm.IsModified = true;
+                        ModelPanel.MainForm.CannotRenderAnymore();
+                        ModelToRestrictionText();
+                    }
                 });
 
                 restrictionsTextBox.ContextMenu = new ContextMenu();
@@ -311,7 +317,7 @@ namespace Seal.Controls
 
         private void restrictionsTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!restrictionsTextBox.Focused) return; 
+            if (!restrictionsTextBox.Focused) return;
             ModelPanel.MainForm.IsModified = true;
             ModelPanel.MainForm.CannotRenderAnymore();
         }
@@ -366,7 +372,13 @@ namespace Seal.Controls
                 highlightRestriction(false);
             }
             Commit();
+
+            if (column != null) ModelPanel.UpdateLINQModel();
         }
 
+        private void restrictionsTextBox_Leave(object sender, EventArgs e)
+        {
+         //   if (restrictionsTextBox.Modified) ModelPanel.UpdateLINQModel();
+        }
     }
 }

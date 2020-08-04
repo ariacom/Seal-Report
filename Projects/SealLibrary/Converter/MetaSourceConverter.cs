@@ -51,7 +51,7 @@ namespace Seal.Forms
                 var component = context.Instance as ReportComponent;
                 if (component != null && value != null)
                 {
-                    ReportSource source = component.Report.Sources.FirstOrDefault(i => i.GUID == value.ToString());
+                    ReportSource source = component.Report.Sources.FirstOrDefault(i => i.GUID == value.ToString() || i.MetaSourceGUID == value.ToString());
                     if (source != null) return source.Name;
                 }
             }

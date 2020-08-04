@@ -1885,5 +1885,24 @@ namespace Seal.Model
         {
             return (IsCommonRestrictionValue && restriction.IsCommonRestrictionValue && Name == restriction.Name) || (!IsCommonRestrictionValue && !restriction.IsCommonRestrictionValue && MetaColumnGUID == restriction.MetaColumnGUID && DisplayNameEl == restriction.DisplayNameEl);
         }
+
+        public void CopyForPrompt(ReportRestriction restriction)
+        {
+                HtmlIndex = restriction.HtmlIndex;
+                Prompt = restriction.Prompt;
+                Operator = restriction.Operator;
+                Value1 = restriction.Value1;
+                Date1 = restriction.Date1;
+                Date1Keyword = restriction.Date1Keyword;
+                Value2 = restriction.Value2;
+                Date2 = restriction.Date2;
+                Date2Keyword = restriction.Date2Keyword;
+                Value3 = restriction.Value3;
+                Date3 = restriction.Date3;
+                Date3Keyword = restriction.Date3Keyword;
+                Value4 = restriction.Value4;
+                Date4 = restriction.Date4;
+                Date4Keyword = restriction.Date4Keyword;
+        }
     }
 }

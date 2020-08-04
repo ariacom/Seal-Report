@@ -507,7 +507,7 @@ namespace Seal.Model
         public List<ReportRestriction> Restrictions { 
             get
             {
-                return Report.AllRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i =>i.DisplayOrderRE).ToList();
+                return Report.AllExecutionRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i =>i.DisplayOrderRE).ToList();
             }
         }
 

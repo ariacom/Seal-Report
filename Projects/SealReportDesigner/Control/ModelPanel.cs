@@ -93,6 +93,8 @@ namespace Seal.Controls
             initNoSQL();
             RestrictionGrid.SelectedObject = null;
 
+            _LINQwarningDone = false;
+
             resizeControls();
 
             //adjust description height
@@ -116,14 +118,14 @@ namespace Seal.Controls
                 {
                     MetaColumn column = elementTreeView.SelectedNode.Tag as MetaColumn;
                     ToolStripMenuItem item = new ToolStripMenuItem("Select");
-                    item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                     {
                         addElement(false);
                     });
                     menu.Items.Add(item);
 
                     item = new ToolStripMenuItem("Prompt at run-time");
-                    item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                     {
                         if (column.IsAggregate == true) aggregateRestrictionsPanel.AddRestriction(column, true);
                         else restrictionsPanel.AddRestriction(column, true);
@@ -133,7 +135,7 @@ namespace Seal.Controls
                     if (SelectedButton != null && SelectedButton.Tag is ReportElement)
                     {
                         item = new ToolStripMenuItem("Replace the selected element");
-                        item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                        item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                         {
                             addElement(true);
                         });
@@ -143,11 +145,11 @@ namespace Seal.Controls
                 else if (elementTreeView.SelectedNode != null && elementTreeView.SelectedNode.Nodes.Count > 0)
                 {
                     ToolStripMenuItem item = new ToolStripMenuItem("Select all");
-                    item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                     {
                         foreach (TreeNode node in elementTreeView.SelectedNode.Nodes)
                         {
-                            if (node.Tag is MetaColumn) 
+                            if (node.Tag is MetaColumn)
                             {
                                 AddElement(RowPanel, (MetaColumn)node.Tag, true);
                                 MainForm.IsModified = true;
@@ -160,7 +162,7 @@ namespace Seal.Controls
                     menu.Items.Add(item);
 
                     item = new ToolStripMenuItem("Sort by Name");
-                    item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                     {
                         elementTreeView.TreeViewNodeSorter = null;
                         elementTreeView.Sort();
@@ -169,7 +171,7 @@ namespace Seal.Controls
                     menu.Items.Add(item);
 
                     item = new ToolStripMenuItem("Sort by Position");
-                    item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                     {
                         elementTreeView.TreeViewNodeSorter = new NodeSorter();
                         elementTreeView.Sort();
@@ -215,6 +217,7 @@ namespace Seal.Controls
             panel.Controls.Add(button);
             if (selectButton) btn_MouseDown(button, null);
             panel.ResizeControls();
+
             return button;
         }
 
@@ -284,7 +287,7 @@ namespace Seal.Controls
             }
 
             if (button.Parent != null)
-            { 
+            {
                 SelectedButton = button;
                 redrawButtons();
             }
@@ -296,28 +299,28 @@ namespace Seal.Controls
             {
                 ContextMenuStrip menu = new ContextMenuStrip();
                 ToolStripMenuItem item = new ToolStripMenuItem("Remove");
-                item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     removeElementFromPanel(button, false);
                 });
                 menu.Items.Add(item);
 
                 item = new ToolStripMenuItem("Remove all elements");
-                item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     removeElementFromPanel(button, true);
                 });
                 menu.Items.Add(item);
 
                 item = new ToolStripMenuItem("Copy");
-                item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     copyElementFromPanel(button);
                 });
                 menu.Items.Add(item);
 
                 item = new ToolStripMenuItem("Prompt at run-time");
-                item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     if (element.MetaColumn.IsAggregate == true) aggregateRestrictionsPanel.AddRestriction(element.MetaColumn, true);
                     else restrictionsPanel.AddRestriction(element.MetaColumn, true);
@@ -326,7 +329,7 @@ namespace Seal.Controls
 
                 menu.Items.Add(new ToolStripSeparator());
                 item = new ToolStripMenuItem("Smart copy...");
-                item.Click += new EventHandler(delegate(object sender2, EventArgs e2)
+                item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     SmartCopyForm form = new SmartCopyForm("Smart copy of " + element.DisplayNameEl, element, Model.Report);
                     form.ShowDialog();
@@ -410,7 +413,7 @@ namespace Seal.Controls
             }
 
             TreeViewHelper.InitCategoryTreeNode(elementTreeView.Nodes, tableList);
-            elementTreeView.TreeViewNodeSorter = new NodeSorter(); 
+            elementTreeView.TreeViewNodeSorter = new NodeSorter();
             elementTreeView.Sort();
             if (Model.IsSQLModel) elementTreeView.ExpandAll();
         }
@@ -453,7 +456,7 @@ namespace Seal.Controls
                         panel.Controls.Remove(SelectedButton);
                         Model.Elements.Remove(element);
                         newIndex--;
-                    } 
+                    }
                 }
 
                 //For aggregate force data panel
@@ -487,6 +490,32 @@ namespace Seal.Controls
                 PanelsToElements();
                 panel.RedrawPanel();
                 button.Focus();
+
+                UpdateLINQModel();
+            }
+        }
+
+        bool _LINQwarningDone = false;
+
+        public void UpdateLINQModel()
+        {
+            if (Model.IsLINQ)
+            {
+                if (!string.IsNullOrEmpty(Model.LoadScript) && !_LINQwarningDone)
+                {
+                    _LINQwarningDone = true;
+                    MessageBox.Show("A custom 'Load Script' has been defined for this model. Adding or removing elements or restrictions may not work during the report execution...", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                //Check submodels and tables
+                Model.BuildSQL(false, true);
+                if (!string.IsNullOrEmpty(Model.ExecutionError))
+                {
+                    MessageBox.Show(string.Format("An error occurs when building the LINQ Query:\r\n{0}", Model.ExecutionError), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MainForm.UpdateModelNode();
+                }
             }
         }
 
@@ -553,7 +582,7 @@ namespace Seal.Controls
                         Model.InitEditor();
                         Model.Restriction = "";
                         Model.AggregateRestrictions.Clear();
-                        Model.AggregateRestriction = "";                    
+                        Model.AggregateRestriction = "";
                         restrictionsPanel.ModelToRestrictionText();
                         aggregateRestrictionsPanel.ModelToRestrictionText();
                         ElementsToPanels();
@@ -615,6 +644,8 @@ namespace Seal.Controls
             ElementGrid.SelectedObject = null;
             panel.RedrawPanel();
             MainForm.IsModified = true;
+
+            UpdateLINQModel();
         }
 
         void copyElementFromPanel(Button elementButton)
