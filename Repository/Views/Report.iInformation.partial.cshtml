@@ -63,7 +63,7 @@
                         foreach (var subModel in item.LINQSubModels)
                         {
                             <tr>
-                                <td>@(item.Name)>@(subModel.Name) (@subModel.Connection.Name)</td>
+                                <td>@(item.Name): @subModel.Name (@subModel.Connection.Name)</td>
                                 <td class="text-center">@subModel.ResultTable.Rows.Count</td>
                                 <td class="text-center">@subModel.Pages.Count</td>
                                 <td class="text-center">@subModel.ExecutionDuration</td>

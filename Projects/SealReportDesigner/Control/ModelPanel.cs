@@ -103,8 +103,8 @@ namespace Seal.Controls
 
         void initNoSQL()
         {
-            aggregateRestrictionsPanel.Visible = !Model.Source.IsNoSQL;
             selectedRestrictionsGroupBox.Text = Model.Source.IsNoSQL ? "Restrictions" : "Restrictions and Aggregate Restrictions";
+            restrictionsSplitContainer.Panel2Collapsed = Model.Source.IsNoSQL;
         }
 
         void elementTreeView_MouseUp(object sender, MouseEventArgs e)
@@ -122,7 +122,7 @@ namespace Seal.Controls
                     {
                         addElement(false);
                     });
-                    menu.Items.Add(item);
+                    if (!Model.IsSubModel) menu.Items.Add(item);
 
                     item = new ToolStripMenuItem("Prompt at run-time");
                     item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
@@ -139,7 +139,7 @@ namespace Seal.Controls
                         {
                             addElement(true);
                         });
-                        menu.Items.Add(item);
+                        if (!Model.IsSubModel) menu.Items.Add(item);
                     }
                 }
                 else if (elementTreeView.SelectedNode != null && elementTreeView.SelectedNode.Nodes.Count > 0)
@@ -159,7 +159,7 @@ namespace Seal.Controls
                             }
                         }
                     });
-                    menu.Items.Add(item);
+                    if (!Model.IsSubModel) menu.Items.Add(item);
 
                     item = new ToolStripMenuItem("Sort by Name");
                     item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
@@ -167,7 +167,7 @@ namespace Seal.Controls
                         elementTreeView.TreeViewNodeSorter = null;
                         elementTreeView.Sort();
                     });
-                    menu.Items.Add(new ToolStripSeparator());
+                    if (!Model.IsSubModel) menu.Items.Add(new ToolStripSeparator());
                     menu.Items.Add(item);
 
                     item = new ToolStripMenuItem("Sort by Position");
@@ -303,21 +303,21 @@ namespace Seal.Controls
                 {
                     removeElementFromPanel(button, false);
                 });
-                menu.Items.Add(item);
+                if (!Model.IsSubModel) menu.Items.Add(item);
 
                 item = new ToolStripMenuItem("Remove all elements");
                 item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     removeElementFromPanel(button, true);
                 });
-                menu.Items.Add(item);
+                if (!Model.IsSubModel) menu.Items.Add(item);
 
                 item = new ToolStripMenuItem("Copy");
                 item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
                     copyElementFromPanel(button);
                 });
-                menu.Items.Add(item);
+                if (!Model.IsSubModel) menu.Items.Add(item);
 
                 item = new ToolStripMenuItem("Prompt at run-time");
                 item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
@@ -326,26 +326,27 @@ namespace Seal.Controls
                     else restrictionsPanel.AddRestriction(element.MetaColumn, true);
                 });
                 menu.Items.Add(item);
-
-                menu.Items.Add(new ToolStripSeparator());
-                item = new ToolStripMenuItem("Smart copy...");
-                item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                if (!Model.IsSubModel)
                 {
-                    SmartCopyForm form = new SmartCopyForm("Smart copy of " + element.DisplayNameEl, element, Model.Report);
-                    form.ShowDialog();
-                    if (form.IsReportModified)
+                    menu.Items.Add(new ToolStripSeparator());
+                    item = new ToolStripMenuItem("Smart copy...");
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                     {
-                        MainForm.IsModified = true;
-                        MainForm.CannotRenderAnymore();
-                        ElementsToPanels();
-                    }
+                        SmartCopyForm form = new SmartCopyForm("Smart copy of " + element.DisplayNameEl, element, Model.Report);
+                        form.ShowDialog();
+                        if (form.IsReportModified)
+                        {
+                            MainForm.IsModified = true;
+                            MainForm.CannotRenderAnymore();
+                            ElementsToPanels();
+                        }
 
-                });
-                menu.Items.Add(item);
+                    });
+                    menu.Items.Add(item);
+                }
                 //Display context menu
                 menu.Show(button, e.Location);
             }
-
         }
 
         void redrawButtons()
@@ -430,6 +431,7 @@ namespace Seal.Controls
 
         private void elementTreeView_DoubleClick(object sender, EventArgs e)
         {
+            if (Model.IsSubModel) return;
             addElement(false);
         }
 
@@ -521,6 +523,7 @@ namespace Seal.Controls
 
         private void elementTreeView_DragEnter(object sender, DragEventArgs e)
         {
+
             if (e.Data.GetDataPresent(typeof(Button)))
             {
                 e.Effect = DragDropEffects.Move;
@@ -542,7 +545,10 @@ namespace Seal.Controls
 
         private void elementTreeView_DragOver(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(Button)) || e.Data.GetDataPresent(typeof(TreeNode)) || e.Data.GetDataPresent(typeof(String)))
+            if ((e.Data.GetDataPresent(typeof(Button)) || e.Data.GetDataPresent(typeof(TreeNode))) && Model.IsSubModel) {
+                e.Effect = DragDropEffects.None;
+            }
+            else if (e.Data.GetDataPresent(typeof(Button)) || e.Data.GetDataPresent(typeof(TreeNode)) || e.Data.GetDataPresent(typeof(string)))
             {
                 e.Effect = DragDropEffects.Move;
             }

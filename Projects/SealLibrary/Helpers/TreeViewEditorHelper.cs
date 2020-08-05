@@ -532,6 +532,12 @@ namespace Seal.Forms
             }
             else if (entity is MetaTable)
             {
+                if (((MetaTable)entity).IsSubTable)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
                 entityName = "Column";
                 copyEntityName = ((MetaTable)entity).DisplayName;
             }

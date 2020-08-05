@@ -964,6 +964,12 @@ namespace Seal
                 else if (entity is ReportModel)
                 {
                     var reportModel = entity as ReportModel;
+                    if (reportModel.MasterModel != null)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+
                     addCopyItem("Copy " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                     addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                     addSmartCopyItem("Smart copy...", entity);
