@@ -222,7 +222,8 @@ namespace Seal
                 mainTreeView.Nodes.Add(modelTN);
                 foreach (var model in _report.Models)
                 {
-                    TreeNode tn = new TreeNode(model.Name) { Tag = model, ImageIndex = model.IsSQLModel ? 15 : 10, SelectedImageIndex = model.IsSQLModel ? 15 : 10 };
+                    var index = model.IsLINQ ? 17 : (model.IsSQLModel ? 15 : 10);
+                    TreeNode tn = new TreeNode(model.Name) { Tag = model, ImageIndex = index, SelectedImageIndex = index };
                     tn.Tag = model;
                     modelTN.Nodes.Add(tn);
                     UpdateModelNode(tn);
