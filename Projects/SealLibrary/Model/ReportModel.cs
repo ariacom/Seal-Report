@@ -49,10 +49,11 @@ namespace Seal.Model
 
                 GetProperty("CommonRestrictions").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PreLoadScript").SetIsBrowsable(!Source.IsNoSQL);
-                GetProperty("LoadScript").SetIsBrowsable(true);
-                GetProperty("FinalScript").SetIsBrowsable(true);
                 GetProperty("ExecutionSet").SetIsBrowsable(true);
                 GetProperty("ShareResultTable").SetIsBrowsable(true);
+
+                GetProperty("LoadScript").SetIsBrowsable(!IsSubModel);
+                GetProperty("FinalScript").SetIsBrowsable(!IsSubModel);
                 if (Source.IsNoSQL)
                 {
                     GetProperty("LoadScript").SetDisplayName("Load Script");
@@ -63,7 +64,7 @@ namespace Seal.Model
                     GetProperty("LoadScript").SetDisplayName("Post Load Script");
                     GetProperty("LoadScript").SetDescription("Optional Razor Script to modify the result table of the model just after the database load.");
                 }
-                GetProperty("ShowFirstLine").SetIsBrowsable(true);
+                GetProperty("ShowFirstLine").SetIsBrowsable(!IsSubModel);
 
 
                 GetProperty("SqlSelect").SetIsBrowsable(!Source.IsNoSQL);
@@ -638,6 +639,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True is it is a Sub-Model used for a LINQ Query
+        /// </summary>
+        public bool IsSubModel
+        {
+            get { return MasterModel != null; }
+        }
+
+        /// <summary>
         /// SELECT Sql used for the model
         /// </summary>
         [XmlIgnore]
@@ -986,11 +995,6 @@ var query =
                     result.Add(newRestriction);
                 }
 
-                if (IsLINQ)
-                {
-                    foreach (var subModel in LINQSubModels) result.AddRange(subModel.ExecutionAggregateRestrictions);
-                }
-
                 return result;
             }
         }
@@ -1121,6 +1125,7 @@ var query =
             {
                 subTable.Model = this;
                 subTable.Source = Source;
+                subTable.InitParameters();
             }
 
             foreach (var element in Elements)
@@ -2142,7 +2147,7 @@ var query =
                         {
                             //we can wait to get the same data table 
                             var runningName = runningModel.MasterModel != null ? runningModel.MasterModel.Name + " > " + runningModel.Name : runningModel.Name;
-                            if (MasterModel == null) Report.LogMessage("Model '{0}': Getting result table from model '{1}'...", Name, runningName);
+                            if (!IsSubModel) Report.LogMessage("Model '{0}': Getting result table from model '{1}'...", Name, runningName);
                             else Report.LogMessage("Model '{0}': Getting result table of sub-model '{1}' from model '{2}'...", MasterModel.Name, Name, runningName);
                             while (!Report.Cancel && !runningModel._resultTableAvailable)
                             {
@@ -2241,23 +2246,28 @@ var query =
             //Add elements involved
             foreach (var subModel in LINQSubModels)
             {
-                subModel.Elements.Clear();
                 var source = subModel.Source;
 
                 //Elements in the select
-                foreach (var element in Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))
+                var elementsToSelect = Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID).ToList();
+
+                foreach (var element in elementsToSelect)
                 {
-                    if (!subModel.Elements.Exists(i => i.MetaColumnGUID == element.MetaColumnGUID))
+                    var element2 = subModel.Elements.FirstOrDefault(i => i.MetaColumnGUID == element.MetaColumnGUID);
+                    if (element2 == null)
                     {
                         //Add the element
-                        ReportElement element2 = ReportElement.Create();
-                        element2.Name = element.Name;
+                        element2 = ReportElement.Create();
                         element2.MetaColumnGUID = element.MetaColumnGUID;
-                        element2.PivotPosition = element.PivotPosition;
-                        element2.SortOrder = element.SortOrder;
                         subModel.Elements.Add(element2);
                     }
+                    element2.Name = element.Name;
+                    element2.PivotPosition = element.PivotPosition;
+                    element2.SortOrder = element.SortOrder;
+                    element2.AggregateFunction = element.AggregateFunction;
                 }
+                //remove old elements
+                subModel.Elements.RemoveAll(i => !elementsToSelect.Exists(j => j.MetaColumnGUID == i.MetaColumnGUID));
 
                 //elements used to perform the LINQ joins
                 foreach (var join in ExecTableJoins)
@@ -2297,7 +2307,7 @@ var query =
                 var subTable = currentSubTables.FirstOrDefault(i => i.GUID == table.GUID);
                 if (subTable == null)
                 {
-                    subTable = new MetaTable() { Name = table.Name, GUID = table.GUID };
+                    subTable = new MetaTable() { Name = table.Name, GUID = table.GUID, TemplateName = table.TemplateName };
                 }
                 subTable.Model = this;
                 subTable.Source = table.Source;
@@ -2407,7 +2417,7 @@ var query =
                     executePrePostStatements(true);
                     executePrePostStatement(PreSQL, "Pre", Name, IgnorePrePostError, this);
 
-                    if (MasterModel == null) Report.LogMessage("Model '{0}': Executing main query...", Name);
+                    if (!IsSubModel) Report.LogMessage("Model '{0}': Executing main query...", Name);
                     else Report.LogMessage("Model '{0}': Executing query for sub-model '{1}'...", MasterModel.Name, Name);
                     _command.CommandText = Sql;
 
@@ -2510,7 +2520,7 @@ var query =
                 if (Report.Cancel) return;
 
                 //If enum, set enum values directly in the table, only for master model
-                if (isMaster && MasterModel == null) handleEnums();
+                if (isMaster && !IsSubModel) handleEnums();
 
                 ExecuteLoadScript(LoadScript, "Post Load Script", this);
                 _resultTableAvailable = true;

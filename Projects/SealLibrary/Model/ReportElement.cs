@@ -42,48 +42,54 @@ namespace Seal.Model
             {
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
+
                 //Then enable
-                GetProperty("DisplayNameEl").SetIsBrowsable(true);
                 GetProperty("SQL").SetIsBrowsable(true);
+                if (!Model.IsSubModel)
+                {
+                    GetProperty("DisplayNameEl").SetIsBrowsable(true);
+                    GetProperty("SQL").SetIsBrowsable(true);
+                    GetProperty("SortOrder").SetIsBrowsable(true);
+                    GetProperty("TypeEd").SetIsBrowsable(true);
+                    GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
+                    GetProperty("ShowSubTotals").SetIsBrowsable(PivotPosition == PivotPosition.Row);
+
+                    GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
+                    GetProperty("TotalAggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("ShowTotal").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("CellScript").SetIsBrowsable(true);
+                    GetProperty("NavigationScript").SetIsBrowsable(true);
+                    GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("EnumGUIDEL").SetIsBrowsable(true);
+                    GetProperty("ForceAggregate").SetIsBrowsable(true);
+                    GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+
+                    GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
+                    GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
+                    GetProperty("DateTimeStandardFormat").SetIsBrowsable(!IsEnum && IsDateTime && (TypeEd == ColumnType.DateTime || Type == ColumnType.Default));
+
+                    GetProperty("SerieDefinition").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column);
+                    GetProperty("Nvd3Serie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("ChartJSSerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("PlotlySerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    //FUTURE GetProperty("XAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column || PivotPosition == PivotPosition.Data);
+                    GetProperty("YAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("SerieSortOrder").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("SerieSortType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    GetProperty("AxisUseValues").SetIsBrowsable((PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column) && (IsNumeric || IsDateTime));
+
+                    //Read only
+                    GetProperty("Format").SetIsReadOnly((IsNumeric && NumericStandardFormat != NumericStandardFormat.Custom) || (IsDateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom));
+                    GetProperty("TotalAggregateFunction").SetIsReadOnly(ShowTotal == ShowTotal.No);
+                    //FUTURE GetProperty("XAxisType").SetIsReadOnly(!IsSerie || _serieDefinition == SerieDefinition.SplitterBoth);
+                    GetProperty("YAxisType").SetIsReadOnly(!IsSerie);
+                    GetProperty("SerieSortOrder").SetIsReadOnly(!IsSerie || _serieSortType == SerieSortType.None);
+                    GetProperty("SerieSortType").SetIsReadOnly(!IsSerie);
+                    GetProperty("AxisUseValues").SetIsReadOnly(SerieDefinition != SerieDefinition.Axis);
+                    GetProperty("CalculationOption").SetIsReadOnly(!IsNumeric);
+                }
                 GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom Expression");
                 GetProperty("SQL").SetDescription(IsSQL ? "If not empty, overwrite the default SQL used for the element in the SELECT statement." : "If not empty, overwrite the default LINQ Expression used for the element in the SELECT LINQ query.");
-                GetProperty("SortOrder").SetIsBrowsable(true);
-                GetProperty("TypeEd").SetIsBrowsable(true);
-                GetProperty("ShowSubTotals").SetIsBrowsable(PivotPosition == PivotPosition.Row);
-
-                GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
-                GetProperty("TotalAggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("ShowTotal").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("CellScript").SetIsBrowsable(true);
-                GetProperty("NavigationScript").SetIsBrowsable(true);
-                GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("EnumGUIDEL").SetIsBrowsable(true);
-                GetProperty("ForceAggregate").SetIsBrowsable(true);
-                GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-
-                GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
-                GetProperty("NumericStandardFormat").SetIsBrowsable(!IsEnum && IsNumeric && (TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
-                GetProperty("DateTimeStandardFormat").SetIsBrowsable(!IsEnum && IsDateTime && (TypeEd == ColumnType.DateTime || Type == ColumnType.Default));
-
-                GetProperty("SerieDefinition").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column);
-                GetProperty("Nvd3Serie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("ChartJSSerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("PlotlySerie").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                //FUTURE GetProperty("XAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column || PivotPosition == PivotPosition.Data);
-                GetProperty("YAxisType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("SerieSortOrder").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("SerieSortType").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                GetProperty("AxisUseValues").SetIsBrowsable((PivotPosition == PivotPosition.Row || PivotPosition == PivotPosition.Column) && (IsNumeric || IsDateTime));
-
-                //Read only
-                GetProperty("Format").SetIsReadOnly((IsNumeric && NumericStandardFormat != NumericStandardFormat.Custom) || (IsDateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom));
-                GetProperty("TotalAggregateFunction").SetIsReadOnly(ShowTotal == ShowTotal.No);
-                //FUTURE GetProperty("XAxisType").SetIsReadOnly(!IsSerie || _serieDefinition == SerieDefinition.SplitterBoth);
-                GetProperty("YAxisType").SetIsReadOnly(!IsSerie);
-                GetProperty("SerieSortOrder").SetIsReadOnly(!IsSerie || _serieSortType == SerieSortType.None);
-                GetProperty("SerieSortType").SetIsReadOnly(!IsSerie);
-                GetProperty("AxisUseValues").SetIsReadOnly(SerieDefinition != SerieDefinition.Axis);
-                GetProperty("CalculationOption").SetIsReadOnly(!IsNumeric);
 
                 TypeDescriptor.Refresh(this);
             }

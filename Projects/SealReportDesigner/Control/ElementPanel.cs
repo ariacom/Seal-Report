@@ -27,9 +27,10 @@ namespace Seal.Controls
             DragEnter += new DragEventHandler(onDragEnter);
             DragOver += new DragEventHandler(onDragOver);
             DragDrop += new DragEventHandler(onDragDrop);
+            AllowDrop = true;
+
             Paint += new PaintEventHandler(ElementPanel_Paint);
             AutoScroll = true;
-            AllowDrop = true;
         }
 
         private void InitializeComponent()
@@ -112,6 +113,7 @@ namespace Seal.Controls
         void onDragDrop(object sender, DragEventArgs e)
         {
             if (!Helper.CanDragAndDrop(e)) return;
+            if (_modelPanel.Model.IsSubModel) return;
 
             Button button = null;
             if (e.Data.GetDataPresent(typeof(TreeNode)))
@@ -164,6 +166,8 @@ namespace Seal.Controls
 
         void onDragOver(object sender, DragEventArgs e)
         {
+            if (_modelPanel.Model.IsSubModel) return;
+
             if (Helper.CanDragAndDrop(e))
             {
                 //set focus
@@ -187,6 +191,8 @@ namespace Seal.Controls
 
         void onDragEnter(object sender, DragEventArgs e)
         {
+            if (_modelPanel.Model.IsSubModel) return;
+
             if (Helper.CanDragAndDrop(e))
             {
                 e.Effect = DragDropEffects.Move;
