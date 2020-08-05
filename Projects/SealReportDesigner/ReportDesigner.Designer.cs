@@ -518,6 +518,7 @@
             this.mainImageList.Images.SetKeyName(14, "task2.png");
             this.mainImageList.Images.SetKeyName(15, "modelSQL.png");
             this.mainImageList.Images.SetKeyName(16, "configuration.png");
+            this.mainImageList.Images.SetKeyName(17, "modelLINQ.png");
             // 
             // mainPropertyGrid
             // 
