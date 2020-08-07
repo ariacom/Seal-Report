@@ -16,11 +16,14 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Seal.Model;
 using SealWebServer.Controllers;
+using SealWebServer.Models.Configuration;
 
 namespace SealWebServer
 {
-    public class Startup
+    public partial class Startup
     {
+        private const string SealConfigurationKey = "SealConfiguration";
+        
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
@@ -29,10 +32,10 @@ namespace SealWebServer
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             //Set repository path
-            Repository.RepositoryConfigurationPath = Configuration.GetValue<string>("SealConfiguration:RepositoryPath");
-            DebugMode = Configuration.GetValue<Boolean>("SealConfiguration:DebugMode", false);
-            RunScheduler = Configuration.GetValue<Boolean>("SealConfiguration:RunScheduler", false);
-            SessionTimeout = Configuration.GetValue<int>("SealConfiguration:SessionTimeout", 60);
+            Repository.RepositoryConfigurationPath = Configuration.GetValue<string>($"{SealConfigurationKey}:RepositoryPath");
+            DebugMode = Configuration.GetValue<Boolean>($"{SealConfigurationKey}:DebugMode", false);
+            RunScheduler = Configuration.GetValue<Boolean>($"{SealConfigurationKey}:RunScheduler", false);
+            SessionTimeout = Configuration.GetValue<int>($"{SealConfigurationKey}:SessionTimeout", 60);
 
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventServer, "Starting Web Report Server");
@@ -57,16 +60,8 @@ namespace SealWebServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(SessionTimeout);
-                options.Cookie.HttpOnly = true;
-                // Make the session cookie essential
-                options.Cookie.IsEssential = true;
-            });
-
+            ConfigureSessionServices(services, Configuration.GetSection(SealConfigurationKey).Get<SessionConfiguration>());
+            
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
