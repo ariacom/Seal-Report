@@ -441,6 +441,18 @@
     <None Include="..\..\Repository\Views\Content\seal.css">
       <Link>Views\Content\seal.css</Link>
     </None>
+    <None Include="..\..\Repository\Sources\TableTemplates\CSV.cshtml">
+      <Link>Table Templates\CSV.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Sources\TableTemplates\Excel.cshtml">
+      <Link>Table Templates\Excel.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Sources\TableTemplates\Generic.cshtml">
+      <Link>Table Templates\Generic.cshtml</Link>
+    </None>
+    <None Include="..\..\Repository\Sources\TableTemplates\OLAP MDX.cshtml">
+      <Link>Table Templates\OLAP MDX.cshtml</Link>
+    </None>
     <None Include="CD-Dashboard.cd" />
     <None Include="CD-Data Source.cd" />
     <None Include="packages.config" />
@@ -540,7 +552,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Table Templates\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)..\..\Repository\Views\Scripts\common.js" "$(ProjectDir)..\SealWebServer\Scripts\"

@@ -1386,7 +1386,16 @@ namespace Seal.Model
         {
             try
             {
-                foreach (var output in Outputs) output.BeforeSerialization();
+                foreach (var model in Models)
+                {
+                    foreach (var table in model.LINQSubTables) table.BeforeSerialization();
+                }
+
+                foreach (var output in Outputs)
+                {
+                    output.BeforeSerialization();
+                }
+
                 foreach (var view in Views)
                 {
                     view.SetAdvancedConfigurations();
@@ -1408,6 +1417,7 @@ namespace Seal.Model
 
                     foreach (var table in source.MetaData.Tables) table.BeforeSerialization();
                 }
+
                 XmlSerializer serializer = new XmlSerializer(typeof(Report));
                 XmlWriterSettings ws = new XmlWriterSettings();
                 ws.NewLineHandling = NewLineHandling.Entitize;
@@ -1429,8 +1439,20 @@ namespace Seal.Model
                     source.MetaData.Joins = source.TempJoins;
                     source.MetaData.Enums = source.TempEnums;
                 }
-                foreach (var view in Views) view.AfterSerialization();
-                foreach (var output in Outputs) output.AfterSerialization();
+                foreach (var view in Views)
+                {
+                    view.AfterSerialization();
+                }
+
+                foreach (var output in Outputs)
+                {
+                    output.AfterSerialization();
+                }
+
+                foreach (var model in Models)
+                {
+                    foreach (var table in model.LINQSubTables) table.BeforeSerialization();
+                }
             }
         }
 
@@ -1486,7 +1508,7 @@ namespace Seal.Model
 
             foreach (var model in Models.Where(i => i.SourceGUID == source.GUID))
             {
-                if (model.Elements.Count > 0 || !string.IsNullOrEmpty(model.RestrictionText)) throw new Exception(string.Format("The source '{0}' is already used by a model.", source.Name));
+                if (model.Elements.Count > 0 || !string.IsNullOrEmpty(model.RestrictionText) || model.IsSQLModel) throw new Exception(string.Format("The source '{0}' is already used by a model.", source.Name));
                 model.SourceGUID = Sources.First(i => i.GUID != source.GUID).GUID;
             }
 
@@ -1503,7 +1525,15 @@ namespace Seal.Model
         /// </summary>
         public ReportModel AddModel(bool sqlModel)
         {
-            if (Sources.Count == 0) throw new Exception("Unable to create a model: No source available.\r\nPlease create a source first.");
+            if (Sources.Count == 0) throw new Exception("Unable to create a model: No source available.\r\nPlease create or add a source first.");
+            ReportSource source = Sources.FirstOrDefault(i => i.IsDefault);
+            if (source == null) source = Sources[0];
+            if (sqlModel && !source.IsSQL) 
+            {
+                source = Sources.FirstOrDefault(i => i.IsSQL);
+                if (source == null) throw new Exception("Unable to create a SQL model: No SQL source available.\r\nPlease create or add a SQL source first.");
+            }
+
             ReportModel result = ReportModel.Create();
             result.Name = Helper.GetUniqueName("Model", (from i in Models select i.Name).ToList());
             if (sqlModel)
@@ -1511,8 +1541,6 @@ namespace Seal.Model
                 result.Table = MetaTable.Create();
                 result.Table.DynamicColumns = true;
             }
-            ReportSource source = Sources.FirstOrDefault(i => i.IsDefault);
-            if (source == null) source = Sources[0];
             result.SourceGUID = source.GUID;
             result.Report = this;
             Models.Add(result);

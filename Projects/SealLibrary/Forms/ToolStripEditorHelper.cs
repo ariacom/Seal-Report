@@ -206,10 +206,10 @@ namespace Seal.Forms
                                     model.Report.CheckingExecution = true;
                                     try
                                     {
-                                        model.BuildSQL();
+                                        model.BuildQuery();
                                         frm.textBox.Text = model.LINQLoadScript;
                                         model.Report.CheckingExecution = false;
-                                        model.BuildSQL();
+                                        model.BuildQuery();
                                     }
                                     finally
                                     {
@@ -273,10 +273,10 @@ namespace Seal.Forms
                                     model.Report.CheckingExecution = true;
                                     try
                                     {
-                                        model.BuildSQL();
+                                        model.BuildQuery();
                                         frm.SqlToCheck = model.Sql;
                                         model.Report.CheckingExecution = false;
-                                        model.BuildSQL();
+                                        model.BuildQuery();
                                     }
                                     finally
                                     {

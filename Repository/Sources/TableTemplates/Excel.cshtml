@@ -1,29 +1,30 @@
-﻿@{
+﻿@using Seal.Model;
+@{
     MetaTable table = Model;
 
     //Parameters for this table
-    table.Parameters.Add(new Parameter() { Name = "excel_path", Value=@"%SEALREPOSITORY%\Databases\databank.worldbank.org_health_population.xlsx", DisplayName = "Excel File Path", Description = "The Excel file path (*.xlsx). The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path." });
-    table.Parameters.Add(new Parameter() { Name = "excel_tab", Value=@"", DisplayName = "Tab Name", Description = "The Tab Name of the Excel Sheet used to load the table. If empty, the first tab is used." });
-    table.Parameters.Add(new Parameter() { Name = "excel_start_row", NumericValue=1, DisplayName = "Start row", Description = "The start row of the tab to define the table." });
-    table.Parameters.Add(new Parameter() { Name = "excel_start_col", NumericValue=1, DisplayName = "Start column", Description = "The start column of the tab to define the table." });
-    table.Parameters.Add(new Parameter() { Name = "excel_end_row", NumericValue=0, DisplayName = "End row", Description = "The end row to define the table. If 0, rows are taken until an empty row is found." });
-    table.Parameters.Add(new Parameter() { Name = "excel_end_col", NumericValue=0, DisplayName = "End column", Description = "The end column to define the table. If 0, columns are taken until an empty column is found." });
-    table.Parameters.Add(new Parameter() { Name = "excel_header", BoolValue=true, DisplayName = "Has header", Description = "If true, the first line is used to get the column names otherwise column names are automatic." });
-		
+    table.Parameters.Add(new Parameter() { Name = "excel_path", Value = @"%SEALREPOSITORY%\Databases\databank.worldbank.org_health_population.xlsx", DisplayName = "Excel File Path", Description = "The Excel file path (*.xlsx). The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path." });
+    table.Parameters.Add(new Parameter() { Name = "excel_tab", Value = @"", DisplayName = "Tab name", Description = "The Tab name of the Excel Sheet used to load the table. If empty, the first tab is used." });
+    table.Parameters.Add(new Parameter() { Name = "excel_start_row", NumericValue = 1, DisplayName = "Start row", Description = "The start row of the tab to define the table." });
+    table.Parameters.Add(new Parameter() { Name = "excel_start_col", NumericValue = 1, DisplayName = "Start column", Description = "The start column of the tab to define the table." });
+    table.Parameters.Add(new Parameter() { Name = "excel_end_row", NumericValue = 0, DisplayName = "End row", Description = "The end row to define the table. If 0, rows are taken until an empty row is found." });
+    table.Parameters.Add(new Parameter() { Name = "excel_end_col", NumericValue = 0, DisplayName = "End column", Description = "The end column to define the table. If 0, columns are taken until an empty column is found." });
+    table.Parameters.Add(new Parameter() { Name = "excel_header", BoolValue = true, DisplayName = "Has header", Description = "If true, the first line is used to get the column names otherwise column names are automatic." });
+
     table.DefinitionScript = @"@using System.Data
 @{
-    MetaTable metaTable = Model;
-    DataTable table = metaTable.NoSQLTable;
-	ReportExecutionLog log = metaTable;
-    ReportModel reportModel = metaTable.NoSQLModel;
-    Report report = (reportModel != null ? reportModel.Report : null);
-    List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
+MetaTable metaTable = Model;
+DataTable table = metaTable.NoSQLTable;
+ReportExecutionLog log = metaTable;
+ReportModel reportModel = metaTable.NoSQLModel;
+Report report = (reportModel != null ? reportModel.Report : null);
+List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
 
-	var path = metaTable.GetValue(""excel_path"").Replace(Repository.SealRepositoryKeyword, Repository.Instance.RepositoryPath);
-	metaTable.NoSQLTable = DataTableLoader.FromExcel(path, metaTable.GetValue(""excel_tab""), metaTable.GetNumericValue(""excel_start_row""), metaTable.GetNumericValue(""excel_start_col""), metaTable.GetNumericValue(""excel_end_row""), metaTable.GetNumericValue(""excel_end_col""), metaTable.GetBoolValue(""excel_header"", true));
+var path = metaTable.GetValue(""excel_path"").Replace(Repository.SealRepositoryKeyword, Repository.Instance.RepositoryPath);
+metaTable.NoSQLTable = DataTableLoader.FromExcel(path, metaTable.GetValue(""excel_tab""), metaTable.GetNumericValue(""excel_start_row""), metaTable.GetNumericValue(""excel_start_col""), metaTable.GetNumericValue(""excel_end_row""), metaTable.GetNumericValue(""excel_end_col""), metaTable.GetBoolValue(""excel_header"", true));
 }
-";    
+";
 
-	table.LoadScript = @"";
+    table.LoadScript = @"";
 }
 

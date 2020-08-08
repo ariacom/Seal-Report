@@ -768,7 +768,7 @@ namespace Seal.Model
         {
             get
             {
-                if (!IsSQL) return RawLINQColumnName;
+                if (!IsSQL) return RawLINQColumn;
 
                 if (IsCommonRestrictionValue) return Name;
 
@@ -811,14 +811,26 @@ namespace Seal.Model
         /// LINQ Select Column name of the element
         /// </summary>
         [XmlIgnore, Browsable(false)]
-        public string RawLINQColumnName
+        public string RawLINQColumn
         {
             get
             {
-                var converter = "String";
-                if (IsDateTime) converter = "DateTime";
-                else if (IsNumeric) converter = "Double";
-                return string.Format("Convert.To{0}({1}[\"{2}\"])", converter, MetaColumn.MetaTable.LINQResultName, (Name ?? MetaColumn.Name).Replace("\"", "\\\""));
+                var converter = "string";
+                if (IsDateTime) converter = "DateTime?";
+                else if (IsNumeric) converter = "decimal?";
+
+                var result = string.Format("{0}.Field<{1}>(\"{2}\")", MetaColumn.MetaTable.LINQResultName, converter, (Name ?? MetaColumn.Name).Replace("\"", "\\\""));
+                if (PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate)
+                {
+                    //aggregate
+                    if (AggregateFunction == AggregateFunction.Count) result = "g.Count()";
+                    else
+                    {
+                        string aggr = AggregateFunction == AggregateFunction.Avg ? "Average" : string.Format("{0}", AggregateFunction);
+                        result = string.Format("g.{0}(i => i.{1})", aggr, result);
+                    }
+                }
+                return result;
             }
         }
 
@@ -828,7 +840,7 @@ namespace Seal.Model
         [XmlIgnore, Browsable(false)]
         public string LINQColumnName
         {
-            get { return string.IsNullOrEmpty(_SQL) ? RawLINQColumnName : string.Format("({0})", _SQL); }
+            get { return string.IsNullOrEmpty(_SQL) ? RawLINQColumn : string.Format("({0})", _SQL); }
 
         }
 
