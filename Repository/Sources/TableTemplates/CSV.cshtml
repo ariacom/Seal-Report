@@ -1,47 +1,48 @@
-﻿@{
+﻿@using Seal.Model;
+@{
     MetaTable table = Model;
 
     //Parameters for this table
-    table.Parameters.Add(new Parameter() { Name = "csv_path", Value=@"%SEALREPOSITORY%\Settings\Translations.csv", DisplayName = "CSV File Path", Description = "The CSV file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path." });
-    table.Parameters.Add(new Parameter() { Name = "csv_sep", Value=@"", DisplayName = "Separator", Description = "The separator character of the CSV field. If empty, the default separator is used." });
-    table.Parameters.Add(new Parameter() { Name = "csv_encoding", Value="UTF8", DisplayName = "File encoding", Description = "The CSV File Encoding.", Enums = new string[] { "Default", "UTF8", "Unicode", "ASCII" }, UseOnlyEnumValues = true });
-    table.Parameters.Add(new Parameter() { Name = "csv_vb", BoolValue=true, DisplayName = "Use Microsoft VB Parser", Description = "If true, the Microsoft VB Parser is used instead of the standard parser." });
-		
+    table.Parameters.Add(new Parameter() { Name = "csv_path", Value = @"%SEALREPOSITORY%\Settings\Translations.csv", DisplayName = "CSV File Path", Description = "The CSV file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path." });
+    table.Parameters.Add(new Parameter() { Name = "csv_sep", Value = @"", DisplayName = "Separator", Description = "The separator character of the CSV field. If empty, the default separator is used." });
+    table.Parameters.Add(new Parameter() { Name = "csv_encoding", Value = "UTF8", DisplayName = "File encoding", Description = "The CSV File Encoding.", Enums = new string[] { "Default", "UTF8", "Unicode", "ASCII" }, UseOnlyEnumValues = true });
+    table.Parameters.Add(new Parameter() { Name = "csv_vb", BoolValue = true, DisplayName = "Use Microsoft VB Parser", Description = "If true, the Microsoft VB Parser is used instead of the standard parser." });
+
     table.DefinitionScript = @"@using System.Data
 @using System.Text
 @{
-    MetaTable metaTable = Model;
-    DataTable table = metaTable.NoSQLTable;
-	ReportExecutionLog log = metaTable;
-    ReportModel reportModel = metaTable.NoSQLModel;
-    Report report = (reportModel != null ? reportModel.Report : null);
-    List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
+MetaTable metaTable = Model;
+DataTable table = metaTable.NoSQLTable;
+ReportExecutionLog log = metaTable;
+ReportModel reportModel = metaTable.NoSQLModel;
+Report report = (reportModel != null ? reportModel.Report : null);
+List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
 
-	var path = metaTable.GetValue(""csv_path"").Replace(Repository.SealRepositoryKeyword, Repository.Instance.RepositoryPath);
-	char? separator = null;
-	if (!string.IsNullOrEmpty(metaTable.GetValue(""csv_sep""))) {
-		separator = metaTable.GetValue(""csv_sep"")[0];
-	}
-	var encoding = Encoding.Default;
-	if (metaTable.GetValue(""csv_encoding"")==""UTF8"") {
-		encoding =  Encoding.UTF8;
-	}
-	else if (metaTable.GetValue(""csv_encoding"")==""Unicode"") {
-		encoding =  Encoding.Unicode;
-	}
-	else if (metaTable.GetValue(""csv_encoding"")==""ASCII"") {
-		encoding =  Encoding.ASCII;
-	}
-	
-	if (metaTable.GetBoolValue(""csv_vb"", true)) {
-		metaTable.NoSQLTable = DataTableLoader.FromCSVVBParser(path, separator, encoding);
-	}
-	else {
-		metaTable.NoSQLTable = DataTableLoader.FromCSV(path, separator, encoding);
-	}
+var path = metaTable.GetValue(""csv_path"").Replace(Repository.SealRepositoryKeyword, Repository.Instance.RepositoryPath);
+char? separator = null;
+if (!string.IsNullOrEmpty(metaTable.GetValue(""csv_sep""))) {
+separator = metaTable.GetValue(""csv_sep"")[0];
 }
-";    
+var encoding = Encoding.Default;
+if (metaTable.GetValue(""csv_encoding"")==""UTF8"") {
+encoding =  Encoding.UTF8;
+}
+else if (metaTable.GetValue(""csv_encoding"")==""Unicode"") {
+encoding =  Encoding.Unicode;
+}
+else if (metaTable.GetValue(""csv_encoding"")==""ASCII"") {
+encoding =  Encoding.ASCII;
+}
 
-	table.LoadScript = @"";
+if (metaTable.GetBoolValue(""csv_vb"", true)) {
+metaTable.NoSQLTable = DataTableLoader.FromCSVVBParser(path, separator, encoding);
+}
+else {
+metaTable.NoSQLTable = DataTableLoader.FromCSV(path, separator, encoding);
+}
+}
+";
+
+    table.LoadScript = @"";
 }
 

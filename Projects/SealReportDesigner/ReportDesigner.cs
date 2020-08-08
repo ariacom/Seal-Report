@@ -1123,7 +1123,7 @@ namespace Seal
                 foreach (var re in model.Restrictions) re.SQLColumnName = re.MetaColumn.Name.Replace(re.MetaColumn.MetaTable.AliasName + ".", "");
                 foreach (var re in model.AggregateRestrictions) re.SQLColumnName = re.MetaColumn.Name.Replace(re.MetaColumn.MetaTable.AliasName + ".", "");
 
-                model.BuildSQL(true);
+                model.BuildQuery(true);
                 model.Table = MetaTable.Create();
                 model.Table.DynamicColumns = true;
                 model.Table.Sql = model.Sql;

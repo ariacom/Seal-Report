@@ -1100,10 +1100,23 @@ if (cell.IsTitle)
                         {
                             frm.Text = "Edit the script to load the table";
                             template = razorModelLoadScriptTemplate;
-                            model.BuildSQL();
+                            model.BuildQuery();
                             template = model.LINQLoadScript;
                         }
                         frm.ObjectForCheckSyntax = context.Instance;
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "LINQQueryScript")
+                    {
+                        template = ReportModel.DefaultLINQScriptTemplate;
+                        frm.Text = "Edit the LINQ Query script template used to generate the model (assign query2 from query)";
+                        List<string> samples = new List<string>();
+                        samples.Add("var query2 = query.Take(3); //Take the first 3 rows");
+                        samples.Add("var query2 = query.Skip(2); //Skip the first 2 rows");
+                        samples.Add("var query2 = query.TakeWhile(i => !string.IsNullOrEmpty(i.C0));");
+                        samples.Add("var query2 = query.SkipWhile(i => i.C0 + i.C1 > 0);");
+                        frm.SetSamples(samples);
+
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

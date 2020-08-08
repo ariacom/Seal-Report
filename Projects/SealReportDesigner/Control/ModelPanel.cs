@@ -90,7 +90,6 @@ namespace Seal.Controls
 
             restrictionsPanel.Init(this);
             aggregateRestrictionsPanel.Init(this);
-            initNoSQL();
             RestrictionGrid.SelectedObject = null;
 
             _LINQwarningDone = false;
@@ -99,12 +98,6 @@ namespace Seal.Controls
 
             //adjust description height
             PropertyGridHelper.ResizeDescriptionArea(ModelGrid, 3);
-        }
-
-        void initNoSQL()
-        {
-            selectedRestrictionsGroupBox.Text = Model.Source.IsNoSQL ? "Restrictions" : "Restrictions and Aggregate Restrictions";
-            restrictionsSplitContainer.Panel2Collapsed = Model.Source.IsNoSQL;
         }
 
         void elementTreeView_MouseUp(object sender, MouseEventArgs e)
@@ -509,7 +502,7 @@ namespace Seal.Controls
                     MessageBox.Show("A custom 'Load Script' has been defined for this model. Adding or removing elements or restrictions may not work during the report execution...", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 //Check submodels and tables
-                Model.BuildSQL(false, true);
+                Model.BuildQuery(false, true);
                 if (!string.IsNullOrEmpty(Model.ExecutionError))
                 {
                     MessageBox.Show(string.Format("An error occurs when building the LINQ Query:\r\n{0}", Model.ExecutionError), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -556,7 +549,6 @@ namespace Seal.Controls
 
         public void ReinitSource()
         {
-            initNoSQL();
             initTreeView();
             restrictionsPanel.ModelToRestrictionText();
             aggregateRestrictionsPanel.ModelToRestrictionText();
@@ -579,7 +571,6 @@ namespace Seal.Controls
 
                     if (result == DialogResult.Yes)
                     {
-                        initNoSQL();
                         if (Model.IsSQLModel) Model.RefreshMetaTable(true);
 
                         initTreeView();

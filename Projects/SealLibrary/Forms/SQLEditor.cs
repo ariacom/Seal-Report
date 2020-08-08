@@ -68,7 +68,7 @@ namespace Seal.Forms
                 if (context.Instance is ReportModel)
                 {
                     ReportModel model = context.Instance as ReportModel;
-                    model.BuildSQL();
+                    model.BuildQuery();
                     if (!string.IsNullOrEmpty(model.ExecutionError))
                     {
                         throw new Exception("Error building the SQL Statement...\r\nPlease fix these errors first.\r\n" + model.ExecutionError);

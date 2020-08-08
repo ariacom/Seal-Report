@@ -32,6 +32,7 @@ namespace Seal.Model
     public class ReportModel : ReportComponent
     {
         const string DefaultClause = "<Default Clause>";
+        public const string DefaultLINQScriptTemplate = "var query2 = query.Distinct();";
 
         #region Editor
         protected override void UpdateEditorAttributes()
@@ -72,11 +73,12 @@ namespace Seal.Model
                 GetProperty("SqlGroupBy").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlOrderBy").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlCTE").SetIsBrowsable(!Source.IsNoSQL);
+                GetProperty("LINQQueryScript").SetIsBrowsable(Source.IsNoSQL);
 
                 GetProperty("PreSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PostSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("IgnorePrePostError").SetIsBrowsable(!Source.IsNoSQL);
-                GetProperty("BuildTimeout").SetIsBrowsable(!IsSQLModel && !Source.IsNoSQL);
+                GetProperty("BuildTimeout").SetIsBrowsable(!IsSQLModel);
 
                 GetProperty("Alias").SetIsBrowsable(IsSQLModel);
                 GetProperty("KeepColNames").SetIsBrowsable(IsSQLModel);
@@ -166,9 +168,17 @@ namespace Seal.Model
         public string PreLoadScript { get; set; }
 
         /// <summary>
+        /// If not empty, overwrites default query script template used to generate the LINQ query
+        /// </summary>
+        [Category("Model Definition"), DisplayName("LINQ Query Script Template"), Description("If not empty, overwrites default query script template used to generate the LINQ query."), Id(5, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
+        public string LINQQueryScript { get; set; }
+
+        /// <summary>
         /// The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used.
         /// </summary>
-        [Category("Model Definition"), DisplayName("Load Script"), Description("The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used."), Id(5, 1)]
+        [Category("Model Definition"), DisplayName("Load Script"), Description("The Razor Script used to load the data in the table. If empty, the LINQ Query generated is used."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string LoadScript { get; set; }
@@ -238,7 +248,7 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')
         /// </summary>
-        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrite the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')."), Id(3, 3)]
+        [Category("SQL"), DisplayName("Select Clause"), Description("If not empty, overwrites the SELECT clause in the generated SQL statement (e.g 'SELECT TOP 10', 'SELECT')."), Id(3, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string SqlSelect
@@ -251,7 +261,7 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the FROM clause in the generated SQL statement
         /// </summary>
-        [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrite the FROM clause in the generated SQL statement."), Id(4, 3)]
+        [Category("SQL"), DisplayName("From Clause"), Description("If not empty, overwrites the FROM clause in the generated SQL statement."), Id(4, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string SqlFrom
@@ -264,7 +274,7 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the GROUP BY clause in the generated SQL statement
         /// </summary>
-        [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrite the GROUP BY clause in the generated SQL statement."), Id(5, 3)]
+        [Category("SQL"), DisplayName("Group By Clause"), Description("If not empty, overwrites the GROUP BY clause in the generated SQL statement."), Id(5, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string SqlGroupBy
@@ -278,7 +288,7 @@ namespace Seal.Model
         /// If not empty, overwrite the ORDER BY clause in the generated SQL statement
         /// </summary>
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrite the ORDER BY clause in the generated SQL statement."), Id(6, 3)]
+        [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrites the ORDER BY clause in the generated SQL statement."), Id(6, 3)]
         [DefaultValue("")]
         public string SqlOrderBy
         {
@@ -290,7 +300,7 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the CTE (Common Table Expressions) clause in the generated SQL statement
         /// </summary>
-        [Category("SQL"), DisplayName("Common Table Expressions Clause"), Description("If not empty, overwrite the CTE (Common Table Expressions) clause in the generated SQL statement."), Id(7, 3)]
+        [Category("SQL"), DisplayName("Common Table Expressions Clause"), Description("If not empty, overwrites the CTE (Common Table Expressions) clause in the generated SQL statement."), Id(7, 3)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string SqlCTE
@@ -298,6 +308,7 @@ namespace Seal.Model
             get { return (_sqlSelect == DefaultClause) ? "" : _sqlCTE; }
             set { _sqlCTE = value; }
         }
+
 
         /// <summary>
         /// SQL Statement executed before the main query. The statement may contain Razor script if it starts with '@'.
@@ -326,7 +337,7 @@ namespace Seal.Model
         /// Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
         /// </summary>
         [DefaultValue(2000)]
-        [Category("SQL"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)."), Id(11, 3)]
+        [Category("Join Preferences"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL or LINQ Query (may be used if many joins are defined)."), Id(11, 4)]
         public int BuildTimeout { get; set; } = 2000;
 
         /// <summary>
@@ -346,7 +357,6 @@ namespace Seal.Model
             get { return "<Click to select joins>"; }
             set { } //keep set for modification handler
         }
-
 
         /// <summary>
         /// Helper to view joins evaluated for the model
@@ -671,12 +681,16 @@ namespace Seal.Model
 @{{
   ReportModel model = Model;
 
+//Query
 var query =
 {0};
 
-  model.ResultTable = query.CopyToDataTable2();
+//LINQ Query Script
+{1}
+
+model.ResultTable = query2.CopyToDataTable2();
 }}
-", LINQSelect);
+", LINQSelect, string.IsNullOrEmpty(LINQQueryScript) ? DefaultLINQScriptTemplate : LINQQueryScript);
             }
         }
 
@@ -1313,7 +1327,7 @@ var query =
             while (--i >= 0)
             {
                 if (string.IsNullOrWhiteSpace(AggregateRestriction)) AggregateRestrictions.RemoveAt(i);
-                if (AggregateRestrictions[i].MetaColumn == null)
+                else if (AggregateRestrictions[i].MetaColumn == null)
                 {
                     if (AggregateRestriction != null) AggregateRestriction = AggregateRestriction.Replace(AggregateRestrictions[i].GUID, "(Warning) Restriction lost: " + AggregateRestrictions[i].Name);
                     AggregateRestrictions.RemoveAt(i);
@@ -1397,7 +1411,7 @@ var query =
         /// <summary>
         /// Build the SQL for the model
         /// </summary>
-        public void BuildSQL(bool forConversion = false, bool forceRestrictionsTables = false)
+        public void BuildQuery(bool forConversion = false, bool forceRestrictionsTables = false)
         {
             try
             {
@@ -1421,6 +1435,7 @@ var query =
                 execCTEClause = "";
                 execFromClause = new StringBuilder();
                 execWhereClause = new StringBuilder(Restriction.Trim());
+                var execGroupByLINQ = new StringBuilder();
                 execGroupByClause = new StringBuilder();
                 execOrderByNameClause = new StringBuilder();
                 execHavingClause = new StringBuilder(AggregateRestriction.Trim());
@@ -1440,13 +1455,15 @@ var query =
 
                 foreach (ReportRestriction restriction in ExecutionAggregateRestrictions)
                 {
-                    execHavingClause = execHavingClause.Replace("[" + restriction.GUID + "]", restriction.SQLText);
+                    execHavingClause = execHavingClause.Replace("[" + restriction.GUID + "]", IsLINQ ? restriction.LINQText : restriction.SQLText);
                 }
 
                 foreach (ReportRestriction restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions).Union(ExecutionCommonRestrictions).OrderBy(i => i.DisplayOrderRE))
                 {
                     if (restriction.HasValue) Helper.AddValue(ref RestrictionText, "\r\n", restriction.DisplayText);
                 }
+
+                bool noGroupBy = GetElements(PivotPosition.Data).Count() == 0 && Elements.Count(i => i.IsAggregateEl) == 0 && execHavingClause.Length == 0;
 
                 //build select
                 FromTables = new List<MetaTable>();
@@ -1457,7 +1474,12 @@ var query =
                     if (!forConversion) SetColumnsName();
                     foreach (ReportElement element in Elements)
                     {
-                        string sqlColumn = !IsLINQ ? element.SQLColumn + " AS " + element.SQLColumnName : string.Format("{0}={1}", element.SQLColumnName, element.LINQColumnName);
+                        string sqlColumn = string.Format("{0} AS {1}", element.SQLColumn, element.SQLColumnName);
+                        if (IsLINQ)
+                        {
+                            sqlColumn = !noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl ? string.Format("{0}=g.Key.{0}", element.SQLColumnName) : string.Format("{0}={1}", element.SQLColumnName, element.LINQColumnName);
+                        }
+
                         if (!selectColumns.Contains(sqlColumn))
                         {
                             Helper.AddValue(ref execSelectClause, ",\r\n", "  " + sqlColumn);
@@ -1467,9 +1489,10 @@ var query =
                         MetaTable table = element.MetaColumn.MetaTable;
                         if (table != null && !FromTables.Contains(table)) FromTables.Add(table);
 
-                        if (element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl && !groupByColumns.Contains(element.SQLColumn))
+                        if (!noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl)
                         {
-                            Helper.AddValue(ref execGroupByClause, ",", element.SQLColumn);
+                            if (groupByColumns.Contains(element.SQLColumn) && !IsLINQ) continue;
+                            Helper.AddValue(ref execGroupByClause, ",\r\n", !IsLINQ ? "  " + element.SQLColumn : string.Format("  {0}={1}", element.SQLColumnName, element.LINQColumnName));
                             groupByColumns.Add(element.SQLColumn);
                         }
                     }
@@ -1480,18 +1503,23 @@ var query =
                         if (table != null && !FromTables.Contains(table) && (restriction.HasValue || forceRestrictionsTables) && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
                     }
 
-                    //For LINQ, keep only SQL tables having joins defined...
-                    filterLINQFromTables();
+                    if (IsLINQ)
+                    {
+                        //For LINQ, keep only SQL tables having joins defined...
+                        filterLINQFromTables();
+                        //and build group by tables
+                        foreach (var table in FromTables) Helper.AddValue(ref execGroupByLINQ, ",", table.LINQResultName);
+                    }
 
                     //Clear group by clause if not necessary
-                    if (GetElements(PivotPosition.Data).Count() == 0 && Elements.Count(i => i.IsAggregateEl) == 0 && execHavingClause.Length == 0) execGroupByClause = new StringBuilder();
+                    if (noGroupBy) execGroupByClause = new StringBuilder();
 
                     List<string> orderColumns = new List<string>();
                     UpdateFinalSortOrders();
-                    buildOrderClause(GetElements(PivotPosition.Page), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
-                    buildOrderClause(GetElements(PivotPosition.Row), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
-                    buildOrderClause(GetElements(PivotPosition.Column), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
-                    buildOrderClause(GetElements(PivotPosition.Data), orderColumns, ref execOrderByClause, ref execOrderByNameClause);
+                    buildOrderClause(GetElements(PivotPosition.Page), orderColumns, ref execOrderByClause, ref execOrderByNameClause, noGroupBy);
+                    buildOrderClause(GetElements(PivotPosition.Row), orderColumns, ref execOrderByClause, ref execOrderByNameClause, noGroupBy);
+                    buildOrderClause(GetElements(PivotPosition.Column), orderColumns, ref execOrderByClause, ref execOrderByNameClause, noGroupBy);
+                    buildOrderClause(GetElements(PivotPosition.Data), orderColumns, ref execOrderByClause, ref execOrderByNameClause, noGroupBy);
 
                     buildFromClause();
 
@@ -1518,6 +1546,8 @@ var query =
 
                         LINQSelect = !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("from {0}", execFromClause);
                         if (execWhereClause.Length > 0) LINQSelect += string.Format("\r\nwhere\r\n{0}\r\n", execWhereClause);
+                        if (execGroupByClause.Length > 0) LINQSelect += string.Format("\r\ngroup new {{ {0} }} by new {{\r\n{1}}} into g\r\n", execGroupByLINQ, execGroupByClause);
+                        if (execHavingClause.Length > 0) LINQSelect += string.Format("\r\nwhere\r\n{0}\r\n", execHavingClause);
                         if (execOrderByClause.Length > 0) LINQSelect += string.Format("\r\norderby {0}\r\n", execOrderByClause);
                         LINQSelect += string.Format("\r\nselect new {{\r\n{0}\r\n}}", execSelectClause);
                     }
@@ -1582,7 +1612,7 @@ var query =
                             filterLINQFromTables();
                             buildFromClause();
                             //No exception -> Joins are ok
-                            BuildSQL(false, true);
+                            BuildQuery(false, true);
                             return;
                         }
                         catch (Exception ex2)
@@ -1885,7 +1915,7 @@ var query =
                             //Replace table name in the Join clause
                             foreach (var col in join.RightTable.Columns.Union(join.LeftTable.Columns))
                             {
-                                joinClause = joinClause.Replace(string.Format("{0}[\"", col.MetaTable.Name), string.Format("{0}[\"", col.MetaTable.LINQResultName));
+                                joinClause = joinClause.Replace(string.Format("{0}.Field<", col.MetaTable.Name), string.Format("{0}.Field<", col.MetaTable.LINQResultName));
                             }
 
                             lastTable = string.Format("{0}join {1} on {2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
@@ -2047,7 +2077,12 @@ var query =
             }
         }
 
-        void buildOrderClause(IEnumerable<ReportElement> elements, List<string> orderColumns, ref StringBuilder orderClause, ref StringBuilder orderClauseName)
+        bool hasGroupBy
+        {
+            get { return execGroupByClause.Length > 0; }
+        }
+
+        void buildOrderClause(IEnumerable<ReportElement> elements, List<string> orderColumns, ref StringBuilder orderClause, ref StringBuilder orderClauseName, bool noGroupBy)
         {
             foreach (ReportElement element in elements.OrderBy(i => i.FinalSortOrder))
             {
@@ -2055,7 +2090,13 @@ var query =
                 {
                     string SQLascdesc = element.SortOrder.Contains(ReportElement.kAscendantSortKeyword) ? " ASC" : " DESC";
                     string LINQascdesc = element.SortOrder.Contains(ReportElement.kAscendantSortKeyword) ? "" : " descending";
-                    Helper.AddValue(ref orderClause, ",", IsLINQ ? element.LINQColumnName + LINQascdesc : element.SQLColumn + SQLascdesc);
+                    var colName = element.SQLColumn + SQLascdesc;
+                    if (IsLINQ)
+                    {
+                        colName = !noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl ? string.Format("g.Key.{0}{1}", element.SQLColumnName, LINQascdesc) : element.LINQColumnName;
+                    }
+
+                    Helper.AddValue(ref orderClause, ",", colName);
                     Helper.AddValue(ref orderClauseName, ",", element.SQLColumnName + SQLascdesc);
                     orderColumns.Add(element.SQLColumn);
                 }
@@ -2274,7 +2315,7 @@ var query =
                 {
                     foreach (var col in join.LeftTable.Columns.Union(join.RightTable.Columns).Where(i => i.Source.GUID == source.GUID))
                     {
-                        if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
+                        if (join.Clause.Contains(string.Format("{0}.Field", col.MetaTable.AliasName)) && join.Clause.Contains(string.Format("({0})", Helper.QuoteDouble(col.Name))))
                         {
                             subModel.addHiddenElement(col.GUID);
                         }
@@ -2311,6 +2352,7 @@ var query =
                 }
                 subTable.Model = this;
                 subTable.Source = table.Source;
+                subTable.NoSQLTable = null;
                 //Copy default properties
                 if (subTable.LoadScript == null) subTable.LoadScript = table.LoadScript;
                 if (subTable.Parameters.Count == 0)
@@ -2332,7 +2374,7 @@ var query =
                 ResultTable = null;
                 _resultTableAvailable = false;
                 var source = Source;
-                BuildSQL();
+                BuildQuery();
                 if (FromTables != null)
                 {
                     fillResultTableFromDatabase(runningModels);
@@ -2364,26 +2406,27 @@ var query =
 
                 if (subTable.NoSQLTable == null)
                 {
+                    subTable.Log = Report;
+                    subTable.NoSQLModel = this;
                     var table = Source.MetaData.Tables.FirstOrDefault(i => i.GUID == subTable.GUID);
                     if (table != null)
                     {
-                        table.Log = Report;
-                        table.NoSQLModel = this;
-                        Report.LogMessage("Model '{0}': Building No SQL Table '{1}'", Name, table.Name);
+                        Report.LogMessage("Model '{0}': Building No SQL Table '{1}'", Name, subTable.Name);
+                        subTable.DefinitionScript = table.DefinitionScript;
 
-                        if (!string.IsNullOrEmpty(table.LoadScript))
+                        if (!string.IsNullOrEmpty(subTable.LoadScript))
                         {
-                            dataTable = table.BuildNoSQLTable(false);
-                            RazorHelper.CompileExecute(table.LoadScript, table);
+                            dataTable = subTable.BuildNoSQLTable(false);
+                            RazorHelper.CompileExecute(subTable.LoadScript, subTable);
                         }
                         else
                         {
-                            dataTable = table.BuildNoSQLTable(true);
+                            dataTable = subTable.BuildNoSQLTable(true);
                         }
 
                         //Thread.Sleep(5000); //For DEV
 
-                        dataTable.TableName = table.AliasName;
+                        dataTable.TableName = subTable.AliasName;
                         subTable.NoSQLTable = dataTable;
                     }
                 }
@@ -2460,7 +2503,7 @@ var query =
 
             ExecutionError = "";
 
-            BuildSQL();
+            BuildQuery();
             Progression = 5; //5% after building SQL
 
             ResultTable = null;

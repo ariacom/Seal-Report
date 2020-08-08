@@ -412,7 +412,7 @@ namespace Seal.Forms
                         try
                         {
                             _model.JoinPaths = new StringBuilder();
-                            _model.BuildSQL();
+                            _model.BuildQuery();
 
                             var frm = new ExecutionForm(null);
                             frm.Text = "List of Joins";

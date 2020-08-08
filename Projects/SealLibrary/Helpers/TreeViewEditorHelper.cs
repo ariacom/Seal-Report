@@ -439,11 +439,13 @@ namespace Seal.Forms
 
                         Cursor.Current = Cursors.WaitCursor;
                         isModified = true;
+                        List<ReportSource> sources = new List<ReportSource>();
+
                         foreach (var item in frm.CheckedItems)
                         {
                             if (item is ReportSource)
                             {
-                                Report.RemoveSource((ReportSource)item);
+                                sources.Add((ReportSource)item);
                             }
                             else if (item is MetaConnection)
                             {
@@ -493,6 +495,11 @@ namespace Seal.Forms
                             {
                                 Report.RemoveSchedule((ReportSchedule)item);
                             }
+                        }
+
+                        foreach (var reportSource in sources.OrderBy(i => !i.IsNoSQL))
+                        {
+                            Report.RemoveSource(reportSource);
                         }
                     }
                 }
