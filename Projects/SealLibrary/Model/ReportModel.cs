@@ -1563,7 +1563,7 @@ model.ResultTable = query2.CopyToDataTable2();
             {
                 LINQSelect = "";
                 Sql = "";
-                ExecutionError = string.Format("Got unexpected error when building the statement:\r\n{0}", Helper.GetExceptionMessage(ex));
+                ExecutionError = string.Format("Error when building the query:\r\n{0}", Helper.GetExceptionMessage(ex));
             }
             catch (Exception ex)
             {
@@ -1571,7 +1571,6 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     //Try to add SQL tables joins from the same source...
                     AdditionalFromTables = new List<MetaTable>();
-                    var joinClause = "";
                     foreach (var join in Source.MetaData.Joins)
                     {
                         //Filter in joins to use here
@@ -1580,42 +1579,19 @@ model.ResultTable = query2.CopyToDataTable2();
                         if (!FromTables.Contains(join.LeftTable) && join.LeftTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.LeftTable.LINQSourceGUID))
                         {
                             AdditionalFromTables.Add(join.LeftTable);
-                            joinClause += join.Clause + "\r\n";
                         }
                         if (!FromTables.Contains(join.RightTable) && join.RightTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.RightTable.LINQSourceGUID))
                         {
                             AdditionalFromTables.Add(join.RightTable);
-                            joinClause += join.Clause + "\r\n";
                         }
                     }
 
                     //Try to join again...
                     if (AdditionalFromTables.Count > 0)
                     {
-               /*         foreach (var newTable in AdditionalFromTables)
-                        {
-                            if (!FromTables.Contains(newTable))
-                            {
-                                FromTables.Add(newTable);
-                                //Add elements used to perform the LINQ joins
-                                foreach (var col in newTable.Columns)
-                                {
-                                    if (joinClause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
-                                    {
-                              //          addHiddenElement(col.GUID);
-                                    }
-                                }
-                            }
-                        }*/
-
                         try
                         {
                             if (JoinPaths != null) JoinPaths = new StringBuilder();
-
-                            var addTables = AdditionalFromTables.ToList(); 
-                            buildFromClause();
-                            //No exception -> Joins are ok
-                            AdditionalFromTables = addTables;
                             BuildQuery(false, true);
                             return;
                         }
@@ -1629,34 +1605,23 @@ model.ResultTable = query2.CopyToDataTable2();
 
                 LINQSelect = "";
                 Sql = "";
-                ExecutionError = string.Format("Got unexpected error when building the statement:\r\n{0}", ex.Message);
+                ExecutionError = string.Format("Error when building the query:\r\n{0}", ex.Message);
             }
         }
 
 
         void buildFromClause()
         {
+            //Handle additional from tables for LINQ joins
             if (AdditionalFromTables.Count > 0)
             {
                 foreach (var newTable in AdditionalFromTables)
                 {
-                    if (!FromTables.Contains(newTable))
-                    {
-                        FromTables.Add(newTable);
-                        //Add elements used to perform the LINQ joins
-                        foreach (var col in newTable.Columns)
-                        {
-//                            if (joinClause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
-                            {
-                                //          addHiddenElement(col.GUID);
-                            }
-                        }
-                    }
+                    if (!FromTables.Contains(newTable)) FromTables.Add(newTable);                    
                 }
                 filterLINQFromTables();
                 AdditionalFromTables.Clear();
             }
-
 
             List<MetaTable> extraWhereTables = FromTables.Where(i => !string.IsNullOrEmpty(i.WhereSQL)).ToList();
             ExecTableJoins = new List<MetaJoin>();
