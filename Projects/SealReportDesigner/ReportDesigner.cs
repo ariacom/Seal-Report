@@ -1044,7 +1044,11 @@ namespace Seal
                     newSource.LoadRepositoryMetaSources(_repository);
                 }
                 if (!newSource.IsNoSQL) newEntity = newSource.Connection;
-                else newEntity = newSource;
+                else
+                {
+                    newSource.Connection.ConnectionString = "";
+                    newEntity = newSource;
+                }
             }
             else if (selectedEntity is ModelFolder)
             {

@@ -44,7 +44,7 @@ namespace Seal.Model
                 GetProperty("Sql").SetIsBrowsable(IsSQL);
                 GetProperty("TemplateName").SetIsBrowsable(!IsSQL);
                 GetProperty("ParameterValues").SetIsBrowsable(!IsSQL && Parameters.Count > 0);
-                GetProperty("DefinitionScript").SetIsBrowsable(!IsSQL && !IsSubTable);
+                GetProperty("DefinitionScript").SetIsBrowsable(!IsSQL);
                 GetProperty("LoadScript").SetIsBrowsable(!IsSQL);
                 GetProperty("PostSQL").SetIsBrowsable(IsSQL);
                 GetProperty("IgnorePrePostError").SetIsBrowsable(IsSQL);
@@ -160,16 +160,15 @@ namespace Seal.Model
             {
                 var initialParameters = Parameters.ToList();
                 Parameters.Clear();
-                foreach (var configParameter in TableTemplate.DefaultParameters)
+
+                var defaultParameters = IsSubTable ? RootTable.Parameters : TableTemplate.DefaultParameters;
+                foreach (var configParameter in defaultParameters)
                 {
                     Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
                     if (parameter == null) parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
                     Parameters.Add(parameter);
                     parameter.InitFromConfiguration(configParameter);
                 }
-
-                if (DefinitionScript == null) DefinitionScript = TableTemplate.DefaultDefinitionScript;
-                if (LoadScript == null) LoadScript = TableTemplate.DefaultLoadScript;
             }
         }
 
@@ -180,15 +179,15 @@ namespace Seal.Model
         {
             bool result =
                 TemplateName == table.TemplateName &&
-                DefinitionScript.Trim() == table.DefinitionScript.Trim() &&
-                (LoadScript == null && table.LoadScript == null) || (LoadScript.Trim() == table.LoadScript.Trim())
+                Helper.CompareTrim(DefinitionScript, table.DefinitionScript) &&
+                Helper.CompareTrim(LoadScript, table.LoadScript)
              ;
 
             if (result)
             {
                 foreach (var parameter in Parameters)
                 {
-                    if (parameter.Value != table.GetValue(parameter.Value))
+                    if (parameter.Value != table.GetValue(parameter.Name))
                     {
                         result = false;
                         break;
@@ -197,6 +196,49 @@ namespace Seal.Model
             }
 
             return result;
+        }
+
+
+        MetaTable _rootTable = null;
+
+        MetaTable RootTable
+        {
+            get
+            {
+                if (_rootTable == null && IsSubTable)
+                {
+                    _rootTable = Source.MetaData.Tables.FirstOrDefault(i => i.GUID == GUID);
+                }
+                return _rootTable;
+            }
+        }
+
+        /// <summary>
+        /// Default definition script coming either from the template or from the root table (for a subtable)
+        /// </summary>
+        public string DefaultDefinitionScript
+        {
+            get
+            {
+                string result = null;
+                if (IsSubTable) result = RootTable.DefaultDefinitionScript;
+                else if (TableTemplate != null) result = TableTemplate.DefaultDefinitionScript;
+                return result ?? "";
+            }
+        }
+
+        /// <summary>
+        /// Default load script coming either from the template or from the root table (for a subtable)
+        /// </summary>
+        public string DefaultLoadScript
+        {
+            get
+            {
+                string result = null;
+                if (IsSubTable) result = RootTable.DefaultLoadScript;
+                else if (TableTemplate != null) result = TableTemplate.DefaultLoadScript;
+                return result ?? "";
+            }
         }
 
         //Temporary variables to help for report serialization...
@@ -212,8 +254,8 @@ namespace Seal.Model
             //Remove parameters identical to config
             Parameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
 
-            if (DefinitionScript.Trim().Replace("\r\n", "\n") == TableTemplate.DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
-            if (LoadScript.Trim().Replace("\r\n", "\n") == TableTemplate.DefaultLoadScript.Trim().Replace("\r\n", "\n")) LoadScript = null;
+            if (DefinitionScript != null && DefinitionScript.Trim().Replace("\r\n", "\n") == DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
+            if (LoadScript != null && LoadScript.Trim().Replace("\r\n", "\n") == DefaultLoadScript.Trim().Replace("\r\n", "\n")) LoadScript = null;
         }
 
         /// <summary>
@@ -222,9 +264,6 @@ namespace Seal.Model
         public void AfterSerialization()
         {
             Parameters = _tempParameters;
-
-            if (DefinitionScript == null) DefinitionScript = TableTemplate.DefaultDefinitionScript;
-            if (LoadScript == null) LoadScript = TableTemplate.DefaultLoadScript;
         }
 
         /// <summary>
@@ -478,11 +517,11 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsForSQLModel
         {
-            get { return Model != null; }
+            get { return Model != null && !Model.IsLINQ; }
         }
 
         /// <summary>
-        /// ReportModel when the MetaTable comes from a SQL Model
+        /// Report Model when the MetaTable comes from a SQL Model or when is a SubTable of a LINQ query
         /// </summary>
         [XmlIgnore]
         public ReportModel Model = null;
@@ -600,10 +639,18 @@ namespace Seal.Model
         {
             lock (this)
             {
-                if (!string.IsNullOrEmpty(DefinitionScript))
+                var definitionScript = DefinitionScript;
+                if (string.IsNullOrEmpty(definitionScript)) definitionScript = DefaultDefinitionScript;
+
+                if (!string.IsNullOrEmpty(definitionScript))
                 {
-                    RazorHelper.CompileExecute(DefinitionScript, this);
-                    if (withLoad && !string.IsNullOrEmpty(LoadScript)) RazorHelper.CompileExecute(LoadScript, this);
+                    RazorHelper.CompileExecute(definitionScript, this);
+                    if (withLoad)
+                    {
+                        var loadScript = LoadScript;
+                        if (string.IsNullOrEmpty(loadScript)) loadScript = DefaultLoadScript;
+                        if (!string.IsNullOrEmpty(loadScript)) RazorHelper.CompileExecute(loadScript, this);
+                    }
                 }
                 else NoSQLTable = new DataTable(Name);
             }
@@ -659,7 +706,7 @@ namespace Seal.Model
                     if (Model.UseRawSQL) sql = Sql;
                     else sql = string.Format("SELECT * FROM ({0}) a WHERE 1=0", Sql);
                 }
-                else
+                else if (IsSQL)
                 {
                     string CTE = "", name = "";
                     GetExecSQLName(ref CTE, ref name);

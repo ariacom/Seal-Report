@@ -679,7 +679,7 @@ namespace Seal.Model
             {
                 return string.Format(@"@using System.Data
 @{{
-  ReportModel model = Model;
+ReportModel model = Model;
 
 //Query
 var query =
@@ -700,6 +700,8 @@ model.ResultTable = query2.CopyToDataTable2();
         /// </summary>
         [XmlIgnore]
         public List<MetaTable> FromTables { get; private set; }
+
+        private List<MetaTable> AdditionalFromTables = new List<MetaTable>();
 
         /// <summary>
         /// Display text for the restrictions of the model
@@ -1568,7 +1570,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 if (IsLINQ && ex.Message.StartsWith("Unable to link all elements") && FromTables.Count > 0)
                 {
                     //Try to add SQL tables joins from the same source...
-                    var newTables = new List<MetaTable>();
+                    AdditionalFromTables = new List<MetaTable>();
                     var joinClause = "";
                     foreach (var join in Source.MetaData.Joins)
                     {
@@ -1577,20 +1579,20 @@ model.ResultTable = query2.CopyToDataTable2();
 
                         if (!FromTables.Contains(join.LeftTable) && join.LeftTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.LeftTable.LINQSourceGUID))
                         {
-                            newTables.Add(join.LeftTable);
+                            AdditionalFromTables.Add(join.LeftTable);
                             joinClause += join.Clause + "\r\n";
                         }
                         if (!FromTables.Contains(join.RightTable) && join.RightTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.RightTable.LINQSourceGUID))
                         {
-                            newTables.Add(join.RightTable);
+                            AdditionalFromTables.Add(join.RightTable);
                             joinClause += join.Clause + "\r\n";
                         }
                     }
 
                     //Try to join again...
-                    if (newTables.Count > 0)
+                    if (AdditionalFromTables.Count > 0)
                     {
-                        foreach (var newTable in newTables)
+               /*         foreach (var newTable in AdditionalFromTables)
                         {
                             if (!FromTables.Contains(newTable))
                             {
@@ -1600,18 +1602,20 @@ model.ResultTable = query2.CopyToDataTable2();
                                 {
                                     if (joinClause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
                                     {
-                                        addHiddenElement(col.GUID);
+                              //          addHiddenElement(col.GUID);
                                     }
                                 }
                             }
-                        }
+                        }*/
 
                         try
                         {
                             if (JoinPaths != null) JoinPaths = new StringBuilder();
-                            filterLINQFromTables();
+
+                            var addTables = AdditionalFromTables.ToList(); 
                             buildFromClause();
                             //No exception -> Joins are ok
+                            AdditionalFromTables = addTables;
                             BuildQuery(false, true);
                             return;
                         }
@@ -1632,6 +1636,28 @@ model.ResultTable = query2.CopyToDataTable2();
 
         void buildFromClause()
         {
+            if (AdditionalFromTables.Count > 0)
+            {
+                foreach (var newTable in AdditionalFromTables)
+                {
+                    if (!FromTables.Contains(newTable))
+                    {
+                        FromTables.Add(newTable);
+                        //Add elements used to perform the LINQ joins
+                        foreach (var col in newTable.Columns)
+                        {
+//                            if (joinClause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
+                            {
+                                //          addHiddenElement(col.GUID);
+                            }
+                        }
+                    }
+                }
+                filterLINQFromTables();
+                AdditionalFromTables.Clear();
+            }
+
+
             List<MetaTable> extraWhereTables = FromTables.Where(i => !string.IsNullOrEmpty(i.WhereSQL)).ToList();
             ExecTableJoins = new List<MetaJoin>();
             if (FromTables.Count == 1)
@@ -1915,7 +1941,7 @@ model.ResultTable = query2.CopyToDataTable2();
                             //Replace table name in the Join clause
                             foreach (var col in join.RightTable.Columns.Union(join.LeftTable.Columns))
                             {
-                                joinClause = joinClause.Replace(string.Format("{0}.Field<", col.MetaTable.Name), string.Format("{0}.Field<", col.MetaTable.LINQResultName));
+                                joinClause = joinClause.Replace(string.Format("{0}[\"", col.MetaTable.Name), string.Format("{0}[\"", col.MetaTable.LINQResultName));
                             }
 
                             lastTable = string.Format("{0}join {1} on {2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
@@ -2315,7 +2341,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     foreach (var col in join.LeftTable.Columns.Union(join.RightTable.Columns).Where(i => i.Source.GUID == source.GUID))
                     {
-                        if (join.Clause.Contains(string.Format("{0}.Field", col.MetaTable.AliasName)) && join.Clause.Contains(string.Format("({0})", Helper.QuoteDouble(col.Name))))
+                        if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
                         {
                             subModel.addHiddenElement(col.GUID);
                         }
@@ -2337,10 +2363,13 @@ model.ResultTable = query2.CopyToDataTable2();
             LINQSubTables.Clear();
 
             var tables = FromTables.Where(i => !i.IsSQL).ToList();
-            //Add other No SQL tables involved in Joins...
-            foreach (var join in ExecTableJoins)
+            if (ExecTableJoins != null)
             {
-                if (!join.LeftTable.IsSQL && !tables.Contains(join.LeftTable)) tables.Add(join.LeftTable);
+                //Add other No SQL tables involved in Joins...
+                foreach (var join in ExecTableJoins)
+                {
+                    if (!join.LeftTable.IsSQL && !tables.Contains(join.LeftTable)) tables.Add(join.LeftTable);
+                }
             }
 
             foreach (var table in tables)
@@ -2348,13 +2377,13 @@ model.ResultTable = query2.CopyToDataTable2();
                 var subTable = currentSubTables.FirstOrDefault(i => i.GUID == table.GUID);
                 if (subTable == null)
                 {
-                    subTable = new MetaTable() { Name = table.Name, GUID = table.GUID, TemplateName = table.TemplateName };
+                    subTable = new MetaTable() { Name = table.Name, GUID = table.GUID };
                 }
                 subTable.Model = this;
                 subTable.Source = table.Source;
                 subTable.NoSQLTable = null;
-                //Copy default properties
-                if (subTable.LoadScript == null) subTable.LoadScript = table.LoadScript;
+                subTable.TemplateName = table.TemplateName;
+                //Init default properties
                 if (subTable.Parameters.Count == 0)
                 {
                     subTable.InitParameters();

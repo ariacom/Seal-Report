@@ -154,6 +154,13 @@ namespace Seal.Helpers
             else input = new StringBuilder(value);
         }
 
+        static public bool CompareTrim(string s1, string s2)
+        {
+            if (string.IsNullOrEmpty(s1) && string.IsNullOrEmpty(s2)) return true;
+            if (s1 != null && s2 != null) return s1.Trim() == s2.Trim();
+            return false;
+        }
+
         static public List<string> GetStringList(string listInput)
         {
             var result = new List<string>();
@@ -922,5 +929,31 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Convert an objet to a string, handling DBNull value
+        /// </summary>
+        static public string ToString(object obj)
+        {
+            if (obj != null && obj == DBNull.Value) obj = null;
+            return Convert.ToString(obj);
+        }
+
+        /// <summary>
+        /// Convert an objet to a datetime, handling DBNull value
+        /// </summary>
+        static public DateTime? ToDateTime(object obj)
+        {
+            if (obj != null && obj == DBNull.Value) obj = null;
+            return obj == null ? (DateTime?) null : Convert.ToDateTime(obj);
+        }
+
+        /// <summary>
+        /// Convert an objet to a double, handling DBNull value
+        /// </summary>
+        static public double? ToDouble(object obj)
+        {
+            if (obj != null && obj == DBNull.Value) obj = null;
+            return obj == null ? (double?)null : Convert.ToDouble(obj);
+        }
     }
 }

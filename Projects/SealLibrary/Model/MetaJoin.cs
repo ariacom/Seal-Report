@@ -242,7 +242,7 @@ var query = from {0} in aDataTable.AsEnumerable() join {1} in aDataTable.AsEnume
 }}", LeftTable.AliasName, RightTable.AliasName, Clause);
                     try
                     {
-                        RazorHelper.Compile(linq, typeof(MetaJoin), Helper.NewGUID());
+                        RazorHelper.Compile(RazorHelper.GetFullScript(linq, null), typeof(MetaJoin), Helper.NewGUID());
                         Information = "Join checked successfully.";
                     }
                     catch(Exception ex)

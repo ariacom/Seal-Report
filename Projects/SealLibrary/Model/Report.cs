@@ -1451,7 +1451,7 @@ namespace Seal.Model
 
                 foreach (var model in Models)
                 {
-                    foreach (var table in model.LINQSubTables) table.BeforeSerialization();
+                    foreach (var table in model.LINQSubTables) table.AfterSerialization();
                 }
             }
         }

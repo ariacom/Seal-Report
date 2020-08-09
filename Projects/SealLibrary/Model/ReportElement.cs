@@ -815,21 +815,22 @@ namespace Seal.Model
         {
             get
             {
-                var converter = "string";
-                if (IsDateTime) converter = "DateTime?";
-                else if (IsNumeric) converter = "decimal?";
+                var converter = "String";
+                if (IsDateTime) converter = "DateTime";
+                else if (IsNumeric) converter = "Double";
 
-                var result = string.Format("{0}.Field<{1}>(\"{2}\")", MetaColumn.MetaTable.LINQResultName, converter, (Name ?? MetaColumn.Name).Replace("\"", "\\\""));
-                if (PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate)
+                var result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
+                if (PivotPosition == PivotPosition.Data && !IsAggregateEl)
                 {
                     //aggregate
                     if (AggregateFunction == AggregateFunction.Count) result = "g.Count()";
                     else
                     {
                         string aggr = AggregateFunction == AggregateFunction.Avg ? "Average" : string.Format("{0}", AggregateFunction);
-                        result = string.Format("g.{0}(i => i.{1})", aggr, result);
+                        result = string.Format("g.{0}(i => Helper.To{1}(i.{2}[{3}]))", aggr, converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
                     }
                 }
+                else result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
                 return result;
             }
         }
