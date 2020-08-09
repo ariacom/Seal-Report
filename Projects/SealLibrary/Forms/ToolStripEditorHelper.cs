@@ -48,7 +48,7 @@ namespace Seal.Forms
                 }
 
                 if (table.IsSQL) AddHelperButton("Edit SQL", "Edit the SQL Select Statement", Keys.F8);
-                else if (!table.IsSubTable) AddHelperButton("Edit Definition Script", "Edit the definition script for the table", Keys.F8);
+                else AddHelperButton("Edit Definition Script", "Edit the definition script for the table", Keys.F8);
                 AddHelperButton("Check table", "Check the table definition", Keys.F7);
 
             }

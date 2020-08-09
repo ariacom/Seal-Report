@@ -439,8 +439,13 @@ namespace Seal
             if (sender == dataSourceToolStripMenuItem || sender == noSQLdataSourceToolStripMenuItem)
             {
                 _source = MetaSource.Create(_repository);
-                _source.IsNoSQL = sender == noSQLdataSourceToolStripMenuItem;
-                entityToSelect = _source.Connection;
+                _source.IsNoSQL = (sender == noSQLdataSourceToolStripMenuItem);
+                if (_source.IsNoSQL)
+                {
+                    entityToSelect = _source.TableFolder;
+                    _source.Connection.ConnectionString = "";
+                }
+                else entityToSelect = _source.Connection;
             }
             else if (sender == emailOutputDeviceToolStripMenuItem)
             {

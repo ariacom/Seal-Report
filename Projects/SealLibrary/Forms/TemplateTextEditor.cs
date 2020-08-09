@@ -1056,7 +1056,7 @@ if (cell.IsTitle)
                     if (context.PropertyDescriptor.Name == "DefinitionScript")
                     {
                         var table = context.Instance as MetaTable;
-                        template = table.TableTemplate != null ? table.TableTemplate.DefaultDefinitionScript : razorTableDefinitionScriptTemplate;
+                        template = table.TableTemplate != null ? table.DefaultDefinitionScript : razorTableDefinitionScriptTemplate;
 
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script to define the table";
@@ -1065,7 +1065,7 @@ if (cell.IsTitle)
                     else if (context.PropertyDescriptor.Name == "LoadScript")
                     {
                         var table = context.Instance as MetaTable;
-                        template = table.TableTemplate != null ? table.TableTemplate.DefaultLoadScript : razorTableLoadScriptTemplate;
+                        template = table.TableTemplate != null ? table.DefaultLoadScript : razorTableLoadScriptTemplate;
 
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the default script to load the table";
