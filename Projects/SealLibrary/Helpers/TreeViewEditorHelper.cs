@@ -1034,7 +1034,7 @@ namespace Seal.Forms
                     if (propertyName == "Name" && string.IsNullOrEmpty(table.Alias)) table.Name = Helper.GetUniqueName(table.Name, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
                     if (propertyName == "Alias") table.Alias = Helper.GetUniqueName(table.Alias, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
                     mainTreeView.SelectedNode.Text = table.AliasName;
-                    if (table.DynamicColumns && (propertyName == "Name" || propertyName == "Sql" || propertyName == "DefinitionScript"))
+                    if (table.DynamicColumns && ((table.IsSQL && (propertyName == "Name" || propertyName == "Sql")) || (!table.IsSQL && propertyName == "DefinitionScript")))
                     {
                         table.Refresh();
                         mustInit = true;
