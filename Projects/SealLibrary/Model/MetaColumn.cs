@@ -427,7 +427,20 @@ namespace Seal.Model
             get { return Name.Split('.').Last(); }
         }
 
-
+        /// <summary>
+        /// LINQ Column name of the element
+        /// </summary>
+        [XmlIgnore]
+        public string RawLINQColumnName
+        {
+            get
+            {
+                var converter = "String";
+                if (Type == ColumnType.DateTime) converter = "DateTime";
+                else if (Type == ColumnType.Numeric) converter = "Double";
+                return string.Format("Helper.To{0}({1}[{2}])", converter, MetaTable.AliasName, Helper.QuoteDouble(Name));
+            }
+        }
         /// <summary>
         /// Defines the child columns to navigate from this column with the drill feature
         /// </summary>
