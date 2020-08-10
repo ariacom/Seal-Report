@@ -219,7 +219,7 @@ namespace Seal.Helpers
         {
             DataTable result = null;
             bool isHeader = true;
-            TextFieldParser csvParser = null;
+            TextFieldParser csvParser;
             try
             {
                 csvParser = new TextFieldParser(csvPath, encoding);
