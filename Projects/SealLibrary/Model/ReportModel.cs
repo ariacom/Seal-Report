@@ -1494,7 +1494,10 @@ model.ResultTable = query2.CopyToDataTable2();
                         if (!noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl)
                         {
                             if (groupByColumns.Contains(element.SQLColumn) && !IsLINQ) continue;
-                            Helper.AddValue(ref execGroupByClause, ",\r\n", !IsLINQ ? "  " + element.SQLColumn : string.Format("  {0}={1}", element.SQLColumnName, element.LINQColumnName));
+
+                            if (IsLINQ) Helper.AddValue(ref execGroupByClause, ",\r\n", string.Format("  {0}={1}", element.SQLColumnName, element.LINQColumnName));
+                            else Helper.AddValue(ref execGroupByClause, ", ", element.SQLColumn);
+
                             groupByColumns.Add(element.SQLColumn);
                         }
                     }
@@ -1523,7 +1526,39 @@ model.ResultTable = query2.CopyToDataTable2();
                     buildOrderClause(GetElements(PivotPosition.Column), orderColumns, ref execOrderByClause, ref execOrderByNameClause, noGroupBy);
                     buildOrderClause(GetElements(PivotPosition.Data), orderColumns, ref execOrderByClause, ref execOrderByNameClause, noGroupBy);
 
-                    buildFromClause();
+                    bool joinsOK = buildFromClause();
+                    if (!joinsOK && IsLINQ)
+                    {
+                        //Try to add SQL tables joins from the same source...
+                        AdditionalFromTables = new List<MetaTable>();
+                        foreach (var join in Source.MetaData.Joins)
+                        {
+                            //Filter in joins to use here
+                            if (JoinsToUse.Count > 0 && !JoinsToUse.Contains(join.GUID)) continue;
+
+                            if (!FromTables.Contains(join.LeftTable) && join.LeftTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.LeftTable.LINQSourceGUID))
+                            {
+                                AdditionalFromTables.Add(join.LeftTable);
+                            }
+                            if (!FromTables.Contains(join.RightTable) && join.RightTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.RightTable.LINQSourceGUID))
+                            {
+                                AdditionalFromTables.Add(join.RightTable);
+                            }
+                        }
+
+                        //Try to join again...
+                        if (AdditionalFromTables.Count > 0)
+                        {
+                            joinsOK = buildFromClause();
+                        }
+                    }
+                    if (!joinsOK)
+                    {
+                        var errMessage = "Unable to link all elements using the joins defined...\r\nAdd Joins to your Data Source\r\nOR remove elements or restrictions in your model\r\nOR add relevant elements or restrictions in your model.";
+                        if (JoinPaths != null) JoinPaths.AppendLine("\r\n" + errMessage);
+                        throw new Exception(errMessage);
+                    }
+
 
                     if (!IsLINQ)
                     {
@@ -1548,7 +1583,7 @@ model.ResultTable = query2.CopyToDataTable2();
 
                         LINQSelect = !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("from {0}", execFromClause);
                         if (execWhereClause.Length > 0) LINQSelect += string.Format("\r\nwhere\r\n{0}\r\n", execWhereClause);
-                        if (execGroupByClause.Length > 0) LINQSelect += string.Format("\r\ngroup new {{ {0} }} by new {{\r\n{1}}} into g\r\n", execGroupByLINQ, execGroupByClause);
+                        if (execGroupByClause.Length > 0) LINQSelect += string.Format("\r\ngroup new {{ {0} }} by new {{\r\n{1}\r\n}} into g\r\n", execGroupByLINQ, execGroupByClause);
                         if (execHavingClause.Length > 0) LINQSelect += string.Format("\r\nwhere\r\n{0}\r\n", execHavingClause);
                         if (execOrderByClause.Length > 0) LINQSelect += string.Format("\r\norderby {0}\r\n", execOrderByClause);
                         LINQSelect += string.Format("\r\nselect new {{\r\n{0}\r\n}}", execSelectClause);
@@ -1567,42 +1602,6 @@ model.ResultTable = query2.CopyToDataTable2();
             }
             catch (Exception ex)
             {
-                if (IsLINQ && ex.Message.StartsWith("Unable to link all elements") && FromTables.Count > 0)
-                {
-                    //Try to add SQL tables joins from the same source...
-                    AdditionalFromTables = new List<MetaTable>();
-                    foreach (var join in Source.MetaData.Joins)
-                    {
-                        //Filter in joins to use here
-                        if (JoinsToUse.Count > 0 && !JoinsToUse.Contains(join.GUID)) continue;
-
-                        if (!FromTables.Contains(join.LeftTable) && join.LeftTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.LeftTable.LINQSourceGUID))
-                        {
-                            AdditionalFromTables.Add(join.LeftTable);
-                        }
-                        if (!FromTables.Contains(join.RightTable) && join.RightTable.IsSQL && FromTables.Exists(i => i.LINQSourceGUID == join.RightTable.LINQSourceGUID))
-                        {
-                            AdditionalFromTables.Add(join.RightTable);
-                        }
-                    }
-
-                    //Try to join again...
-                    if (AdditionalFromTables.Count > 0)
-                    {
-                        try
-                        {
-                            if (JoinPaths != null) JoinPaths = new StringBuilder();
-                            BuildQuery(false, true);
-                            return;
-                        }
-                        catch (Exception ex2)
-                        {
-                            FromTables.Clear();
-                            ex = ex2;
-                        }
-                    }
-                }
-
                 LINQSelect = "";
                 Sql = "";
                 ExecutionError = string.Format("Error when building the query:\r\n{0}", ex.Message);
@@ -1610,14 +1609,14 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
 
-        void buildFromClause()
+        bool buildFromClause()
         {
             //Handle additional from tables for LINQ joins
             if (AdditionalFromTables.Count > 0)
             {
                 foreach (var newTable in AdditionalFromTables)
                 {
-                    if (!FromTables.Contains(newTable)) FromTables.Add(newTable);                    
+                    if (!FromTables.Contains(newTable)) FromTables.Add(newTable);
                 }
                 filterLINQFromTables();
                 AdditionalFromTables.Clear();
@@ -1819,9 +1818,8 @@ model.ResultTable = query2.CopyToDataTable2();
                 //Handle the best path
                 if (bestPath == null)
                 {
-                    var errMessage = "Unable to link all elements using the joins defined...\r\nAdd Joins to your Data Source\r\nOR remove elements or restrictions in your model\r\nOR add relevant elements or restrictions in your model.";
-                    if (JoinPaths != null) JoinPaths.AppendLine("\r\n" + errMessage);
-                    throw new Exception(errMessage);
+                    //No link...
+                    return false;
                 }
 
                 ExecTableJoins = bestPath.joins;
@@ -1936,6 +1934,8 @@ model.ResultTable = query2.CopyToDataTable2();
                     }
                 }
             }
+
+            return true;
         }
 
         class JoinPath
@@ -2262,7 +2262,17 @@ model.ResultTable = query2.CopyToDataTable2();
             var currentSubModels = LINQSubModels.ToList();
             LINQSubModels.Clear();
 
-            foreach (var table in FromTables.Where(i => i.IsSQL))
+            var SQLtables = FromTables.Where(i => i.IsSQL).ToList();
+            if (ExecTableJoins != null)
+            {
+                //Add other SQL tables involved in Joins...
+                foreach (var join in ExecTableJoins)
+                {
+                    if (join.LeftTable.IsSQL && !SQLtables.Contains(join.LeftTable)) SQLtables.Add(join.LeftTable);
+                }
+            }
+
+            foreach (var table in SQLtables)
             {
                 var subModel = currentSubModels.FirstOrDefault(i => i.SourceGUID == table.LINQSourceGUID);
                 if (subModel == null)
@@ -2327,17 +2337,17 @@ model.ResultTable = query2.CopyToDataTable2();
             var currentSubTables = LINQSubTables.ToList();
             LINQSubTables.Clear();
 
-            var tables = FromTables.Where(i => !i.IsSQL).ToList();
+            var noSQLtables = FromTables.Where(i => !i.IsSQL).ToList();
             if (ExecTableJoins != null)
             {
                 //Add other No SQL tables involved in Joins...
                 foreach (var join in ExecTableJoins)
                 {
-                    if (!join.LeftTable.IsSQL && !tables.Contains(join.LeftTable)) tables.Add(join.LeftTable);
+                    if (!join.LeftTable.IsSQL && !noSQLtables.Contains(join.LeftTable)) noSQLtables.Add(join.LeftTable);
                 }
             }
 
-            foreach (var table in tables)
+            foreach (var table in noSQLtables)
             {
                 var subTable = currentSubTables.FirstOrDefault(i => i.GUID == table.GUID);
                 if (subTable == null)

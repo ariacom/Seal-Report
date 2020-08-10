@@ -221,7 +221,7 @@ namespace Seal.Controls
             {
                 if (element.PivotPosition == PivotPosition.Page) AddElement(PagePanel, element, false);
                 if (element.PivotPosition == PivotPosition.Column) AddElement(ColumnPanel, element, false);
-                if (element.PivotPosition == PivotPosition.Row) AddElement(RowPanel, element, false);
+                if (element.PivotPosition == PivotPosition.Row || (element.PivotPosition == PivotPosition.Hidden && Model.IsSubModel)) AddElement(RowPanel, element, false);
                 if (element.PivotPosition == PivotPosition.Data) AddElement(DataPanel, element, false);
             }
 

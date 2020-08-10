@@ -768,7 +768,7 @@ namespace Seal.Model
         {
             get
             {
-                if (!IsSQL) return RawLINQColumn;
+                if (!IsSQL) return RawLINQColumnName;
 
                 if (IsCommonRestrictionValue) return Name;
 
@@ -811,7 +811,7 @@ namespace Seal.Model
         /// LINQ Select Column name of the element
         /// </summary>
         [XmlIgnore, Browsable(false)]
-        public string RawLINQColumn
+        public new string RawLINQColumnName
         {
             get
             {
@@ -819,7 +819,7 @@ namespace Seal.Model
                 if (IsDateTime) converter = "DateTime";
                 else if (IsNumeric) converter = "Double";
 
-                var result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
+                string result = "";
                 if (PivotPosition == PivotPosition.Data && !IsAggregateEl)
                 {
                     //aggregate
@@ -830,7 +830,10 @@ namespace Seal.Model
                         result = string.Format("g.{0}(i => Helper.To{1}(i.{2}[{3}]))", aggr, converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
                     }
                 }
-                else result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
+                else
+                {
+                    result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
+                }
                 return result;
             }
         }
@@ -841,7 +844,7 @@ namespace Seal.Model
         [XmlIgnore, Browsable(false)]
         public string LINQColumnName
         {
-            get { return string.IsNullOrEmpty(_SQL) ? RawLINQColumn : string.Format("({0})", _SQL); }
+            get { return string.IsNullOrEmpty(_SQL) ? RawLINQColumnName : string.Format("({0})", _SQL); }
 
         }
 

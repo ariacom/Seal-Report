@@ -121,7 +121,10 @@ namespace Seal.Model
                 GetProperty("ChangeOperator").SetIsReadOnly(Prompt == PromptType.None);
 
                 //Aggregate restriction
-                if (PivotPosition == PivotPosition.Data && !(MetaColumn != null && MetaColumn.IsAggregate)) GetProperty("AggregateFunction").SetIsBrowsable(true);
+                if (PivotPosition == PivotPosition.Data && !(MetaColumn != null && MetaColumn.IsAggregate))
+                {
+                    GetProperty("AggregateFunction").SetIsBrowsable(true);
+                }
 
                 if (!GetProperty("Date1Keyword").IsReadOnly) GetProperty("Date1").SetIsReadOnly(HasDateKeyword(Date1Keyword));
                 if (!GetProperty("Date2Keyword").IsReadOnly) GetProperty("Date2").SetIsReadOnly(HasDateKeyword(Date2Keyword));
@@ -1559,14 +1562,14 @@ namespace Seal.Model
                 }
                 else
                 {
-                    if (IsGreaterSmallerOperator)
+                    if (IsGreaterSmallerOperator && _SQLText.Length > 0)
                     {
                         _SQLText += " ";
                     }
                     _SQLText += SQLColumn + " " + sqlOperator;
                     _displayText += " " + GetDisplayValue(Value1, FinalDate1);
                     _displayRestriction += " " + GetDisplayRestriction(Value1, Date1Keyword, Date1);
-                    _SQLText += GetSQLValue(Value1, FinalDate1, _operator);
+                    _SQLText += " " + GetSQLValue(Value1, FinalDate1, _operator);
                 }
             }
 
