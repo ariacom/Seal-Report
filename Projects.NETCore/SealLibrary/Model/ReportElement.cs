@@ -35,7 +35,7 @@ namespace Seal.Model
         /// <returns></returns>
         public static ReportElement Create()
         {
-            return new ReportElement() { GUID = Guid.NewGuid().ToString() };                                                           
+            return new ReportElement() { GUID = Guid.NewGuid().ToString() };
         }
 
         /// <summary>
@@ -307,7 +307,8 @@ namespace Seal.Model
         /// Final sort as integer (without ASC or DESC)
         /// </summary>
         [XmlIgnore]
-        public int FinalSort {
+        public int FinalSort
+        {
             get
             {
                 int result = 99999;
@@ -403,7 +404,8 @@ namespace Seal.Model
         public ChartJSSerieDefinition ChartJSSerie
         {
             get { return _chartJSSerie; }
-            set {
+            set
+            {
                 _chartJSSerie = value;
                 
             }
@@ -416,7 +418,8 @@ namespace Seal.Model
         public NVD3SerieDefinition Nvd3Serie
         {
             get { return _nvd3Serie; }
-            set {
+            set
+            {
                 _nvd3Serie = value;
                 
             }
@@ -429,7 +432,8 @@ namespace Seal.Model
         public PlotlySerieDefinition PlotlySerie
         {
             get { return _plotlySerie; }
-            set {
+            set
+            {
                 _plotlySerie = value;
                 
             }
@@ -486,6 +490,7 @@ namespace Seal.Model
         }
 
         MetaColumn _metaColumn = null;
+
         /// <summary>
         /// The MetaColumn of the element
         /// </summary>
@@ -530,19 +535,13 @@ namespace Seal.Model
         }
 
 
-        /// <summary>
-        /// If not empty, overwrite the default SQL used for the element in the SELECT statement
-        /// </summary>
         protected string _SQL;
         /// <summary>
-        /// If not empty, overwrite the default SQL used for the element in the SELECT statement
+        /// If not empty, overwrite the default SQL or LINQ Expression used for the element in the SELECT statement
         /// </summary>
         public string SQL
         {
-            get
-            {
-                return _SQL;
-            }
+            get { return _SQL; }
             set { _SQL = value; }
         }
 
@@ -562,7 +561,8 @@ namespace Seal.Model
         public string EnumGUIDEL
         {
             get { return _enumGUID; }
-            set { 
+            set
+            {
                 _enumGUID = value;
                 
             }
@@ -638,6 +638,8 @@ namespace Seal.Model
         {
             get
             {
+                if (!IsSQL) return RawLINQColumnName;
+
                 if (IsCommonRestrictionValue) return Name;
 
                 string result = MetaColumn.Name;
@@ -679,18 +681,41 @@ namespace Seal.Model
         /// LINQ Select Column name of the element
         /// </summary>
         [XmlIgnore]
-        public string LINQColumnName
+        public new string RawLINQColumnName
         {
             get
             {
                 var converter = "String";
-//                if (!IsEnum)
-  //              {
-                    if (IsDateTime) converter = "DateTime";
-                    else if (IsNumeric) converter = "Double";
-    //            }
-                return string.Format("Convert.To{0}({1}[\"{2}\"])", converter, MetaColumn.MetaTable.LINQResultName, (Name ?? MetaColumn.Name).Replace("\"", "\\\""));
+                if (IsDateTime) converter = "DateTime";
+                else if (IsNumeric) converter = "Double";
+
+                string result = "";
+                if (PivotPosition == PivotPosition.Data && !IsAggregateEl)
+                {
+                    //aggregate
+                    if (AggregateFunction == AggregateFunction.Count) result = "g.Count()";
+                    else
+                    {
+                        string aggr = AggregateFunction == AggregateFunction.Avg ? "Average" : string.Format("{0}", AggregateFunction);
+                        result = string.Format("g.{0}(i => Helper.To{1}(i.{2}[{3}]))", aggr, converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
+                    }
+                }
+                else
+                {
+                    result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
+                }
+                return result;
             }
+        }
+
+        /// <summary>
+        /// LINQ Select Column name of the element
+        /// </summary>
+        [XmlIgnore]
+        public string LINQColumnName
+        {
+            get { return string.IsNullOrEmpty(_SQL) ? RawLINQColumnName : string.Format("({0})", _SQL); }
+
         }
 
         /// <summary>
@@ -702,11 +727,11 @@ namespace Seal.Model
             get
             {
                 var converter = "String";
-                                if (!IsEnum)
-                              {
-                if (IsDateTime) converter = "DateTime";
-                else if (IsNumeric) converter = "Double";
-                            }
+                if (!IsEnum)
+                {
+                    if (IsDateTime) converter = "DateTime";
+                    else if (IsNumeric) converter = "Double";
+                }
                 return string.Format("Convert.To{0}({1}[\"{2}\"])", converter, MetaColumn.MetaTable.LINQResultName, (Name ?? MetaColumn.Name).Replace("\"", "\\\""));
             }
         }

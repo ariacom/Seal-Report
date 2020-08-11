@@ -116,7 +116,7 @@ function executeTimer() {
                         }
                     }
                     else if (data.error != null) {
-                        setProgressBarMessage("#progress_bar", 100, data.error, "progress-bar-error");
+                        setProgressBarMessage("#progress_bar", 100, data.error, "progress-bar-danger");
                         clearInterval(executionTimer);
                         $("#execute_button").css("display", "none");
                     }
@@ -132,7 +132,7 @@ function executeTimer() {
 function setProgressBarMessage(selector, progression, message, classname) {
     $(selector).css('width', progression + '%').css('min-width', '120px').attr('aria-valuenow', progression);
     $(selector).html(message);
-    $(selector).removeClass("progress-bar-error").removeClass("progress-bar-warning").removeClass("progress-bar-success").removeClass("progress-bar-primary");
+    $(selector).removeClass("progress-bar-danger").removeClass("progress-bar-warning").removeClass("progress-bar-success").removeClass("progress-bar-primary");
     $(selector).addClass(classname);
 }
 

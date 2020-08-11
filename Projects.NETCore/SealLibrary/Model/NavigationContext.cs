@@ -113,7 +113,7 @@ namespace Seal.Model
                                     else if (val == null) restriction.Operator = Operator.IsNull;
                                     restriction.SetNavigationValue(val);
                                     model.Restrictions.Add(restriction);
-                                    if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) AND ", model.Restriction);
+                                    if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) {1} ", model.Restriction, model.IsLINQ ? "&&" : "AND");
                                     model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
 
                                     srcRestriction = restriction.GeNavigationDisplayValue();

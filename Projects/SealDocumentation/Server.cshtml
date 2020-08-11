@@ -88,17 +88,16 @@
                                 Be sure that the <code>Server is local (No internet)</code> property equals <b>true</b> if your server has no access to the internet.<br />
                                 In this case all the Java Scripts and CSS files used in the report result will be loaded from the server.
                             </div>
-                            <div class="bs-callout bs-callout-info">
-                                <h4>ASP Session Storage</h4>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>ASP Session Storage (<a href="https://github.com/ariacom/Seal-Report/pull/46" target="_blank">Pull Request 46</a>)</h4>
                                 <h5>Session management options</h5>
-                                <div>With Seal Report Web Server you’ve got to options to manage the ASP session:</div>
+                                <div>Seal Report Web Server has two options to manage the ASP session:</div>
                                 <ul>
-                                    <li>In memory - stored individually in memory not shared between nodes</li>
-                                
+                                    <li>In memory - stored individually in memory not shared between nodes (default)</li>
                                     <li>In SQL Server - stored in database, in one table, shared between the nodes.</li>
                                 </ul>
-                                <div>The default option that is chosen in to store in memory. To store the session in SQL Server you have to just add the configuration to appsettings.json file like:</div>
-                                <pre class="brush: sql; highlight: [15]">
+                                <div>To store the session in SQL Server, change the configuration in appsettings.json file:</div>
+                                <pre class="brush: sql;">
                                     "SealConfiguration": {
                                         "SessionProvider": {
                                             "SqlServer": {
@@ -110,20 +109,16 @@
                                     }
                                 </pre>
                                 <h5>SQL Server session storage</h5>
-                                <div>To use SQL Server option, besides the configuration, you have to also create the session table. You can do that with the .net core tool created for that purpose:</div>
-                                <pre class="brush: sql; highlight: [15]">
+                                <div>To use SQL Server option, besides the configuration, the session table has to be created in the database using the following the .net core tool:</div>
+                                <pre class="brush: csharp;">
                                     dotnet  tool  install --global  dotnet-sql-cache
                                 </pre>
-                                <div>Then when the tool is installed you have to run the command according to the CLI:</div>
-                                <pre class="brush: sql; highlight: [15]">
+                                <div>When the tool is installed, run the command according to the CLI:</div>
+                                <pre class="brush: sql;">
                                     Usage: dotnet sql-cache create [arguments] [options]
-                                      
-                                    Arguments:
-                                    
+                                    Arguments:                                    
                                     [connectionString] The connection string to connect to the database.
-                                    
                                     [schemaName] Name of the table schema.
-                                    
                                     [tableName] Name of the table to be created.
                                 </pre>
                             </div>
@@ -442,4 +437,5 @@
         $(document).ready(function () {
             $("#server_nav").addClass("active");
         });
-    </script>}
+    </script>
+}
