@@ -16,6 +16,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace Seal.Model
 {
@@ -574,13 +575,20 @@ namespace Seal.Model
 
                 foreach (ReportModel model in Report.ExecutionModels)
                 {
-                    foreach (ReportRestriction restriction in
-                        model.ExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI)
-                        .Union(model.ExecutionAggregateRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
-                        .Union(model.ExecutionCommonRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
-                        )
+                    foreach (ReportRestriction restriction in model.AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                     {
                         setRestriction(restriction);
+                    }
+
+                    if (model.IsLINQ)
+                    {
+                        foreach (ReportModel subModel in model.LINQSubModels)
+                        {
+                            foreach (ReportRestriction restriction in subModel.AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
+                            {
+                                setRestriction(restriction);
+                            }
+                        }
                     }
                 }
             }

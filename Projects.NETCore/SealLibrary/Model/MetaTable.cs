@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Data.Common;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace Seal.Model
 {
@@ -111,7 +112,9 @@ namespace Seal.Model
             {
                 var initialParameters = Parameters.ToList();
                 Parameters.Clear();
-                foreach (var configParameter in TableTemplate.DefaultParameters)
+
+                var defaultParameters = IsSubTable ? RootTable.Parameters : TableTemplate.DefaultParameters;
+                foreach (var configParameter in defaultParameters)
                 {
                     Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
                     if (parameter == null) parameter = new Parameter() { Name = configParameter.Name, Value = configParameter.Value };
@@ -119,8 +122,7 @@ namespace Seal.Model
                     parameter.InitFromConfiguration(configParameter);
                 }
 
-                if (DefinitionScript == null) DefinitionScript = TableTemplate.DefaultDefinitionScript;
-                if (LoadScript == null) LoadScript = TableTemplate.DefaultLoadScript;
+                if (string.IsNullOrEmpty(_name)) _name = "Master"; //Force a name for backward compatibility
             }
         }
 
@@ -131,15 +133,15 @@ namespace Seal.Model
         {
             bool result =
                 TemplateName == table.TemplateName &&
-                DefinitionScript.Trim() == table.DefinitionScript.Trim() &&
-                (LoadScript == null && table.LoadScript == null) || (LoadScript.Trim() == table.LoadScript.Trim())
+                Helper.CompareTrim(DefinitionScript, table.DefinitionScript) &&
+                Helper.CompareTrim(LoadScript, table.LoadScript)
              ;
 
             if (result)
             {
                 foreach (var parameter in Parameters)
                 {
-                    if (parameter.Value !=  table.GetValue(parameter.Value))
+                    if (parameter.Value != table.GetValue(parameter.Name))
                     {
                         result = false;
                         break;
@@ -148,6 +150,49 @@ namespace Seal.Model
             }
 
             return result;
+        }
+
+
+        MetaTable _rootTable = null;
+
+        MetaTable RootTable
+        {
+            get
+            {
+                if (_rootTable == null && IsSubTable)
+                {
+                    _rootTable = Source.MetaData.Tables.FirstOrDefault(i => i.GUID == GUID);
+                }
+                return _rootTable;
+            }
+        }
+
+        /// <summary>
+        /// Default definition script coming either from the template or from the root table (for a subtable)
+        /// </summary>
+        public string DefaultDefinitionScript
+        {
+            get
+            {
+                string result = null;
+                if (IsSubTable) result = RootTable.DefaultDefinitionScript;
+                else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultDefinitionScript;
+                return result ?? "";
+            }
+        }
+
+        /// <summary>
+        /// Default load script coming either from the template or from the root table (for a subtable)
+        /// </summary>
+        public string DefaultLoadScript
+        {
+            get
+            {
+                string result = null;
+                if (IsSubTable) result = RootTable.LoadScript ?? RootTable.DefaultLoadScript;
+                else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultLoadScript;
+                return result ?? "";
+            }
         }
 
         //Temporary variables to help for report serialization...
@@ -163,8 +208,8 @@ namespace Seal.Model
             //Remove parameters identical to config
             Parameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
 
-            if (DefinitionScript.Trim().Replace("\r\n","\n") == TableTemplate.DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
-            if (LoadScript.Trim().Replace("\r\n", "\n") == TableTemplate.DefaultLoadScript.Trim().Replace("\r\n", "\n")) LoadScript = null;
+            if (DefinitionScript != null && DefinitionScript.Trim().Replace("\r\n", "\n") == DefaultDefinitionScript.Trim().Replace("\r\n", "\n")) DefinitionScript = null;
+            if (LoadScript != null && LoadScript.Trim().Replace("\r\n", "\n") == DefaultLoadScript.Trim().Replace("\r\n", "\n")) LoadScript = null;
         }
 
         /// <summary>
@@ -173,9 +218,6 @@ namespace Seal.Model
         public void AfterSerialization()
         {
             Parameters = _tempParameters;
-
-            if (DefinitionScript == null) DefinitionScript = TableTemplate.DefaultDefinitionScript;
-            if (LoadScript == null) LoadScript = TableTemplate.DefaultLoadScript;
         }
 
         /// <summary>
@@ -389,7 +431,16 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsSQL
         {
-            get { return !_source.IsNoSQL; }
+            get { return !Source.IsNoSQL; }
+        }
+
+        /// <summary>
+        /// True if the table is a sub-table of a model
+        /// </summary>
+        [XmlIgnore]
+        public bool IsSubTable
+        {
+            get { return Model != null && Model.IsLINQ; }
         }
 
         /// <summary>
@@ -398,11 +449,11 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsForSQLModel
         {
-            get { return Model != null; }
+            get { return Model != null && !Model.IsLINQ; }
         }
 
         /// <summary>
-        /// ReportModel when the MetaTable comes from a SQL Model
+        /// Report Model when the MetaTable comes from a SQL Model or when is a SubTable of a LINQ query
         /// </summary>
         [XmlIgnore]
         public ReportModel Model = null;
@@ -421,7 +472,7 @@ namespace Seal.Model
                 if (startIndex > 0)
                 {
                     bool inComment = false, inQuote = false;
-                    for (int i = startIndex+1; i < Sql.Length - 5; i++)
+                    for (int i = startIndex + 1; i < Sql.Length - 5; i++)
                     {
                         switch (Sql[i])
                         {
@@ -483,15 +534,25 @@ namespace Seal.Model
             }
         }
 
-        protected MetaSource _source;
         /// <summary>
         /// Current MetaSource
         /// </summary>
         [XmlIgnore]
-        public MetaSource Source
+        public MetaSource Source { get; set; }
+
+        /// <summary>
+        /// Source GUID for the LINQ Sub-models
+        /// </summary>
+        public string LINQSourceGUID
         {
-            get { return _source; }
-            set { _source = value; }
+            get
+            {
+                if (Source is ReportSource)
+                {
+                    return ((ReportSource)Source).MetaSourceGUID ?? Source.GUID;
+                }
+                return Source.GUID;
+            }
         }
 
         /// <summary>
@@ -510,10 +571,18 @@ namespace Seal.Model
         {
             lock (this)
             {
-                if (!string.IsNullOrEmpty(DefinitionScript))
+                var definitionScript = DefinitionScript;
+                if (string.IsNullOrEmpty(definitionScript)) definitionScript = DefaultDefinitionScript;
+
+                if (!string.IsNullOrEmpty(definitionScript))
                 {
-                    RazorHelper.CompileExecute(DefinitionScript, this);
-                    if (withLoad && !string.IsNullOrEmpty(LoadScript)) RazorHelper.CompileExecute(LoadScript, this);
+                    RazorHelper.CompileExecute(definitionScript, this);
+                    if (withLoad)
+                    {
+                        var loadScript = LoadScript;
+                        if (string.IsNullOrEmpty(loadScript)) loadScript = DefaultLoadScript;
+                        if (!string.IsNullOrEmpty(loadScript)) RazorHelper.CompileExecute(loadScript, this);
+                    }
                 }
                 else NoSQLTable = new DataTable(Name);
             }
@@ -528,7 +597,7 @@ namespace Seal.Model
             {
                 if (IsSQL)
                 {
-                    DbConnection connection = _source.GetOpenConnection();
+                    DbConnection connection = Source.GetOpenConnection();
 
                     Helper.ExecutePrePostSQL(connection, Model == null ? ReportModel.ClearCommonRestrictions(PreSQL) : Model.ParseCommonRestrictions(PreSQL), this, IgnorePrePostError);
                     finalSQL = Model == null ? ReportModel.ClearCommonRestrictions(sql) : Model.ParseCommonRestrictions(sql);
@@ -554,7 +623,7 @@ namespace Seal.Model
         /// </summary>
         public void Refresh()
         {
-            if (_source == null || !DynamicColumns) return;
+            if (Source == null || !DynamicColumns) return;
 
             try
             {
@@ -569,7 +638,7 @@ namespace Seal.Model
                     if (Model.UseRawSQL) sql = Sql;
                     else sql = string.Format("SELECT * FROM ({0}) a WHERE 1=0", Sql);
                 }
-                else
+                else if (IsSQL)
                 {
                     string CTE = "", name = "";
                     GetExecSQLName(ref CTE, ref name);
@@ -588,7 +657,7 @@ namespace Seal.Model
                     if (newColumn == null)
                     {
                         newColumn = MetaColumn.Create(fullColumnName);
-                        newColumn.Source = _source;
+                        newColumn.Source = Source;
                         newColumn.DisplayName = (KeepColumnNames ? column.ColumnName.Trim() : Helper.DBNameToDisplayName(column.ColumnName.Trim()));
                         newColumn.Category = AliasName;
                         newColumn.DisplayOrder = GetLastDisplayOrder();
@@ -596,7 +665,7 @@ namespace Seal.Model
                         newColumn.Type = type;
                         newColumn.SetStandardFormat();
                     }
-                    newColumn.Source = _source;
+                    newColumn.Source = Source;
                     if (type != newColumn.Type)
                     {
                         newColumn.Type = type;
@@ -627,7 +696,7 @@ namespace Seal.Model
         /// </summary>
         public void SortColumns(bool byPosition)
         {
-            if (_source == null) return;
+            if (Source == null) return;
 
             try
             {
@@ -676,22 +745,10 @@ namespace Seal.Model
         /// </summary>
         public void CheckTable(MetaColumn column)
         {
-            if (_source == null) return;
+            if (Source == null) return;
 
             Information = "";
             Error = "";
-
-            if (IsSQL && string.IsNullOrEmpty(Sql))
-            {
-                Information = Helper.FormatMessage("No SQL Select Statement defined for the table...");
-                return;
-            }
-            if (!IsSQL && string.IsNullOrEmpty(DefinitionScript))
-            {
-                Information = Helper.FormatMessage("No Script defined for the table...");
-                return;
-            }
-
             try
             {
                 if (IsSQL)
@@ -718,7 +775,7 @@ namespace Seal.Model
                     {
                         sql += string.Format("\r\nGROUP BY {0}", groupByNames);
                     }
-                    Error = _source.CheckSQL(sql, new List<MetaTable>() { this }, null, false);
+                    Error = Source.CheckSQL(sql, new List<MetaTable>() { this }, null, false);
                 }
                 else
                 {
@@ -761,7 +818,7 @@ namespace Seal.Model
                 {
                     string sql = string.Format("SELECT {0} FROM {1}", column.Name, FullSQLName);
                     result = string.Format("{0}\r\n\r\n{1}:\r\n", sql, column.DisplayName);
-                    DbConnection connection = _source.GetOpenConnection();
+                    DbConnection connection = Source.GetOpenConnection();
                     DbCommand command = connection.CreateCommand();
                     command.CommandText = sql;
                     var reader = command.ExecuteReader();
@@ -773,7 +830,7 @@ namespace Seal.Model
                         {
                             object value = reader[0];
 
-                            CultureInfo culture = (_source.Report != null ? _source.Report.ExecutionView.CultureInfo : _source.Repository.CultureInfo);
+                            CultureInfo culture = (Source.Report != null ? Source.Report.ExecutionView.CultureInfo : Source.Repository.CultureInfo);
                             if (value is IFormattable) valueStr = ((IFormattable)value).ToString(column.Format, culture);
                             else valueStr = value.ToString();
                         }

@@ -1131,6 +1131,8 @@ namespace Seal.Model
                     source.LoadRepositoryMetaSources(repository);
                 }
 
+                result.CheckLinkedTablesSources();
+
                 if (result.Views.Count == 0)
                 {
                     var view = result.AddRootView();
@@ -1343,7 +1345,16 @@ namespace Seal.Model
         {
             try
             {
-                foreach (var output in Outputs) output.BeforeSerialization();
+                foreach (var model in Models)
+                {
+                    foreach (var table in model.LINQSubTables) table.BeforeSerialization();
+                }
+
+                foreach (var output in Outputs)
+                {
+                    output.BeforeSerialization();
+                }
+
                 foreach (var view in Views)
                 {
                     view.SetAdvancedConfigurations();
@@ -1365,6 +1376,7 @@ namespace Seal.Model
 
                     foreach (var table in source.MetaData.Tables) table.BeforeSerialization();
                 }
+
                 XmlSerializer serializer = new XmlSerializer(typeof(Report));
                 XmlWriterSettings ws = new XmlWriterSettings();
                 ws.NewLineHandling = NewLineHandling.Entitize;
@@ -1386,8 +1398,40 @@ namespace Seal.Model
                     source.MetaData.Joins = source.TempJoins;
                     source.MetaData.Enums = source.TempEnums;
                 }
-                foreach (var view in Views) view.AfterSerialization();
-                foreach (var output in Outputs) output.AfterSerialization();
+                foreach (var view in Views)
+                {
+                    view.AfterSerialization();
+                }
+
+                foreach (var output in Outputs)
+                {
+                    output.AfterSerialization();
+                }
+
+                foreach (var model in Models)
+                {
+                    foreach (var table in model.LINQSubTables) table.AfterSerialization();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check report sources to have all sources referenced by linked tables 
+        /// </summary>
+        public void CheckLinkedTablesSources()
+        {
+            foreach (var source in Sources.Where(i => i.IsNoSQL).ToList())
+            {
+                //Add linked sources referenced if necessary
+                foreach (var sourceGUID in (from s in source.MetaData.TableLinks select s.SourceGUID).Distinct())
+                {
+                    if (!Sources.Exists(j => j.GUID == sourceGUID || j.MetaSourceGUID == sourceGUID))
+                    {
+                        var newSource = AddSource(Repository.Sources.FirstOrDefault(i => i.GUID == sourceGUID));
+                        newSource.LoadRepositoryMetaSources(Repository);
+                        if (newSource.IsNoSQL) CheckLinkedTablesSources();
+                    }
+                }
             }
         }
 
@@ -1408,6 +1452,8 @@ namespace Seal.Model
             }
             result.Name = Helper.GetUniqueName(result.Name, (from i in Sources select i.Name).ToList());
             Sources.Add(result);
+
+            if (source != null && source.IsNoSQL) CheckLinkedTablesSources();
             return result;
         }
 
@@ -1421,13 +1467,13 @@ namespace Seal.Model
 
             foreach (var model in Models.Where(i => i.SourceGUID == source.GUID))
             {
-                if (model.Elements.Count > 0 || !string.IsNullOrEmpty(model.RestrictionText)) throw new Exception(string.Format("The source '{0}' is already used by a model.", source.Name));
+                if (model.Elements.Count > 0 || !string.IsNullOrEmpty(model.RestrictionText) || model.IsSQLModel) throw new Exception(string.Format("The source '{0}' is already used by a model.", source.Name));
                 model.SourceGUID = Sources.First(i => i.GUID != source.GUID).GUID;
             }
 
             foreach (var reportSource in Sources.Where(i => i != source))
             {
-                reportSource.MetaData.TableLinks.RemoveAll(i => i.SourceGUID == source.GUID);
+                if (reportSource.MetaData.TableLinks.Exists(i => i.SourceGUID == source.GUID || i.SourceGUID == source.MetaSourceGUID)) throw new Exception(string.Format("The source '{0}' is referenced by a table link in '{1}'.", source.Name, reportSource.Name));
             }
 
             Sources.Remove(source);
@@ -1438,7 +1484,15 @@ namespace Seal.Model
         /// </summary>
         public ReportModel AddModel(bool sqlModel)
         {
-            if (Sources.Count == 0) throw new Exception("Unable to create a model: No source available.\r\nPlease create a source first.");
+            if (Sources.Count == 0) throw new Exception("Unable to create a model: No source available.\r\nPlease create or add a source first.");
+            ReportSource source = Sources.FirstOrDefault(i => i.IsDefault);
+            if (source == null) source = Sources[0];
+            if (sqlModel && !source.IsSQL) 
+            {
+                source = Sources.FirstOrDefault(i => i.IsSQL);
+                if (source == null) throw new Exception("Unable to create a SQL model: No SQL source available.\r\nPlease create or add a SQL source first.");
+            }
+
             ReportModel result = ReportModel.Create();
             result.Name = Helper.GetUniqueName("Model", (from i in Models select i.Name).ToList());
             if (sqlModel)
@@ -1446,8 +1500,6 @@ namespace Seal.Model
                 result.Table = MetaTable.Create();
                 result.Table.DynamicColumns = true;
             }
-            ReportSource source = Sources.FirstOrDefault(i => i.IsDefault);
-            if (source == null) source = Sources[0];
             result.SourceGUID = source.GUID;
             result.Report = this;
             Models.Add(result);
@@ -1929,21 +1981,23 @@ namespace Seal.Model
                             ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions).FirstOrDefault(i => i != restriction && i.IsIdenticalForPrompt(restriction));
                             if (modelRestriction != null)
                             {
-                                modelRestriction.HtmlIndex = restriction.HtmlIndex;
-                                modelRestriction.Prompt = restriction.Prompt;
-                                modelRestriction.Operator = restriction.Operator;
-                                modelRestriction.Value1 = restriction.Value1;
-                                modelRestriction.Date1 = restriction.Date1;
-                                modelRestriction.Date1Keyword = restriction.Date1Keyword;
-                                modelRestriction.Value2 = restriction.Value2;
-                                modelRestriction.Date2 = restriction.Date2;
-                                modelRestriction.Date2Keyword = restriction.Date2Keyword;
-                                modelRestriction.Value3 = restriction.Value3;
-                                modelRestriction.Date3 = restriction.Date3;
-                                modelRestriction.Date3Keyword = restriction.Date3Keyword;
-                                modelRestriction.Value4 = restriction.Value4;
-                                modelRestriction.Date4 = restriction.Date4;
-                                modelRestriction.Date4Keyword = restriction.Date4Keyword;
+                                modelRestriction.CopyForPrompt(restriction);
+                            }
+                        }
+
+                        if (model.IsLINQ)
+                        {
+                            foreach (ReportModel subModel in model.LINQSubModels)
+                            {
+                                foreach (ReportRestriction restriction in _executionViewRestrictions)
+                                {
+                                    ReportRestriction modelRestriction = subModel.Restrictions.Union(subModel.AggregateRestrictions).Union(subModel.CommonRestrictions).FirstOrDefault(i => i != restriction && i.IsIdenticalForPrompt(restriction));
+                                    if (modelRestriction != null)
+                                    {
+                                        modelRestriction.CopyForPrompt(restriction);
+                                    }
+                                }
+
                             }
                         }
                     }
@@ -1987,6 +2041,10 @@ namespace Seal.Model
                 foreach (ReportModel model in ExecutionModels)
                 {
                     result.AddRange(model.ExecutionRestrictions.Union(model.ExecutionAggregateRestrictions).Union(model.ExecutionCommonRestrictions));
+                    if (model.IsLINQ)
+                    {
+                        foreach (var subModel in model.LINQSubModels) result.AddRange(subModel.ExecutionRestrictions.Union(subModel.ExecutionAggregateRestrictions).Union(subModel.ExecutionCommonRestrictions));
+                    }
                 }
                 return result;
             }

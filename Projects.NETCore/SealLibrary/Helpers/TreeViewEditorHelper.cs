@@ -141,10 +141,13 @@ namespace Seal.Forms
             TreeViewHelper.InitCategoryTreeNode(categoryTN.Nodes, source.MetaData.Tables);
             categoryTN.Expand();
 
-            //Table links
-            TreeNode tableLinksTN = new TreeNode("Table Links") { Tag = source.TableLinksFolder, ImageIndex = 2, SelectedImageIndex = 2 };
-            sourceTableTN.Nodes.Add(tableLinksTN);
-            TreeViewHelper.InitTablesLinksTreeNode(tableLinksTN.Nodes, source.MetaData.TableLinks);
+            if (source.IsNoSQL)
+            {
+                //Table links
+                TreeNode tableLinksTN = new TreeNode("Table Links") { Tag = source.TableLinksFolder, ImageIndex = 2, SelectedImageIndex = 2 };
+                sourceTableTN.Nodes.Add(tableLinksTN);
+                TreeViewHelper.InitTablesLinksTreeNode(tableLinksTN.Nodes, source.MetaData.TableLinks);
+            }
 
             //Joins
             TreeNode sourceJoinTN = new TreeNode("Joins") { Tag = source.JoinFolder, ImageIndex = 2, SelectedImageIndex = 2 };
@@ -435,11 +438,13 @@ namespace Seal.Forms
 
                         Cursor.Current = Cursors.WaitCursor;
                         isModified = true;
+                        List<ReportSource> sources = new List<ReportSource>();
+
                         foreach (var item in frm.CheckedItems)
                         {
                             if (item is ReportSource)
                             {
-                                Report.RemoveSource((ReportSource)item);
+                                sources.Add((ReportSource)item);
                             }
                             else if (item is MetaConnection)
                             {
@@ -490,6 +495,11 @@ namespace Seal.Forms
                                 Report.RemoveSchedule((ReportSchedule)item);
                             }
                         }
+
+                        foreach (var reportSource in sources.OrderBy(i => !i.IsNoSQL))
+                        {
+                            Report.RemoveSource(reportSource);
+                        }
                     }
                 }
             }
@@ -528,6 +538,12 @@ namespace Seal.Forms
             }
             else if (entity is MetaTable)
             {
+                if (((MetaTable)entity).IsSubTable)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
                 entityName = "Column";
                 copyEntityName = ((MetaTable)entity).DisplayName;
             }
@@ -855,6 +871,8 @@ namespace Seal.Forms
                                 MetaTable table = (MetaTable)item;
                                 var link = new MetaTableLink() { TableGUID = table.GUID, SourceGUID = table.Source.GUID, Source = table.Source };
                                 source.MetaData.TableLinks.Add(link);
+
+                                if (source.Report != null) source.Report.CheckLinkedTablesSources();
                             }
                             else if (item is MetaColumn)
                             {
@@ -1015,7 +1033,7 @@ namespace Seal.Forms
                     if (propertyName == "Name" && string.IsNullOrEmpty(table.Alias)) table.Name = Helper.GetUniqueName(table.Name, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
                     if (propertyName == "Alias") table.Alias = Helper.GetUniqueName(table.Alias, (from i in source.MetaData.Tables where i != table select i.AliasName).ToList());
                     mainTreeView.SelectedNode.Text = table.AliasName;
-                    if (table.DynamicColumns && (propertyName == "Name" || propertyName == "Sql" || propertyName == "DefinitionScript"))
+                    if (table.DynamicColumns && ((table.IsSQL && (propertyName == "Name" || propertyName == "Sql")) || (!table.IsSQL && propertyName == "DefinitionScript")))
                     {
                         table.Refresh();
                         mustInit = true;

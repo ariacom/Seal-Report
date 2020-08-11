@@ -169,6 +169,8 @@ namespace Seal.Model
                     Parameters.Add(parameter);
                     parameter.InitFromConfiguration(configParameter);
                 }
+
+                if (string.IsNullOrEmpty(_name)) _name = "Master"; //Force a name for backward compatibility
             }
         }
 
@@ -222,7 +224,7 @@ namespace Seal.Model
             {
                 string result = null;
                 if (IsSubTable) result = RootTable.DefaultDefinitionScript;
-                else if (TableTemplate != null) result = TableTemplate.DefaultDefinitionScript;
+                else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultDefinitionScript;
                 return result ?? "";
             }
         }
@@ -235,8 +237,8 @@ namespace Seal.Model
             get
             {
                 string result = null;
-                if (IsSubTable) result = RootTable.DefaultLoadScript;
-                else if (TableTemplate != null) result = TableTemplate.DefaultLoadScript;
+                if (IsSubTable) result = RootTable.LoadScript ?? RootTable.DefaultLoadScript;
+                else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultLoadScript;
                 return result ?? "";
             }
         }
@@ -819,18 +821,6 @@ namespace Seal.Model
 
             Information = "";
             Error = "";
-
-            if (IsSQL && string.IsNullOrEmpty(Sql))
-            {
-                Information = Helper.FormatMessage("No SQL Select Statement defined for the table...");
-                return;
-            }
-            if (!IsSQL && string.IsNullOrEmpty(DefinitionScript))
-            {
-                Information = Helper.FormatMessage("No Script defined for the table...");
-                return;
-            }
-
             try
             {
                 if (IsSQL)

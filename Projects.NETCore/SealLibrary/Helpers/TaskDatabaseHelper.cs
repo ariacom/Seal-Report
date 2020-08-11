@@ -8,11 +8,8 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Data.OleDb;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using Microsoft.VisualBasic.FileIO;
 using System.Data.SqlClient;
 using OfficeOpenXml;
 

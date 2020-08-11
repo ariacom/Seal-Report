@@ -96,6 +96,8 @@ namespace Seal.Controls
 
             resizeControls();
 
+            if (Model.IsLINQ && Model.LINQSubTables.Count == 0 && Model.LINQSubModels.Count == 0) UpdateLINQModel();
+
             //adjust description height
             PropertyGridHelper.ResizeDescriptionArea(ModelGrid, 3);
         }
