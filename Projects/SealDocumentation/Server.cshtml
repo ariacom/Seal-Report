@@ -88,6 +88,45 @@
                                 Be sure that the <code>Server is local (No internet)</code> property equals <b>true</b> if your server has no access to the internet.<br />
                                 In this case all the Java Scripts and CSS files used in the report result will be loaded from the server.
                             </div>
+                            <div class="bs-callout bs-callout-info">
+                                <h4>ASP Session Storage</h4>
+                                <h5>Session management options</h5>
+                                <div>With Seal Report Web Server you’ve got to options to manage the ASP session:</div>
+                                <ul>
+                                    <li>In memory - stored individually in memory not shared between nodes</li>
+                                
+                                    <li>In SQL Server - stored in database, in one table, shared between the nodes.</li>
+                                </ul>
+                                <div>The default option that is chosen in to store in memory. To store the session in SQL Server you have to just add the configuration to appsettings.json file like:</div>
+                                <pre class="brush: sql; highlight: [15]">
+                                    "SealConfiguration": {
+                                        "SessionProvider": {
+                                            "SqlServer": {
+                                                "ConnectionString": "",
+                                                "SchemaName": "dbo",
+                                                "TableName": "CacheSessions"
+                                            }
+                                        }
+                                    }
+                                </pre>
+                                <h5>SQL Server session storage</h5>
+                                <div>To use SQL Server option, besides the configuration, you have to also create the session table. You can do that with the .net core tool created for that purpose:</div>
+                                <pre class="brush: sql; highlight: [15]">
+                                    dotnet  tool  install --global  dotnet-sql-cache
+                                </pre>
+                                <div>Then when the tool is installed you have to run the command according to the CLI:</div>
+                                <pre class="brush: sql; highlight: [15]">
+                                    Usage: dotnet sql-cache create [arguments] [options]
+                                      
+                                    Arguments:
+                                    
+                                    [connectionString] The connection string to connect to the database.
+                                    
+                                    [schemaName] Name of the table schema.
+                                    
+                                    [tableName] Name of the table to be created.
+                                </pre>
+                            </div>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>PDF and Excel Converter Configurations</h4>
                                 If you are using the PDF and Excel converter component, the server configuration contains the <code>Default PDF Configuration</code> and the <code>Default Excel Configuration</code> that are used by default when a conversion is done.
