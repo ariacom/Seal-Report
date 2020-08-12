@@ -45,6 +45,7 @@ namespace Seal.Model
 
                 //Then enable
                 GetProperty("SQL").SetIsBrowsable(true);
+                GetProperty("ForceAggregate").SetIsBrowsable(PivotPosition != PivotPosition.Data);
                 if (!Model.IsSubModel)
                 {
                     GetProperty("DisplayNameEl").SetIsBrowsable(true);
@@ -61,7 +62,6 @@ namespace Seal.Model
                     GetProperty("NavigationScript").SetIsBrowsable(true);
                     GetProperty("CalculationOption").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("EnumGUIDEL").SetIsBrowsable(true);
-                    GetProperty("ForceAggregate").SetIsBrowsable(true);
                     GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
 
                     GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
@@ -713,7 +713,7 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// True if the element is an aggregate
+        /// True if the element definition contains already the aggregate
         /// </summary>
         [XmlIgnore, Browsable(false)]
         public bool IsAggregateEl
@@ -724,6 +724,17 @@ namespace Seal.Model
                 if (ForceAggregate == YesNoDefault.No) return false;
                 if (MetaColumn != null) return MetaColumn.IsAggregate;
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// True is the lement is not an aggregate
+        /// </summary>
+        public bool IsNotAggregate
+        {
+            get
+            {
+                return PivotPosition != PivotPosition.Data && !IsAggregateEl;
             }
         }
 
@@ -819,8 +830,12 @@ namespace Seal.Model
                 if (IsDateTime) converter = "DateTime";
                 else if (IsNumeric) converter = "Double";
 
-                string result = "";
-                if (PivotPosition == PivotPosition.Data && !IsAggregateEl)
+                string result;
+                if (IsNotAggregate)
+                {
+                    result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
+                }
+                else
                 {
                     //aggregate
                     if (AggregateFunction == AggregateFunction.Count) result = "g.Count()";
@@ -829,10 +844,6 @@ namespace Seal.Model
                         string aggr = AggregateFunction == AggregateFunction.Avg ? "Average" : string.Format("{0}", AggregateFunction);
                         result = string.Format("g.{0}(i => Helper.To{1}(i.{2}[{3}]))", aggr, converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
                     }
-                }
-                else
-                {
-                    result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
                 }
                 return result;
             }

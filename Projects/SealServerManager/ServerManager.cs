@@ -208,6 +208,10 @@ namespace Seal
         {
         }
 
+        public void UpdateModelNode(TreeNode currentNode = null)
+        {
+        }
+
         #endregion
 
         #region Helpers
@@ -525,10 +529,11 @@ namespace Seal
 
         private void mainTreeView_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Clicks == 1 && e.Button == MouseButtons.Right)
             {
                 // Select the clicked node
-                mainTreeView.SelectedNode = mainTreeView.GetNodeAt(e.X, e.Y);
+                var newNode = mainTreeView.GetNodeAt(e.X, e.Y);
+                if (newNode != mainTreeView.SelectedNode) mainTreeView.SelectedNode = newNode;
 
                 if (mainTreeView.SelectedNode != null)
                 {

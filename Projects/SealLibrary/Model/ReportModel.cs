@@ -74,6 +74,7 @@ namespace Seal.Model
                 GetProperty("SqlOrderBy").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlCTE").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("LINQQueryScript").SetIsBrowsable(Source.IsNoSQL);
+                GetProperty("AggregateSubModels").SetIsBrowsable(Source.IsNoSQL);
 
                 GetProperty("PreSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PostSQL").SetIsBrowsable(!Source.IsNoSQL);
@@ -183,6 +184,27 @@ namespace Seal.Model
         [DefaultValue("")]
         public string LoadScript { get; set; }
 
+        private bool _aggregateSubModels = true;
+        /// <summary>
+        /// If true, aggregates are propagated to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates). 
+        /// </summary>
+        [Category("Model Definition"), DisplayName("Use aggregates in Sub-Models"), Description("If true, aggregates are propagated to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates)."), Id(6, 1)]
+        [DefaultValue(true)]
+        public bool AggregateSubModels
+        {
+            get
+            {
+                return _aggregateSubModels;
+            }
+            set
+            {
+                bool updateModels = (_aggregateSubModels != value);
+                _aggregateSubModels = value;
+                if (updateModels) BuildQuery(false, true);
+            }
+        }
+        public bool ShouldSerializeAggregateSubModels() { return !_aggregateSubModels; }
+
         /// <summary>
         /// Optional Razor Script to modify the model after its generation
         /// </summary>
@@ -204,7 +226,6 @@ namespace Seal.Model
         [Category("Model Definition"), DisplayName("Share result table"), Description("If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization)."), Id(8, 1)]
         [DefaultValue(true)]
         public bool ShareResultTable { get; set; } = true;
-
 
         /// <summary>
         /// If true and the table has column values, the first line used for titles is generated in the table header
@@ -1479,7 +1500,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         string sqlColumn = string.Format("{0} AS {1}", element.SQLColumn, element.SQLColumnName);
                         if (IsLINQ)
                         {
-                            sqlColumn = !noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl ? string.Format("{0}=g.Key.{0}", element.SQLColumnName) : string.Format("{0}={1}", element.SQLColumnName, element.LINQColumnName);
+                            sqlColumn = !noGroupBy && element.IsNotAggregate ? string.Format("{0}=g.Key.{0}", element.SQLColumnName) : string.Format("{0}={1}", element.SQLColumnName, element.LINQColumnName);
                         }
 
                         if (!selectColumns.Contains(sqlColumn))
@@ -1491,7 +1512,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         MetaTable table = element.MetaColumn.MetaTable;
                         if (table != null && !FromTables.Contains(table)) FromTables.Add(table);
 
-                        if (!noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl)
+                        if (!noGroupBy && element.IsNotAggregate)
                         {
                             if (groupByColumns.Contains(element.SQLColumn) && !IsLINQ) continue;
 
@@ -2084,7 +2105,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     var colName = element.SQLColumn + SQLascdesc;
                     if (IsLINQ)
                     {
-                        colName = !noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl ? string.Format("g.Key.{0}{1}", element.SQLColumnName, LINQascdesc) : element.LINQColumnName;
+                        colName = !noGroupBy && element.IsNotAggregate ? string.Format("g.Key.{0}{1}", element.SQLColumnName, LINQascdesc) : element.LINQColumnName;
                     }
 
                     Helper.AddValue(ref orderClause, ",", colName);
@@ -2168,6 +2189,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         //check if we can reuse the current running query: same source, same connection string and same pre/Post SQL
                         ReportModel runningModel = runningModels[key];
                         if (Source == runningModel.Source
+                            && IsSubModel == runningModel.IsSubModel
                             && Connection.ConnectionType == runningModel.Connection.ConnectionType
                             && Connection.FullConnectionString == runningModel.Connection.FullConnectionString
                             && string.IsNullOrEmpty(runningModel.ExecutionError)
@@ -2292,24 +2314,22 @@ model.ResultTable = query2.CopyToDataTable2();
 
                 //Elements in the select
                 var elementsToSelect = Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID).ToList();
-
+                var currentElements = subModel.Elements.ToList();
+                subModel.Elements.Clear();
                 foreach (var element in elementsToSelect)
                 {
-                    var element2 = subModel.Elements.FirstOrDefault(i => i.MetaColumnGUID == element.MetaColumnGUID);
+                    var element2 = currentElements.FirstOrDefault(i => i.MetaColumnGUID == element.MetaColumnGUID);
                     if (element2 == null)
                     {
-                        //Add the element
+                        //Create the element
                         element2 = ReportElement.Create();
                         element2.MetaColumnGUID = element.MetaColumnGUID;
-                        subModel.Elements.Add(element2);
                     }
+                    subModel.Elements.Add(element2);
                     element2.Name = element.Name;
-                    element2.PivotPosition = element.PivotPosition;
-                    element2.SortOrder = element.SortOrder;
+                    element2.PivotPosition = AggregateSubModels ? element.PivotPosition : PivotPosition.Row;
                     element2.AggregateFunction = element.AggregateFunction;
                 }
-                //remove old elements
-                subModel.Elements.RemoveAll(i => !elementsToSelect.Exists(j => j.MetaColumnGUID == i.MetaColumnGUID));
 
                 //elements used to perform the LINQ joins
                 foreach (var join in ExecTableJoins)

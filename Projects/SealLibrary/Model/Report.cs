@@ -101,7 +101,7 @@ namespace Seal.Model
                 {
                     try
                     {
-                        _displayNameEx = RazorHelper.CompileExecute(DisplayName, this);
+                        _displayNameEx = RazorHelper.CompileExecute(DisplayName, this).Trim();
                     }
                     catch { }
                 }

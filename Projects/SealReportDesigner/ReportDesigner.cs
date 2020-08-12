@@ -361,6 +361,7 @@ namespace Seal
         public void UpdateModelNode(TreeNode currentNode = null)
         {
             if (currentNode == null) currentNode = mainTreeView.SelectedNode;
+            if (currentNode == null) return;
 
             var model = currentNode.Tag as ReportModel;
             if (model != null && model.IsLINQ)
@@ -643,10 +644,11 @@ namespace Seal
 
         private void mainTreeView_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Clicks == 1 && e.Button == MouseButtons.Right)
             {
                 // Select the clicked node
-                mainTreeView.SelectedNode = mainTreeView.GetNodeAt(e.X, e.Y);
+                var newNode = mainTreeView.GetNodeAt(e.X, e.Y);
+                if (newNode != mainTreeView.SelectedNode) mainTreeView.SelectedNode = newNode;
 
                 if (mainTreeView.SelectedNode != null)
                 {
