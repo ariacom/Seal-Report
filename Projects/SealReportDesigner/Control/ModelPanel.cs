@@ -70,6 +70,8 @@ namespace Seal.Controls
             RestrictionGrid.LineColor = SystemColors.ControlLight;
             restrictionsContainer.Panel2.Controls.Add(RestrictionGrid);
             PropertyGridHelper.AddResetMenu(RestrictionGrid);
+
+            elementTreeView.MouseUp += elementTreeView_MouseUp;
         }
 
         public void Init(ReportDesigner mainForm)
@@ -84,7 +86,6 @@ namespace Seal.Controls
             SelectedButton = null;
 
             initTreeView();
-            elementTreeView.MouseUp += elementTreeView_MouseUp;
 
             ElementsToPanels();
 
@@ -104,10 +105,11 @@ namespace Seal.Controls
 
         void elementTreeView_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Clicks == 1 && e.Button == MouseButtons.Right)
             {
                 // Select the clicked node
-                elementTreeView.SelectedNode = elementTreeView.GetNodeAt(e.X, e.Y);
+                var newNode = elementTreeView.GetNodeAt(e.X, e.Y);
+                if (newNode != elementTreeView.SelectedNode) elementTreeView.SelectedNode = newNode;
                 ContextMenuStrip menu = new ContextMenuStrip();
                 if (elementTreeView.SelectedNode != null && elementTreeView.SelectedNode.Tag is MetaColumn)
                 {
@@ -244,7 +246,6 @@ namespace Seal.Controls
             foreach (GridItem item in root.GridItems)
             {
                 string label = item.Label.Replace("\t", "").ToLower();
-                if (label == "advanced") item.Expanded = false;
                 if (label == "chart") item.Expanded = false;
                 if (label == "extra restriction values...") item.Expanded = false;
             }
@@ -540,7 +541,8 @@ namespace Seal.Controls
 
         private void elementTreeView_DragOver(object sender, DragEventArgs e)
         {
-            if ((e.Data.GetDataPresent(typeof(Button)) || e.Data.GetDataPresent(typeof(TreeNode))) && Model.IsSubModel) {
+            if ((e.Data.GetDataPresent(typeof(Button)) || e.Data.GetDataPresent(typeof(TreeNode))) && Model.IsSubModel)
+            {
                 e.Effect = DragDropEffects.None;
             }
             else if (e.Data.GetDataPresent(typeof(Button)) || e.Data.GetDataPresent(typeof(TreeNode)) || e.Data.GetDataPresent(typeof(string)))

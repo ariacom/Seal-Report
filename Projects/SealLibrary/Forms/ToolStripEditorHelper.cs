@@ -80,6 +80,9 @@ namespace Seal.Forms
                 if (model.IsLINQ) AddHelperButton("View LINQ", "View the LINQ Query generated for the model", Keys.F7);
                 else if (model.IsSQLModel) AddHelperButton("Edit SQL", "Edit the source SQL used for the model", Keys.F7);
                 else AddHelperButton("View SQL", "View the SQL generated for the model", Keys.F7);
+
+                if (model.IsLINQ) AddHelperButton("Refresh Sub-Models and Sub-Tables", "Using the elements and restrictions selected, rebuild the Sub-Models and Sub-Tables involved in the LINQ Query", null);
+
             }
             else if (SelectedEntity is ReportView)
             {
@@ -105,9 +108,9 @@ namespace Seal.Forms
             }
         }
 
-        ToolStripButton AddHelperButton(string text, string tooltip, Keys shortcut)
+        ToolStripButton AddHelperButton(string text, string tooltip, Keys? shortcut)
         {
-            ToolStripButton helperButton = new ToolStripButton(shortcut.ToString() + " " + text);
+            ToolStripButton helperButton = new ToolStripButton(shortcut != null ? shortcut.ToString() + " " + text : text);
             helperButton.ToolTipText = tooltip;
             helperButton.Alignment = ToolStripItemAlignment.Right;
             helperButton.Click += helperButton_Click;
@@ -125,7 +128,9 @@ namespace Seal.Forms
                 Cursor.Current = Cursors.WaitCursor;
                 if (sender is ToolStripItem)
                 {
-                    Keys key = (Keys)((ToolStripItem)sender).Tag;
+                    var toolStrip = (ToolStripItem)sender;
+                    Keys? key = null;
+                    if (toolStrip.Tag != null) key = (Keys)toolStrip.Tag;
 
                     if (SelectedEntity is MetaSource)
                     {
@@ -190,10 +195,17 @@ namespace Seal.Forms
                     }
                     else if (SelectedEntity is ReportModel)
                     {
-                        if (key == Keys.F7 || key == Keys.F8)
-                        {
-                            ReportModel model = SelectedEntity as ReportModel;
+                        ReportModel model = SelectedEntity as ReportModel;
 
+                        if (key == null && model.IsLINQ)
+                        {
+                            model.BuildQuery(false, true);
+                            EntityHandler.UpdateModelNode();
+
+                            MessageBox.Show(string.Format("The LINQ Model has been refreshed...\r\n\r\nIt contains {0} SQL Sub-Models and {1} NoSQL Sub-Tables.", model.LINQSubModels.Count, model.LINQSubTables.Count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else if (key == Keys.F7 || key == Keys.F8)
+                        {
                             if (model.IsLINQ)
                             {
                                 var frm = new TemplateTextEditorForm();
