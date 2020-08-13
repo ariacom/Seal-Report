@@ -63,7 +63,7 @@ namespace Seal.Forms
         {
             if (sqlTextBox.Modified)
             {
-                if (MessageBox.Show("The script has been modified. Do you really want to exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return false;
+                if (MessageBox.Show("The SQL has been modified. Do you really want to exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return false;
             }
             return true;
         }
@@ -115,7 +115,7 @@ namespace Seal.Forms
                 checkSQL();
                 if (!string.IsNullOrEmpty(errorTextBox.Text))
                 {
-                    if (MessageBox.Show("The script is incorrect. Do you really want to save it and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
+                    if (MessageBox.Show("The SQL is incorrect. Do you really want to save it and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
                 }
             }
 
@@ -240,7 +240,7 @@ namespace Seal.Forms
             }
             else
             {
-                toolStripStatusLabel.Text = "Script checked successfully";
+                toolStripStatusLabel.Text = "SQL checked successfully";
                 toolStripStatusLabel.Image = global::Seal.Properties.Resources.checkedGreen;
             }
         }

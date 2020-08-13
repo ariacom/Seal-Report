@@ -318,6 +318,15 @@ if (cell.IsTitle)
 }
 ";
 
+        const string scriptEnumTemplate = @"@{
+    var enumList = Model;
+    enumList.Values.Clear();
+    //Add enum values
+    enumList.Values.Add(new MetaEV() {Id=""id1""});
+    enumList.Values.Add(new MetaEV() {Id=""id2"", Val=""Display2"", ValR=""Display Restriction2"", Css=""color:red"", Class=""""});
+    enumList.Values.Add(new MetaEV() {Id=""id3"", Val=""Display4 "" + DateTime.Now.ToString(), ValR=""Display Restriction4 "" + DateTime.Now.ToString(), Css="""", Class=""text-info""});
+}
+";
 
         const string razorModelFinalScriptTemplate = @"@using System.Data
 @{
@@ -1024,6 +1033,17 @@ if (cell.IsTitle)
                         frm.Text = "Edit column name";
                         ScintillaHelper.Init(frm.textBox, Lexer.Sql);
                         frm.textBox.WrapMode = WrapMode.Word;
+                    }
+                }
+                else if (context.Instance is MetaEnum)
+                {
+                    if (context.PropertyDescriptor.Name == "Script")
+                    {
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                        frm.ObjectForCheckSyntax = context.Instance;
+                        template = scriptEnumTemplate;
+                        frm.Text = "Edit the script to load the enumerated list values";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }
                 else if (context.Instance is MetaConnection)

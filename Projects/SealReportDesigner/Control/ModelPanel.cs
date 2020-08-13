@@ -155,6 +155,8 @@ namespace Seal.Controls
                                 RowPanel.RedrawPanel();
                             }
                         }
+                        UpdateLINQModel();
+
                     });
                     if (!Model.IsSubModel) menu.Items.Add(item);
 
