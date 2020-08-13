@@ -90,8 +90,8 @@
             this.checkSQLToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("checkSQLToolStripButton.Image")));
             this.checkSQLToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.checkSQLToolStripButton.Name = "checkSQLToolStripButton";
-            this.checkSQLToolStripButton.Size = new System.Drawing.Size(77, 22);
-            this.checkSQLToolStripButton.Text = "Check Script";
+            this.checkSQLToolStripButton.Size = new System.Drawing.Size(68, 22);
+            this.checkSQLToolStripButton.Text = "Check SQL";
             this.checkSQLToolStripButton.Click += new System.EventHandler(this.checkSQLToolStripButton_Click);
             // 
             // clearToolStripButton
@@ -100,8 +100,8 @@
             this.clearToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("clearToolStripButton.Image")));
             this.clearToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.clearToolStripButton.Name = "clearToolStripButton";
-            this.clearToolStripButton.Size = new System.Drawing.Size(71, 22);
-            this.clearToolStripButton.Text = "Clear Script";
+            this.clearToolStripButton.Size = new System.Drawing.Size(62, 22);
+            this.clearToolStripButton.Text = "Clear SQL";
             this.clearToolStripButton.ToolTipText = "Clear SQL to get default clause";
             this.clearToolStripButton.Click += new System.EventHandler(this.clearToolStripButton_Click);
             // 

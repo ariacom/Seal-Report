@@ -59,10 +59,12 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is MetaEnum)
             {
-                if (((MetaEnum)SelectedEntity).IsDynamic && ((MetaEnum)SelectedEntity).IsEditable)
+                var enumList = ((MetaEnum)SelectedEntity);
+                if (enumList.IsDynamic && enumList.IsEditable)
                 {
                     AddHelperButton("Refresh values", "Refresh values of this list using the SQL Statement", Keys.F9);
-                    AddHelperButton("Edit SQL", "Edit the select statement", Keys.F8);
+                    AddHelperButton("Edit Load Script", "Edit the script used to load the values", Keys.F8);
+                    if (enumList.IsSQL) AddHelperButton("Edit SQL", "Edit the SQL select statement used to load the values", Keys.F7);
                 }
             }
             else if (SelectedEntity is MetaJoin)
@@ -176,7 +178,8 @@ namespace Seal.Forms
                     }
                     else if (SelectedEntity is MetaEnum)
                     {
-                        if (key == Keys.F8) EditProperty("SQL Select Statement");
+                        if (key == Keys.F7) EditProperty("SQL Select Statement");
+                        if (key == Keys.F8) EditProperty("Script");
                         if (key == Keys.F9)
                         {
                             if (EntityHandler != null) EntityHandler.SetModified();
@@ -202,7 +205,7 @@ namespace Seal.Forms
                             model.BuildQuery(false, true);
                             EntityHandler.UpdateModelNode();
 
-                            MessageBox.Show(string.Format("The LINQ Model has been refreshed...\r\n\r\nIt contains {0} SQL Sub-Models and {1} NoSQL Sub-Tables.", model.LINQSubModels.Count, model.LINQSubTables.Count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(string.Format("The LINQ Model has been refreshed...\r\n\r\nIt contains {0} SQL Sub-Model(s) and {1} NoSQL Sub-Table(s).", model.LINQSubModels.Count, model.LINQSubTables.Count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else if (key == Keys.F7 || key == Keys.F8)
                         {
@@ -247,6 +250,7 @@ namespace Seal.Forms
                                 var frm = new SQLEditorForm();
                                 frm.Instance = SelectedEntity;
                                 frm.PropertyName = "";
+                                frm.InitLexer(Lexer.Sql);
 
                                 if (model.IsSQLModel && key == Keys.F7)
                                 {
@@ -298,7 +302,6 @@ namespace Seal.Forms
                                     {
                                         throw new Exception("Error building the SQL Statement...\r\nPlease fix these errors first.\r\n" + model.ExecutionError);
                                     }
-                                    frm.InitLexer(Lexer.Sql);
                                     frm.sqlTextBox.Text = model.Sql;
                                     frm.SetReadOnly();
                                     if (key == Keys.F8) frm.checkSQL();
