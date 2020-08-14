@@ -372,7 +372,7 @@ namespace Seal.Model
         /// The culture used to generate the report. If empty, the culture from the groups is used, then the default culture.
         /// </summary>
         [Category("Security and Publication"), DisplayName("Culture"), Description("The culture used to generate the report. If empty, the culture from the groups is used, then the default culture."), Id(3, 6)]
-        [TypeConverter(typeof(Seal.Forms.CultureInfoConverter))]
+        [TypeConverter(typeof(Forms.CultureInfoConverter))]
         public string UserCulture { get; set; }
 
         /// <summary>

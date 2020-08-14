@@ -36,12 +36,12 @@ namespace Seal.Model
                 GetProperty("IsDbRefresh").SetIsBrowsable(true);
                 GetProperty("UsePosition").SetIsBrowsable(true);
                 GetProperty("Translate").SetIsBrowsable(true);
-                GetProperty("Sql").SetIsBrowsable(IsSQL);
+                GetProperty("Sql").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
 
-                GetProperty("SqlDisplay").SetIsBrowsable(IsSQL);
-                GetProperty("FilterChars").SetIsBrowsable(IsSQL);
-                GetProperty("Message").SetIsBrowsable(IsSQL);
+                GetProperty("SqlDisplay").SetIsBrowsable(true);
+                GetProperty("FilterChars").SetIsBrowsable(true);
+                GetProperty("Message").SetIsBrowsable(true);
 
                 GetProperty("Values").SetIsBrowsable(IsEditable);
                 GetProperty("NumberOfValues").SetIsBrowsable(true);
@@ -140,9 +140,9 @@ namespace Seal.Model
         private string _script;
 
         /// <summary>
-        /// If the list is dynamic, Razor Script to load or update the enumerated list values.
+        /// If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty.
         /// </summary>
-        [Category("Definition"), DisplayName("Script"), Description("If the list is dynamic, Razor Script executed to load or update the enumerated list values."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Script"), Description("If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string Script
         {

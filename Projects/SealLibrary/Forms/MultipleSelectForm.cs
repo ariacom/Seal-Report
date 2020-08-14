@@ -40,7 +40,7 @@ namespace Seal.Forms
                 _source.Add(item);
                 filterToolStripTextBox.AutoCompleteCustomSource.Add(GetPropertyValue(item, _displayMember));
             }
-            filterToolStripTextBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            filterToolStripTextBox.AutoCompleteMode = AutoCompleteMode.Suggest;
             filterToolStripTextBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
 
             ShowIcon = true;
