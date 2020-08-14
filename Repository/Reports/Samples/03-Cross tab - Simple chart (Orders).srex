@@ -1,237 +1,133 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <GUID>4cc16caf-749a-42e6-a61e-235d763aa5dc</GUID>
-  <Sources>
-    <ReportSource>
-      <GUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</GUID>
-      <Name>Northwind (Repository)</Name>
-      <Connections />
-      <ConnectionGUID>442f6511-a22b-47ec-a33e-e1c7344adb68</ConnectionGUID>
-      <InitScript />
-      <TasksScript />
-      <MetaData>
-        <Tables>
-          <MetaTable>
-            <GUID>55dc8e4b-9040-4547-a15d-3ccc6286f66b</GUID>
-            <Alias>SealMasterTable</Alias>
-            <DynamicColumns>true</DynamicColumns>
-            <MustRefresh>false</MustRefresh>
-            <Columns />
-          </MetaTable>
-        </Tables>
-        <Joins />
-        <Enums />
-      </MetaData>
-      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
-    </ReportSource>
-  </Sources>
-  <Models>
-    <ReportModel>
-      <GUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</GUID>
-      <Name>model</Name>
-      <SourceGUID>6f5296f5-b91a-4fec-97e2-91f7cac68133</SourceGUID>
-      <SqlSelect />
-      <SqlFrom />
-      <SqlGroupBy />
-      <SqlOrderBy />
-      <IgnorePrePostError>false</IgnorePrePostError>
-      <ForceJoinTableGUID />
-      <AvoidJoinTableGUID />
-      <Elements>
-        <ReportElement>
-          <GUID>3e8c1b78-2884-4638-ae2c-80b8ab544abe</GUID>
-          <Name>DatePart('yyyy',[Orders.OrderDate],1,0)</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format>yyyy</Format>
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Page</PivotPosition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>32f79895-2da2-4b75-a2d8-36e73707e925</GUID>
-          <Name>Products.CategoryID</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Column</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <SerieDefinition>Axis</SerieDefinition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>53402a75-0948-44bc-8d4e-b1c89eeb6001</GUID>
-          <Name>Customers.Country</Name>
-          <Category>Master</Category>
-          <Tag />
-          <Format />
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <SerieDefinition>Splitter</SerieDefinition>
-          <Nvd3Serie>ScatterChart</Nvd3Serie>
-          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>318e4a99-855d-4c84-aa77-f45b5439b8d9</GUID>
-          <Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
-          <Category>Master</Category>
-          <Tag />
-          <DisplayName />
-          <Format>N0</Format>
-          <HasHTMLTags>false</HasHTMLTags>
-          <DrillChildren />
-          <SubReports />
-          <PivotPosition>Data</PivotPosition>
-          <ShowTotal>RowColumn</ShowTotal>
-          <SerieDefinition>NVD3Serie</SerieDefinition>
-          <ChartJSSerie>Bar</ChartJSSerie>
-          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-        </ReportElement>
-      </Elements>
-      <Restriction />
-      <Restrictions />
-      <AggregateRestriction />
-      <AggregateRestrictions />
-    </ReportModel>
-  </Models>
-  <Outputs />
-  <Tasks />
-  <TasksScript />
-  <Views>
-    <ReportView>
-      <GUID>2194db7c-bdea-459c-b055-d2e630d7f829</GUID>
-      <Name>view</Name>
-      <Views>
-        <ReportView>
-          <GUID>d8cb2182-2ec0-48d7-8659-68002b6b35f9</GUID>
-          <Name>Model HTML View</Name>
-          <Views>
-            <ReportView>
-              <GUID>f1f9b36c-5f47-47e0-93f2-aa08865dccd0</GUID>
-              <Name>Model Container</Name>
-              <Views>
-                <ReportView>
-                  <GUID>1b8d9cb1-0b51-43eb-a99e-111af8062616</GUID>
-                  <Name>Page Table</Name>
-                  <Views />
-                  <TemplateName>Page Table</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>1</SortOrder>
-                  <WebExec>true</WebExec>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
-                </ReportView>
-                <ReportView>
-                  <GUID>fe81614a-17b3-4f9e-b3f7-86e0b337052e</GUID>
-                  <Name>Chart JS</Name>
-                  <Views />
-                  <TemplateName>Chart JS</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>2</SortOrder>
-                  <WebExec>true</WebExec>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
-                </ReportView>
-                <ReportView>
-                  <GUID>a6be3fb0-f5be-40a6-a82c-836f0a0fb6a7</GUID>
-                  <Name>Chart NVD3</Name>
-                  <Views />
-                  <TemplateName>Chart NVD3</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>3</SortOrder>
-                  <WebExec>true</WebExec>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
-                </ReportView>
-                <ReportView>
-                  <GUID>60f8243c-fda3-4243-9be3-489826f90123</GUID>
-                  <Name>Chart Plotly</Name>
-                  <Views />
-                  <TemplateName>Chart Plotly</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>4</SortOrder>
-                  <WebExec>true</WebExec>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
-                </ReportView>
-                <ReportView>
-                  <GUID>a27ab27a-b0ae-4a85-9532-5054d0536f7b</GUID>
-                  <Name>Data Table</Name>
-                  <Views />
-                  <TemplateName>Data Table</TemplateName>
-                  <PartialTemplates />
-                  <Parameters />
-                  <CultureName />
-                  <SortOrder>5</SortOrder>
-                  <WebExec>true</WebExec>
-                  <PdfConfigurations />
-                  <ExcelConfigurations />
-                </ReportView>
-              </Views>
-              <TemplateName>Model Container</TemplateName>
-              <PartialTemplates />
-              <Parameters />
-              <CultureName />
-              <SortOrder>1</SortOrder>
-              <WebExec>true</WebExec>
-              <PdfConfigurations />
-              <ExcelConfigurations />
-            </ReportView>
-          </Views>
-          <ModelGUID>8fa6077e-85b0-4ed7-b838-8e70b1e2a4bb</ModelGUID>
-          <TemplateName>Model</TemplateName>
-          <CustomTemplate />
-          <PartialTemplates />
-          <Parameters>
-            <Parameter>
-              <Name>print_break_after_page</Name>
-              <Value>True</Value>
-            </Parameter>
-          </Parameters>
-          <CultureName />
-          <SortOrder>1</SortOrder>
-          <WebExec>true</WebExec>
-          <PdfConfigurations />
-          <ExcelConfigurations />
-        </ReportView>
-      </Views>
-      <ModelGUID />
-      <TemplateName>Report</TemplateName>
-      <CustomTemplate />
-      <PartialTemplates />
-      <Parameters>
-        <Parameter>
-          <Name>force_execution</Name>
-          <Value>True</Value>
-        </Parameter>
-      </Parameters>
-      <CultureName />
-      <SortOrder>0</SortOrder>
-      <WebExec>true</WebExec>
-      <PdfConfigurations />
-      <ExcelConfigurations />
-    </ReportView>
-  </Views>
-  <DisplayName />
-  <InitScript />
-  <ViewGUID>2194db7c-bdea-459c-b055-d2e630d7f829</ViewGUID>
-  <Schedules />
-</Report>
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>4807c0f1-3e59-48c9-8ed9-b4c1b47988fe</GUID><ViewGUID>9341322a-7415-45b1-9b77-28624924cd16</ViewGUID><Sources><ReportSource><GUID>b82ea022-92bb-4bbf-bd4a-a6fb7c5f0883</GUID><Name>Audit (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID></ReportSource><ReportSource><GUID>28f90a36-11f9-4ce7-b534-f5ccf8c72557</GUID><Name>Local MS SQLServer (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>84abac98-6722-4a0b-98a0-00c15042e0a5</MetaSourceGUID></ReportSource><ReportSource><GUID>22535132-5ed5-46bc-8433-28f9e1b0c77f</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData /><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource><ReportSource><GUID>a6780cb3-e02d-4f2d-a5d2-384d48ccef64</GUID><Name>RSS No SQL Source (Repository)</Name><ConnectionGUID>1</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData /><MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>82e6a24c-a88c-4ae4-aff9-2ba96622e9b3</GUID><Name>Model</Name><SourceGUID>22535132-5ed5-46bc-8433-28f9e1b0c77f</SourceGUID><Elements><ReportElement><GUID>7bf5e707-950e-4d3b-8849-a2fca9b55e69</GUID><Name>DateSerial(DatePart('yyyy',[Orders.OrderDate]), 1, 1)</Name><DisplayName /><Format>yyyy</Format><PivotPosition>Page</PivotPosition><AggregateFunction>Max</AggregateFunction><TotalAggregateFunction>Max</TotalAggregateFunction><MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID></ReportElement><ReportElement><GUID>0a23805c-a784-4b7f-a8a5-bbbe2b13f488</GUID><Name>Customers.Country</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Splitter</SerieDefinition><MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID></ReportElement><ReportElement><GUID>f3777a22-6fd0-49ac-ac48-ffe5a2010ed2</GUID><Name>Products.CategoryID</Name><DisplayName /><Format>N0</Format><PivotPosition>Column</PivotPosition><AggregateFunction>Count</AggregateFunction><SerieDefinition>Axis</SerieDefinition><MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID></ReportElement><ReportElement><GUID>c53813fb-88d6-4656-98dd-1e9acc6f56d3</GUID><Name>(1-Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name><DisplayName /><Format>N0</Format><PivotPosition>Data</PivotPosition><ShowTotal>RowColumn</ShowTotal><ChartJSSerie>Bar</ChartJSSerie><MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Views><ReportView><GUID>9341322a-7415-45b1-9b77-28624924cd16</GUID><Name>View</Name><Views><ReportView><GUID>4a88bd81-b2ed-417f-b809-c87e3df4f6e7</GUID><Name>Model</Name><Views><ReportView><GUID>70c2a807-84ac-4e22-b662-469c1e0e5135</GUID><Name>Model Container</Name><Views><ReportView><GUID>9677c02a-6d8d-41dd-8f0d-66da5cf75ae0</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>83a11a46-f770-40e0-ba7f-0ab4767f9c46</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>6d351888-14ff-49b0-80ce-fc547b4a71e4</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>e8ac3077-e77d-42b0-9890-883c7554a955</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>27ba0e89-8612-4a57-951d-e6ea103c9198</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>82e6a24c-a88c-4ae4-aff9-2ba96622e9b3</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>pdf_toc</Name><Value>False</Value></Parameter></Parameters><SortOrder>1</SortOrder><PdfConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;HtmlToPdfConverter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&#xD;
+  &lt;HtmlViewerWidth&gt;1024&lt;/HtmlViewerWidth&gt;&#xD;
+  &lt;HtmlViewerHeight&gt;0&lt;/HtmlViewerHeight&gt;&#xD;
+  &lt;HtmlViewerZoom&gt;100&lt;/HtmlViewerZoom&gt;&#xD;
+  &lt;ClipHtmlView&gt;false&lt;/ClipHtmlView&gt;&#xD;
+  &lt;JavaScriptEnabled&gt;true&lt;/JavaScriptEnabled&gt;&#xD;
+  &lt;Enable3DTransformations&gt;false&lt;/Enable3DTransformations&gt;&#xD;
+  &lt;EnableWebGL&gt;false&lt;/EnableWebGL&gt;&#xD;
+  &lt;EnableAccelerated2DCanvas&gt;false&lt;/EnableAccelerated2DCanvas&gt;&#xD;
+  &lt;EnablePersistentStorage&gt;false&lt;/EnablePersistentStorage&gt;&#xD;
+  &lt;LocalFilesAccessEnabled&gt;true&lt;/LocalFilesAccessEnabled&gt;&#xD;
+  &lt;SvgFontsEnabled&gt;false&lt;/SvgFontsEnabled&gt;&#xD;
+  &lt;WebFontsEnabled&gt;true&lt;/WebFontsEnabled&gt;&#xD;
+  &lt;EnableHttp2&gt;false&lt;/EnableHttp2&gt;&#xD;
+  &lt;PostScriptFontsEnabled&gt;true&lt;/PostScriptFontsEnabled&gt;&#xD;
+  &lt;ExtensionsEnabled&gt;false&lt;/ExtensionsEnabled&gt;&#xD;
+  &lt;DownloadAllResources&gt;false&lt;/DownloadAllResources&gt;&#xD;
+  &lt;PrerenderEnabled&gt;false&lt;/PrerenderEnabled&gt;&#xD;
+  &lt;InterruptSlowJavaScript&gt;false&lt;/InterruptSlowJavaScript&gt;&#xD;
+  &lt;MaxHtmlViewerHeight&gt;0&lt;/MaxHtmlViewerHeight&gt;&#xD;
+  &lt;MinHtmlViewerHeight&gt;0&lt;/MinHtmlViewerHeight&gt;&#xD;
+  &lt;InitialHtmlViewerHeight&gt;0&lt;/InitialHtmlViewerHeight&gt;&#xD;
+  &lt;DefaultHtmlEncoding /&gt;&#xD;
+  &lt;ImagePartSize&gt;32000&lt;/ImagePartSize&gt;&#xD;
+  &lt;TriggeringMode&gt;ConversionDelay&lt;/TriggeringMode&gt;&#xD;
+  &lt;ConversionDelay&gt;6&lt;/ConversionDelay&gt;&#xD;
+  &lt;ManualTriggeringConversionDelay&gt;2&lt;/ManualTriggeringConversionDelay&gt;&#xD;
+  &lt;NavigationTimeout&gt;60&lt;/NavigationTimeout&gt;&#xD;
+  &lt;PersistentHttpRequestHeaders&gt;true&lt;/PersistentHttpRequestHeaders&gt;&#xD;
+  &lt;XPSupplementalLanguages&gt;false&lt;/XPSupplementalLanguages&gt;&#xD;
+&lt;/HtmlToPdfConverter&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfDocumentOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&#xD;
+  &lt;AutoCloseExternalDocs&gt;true&lt;/AutoCloseExternalDocs&gt;&#xD;
+  &lt;LeftMargin&gt;10&lt;/LeftMargin&gt;&#xD;
+  &lt;RightMargin&gt;10&lt;/RightMargin&gt;&#xD;
+  &lt;TopMargin&gt;10&lt;/TopMargin&gt;&#xD;
+  &lt;BottomMargin&gt;10&lt;/BottomMargin&gt;&#xD;
+  &lt;X&gt;0&lt;/X&gt;&#xD;
+  &lt;Y&gt;0&lt;/Y&gt;&#xD;
+  &lt;Width&gt;-1&lt;/Width&gt;&#xD;
+  &lt;Height&gt;-1&lt;/Height&gt;&#xD;
+  &lt;TopSpacing&gt;0&lt;/TopSpacing&gt;&#xD;
+  &lt;BottomSpacing&gt;0&lt;/BottomSpacing&gt;&#xD;
+  &lt;BackColor /&gt;&#xD;
+  &lt;PdfCompressionLevel&gt;Normal&lt;/PdfCompressionLevel&gt;&#xD;
+  &lt;JpegCompressionEnabled&gt;true&lt;/JpegCompressionEnabled&gt;&#xD;
+  &lt;JpegCompressionLevel&gt;10&lt;/JpegCompressionLevel&gt;&#xD;
+  &lt;CompressCrossReference&gt;false&lt;/CompressCrossReference&gt;&#xD;
+  &lt;PdfPageSize&gt;&#xD;
+    &lt;Width&gt;595&lt;/Width&gt;&#xD;
+    &lt;Height&gt;842&lt;/Height&gt;&#xD;
+  &lt;/PdfPageSize&gt;&#xD;
+  &lt;PdfStandardSubset&gt;Full&lt;/PdfStandardSubset&gt;&#xD;
+  &lt;ColorSpace&gt;RGB&lt;/ColorSpace&gt;&#xD;
+  &lt;ColorProfile&gt;Custom&lt;/ColorProfile&gt;&#xD;
+  &lt;FitWidth&gt;true&lt;/FitWidth&gt;&#xD;
+  &lt;FitHeight&gt;false&lt;/FitHeight&gt;&#xD;
+  &lt;StretchToFit&gt;false&lt;/StretchToFit&gt;&#xD;
+  &lt;SinglePage&gt;false&lt;/SinglePage&gt;&#xD;
+  &lt;AutoSizePdfPage&gt;true&lt;/AutoSizePdfPage&gt;&#xD;
+  &lt;AvoidTextBreak&gt;true&lt;/AvoidTextBreak&gt;&#xD;
+  &lt;AvoidImageBreak&gt;false&lt;/AvoidImageBreak&gt;&#xD;
+  &lt;PdfPageOrientation&gt;Portrait&lt;/PdfPageOrientation&gt;&#xD;
+  &lt;ShowHeader&gt;false&lt;/ShowHeader&gt;&#xD;
+  &lt;ShowFooter&gt;false&lt;/ShowFooter&gt;&#xD;
+  &lt;EmbedFonts&gt;true&lt;/EmbedFonts&gt;&#xD;
+  &lt;LiveUrlsEnabled&gt;true&lt;/LiveUrlsEnabled&gt;&#xD;
+  &lt;InteractiveHiddenElements&gt;false&lt;/InteractiveHiddenElements&gt;&#xD;
+  &lt;InternalLinksEnabled&gt;true&lt;/InternalLinksEnabled&gt;&#xD;
+  &lt;TiledRenderingEnabled&gt;true&lt;/TiledRenderingEnabled&gt;&#xD;
+  &lt;EnhancedGraphicsQuality&gt;true&lt;/EnhancedGraphicsQuality&gt;&#xD;
+  &lt;TransparentImagesEnabled&gt;true&lt;/TransparentImagesEnabled&gt;&#xD;
+  &lt;ImagesScalingEnabled&gt;false&lt;/ImagesScalingEnabled&gt;&#xD;
+  &lt;NoSizeElementsEnabled&gt;false&lt;/NoSizeElementsEnabled&gt;&#xD;
+  &lt;TransparencyEnabled&gt;true&lt;/TransparencyEnabled&gt;&#xD;
+  &lt;TableHeaderRepeatEnabled&gt;true&lt;/TableHeaderRepeatEnabled&gt;&#xD;
+  &lt;TableFooterRepeatEnabled&gt;true&lt;/TableFooterRepeatEnabled&gt;&#xD;
+  &lt;StackRepeatedTableHeaders&gt;true&lt;/StackRepeatedTableHeaders&gt;&#xD;
+  &lt;StackRepeatedTableFooters&gt;true&lt;/StackRepeatedTableFooters&gt;&#xD;
+&lt;/PdfDocumentOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfSecurityOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&#xD;
+  &lt;CanAssembleDocument&gt;true&lt;/CanAssembleDocument&gt;&#xD;
+  &lt;CanCopyContent&gt;true&lt;/CanCopyContent&gt;&#xD;
+  &lt;CanCopyAccessibilityContent&gt;true&lt;/CanCopyAccessibilityContent&gt;&#xD;
+  &lt;CanEditAnnotations&gt;true&lt;/CanEditAnnotations&gt;&#xD;
+  &lt;CanEditContent&gt;true&lt;/CanEditContent&gt;&#xD;
+  &lt;CanFillFormFields&gt;true&lt;/CanFillFormFields&gt;&#xD;
+  &lt;CanPrint&gt;true&lt;/CanPrint&gt;&#xD;
+  &lt;CanPrintHighResolution&gt;true&lt;/CanPrintHighResolution&gt;&#xD;
+  &lt;KeySize&gt;EncryptKey128Bit&lt;/KeySize&gt;&#xD;
+  &lt;EncryptionAlgorithm&gt;RC4&lt;/EncryptionAlgorithm&gt;&#xD;
+  &lt;OwnerPassword /&gt;&#xD;
+  &lt;UserPassword /&gt;&#xD;
+&lt;/PdfSecurityOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfHeaderOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&#xD;
+  &lt;HeaderBackColor /&gt;&#xD;
+  &lt;HeaderHeight&gt;40&lt;/HeaderHeight&gt;&#xD;
+  &lt;PageNumberingStartIndex&gt;0&lt;/PageNumberingStartIndex&gt;&#xD;
+  &lt;PageNumberingPageCountIncrement&gt;0&lt;/PageNumberingPageCountIncrement&gt;&#xD;
+&lt;/PdfHeaderOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfFooterOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&#xD;
+  &lt;FooterBackColor /&gt;&#xD;
+  &lt;FooterHeight&gt;20&lt;/FooterHeight&gt;&#xD;
+  &lt;PageNumberingStartIndex&gt;0&lt;/PageNumberingStartIndex&gt;&#xD;
+  &lt;PageNumberingPageCountIncrement&gt;0&lt;/PageNumberingPageCountIncrement&gt;&#xD;
+&lt;/PdfFooterOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfDocumentInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&#xD;
+  &lt;CreatedDate&gt;0001-01-01T00:00:00&lt;/CreatedDate&gt;&#xD;
+&lt;/PdfDocumentInfo&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfBookmarkOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&#xD;
+  &lt;AutoBookmarksEnabled&gt;false&lt;/AutoBookmarksEnabled&gt;&#xD;
+  &lt;HierarchicalBookmarks&gt;true&lt;/HierarchicalBookmarks&gt;&#xD;
+  &lt;AllowDefaultTitle&gt;true&lt;/AllowDefaultTitle&gt;&#xD;
+  &lt;DefaultTitle&gt;Bookmark&lt;/DefaultTitle&gt;&#xD;
+  &lt;MaxTitleLength&gt;-1&lt;/MaxTitleLength&gt;&#xD;
+&lt;/PdfBookmarkOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;ViewerPreferences xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&#xD;
+  &lt;HideToolbar&gt;false&lt;/HideToolbar&gt;&#xD;
+  &lt;HideMenuBar&gt;false&lt;/HideMenuBar&gt;&#xD;
+  &lt;HideWindowUI&gt;false&lt;/HideWindowUI&gt;&#xD;
+  &lt;FitWindow&gt;false&lt;/FitWindow&gt;&#xD;
+  &lt;CenterWindow&gt;false&lt;/CenterWindow&gt;&#xD;
+  &lt;DisplayDocTitle&gt;false&lt;/DisplayDocTitle&gt;&#xD;
+  &lt;NonFullScreenPageMode&gt;UseNone&lt;/NonFullScreenPageMode&gt;&#xD;
+  &lt;Direction&gt;L2R&lt;/Direction&gt;&#xD;
+  &lt;PageMode&gt;UseNone&lt;/PageMode&gt;&#xD;
+  &lt;PageLayout&gt;OneColumn&lt;/PageLayout&gt;&#xD;
+&lt;/ViewerPreferences&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;SealPdfCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;&#xD;
+  &lt;ConverterScript /&gt;&#xD;
+  &lt;DocumentScript /&gt;&#xD;
+&lt;/SealPdfCfg&gt;</string></PdfConfigurations></ReportView></Views></Report>

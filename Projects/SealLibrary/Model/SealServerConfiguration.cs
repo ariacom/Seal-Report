@@ -53,6 +53,7 @@ namespace Seal.Model
                 GetProperty("DefaultCulture").SetIsBrowsable(!ForPublication);
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
                 GetProperty("WebProductName").SetIsBrowsable(!ForPublication);
+                GetProperty("WebCultures").SetIsBrowsable(!ForPublication);
                 GetProperty("LogDays").SetIsBrowsable(!ForPublication);
                 GetProperty("CsvSeparator").SetIsBrowsable(!ForPublication);
                 GetProperty("NumericFormat").SetIsBrowsable(!ForPublication);
@@ -137,16 +138,24 @@ namespace Seal.Model
         public string WebProductName { get; set; } = "Seal Report";
 
         /// <summary>
+        /// List of cultures available in the user profile of the Web Report Server. If nothing is selected, the translation cultures installed in the repository are proposed by default.
+        /// </summary>
+        [Category("Server Settings"), DisplayName("Web Cultures"), Description("List of cultures available in the user profile of the Web Report Server. If nothing is selected, the translation cultures installed in the repository are proposed by default."), Id(8, 1)]
+        [Editor(typeof(CultureCollectionEditor), typeof(UITypeEditor))]
+        public List<string> WebCultures { get; set; } = new List<string>();
+        public bool ShouldSerializeWebCultures() { return WebCultures.Count > 0; }
+
+        /// <summary>
         /// If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path).
         /// </summary>
-        [Category("Server Settings"), DisplayName("Server is local (No internet)"), Description("If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path)."), Id(8, 1)]
+        [Category("Server Settings"), DisplayName("Server is local (No internet)"), Description("If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path)."), Id(9, 1)]
         [DefaultValue(true)]
         public bool IsLocal { get; set; } = true;
 
         /// <summary>
         /// List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS.
         /// </summary>
-        [Category("Server Settings"), DisplayName("Patterns to replace in CSS or JScript"), Description("List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS."), Id(9, 1)]
+        [Category("Server Settings"), DisplayName("Patterns to replace in CSS or JScript"), Description("List of strings to replace when the report result is generated in a single HTML file (case of View Report Result or Output generation). This allow to specify the new font location in a CSS."), Id(10, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<FileReplacePattern> FileReplacePatterns { get; set; } = new List<FileReplacePattern>();
         public bool ShouldSerializeFileReplacePatterns() { return FileReplacePatterns.Count > 0; }
@@ -154,14 +163,14 @@ namespace Seal.Model
         /// <summary>
         /// Additional CSS files to be included in the HTML report result. One per line or separated by semi-column.
         /// </summary>
-        [Category("Server Settings"), DisplayName("CSS Files"), Description("Additional CSS files to be included in the HTML report result. One per line or separated by semi-column."), Id(10, 1)]
+        [Category("Server Settings"), DisplayName("CSS Files"), Description("Additional CSS files to be included in the HTML report result. One per line or separated by semi-column."), Id(11, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string CssFiles { get; set; } = null;
 
         /// <summary>
         /// Additional JavaScript files to be included in the HTML report result. One per line or separated by semi-column.
         /// </summary>
-        [Category("Server Settings"), DisplayName("JavaScript Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(11, 1)]
+        [Category("Server Settings"), DisplayName("JavaScript Files"), Description("Additional Script files to be included in the HTML report result. One per line or separated by semi-column."), Id(12, 1)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string ScriptFiles { get; set; } = null;
 

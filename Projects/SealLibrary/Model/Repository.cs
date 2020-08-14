@@ -743,10 +743,11 @@ namespace Seal.Model
             return inputFolder.Replace(Repository.SealRepositoryKeyword, RepositoryPath).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
         }
 
-        #region Translations
+        #region Translations and Cultures
 
         //Translations, one dictionary per context
         Dictionary<string, RepositoryTranslation> _translations = null;
+
         /// <summary>
         /// Current translations
         /// </summary>
@@ -825,6 +826,17 @@ namespace Seal.Model
                 }
                 return _nvd3Translations;
             }
+        }
+
+
+        public List<string> GetInstalledTranslationCultures()
+        {
+            var result = new List<string>();
+            if (Translations.Count > 0)
+            {
+                result = Translations.Values.First().Translations.Keys.ToList();
+            }
+            return result;
         }
 
         /// <summary>

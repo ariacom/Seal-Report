@@ -322,6 +322,12 @@ var SWIMain = /** @class */ (function () {
         });
         _main.enableControls();
         _main.resize();
+        $(document).ajaxStart(function () {
+            $("#refresh-nav-item").addClass("fa-spin");
+        });
+        $(document).ajaxStop(function () {
+            $("#refresh-nav-item").removeClass("fa-spin");
+        });
     };
     SWIMain.prototype.search = function () {
         $waitDialog.modal();

@@ -374,6 +374,13 @@ class SWIMain {
         });
         _main.enableControls();
         _main.resize();
+
+        $(document).ajaxStart(function () {
+            $("#refresh-nav-item").addClass("fa-spin");
+        });
+        $(document).ajaxStop(function () {
+            $("#refresh-nav-item").removeClass("fa-spin");
+        });
     }
 
     private search() {

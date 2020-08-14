@@ -578,27 +578,6 @@ namespace SealWebServer.Controllers
             }
         }
 
-        static object _culturesLock = new object();
-        static List<SWIItem> _cultures = null;
-        static List<SWIItem> Cultures
-        {
-            get
-            {
-                lock (_culturesLock)
-                {
-                    if (_cultures == null)
-                    {
-                        _cultures = new List<SWIItem>();
-                        foreach (var culture in CultureInfo.GetCultures(CultureTypes.AllCultures).OrderBy(i => i.EnglishName))
-                        {
-                            _cultures.Add(new SWIItem() { id = culture.EnglishName, val = culture.NativeName });
-                        }
-                    }
-                }
-                return _cultures;
-            }
-        }
-
         /// <summary>
         /// Return the list of Cultures available
         /// </summary>
@@ -610,7 +589,17 @@ namespace SealWebServer.Controllers
             try
             {
                 checkSWIAuthentication();
-                return Json(Cultures.ToArray());
+
+                var cultures = Repository.Configuration.WebCultures;
+                if (cultures.Count == 0) cultures = Repository.GetInstalledTranslationCultures();
+                var result = new List<SWIItem>();
+                foreach (var culture in cultures)
+                {
+                    var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == culture);
+                    if (cultureInfo == null) cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.Name == culture);
+                    if (cultureInfo != null) result.Add(new SWIItem() { id = cultureInfo.EnglishName, val = string.Format("{0} - {1}", cultureInfo.NativeName, cultureInfo.EnglishName) });
+                }
+                return Json(result.OrderBy(i => i.val).ToArray());
             }
             catch (Exception ex)
             {
