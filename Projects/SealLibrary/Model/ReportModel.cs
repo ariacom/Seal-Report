@@ -52,6 +52,7 @@ namespace Seal.Model
                 GetProperty("PreLoadScript").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("ExecutionSet").SetIsBrowsable(true);
                 GetProperty("ShareResultTable").SetIsBrowsable(true);
+                GetProperty("PrintQuery").SetIsBrowsable(true);
 
                 GetProperty("LoadScript").SetIsBrowsable(!IsSubModel);
                 GetProperty("FinalScript").SetIsBrowsable(!IsSubModel);
@@ -226,6 +227,13 @@ namespace Seal.Model
         [Category("Model Definition"), DisplayName("Share result table"), Description("If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization)."), Id(8, 1)]
         [DefaultValue(true)]
         public bool ShareResultTable { get; set; } = true;
+
+        /// <summary>
+        /// If true, the query is printed in the report messages (for debug purpose).
+        /// </summary>
+        [Category("Model Definition"), DisplayName("Print Query"), Description("If true, the LINQ or SQL Query is printed in the report messages (for debug purpose)."), Id(9, 1)]
+        [DefaultValue(false)]
+        public bool PrintQuery { get; set; } = false;
 
         /// <summary>
         /// If true and the table has column values, the first line used for titles is generated in the table header
@@ -2488,6 +2496,11 @@ model.ResultTable = query2.CopyToDataTable2();
                     else Report.LogMessage("Model '{0}': Executing query for sub-model '{1}'...", MasterModel.Name, Name);
                     _command.CommandText = Sql;
 
+                    if (PrintQuery)
+                    {
+                        Report.LogMessage("Model '{0}' SQL Query:\r\n{1}\r\n", Name, Sql);
+                    }
+
                     DbDataAdapter adapter = null;
                     if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
                     else if (connection is SqlConnection) adapter = new SqlDataAdapter((SqlCommand)_command);
@@ -2566,8 +2579,14 @@ model.ResultTable = query2.CopyToDataTable2();
                             ExecResultTables.Add(subTable.NoSQLTable.TableName, subTable.NoSQLTable);
                         }
 
+                        var loadScript = LoadScript ?? LINQLoadScript;
+                        if (PrintQuery)
+                        {
+                            Report.LogMessage("Model '{0}' LINQ Query:\r\n{1}\r\n", Name, loadScript);
+                        }
+
                         //Finally LINQ query
-                        RazorHelper.CompileExecute(LoadScript ?? LINQLoadScript, this);
+                        RazorHelper.CompileExecute(loadScript, this);
 
                         handleEnums();
                     }

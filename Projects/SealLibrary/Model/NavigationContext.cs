@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 
 namespace Seal.Model
@@ -30,7 +31,7 @@ namespace Seal.Model
             var previousNav = Navigations.Values.FirstOrDefault(i => i.Execution.NavigationParameter == navigation && i.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID);
             if (previousNav != null) newReport = previousNav.Execution.Report;
 
-            string destLabel = "", srcRestriction = "", srcGUID = "";
+            string destLabel = "", srcRestriction = "";
             if (Navigations.Count(i => i.Value.Execution.RootReport.ExecutionGUID == rootReport.ExecutionGUID) == 1)
             {
                 //For the first navigation, we update the JS file in the result to show up the button
@@ -76,10 +77,12 @@ namespace Seal.Model
             else if (!string.IsNullOrEmpty(executionGuid))
             {
                 //Drill
-                var els = new Dictionary<ReportElement, string>();
                 if (newReport == null)
                 {
-                    if (Navigations.ContainsKey(executionGuid)) newReport = Navigations[executionGuid].Execution.Report.Clone();
+                    if (Navigations.ContainsKey(executionGuid))
+                    {
+                        newReport = Navigations[executionGuid].Execution.Report.Clone();
+                    }
                     else
                     {
                         //Drill from dashboard
@@ -93,105 +96,12 @@ namespace Seal.Model
 
                     foreach (var model in newReport.Models)
                     {
-                        foreach (var element in model.Elements.Where(i => i.MetaColumnGUID == src))
+                        drillModel(model, src, dst, val, ref destLabel, ref srcRestriction, newReport, rootReport);
+
+                        if (model.IsLINQ)
                         {
-                            //Has already restriction ? if down check src, if up check dest
-                            bool hasAlreadyRestriction = model.Restrictions.Exists(i => i.MetaColumnGUID == (val != null ? src : dst));
-                            if (element != null || hasAlreadyRestriction)
-                            {
-                                if (val != null)
-                                {
-                                    //Drill Down: Add restriction 
-                                    ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
-                                    restriction.Source = model.Source;
-                                    restriction.Report = newReport;
-                                    restriction.Model = model;
-                                    restriction.MetaColumnGUID = src;
-                                    restriction.SetDefaults();
-                                    restriction.Operator = Operator.Equal;
-                                    if (val == "") restriction.Operator = Operator.IsEmpty;
-                                    else if (val == null) restriction.Operator = Operator.IsNull;
-                                    restriction.SetNavigationValue(val);
-                                    model.Restrictions.Add(restriction);
-                                    if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) {1} ", model.Restriction, model.IsLINQ ? "&&" : "AND");
-                                    model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
-
-                                    srcRestriction = restriction.GeNavigationDisplayValue();
-                                    srcGUID = restriction.MetaColumnGUID;
-
-                                    if (rootReport.ExecutionView.GetBoolValue(Parameter.DrillAllParameter))
-                                    {
-                                        //Check if children are involved
-
-                                        //Elements having a child reaching the src -> they are now the src 
-                                        foreach (var child in model.Elements.Where(i => i.MetaColumn.DrillChildren.Contains(src)))
-                                        {
-                                            els.Add(child, src);
-                                        }
-
-                                        //Children elements of the new dst, change dst element to its child 
-                                        var destColumn = model.Source.MetaData.AllColumns.FirstOrDefault(i => i.GUID == dst);
-                                        if (destColumn != null && destColumn.DrillChildren.Count > 0)
-                                        {
-                                            var childColumn = model.Source.MetaData.AllColumns.Where(i => destColumn.DrillChildren.Contains(i.GUID)).OrderBy(i => i.DisplayOrder).FirstOrDefault();
-                                            if (childColumn != null)
-                                            {
-                                                //Set new GUID for chidren
-                                                foreach (var child in model.Elements.Where(i => i.MetaColumnGUID == dst))
-                                                {
-                                                    els.Add(child, childColumn.GUID);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    //Drill Up: Remove restrictions 
-                                    var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
-                                    foreach (var restr in restrictions)
-                                    {
-                                        model.Restrictions.Remove(restr);
-                                        model.Restriction = model.Restriction.Replace(ReportRestriction.kStartRestrictionChar + restr.GUID + ReportRestriction.kStopRestrictionChar, "1=1");
-                                    }
-
-                                    //Check if parents are involved
-                                    if (rootReport.ExecutionView.GetBoolValue(Parameter.DrillAllParameter))
-                                    {
-                                        //Check element having a child to dest
-                                        //First metacolumn sorted by DisplayOrder
-                                        var parentColumn = model.Source.MetaData.AllColumns.Where(i => i.DrillChildren.Contains(dst)).OrderBy(i => i.DisplayOrder).FirstOrDefault();
-                                        if (parentColumn != null)
-                                        {
-                                            //Set new GUID for parents
-                                            foreach (var parent in model.Elements.Where(i => i.MetaColumnGUID == dst))
-                                            {
-                                                els.Add(parent, parentColumn.GUID);
-                                            }
-                                        }
-
-                                        //Check element having a child to src
-                                        foreach (var child in element.MetaColumn.DrillChildren)
-                                        {
-                                            foreach (var parent in model.Elements.Where(i => i.MetaColumnGUID == child))
-                                            {
-                                                els.Add(parent, src);
-                                            }
-                                        }
-                                    }
-                                }
-                                //Set new GUID
-                                if (element != null)
-                                {
-                                    changeElementGUID(element, dst, newReport.ExecutionView);
-                                    destLabel = element.DisplayNameElTranslated;
-                                }
-
-                                foreach (var el in els)
-                                {
-                                    changeElementGUID(el.Key, el.Value, newReport.ExecutionView);
-                                }
-                            }
+                            //Handle restriction also for the sub-models
+                            foreach (var subModel in model.LINQSubModels) drillModel(subModel, src, dst, val, ref destLabel, ref srcRestriction, newReport, rootReport);
                         }
                     }
                 }
@@ -206,7 +116,8 @@ namespace Seal.Model
             if (previousNav == null)
             {
                 if (!string.IsNullOrEmpty(srcRestriction)) newReport.DisplayName = string.Format("{0} > {1}", newReport.ExecutionName, srcRestriction);
-                else {
+                else
+                {
                     newReport.DisplayName = newReport.ExecutionName;
                     if (!string.IsNullOrEmpty(destLabel)) newReport.DisplayName += string.Format(" < {0}", destLabel);
                 }
@@ -277,6 +188,111 @@ namespace Seal.Model
             view.ReplaceInParameterValues("nvd3_chart_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
             view.ReplaceInParameterValues("chartjs_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
             view.ReplaceInParameterValues("plotly_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
+        }
+
+        void drillModel(ReportModel model, string src, string dst, string val, ref string destLabel, ref string srcRestriction, Report newReport, Report rootReport)
+        {
+            //First remove hidden elements
+            model.Elements.RemoveAll(i => i.PivotPosition == PivotPosition.Hidden);
+
+            foreach (var element in model.Elements.Where(i => i.MetaColumnGUID == src).ToList())
+            {
+                var els = new Dictionary<ReportElement, string>();
+                if (val != null)
+                {
+                    //Drill Down, check src
+                    ReportRestriction restriction = model.Restrictions.FirstOrDefault(i => i.MetaColumnGUID == src);
+                    if (restriction == null)
+                    {
+                        restriction = ReportRestriction.CreateReportRestriction();
+                        model.Restrictions.Add(restriction);
+                    }
+                    restriction.Source = model.Source;
+                    restriction.Report = newReport;
+                    restriction.Model = model;
+                    restriction.MetaColumnGUID = src;
+                    restriction.Operator = Operator.Equal;
+                    restriction.SetDefaults();
+                    if (val == "") restriction.Operator = Operator.IsEmpty;
+                    restriction.SetNavigationValue(val);
+                    if (!string.IsNullOrEmpty(model.Restriction)) model.Restriction = string.Format("({0}) {1} ", model.Restriction, model.IsLINQ ? "&&" : "AND");
+                    model.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+
+                    srcRestriction = restriction.GeNavigationDisplayValue();
+
+                    if (rootReport.ExecutionView.GetBoolValue(Parameter.DrillAllParameter))
+                    {
+                        //Check if children are involved
+
+                        //Elements having a child reaching the src -> they are now the src 
+                        foreach (var child in model.Elements.Where(i => i.MetaColumn.DrillChildren.Contains(src)))
+                        {
+                            els.Add(child, src);
+                        }
+
+                        //Children elements of the new dst, change dst element to its child 
+                        var destColumn = model.Source.MetaData.AllColumns.FirstOrDefault(i => i.GUID == dst);
+                        if (destColumn != null && destColumn.DrillChildren.Count > 0)
+                        {
+                            var childColumn = model.Source.MetaData.AllColumns.Where(i => destColumn.DrillChildren.Contains(i.GUID)).OrderBy(i => i.DisplayOrder).FirstOrDefault();
+                            if (childColumn != null)
+                            {
+                                //Set new GUID for chidren
+                                foreach (var child in model.Elements.Where(i => i.MetaColumnGUID == dst))
+                                {
+                                    els.Add(child, childColumn.GUID);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //Drill Up: Remove restrictions
+                    var restrictions = model.Restrictions.Where(i => i.MetaColumnGUID == dst).ToList();
+                    foreach (var restr in restrictions)
+                    {
+                        model.Restrictions.Remove(restr);
+                        model.Restriction = model.Restriction.Replace(ReportRestriction.kStartRestrictionChar + restr.GUID + ReportRestriction.kStopRestrictionChar, model.IsLINQ ? "true" : "1=1");
+                    }
+
+                    //Check if parents are involved
+                    if (rootReport.ExecutionView.GetBoolValue(Parameter.DrillAllParameter))
+                    {
+                        //Check element having a child to dest
+                        //First metacolumn sorted by DisplayOrder
+                        var parentColumn = model.Source.MetaData.AllColumns.Where(i => i.DrillChildren.Contains(dst)).OrderBy(i => i.DisplayOrder).FirstOrDefault();
+                        if (parentColumn != null)
+                        {
+                            //Set new GUID for parents
+                            foreach (var parent in model.Elements.Where(i => i.MetaColumnGUID == dst))
+                            {
+                                els.Add(parent, parentColumn.GUID);
+                            }
+                        }
+
+                        //Check element having a child to src
+                        foreach (var child in element.MetaColumn.DrillChildren)
+                        {
+                            foreach (var parent in model.Elements.Where(i => i.MetaColumnGUID == child))
+                            {
+                                els.Add(parent, src);
+                            }
+                        }
+                    }
+                }
+                //Set new GUID
+                if (element != null)
+                {
+                    changeElementGUID(element, dst, newReport.ExecutionView);
+                    destLabel = element.DisplayNameElTranslated;
+                }
+
+                foreach (var el in els)
+                {
+                    changeElementGUID(el.Key, el.Value, newReport.ExecutionView);
+                }
+            }
         }
     }
 }
