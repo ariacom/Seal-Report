@@ -377,7 +377,7 @@ namespace Seal.Model
                             }
 
                             //Get drill parent link
-                            foreach (MetaTable table in Element.Source.MetaData.Tables)
+                            foreach (MetaTable table in Element.Source.MetaData.AllTables)
                             {
                                 foreach (MetaColumn parentColumn in table.Columns.Where(i => i.DrillChildren.Contains(Element.MetaColumnGUID)))
                                 {
