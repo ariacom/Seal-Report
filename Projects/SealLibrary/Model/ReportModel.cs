@@ -2386,6 +2386,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 subTable.Source = table.Source;
                 subTable.NoSQLTable = null;
                 subTable.TemplateName = table.TemplateName;
+                subTable.CacheDuration = table.CacheDuration;
                 //Init default properties
                 if (subTable.Parameters.Count == 0)
                 {
@@ -2444,16 +2445,26 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (table != null)
                     {
                         Report.LogMessage("Model '{0}': Building No SQL Table '{1}'", Name, subTable.Name);
-                        subTable.DefinitionScript = table.DefinitionScript;
 
-                        if (!string.IsNullOrEmpty(subTable.LoadScript))
+                        if (subTable.NoSQLCacheTable != null && subTable.CacheDuration > 0 && DateTime.Now < subTable.LoadDate.AddSeconds(subTable.CacheDuration))
                         {
-                            dataTable = subTable.BuildNoSQLTable(false);
-                            RazorHelper.CompileExecute(subTable.LoadScript, subTable);
+                            Report.LogMessage("Model '{0}': Using cache table loaded at {1} for '{2}'", Name, subTable.LoadDate, subTable.Name);
+                            dataTable = subTable.NoSQLCacheTable;
                         }
                         else
                         {
-                            dataTable = subTable.BuildNoSQLTable(true);
+                            if (string.IsNullOrEmpty(subTable.DefinitionScript)) subTable.DefinitionScript = table.DefinitionScript;
+                            if (!string.IsNullOrEmpty(subTable.LoadScript))
+                            {
+                                dataTable = subTable.BuildNoSQLTable(false);
+                                RazorHelper.CompileExecute(subTable.LoadScript, subTable);
+                            }
+                            else
+                            {
+                                dataTable = subTable.BuildNoSQLTable(true);
+                            }
+                            subTable.NoSQLCacheTable = dataTable;
+                            subTable.LoadDate = DateTime.Now;
                         }
 
                         //Thread.Sleep(5000); //For DEV
