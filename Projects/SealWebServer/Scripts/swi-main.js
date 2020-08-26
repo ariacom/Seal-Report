@@ -472,6 +472,8 @@ var SWIMain = /** @class */ (function () {
         //Body
         for (var i = 0; i < data.files.length; i++) {
             var file = data.files[i];
+            if (file.right == 0)
+                continue;
             $tr = $("<tr>");
             $tableBody.append($tr);
             if (_main._canEdit)

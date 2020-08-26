@@ -84,13 +84,6 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
-    SWIGateway.prototype.GetFolders = function (path, callback, errorcb) {
-        $.post(_server + "SWIGetFolders", {
-            path: path
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    };
     SWIGateway.prototype.GetFolderDetail = function (path, callback, errorcb) {
         $.post(_server + "SWIGetFolderDetail", {
             path: path

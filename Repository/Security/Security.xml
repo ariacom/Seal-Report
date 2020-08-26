@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><ProviderName>Basic Authentication</ProviderName><UseCustomScript>true</UseCustomScript><Script>@{
+﻿<?xml version="1.0" encoding="utf-8"?><SealSecurity xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><ProviderName>Basic Authentication</ProviderName><UseCustomScript>true</UseCustomScript><Script>@{
     SecurityUser user = Model;
 	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
 	//user.WebUserName -&gt; user name from the login screen
@@ -35,6 +35,15 @@
 	{&#xD;
 		user.AddSecurityGroup("Group (Edit Dashboards)");&#xD;
 	}&#xD;
+	else if (user.WebUserName == "sc1" &amp;&amp; user.WebPassword == "sc1")&#xD;
+	{&#xD;
+		user.AddSecurityGroup("Group (Scripts 1)");&#xD;
+	}&#xD;
+	else if (user.WebUserName == "sc2" &amp;&amp; user.WebPassword == "sc2")&#xD;
+	{&#xD;
+		user.AddSecurityGroup("Group (Scripts 1)");&#xD;
+		user.AddSecurityGroup("Group (Scripts 2)");&#xD;
+	}&#xD;
 	else if (user.WebUserName == "demo" &amp;&amp; user.WebPassword == "demo")&#xD;
 	{&#xD;
 		user.AddSecurityGroup("Group (Demo)");&#xD;
@@ -55,4 +64,48 @@
 	else if (string.IsNullOrEmpty(user.WebUserName)) {
 		user.AddDefaultSecurityGroup();
 	}
-}</Script><Groups><SecurityGroup><Name>Default Group</Name><Folders><SecurityFolder /></Folders><SqlModel>true</SqlModel><PersonalDashboardFolder>true</PersonalDashboardFolder><DashboardFolders><SecurityDashboardFolder><Name>General</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>System</Name></SecurityDashboardFolder></DashboardFolders><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute Output)</Name><Folders><SecurityFolder><Path>\Samples</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder><SecurityFolder><Path>\System</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder></Folders><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Schedule)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Schedule</FolderRight></SecurityFolder></Folders><PersFolderRight>Files</PersFolderRight><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Edit)</Name><Folders><SecurityFolder /></Folders><PersFolderRight>Reports</PersFolderRight><ViewType>Reports</ViewType><WidgetPublication>false</WidgetPublication><Devices><SecurityDevice><Name>Folder Device</Name></SecurityDevice></Devices><Sources><SecuritySource><Name>RSS No SQL Source</Name></SecuritySource></Sources><Connections><SecurityConnection><Name>connection</Name></SecurityConnection></Connections><Columns><SecurityColumn><Source>Northwind</Source><Tag /><Category>Products</Category></SecurityColumn><SecurityColumn><Source>Northwind</Source><Tag /><Category>Customers</Category></SecurityColumn></Columns><Culture /></SecurityGroup><SecurityGroup><Name>Group (View Dashboards)</Name><ViewType>Dashboards</ViewType><ManageDashboards>false</ManageDashboards><DashboardFolders><SecurityDashboardFolder><Name>General</Name><Right>Execute</Right></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name><Right>Execute</Right></SecurityDashboardFolder></DashboardFolders></SecurityGroup><SecurityGroup><Name>Group (Edit Dashboards)</Name><ViewType>Dashboards</ViewType><DashboardFolders><SecurityDashboardFolder><Name>General</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name></SecurityDashboardFolder></DashboardFolders><Widgets><SecurityWidget><ReportName /><Tag>KPI</Tag><Name /></SecurityWidget></Widgets></SecurityGroup><SecurityGroup><Name>Group (Demo)</Name><PersFolderRight>Reports</PersFolderRight><SqlModel>true</SqlModel><PersonalDashboardFolder>true</PersonalDashboardFolder><DashboardFolders><SecurityDashboardFolder><Name>General</Name><Right>Execute</Right></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name><Right>Execute</Right></SecurityDashboardFolder></DashboardFolders></SecurityGroup></Groups></SealSecurity>
+}</Script><Groups><SecurityGroup><Name>Default Group</Name><Folders><SecurityFolder /></Folders><FoldersScript /><FolderDetailScript /><SqlModel>true</SqlModel><PersonalDashboardFolder>true</PersonalDashboardFolder><DashboardFolders><SecurityDashboardFolder><Name>General</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>System</Name></SecurityDashboardFolder></DashboardFolders><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Execute</FolderRight></SecurityFolder></Folders><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Execute Output)</Name><Folders><SecurityFolder><Path>\Samples</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder><SecurityFolder><Path>\System</Path><ManageFolder>false</ManageFolder><FolderRight>ExecuteReportOuput</FolderRight></SecurityFolder></Folders><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Schedule)</Name><Folders><SecurityFolder><ManageFolder>false</ManageFolder><FolderRight>Schedule</FolderRight></SecurityFolder></Folders><PersFolderRight>Files</PersFolderRight><ViewType>Reports</ViewType><Culture /></SecurityGroup><SecurityGroup><Name>Group (Edit)</Name><Folders><SecurityFolder /></Folders><PersFolderRight>Reports</PersFolderRight><ViewType>Reports</ViewType><WidgetPublication>false</WidgetPublication><Devices><SecurityDevice><Name>Folder Device</Name></SecurityDevice></Devices><Sources><SecuritySource><Name>RSS No SQL Source</Name></SecuritySource></Sources><Connections><SecurityConnection><Name>connection</Name></SecurityConnection></Connections><Columns><SecurityColumn><Source>Northwind</Source><Tag /><Category>Products</Category></SecurityColumn><SecurityColumn><Source>Northwind</Source><Tag /><Category>Customers</Category></SecurityColumn></Columns><Culture /></SecurityGroup><SecurityGroup><Name>Group (View Dashboards)</Name><ViewType>Dashboards</ViewType><ManageDashboards>false</ManageDashboards><DashboardFolders><SecurityDashboardFolder><Name>General</Name><Right>Execute</Right></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name><Right>Execute</Right></SecurityDashboardFolder></DashboardFolders></SecurityGroup><SecurityGroup><Name>Group (Edit Dashboards)</Name><ViewType>Dashboards</ViewType><DashboardFolders><SecurityDashboardFolder><Name>General</Name></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name></SecurityDashboardFolder></DashboardFolders><Widgets><SecurityWidget><ReportName /><Tag>KPI</Tag><Name /></SecurityWidget></Widgets></SecurityGroup><SecurityGroup><Name>Group (Demo)</Name><PersFolderRight>Reports</PersFolderRight><SqlModel>true</SqlModel><PersonalDashboardFolder>true</PersonalDashboardFolder><DashboardFolders><SecurityDashboardFolder><Name>General</Name><Right>Execute</Right></SecurityDashboardFolder><SecurityDashboardFolder><Name>Sales</Name><Right>Execute</Right></SecurityDashboardFolder></DashboardFolders></SecurityGroup><SecurityGroup><Name>Group (Scripts 1)</Name><FoldersScript>@{&#xD;
+    SecurityUser user = Model;&#xD;
+    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
+    &#xD;
+    if (user.Folders.Count == 0) {&#xD;
+        user.Folders.Add(new SWIFolder() { path = @"\Samples", name = "New Samples", right = 4, sql = true, manage = 1, expand = true });&#xD;
+    }&#xD;
+}&#xD;
+</FoldersScript><FolderDetailScript>@{&#xD;
+    SecurityUser user = Model;&#xD;
+    &#xD;
+    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
+&#xD;
+    if (user.ScriptNumber == 1) {&#xD;
+        user.FolderDetail.files = new SWIFile[0];&#xD;
+    }&#xD;
+&#xD;
+    //Add reports&#xD;
+    if (user.FolderDetail.folder.path == @"\Samples") {&#xD;
+        user.FolderDetail.files = user.FolderDetail.files.Concat(user.FolderDetailFiles.Where(i =&gt; i.name.Contains("Charts"))).ToArray(); &#xD;
+    }&#xD;
+}&#xD;
+</FolderDetailScript></SecurityGroup><SecurityGroup><Name>Group (Scripts 2)</Name><FoldersScript>@{&#xD;
+    SecurityUser user = Model;&#xD;
+    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
+    &#xD;
+    if (user.Folders.Count == 0) {&#xD;
+        user.Folders.Add(new SWIFolder() { path = @"\Samples", name = "New Samples", right = 4, sql = true, manage = 1, expand = true });&#xD;
+    }&#xD;
+}&#xD;
+</FoldersScript><FolderDetailScript>@{&#xD;
+    SecurityUser user = Model;&#xD;
+    &#xD;
+    //Full documentation at https://sealreport.org/Help/Index.html&#xD;
+&#xD;
+    if (user.ScriptNumber == 1) {&#xD;
+        user.FolderDetail.files = new SWIFile[0];&#xD;
+    }&#xD;
+&#xD;
+    //Add reports&#xD;
+    if (user.FolderDetail.folder.path == @"\Samples") {&#xD;
+        user.FolderDetail.files = user.FolderDetail.files.Concat(user.FolderDetailFiles.Where(i =&gt; i.name.Contains("Output"))).ToArray(); &#xD;
+    }&#xD;
+}&#xD;
+</FolderDetailScript></SecurityGroup></Groups></SealSecurity>
