@@ -125,30 +125,17 @@ namespace SealWebServer.Controllers
                 {
                     addValidFolders(folder, result);
                 }
+
+                //Folders Script
                 WebUser.Folders = result;
-                return Json(result.ToArray());
-            }
-            catch (Exception ex)
-            {
-                return HandleSWIException(ex);
-            }
-        }
+                WebUser.ScriptNumber = 1;
+                foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.FoldersScript)).OrderBy(i => i.Name))
+                {
+                    RazorHelper.CompileExecute(group.FoldersScript, WebUser);
+                    WebUser.ScriptNumber++;
 
-        /// <summary>
-        /// Returns the list of the published folders for the current user from a root folder.
-        /// </summary>
-        [HttpPost]
-        public ActionResult SWIGetFolders(string path)
-        {
-            writeDebug("SWIGetFolders");
-            try
-            {
-                checkSWIAuthentication();
-                if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
-
-                var folder = getFolder(path);
-                fillFolder(folder);
-                return Json(folder);
+                }
+                return Json(WebUser.Folders.ToArray());
             }
             catch (Exception ex)
             {
@@ -165,29 +152,9 @@ namespace SealWebServer.Controllers
             writeDebug("SWIGetFolderDetail");
             try
             {
-                SWIFolder folder = getFolder(path);
-                var files = new List<SWIFile>();
-                if (folder.right > 0)
-                {
-                    foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
-                    {
-                        //check right on files only
-                        if (folder.files && FileHelper.IsSealReportFile(newPath)) continue;
-                        if (folder.IsPersonal && newPath.ToLower() == WebUser.ProfilePath.ToLower()) continue;
-
-                        files.Add(new SWIFile()
-                        {
-                            path = folder.Combine(Path.GetFileName(newPath)),
-                            name = Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
-                            last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
-                            isreport = FileHelper.IsSealReportFile(newPath),
-                            right = folder.right
-                        });
-                    }
-                }
+                var folderDetail = getFolderDetail(path, true);
                 setCookie(SealLastFolderCookieName, path);
-
-                return Json(new SWIFolderDetail() { folder = folder, files = files.ToArray() });
+                return Json(folderDetail);
             }
             catch (Exception ex)
             {
@@ -208,6 +175,7 @@ namespace SealWebServer.Controllers
                 var files = new List<SWIFile>();
                 path = folder.GetFullPath();
                 searchFolder(folder, pattern, files);
+
                 return Json(new SWIFolderDetail() { files = files.ToArray() });
             }
             catch (Exception ex)
@@ -292,6 +260,9 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
 
+                var file = getFileDetail(path);
+                if (file.right == 0) throw new Exception("Error: no right on this report or file");
+
                 string newPath = getFullPath(path);
                 if (!System.IO.File.Exists(newPath)) throw new Exception("Report path not found");
                 Repository repository = Repository;
@@ -328,6 +299,10 @@ namespace SealWebServer.Controllers
                     {
                         SWIFolder folder = getParentFolder(path);
                         if ((FolderRight)folder.right != FolderRight.Edit) throw new Exception("Error: no right to edit in this folder");
+
+                        var file = getFileDetail(path);
+                        if ((FolderRight)file.right != FolderRight.Edit) throw new Exception("Error: no right to edit this report or file");
+
                         string fullPath = getFullPath(path);
                         if (FileHelper.IsSealReportFile(fullPath) && FileHelper.ReportHasSchedule(fullPath))
                         {
@@ -362,8 +337,15 @@ namespace SealWebServer.Controllers
             {
                 SWIFolder folderSource = getParentFolder(source);
                 if (folderSource.right == 0) throw new Exception("Error: no right on this folder");
+                if (!copy && (FolderRight)folderSource.right != FolderRight.Edit) throw new Exception("Error: no edit right on this folder");
+
+                var file = getFileDetail(source);
+                if (file.right == 0) throw new Exception("Error: no right on this report or file");
+                if (!copy && (FolderRight)file.right != FolderRight.Edit) throw new Exception("Error: no right to edit this report or file");
+
                 SWIFolder folderDest = getParentFolder(destination);
                 if ((FolderRight)folderDest.right != FolderRight.Edit) throw new Exception("Error: no right to edit on the destination folder");
+
 
                 string sourcePath = getFullPath(source);
                 string destinationPath = getFullPath(destination);
@@ -410,6 +392,10 @@ namespace SealWebServer.Controllers
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
                 if (!string.IsNullOrEmpty(outputGUID) && (FolderRight)folder.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this folder");
+
+                var file = getFileDetail(path);
+                if (file.right == 0) throw new Exception("Error: no right on this report or file");
+                if (!string.IsNullOrEmpty(outputGUID) && (FolderRight)file.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this report");
 
                 string filePath = getFullPath(path);
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: report does not exist");
@@ -463,8 +449,12 @@ namespace SealWebServer.Controllers
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
                 if (!string.IsNullOrEmpty(outputGUID) && (FolderRight)folder.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this folder");
 
+                var file = getFileDetail(path);
+                if (file.right == 0) throw new Exception("Error: no right on this report or file");
+                if (!string.IsNullOrEmpty(outputGUID) && (FolderRight)file.right == FolderRight.Execute) throw new Exception("Error: no right to execute output on this report");
+
                 string filePath = getFullPath(path);
-                if (!System.IO.File.Exists(filePath)) throw new Exception("Error: report does not exist");
+                if (!System.IO.File.Exists(filePath)) throw new Exception("Error: report or file does not exist");
                 repository = Repository.CreateFast();
                 report = Report.LoadFromFile(filePath, repository);
 
@@ -491,6 +481,9 @@ namespace SealWebServer.Controllers
 
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
+
+                var file = getFileDetail(path);
+                if (file.right == 0) throw new Exception("Error: no right on this report or file");
 
                 return getFileResult(getFullPath(path), null);
             }

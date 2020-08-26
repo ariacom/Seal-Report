@@ -466,6 +466,51 @@ if (cell.IsTitle)
 }
 ";
 
+        const string foldersScriptTemplate = @"@{
+    SecurityUser user = Model;
+    //Full documentation at https://sealreport.org/Help/Index.html
+    
+    //Sample to define a folder
+    //user.Folders.Clear();
+    //user.Folders.Add(new SWIFolder() { path = @""\Samples"", name = ""New Samples"", right = 4, sql = true, manage = 2, expand = true });
+
+    SWIFolder sampleFolder = user.AllFolders.FirstOrDefault(i => i.path ==  @""\Samples"");
+    if (sampleFolder != null) {
+        //Sample to add a subfolder (physical path must be created...)
+        //sampleFolder.folders = sampleFolder.folders.Concat(new SWIFolder[] { new SWIFolder() { path = @""\Samples\subfolder"", name = ""Samples Sub Folder"", right = 4, sql = false, manage = 2}}).ToArray();
+        
+        //Sample to modify a folder
+        //sampleFolder.name = ""New Samples 2""; 
+        //sampleFolder.manage = 1; 
+        //sampleFolder.right = 4;
+        //sampleFolder.sql = false;        
+    }
+    
+    //Sample to remove a folder
+    SWIFolder rootFolder = user.AllFolders.FirstOrDefault(i => i.path ==  @""\"");
+    if (rootFolder != null) {
+        //rootFolder.folders = rootFolder.folders.Where(i => i.path != @""\Samples"").ToArray();
+    }
+}
+";
+
+        const string folderDetailScriptTemplate = @"@{
+    SecurityUser user = Model;
+    //Full documentation at https://sealreport.org/Help/Index.html
+
+    if (user.FolderDetail.folder.path == @""\Samples"") {
+        //Sample to filter reports
+        //user.FolderDetail.files = user.FolderDetail.files.Where(i => i.name.Contains(""Charts"")).ToArray(); 
+
+        //Sample to change a report 
+        SWIFile file = user.FolderDetailFiles.FirstOrDefault(i => i.name == ""04-Charts Gallery - Basics"");
+        if (file != null) {
+            //file.name = ""04-Charts Gallery - Basics NEW"";
+            //file.right = 1;
+        }
+    }
+ }
+";
 
         const string razorSourceInitScriptTemplate = @"@using System.Data
 @{
@@ -1194,6 +1239,23 @@ if (cell.IsTitle)
                         template = Audit.AuditScriptTemplate;
                         frm.ObjectForCheckSyntax = new Audit();
                         frm.Text = "Edit the script executed when a an audit event occurs";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                }
+                else if (context.Instance is SecurityGroup)
+                {
+                    if (context.PropertyDescriptor.Name == "FoldersScript")
+                    {
+                        template = foldersScriptTemplate;
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
+                        frm.Text = "Edit the Folders Script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "FolderDetailScript")
+                    {
+                        template = folderDetailScriptTemplate;
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
+                        frm.Text = "Edit the Folder Detail Script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

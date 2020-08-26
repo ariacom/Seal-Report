@@ -164,44 +164,9 @@ $.post("https://sealreport.org/demo/SWIGetRootFolders", {
                             path (string) : the folder path<br />
                             name (string) : the translated folder name<br />
                             fullname (string): the full path translated of the folder<br />
-                            right (integer): folder right (0 = Execute reports, 1 = Execute reports, 2 = Schedule reports, 3 = Edit reports)<br />
+                            right (integer): folder right (0 = No right, 1 = Execute reports / View files, 2 = Execute reports and outputs / View files, 3 = Edit schedules / View files, 4 = Edit reports / Manage files)<br />
                             expand (boolean): true is the folder must be expanded in the tree view<br />
-                            manage (integer): manage flag for the folder. (0 = Do not manage, 1 = manage sub-folders only, 2 = manage folder itself and sub-folders)<br />
-                            folders ([folder]): array of children folders<br />
-                            error (string): if any error, the error description
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col-lg-12">
-            <h2>SWIGetFolders</h2>
-            <table class="table table-striped">
-                <tbody>
-                    <tr><th>Description</th><td>Returns the list of the published folders for the current user from a root folder.</td></tr>
-                    <tr>
-                        <th>Call</th>
-                        <td>
-<pre>
-$.post("https://sealreport.org/demo/SWIGetFolders", {
-    path: "\\" // The path of the root folder
-})
-.done(function (data) {
-    if (!data.error) { /* Do your job here */ }
-})
-</pre>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Returns</th>
-                        <td>
-                            path (string) : the folder path<br />
-                            name (string) : the translated folder name<br />
-                            fullname (string): the full path translated of the folder<br />
-                            right (integer): folder right (0 = Execute reports, 1 = Execute reports, 2 = Schedule reports, 3 = Edit reports)<br />
-                            expand (boolean): true is the folder must be expanded in the tree view<br />
-                            manage (integer): manage flag for the folder. (0 = Do not manage, 1 = manage sub-folders only, 2 = manage folder itself and sub-folders)<br />
+                            manage (integer): manage flag for the folder. (0 = do not manage sub-folders, 1 = manage sub-folders only as they are defined by the security (no rename or delete allowed), 2 = manage all: create, delete and rename sub-folders<br />
                             folders ([folder]): array of children folders<br />
                             error (string): if any error, the error description
                         </td>

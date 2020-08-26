@@ -26,6 +26,8 @@ namespace Seal.Model
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("ViewType").SetIsBrowsable(true);
                 GetProperty("Folders").SetIsBrowsable(true);
+                GetProperty("FoldersScript").SetIsBrowsable(true);
+                GetProperty("FolderDetailScript").SetIsBrowsable(true);
                 GetProperty("Columns").SetIsBrowsable(true);
                 GetProperty("SqlModel").SetIsBrowsable(true);
                 GetProperty("WidgetPublication").SetIsBrowsable(true);
@@ -51,13 +53,13 @@ namespace Seal.Model
         /// <summary>
         /// The security group name
         /// </summary>
-        [Category("Definition"), DisplayName("\tName"), Description("The security group name."), Id(1, 1)]
+        [Category("Definition"), DisplayName("\t\t\tName"), Description("The security group name."), Id(1, 1)]
         public string Name { get; set; } = "Group";
 
         /// <summary>
         /// The folder configurations for this group used for Web Publication of reports. By default, repository folders have no right.
         /// </summary>
-        [Category("Definition"), DisplayName("Folders"), Description("The folder configurations for this group used for Web Publication of reports. By default, repository folders have no right."), Id(2, 1)]
+        [Category("Definition"), DisplayName("\t\tFolders"), Description("The folder configurations for this group used for Web Publication of reports. By default, repository folders have no right."), Id(2, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityFolder> Folders { get; set; } = new List<SecurityFolder>();
         public bool ShouldSerializeFolders() { return Folders.Count > 0; }
@@ -65,7 +67,7 @@ namespace Seal.Model
         /// <summary>
         /// Define the right of the dedicated personal folder for each user of the group
         /// </summary>
-        [Category("Definition"), DisplayName("Personal folder"), Description("Define the right of the dedicated personal folder for each user of the group."), Id(4, 1)]
+        [Category("Definition"), DisplayName("\t\tPersonal Folder"), Description("Define the right of the dedicated personal folder for each user of the group."), Id(4, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(PersonalFolderRight.None)]
         public PersonalFolderRight PersFolderRight { get; set; } = PersonalFolderRight.None;
@@ -73,17 +75,32 @@ namespace Seal.Model
         /// <summary>
         /// Define if the group can view Reports and Dashboards
         /// </summary>
-        [Category("Definition"), DisplayName("Show all folders"), Description("If true, parent folder with no rights are also shown in the tree view."), Id(5, 1)]
+        [Category("Definition"), DisplayName("\t\tShow all folders"), Description("If true, parent folder with no rights are also shown in the tree view."), Id(5, 1)]
         [DefaultValue(false)]
         public bool ShowAllFolders { get; set; } = false;
 
         /// <summary>
         /// Define if the group can view Reports and Dashboards
         /// </summary>
-        [Category("Definition"), DisplayName("View type"), Description("Define if the group can view Reports and Dashboards."), Id(6, 1)]
+        [Category("Definition"), DisplayName("\t\tView Type"), Description("Define if the group can view Reports and Dashboards."), Id(6, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(ViewType.ReportsDashboards)]
         public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
+
+
+        /// <summary>
+        /// Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+        /// </summary>
+        [Category("Definition"), DisplayName("\tFolders Script"), Description("Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(7, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))] 
+        public string FoldersScript { get; set; }
+
+        /// <summary>
+        /// Optional script executed to define/modify the reports published in the Web Report Server for a given folder. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+        /// </summary>
+        [Category("Definition"), DisplayName("Folder Detail Script"), Description("Optional script executed to define/modify the reports published in the Web Report Server for a given folder. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(8, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string FolderDetailScript { get; set; }
 
         /// <summary>
         /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.

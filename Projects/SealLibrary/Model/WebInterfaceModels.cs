@@ -56,7 +56,7 @@ namespace Seal.Model
         public int right = 0;
 
         /// <summary>
-        /// True if Sql Model can be edited
+        /// True if Sql Model and Sql can be edited
         /// </summary>
         public bool sql = false;
 
@@ -81,7 +81,7 @@ namespace Seal.Model
         /// <summary>
         /// List of folder children.
         /// </summary>
-        public SWIFolder[] folders = null;
+        public SWIFolder[] folders = new SWIFolder[0];
 
         public void SetManageFlag(bool useSubFolders, bool manageFolder, bool isDefined)
         {

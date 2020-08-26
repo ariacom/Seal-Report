@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using Seal.Helpers;
 using System;
 using System.Collections.Generic;
@@ -50,9 +51,57 @@ namespace Seal.Model
         public string Warning = "";
 
         /// <summary>
-        /// List of SWIFolder
+        /// Current list of SWIFolder of the user
         /// </summary>
         public List<SWIFolder> Folders = new List<SWIFolder>();
+
+        /// <summary>
+        /// Flat list of all SWIFolder of the user 
+        /// </summary>
+        public List<SWIFolder> AllFolders
+        {
+            get
+            {
+                var result = new List<SWIFolder>();
+                foreach (var child in Folders)
+                {
+                    fillFolder(child, result);
+                }
+                return result;
+            }
+        } 
+
+        void fillFolder(SWIFolder folder, List<SWIFolder> folders)
+        {
+            folders.Add(folder);
+            if (folder.folders != null)
+            {
+                foreach (var child in folder.folders)
+                {
+                    fillFolder(child, folders);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Current folder detail of the user (used for Folder Detail Scripts)
+        /// </summary>
+        public SWIFolderDetail FolderDetail = new SWIFolderDetail();
+
+        /// <summary>
+        /// Current files for a folder detail (used for Folder Detail Scripts)
+        /// </summary>
+        public List<SWIFile> FolderDetailFiles;
+
+        /// <summary>
+        /// Current script execution number when several Folders or Folder Detail scripts are executed.
+        /// </summary>
+        public int ScriptNumber = 0;
+
+        /// <summary>
+        /// List of all SWIFolderDetail of the user. The list is built when the user browse the folders.
+        /// </summary>
+        public List<SWIFolderDetail> FolderDetails = new List<SWIFolderDetail>();
 
         /// <summary>
         /// Current SecurityUserProfile
