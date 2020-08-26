@@ -8,32 +8,39 @@
     table.Parameters.Add(new Parameter() { Name = "csv_encoding", Value = "UTF8", DisplayName = "File encoding", Description = "The CSV File Encoding.", Enums = new string[] { "Default", "UTF8", "Unicode", "ASCII" }, UseOnlyEnumValues = true });
     table.Parameters.Add(new Parameter() { Name = "csv_vb", BoolValue = true, DisplayName = "Use Microsoft VB Parser", Description = "If true, the Microsoft VB Parser is used instead of the standard parser." });
 
-    table.DefinitionScript = @"@using System.Data
+    table.DefinitionScript = @"@using System.IO
+@using System.Data
 @using System.Text
 @{
     MetaTable metaTable = Model;
     var path = metaTable.GetValue(""csv_path"").Replace(Repository.SealRepositoryKeyword, Repository.Instance.RepositoryPath);
-    char? separator = null;
-    var sep = metaTable.GetValue(""csv_sep"");
-    if (!string.IsNullOrEmpty(sep)) {
-        separator = (sep == ""\\t"" ? '\t' : metaTable.GetValue(""csv_sep"")[0]);
-    }
-    var encoding = Encoding.Default;
-    if (metaTable.GetValue(""csv_encoding"")==""UTF8"") {
-        encoding =  Encoding.UTF8;
-    }
-    else if (metaTable.GetValue(""csv_encoding"")==""Unicode"") {
-        encoding =  Encoding.Unicode;
-    }
-    else if (metaTable.GetValue(""csv_encoding"")==""ASCII"") {
-        encoding =  Encoding.ASCII;
-    }
-
-    if (metaTable.GetBoolValue(""csv_vb"", true)) {
-        metaTable.NoSQLTable = DataTableLoader.FromCSVVBParser(path, separator, encoding);
+    if (metaTable.NoSQLCacheTable != null && File.GetLastWriteTime(path) <= metaTable.LoadDate) {
+        metaTable.LogMessage(""Getting table from the load done at {0}."", metaTable.LoadDate);
+        metaTable.NoSQLTable = metaTable.NoSQLCacheTable;
     }
     else {
-        metaTable.NoSQLTable = DataTableLoader.FromCSV(path, separator, encoding);
+        char? separator = null;
+        var sep = metaTable.GetValue(""csv_sep"");
+        if (!string.IsNullOrEmpty(sep)) {
+            separator = (sep == ""\\t"" ? '\t' : metaTable.GetValue(""csv_sep"")[0]);
+        }
+        var encoding = Encoding.Default;
+        if (metaTable.GetValue(""csv_encoding"")==""UTF8"") {
+            encoding =  Encoding.UTF8;
+        }
+        else if (metaTable.GetValue(""csv_encoding"")==""Unicode"") {
+            encoding =  Encoding.Unicode;
+        }
+        else if (metaTable.GetValue(""csv_encoding"")==""ASCII"") {
+            encoding =  Encoding.ASCII;
+        }
+
+        if (metaTable.GetBoolValue(""csv_vb"", true)) {
+            metaTable.NoSQLTable = DataTableLoader.FromCSVVBParser(path, separator, encoding);
+        }
+        else {
+            metaTable.NoSQLTable = DataTableLoader.FromCSV(path, separator, encoding);
+        }
     }
 }
 ";

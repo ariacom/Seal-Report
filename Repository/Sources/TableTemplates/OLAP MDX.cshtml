@@ -11,12 +11,12 @@
 @{
     MetaTable metaTable = Model;
 
-    using (var conn = new AdomdConnection(metaTable.GetValue(""mdx_connection"")))
+    using (var connection = new AdomdConnection(metaTable.GetValue(""mdx_connection"")))
     {
-        conn.Open();
-        AdomdCommand cmd = new AdomdCommand(metaTable.GetValue(""mdx_query""), conn);
+        connection.Open();
+        AdomdCommand cmd = new AdomdCommand(metaTable.GetValue(""mdx_query""), connection);
         metaTable.NoSQLTable = DataTableLoader.FromAdomdCommand(cmd);
-        conn.Close();
+        connection.Close();
     }
 }
 ";
