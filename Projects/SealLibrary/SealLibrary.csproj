@@ -454,6 +454,9 @@
     <None Include="..\..\Repository\Sources\TableTemplates\OLAP MDX.cshtml">
       <Link>Table Templates\OLAP MDX.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Sources\TableTemplates\XML.cshtml">
+      <Link>Table Templates\XML.cshtml</Link>
+    </None>
     <None Include="CD-Dashboard.cd" />
     <None Include="CD-Data Source.cd" />
     <None Include="packages.config" />

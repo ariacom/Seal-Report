@@ -622,13 +622,12 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the version of the Seal Web Interface and the version of the Seal Library.
         /// </summary>
-        [HttpPost]
         public ActionResult SWIGetVersions()
         {
             writeDebug("SWIGetVersions");
             try
             {
-                return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion, Info = Info });
+                return Json(new { SWIVersion = Repository.ProductVersion, SRVersion = Repository.ProductVersion, Info = Info }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
