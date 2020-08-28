@@ -2190,11 +2190,6 @@ namespace Seal.Model
             if (restriction != null && restriction.EnumRE != null)
             {
                 var enumRE = restriction.EnumRE;
-                //Refresh full values if necessary
-                if (enumRE.Values.Count == 0 && string.IsNullOrEmpty(enumRE.Error))
-                {
-                    enumRE.RefreshEnum();
-                }
 
                 //Set current restrictions
                 foreach (var r in Report.ExecutionCommonRestrictions.Where(i => i.EnumRE != null))
@@ -2221,7 +2216,6 @@ namespace Seal.Model
                         }
                     }
                 }
-                restriction.SetEnumHtmlIds();
 
                 foreach (var enumDef in enumRE.Values.Where(i => values.Exists(j => i.Id == j.Id)))
                 {
