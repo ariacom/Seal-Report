@@ -586,9 +586,8 @@ namespace Seal.Controls
                         Model.Restriction = "";
                         Model.AggregateRestrictions.Clear();
                         Model.AggregateRestriction = "";
-                        restrictionsPanel.ModelToRestrictionText();
-                        aggregateRestrictionsPanel.ModelToRestrictionText();
-                        ElementsToPanels();
+
+                        MainForm.RefreshNode();
                     }
                     else
                     {

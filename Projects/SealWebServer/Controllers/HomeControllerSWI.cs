@@ -20,7 +20,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Start a session with the Web Report Server using the user name, password, token (may be optional according to the authentication configured on the server) and returns information of the logged user (SWIUserProfile).
         /// </summary>
-        [HttpPost]
         public ActionResult SWILogin(string user, string password, string token)
         {
             writeDebug("SWILogin");
@@ -72,7 +71,7 @@ namespace SealWebServer.Controllers
                     dashboardfolders = WebUser.DashboardFolders.ToArray(),
                     managedashboards = WebUser.ManageDashboards,
                     usertag = WebUser.Tag
-                });
+                }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -99,7 +98,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns all the folders of the user (including Personal folders).
         /// </summary>
-        [HttpPost]
         public ActionResult SWIGetRootFolders()
         {
             writeDebug("SWIGetRootFolders");
@@ -135,7 +133,7 @@ namespace SealWebServer.Controllers
                     WebUser.ScriptNumber++;
 
                 }
-                return Json(WebUser.Folders.ToArray());
+                return Json(WebUser.Folders.ToArray(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -146,7 +144,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the list of file names and details contained in a folder.
         /// </summary>
-        [HttpPost]
         public ActionResult SWIGetFolderDetail(string path)
         {
             writeDebug("SWIGetFolderDetail");
@@ -154,7 +151,7 @@ namespace SealWebServer.Controllers
             {
                 var folderDetail = getFolderDetail(path, true);
                 setCookie(SealLastFolderCookieName, path);
-                return Json(folderDetail);
+                return Json(folderDetail, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -165,7 +162,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the list of file names and details matching a search in the repository.
         /// </summary>
-        [HttpPost]
         public ActionResult SWISearch(string path, string pattern)
         {
             writeDebug("SWISearch");
@@ -176,7 +172,7 @@ namespace SealWebServer.Controllers
                 path = folder.GetFullPath();
                 searchFolder(folder, pattern, files);
 
-                return Json(new SWIFolderDetail() { files = files.ToArray() });
+                return Json(new SWIFolderDetail() { files = files.ToArray() }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -187,7 +183,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Delete a sub-folder in the repository. The folder must be empty.
         /// </summary>
-        [HttpPost]
         public ActionResult SWIDeleteFolder(string path)
         {
             writeDebug("SWIDeleteFolder");
@@ -197,7 +192,7 @@ namespace SealWebServer.Controllers
                 if (folder.manage != 2) throw new Exception("Error: no right to delete this folder");
                 Directory.Delete(folder.GetFullPath());
                 Audit.LogAudit(AuditType.FolderDelete, WebUser, folder.GetFullPath());
-                return Json(new object { });
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -208,7 +203,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Create a sub-folder in the repository.
         /// </summary>
-        [HttpPost]
         public ActionResult SWICreateFolder(string path)
         {
             writeDebug("SWICreateFolder");
@@ -218,7 +212,7 @@ namespace SealWebServer.Controllers
                 if (folder.manage == 0) throw new Exception("Error: no right to create in this folder");
                 Directory.CreateDirectory(folder.GetFullPath());
                 Audit.LogAudit(AuditType.FolderCreate, WebUser, folder.GetFullPath());
-                return Json(new object { });
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -229,7 +223,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Rename a sub-folder in the repository.
         /// </summary>
-        [HttpPost]
         public ActionResult SWIRenameFolder(string source, string destination)
         {
             writeDebug("SWIRenameFolder");
@@ -240,7 +233,7 @@ namespace SealWebServer.Controllers
                 if (folderSource.manage != 2 || folderDest.manage != 2) throw new Exception("Error: no right to rename this folder");
                 Directory.Move(folderSource.GetFullPath(), folderDest.GetFullPath());
                 Audit.LogAudit(AuditType.FolderRename, WebUser, folderSource.GetFullPath(), string.Format("Rename to '{0}'", folderDest.GetFullPath()));
-                return Json(new object { });
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -251,7 +244,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the views and outputs of a report.
         /// </summary>
-        [HttpPost]
         public ActionResult SWIGetReportDetail(string path)
         {
             writeDebug("SWIGetReportDetail");
@@ -272,7 +264,7 @@ namespace SealWebServer.Controllers
                 result.outputs = ((FolderRight)folder.right >= FolderRight.ExecuteReportOuput) ? (from i in report.Outputs.Where(j => j.PublicExec || string.IsNullOrEmpty(j.UserName) || (!j.PublicExec && j.UserName == WebUser.Name)) select new SWIOutput() { guid = i.GUID, name = i.Name, displayname = report.TranslateOutputName(i.Name) }).ToArray() : new SWIOutput[] { };
                 if (result.views.Length == 0 && result.outputs.Length == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToArray();
 
-                return Json(result);
+                return Json(result, JsonRequestBehavior.AllowGet);
 
             }
             catch (Exception ex)
@@ -284,7 +276,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Delete files or reports from the repository.
         /// </summary>
-        [HttpPost]
         public ActionResult SWIDeleteFiles(string paths)
         {
             writeDebug("SWIDeleteFiles");
@@ -317,8 +308,7 @@ namespace SealWebServer.Controllers
                         Audit.LogAudit(AuditType.FileDelete, WebUser, path);
                     }
                 }
-                return Json(new object { });
-
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -329,7 +319,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Move a file or a report in the repository.
         /// </summary>
-        [HttpPost]
         public ActionResult SWIMoveFile(string source, string destination, bool copy)
         {
             writeDebug("SWIMoveFile");
@@ -370,7 +359,7 @@ namespace SealWebServer.Controllers
                     report.SchedulesWithCurrentUser = false;
                     report.SynchronizeTasks();
                 }
-                return Json(new object { });
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -381,7 +370,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Execute a report into a report result and returns the result. Check API of Seal Web Interface for more information.
         /// </summary>
-        [HttpPost]
         public ActionResult SWExecuteReportToResult(string path, string viewGUID, string outputGUID, string format)
         {
             writeDebug("SWExecuteReportToResult");
@@ -434,7 +422,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Execute a report and returns the report html display result content (e.g. html with prompted restrictions). Check API of Seal Web Interface for more information.
         /// </summary>
-        [HttpPost]
         public ActionResult SWExecuteReport(string path, bool? render, string viewGUID, string outputGUID)
         {
             writeDebug("SWExecuteReport");
@@ -471,7 +458,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// View a file published in the repository.
         /// </summary>
-        [HttpPost]
         public ActionResult SWViewFile(string path)
         {
             writeDebug("SWViewFile");
@@ -496,7 +482,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Clear the current user session.
         /// </summary>
-        [HttpPost]
         public ActionResult SWILogout()
         {
             writeDebug("SWILogout");
@@ -507,7 +492,7 @@ namespace SealWebServer.Controllers
                 //Audit
                 Audit.LogAudit(AuditType.Logout, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
-                return Json(new { });
+                return Json(new { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -518,7 +503,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Set the culture and the default view (reports or dashboards) for the logged user.
         /// </summary>
-        [HttpPost]
         public ActionResult SWISetUserProfile(string culture, string defaultView)
         {
             writeDebug("SWISetUserProfile");
@@ -535,7 +519,7 @@ namespace SealWebServer.Controllers
 
                 if (!string.IsNullOrEmpty(defaultView)) setCookie(SealLastViewCookieName, defaultView);
 
-                return Json(new { });
+                return Json(new { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -546,7 +530,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Returns the profile information of the logged user.
         /// </summary>
-        [HttpPost]
         public ActionResult SWIGetUserProfile()
         {
             writeDebug("SWIGetUserProfile");
@@ -567,7 +550,7 @@ namespace SealWebServer.Controllers
             catch
             {
                 //not authenticated
-                return Json(new { authenticated = false });
+                return Json(new { authenticated = false }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -575,7 +558,6 @@ namespace SealWebServer.Controllers
         /// Return the list of Cultures available
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
         public ActionResult SWIGetCultures()
         {
             writeDebug("SWIGetCultures");
@@ -592,7 +574,7 @@ namespace SealWebServer.Controllers
                     if (cultureInfo == null) cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.Name == culture);
                     if (cultureInfo != null) result.Add(new SWIItem() { id = cultureInfo.EnglishName, val = string.Format("{0} - {1}", cultureInfo.NativeName, cultureInfo.EnglishName) });
                 }
-                return Json(result.OrderBy(i => i.val).ToArray());
+                return Json(result.OrderBy(i => i.val).ToArray(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -603,7 +585,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Translate a text either from the public translations or the repository translations. If the optional parameter instance is not empty, the repository translations are used.
         /// </summary>
-        [HttpPost]
         public ActionResult SWITranslate(string context, string instance, string reference)
         {
             writeDebug("SWITranslate");
@@ -611,7 +592,7 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
                 if (!string.IsNullOrEmpty(instance)) return Json(new { text = Repository.RepositoryTranslate(context, instance, reference) });
-                return Json(new { text = Repository.Translate(context, reference) });
+                return Json(new { text = Repository.Translate(context, reference) }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -656,8 +637,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Return the dashboards available for the logged user
         /// </summary>
-        /// <returns></returns>
-        [HttpPost]
         public ActionResult SWIGetUserDashboards()
         {
             writeDebug("SWIGetUserDashboards");
@@ -665,7 +644,7 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
 
-                return Json(WebUser.UserDashboards.OrderBy(i => i.Order).ToArray());
+                return Json(WebUser.UserDashboards.OrderBy(i => i.Order).ToArray(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -676,7 +655,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Return the dashboards in the current view of the logged user
         /// </summary>
-        [HttpPost]
         public ActionResult SWIGetDashboards()
         {
             writeDebug("SWIGetDashboards");
@@ -685,7 +663,7 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
 
                 //Public Dashboards not selected 
-                return Json(WebUser.GetDashboards().Where(i => !WebUser.Profile.Dashboards.Contains(i.GUID)).OrderBy(i => i.Order).ToArray());
+                return Json(WebUser.GetDashboards().Where(i => !WebUser.Profile.Dashboards.Contains(i.GUID)).OrderBy(i => i.Order).ToArray(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -697,7 +675,6 @@ namespace SealWebServer.Controllers
         /// Return the list of dashboard items for a dashboard
         /// </summary>
 
-        [HttpPost]
         public ActionResult SWIGetDashboardItems(string guid)
         {
             writeDebug("SWIGetDashboardItems");
@@ -711,7 +688,7 @@ namespace SealWebServer.Controllers
                 if (dashboard == null) throw new Exception("Error: The dashboard does not exist");
 
                 foreach (var item in dashboard.Items) item.JSonSerialization = true;
-                return Json(dashboard.Items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order).ToArray());
+                return Json(dashboard.Items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order).ToArray(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -722,7 +699,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Return a dashboard item
         /// </summary>
-        [HttpPost]
         public ActionResult SWIGetDashboardItem(string guid, string itemguid)
         {
             writeDebug("SWIGetDashboardItems");
@@ -738,7 +714,7 @@ namespace SealWebServer.Controllers
                 var item = dashboard.Items.FirstOrDefault(i => i.GUID == itemguid);
                 if (item == null) throw new Exception("Error: The dashboard item does not exist");
 
-                return Json(item);
+                return Json(item, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -763,7 +739,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Add Dashboards to the current logged user
         /// </summary>
-        [HttpPost]
         public ActionResult SWIAddDashboard(string[] guids)
         {
             writeDebug("SWIAddDashboard");
@@ -781,7 +756,7 @@ namespace SealWebServer.Controllers
                     WebUser.SaveProfile();
                 }
 
-                return Json(new object { });
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -792,7 +767,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Remove the dashboard from the logged user view
         /// </summary>
-        [HttpPost]
         public ActionResult SWIRemoveDashboard(string guid)
         {
             writeDebug("SWIRemoveDashboard");
@@ -810,7 +784,7 @@ namespace SealWebServer.Controllers
                     WebUser.SaveProfile();
                 }
 
-                return Json(new object { });
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -821,7 +795,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Change the order between two dashboards in the current logged user view
         /// </summary>
-        [HttpPost]
         public ActionResult SWISwapDashboardOrder(string guid1, string guid2)
         {
             writeDebug("SWISwapDashboardOrder");
@@ -843,7 +816,7 @@ namespace SealWebServer.Controllers
                     WebUser.Profile.Dashboards = newDashboards;
                     WebUser.SaveProfile();
                 }
-                return Json(new object { });
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -854,7 +827,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Set the last dashboard viewed by the logged user
         /// </summary>
-        [HttpPost]
         public ActionResult SWISetLastDashboard(string guid)
         {
             writeDebug("SWISetLastDashboard");
@@ -862,8 +834,7 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
                 setCookie(SealLastDashboardCookieName, guid);
-                return Json(new object { });
-
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -874,7 +845,6 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Return the result of a dashboard item
         /// </summary>
-        [HttpPost]
         public ActionResult SWIGetDashboardResult(string guid, string itemguid, bool force)
         {
             writeDebug("SWIGetDashboardResult");
@@ -891,7 +861,7 @@ namespace SealWebServer.Controllers
                 var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
                 if (dashboard == null)
                 {
-                    return Json(new object { });
+                    return Json(new object { }, JsonRequestBehavior.AllowGet);
                 }
 
                 var item = dashboard.Items.FirstOrDefault(i => i.GUID == itemguid);

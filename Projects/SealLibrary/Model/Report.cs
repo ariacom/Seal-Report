@@ -2645,7 +2645,6 @@ namespace Seal.Model
         /// </summary>
         public string EnumMessage(MetaEnum instance)
         {
-            if (!instance.HasFilters && !instance.HasDependencies) return "";
             return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "EnumMessage", instance.Name, instance.Message);
         }
         #endregion

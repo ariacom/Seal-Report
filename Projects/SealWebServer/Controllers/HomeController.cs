@@ -14,7 +14,6 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Collections.Specialized;
-using DocumentFormat.OpenXml.EMMA;
 
 namespace SealWebServer.Controllers
 {
@@ -903,7 +902,7 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
                 WebHelper.WriteWebException(ex, detail);
             }
-            return Json(new { error = ex.Message, authenticated = (WebUser != null && WebUser.IsAuthenticated) });
+            return Json(new { error = ex.Message, authenticated = (WebUser != null && WebUser.IsAuthenticated) }, JsonRequestBehavior.AllowGet);
         }
 
         ReportExecution getExecution(string execution_guid)

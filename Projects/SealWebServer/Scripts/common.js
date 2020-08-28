@@ -269,11 +269,16 @@ function fillEnumSelect(data, noMessage) {
             );
         }
         $enum.selectpicker("refresh");
-    }
+    }    
 
+    if (!noMessage) setEnumMessage($("#id_load").val());
+}
+
+function setEnumMessage(id) {
+    var $enum = $("#"+id);
     var $message = $("#enum-message");
     if ($message) $message.text("");
-    if (!noMessage && $enum.attr("message")) {
+    if ($enum.attr("message")) {
         //Add info message
         if ($message.length == 0) {
             $message = $("<li>").attr("id", "enum-message").addClass("no-results");
