@@ -201,12 +201,8 @@ namespace Seal.Model
                 if (val != null)
                 {
                     //Drill Down, check src
-                    ReportRestriction restriction = model.Restrictions.FirstOrDefault(i => i.MetaColumnGUID == src);
-                    if (restriction == null)
-                    {
-                        restriction = ReportRestriction.CreateReportRestriction();
-                        model.Restrictions.Add(restriction);
-                    }
+                    ReportRestriction restriction = ReportRestriction.CreateReportRestriction();
+                    model.Restrictions.Add(restriction);
                     restriction.Source = model.Source;
                     restriction.Report = newReport;
                     restriction.Model = model;

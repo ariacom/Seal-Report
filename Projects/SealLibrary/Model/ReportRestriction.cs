@@ -270,9 +270,18 @@ namespace Seal.Model
         {
             get
             {
-                if (Enum != null) return Enum;
-                if (IsCommonRestrictionValue) return null;
-                return MetaColumn.Enum;
+                MetaEnum result = null;
+                if (Enum != null) result = Enum;
+                else if (IsCommonRestrictionValue) return null;
+
+                if (result == null) result = MetaColumn.Enum;
+
+                if (result != null && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
+                {
+                    result.RefreshEnum();
+                    SetEnumHtmlIds();
+                }
+                return result;
             }
         }
 

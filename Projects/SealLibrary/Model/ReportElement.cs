@@ -764,10 +764,17 @@ namespace Seal.Model
         {
             get
             {
+                MetaEnum result = null;
                 if (_enumGUID == kClearEnumGUID) return null;
-                if (Enum != null) return Enum;
-                if (IsCommonRestrictionValue) return null;
-                return MetaColumn.Enum;
+                if (Enum != null) result = Enum;
+                else if (IsCommonRestrictionValue) return null;
+
+                if (result == null) result = MetaColumn.Enum;
+                if (result != null && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
+                {
+                    result.RefreshEnum();
+                }
+                return result;
             }
         }
 
