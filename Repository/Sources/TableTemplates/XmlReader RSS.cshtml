@@ -1,0 +1,52 @@
+﻿@using Seal.Model;
+@{
+    MetaTable table = Model;
+
+    //Parameters for this table
+    table.Parameters.Add(new Parameter() { Name = "rss_url", Value = "http://feeds.bbci.co.uk/news/education/rss.xml", DisplayName = "RSS URL", Description = "Internet address of the RSS feed", Enums = new string[] { "http://feeds.bbci.co.uk/news/education/rss.xml", "http://feeds.bbci.co.uk/news/world/rss.xml" }, UseOnlyEnumValues = false });
+
+    table.DefinitionScript = @"@using System.Data
+@{
+    MetaTable metaTable = Model;
+    DataTable table = new DataTable();
+	//Define the table columns 
+	table.Columns.Add(new DataColumn(""Id"", typeof(string)));
+	table.Columns.Add(new DataColumn(""Date"", typeof(DateTime)));
+	table.Columns.Add(new DataColumn(""Title"", typeof(string)));
+	table.Columns.Add(new DataColumn(""Summary"", typeof(string)));
+	table.Columns.Add(new DataColumn(""Link"", typeof(string)));
+	table.Columns.Add(new DataColumn(""Categories"", typeof(string)));
+	table.Columns.Add(new DataColumn(""TitleWithLink"", typeof(string)));
+	metaTable.NoSQLTable = table;
+}";
+
+    table.LoadScript = @"@using System.Data
+@using System.Text
+@using System.Collections
+@using System.Web
+@using System.Xml
+@using System.ServiceModel.Syndication
+@{
+	//Just feed the table from the RSS data
+    MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+
+	var url = metaTable.GetValue(""rss_url"");
+    metaTable.LogMessage(""Loading RSS feed from {0}"", url);
+	var reader = XmlReader.Create(url);
+	var feed = SyndicationFeed.Load(reader);
+	foreach (var item in feed.Items)
+	{
+		string link = item.Links.Count >0 ? item.Links[0].Uri.AbsoluteUri : """";
+		string categories = """";
+		foreach (var category in item.Categories)
+		{
+			categories += category.Name + "";"";
+		}
+		string titleWithLink = string.Format(""<a href='{0}' target=_blank>{1}</a>"", link, HttpUtility.HtmlEncode(item.Title.Text)); 
+		//Values must match the table definition
+		table.Rows.Add(item.Id, item.PublishDate.DateTime, item.Title.Text, item.Summary.Text, link, categories, titleWithLink);
+	}	
+    metaTable.LogMessage(""{0} record(s) loaded"", table.Rows.Count);
+}";
+}

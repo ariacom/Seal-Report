@@ -72,6 +72,8 @@ namespace Seal.Forms
             try
             {
                 var script = RazorHelper.GetFullScript(textBox.Text, objectForCheckSyntax, header);
+                if (objectForCheckSyntax is MetaEnum) script = Helper.ClearAllLINQKeywords(script);
+
                 RazorHelper.Compile(script, objectForCheckSyntax.GetType(), Guid.NewGuid().ToString());
             }
             catch (TemplateParsingException ex)

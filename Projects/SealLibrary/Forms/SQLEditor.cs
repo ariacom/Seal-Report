@@ -125,7 +125,7 @@ namespace Seal.Forms
                     {
                         samples.Add("SELECT DISTINCT CategoryID, CategoryName\r\nFROM Categories\r\nWHERE CategoryName LIKE '%{EnumFilter}%'\r\nORDER BY 2");
                         samples.Add("SELECT DISTINCT City\r\nFROM Customers\r\nWHERE Country in ({EnumValues_Country})\r\nORDER BY 1");
-                        description = descriptionTemplate1 + "The SQL may contain the filter tag by using the keyword '{EnumFilter}' to build the enum  with filters got from the user.\r\nThe SQL may contain dependencies with other enum values got from the user by using the keyword {EnumValues_<Name>} where <Name> is the name of the other enumerated list.\r\n";
+                        description = descriptionTemplate1 + "The SQL may contain the filter tag by using the keyword '{EnumFilter}' to build the enum with filters got from the user.\r\nThe SQL may contain dependencies with other enum values got from the user by using the keyword {EnumValues_<Name>} where <Name> is the name of the other enumerated list.\r\n";
                     }
                     else
                     {

@@ -770,6 +770,14 @@ namespace Seal.Helpers
             return sql;
         }
 
+        //SQL Keywords management
+        public static string ClearAllLINQKeywords(string script)
+        {
+            script = ClearSQLKeywords(script, Repository.EnumFilterKeyword, "null");
+            script = ClearSQLKeywords(script, Repository.EnumValuesKeyword, "null");
+            return script;
+        }
+
         public static string ClearSQLKeywords(string sql, string keyword, string replacedBy)
         {
             if (string.IsNullOrEmpty(sql)) return "";

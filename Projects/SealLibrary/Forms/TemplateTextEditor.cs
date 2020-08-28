@@ -328,6 +328,24 @@ if (cell.IsTitle)
 }
 ";
 
+        const string scriptDisplayEnumTemplate = @"@{
+    var enumList = Model;
+
+    //NewValues is the list of values available
+    enumList.NewValues.Clear();
+
+    //The Script may contain the filter tag by using the keyword '{EnumFilter}' to build the enum with filters got from the user.
+    //The script may contain dependencies with other enum values got from the user by using the keyword {EnumValues_<Name>} where <Name> is the name of the other enumerated list.
+    string filter = {EnumFilter};
+    string[] enumValuesCountry = {EnumValues_Country};
+
+    //Add enum values
+    enumList.NewValues.Add(new MetaEV() {Id=""id1""});
+    enumList.NewValues.Add(new MetaEV() {Id=""id2"", Val=""Display2"", ValR=""Display Restriction2"", Css=""color:red"", Class=""""});
+    enumList.NewValues.Add(new MetaEV() {Id=""id3"", Val=""Display4 "" + DateTime.Now.ToString(), ValR=""Display Restriction4 "" + DateTime.Now.ToString(), Css="""", Class=""text-info""});
+}
+";
+
         const string razorModelFinalScriptTemplate = @"@using System.Data
 @{
     ReportModel model = Model;
@@ -1088,6 +1106,14 @@ if (cell.IsTitle)
                         frm.ObjectForCheckSyntax = context.Instance;
                         template = scriptEnumTemplate;
                         frm.Text = "Edit the script to load the enumerated list values";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "ScriptDisplay")
+                    {
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                        frm.ObjectForCheckSyntax = context.Instance;
+                        template = scriptDisplayEnumTemplate;
+                        frm.Text = "Edit the script to load dynamically the enumerated list values";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

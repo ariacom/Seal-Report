@@ -45,7 +45,7 @@ namespace Seal.Model
                 GetProperty("SQL").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom Expression");
                 GetProperty("SQL").SetDescription(IsSQL ? "If not empty, overwrite the default SQL used for the restriction in the WHERE clause." : "If not empty, overwrite the default LINQ Expression used for the restriction in the LINQ query.");
-
+                GetProperty("CaseSensitive").SetIsBrowsable(!IsSQL && IsText);                
 
                 GetProperty("FormatRe").SetIsBrowsable(!IsEnum);
                 GetProperty("TypeRe").SetIsBrowsable(true);
@@ -303,6 +303,12 @@ namespace Seal.Model
                 if (!EnumRE.HasDynamicDisplay) return EnumRE.Values;
 
                 //Add only selected values...
+                if (EnumRE.Values.Count == 0 && string.IsNullOrEmpty(EnumRE.Error))
+                {
+                    EnumRE.RefreshEnum();
+                    SetEnumHtmlIds();
+                }
+
                 var result = new List<MetaEV>();
                 foreach (var v in EnumRE.Values)
                 {
@@ -821,6 +827,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// If True, the restriction text is case sensitive in the LINQ where clause.
+        /// </summary>
+        [DefaultValue(false)]
+        [Category("Advanced"), DisplayName("Is case sensitive"), Description("If True, the restriction text is case sensitive in the LINQ where clause."), Id(10, 4)]
+        public bool CaseSensitive { get; set; } = false;
+        public bool ShouldSerializeCaseSensitive() { return CaseSensitive; }
+
+        /// <summary>
         /// If True, the restriction can be modified through the Web API, even if the restriction is not prompted.
         /// </summary>
         [DefaultValue(false)]
@@ -1278,6 +1292,29 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// String containing the LINQ values of the enum values
+        /// </summary>
+        public string EnumLINQValue
+        {
+            get
+            {
+
+                string result = "";
+                if (IsEnum)
+                {
+                    var type = MetaColumn.Type;
+                    if (EnumValues.Count == 0) result = "\"\"";
+                    foreach (string enumValue in EnumValues)
+                    {
+                        Helper.AddValue(ref result, ",", Helper.QuoteDouble(enumValue));
+                    }
+                    result = string.Format("new List<string>(){{{0}}}", result);
+                }
+                return result;
+            }
+        }
+
         string GetSQLValue(string value, DateTime date, Operator op)
         {
             string result = "";
@@ -1356,11 +1393,7 @@ namespace Seal.Model
         string GetLINQValue(string value, DateTime date, Operator op)
         {
             string result = "";
-           /* if (IsEnum)
-            {
-                result = Helper.QuoteDouble(Model.Report.EnumDisplayValue(EnumRE, value, true));
-            }
-            else**/ if (IsNumeric)
+            if (IsNumeric)
             {
                 if (string.IsNullOrEmpty(value)) result = "0";
                 else
@@ -1386,7 +1419,7 @@ namespace Seal.Model
             {
                 string value2 = value;
                 if (string.IsNullOrEmpty(value)) value2 = "";
-                result = Helper.QuoteDouble(value2);
+                result = Helper.QuoteDouble(value2) + (!IsEnum && CaseSensitive ? "" : ".ToLower()");
             }
             return result;
         }
@@ -1435,12 +1468,17 @@ namespace Seal.Model
         {
             string separator = (_operator == Operator.NotContains || _operator == Operator.NotEqual ? " && " : " || ");
             string prefix = _operator == Operator.NotContains ? "!" : "";
-            if (IsDateTime) Helper.AddValue(ref LINQText, separator, string.Format("{0} {1}{2}", LINQColumnName, LINQOperator, GetLINQValue(value, finalDate, _operator)));
+            if (IsDateTime)
+            {
+                Helper.AddValue(ref LINQText, separator, string.Format("{0}{1}{2}", LINQColumnName, LINQOperator, GetLINQValue(value, finalDate, _operator)));
+            }
             else
             {
+                var colName = LINQColumnName;
+                if (IsText && !CaseSensitive && string.IsNullOrEmpty(SQL)) colName += ".ToLower()"; 
                 foreach (var val in GetVals(value))
                 {
-                    Helper.AddValue(ref LINQText, separator, string.Format("{0}{1}{2}{3}{4}", prefix, LINQColumnName, LINQOperator, GetLINQValue(val, finalDate, _operator), LINQSuffix));
+                    Helper.AddValue(ref LINQText, separator, string.Format("{0}{1}{2}{3}{4}", prefix, colName, LINQOperator, GetLINQValue(val, finalDate, _operator), LINQSuffix));
                 }
             }
         }

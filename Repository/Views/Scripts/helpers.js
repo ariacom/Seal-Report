@@ -208,8 +208,8 @@ function initRestrictions(parent) {
         if ($(this).attr("id")) {
             $("#id_load").val($(this).attr("id"));
 
-            var data = [];
-            if ($(this).attr("dependencies")) requestEnumData("", false);
+            if ($(this).attr("dependencies") == "true" && $(this).attr("filterchars")==0) requestEnumData("", false);
+            else setEnumMessage($(this).attr("id"));
 
             var filter = "";
             $(parent + ".bs-searchbox input").on("input", function (evt) {

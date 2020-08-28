@@ -358,6 +358,13 @@ namespace Seal
             TreeViewHelper.SelectNode(mainTreeView, mainTreeView.Nodes, entity);
         }
 
+        public void RefreshNode()
+        {
+            var currentNode = mainTreeView.SelectedNode;
+            mainTreeView.SelectedNode = null;
+            mainTreeView.SelectedNode = currentNode;
+        }
+
         public void UpdateModelNode(TreeNode currentNode = null)
         {
             if (currentNode == null) currentNode = mainTreeView.SelectedNode;

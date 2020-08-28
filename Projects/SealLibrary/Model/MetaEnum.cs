@@ -40,6 +40,7 @@ namespace Seal.Model
                 GetProperty("Script").SetIsBrowsable(true);
 
                 GetProperty("SqlDisplay").SetIsBrowsable(true);
+                GetProperty("ScriptDisplay").SetIsBrowsable(true);
                 GetProperty("FilterChars").SetIsBrowsable(true);
                 GetProperty("Message").SetIsBrowsable(true);
 
@@ -56,8 +57,8 @@ namespace Seal.Model
                 GetProperty("Values").SetIsReadOnly(!IsDynamic);
                 GetProperty("NumberOfValues").SetIsReadOnly(true);
 
-                GetProperty("FilterChars").SetIsReadOnly(!HasDynamicDisplay || !HasFilters);
-                GetProperty("Message").SetIsReadOnly(!HasDynamicDisplay || (!HasFilters && !HasDependencies));
+                GetProperty("FilterChars").SetIsReadOnly(!HasDynamicDisplay);
+                GetProperty("Message").SetIsReadOnly(!HasDynamicDisplay || (FilterChars == 0 && !HasDependencies));
 
                 GetProperty("Information").SetIsReadOnly(true);
                 GetProperty("Error").SetIsReadOnly(true);
@@ -90,10 +91,10 @@ namespace Seal.Model
 
         private bool _isDynamic = false;
         /// <summary>
-        /// List is dynamically loaded from the 'SQL Select Statement' or from the 'Load Script'"), Description("If True, the list is loaded using the SQL Select Statement or the Load Script defined
+        /// If True, the list is loaded using the 'SQL Select Statement' and/or the 'Script' defined.
         /// </summary>
         [DefaultValue(false)]
-        [Category("Definition"), DisplayName("List is dynamically loaded from the 'SQL Select Statement' or from the 'Load Script'"), Description("If True, the list is loaded using the SQL Select Statement or the Load Script defined."), Id(2, 1)]
+        [Category("Definition"), DisplayName("List is dynamically loaded from the 'SQL Select Statement' or from the 'Load Script'"), Description("If True, the list is loaded using the 'SQL Select Statement' and/or the 'Script' defined."), Id(2, 1)]
         public Boolean IsDynamic
         {
             get { return _isDynamic; }
@@ -116,7 +117,7 @@ namespace Seal.Model
         /// </summary>
         public bool HasDynamicDisplay
         {
-            get { return !string.IsNullOrEmpty(SqlDisplay) && IsDynamic && IsDbRefresh; }
+            get { return IsDynamic && IsDbRefresh; }
         }
 
 
@@ -168,35 +169,33 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are translated using the Repository translations."), Id(6, 1)]
         public Boolean Translate { get; set; } = false;
 
-        [XmlIgnore]
-        private string _sqlDisplay;
         /// <summary>
-        /// SQL Select Statement used to build the values displayed in a prompted restriction. The SQL is used only if the list is dynamic, refreshed upon database connection.
+        /// If the list is dynamic, refreshed before execution and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed
         /// </summary>
-        [Category("Dynamic Display"), DisplayName("SQL Select Statement for prompted restriction"), Description("SQL Select Statement used to build the values displayed in a prompted restriction. The SQL can return 1 to 5 columns and follows the definition of 'SQL Select Statement' property. It can contain either the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. The SQL is used only if the list is dynamic, refreshed upon database connection."), Id(1, 2)]
+        [DefaultValue(0)]
+        [Category("Dynamic Display"), DisplayName("Filter characters to type"), Description("If the list is dynamic, refreshed before execution and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed."), Id(1, 2)]
+        public int FilterChars { get; set; } = 0;
+        public bool ShouldSerializeFilterChars() { return FilterChars > 0; }
+
+        /// <summary>
+        /// If the list is dynamic, refreshed before execution and has filter characters or dependencies, the message displayed to the end user to trigger the list (e.g. 'Select a country first' or 'Type 5 characters').
+        /// </summary>
+        [Category("Dynamic Display"), DisplayName("Information message"), Description("If the list is dynamic, refreshed before execution and has filter characters or dependencies, the message displayed to the end user to trigger the list (e.g. 'Select a country first' or 'Type 5 characters')."), Id(2, 2)]
+        public string Message { get; set; }
+
+        /// <summary>
+        /// Optional SQL Select Statement used to build the values displayed in a prompted restriction. The SQL is used only if the list is dynamic, refreshed before report execution.
+        /// </summary>
+        [Category("Dynamic Display"), DisplayName("SQL Select Statement for prompted restriction"), Description("Optional SQL Select Statement used to build the values displayed in a prompted restriction. The SQL can return 1 to 5 columns and follows the definition of 'SQL Select Statement' property. It can contain either the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. The SQL is used only if the list is dynamic, refreshed before report execution."), Id(3, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
-        public string SqlDisplay
-        {
-            get { return _sqlDisplay; }
-            set { _sqlDisplay = value;}
-        }
+        public string SqlDisplay { get; set; }
 
         /// <summary>
-        /// If the list is dynamic, refreshed upon database connection and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed
+        /// Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution.
         /// </summary>
-        [DefaultValue(2)]
-        [Category("Dynamic Display"), DisplayName("Filter characters to type"), Description("If the list is dynamic, refreshed upon database connection and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed."), Id(2, 2)]
-        public int FilterChars { get; set; } = 2;
-        public bool ShouldSerializeFilterChars() { return HasFilters; }
-
-        /// <summary>
-        /// True if the list has filter
-        /// </summary>
-        [XmlIgnore()]
-        public bool HasFilters
-        {
-            get { return !string.IsNullOrEmpty(SqlDisplay) && SqlDisplay.Contains(Repository.EnumFilterKeyword); }
-        }
+        [Category("Dynamic Display"), DisplayName("Script for prompted restriction"), Description("Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution."), Id(4, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string ScriptDisplay { get; set; }
 
         /// <summary>
         /// True if the list has dependencies to other list
@@ -204,32 +203,27 @@ namespace Seal.Model
         [XmlIgnore]
         public bool HasDependencies
         {
-            get { return !string.IsNullOrEmpty(SqlDisplay) && SqlDisplay.Contains(Repository.EnumValuesKeyword); }
+            get { return 
+                    (!string.IsNullOrEmpty(SqlDisplay) && SqlDisplay.Contains(Repository.EnumValuesKeyword)) ||
+                    (!string.IsNullOrEmpty(ScriptDisplay) && ScriptDisplay.Contains(Repository.EnumValuesKeyword))
+                    ;
+            }
         }
 
-        /// <summary>
-        /// If the list is dynamic, refreshed upon database connection and has filter characters or dependencies, the message displayed to the end user to trigger the list (e.g. 'Select a country first' or 'Type 5 characters').
-        /// </summary>
-        [Category("Dynamic Display"), DisplayName("Information message"), Description("If the list is dynamic, refreshed upon database connection and has filter characters or dependencies, the message displayed to the end user to trigger the list (e.g. 'Select a country first' or 'Type 5 characters')."), Id(4, 2)]
-        public string Message { get; set; }
-
-        private List<MetaEV> _values = new List<MetaEV>();
         /// <summary>
         /// The list of values used for this enumerated list
         /// </summary>
         [DefaultValue(null)]
         [Category("Values"), DisplayName("Values"), Description("The list of values used for this enumerated list"), Id(1, 3)]
         [Editor(typeof(EnumValueCollectionEditor), typeof(UITypeEditor))]
-        public List<MetaEV> Values
-        {
-            get
-            {
-                if (HasDynamicDisplay && _values.Count == 0 && string.IsNullOrEmpty(Error)) RefreshEnum();
-                return _values;
-            }
-            set { _values = value; }
-        }
-        public bool ShouldSerializeValues() { return !HasDynamicDisplay && _values.Count > 0; }
+        public List<MetaEV> Values { get; set; } = new List<MetaEV>();
+        public bool ShouldSerializeValues() { return !HasDynamicDisplay && Values.Count > 0; }
+
+        /// <summary>
+        /// New enum values set by the dynamic display Script
+        /// </summary>
+        [XmlIgnore]
+        public List<MetaEV> NewValues = new List<MetaEV>();
 
         /// <summary>
         /// The number of values in the collection
@@ -302,20 +296,40 @@ namespace Seal.Model
         /// </summary>
         public List<MetaEV> GetSubSetValues(string filter, Dictionary<MetaEnum, string> dependencies)
         {
-            DbConnection connection = _source.GetOpenConnection();
-
-            var finalSQL = RazorHelper.CompileExecute(SqlDisplay, this);
-            if (HasDynamicDisplay) finalSQL = finalSQL.Replace(Repository.EnumFilterKeyword + "}", filter);
-            if (HasDynamicDisplay && dependencies != null)
+            var result = new List<MetaEV>();
+            if (!string.IsNullOrEmpty(SqlDisplay))
             {
-                foreach (var d in dependencies.Keys)
+                DbConnection connection = _source.GetOpenConnection();
+                var finalSQL = RazorHelper.CompileExecute(SqlDisplay, this);
+                if (HasDynamicDisplay) finalSQL = finalSQL.Replace(Repository.EnumFilterKeyword + "}", filter);
+                if (HasDynamicDisplay && dependencies != null)
                 {
-                    finalSQL = finalSQL.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                    foreach (var d in dependencies.Keys)
+                    {
+                        finalSQL = finalSQL.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                    }
                 }
+                finalSQL = Helper.ClearAllSQLKeywords(finalSQL);
+                result = getValues(connection, finalSQL);
             }
-            finalSQL = Helper.ClearAllSQLKeywords(finalSQL);
 
-            return getValues(connection, finalSQL);
+            if (!string.IsNullOrEmpty(ScriptDisplay))
+            {
+                var finalScript = ScriptDisplay;
+                if (HasDynamicDisplay) finalScript = finalScript.Replace(Repository.EnumFilterKeyword + "}", Helper.QuoteDouble(filter));
+                if (HasDynamicDisplay && dependencies != null)
+                {
+                    foreach (var d in dependencies.Keys)
+                    {
+                        finalScript = finalScript.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                    }
+                }
+                finalScript = Helper.ClearAllLINQKeywords(finalScript);
+                RazorHelper.CompileExecute(finalScript, this);
+                result = NewValues.ToList();
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -327,7 +341,7 @@ namespace Seal.Model
             if (_source == null || !IsDynamic || (string.IsNullOrEmpty(Sql) && string.IsNullOrEmpty(Script))) return;
 
             DbConnection connection = null;
-            var initialValues = _values.ToList();
+            var initialValues = Values.ToList();
             try
             {
                 Error = "";
@@ -336,14 +350,14 @@ namespace Seal.Model
                 if (!string.IsNullOrEmpty(Sql))
                 {
                     connection = _source.GetOpenConnection();
-                    _values = getValues(connection, RazorHelper.CompileExecute(Sql, this));
+                    Values = getValues(connection, RazorHelper.CompileExecute(Sql, this));
                 }
 
                 if (!string.IsNullOrEmpty(Script))
                 {
                     RazorHelper.CompileExecute(Script, this);
                 }
-                Information = string.Format("List refreshed with {0} value(s).", _values.Count);
+                Information = string.Format("List refreshed with {0} value(s).", Values.Count);
             }
             catch (Exception ex)
             {
@@ -353,7 +367,7 @@ namespace Seal.Model
             finally
             {
                 if (connection != null && connection.State == ConnectionState.Open) connection.Close();
-                if (checkOnly) _values = initialValues;
+                if (checkOnly) Values = initialValues;
             }
             Information = Helper.FormatMessage(Information);
             UpdateEditorAttributes();

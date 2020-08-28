@@ -1,0 +1,80 @@
+﻿@using Seal.Model;
+@{
+    MetaTable table = Model;
+
+    table.DefinitionScript = @"@using System.Data
+@{
+    MetaTable metaTable = Model;
+
+    metaTable.NoSQLTable = new DataTable();
+    metaTable.NoSQLTable.Columns.Add(new DataColumn(""Name"", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn(""Path"", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn(""Last Modification"", typeof(string)));
+
+    metaTable.LogMessage(""{0} column(s) defined"", metaTable.NoSQLTable.Columns.Count);
+}";    
+
+	table.LoadScript = @"@using System.Data
+@using System.Net.Http
+@using Newtonsoft.Json.Linq
+@using System.Text
+@using Newtonsoft.Json
+
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
+    
+    var client = new HttpClient();
+    client.DefaultRequestHeaders.Accept.Clear();
+    client.DefaultRequestHeaders.Add(""Cache-Control"", ""no-cache"");
+    try
+    {
+        string url = ""https://sealreport.org/demo/"";
+        //url = ""http://localhost:17178/seal/"";
+
+        //Get SWIGetVersions
+        string response = client.GetStringAsync(url + ""SWIGetVersions"").Result;    
+        dynamic responseGet = JValue.Parse(response);        
+        metaTable.LogMessage(""Version: "" + responseGet.SWIVersion);
+             
+        //Post SWILogin
+        var json = JsonConvert.SerializeObject(new { user="""", password=""""} );
+        var data = new StringContent(json, Encoding.UTF8, ""application/json"");
+        var responsePost = client.PostAsync(url+""SWILogin"", data).Result;  
+        string responseBody = responsePost.Content.ReadAsStringAsync().Result;
+        dynamic login = JValue.Parse(responseBody);
+        metaTable.LogMessage(""Login '{0}' Group '{1}' "", login.name, login.group);
+        
+        //Post SWISearch
+        json = JsonConvert.SerializeObject(new { path=@""\"", pattern=""er""} );
+        data = new StringContent(json, Encoding.UTF8, ""application/json"");
+        responsePost = client.PostAsync(url+""SWISearch"", data).Result;  
+        responseBody = responsePost.Content.ReadAsStringAsync().Result;
+        dynamic search = JValue.Parse(responseBody);
+        foreach (var file in search.files) {
+            table.Rows.Add(
+                file.name,
+                file.path,
+                file.last
+            );
+        }
+        metaTable.LogMessage(""Loaded {0} rows"", table.Rows.Count);
+    }
+    catch(Exception e)
+    {
+        metaTable.LogMessage(String.Format(""Exception getting response from HttpClient: {0}"", e.Message));
+        if (e.InnerException != null) {
+            metaTable.LogMessage(String.Format(""Exception2 getting response from HttpClient: {0}"", e.InnerException.Message));
+            if (e.InnerException.InnerException != null) {
+                metaTable.LogMessage(String.Format(""Exception3 getting response from HttpClient: {0}"", e.InnerException.InnerException.Message));
+                if (e.InnerException.InnerException.InnerException != null) {
+                    metaTable.LogMessage(String.Format(""Exception4 getting response from HttpClient: {0}"", e.InnerException.InnerException.InnerException.Message));
+                }
+            }
+        }
+    }
+ }";
+}

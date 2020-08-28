@@ -66,7 +66,7 @@
                                     }
                                     else
                                     {
-                                        <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum @(trigger ? "trigger_enum" : "") @(restriction.EnumRE.HasDynamicDisplay ? "enum_dynamic"  :"")" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple") @Raw(restriction.EnumLayout == RestrictionLayout.SelectWithFilter ? " data-live-search='true'" : "") dependencies="@restriction.EnumRE.HasDependencies" filterchars="@restriction.EnumRE.FilterChars" message="@Raw(restriction.GetEnumMessage())">
+                                        <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum @(trigger ? "trigger_enum" : "") @(restriction.EnumRE.HasDynamicDisplay ? "enum_dynamic"  :"")" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple") @Raw(restriction.EnumLayout == RestrictionLayout.SelectWithFilter ? " data-live-search='true'" : "") dependencies="@Helper.ToJS(restriction.EnumRE.HasDependencies)" filterchars="@restriction.EnumRE.FilterChars" message="@Raw(restriction.GetEnumMessage())">
                                             @foreach (var enumDef in restriction.PromptedEnumValues)
                                             {
                                                 <option id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
