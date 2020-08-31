@@ -471,6 +471,9 @@
     <None Include="..\..\Repository\Sources\TableTemplates\Xml File.cshtml">
       <Link>Table Templates\Xml File.cshtml</Link>
     </None>
+    <None Include="..\..\Repository\Sources\TableTemplates\Database.cshtml">
+      <Link>Table Templates\Database.cshtml</Link>
+    </None>
     <None Include="CD-Dashboard.cd" />
     <None Include="CD-Data Source.cd" />
     <None Include="packages.config" />

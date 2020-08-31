@@ -276,10 +276,10 @@ namespace Seal.Model
 
                 if (result == null) result = MetaColumn.Enum;
 
-                if (result != null && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
+                if (result != null && result.IsDynamic && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
                 {
                     result.RefreshEnum();
-                    SetEnumHtmlIds();
+                    setEnumHtmlIds(result.Values);
                 }
                 return result;
             }
@@ -292,9 +292,14 @@ namespace Seal.Model
         {
             if (IsEnum)
             {
-                int i = 0;
-                foreach (var enumDef in EnumRE.Values) enumDef.HtmlId = (i++).ToString();
+                setEnumHtmlIds(EnumRE.Values);
             }
+        }
+
+        void setEnumHtmlIds(List<MetaEV> values)
+        {
+            int i = 0;
+            foreach (var enumDef in values) enumDef.HtmlId = (i++).ToString();
         }
 
         /// <summary>
@@ -307,17 +312,15 @@ namespace Seal.Model
             {
                 if (EnumRE == null) return new List<MetaEV>();
 
+                if (EnumRE.IsDynamic && EnumRE.Values.Count == 0 && string.IsNullOrEmpty(EnumRE.Error))
+                {
+                    EnumRE.RefreshEnum();
+                }
                 SetEnumHtmlIds();
 
                 if (!EnumRE.HasDynamicDisplay) return EnumRE.Values;
 
                 //Add only selected values...
-                if (EnumRE.Values.Count == 0 && string.IsNullOrEmpty(EnumRE.Error))
-                {
-                    EnumRE.RefreshEnum();
-                    SetEnumHtmlIds();
-                }
-
                 var result = new List<MetaEV>();
                 foreach (var v in EnumRE.Values)
                 {
@@ -1428,7 +1431,7 @@ namespace Seal.Model
             {
                 string value2 = value;
                 if (string.IsNullOrEmpty(value)) value2 = "";
-                result = Helper.QuoteDouble(value2) + (!IsEnum && CaseSensitive ? "" : ".ToLower()");
+                result = "@" + Helper.QuoteDouble(value2) + (!IsEnum && CaseSensitive ? "" : ".ToLower()");
             }
             return result;
         }

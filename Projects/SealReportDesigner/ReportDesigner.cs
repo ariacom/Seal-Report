@@ -385,6 +385,12 @@ namespace Seal
                         }
                     }
 
+                    if (node != null && node.Name != subModel.Name)
+                    {
+                        currentNode.Nodes.Remove(node);
+                        node = null;
+                    }
+
                     if (node == null)
                     {
                         node = new TreeNode(subModel.Name) { Tag = subModel, ImageIndex = 10, SelectedImageIndex = 10 };
@@ -403,6 +409,12 @@ namespace Seal
                             node = subNode;
                             break;
                         }
+                    }
+
+                    if (node != null && node.Name != subTable.Name)
+                    {
+                        currentNode.Nodes.Remove(node);
+                        node = null;
                     }
 
                     if (node == null)

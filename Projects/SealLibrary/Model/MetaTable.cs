@@ -277,7 +277,7 @@ namespace Seal.Model
         public string GetValue(string name)
         {
             Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
-            return parameter == null ? "" : parameter.Value;
+            return parameter == null ? "" : (string.IsNullOrEmpty(parameter.Value) ? parameter.ConfigValue : parameter.Value);
         }
 
         /// <summary>
