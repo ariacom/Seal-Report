@@ -770,7 +770,7 @@ namespace Seal.Model
                 else if (IsCommonRestrictionValue) return null;
 
                 if (result == null) result = MetaColumn.Enum;
-                if (result != null && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
+                if (result != null && result.IsDynamic  && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
                 {
                     result.RefreshEnum();
                 }

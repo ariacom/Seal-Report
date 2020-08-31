@@ -2380,8 +2380,9 @@ model.ResultTable = query2.CopyToDataTable2();
                 var subTable = currentSubTables.FirstOrDefault(i => i.GUID == table.GUID);
                 if (subTable == null)
                 {
-                    subTable = new MetaTable() { Name = table.Name, GUID = table.GUID };
+                    subTable = new MetaTable() { GUID = table.GUID };
                 }
+                subTable.Name = table.Name;
                 subTable.Model = this;
                 subTable.Source = table.Source;
                 subTable.NoSQLTable = null;
