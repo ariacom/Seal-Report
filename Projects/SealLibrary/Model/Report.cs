@@ -522,6 +522,12 @@ namespace Seal.Model
                 ExecutionErrorStackTrace = ex.StackTrace;
             }
 
+            //Init enum values
+            foreach (var restriction in AllRestrictions.Where(i => i.IsEnumRE))
+            {
+                restriction.SetEnumHtmlIds();
+            }
+
             //First selection for enum values
             foreach (var restriction in AllRestrictions.Where(i => i.IsEnumRE && i.FirstSelection != FirstEnumSelection.None))
             {

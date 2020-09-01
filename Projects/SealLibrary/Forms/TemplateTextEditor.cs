@@ -530,6 +530,29 @@ if (cell.IsTitle)
  }
 ";
 
+        const string dashboardsScriptTemplate = @"@{
+    SecurityUser user = Model;
+    //Full documentation at https://sealreport.org/Help/Index.html
+
+    //user.Dashboards.Clear();
+
+    //Sample to add a personal Dashboard
+    user.LoadPersonalDashboard(
+        user.DashboardPersonalFolder+ @""\test.sdax"" /* dashboard path */
+    );
+
+    //Sample to add a public Dashboard
+    user.LoadPublicDashboard(
+        user.Security.Repository.DashboardPublicFolder + @""\General\KPI.sdax"", /* dashboard path */
+        ""General"", /* folder path */ 
+        ""General"", /* folder name */
+        true /* editable */
+    );
+
+    //Sample to remove a dashboard
+    //user.Dashboards.RemoveAll(i => i.Path == """" || i.Name.Contains(""test""));
+}";
+
         const string razorSourceInitScriptTemplate = @"@using System.Data
 @{
     MetaSource source = Model;
@@ -1282,6 +1305,13 @@ if (cell.IsTitle)
                         template = folderDetailScriptTemplate;
                         frm.ObjectForCheckSyntax = new SecurityUser(null);
                         frm.Text = "Edit the Folder Detail Script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "DashboardsScript")
+                    {
+                        template = dashboardsScriptTemplate;
+                        frm.ObjectForCheckSyntax = new SecurityUser(null);
+                        frm.Text = "Edit the Dashboards Script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

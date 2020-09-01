@@ -12,6 +12,10 @@ function restrictionSelectChange(source) {
 
     var idValue = idSelect.replace("Operator", "Value");
     var value1 = group.find(idValue + "_1");
+    if (value1.length == 0) {
+        idValue = idSelect.replace("Operator", "Option_Value");
+        value1 = group.find(idValue);
+    }
     var value2 = group.find(idValue + "_2");
     var value3 = group.find(idValue + "_3");
     var value4 = group.find(idValue + "_4");
@@ -40,6 +44,9 @@ function restrictionSelectChange(source) {
             value2.parent().parent().css("display", display2);
             value3.parent().parent().css("display", display3);
             value4.parent().parent().css("display", display4);
+        }
+        if (value1.hasClass("enum")) { //enum
+            value1.selectpicker(display1 == "none" ? "hide" : "show");
         }
         else { //numeric or text
             value1.css("display", display1);
