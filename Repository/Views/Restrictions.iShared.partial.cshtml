@@ -55,7 +55,7 @@
                                 {
                                     if (restriction.EnumLayout == RestrictionLayout.RadioToggleButton)
                                     {
-                                        <div class="btn-group" data-toggle="buttons">
+                                        <div class="btn-group" data-toggle="buttons"  id='@restriction.OptionValueHtmlId'>
                                             @foreach (var enumDef in restriction.PromptedEnumValues)
                                             {
                                                 <label class="btn btn-default @(restriction.EnumValues.Contains(enumDef.Id) ? "active" : "")">

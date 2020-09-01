@@ -185,7 +185,7 @@ namespace Seal.Model
         public void ClearCache()
         {
             //reset pointers of objects having translations
-            _dashboards = null;
+            Dashboards = null;
             _widgets = null;
         }
 
@@ -873,16 +873,32 @@ namespace Seal.Model
             }
         }
 
-        void LoadDashboard(string path, string folderPath, string folderName, bool editable, bool isPersonal)
+        /// <summary>
+        /// Load a personal dashboard and its widgets
+        /// </summary>
+        public void LoadPersonalDashboard(string path)
+        {
+            loadDashboard(path, SWIDashboardFolder.PersonalPath, "", true, true);
+        }
+
+        /// <summary>
+        /// Load a public dashboard and its widgets
+        /// </summary>
+        public void LoadPublicDashboard(string path, string folderPath, string folderName, bool editable)
+        {
+            loadDashboard(path, folderPath, folderName, editable, false);
+        }
+
+        void loadDashboard(string path, string folderPath, string folderName, bool editable, bool isPersonal)
         {
             try
             {
-                var dashboard = _dashboards.FirstOrDefault(i => i.Path == path);
+                var dashboard = Dashboards.FirstOrDefault(i => i.Path == path);
                 if (dashboard == null || dashboard.LastModification != File.GetLastWriteTime(path))
                 {
-                    if (dashboard != null) _dashboards.Remove(dashboard);
+                    if (dashboard != null) Dashboards.Remove(dashboard);
                     dashboard = Dashboard.LoadFromFile(path);
-                    _dashboards.Add(dashboard);
+                    Dashboards.Add(dashboard);
                 }
                 dashboard.IsPersonal = isPersonal;
                 dashboard.Editable = editable;
@@ -972,7 +988,7 @@ namespace Seal.Model
             }
         }
 
-        private List<Dashboard> _dashboards = null;
+        public List<Dashboard> Dashboards = null;
         /// <summary>
         /// Load all dashboards for the user
         /// </summary>
@@ -980,13 +996,13 @@ namespace Seal.Model
         {
             try
             {
-                if (_dashboards == null) _dashboards = new List<Dashboard>();
+                if (Dashboards == null) Dashboards = new List<Dashboard>();
                 //personal
                 if (HasPersonalDashboardFolder)
                 {
                     foreach (var p in Directory.GetFiles(DashboardPersonalFolder, "*." + Repository.SealDashboardExtension))
                     {
-                        LoadDashboard(p, SWIDashboardFolder.PersonalPath, "", true, true);
+                        LoadPersonalDashboard(p);
                     }
                 }
 
@@ -997,18 +1013,27 @@ namespace Seal.Model
                     if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
                     foreach (var p in Directory.GetFiles(dir, "*." + Repository.SealDashboardExtension))
                     {
-                        LoadDashboard(p, f.FolderPath, f.Name, f.Right == DashboardFolderRight.Edit, false);
+                        LoadPublicDashboard(p, f.FolderPath, f.Name, f.Right == DashboardFolderRight.Edit);
                     }
                 }
 
                 //remove deleted
-                _dashboards.RemoveAll(i => !File.Exists(i.Path));
+                Dashboards.RemoveAll(i => !File.Exists(i.Path));
+
+                //Dashboards Script
+                ScriptNumber = 1;
+                foreach (var group in SecurityGroups.Where(i => !string.IsNullOrEmpty(i.DashboardsScript)).OrderBy(i => i.Name))
+                {
+                    RazorHelper.CompileExecute(group.DashboardsScript, this);
+                    ScriptNumber++;
+                }
+
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
-            return _dashboards;
+            return Dashboards;
         }
         #endregion
 

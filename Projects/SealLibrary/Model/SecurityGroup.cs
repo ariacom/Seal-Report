@@ -37,7 +37,7 @@ namespace Seal.Model
                 GetProperty("DashboardFolders").SetIsBrowsable(true);
                 GetProperty("PersonalDashboardFolder").SetIsBrowsable(true);
                 GetProperty("ManageDashboards").SetIsBrowsable(true);
-                
+                GetProperty("DashboardsScript").SetIsBrowsable(true);
                 GetProperty("Widgets").SetIsBrowsable(true);
 
                 GetProperty("Culture").SetIsBrowsable(true);
@@ -177,6 +177,13 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityWidget> Widgets { get; set; } = new List<SecurityWidget>();
         public bool ShouldSerializeWidgets() { return Widgets.Count > 0; }
+
+        /// <summary>
+        /// Optional script executed to define/modify the dashboards published for the user. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+        /// </summary>
+        [Category("Dashboards Security"), DisplayName("Dashboards Script"), Description("Optional script executed to define/modify the dashboards published for the user. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(5, 3)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+        public string DashboardsScript { get; set; }
 
         /// <summary>
         /// The culture used for users belonging to the group. If empty, the default culture is used.

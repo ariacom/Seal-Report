@@ -279,7 +279,6 @@ namespace Seal.Model
                 if (result != null && result.IsDynamic && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
                 {
                     result.RefreshEnum();
-                    setEnumHtmlIds(result.Values);
                 }
                 return result;
             }
@@ -292,14 +291,9 @@ namespace Seal.Model
         {
             if (IsEnum)
             {
-                setEnumHtmlIds(EnumRE.Values);
+                int i = 0;
+                foreach (var enumDef in EnumRE.Values) enumDef.HtmlId = (i++).ToString();
             }
-        }
-
-        void setEnumHtmlIds(List<MetaEV> values)
-        {
-            int i = 0;
-            foreach (var enumDef in values) enumDef.HtmlId = (i++).ToString();
         }
 
         /// <summary>
@@ -311,12 +305,6 @@ namespace Seal.Model
             get
             {
                 if (EnumRE == null) return new List<MetaEV>();
-
-                if (EnumRE.IsDynamic && EnumRE.Values.Count == 0 && string.IsNullOrEmpty(EnumRE.Error))
-                {
-                    EnumRE.RefreshEnum();
-                }
-                SetEnumHtmlIds();
 
                 if (!EnumRE.HasDynamicDisplay) return EnumRE.Values;
 

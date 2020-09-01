@@ -521,8 +521,6 @@ namespace Seal.Model
                     List<string> selected_enum = new List<string>();
                     foreach (var enumVal in restriction.EnumRE.Values)
                     {
-                        if (string.IsNullOrEmpty(enumVal.HtmlId)) restriction.SetEnumHtmlIds();
-
                         var val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
                         if (val.ToLower() == "true")
                         {
