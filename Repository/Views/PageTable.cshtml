@@ -18,7 +18,7 @@
         {
             ResultCell header = page.PageTable[0, i];
             ResultCell value = page.PageTable[1, i];
-            Helper.AddValue(ref tocValue, ", ", value.HTMLValue + ": " + value.HTMLValue);
+            Helper.AddValue(ref tocValue, ", ", header.HTMLValue + ": " + value.HTMLValue);
         }
         <h3 data-toc-item='true' data-toc-level='2'>@Raw(tocValue)</h3>
     }
