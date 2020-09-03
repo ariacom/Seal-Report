@@ -105,6 +105,25 @@ namespace Seal.Model
         /// </summary>
         public string LoadScript { get; set; }
 
+        private bool _aggregateSubModels = true;
+        /// <summary>
+        /// If true, aggregates are propagated to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates). 
+        /// </summary>
+        public bool AggregateSubModels
+        {
+            get
+            {
+                return _aggregateSubModels;
+            }
+            set
+            {
+                bool updateModels = (_aggregateSubModels != value);
+                _aggregateSubModels = value;
+                if (updateModels) BuildQuery(false, true);
+            }
+        }
+        public bool ShouldSerializeAggregateSubModels() { return !_aggregateSubModels; }
+
         /// <summary>
         /// Optional Razor Script to modify the model after its generation
         /// </summary>
@@ -120,6 +139,10 @@ namespace Seal.Model
         /// </summary>
         public bool ShareResultTable { get; set; } = true;
 
+        /// <summary>
+        /// If true, the query is printed in the report messages (for debug purpose).
+        /// </summary>
+        public bool PrintQuery { get; set; } = false;
 
         /// <summary>
         /// If true and the table has column values, the first line used for titles is generated in the table header
@@ -1358,7 +1381,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         string sqlColumn = string.Format("{0} AS {1}", element.SQLColumn, element.SQLColumnName);
                         if (IsLINQ)
                         {
-                            sqlColumn = !noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl ? string.Format("{0}=g.Key.{0}", element.SQLColumnName) : string.Format("{0}={1}", element.SQLColumnName, element.LINQColumnName);
+                            sqlColumn = !noGroupBy && element.IsNotAggregate ? string.Format("{0}=g.Key.{0}", element.SQLColumnName) : string.Format("{0}={1}", element.SQLColumnName, element.LINQColumnName);
                         }
 
                         if (!selectColumns.Contains(sqlColumn))
@@ -1370,7 +1393,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         MetaTable table = element.MetaColumn.MetaTable;
                         if (table != null && !FromTables.Contains(table)) FromTables.Add(table);
 
-                        if (!noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl)
+                        if (!noGroupBy && element.IsNotAggregate)
                         {
                             if (groupByColumns.Contains(element.SQLColumn) && !IsLINQ) continue;
 
@@ -1963,7 +1986,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     var colName = element.SQLColumn + SQLascdesc;
                     if (IsLINQ)
                     {
-                        colName = !noGroupBy && element.PivotPosition != PivotPosition.Data && !element.IsAggregateEl ? string.Format("g.Key.{0}{1}", element.SQLColumnName, LINQascdesc) : element.LINQColumnName;
+                        colName = !noGroupBy && element.IsNotAggregate ? string.Format("g.Key.{0}{1}", element.SQLColumnName, LINQascdesc) : element.LINQColumnName;
                     }
 
                     Helper.AddValue(ref orderClause, ",", colName);
@@ -2047,6 +2070,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         //check if we can reuse the current running query: same source, same connection string and same pre/Post SQL
                         ReportModel runningModel = runningModels[key];
                         if (Source == runningModel.Source
+                            && IsSubModel == runningModel.IsSubModel
                             && Connection.ConnectionType == runningModel.Connection.ConnectionType
                             && Connection.FullConnectionString == runningModel.Connection.FullConnectionString
                             && string.IsNullOrEmpty(runningModel.ExecutionError)
@@ -2171,24 +2195,22 @@ model.ResultTable = query2.CopyToDataTable2();
 
                 //Elements in the select
                 var elementsToSelect = Elements.Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID).ToList();
-
+                var currentElements = subModel.Elements.ToList();
+                subModel.Elements.Clear();
                 foreach (var element in elementsToSelect)
                 {
-                    var element2 = subModel.Elements.FirstOrDefault(i => i.MetaColumnGUID == element.MetaColumnGUID);
+                    var element2 = currentElements.FirstOrDefault(i => i.MetaColumnGUID == element.MetaColumnGUID);
                     if (element2 == null)
                     {
-                        //Add the element
+                        //Create the element
                         element2 = ReportElement.Create();
                         element2.MetaColumnGUID = element.MetaColumnGUID;
-                        subModel.Elements.Add(element2);
                     }
+                    subModel.Elements.Add(element2);
                     element2.Name = element.Name;
-                    element2.PivotPosition = element.PivotPosition;
-                    element2.SortOrder = element.SortOrder;
+                    element2.PivotPosition = AggregateSubModels ? element.PivotPosition : PivotPosition.Row;
                     element2.AggregateFunction = element.AggregateFunction;
                 }
-                //remove old elements
-                subModel.Elements.RemoveAll(i => !elementsToSelect.Exists(j => j.MetaColumnGUID == i.MetaColumnGUID));
 
                 //elements used to perform the LINQ joins
                 foreach (var join in ExecTableJoins)
@@ -2231,12 +2253,14 @@ model.ResultTable = query2.CopyToDataTable2();
                 var subTable = currentSubTables.FirstOrDefault(i => i.GUID == table.GUID);
                 if (subTable == null)
                 {
-                    subTable = new MetaTable() { Name = table.Name, GUID = table.GUID };
+                    subTable = new MetaTable() { GUID = table.GUID };
                 }
+                subTable.Name = table.Name;
                 subTable.Model = this;
                 subTable.Source = table.Source;
                 subTable.NoSQLTable = null;
                 subTable.TemplateName = table.TemplateName;
+                subTable.CacheDuration = table.CacheDuration;
                 //Init default properties
                 if (subTable.Parameters.Count == 0)
                 {
@@ -2295,16 +2319,26 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (table != null)
                     {
                         Report.LogMessage("Model '{0}': Building No SQL Table '{1}'", Name, subTable.Name);
-                        subTable.DefinitionScript = table.DefinitionScript;
 
-                        if (!string.IsNullOrEmpty(subTable.LoadScript))
+                        if (subTable.NoSQLCacheTable != null && subTable.CacheDuration > 0 && DateTime.Now < subTable.LoadDate.AddSeconds(subTable.CacheDuration))
                         {
-                            dataTable = subTable.BuildNoSQLTable(false);
-                            RazorHelper.CompileExecute(subTable.LoadScript, subTable);
+                            Report.LogMessage("Model '{0}': Using cache table loaded at {1} for '{2}'", Name, subTable.LoadDate, subTable.Name);
+                            dataTable = subTable.NoSQLCacheTable;
                         }
                         else
                         {
-                            dataTable = subTable.BuildNoSQLTable(true);
+                            if (string.IsNullOrEmpty(subTable.DefinitionScript)) subTable.DefinitionScript = table.DefinitionScript;
+                            if (!string.IsNullOrEmpty(subTable.LoadScript))
+                            {
+                                dataTable = subTable.BuildNoSQLTable(false);
+                                RazorHelper.CompileExecute(subTable.LoadScript, subTable);
+                            }
+                            else
+                            {
+                                dataTable = subTable.BuildNoSQLTable(true);
+                            }
+                            subTable.NoSQLCacheTable = dataTable;
+                            subTable.LoadDate = DateTime.Now;
                         }
 
                         //Thread.Sleep(5000); //For DEV
@@ -2346,6 +2380,11 @@ model.ResultTable = query2.CopyToDataTable2();
                     if (!IsSubModel) Report.LogMessage("Model '{0}': Executing main query...", Name);
                     else Report.LogMessage("Model '{0}': Executing query for sub-model '{1}'...", MasterModel.Name, Name);
                     _command.CommandText = Sql;
+
+                    if (PrintQuery)
+                    {
+                        Report.LogMessage("Model '{0}' SQL Query:\r\n{1}\r\n", Name, Sql);
+                    }
 
                     DbDataAdapter adapter = null;
                     if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
@@ -2425,8 +2464,14 @@ model.ResultTable = query2.CopyToDataTable2();
                             ExecResultTables.Add(subTable.NoSQLTable.TableName, subTable.NoSQLTable);
                         }
 
+                        var loadScript = LoadScript ?? LINQLoadScript;
+                        if (PrintQuery)
+                        {
+                            Report.LogMessage("Model '{0}' LINQ Query:\r\n{1}\r\n", Name, loadScript);
+                        }
+
                         //Finally LINQ query
-                        RazorHelper.CompileExecute(LoadScript ?? LINQLoadScript, this);
+                        RazorHelper.CompileExecute(loadScript, this);
 
                         handleEnums();
                     }

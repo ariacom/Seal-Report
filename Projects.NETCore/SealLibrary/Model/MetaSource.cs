@@ -257,21 +257,36 @@ namespace Seal.Model
             MetaEnum result = AddEnum();
             result.IsEditable = true;
             result.Name = column.DisplayName;
+            result.IsDynamic = true;
             if (!IsNoSQL)
             {
-                result.IsDynamic = true;
                 result.Sql = string.Format("SELECT DISTINCT \r\n{0} \r\nFROM {1} \r\nORDER BY 1", column.Name, column.MetaTable.FullSQLName);
-                result.RefreshEnum();
             }
             else
             {
-                result.IsDynamic = false;
-                column.MetaTable.BuildNoSQLTable(true);
-                foreach (DataRow row in column.MetaTable.NoSQLTable.Rows)
-                {
-                    result.Values.Add(new MetaEV() { Id = row[column.Name].ToString() });
-                }
+                result.Script = @"@using System.Data
+@{
+    MetaEnum enumList = Model;
+    MetaSource source = enumList.Source;
+    MetaTable table = source.MetaData.Tables.FirstOrDefault(i => i.Name == TableName);
+    if (table != null)
+    {
+        DataTable dataTable = table.BuildNoSQLTable(true);
+        enumList.Values.Clear();
+        foreach (DataRow val in dataTable.Rows)
+        {
+            if (!enumList.Values.Exists(i => i.Id == val[ColumnName].ToString()))
+            {
+                enumList.Values.Add(new MetaEV() { Id = val[ColumnName].ToString() });
             }
+        }
+    }
+}
+";
+                result.Script = result.Script.Replace("TableName", Helper.QuoteDouble(column.MetaTable.Name));
+                result.Script = result.Script.Replace("ColumnName", Helper.QuoteDouble(column.Name));
+            }
+            result.RefreshEnum();
             return result;
         }
 

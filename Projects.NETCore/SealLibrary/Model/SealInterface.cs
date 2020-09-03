@@ -18,14 +18,14 @@ namespace Seal.Model
         {
             SealInterface result = null;
             //Check if an implementation is available in a .dll
-            string applicationPath = string.IsNullOrEmpty(repository.ApplicationPath) ? Helper.GetApplicationDirectory() : repository.ApplicationPath;
-            if (File.Exists(Path.Combine(applicationPath, "SealInterface.dll")))
+            string assembilesFolder = repository.AssembliesFolder;
+            if (File.Exists(Path.Combine(assembilesFolder, "SealInterface.dll")))
             {
                 try
                 {
                     Assembly currentAssembly = AppDomain.CurrentDomain.Load("SealInterface");
                     Type t = currentAssembly.GetType("Seal.Model.SealLicenseInterface", true);
-                    Object[] args = new Object[] { };
+                    object[] args = new object[] { };
                     result = (SealInterface)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);
                     result._repository = repository;
                 }

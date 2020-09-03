@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.10.1" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.11.3" />
     <PackageReference Include="EPPlus" Version="4.5.3.3" />
     <PackageReference Include="FluentFTP" Version="32.3.3" />
     <PackageReference Include="jose-jwt" Version="2.5.0" />

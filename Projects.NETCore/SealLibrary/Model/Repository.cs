@@ -79,7 +79,7 @@ namespace Seal.Model
             {
                 if (_licenseText == null)
                 {
-                    var converter = SealPdfConverter.Create(ApplicationPath);
+                    var converter = SealPdfConverter.Create();
                     _licenseText = converter.GetLicenseText();
                 }
 
@@ -365,7 +365,6 @@ namespace Seal.Model
                 result.RepositoryPath = path;
                 //plus defaults...
                 result._cultureInfo = CultureInfo;
-                result.WebApplicationPath = WebApplicationPath;
             }
             return result;
         }
@@ -742,10 +741,11 @@ namespace Seal.Model
             return inputFolder.Replace(Repository.SealRepositoryKeyword, RepositoryPath).Replace(SealPersonalRepositoryKeyword, PersonalFolder).Replace(SealReportsRepositoryKeyword, ReportsFolder);
         }
 
-        #region Translations
+        #region Translations and Cultures
 
         //Translations, one dictionary per context
         Dictionary<string, RepositoryTranslation> _translations = null;
+
         /// <summary>
         /// Current translations
         /// </summary>
@@ -824,6 +824,17 @@ namespace Seal.Model
                 }
                 return _nvd3Translations;
             }
+        }
+
+
+        public List<string> GetInstalledTranslationCultures()
+        {
+            var result = new List<string>();
+            if (Translations.Count > 0)
+            {
+                result = Translations.Values.First().Translations.Keys.ToList();
+            }
+            return result;
         }
 
         /// <summary>
@@ -1087,25 +1098,6 @@ namespace Seal.Model
                 Debug.WriteLine(ex.Message);
             }
             return result;
-        }
-
-        #endregion
-
-        #region Web publishing
-        /// <summary>
-        /// Current web application apth
-        /// </summary>
-        public string WebApplicationPath;
-
-        /// <summary>
-        /// Current application path
-        /// </summary>
-        public string ApplicationPath
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(WebApplicationPath) ? WebApplicationPath : Helper.GetApplicationDirectory();
-            }
         }
 
         #endregion

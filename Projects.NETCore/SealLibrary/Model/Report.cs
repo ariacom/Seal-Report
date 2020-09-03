@@ -74,7 +74,7 @@ namespace Seal.Model
                 {
                     try
                     {
-                        _displayNameEx = RazorHelper.CompileExecute(DisplayName, this);
+                        _displayNameEx = RazorHelper.CompileExecute(DisplayName, this).Trim();
                     }
                     catch { }
                 }
@@ -479,6 +479,12 @@ namespace Seal.Model
                 if (string.IsNullOrEmpty(fileFolder) && OutputToExecute != null && !string.IsNullOrEmpty(OutputToExecute.FolderPath)) fileFolder = OutputToExecute.FolderPath;
                 ExecutionErrors += string.Format("Error initializing report Path, check your report execution or output Path '{0}'\r\n{1}\r\n", Path.Combine(fileFolder, fileName), ex.Message);
                 ExecutionErrorStackTrace = ex.StackTrace;
+            }
+
+            //Init enum values
+            foreach (var restriction in AllRestrictions.Where(i => i.IsEnumRE))
+            {
+                restriction.SetEnumHtmlIds();
             }
 
             //First selection for enum values
@@ -2604,7 +2610,6 @@ namespace Seal.Model
         /// </summary>
         public string EnumMessage(MetaEnum instance)
         {
-            if (!instance.HasFilters && !instance.HasDependencies) return "";
             return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "EnumMessage", instance.Name, instance.Message);
         }
         #endregion

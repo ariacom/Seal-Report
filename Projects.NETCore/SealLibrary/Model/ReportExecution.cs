@@ -521,8 +521,6 @@ namespace Seal.Model
                     List<string> selected_enum = new List<string>();
                     foreach (var enumVal in restriction.EnumRE.Values)
                     {
-                        if (string.IsNullOrEmpty(enumVal.HtmlId)) restriction.SetEnumHtmlIds();
-
                         var val = Report.GetInputRestriction(restriction.OptionHtmlId + enumVal.HtmlId);
                         if (val.ToLower() == "true")
                         {
@@ -2175,7 +2173,7 @@ namespace Seal.Model
                         if (restriction.OptionHtmlId + ev.HtmlId == v) restriction.EnumValues.Add(ev.Id);
                     }
                 }
-                CurrentEnumValues[restriction.EnumRE] = restriction.EnumSQLValue;
+                CurrentEnumValues[restriction.EnumRE] = restriction.IsSQL ? restriction.EnumSQLValue : restriction.EnumLINQValue;
             }
             return restriction;
         }
@@ -2189,27 +2187,39 @@ namespace Seal.Model
             var result = new StringBuilder();
             if (restriction != null && restriction.EnumRE != null)
             {
+                var enumRE = restriction.EnumRE;
+
                 //Set current restrictions
                 foreach (var r in Report.ExecutionCommonRestrictions.Where(i => i.EnumRE != null))
                 {
                     if (!CurrentEnumValues.ContainsKey(r.EnumRE)) CurrentEnumValues.Add(r.EnumRE, null);
-                    CurrentEnumValues[r.EnumRE] = r.EnumSQLValue;
+                    CurrentEnumValues[r.EnumRE] = r.IsSQL ? r.EnumSQLValue : r.EnumLINQValue;
                 }
 
                 var values = new List<MetaEV>();
-                if ((restriction.EnumRE.HasFilters && filter.Length >= restriction.EnumRE.FilterChars) || (restriction.EnumRE.HasDependencies && CurrentEnumValues.Count > 0))
+                if ((enumRE.FilterChars > 0 && filter.Length >= enumRE.FilterChars) || (enumRE.HasDependencies && CurrentEnumValues.Count > 0))
                 {
-                    values = restriction.EnumRE.GetSubSetValues(filter, CurrentEnumValues);
+                    values = enumRE.GetSubSetValues(filter, CurrentEnumValues);
                 }
 
-                foreach (var enumDef in restriction.EnumRE.Values)
+                //Apply auto filter if any
+                if (values.Count == 0 && enumRE.FilterChars > 0 && filter.Length >= enumRE.FilterChars && string.IsNullOrEmpty(enumRE.SqlDisplay) && string.IsNullOrEmpty(enumRE.ScriptDisplay))
                 {
-                    if (values.Exists(i => i.Id == enumDef.Id))
+                    foreach (var enumDef in enumRE.Values)
                     {
-                        var display = restriction.GetEnumDisplayValue(enumDef.Id);
-                        result.Append(result.Length == 0 ? "[" : ",");
-                        result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"}}", restriction.OptionHtmlId + enumDef.HtmlId, display.Replace("\"", "\\\""));
+                        var display = restriction.GetEnumDisplayValue(enumDef.Id).ToLower();
+                        if (display.Contains(filter.ToLower()))
+                        {
+                            values.Add(enumDef);
+                        }
                     }
+                }
+
+                foreach (var enumDef in enumRE.Values.Where(i => values.Exists(j => i.Id == j.Id)))
+                {
+                    var display = restriction.GetEnumDisplayValue(enumDef.Id);
+                    result.Append(result.Length == 0 ? "[" : ",");
+                    result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"}}", restriction.OptionHtmlId + enumDef.HtmlId, display.Replace("\"", "\\\""));
                 }
                 result.Append(result.Length == 0 ? "[]" : "]");
             }

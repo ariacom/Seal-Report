@@ -40,6 +40,17 @@ namespace Seal.Model
         /// </summary>
         public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
 
+
+        /// <summary>
+        /// Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+        /// </summary>
+        public string FoldersScript { get; set; }
+
+        /// <summary>
+        /// Optional script executed to define/modify the reports published in the Web Report Server for a given folder. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+        /// </summary>
+        public string FolderDetailScript { get; set; }
+
         /// <summary>
         /// For the Web Report Designer: If true, SQL Models and Custom SQL for elements or restrictions can be edited through the Web Report Designer.
         /// </summary>
@@ -95,6 +106,11 @@ namespace Seal.Model
         /// </summary>
         public List<SecurityWidget> Widgets { get; set; } = new List<SecurityWidget>();
         public bool ShouldSerializeWidgets() { return Widgets.Count > 0; }
+
+        /// <summary>
+        /// Optional script executed to define/modify the dashboards published for the user. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+        /// </summary>
+        public string DashboardsScript { get; set; }
 
         /// <summary>
         /// The culture used for users belonging to the group. If empty, the default culture is used.

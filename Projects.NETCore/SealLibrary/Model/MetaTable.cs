@@ -154,7 +154,7 @@ namespace Seal.Model
 
 
         MetaTable _rootTable = null;
-
+        [XmlIgnore]
         MetaTable RootTable
         {
             get
@@ -170,6 +170,7 @@ namespace Seal.Model
         /// <summary>
         /// Default definition script coming either from the template or from the root table (for a subtable)
         /// </summary>
+        [XmlIgnore]
         public string DefaultDefinitionScript
         {
             get
@@ -184,6 +185,7 @@ namespace Seal.Model
         /// <summary>
         /// Default load script coming either from the template or from the root table (for a subtable)
         /// </summary>
+        [XmlIgnore]
         public string DefaultLoadScript
         {
             get
@@ -226,7 +228,7 @@ namespace Seal.Model
         public string GetValue(string name)
         {
             Parameter parameter = Parameters.FirstOrDefault(i => i.Name == name);
-            return parameter == null ? "" : parameter.Value;
+            return parameter == null ? "" : (string.IsNullOrEmpty(parameter.Value) ? parameter.ConfigValue : parameter.Value);
         }
 
         /// <summary>
@@ -256,6 +258,11 @@ namespace Seal.Model
         /// The Default Razor Script used to load the data in the table. This can be overwritten in the model.
         /// </summary>
         public string LoadScript { get; set; }
+
+        /// <summary>
+        /// Duration in seconds to keep the result DataTable in cache after a load. If 0, the table is always reloaded.
+        /// </summary>
+        public int CacheDuration { get; set; } = 0;
 
         /// <summary>
         /// If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified.
@@ -419,6 +426,7 @@ namespace Seal.Model
                 return string.Format("{0}: {1} ({2})", Source.Name, AliasName, Type);
             }
         }
+
         /// <summary>
         /// True if the table is editable
         /// </summary>
@@ -855,6 +863,19 @@ namespace Seal.Model
             }
             return result;
         }
+
+        /// <summary>
+        /// Load date time to handle caching for No SQL tables
+        /// </summary>
+        [XmlIgnore]
+        public DateTime LoadDate = DateTime.MinValue;
+
+        /// <summary>
+        /// DataTable used for Cache Table (No SQL Source)
+        /// </summary>
+        [XmlIgnore]
+        public DataTable NoSQLCacheTable = null;
+
 
         #region Helpers
 

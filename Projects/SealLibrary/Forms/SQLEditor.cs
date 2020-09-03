@@ -98,8 +98,9 @@ namespace Seal.Forms
                 }
                 else if (context.Instance is MetaJoin)
                 {
-                    frm.clearToolStripButton.Visible = false;
                     MetaJoin join = context.Instance as MetaJoin;
+                    frm.clearToolStripButton.Visible = false;
+                    frm.checkSQLToolStripButton.Text = join.Source.IsNoSQL ? "Check Script" : "Check SQL";
                     isLINQ = join.Source.IsNoSQL;
 
                     if (join.LeftTable != null && join.RightTable != null && join.LeftTable.Columns.Count > 0 && join.RightTable.Columns.Count > 0)

@@ -128,19 +128,6 @@ namespace SealWebServer.Controllers
             return result;
         }
 
-        private string RequestPhysicalApplicationPath
-        {
-            get
-            {
-#if DEBUG
-                var envDir = _env.ContentRootPath + string.Format("{0}bin{0}Debug{0}netcoreapp3.1", Path.DirectorySeparatorChar);
-#else
-                var envDir = _env.ContentRootPath + string.Format("{0}bin{0}Release{0}netcoreapp3.1", Path.DirectorySeparatorChar);
-#endif
-                return Directory.Exists(envDir) ? envDir : _env.ContentRootPath;
-            }
-        }
-
         private string RequestUrl
         {
             get

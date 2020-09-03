@@ -69,6 +69,12 @@ namespace Seal.Model
         public string WebProductName { get; set; } = "Seal Report";
 
         /// <summary>
+        /// List of cultures available in the user profile of the Web Report Server. If nothing is selected, the translation cultures installed in the repository are proposed by default.
+        /// </summary>
+        public List<string> WebCultures { get; set; } = new List<string>();
+        public bool ShouldSerializeWebCultures() { return WebCultures.Count > 0; }
+
+        /// <summary>
         /// If true, the programs will not access to Internet for external resources. All JavaScript's will be loaded locally (no use of CDN path).
         /// </summary>
         public bool IsLocal { get; set; } = true;
@@ -235,7 +241,7 @@ namespace Seal.Model
             {
                 if (_pdfConverter == null)
                 {
-                    _pdfConverter = SealPdfConverter.Create(Repository.Instance.ApplicationPath);
+                    _pdfConverter = SealPdfConverter.Create();
                     _pdfConverter.SetConfigurations(PdfConfigurations, null);
                     
                 }
@@ -269,7 +275,7 @@ namespace Seal.Model
             {
                 if (_excelConverter == null)
                 {
-                    _excelConverter = SealExcelConverter.Create(Repository.Instance.ApplicationPath);
+                    _excelConverter = SealExcelConverter.Create();
                     _excelConverter.SetConfigurations(ExcelConfigurations, null);
                     
                 }

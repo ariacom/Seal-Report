@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using System.Data;
 using Seal.Helpers;
 using System.Data.Common;
+using RazorEngine;
 
 namespace Seal.Model
 {
@@ -40,7 +41,7 @@ namespace Seal.Model
 
         private bool _isDynamic = false;
         /// <summary>
-        /// If True, the list is loaded using the SQL Select Statement defined
+        /// If True, the list is loaded using the 'SQL Select Statement' and/or the 'Script' defined.
         /// </summary>
         public Boolean IsDynamic
         {
@@ -53,7 +54,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// If True, the list is loaded before a report execution. Should be set to False if the SQL has poor performances.
+        /// If True, the list is loaded before a report execution. Should be set to False if the SQL or the Load Script has poor performances.
         /// </summary>
         public Boolean IsDbRefresh { get; set; } = false;
 
@@ -62,15 +63,14 @@ namespace Seal.Model
         /// </summary>
         public bool HasDynamicDisplay
         {
-            get { return !string.IsNullOrEmpty(SqlDisplay) && IsDynamic && IsDbRefresh; }
+            get { return IsDynamic && IsDbRefresh; }
         }
 
 
-        [XmlIgnore]
         private string _sql;
 
         /// <summary>
-        /// If the list is loaded from the database, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell.
+        /// If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell.
         /// </summary>
         public string Sql
         {
@@ -79,6 +79,21 @@ namespace Seal.Model
             {
                 _sql = value;
                 if (IsDynamic && IsDbRefresh && !string.IsNullOrEmpty(_sql) && _dctd != null) RefreshEnum();
+            }
+        }
+
+        private string _script;
+
+        /// <summary>
+        /// If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty.
+        /// </summary>
+        public string Script
+        {
+            get { return _script; }
+            set
+            {
+                _script = value;
+                if (IsDynamic && IsDbRefresh && !string.IsNullOrEmpty(_script) && _dctd != null) RefreshEnum();
             }
         }
 
@@ -92,31 +107,26 @@ namespace Seal.Model
         /// </summary>
         public Boolean Translate { get; set; } = false;
 
-        [XmlIgnore]
-        private string _sqlDisplay;
         /// <summary>
-        /// SQL Select Statement used to build the values displayed in a prompted restriction. The SQL is used only if the list is dynamic, refreshed upon database connection.
+        /// If the list is dynamic, refreshed before execution and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed
         /// </summary>
-        public string SqlDisplay
-        {
-            get { return _sqlDisplay; }
-            set { _sqlDisplay = value;}
-        }
+        public int FilterChars { get; set; } = 0;
+        public bool ShouldSerializeFilterChars() { return FilterChars > 0; }
 
         /// <summary>
-        /// If the list is dynamic, refreshed upon database connection and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed
+        /// If the list is dynamic, refreshed before execution and has filter characters or dependencies, the message displayed to the end user to trigger the list (e.g. 'Select a country first' or 'Type 5 characters').
         /// </summary>
-        public int FilterChars { get; set; } = 2;
-        public bool ShouldSerializeFilterChars() { return HasFilters; }
+        public string Message { get; set; }
 
         /// <summary>
-        /// True if the list has filter
+        /// Optional SQL Select Statement used to build the values displayed in a prompted restriction. The SQL is used only if the list is dynamic, refreshed before report execution.
         /// </summary>
-        [XmlIgnore]
-        public bool HasFilters
-        {
-            get { return !string.IsNullOrEmpty(SqlDisplay) && SqlDisplay.Contains(Repository.EnumFilterKeyword); }
-        }
+        public string SqlDisplay { get; set; }
+
+        /// <summary>
+        /// Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution.
+        /// </summary>
+        public string ScriptDisplay { get; set; }
 
         /// <summary>
         /// True if the list has dependencies to other list
@@ -124,28 +134,24 @@ namespace Seal.Model
         [XmlIgnore]
         public bool HasDependencies
         {
-            get { return !string.IsNullOrEmpty(SqlDisplay) && SqlDisplay.Contains(Repository.EnumValuesKeyword); }
+            get { return 
+                    (!string.IsNullOrEmpty(SqlDisplay) && SqlDisplay.Contains(Repository.EnumValuesKeyword)) ||
+                    (!string.IsNullOrEmpty(ScriptDisplay) && ScriptDisplay.Contains(Repository.EnumValuesKeyword))
+                    ;
+            }
         }
 
-        /// <summary>
-        /// If the list is dynamic, refreshed upon database connection and has filter characters or dependencies, the message displayed to the end user to trigger the list (e.g. 'Select a country first' or 'Type 5 characters').
-        /// </summary>
-        public string Message { get; set; }
-
-        private List<MetaEV> _values = new List<MetaEV>();
         /// <summary>
         /// The list of values used for this enumerated list
         /// </summary>
-        public List<MetaEV> Values
-        {
-            get
-            {
-                if (HasDynamicDisplay && _values.Count == 0 && string.IsNullOrEmpty(Error)) RefreshEnum();
-                return _values;
-            }
-            set { _values = value; }
-        }
-        public bool ShouldSerializeValues() { return !HasDynamicDisplay && _values.Count > 0; }
+        public List<MetaEV> Values { get; set; } = new List<MetaEV>();
+        public bool ShouldSerializeValues() { return !HasDynamicDisplay && Values.Count > 0; }
+
+        /// <summary>
+        /// New enum values set by the dynamic display Script
+        /// </summary>
+        [XmlIgnore]
+        public List<MetaEV> NewValues = new List<MetaEV>();
 
         /// <summary>
         /// The number of values in the collection
@@ -188,25 +194,27 @@ namespace Seal.Model
         List<MetaEV> getValues(DbConnection connection, string sql)
         {
             var result = new List<MetaEV>();
-            DataTable table = Helper.GetDataTable(connection, sql);
 
-            if (table.Columns.Count > 0)
+            if (!string.IsNullOrEmpty(sql))
             {
-                foreach (DataRow row in table.Rows)
+                DataTable table = Helper.GetDataTable(connection, sql);
+                if (table.Columns.Count > 0)
                 {
-                    if (!row.IsNull(0))
+                    foreach (DataRow row in table.Rows)
                     {
-                        MetaEV value = new MetaEV();
-                        value.Id = row[0].ToString();
-                        value.Val = table.Columns.Count > 1 ? (row.IsNull(1) ? null : row[1].ToString()) : null;
-                        value.ValR = table.Columns.Count > 2 ? (row.IsNull(2) ? null : row[2].ToString()) : null;
-                        value.Css = table.Columns.Count > 3 ? (row.IsNull(3) ? null : row[3].ToString()) : null;
-                        value.Class = table.Columns.Count > 4 ? (row.IsNull(4) ? null : row[4].ToString()) : null;
-                        result.Add(value);
+                        if (!row.IsNull(0))
+                        {
+                            MetaEV value = new MetaEV();
+                            value.Id = row[0].ToString();
+                            value.Val = table.Columns.Count > 1 ? (row.IsNull(1) ? null : row[1].ToString()) : null;
+                            value.ValR = table.Columns.Count > 2 ? (row.IsNull(2) ? null : row[2].ToString()) : null;
+                            value.Css = table.Columns.Count > 3 ? (row.IsNull(3) ? null : row[3].ToString()) : null;
+                            value.Class = table.Columns.Count > 4 ? (row.IsNull(4) ? null : row[4].ToString()) : null;
+                            result.Add(value);
+                        }
                     }
                 }
             }
-
             return result;
         }
 
@@ -215,20 +223,40 @@ namespace Seal.Model
         /// </summary>
         public List<MetaEV> GetSubSetValues(string filter, Dictionary<MetaEnum, string> dependencies)
         {
-            DbConnection connection = _source.GetOpenConnection();
-
-            var finalSQL = RazorHelper.CompileExecute(SqlDisplay, this);
-            if (HasDynamicDisplay) finalSQL = finalSQL.Replace(Repository.EnumFilterKeyword + "}", filter);
-            if (HasDynamicDisplay && dependencies != null)
+            var result = new List<MetaEV>();
+            if (!string.IsNullOrEmpty(SqlDisplay))
             {
-                foreach (var d in dependencies.Keys)
+                DbConnection connection = _source.GetOpenConnection();
+                var finalSQL = RazorHelper.CompileExecute(SqlDisplay, this);
+                if (HasDynamicDisplay) finalSQL = finalSQL.Replace(Repository.EnumFilterKeyword + "}", filter);
+                if (HasDynamicDisplay && dependencies != null)
                 {
-                    finalSQL = finalSQL.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                    foreach (var d in dependencies.Keys)
+                    {
+                        finalSQL = finalSQL.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                    }
                 }
+                finalSQL = Helper.ClearAllSQLKeywords(finalSQL);
+                result = getValues(connection, finalSQL);
             }
-            finalSQL = Helper.ClearAllSQLKeywords(finalSQL);
 
-            return getValues(connection, finalSQL);
+            if (!string.IsNullOrEmpty(ScriptDisplay))
+            {
+                var finalScript = ScriptDisplay;
+                if (HasDynamicDisplay) finalScript = finalScript.Replace(Repository.EnumFilterKeyword + "}", Helper.QuoteDouble(filter));
+                if (HasDynamicDisplay && dependencies != null)
+                {
+                    foreach (var d in dependencies.Keys)
+                    {
+                        finalScript = finalScript.Replace(Repository.EnumValuesKeyword + d.Name + "}", dependencies[d]);
+                    }
+                }
+                finalScript = Helper.ClearAllLINQKeywords(finalScript);
+                RazorHelper.CompileExecute(finalScript, this);
+                result = NewValues.ToList();
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -237,19 +265,25 @@ namespace Seal.Model
         /// <param name="checkOnly"></param>
         public void RefreshEnum(bool checkOnly = false)
         {
-            if (_source == null || !IsDynamic || string.IsNullOrEmpty(Sql)) return;
+            if (_source == null || !IsDynamic || (string.IsNullOrEmpty(Sql) && string.IsNullOrEmpty(Script))) return;
 
             DbConnection connection = null;
+            var initialValues = Values.ToList();
             try
             {
                 Error = "";
                 Information = "";
-                connection = _source.GetOpenConnection();
-                var result = getValues(connection, RazorHelper.CompileExecute(Sql, this));
-                connection.Close();
-                if (checkOnly) return;
 
-                Values = result;
+                if (!string.IsNullOrEmpty(Sql))
+                {
+                    connection = _source.GetOpenConnection();
+                    Values = getValues(connection, RazorHelper.CompileExecute(Sql, this));
+                }
+
+                if (!string.IsNullOrEmpty(Script))
+                {
+                    RazorHelper.CompileExecute(Script, this);
+                }
                 Information = string.Format("List refreshed with {0} value(s).", Values.Count);
             }
             catch (Exception ex)
@@ -260,6 +294,7 @@ namespace Seal.Model
             finally
             {
                 if (connection != null && connection.State == ConnectionState.Open) connection.Close();
+                if (checkOnly) Values = initialValues;
             }
             Information = Helper.FormatMessage(Information);
             

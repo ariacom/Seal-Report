@@ -37,15 +37,6 @@ namespace SealWebServer.Controllers
             }
         }
 
-        private string RequestPhysicalApplicationPath
-        {
-            get
-            {
-                return Path.Combine(Request.PhysicalApplicationPath, "bin");
-            }
-        }
-
-
         private ActionResult getFileResult(string path, Report report) 
         {
             var contentType = MimeMapping.GetMimeMapping(path);

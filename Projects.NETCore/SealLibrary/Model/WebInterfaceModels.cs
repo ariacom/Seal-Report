@@ -30,15 +30,58 @@ namespace Seal.Model
     {
         private static string PersonalPrefix = ":";
 
+        /// <summary>
+        /// Relative folder path including name
+        /// </summary>
         public string path;
+
+        /// <summary>
+        /// Folder name
+        /// </summary>
         public string name;
+
+        /// <summary>
+        /// Full folder path including name
+        /// </summary>
         public string fullname;
+
+        /// <summary>
+        /// Right applied on the folder files/reports:
+        /// 0: No right
+        /// 1: Execute reports / View files
+        /// 2: Execute reports and outputs / View files
+        /// 3: Edit schedules / View files
+        /// 4: Edit reports / Manage files
+        /// </summary>
         public int right = 0;
-        public bool sql = false; //can edit sql model
+
+        /// <summary>
+        /// True if Sql Model and Sql can be edited
+        /// </summary>
+        public bool sql = false;
+
+        /// <summary>
+        /// If true, the folder is expanded after the login
+        /// </summary>
         public bool expand = true;
-        public bool files = false; //true = files only = no reports
-        public int manage = 0; //0 do not manage, 1 manage sub-folders only, 2 manage all :create, delete and rename
-        public SWIFolder[] folders = null;
+
+        /// <summary>
+        /// If true, only files can be displayed in this folder
+        /// </summary>
+        public bool files = false;
+
+        /// <summary>
+        /// Sub-folders management:
+        /// 0 do not manage sub-folders
+        /// 1 manage sub-folders only as they are defined by the security (no rename or delete allowed)
+        /// 2 manage all: create, delete and rename sub-folders
+        /// </summary>
+        public int manage = 0;
+
+        /// <summary>
+        /// List of folder children.
+        /// </summary>
+        public SWIFolder[] folders = new SWIFolder[0];
 
         public void SetManageFlag(bool useSubFolders, bool manageFolder, bool isDefined)
         {
@@ -102,10 +145,34 @@ namespace Seal.Model
     /// </summary>
     public class SWIFile
     {
+        /// <summary>
+        /// File path
+        /// </summary>
         public string path;
+
+        /// <summary>
+        /// File name
+        /// </summary>
         public string name;
+
+        /// <summary>
+        /// Last modification
+        /// </summary>
         public string last;
+
+        /// <summary>
+        /// True if the file is a report
+        /// </summary>
         public bool isreport;
+
+        /// <summary>
+        /// Right applied on the file/report:
+        /// 0: No right
+        /// 1: Execute reports / View files
+        /// 2: Execute reports and outputs / View files
+        /// 3: Edit schedules / View files
+        /// 4: Edit reports / Manage files
+        /// </summary>
         public int right;
     }
 

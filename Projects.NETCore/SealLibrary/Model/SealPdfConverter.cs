@@ -18,28 +18,27 @@ namespace Seal.Model
     public class SealPdfConverter : RootEditor
     {
 
-        public static SealPdfConverter Create(string assemblyDirectory)
+        public static SealPdfConverter Create()
         {
             SealPdfConverter result = null;
             //Check if an implementation is available in a .dll
-            string applicationPath = string.IsNullOrEmpty(assemblyDirectory) ? Helper.GetApplicationDirectory() : assemblyDirectory;
-            if (File.Exists(Path.Combine(applicationPath, "SealConverter.dll")))
+            string assembliesFolder = Repository.Instance.AssembliesFolder;
+            if (File.Exists(Path.Combine(assembliesFolder, "SealConverter.dll")))
             {
                 try
                 {
-                    Assembly currentAssembly = Assembly.LoadFrom(Path.Combine(applicationPath, "SealConverter.dll"));
+                    Assembly currentAssembly = Assembly.LoadFrom(Path.Combine(assembliesFolder, "SealConverter.dll"));
                     //Load related DLLs
 #if NETCOREAPP
-                    Assembly.LoadFrom(Path.Combine(applicationPath, "WnvHtmlToPdf_NetCore.dll"));
-                    Assembly.LoadFrom(Path.Combine(applicationPath, "WnvHtmlToPdfClient_NetCore.dll"));
+                    Assembly.LoadFrom(Path.Combine(assembliesFolder, "WnvHtmlToPdf_NetCore.dll"));
+                    Assembly.LoadFrom(Path.Combine(assembliesFolder, "WnvHtmlToPdfClient_NetCore.dll"));
 #else
-                    Assembly.LoadFrom(Path.Combine(applicationPath, "wnvhtmltopdf.dll"));
-                    Assembly.LoadFrom(Path.Combine(applicationPath, "WnvHtmlToPdfClient.dll"));
+                    Assembly.LoadFrom(Path.Combine(assembliesFolder, "wnvhtmltopdf.dll"));
+                    Assembly.LoadFrom(Path.Combine(assembliesFolder, "WnvHtmlToPdfClient.dll"));
 #endif
                     Type t = currentAssembly.GetType("Seal.Converter.PdfConverter", true);
-                    Object[] args = new Object[] { };
+                    object[] args = new object[] { };
                     result = (SealPdfConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);
-                    result.ApplicationPath = applicationPath;
                 }
                 catch (Exception ex)
                 {
@@ -57,8 +56,6 @@ namespace Seal.Model
             //PlaceHolder1
             return "Not implemented in the open source version. A commercial component is available at https://ariacom.com";
         }
-
-        public string ApplicationPath = Helper.GetApplicationDirectory();
 
         public virtual void ConvertHTMLToPDF(string source, string destination)
         {
