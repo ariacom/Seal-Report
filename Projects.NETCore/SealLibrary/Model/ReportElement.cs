@@ -583,7 +583,7 @@ namespace Seal.Model
 
 
         /// <summary>
-        /// True if the element is an aggregate
+        /// True if the element definition contains already the aggregate
         /// </summary>
         [XmlIgnore]
         public bool IsAggregateEl
@@ -594,6 +594,17 @@ namespace Seal.Model
                 if (ForceAggregate == YesNoDefault.No) return false;
                 if (MetaColumn != null) return MetaColumn.IsAggregate;
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// True is the lement is not an aggregate
+        /// </summary>
+        public bool IsNotAggregate
+        {
+            get
+            {
+                return PivotPosition != PivotPosition.Data && !IsAggregateEl;
             }
         }
 
@@ -623,10 +634,17 @@ namespace Seal.Model
         {
             get
             {
+                MetaEnum result = null;
                 if (_enumGUID == kClearEnumGUID) return null;
-                if (Enum != null) return Enum;
-                if (IsCommonRestrictionValue) return null;
-                return MetaColumn.Enum;
+                if (Enum != null) result = Enum;
+                else if (IsCommonRestrictionValue) return null;
+
+                if (result == null) result = MetaColumn.Enum;
+                if (result != null && result.IsDynamic  && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
+                {
+                    result.RefreshEnum();
+                }
+                return result;
             }
         }
 
@@ -689,8 +707,12 @@ namespace Seal.Model
                 if (IsDateTime) converter = "DateTime";
                 else if (IsNumeric) converter = "Double";
 
-                string result = "";
-                if (PivotPosition == PivotPosition.Data && !IsAggregateEl)
+                string result;
+                if (IsNotAggregate)
+                {
+                    result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
+                }
+                else
                 {
                     //aggregate
                     if (AggregateFunction == AggregateFunction.Count) result = "g.Count()";
@@ -699,10 +721,6 @@ namespace Seal.Model
                         string aggr = AggregateFunction == AggregateFunction.Avg ? "Average" : string.Format("{0}", AggregateFunction);
                         result = string.Format("g.{0}(i => Helper.To{1}(i.{2}[{3}]))", aggr, converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
                     }
-                }
-                else
-                {
-                    result = string.Format("Helper.To{0}({1}[{2}])", converter, MetaColumn.MetaTable.LINQResultName, Helper.QuoteDouble(Name ?? MetaColumn.Name));
                 }
                 return result;
             }

@@ -68,8 +68,6 @@ namespace SealWebServer.Controllers
         Repository CreateRepository()
         {
             Repository repository = Repository.Create();
-            repository.WebApplicationPath = RequestPhysicalApplicationPath;
-            if (string.IsNullOrEmpty(Repository.Instance.WebApplicationPath)) Repository.Instance.WebApplicationPath = RequestPhysicalApplicationPath;
             //Set culture from cookie
             string culture = getCookie(SealCultureCookieName);
             if (!string.IsNullOrEmpty(culture)) repository.SetCultureInfo(culture);
@@ -1254,7 +1252,6 @@ namespace SealWebServer.Controllers
             int index = RequestUrl.ToLower().IndexOf("swexecutereport");
             if (index == -1) throw new Exception("Invalid URL");
             report.WebUrl = GetWebUrl(Request, Response);
-            repository.WebApplicationPath = RequestPhysicalApplicationPath;
 
             //Purge temp files here
             FileHelper.PurgeTempApplicationDirectory();

@@ -349,7 +349,7 @@ namespace Seal.Model
             {
                 if (_pdfConverter == null)
                 {
-                    _pdfConverter = SealPdfConverter.Create(Repository.Instance.ApplicationPath);
+                    _pdfConverter = SealPdfConverter.Create();
                     _pdfConverter.SetConfigurations(PdfConfigurations, null);
                     UpdateEditorAttributes();
                 }
@@ -385,7 +385,7 @@ namespace Seal.Model
             {
                 if (_excelConverter == null)
                 {
-                    _excelConverter = SealExcelConverter.Create(Repository.Instance.ApplicationPath);
+                    _excelConverter = SealExcelConverter.Create();
                     _excelConverter.SetConfigurations(ExcelConfigurations, null);
                     UpdateEditorAttributes();
                 }

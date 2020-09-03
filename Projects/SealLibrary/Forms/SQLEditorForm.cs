@@ -41,6 +41,14 @@ namespace Seal.Forms
             this.KeyDown += TextBox_KeyDown;
         }
 
+        bool IsLINQ
+        {
+            get
+            {
+                return Instance is MetaJoin && ((MetaJoin)Instance).Source.IsNoSQL;
+            }
+        }
+
         public void InitLexer(Lexer lex)
         {
             ScintillaHelper.Init(sqlTextBox, lex);
@@ -63,7 +71,7 @@ namespace Seal.Forms
         {
             if (sqlTextBox.Modified)
             {
-                if (MessageBox.Show("The SQL has been modified. Do you really want to exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return false;
+                if (MessageBox.Show("The " + (IsLINQ ? "Script" : "SQL") + " has been modified. Do you really want to exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return false;
             }
             return true;
         }
@@ -115,7 +123,7 @@ namespace Seal.Forms
                 checkSQL();
                 if (!string.IsNullOrEmpty(errorTextBox.Text))
                 {
-                    if (MessageBox.Show("The SQL is incorrect. Do you really want to save it and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
+                    if (MessageBox.Show("The " + (IsLINQ  ? "Script" : "SQL") + " is incorrect. Do you really want to save it and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
                 }
             }
 
@@ -131,7 +139,7 @@ namespace Seal.Forms
 
         public void checkSQL()
         {
-            string initialSQL = "", error = "";
+            string error = "";
             try
             {
                 if (Instance is ReportModel)
@@ -149,6 +157,8 @@ namespace Seal.Forms
                         else error = model.Source.CheckSQL(sql, model.FromTables, model, false);
                     }
                 }
+
+                string initialSQL;
                 if (Instance is MetaEnum)
                 {
                     MetaEnum anEnum = Instance as MetaEnum;
@@ -240,7 +250,7 @@ namespace Seal.Forms
             }
             else
             {
-                toolStripStatusLabel.Text = "SQL checked successfully";
+                toolStripStatusLabel.Text = (IsLINQ ? "Script" : "SQL") + " checked successfully";
                 toolStripStatusLabel.Image = global::Seal.Properties.Resources.checkedGreen;
             }
         }

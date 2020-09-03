@@ -15,7 +15,6 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Collections.Specialized;
-using DocumentFormat.OpenXml.EMMA;
 
 namespace SealWebServer.Controllers
 {
@@ -69,8 +68,6 @@ namespace SealWebServer.Controllers
         Repository CreateRepository()
         {
             Repository repository = Repository.Create();
-            repository.WebApplicationPath = RequestPhysicalApplicationPath;
-            if (string.IsNullOrEmpty(Repository.Instance.WebApplicationPath)) Repository.Instance.WebApplicationPath = RequestPhysicalApplicationPath;
             //Set culture from cookie
             string culture = getCookie(SealCultureCookieName);
             if (!string.IsNullOrEmpty(culture)) repository.SetCultureInfo(culture);
@@ -299,7 +296,8 @@ namespace SealWebServer.Controllers
                         //Check rights if not in subreports folder
                         if (!report.FilePath.StartsWith(report.Repository.SubReportsFolder))
                         {
-                            SWIFolder folder = getParentFolder(report.FilePath.Replace(report.Repository.ReportsFolder, ""));
+                            var path = report.FilePath.Replace(report.Repository.ReportsFolder, "");
+                            SWIFolder folder = getParentFolder(path);
                             if (folder.right == 0) throw new Exception(string.Format("Error: no right to execute a report on the folder '{0}'", folder.path));
                         }
 
@@ -935,7 +933,16 @@ namespace SealWebServer.Controllers
             path = FileHelper.ConvertOSFilePath(path);
             if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
             if (path.Contains(".." + Path.DirectorySeparatorChar.ToString())) throw new Exception("Error: invalid path");
-            SWIFolder result = new SWIFolder();
+
+            SWIFolder result = WebUser.AllFolders.FirstOrDefault(i => i.path == path);
+            if (result != null)
+            {
+                //Folder was already initialized
+                result.SetFullPath(getFullPath(path));
+                return result;
+            }
+
+            result = new SWIFolder();
             result.path = path;
             result.right = 0;
             result.sql = WebUser.SqlModel;
@@ -969,6 +976,72 @@ namespace SealWebServer.Controllers
             return result;
         }
 
+        SWIFolderDetail getFolderDetail(string path, bool refresh = false)
+        {
+            path = FileHelper.ConvertOSFilePath(path);
+            if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+
+            SWIFolderDetail folderDetail = null;
+            if (refresh)
+            {
+                WebUser.FolderDetails.RemoveAll(i => i.folder.path == path);
+            }
+            else
+            {
+                folderDetail = WebUser.FolderDetails.FirstOrDefault(i => i.folder.path == path);
+                if (folderDetail != null)
+                {
+                    return folderDetail;
+                }
+            }
+
+            SWIFolder folder = getFolder(path);
+            var files = new List<SWIFile>();
+            if (folder.right > 0)
+            {
+                foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
+                {
+                    //check right on files only
+                    if (folder.files && FileHelper.IsSealReportFile(newPath)) continue;
+                    if (folder.IsPersonal && newPath.ToLower() == WebUser.ProfilePath.ToLower()) continue;
+
+                    files.Add(new SWIFile()
+                    {
+                        path = folder.Combine(Path.GetFileName(newPath)),
+                        name = Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
+                        last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
+                        isreport = FileHelper.IsSealReportFile(newPath),
+                        right = folder.right
+                    });
+                }
+            }
+
+            //Folder Detail script
+            WebUser.FolderDetail = new SWIFolderDetail() { folder = folder, files = files.ToArray() };
+            WebUser.ScriptNumber = 1;
+            WebUser.FolderDetailFiles = files;
+            foreach (var group in WebUser.SecurityGroups.Where(i => !string.IsNullOrEmpty(i.FolderDetailScript)).OrderBy(i => i.Name))
+            {
+                RazorHelper.CompileExecute(group.FolderDetailScript, WebUser);
+                WebUser.ScriptNumber++;
+            }
+            folderDetail = WebUser.FolderDetail;
+            WebUser.FolderDetails.Add(folderDetail);
+
+            return folderDetail;
+        }
+
+        SWIFile getFileDetail(string path)
+        {
+            path = FileHelper.ConvertOSFilePath(path);
+            if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+            var folderDetail = getFolderDetail(SWIFolder.GetParentPath(path));
+
+            var fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
+            if (fileDetail == null) throw new Exception("Error: file not found");
+
+            return fileDetail;
+        }
 
         void fillFolder(SWIFolder folder)
         {
@@ -993,19 +1066,19 @@ namespace SealWebServer.Controllers
 
         void searchFolder(SWIFolder folder, string pattern, List<SWIFile> files)
         {
-            foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*").Where(i => Path.GetFileName(i).ToLower().Contains(pattern.ToLower())))
+            var folderDetail = getFolderDetail(folder.path, true);
+
+            foreach (var file in (folderDetail.files.Where(i => Path.GetFileName(i.path).ToLower().Contains(pattern.ToLower()))))
             {
-                if (folder.right > 0)
+                files.Add(new SWIFile()
                 {
-                    files.Add(new SWIFile()
-                    {
-                        path = folder.Combine(Path.GetFileName(newPath)),
-                        name = folder.fullname + Path.DirectorySeparatorChar.ToString() + Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
-                        last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
-                        isreport = FileHelper.IsSealReportFile(newPath),
-                        right = folder.right
-                    });
-                }
+                    path = file.path,
+                    name = folder.fullname + Path.DirectorySeparatorChar.ToString() + file.name,
+                    last = file.last,
+                    isreport = file.isreport,
+                    right = file.right
+                });
+
             }
 
             foreach (string subFolder in Directory.GetDirectories(folder.GetFullPath()))
@@ -1178,7 +1251,6 @@ namespace SealWebServer.Controllers
             int index = RequestUrl.ToLower().IndexOf("swexecutereport");
             if (index == -1) throw new Exception("Invalid URL");
             report.WebUrl = GetWebUrl(Request, Response);
-            repository.WebApplicationPath = RequestPhysicalApplicationPath;
 
             //Purge temp files here
             FileHelper.PurgeTempApplicationDirectory();

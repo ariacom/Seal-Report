@@ -20,23 +20,19 @@ namespace Seal.Model
         /// <summary>
         /// Creates a basic SealExcelConverter
         /// </summary>
-        public static SealExcelConverter Create(string assemblyDirectory)
+        public static SealExcelConverter Create()
         {
             SealExcelConverter result = null;
-            //Check if an implementation is available in a .dll
-            string applicationPath = string.IsNullOrEmpty(assemblyDirectory) ? Helper.GetApplicationDirectory() : assemblyDirectory;
-            if (File.Exists(Path.Combine(applicationPath, "SealConverter.dll")))
+            //Check if an implementation is available in a .dll            
+            string assembliesFolder = Repository.Instance.AssembliesFolder;
+            if (File.Exists(Path.Combine(assembliesFolder, "SealConverter.dll")))
             {
                 try
                 {
-                    Assembly currentAssembly = Assembly.LoadFrom(Path.Combine(applicationPath, "SealConverter.dll"));
-                    //Load related DLLs
-                    Assembly.LoadFrom(Path.Combine(applicationPath, "DocumentFormat.OpenXml.dll"));
-                    Assembly.LoadFrom(Path.Combine(applicationPath, "EPPlus.dll"));
+                    Assembly currentAssembly = Assembly.LoadFrom(Path.Combine(assembliesFolder, "SealConverter.dll"));
                     Type t = currentAssembly.GetType("Seal.Converter.ExcelConverter", true);
-                    Object[] args = new Object[] { };
+                    object[] args = new object[] { };
                     result = (SealExcelConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);
-                    result.ApplicationPath = applicationPath;
                 }
                 catch (Exception ex)
                 {
@@ -56,11 +52,6 @@ namespace Seal.Model
             //PlaceHolder1
             return "Not implemented in the open source version. A commercial component is available at https://ariacom.com"; 
         }
-
-        /// <summary>
-        /// Current application path
-        /// </summary>
-        public string ApplicationPath = Helper.GetApplicationDirectory();
 
         /// <summary>
         /// Convert to Excel and save the result to a destination path

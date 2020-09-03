@@ -94,14 +94,6 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
-    public GetFolders(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIGetFolders", {
-            path: path
-        })
-            .done(function (data) { callbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { failure(xhr, status, error); });
-    }
-
     public GetFolderDetail(path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetFolderDetail", {
             path: path

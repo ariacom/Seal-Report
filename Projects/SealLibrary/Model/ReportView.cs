@@ -899,7 +899,7 @@ namespace Seal.Model
             {
                 if (_pdfConverter == null)
                 {
-                    _pdfConverter = SealPdfConverter.Create(Repository.Instance.ApplicationPath);
+                    _pdfConverter = SealPdfConverter.Create();
                     if (PdfConfigurations.Count == 0) PdfConfigurations = Repository.Instance.Configuration.PdfConfigurations.ToList();
                     _pdfConverter.SetConfigurations(PdfConfigurations, this);
                     _pdfConverter.EntityHandler = HelperEditor.HandlerInterface; //!NETCore
@@ -957,7 +957,7 @@ namespace Seal.Model
             {
                 if (_excelConverter == null)
                 {
-                    _excelConverter = SealExcelConverter.Create(Repository.Instance.ApplicationPath);
+                    _excelConverter = SealExcelConverter.Create();
                     if (ExcelConfigurations.Count == 0) ExcelConfigurations = Repository.Instance.Configuration.ExcelConfigurations.ToList();
 
                     _excelConverter.SetConfigurations(ExcelConfigurations, this);

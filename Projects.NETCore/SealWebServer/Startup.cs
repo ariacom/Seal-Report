@@ -115,9 +115,6 @@ namespace SealWebServer
         {
             try
             {
-                //Wait for application path to be set
-                while (string.IsNullOrEmpty(Repository.Instance.WebApplicationPath)) Thread.Sleep(1000);
-
                 SealReportScheduler.Instance.Run();
             }
             catch (Exception ex)

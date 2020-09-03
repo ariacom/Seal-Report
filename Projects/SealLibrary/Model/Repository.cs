@@ -80,7 +80,7 @@ namespace Seal.Model
             {
                 if (_licenseText == null)
                 {
-                    var converter = SealPdfConverter.Create(ApplicationPath);
+                    var converter = SealPdfConverter.Create();
                     _licenseText = converter.GetLicenseText();
                 }
 
@@ -366,7 +366,6 @@ namespace Seal.Model
                 result.RepositoryPath = path;
                 //plus defaults...
                 result._cultureInfo = CultureInfo;
-                result.WebApplicationPath = WebApplicationPath;
             }
             return result;
         }
@@ -1100,25 +1099,6 @@ namespace Seal.Model
                 Debug.WriteLine(ex.Message);
             }
             return result;
-        }
-
-        #endregion
-
-        #region Web publishing
-        /// <summary>
-        /// Current web application apth
-        /// </summary>
-        public string WebApplicationPath;
-
-        /// <summary>
-        /// Current application path
-        /// </summary>
-        public string ApplicationPath
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(WebApplicationPath) ? WebApplicationPath : Helper.GetApplicationDirectory();
-            }
         }
 
         #endregion

@@ -322,6 +322,12 @@ var SWIMain = /** @class */ (function () {
         });
         _main.enableControls();
         _main.resize();
+        $(document).ajaxStart(function () {
+            $("#refresh-nav-item").addClass("fa-spin");
+        });
+        $(document).ajaxStop(function () {
+            $("#refresh-nav-item").removeClass("fa-spin");
+        });
     };
     SWIMain.prototype.search = function () {
         $waitDialog.modal();
@@ -466,6 +472,8 @@ var SWIMain = /** @class */ (function () {
         //Body
         for (var i = 0; i < data.files.length; i++) {
             var file = data.files[i];
+            if (file.right == 0)
+                continue;
             $tr = $("<tr>");
             $tableBody.append($tr);
             if (_main._canEdit)
@@ -610,3 +618,4 @@ var SWIMain = /** @class */ (function () {
     };
     return SWIMain;
 }());
+//# sourceMappingURL=swi-main.js.map

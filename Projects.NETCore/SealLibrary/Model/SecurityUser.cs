@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using Seal.Helpers;
 using System;
 using System.Collections.Generic;
@@ -51,9 +52,57 @@ namespace Seal.Model
         public string Warning = "";
 
         /// <summary>
-        /// List of SWIFolder
+        /// Current list of SWIFolder of the user
         /// </summary>
         public List<SWIFolder> Folders = new List<SWIFolder>();
+
+        /// <summary>
+        /// Flat list of all SWIFolder of the user 
+        /// </summary>
+        public List<SWIFolder> AllFolders
+        {
+            get
+            {
+                var result = new List<SWIFolder>();
+                foreach (var child in Folders)
+                {
+                    fillFolder(child, result);
+                }
+                return result;
+            }
+        } 
+
+        void fillFolder(SWIFolder folder, List<SWIFolder> folders)
+        {
+            folders.Add(folder);
+            if (folder.folders != null)
+            {
+                foreach (var child in folder.folders)
+                {
+                    fillFolder(child, folders);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Current folder detail of the user (used for Folder Detail Scripts)
+        /// </summary>
+        public SWIFolderDetail FolderDetail = new SWIFolderDetail();
+
+        /// <summary>
+        /// Current files for a folder detail (used for Folder Detail Scripts)
+        /// </summary>
+        public List<SWIFile> FolderDetailFiles;
+
+        /// <summary>
+        /// Current script execution number when several Folders or Folder Detail scripts are executed.
+        /// </summary>
+        public int ScriptNumber = 0;
+
+        /// <summary>
+        /// List of all SWIFolderDetail of the user. The list is built when the user browse the folders.
+        /// </summary>
+        public List<SWIFolderDetail> FolderDetails = new List<SWIFolderDetail>();
 
         /// <summary>
         /// Current SecurityUserProfile
@@ -137,7 +186,7 @@ namespace Seal.Model
         public void ClearCache()
         {
             //reset pointers of objects having translations
-            _dashboards = null;
+            Dashboards = null;
             _widgets = null;
         }
 
@@ -825,16 +874,32 @@ namespace Seal.Model
             }
         }
 
-        void LoadDashboard(string path, string folderPath, string folderName, bool editable, bool isPersonal)
+        /// <summary>
+        /// Load a personal dashboard and its widgets
+        /// </summary>
+        public void LoadPersonalDashboard(string path)
+        {
+            loadDashboard(path, SWIDashboardFolder.PersonalPath, "", true, true);
+        }
+
+        /// <summary>
+        /// Load a public dashboard and its widgets
+        /// </summary>
+        public void LoadPublicDashboard(string path, string folderPath, string folderName, bool editable)
+        {
+            loadDashboard(path, folderPath, folderName, editable, false);
+        }
+
+        void loadDashboard(string path, string folderPath, string folderName, bool editable, bool isPersonal)
         {
             try
             {
-                var dashboard = _dashboards.FirstOrDefault(i => i.Path == path);
+                var dashboard = Dashboards.FirstOrDefault(i => i.Path == path);
                 if (dashboard == null || dashboard.LastModification != File.GetLastWriteTime(path))
                 {
-                    if (dashboard != null) _dashboards.Remove(dashboard);
+                    if (dashboard != null) Dashboards.Remove(dashboard);
                     dashboard = Dashboard.LoadFromFile(path);
-                    _dashboards.Add(dashboard);
+                    Dashboards.Add(dashboard);
                 }
                 dashboard.IsPersonal = isPersonal;
                 dashboard.Editable = editable;
@@ -924,7 +989,7 @@ namespace Seal.Model
             }
         }
 
-        private List<Dashboard> _dashboards = null;
+        public List<Dashboard> Dashboards = null;
         /// <summary>
         /// Load all dashboards for the user
         /// </summary>
@@ -932,13 +997,13 @@ namespace Seal.Model
         {
             try
             {
-                if (_dashboards == null) _dashboards = new List<Dashboard>();
+                if (Dashboards == null) Dashboards = new List<Dashboard>();
                 //personal
                 if (HasPersonalDashboardFolder)
                 {
                     foreach (var p in Directory.GetFiles(DashboardPersonalFolder, "*." + Repository.SealDashboardExtension))
                     {
-                        LoadDashboard(p, SWIDashboardFolder.PersonalPath, "", true, true);
+                        LoadPersonalDashboard(p);
                     }
                 }
 
@@ -949,18 +1014,27 @@ namespace Seal.Model
                     if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
                     foreach (var p in Directory.GetFiles(dir, "*." + Repository.SealDashboardExtension))
                     {
-                        LoadDashboard(p, f.FolderPath, f.Name, f.Right == DashboardFolderRight.Edit, false);
+                        LoadPublicDashboard(p, f.FolderPath, f.Name, f.Right == DashboardFolderRight.Edit);
                     }
                 }
 
                 //remove deleted
-                _dashboards.RemoveAll(i => !File.Exists(i.Path));
+                Dashboards.RemoveAll(i => !File.Exists(i.Path));
+
+                //Dashboards Script
+                ScriptNumber = 1;
+                foreach (var group in SecurityGroups.Where(i => !string.IsNullOrEmpty(i.DashboardsScript)).OrderBy(i => i.Name))
+                {
+                    RazorHelper.CompileExecute(group.DashboardsScript, this);
+                    ScriptNumber++;
+                }
+
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
-            return _dashboards;
+            return Dashboards;
         }
         #endregion
 
