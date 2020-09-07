@@ -45,7 +45,6 @@ work/
 [Pp]ackages/
 temp/
 Assemblies/
-Settings/*.slc
 Logs/
 SpecialFolders/
 Projects/SealDocumentation/Help/
@@ -66,6 +65,7 @@ MainEditor.cshtml
 DataTableEditor*.cshtml
 _ed.*.css
 _ed.*.js
+*.slc
 
 # =========================
 # Operating System Files
