@@ -124,7 +124,7 @@
             this.dataSourceToolStripMenuItem.Image = global::Seal.Properties.Resources.database;
             this.dataSourceToolStripMenuItem.Name = "dataSourceToolStripMenuItem";
             this.dataSourceToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.dataSourceToolStripMenuItem.Text = "Data Source";
+            this.dataSourceToolStripMenuItem.Text = "SQL Data Source";
             this.dataSourceToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // noSQLdataSourceToolStripMenuItem
@@ -132,7 +132,7 @@
             this.noSQLdataSourceToolStripMenuItem.Image = global::Seal.Properties.Resources.nosql;
             this.noSQLdataSourceToolStripMenuItem.Name = "noSQLdataSourceToolStripMenuItem";
             this.noSQLdataSourceToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.noSQLdataSourceToolStripMenuItem.Text = "No SQL Data Source";
+            this.noSQLdataSourceToolStripMenuItem.Text = "LINQ Data Source";
             this.noSQLdataSourceToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // toolStripSeparator2

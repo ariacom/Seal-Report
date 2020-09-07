@@ -146,12 +146,6 @@ New parameter values may require a restart of the Report Designer or the Web Ser
                 log.Log("Copying files from '{0}' to '{1}'", sourceDirectory, publicationDirectory);
                 FileHelper.CopyDirectory(sourceDirectory, publicationDirectory, true);
 
-                //Copy license files if any
-                foreach (var path in Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "*.slc"))
-                {
-                    File.Copy(path, Path.Combine((_configuration.WebNETCore ? publicationDirectory : Path.Combine(publicationDirectory, "bin")), Path.GetFileName(path)), true);
-                }
-
                 //Check config...
                 var currentConfig = Path.Combine(publicationDirectory, _configuration.WebNETCore ? "appsettings.json" : "web.config");
                 var releaseConfig = Path.Combine(publicationDirectory, _configuration.WebNETCore ? "appsettings.Release.json" : "web.release.config");

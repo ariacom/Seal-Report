@@ -336,9 +336,9 @@ namespace Seal.Forms
                         break;
 
                     case ReportExecution.ActionGetNavigationLinks:
-                        cancelNavigation = true;
+                        cancelNavigation = true;                       
                         HtmlElement navMenu = webBrowser.Document.All[ReportExecution.HtmlId_navigation_menu];
-                        if (navMenu != null) navMenu.SetAttribute("innerHTML", _navigation.GetNavigationLinksHTML(_execution.RootReport));
+                        if (navMenu != null && _execution.RootReport != null) navMenu.SetAttribute("innerHTML", _navigation.GetNavigationLinksHTML(_execution.RootReport));
                         break;
 
                     case ReportExecution.ActionGetTableData:

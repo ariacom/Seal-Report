@@ -111,10 +111,10 @@ namespace Seal.Model
         public bool IsDefault { get; set; } = false;
 
         /// <summary>
-        /// If true, this source contains only a table built from a Razor script. The LINQ engine will be used to fill the models.
+        /// If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models.
         /// </summary>
         [DefaultValue(false)]
-        [Category("General"), DisplayName("Is No SQL"), Description("If true (= Is LINQ), this source contains only a table built from a Razor script. The LINQ engine will be used to fill the models."), Id(3, 1)]
+        [Category("General"), DisplayName("Is LINQ"), Description("If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models."), Id(3, 1)]
         public bool IsNoSQL { get; set; } = false;
 
         /// <summary>

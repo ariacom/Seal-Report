@@ -42,12 +42,11 @@ namespace Seal.Model
         {
             SealPdfConverter result = null;
             //Check if an implementation is available in a .dll
-            string assembliesFolder = Repository.Instance.AssembliesFolder;
-            if (File.Exists(Path.Combine(assembliesFolder, "SealConverter.dll")))
+            if (File.Exists(Repository.Instance.SealConverterPath))
             {
                 try
                 {
-                    Assembly currentAssembly = Assembly.LoadFrom(Path.Combine(assembliesFolder, "SealConverter.dll"));
+                    string assembliesFolder = Repository.Instance.AssembliesFolder;
                     //Load related DLLs
 #if NETCOREAPP
                     Assembly.LoadFrom(Path.Combine(assembliesFolder, "WnvHtmlToPdf_NetCore.dll"));
@@ -56,6 +55,7 @@ namespace Seal.Model
                     Assembly.LoadFrom(Path.Combine(assembliesFolder, "wnvhtmltopdf.dll"));
                     Assembly.LoadFrom(Path.Combine(assembliesFolder, "WnvHtmlToPdfClient.dll"));
 #endif
+                    Assembly currentAssembly = Assembly.LoadFrom(Repository.Instance.SealConverterPath);
                     Type t = currentAssembly.GetType("Seal.Converter.PdfConverter", true);
                     object[] args = new object[] { };
                     result = (SealPdfConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);

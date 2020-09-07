@@ -2166,6 +2166,7 @@ namespace Seal.Model
                 if (!CurrentEnumValues.ContainsKey(restriction.EnumRE)) CurrentEnumValues.Add(restriction.EnumRE, null);
                 //Build the SQL value
                 restriction.EnumValues.Clear();
+                if (values == null) values = "";
                 foreach (var v in values.Split('\n').Where(i => !string.IsNullOrEmpty(i)))
                 {
                     foreach (var ev in restriction.EnumRE.Values)

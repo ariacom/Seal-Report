@@ -24,12 +24,11 @@ namespace Seal.Model
         {
             SealExcelConverter result = null;
             //Check if an implementation is available in a .dll            
-            string assembliesFolder = Repository.Instance.AssembliesFolder;
-            if (File.Exists(Path.Combine(assembliesFolder, "SealConverter.dll")))
+            if (File.Exists(Repository.Instance.SealConverterPath))
             {
                 try
                 {
-                    Assembly currentAssembly = Assembly.LoadFrom(Path.Combine(assembliesFolder, "SealConverter.dll"));
+                    Assembly currentAssembly = Assembly.LoadFrom(Repository.Instance.SealConverterPath);
                     Type t = currentAssembly.GetType("Seal.Converter.ExcelConverter", true);
                     object[] args = new object[] { };
                     result = (SealExcelConverter)t.InvokeMember(null, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, null, args);

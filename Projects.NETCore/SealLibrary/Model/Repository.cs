@@ -628,7 +628,29 @@ namespace Seal.Model
         /// </summary>
         public string AssembliesFolder
         {
-            get { return Path.Combine(RepositoryPath, "Assemblies"); }
+            get
+            {
+#if NETCOREAPP
+                return Path.Combine(RepositoryPath, "Assemblies\\NETCore"); 
+#else
+                return Path.Combine(RepositoryPath, "Assemblies");
+#endif
+            }
+        }
+
+        /// <summary>
+        /// SealConverter assembly path
+        /// </summary>
+        public string SealConverterPath
+        {
+            get
+            {
+#if NETCOREAPP
+                return Path.Combine(AssembliesFolder, "SealConverter_NetCore.dll");
+#else
+                return Path.Combine(AssembliesFolder, "SealConverter.dll");
+#endif
+            }
         }
 
         /// <summary>

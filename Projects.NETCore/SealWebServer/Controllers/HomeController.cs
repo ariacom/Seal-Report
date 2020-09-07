@@ -336,7 +336,7 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
-                if (execution != null)
+                if (execution != null && execution.RootReport != null)
                 {
                     Report report = execution.Report;
                     return Json(new { links = NavigationContext.GetNavigationLinksHTML(execution.RootReport) });

@@ -136,18 +136,20 @@ function setProgressBarMessage(selector, progression, message, classname) {
     $(selector).addClass(classname);
 }
 
-function executeReport(nav) {
+function executeReport(nav, target) {
     //check execution triggers
     if (inExecution) return;
     inExecution = true;
 
     var form = $("#header_form");
     if (nav != null && nav.startsWith("HL:")) { //Hyperlink
+        inExecution = false;
         window.open(nav.replace("HL:", ""), '_blank');
         return;
     }
 
     if (nav != null && nav.startsWith("RE:")) { //Report execution
+        inExecution = false;
         if (urlPrefix == "") alert('Not supported from the Report Designer');
         else {
             form.attr("target", "_blank");
@@ -159,7 +161,17 @@ function executeReport(nav) {
     }
 
     $("#navigation_id").val(nav);
+
+    if (nav != null && target) { //Navigation to other window
+        inExecution = false;
+        form.attr("target", target);
+        form.attr("action", urlPrefix + "ActionNavigate");
+        form.submit();
+        return;
+    }
+
     if (nav != null && nav.startsWith("FD:")) { //File download
+        inExecution = false;
         form.attr("action", urlPrefix + "ActionNavigate");
         form.submit();
         return;
@@ -269,13 +281,13 @@ function fillEnumSelect(data, noMessage) {
             );
         }
         $enum.selectpicker("refresh");
-    }    
+    }
 
     if (!noMessage) setEnumMessage($("#id_load").val());
 }
 
 function setEnumMessage(id) {
-    var $enum = $("#"+id);
+    var $enum = $("#" + id);
     var $message = $("#enum-message");
     if ($message) $message.text("");
     if ($enum.attr("message")) {
