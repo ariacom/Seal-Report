@@ -921,8 +921,8 @@ namespace Seal
                 treeContextMenuStrip.Items.Clear();
                 if (entity is SourceFolder)
                 {
-                    addAddItem("Add Data Source", null);
-                    addAddItem("Add No SQL Data Source", null);
+                    addAddItem("Add a new SQL Data Source", null);
+                    addAddItem("Add a new LINQ Data Source", null);
                     foreach (var source in _repository.Sources)
                     {
                         addAddItem(string.Format("Add {0} (Repository)", source.Name), source);
@@ -1059,7 +1059,7 @@ namespace Seal
             {
                 MetaSource source = ((ToolStripMenuItem)sender).Tag as MetaSource;
                 ReportSource newSource = Report.AddSource(source);
-                newSource.IsNoSQL = ((ToolStripMenuItem)sender).Text.Contains("No SQL");
+                newSource.IsNoSQL = ((ToolStripMenuItem)sender).Text.Contains("LINQ");
                 if (source != null)
                 {
                     newSource.LoadRepositoryMetaSources(_repository);

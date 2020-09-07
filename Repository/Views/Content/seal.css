@@ -73,6 +73,7 @@ body {
     from {
         transform: scale(1) rotate(0deg);
     }
+
     to {
         transform: scale(1) rotate(360deg);
     }
@@ -82,11 +83,19 @@ body {
     from {
         -webkit-transform: rotate(0deg);
     }
+
     to {
         -webkit-transform: rotate(360deg);
     }
 }
 
+.external-navigation {
+    padding: 2px 8px;
+    margin-left: 8px;
+}
+.external-navigation:hover {
+    background-color: darkgrey;
+}
 
 .disabled {
     pointer-events: none;

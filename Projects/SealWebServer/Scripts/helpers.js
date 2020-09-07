@@ -115,11 +115,6 @@ function initRestrictions(parent) {
         }
     });
 
-    //Select All button
-    $(parent + ".enum").selectpicker({
-        "actionsBox": true
-    });
-
     //Select Picker
     $(parent + ".operator_select").selectpicker('refresh');
 
@@ -215,7 +210,7 @@ function initRestrictions(parent) {
         if ($(this).attr("id")) {
             $("#id_load").val($(this).attr("id"));
 
-            if ($(this).attr("dependencies") == "true" && $(this).attr("filterchars")==0) requestEnumData("", false);
+            if ($(this).attr("dependencies") == "true" && $(this).attr("filterchars") == 0) requestEnumData("", false);
             else setEnumMessage($(this).attr("id"));
 
             var filter = "";
@@ -311,9 +306,21 @@ function showPopupNavMenu(source, content, forChart, executionguid) {
                 $popup.hide();
             });
     }
+
+    //For web add option to navigate in another tab
+    if (urlPrefix != "") {
+        content = content.replace(new RegExp('</a>', 'g'), '<span class="external-navigation glyphicon glyphicon-share"></span></a>');
+    }
+
     $popup.html(content);
-    $('#nav_popupmenu li').click(function (e) {
+    $('#nav_popupmenu li,#nav_popupmenu span').click(function (e) {
         var nav = $(this).attr("nav");
+        var target = "";
+        if (!nav) {
+            e.stopPropagation();
+            nav = $(this).closest("li").attr("nav");
+            target = "_blank";
+        }
         if (!inReport) {
             //Navigation from dashboard
             var f = $('<form method="post" target="' + executionguid + '"/>').appendTo('body');
@@ -324,7 +331,7 @@ function showPopupNavMenu(source, content, forChart, executionguid) {
             f.submit();
         }
         else {
-            executeReport(nav);
+            executeReport(nav, target);
         }
         $popup.hide();
     });
@@ -390,11 +397,11 @@ function dtCreatedCell(td, cellData, rowData, row, col) {
             $(td).html(html);
         }
         else $(td).html(cellDatas[5]);
-        $(td).attr("class", cellDatas[4]);
-        $(td).attr("style", cellDatas[3]);
-        $(td).attr("navigation", cellDatas[2]);
-        $(td).parent().attr("class", cellDatas[1]);
-        $(td).parent().attr("style", cellDatas[0]);
+        if (cellDatas[4]) $(td).attr("class", cellDatas[4]);
+        if (cellDatas[3]) $(td).attr("style", cellDatas[3]);
+        if (cellDatas[2]) $(td).attr("navigation", cellDatas[2]);
+        if (cellDatas[1]) $(td).parent().attr("class", cellDatas[1]);
+        if (cellDatas[0]) $(td).parent().attr("style", cellDatas[0]);
     }
 }
 
