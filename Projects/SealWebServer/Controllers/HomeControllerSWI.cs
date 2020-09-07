@@ -635,7 +635,7 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Return the dashboards available for the logged user
+        /// Return the dashboards in the current view of the logged user
         /// </summary>
         public ActionResult SWIGetUserDashboards()
         {
@@ -653,7 +653,7 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Return the dashboards in the current view of the logged user
+        /// Return the dashboards available for the logged user
         /// </summary>
         public ActionResult SWIGetDashboards()
         {
@@ -932,7 +932,7 @@ namespace SealWebServer.Controllers
 
                 lock (execution)
                 {
-                    if (!report.IsExecuting && (report.ExecutionEndDate == DateTime.MinValue || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
+                    if (!report.IsExecuting && (force || report.ExecutionEndDate == DateTime.MinValue || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
                     {
                         //Disable basics
                         report.ExecutionView.InitParameters(false);
