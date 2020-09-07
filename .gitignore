@@ -45,6 +45,7 @@ work/
 [Pp]ackages/
 temp/
 Assemblies/
+Settings/*.slc
 Logs/
 SpecialFolders/
 Projects/SealDocumentation/Help/
