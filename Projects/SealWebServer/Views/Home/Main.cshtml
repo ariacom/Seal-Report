@@ -33,8 +33,10 @@
     <input type="text" style="display:none">
     <input type="password" style="display:none">
 
-    @Html.Partial("~/Views/Home/Menu.cshtml")
-
+    @if (string.IsNullOrEmpty(repository.ExportFormat))
+    {
+        @Html.Partial("~/Views/Home/Menu.cshtml")
+    }
     <!--Reports view -->
     <div id="main-container" class="container-fluid folderview" style="padding-top:62px; display:none;">
         <div class="row">
@@ -250,56 +252,81 @@
         </div>
     </div>
 
-    @if (ServerOptions.HasEditor())
-    {
-        @Html.Partial("~/Views/Home/MainEditor.cshtml");
-    }
-
-    <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">
-        <div>
-            <p>Copyright &copy; @DateTime.Now.Year Seal Report. All Rights Reserved (version <span id="footer-version">@Repository.ProductVersion</span>)</p>
+    <!-- Export Modal -->
+    <div id="export-dialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" style="top:60px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@repository.TranslateWeb("Export Dashboards")</h4>
+                </div>
+                <div class="modal-body">
+                    <h5>@repository.TranslateWeb("Dashboards to export")</h5>
+                    <div class="form-group">
+                        <select id="export-dashboards" multiple="multiple"></select>
+                    </div>
+                    <h5>@repository.TranslateWeb("Format")</h5>
+                    <div class="form-group">
+                        <select id="export-format" data-width="60%"></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="dashboard-export" type="button" class="btn btn-primary" data-dismiss="modal">@repository.TranslateWeb("Export")</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="~/Scripts/datatables.min.js"></script>
-    <script src="~/Scripts/jstree.min.js"></script>
-    <script src="~/Scripts/bootstrap-select.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
-    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
-    {
-        <script src="~/Scripts/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
-        <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
-    }
-    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/Scripts/datetime-moment.js"></script>
+        @if (ServerOptions.HasEditor() && string.IsNullOrEmpty(repository.ExportFormat))
+        {
+            @Html.Partial("~/Views/Home/MainEditor.cshtml");
+        }
 
-    <!-- muuri -->
-    <script src='~/Scripts/web-animations.min.js'></script>
-    <script src='~/Scripts/hammer.min.js'></script>
-    <script src='~/Scripts/muuri.min.js'></script>
+        <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">
+            <div>
+                <p>Copyright &copy; @DateTime.Now.Year Seal Report. All Rights Reserved (version <span id="footer-version">@Repository.ProductVersion</span>)</p>
+            </div>
+        </div>
 
-    <!-- libraries for widgets execution -->
-    <script src="~/Scripts/helpers.js"></script>
-    <script src="~/Scripts/d3.min.js"></script>
-    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
-    {
-        <script src="~/Scripts/d3-time.v1.min.js"></script>
-        <script src="~/Scripts/d3-time-format.v2.min.js"></script>
-        <script src="~/Scripts/@("d3/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
-    }
-    <script src="~/Scripts/nv.d3.min.js"></script>
-    <script src="~/Scripts/chartNVD3.js"></script>
-    <script src="~/Scripts/Chart.min.js"></script>
-    <script src="~/Scripts/plotly-latest.min.js"></script>
-    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
-    {
-        <script src="~/Scripts/plotly/@("plotly-locale-" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
-    }
+        <script src="~/Scripts/datatables.min.js"></script>
+        <script src="~/Scripts/jstree.min.js"></script>
+        <script src="~/Scripts/bootstrap-select.min.js"></script>
+        <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+        @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
+        {
+            <script src="~/Scripts/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+            <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
+        }
+        <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+        <script src="~/Scripts/datetime-moment.js"></script>
 
-    @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
-    {
-        <script type='text/javascript' src='~/Scripts/@fileName'></script>
-    }
+        <!-- muuri -->
+        <script src='~/Scripts/web-animations.min.js'></script>
+        <script src='~/Scripts/hammer.min.js'></script>
+        <script src='~/Scripts/muuri.min.js'></script>
+
+        <!-- libraries for widgets execution -->
+        <script src="~/Scripts/helpers.js"></script>
+        <script src="~/Scripts/d3.min.js"></script>
+        @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
+        {
+            <script src="~/Scripts/d3-time.v1.min.js"></script>
+            <script src="~/Scripts/d3-time-format.v2.min.js"></script>
+            <script src="~/Scripts/@("d3/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+        }
+        <script src="~/Scripts/nv.d3.min.js"></script>
+        <script src="~/Scripts/chartNVD3.js"></script>
+        <script src="~/Scripts/Chart.min.js"></script>
+        <script src="~/Scripts/plotly-latest.min.js"></script>
+        @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
+        {
+            <script src="~/Scripts/plotly/@("plotly-locale-" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+        }
+
+        @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
+        {
+            <script type='text/javascript' src='~/Scripts/@fileName'></script>
+        }
 
 <script type="text/javascript">
         //server
@@ -319,6 +346,8 @@
         var shortDateTimeFormat = '@repository.MomentJSShortDateTimeFormat';
         var isUSdate = shortDateFormat.match(/^m/i);
         var printLayout = false;
+        var exportFormat = '@repository.ExportFormat';
+        var exportIds = '@repository.ExportIds'.split(',');
 
         var folderRightSchedule = @((int) FolderRight.Schedule);
         var folderRightEdit = @((int) FolderRight.Edit);
@@ -414,7 +443,7 @@
         //keyword
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
 
-        var hasEditor = @Helper.ToJS(ServerOptions.HasEditor());
+        var hasEditor = @Helper.ToJS(ServerOptions.HasEditor() && string.IsNullOrEmpty(repository.ExportFormat));
         //specific for widget execution
         function nvd3TranslateText(text)
         {
@@ -426,24 +455,24 @@
         }
 </script>
 
-    @if (!ServerOptions.HasMinifiedScripts())
-    {
-        <script src="~/Scripts/swi-utils.js"></script>
-        <script src="~/Scripts/swi-gateway.js"></script>
-        <script src="~/Scripts/swi-dashboard.js"></script>
-        <script src="~/Scripts/swi-main.js"></script>
-        if (ServerOptions.HasEditor())
+        @if (!ServerOptions.HasMinifiedScripts())
         {
-            <script src="~/Scripts/swi-button-group.js"></script>
-            <script src="~/Scripts/swi-editor.js"></script>
-            <script src="~/Scripts/swi-properties.js"></script>
-            <script src="~/Scripts/swi-dashboard-editor.js"></script>
+            <script src="~/Scripts/swi-utils.js"></script>
+            <script src="~/Scripts/swi-gateway.js"></script>
+            <script src="~/Scripts/swi-dashboard.js"></script>
+            <script src="~/Scripts/swi-main.js"></script>
+            if (ServerOptions.HasEditor() && string.IsNullOrEmpty(repository.ExportFormat))
+            {
+                <script src="~/Scripts/swi-button-group.js"></script>
+                <script src="~/Scripts/swi-editor.js"></script>
+                <script src="~/Scripts/swi-properties.js"></script>
+                <script src="~/Scripts/swi-dashboard-editor.js"></script>
+            }
         }
-    }
-    else
-    {
-        <script src="~/Scripts/swi.js"></script>
-    }
+        else
+        {
+            <script src="~/Scripts/swi.js"></script>
+        }
 
-</body>
+    </body>
 </html>

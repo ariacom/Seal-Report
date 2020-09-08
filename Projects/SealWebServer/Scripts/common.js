@@ -139,17 +139,14 @@ function setProgressBarMessage(selector, progression, message, classname) {
 function executeReport(nav, target) {
     //check execution triggers
     if (inExecution) return;
-    inExecution = true;
 
     var form = $("#header_form");
     if (nav != null && nav.startsWith("HL:")) { //Hyperlink
-        inExecution = false;
         window.open(nav.replace("HL:", ""), '_blank');
         return;
     }
 
     if (nav != null && nav.startsWith("RE:")) { //Report execution
-        inExecution = false;
         if (urlPrefix == "") alert('Not supported from the Report Designer');
         else {
             form.attr("target", "_blank");
@@ -163,7 +160,6 @@ function executeReport(nav, target) {
     $("#navigation_id").val(nav);
 
     if (nav != null && target) { //Navigation to other window
-        inExecution = false;
         form.attr("target", target);
         form.attr("action", urlPrefix + "ActionNavigate");
         form.submit();
@@ -171,12 +167,12 @@ function executeReport(nav, target) {
     }
 
     if (nav != null && nav.startsWith("FD:")) { //File download
-        inExecution = false;
         form.attr("action", urlPrefix + "ActionNavigate");
         form.submit();
         return;
     }
 
+    inExecution = true;
     if (refreshTimer) clearInterval(refreshTimer);
 
     var url = "";
@@ -450,4 +446,11 @@ $(document).ready(function () {
     scrollMessages();
 
     $("#main_container").css("display", "block");
+
+    //trigger of conversion
+    if (typeof wnvPdfConverter != "undefined") {
+        setTimeout(function () {
+            wnvPdfConverter.startConversion();
+        }, 3000);
+    }
 });

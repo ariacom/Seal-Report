@@ -81,6 +81,15 @@ namespace Seal.Model
             throw new Exception("The Excel Converter is not implemented in the open source version...\r\nA commercial component is available at https://ariacom.com\r\n");
         }
 
+        /// <summary>
+        /// Convert Dashboards to Excel and save the result to a destination path
+        /// </summary>
+        public virtual string ConvertDashboardsToExcel(object dashboards, string destination)
+        {
+            //PlaceHolder2
+            throw new Exception("The Excel Converter is not implemented in the open source version...\r\nA commercial component is available at https://ariacom.com\r\n");
+        }
+
         public virtual void SetConfigurations(List<string> configurations, ReportView view)
         {
         }
