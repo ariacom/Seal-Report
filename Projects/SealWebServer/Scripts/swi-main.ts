@@ -21,6 +21,7 @@ declare var folderRightSchedule: number;
 declare var folderRightEdit: number;
 declare var hasEditor: boolean;
 declare var dirSeparator: string;
+declare var exportFormat : string;
 
 $(document).ready(function () {
     _gateway = new SWIGateway();
@@ -42,6 +43,8 @@ class SWIMain {
     private _clipboard: string[];
     private _clipboardCut: boolean = false;
     private _folderpath: string = "\\";
+    public _exporting: boolean = false;
+    public _exportingPrint: boolean = false;
 
     public Process() {
         $waitDialog = $("#wait-dialog");
@@ -51,6 +54,14 @@ class SWIMain {
         $outputPanel = $("#output-panel");
         $propertiesPanel = $("#properties-panel");
         $elementDropDown = $("#element-dropdown");
+
+        //Dashboard export
+        _main._exporting = (exportFormat != "");
+        _main._exportingPrint = (exportFormat == "htmlprint" || exportFormat == "pdf" || exportFormat == "pdflandscape");
+        if (_main._exporting) {
+            $(".hide-export").css("display", "none");
+            $("#main-dashboard").css("padding-top", "15px");
+        }
 
         $(".navbar-right").hide();
 
@@ -159,7 +170,7 @@ class SWIMain {
             _editor.brand();
         }
 
-        if (_main._profile.lastview == "dashboards") {
+        if (_main._profile.lastview == "dashboards" || _main._exporting) {
             _main.showDashboard(true);
         }
         else {
@@ -670,7 +681,6 @@ class SWIMain {
                 });
             }, 200);
         });
-
 
         _main.enableControls();
     }

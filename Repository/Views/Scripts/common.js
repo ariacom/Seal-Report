@@ -446,4 +446,11 @@ $(document).ready(function () {
     scrollMessages();
 
     $("#main_container").css("display", "block");
+
+    //trigger of conversion
+    if (typeof wnvPdfConverter != "undefined") {
+        setTimeout(function () {
+            wnvPdfConverter.startConversion();
+        }, 3000);
+    }
 });

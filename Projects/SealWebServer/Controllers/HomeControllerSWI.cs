@@ -842,10 +842,69 @@ namespace SealWebServer.Controllers
             }
         }
 
+        ReportExecution getWidgetViews(DashboardWidget widget, out Report report, ref ReportView view, ref ReportView modelView)
+        {
+            ReportExecution execution = null;
+            var filePath = Repository.ReportsFolder + widget.ReportPath;
+            if (!System.IO.File.Exists(filePath)) throw new Exception("Error: the report does not exist");
+
+            var executions = DashboardExecutions;
+            lock (executions)
+            {
+                //remove executions older than 2 hours
+                executions.RemoveAll(i => i.Report.ExecutionEndDate != DateTime.MinValue && i.Report.ExecutionEndDate < DateTime.Now.AddHours(-2));
+                //check if report has been modified
+                var lastDateTime = System.IO.File.GetLastWriteTime(filePath);
+                executions.RemoveAll(i => i.Report.FilePath == filePath && i.Report.LastModification != lastDateTime);
+
+                //find existing execution
+                foreach (var exec in executions.Where(i => i.Report.FilePath == filePath))
+                {
+                    exec.Report.GetWidgetViewToParse(exec.Report.ExecutionView.Views, widget.GUID, ref view, ref modelView);
+                    if (view != null)
+                    {
+                        execution = exec;
+                        break;
+                    }
+                }
+
+                if (execution == null)
+                {
+                    //create execution
+                    var repository = Repository.CreateFast();
+                    report = Report.LoadFromFile(filePath, repository);
+
+                    report.ExecutionContext = ReportExecutionContext.WebReport;
+                    report.SecurityContext = WebUser;
+                    //Set url
+                    report.WebUrl = GetWebUrl(Request, Response);
+
+                    execution = new ReportExecution() { Report = report };
+                    executions.Add(execution);
+                }
+                else
+                {
+                    report = execution.Report;
+                }
+
+                if (view == null)
+                {
+                    report.GetWidgetViewToParse(report.Views, widget.GUID, ref view, ref modelView);
+                }
+
+                if (view == null) throw new Exception("Error: the widget does not exist");
+
+                //Set execution view from the new root...
+                report.CurrentViewGUID = report.GetRootView(view).GUID;
+            }
+
+            return execution;
+        }
+
         /// <summary>
         /// Return the result of a dashboard item
         /// </summary>
-        public ActionResult SWIGetDashboardResult(string guid, string itemguid, bool force)
+        public ActionResult SWIGetDashboardResult(string guid, string itemguid, bool force, string format)
         {
             writeDebug("SWIGetDashboardResult");
             try
@@ -853,10 +912,6 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
 
                 if (!CheckAuthentication()) return Content(_loginContent);
-
-                Report report = null;
-                ReportExecution execution = null;
-                Repository repository = null;
 
                 var dashboard = WebUser.UserDashboards.FirstOrDefault(i => i.GUID == guid);
                 if (dashboard == null)
@@ -877,59 +932,11 @@ namespace SealWebServer.Controllers
                 var filePath = Repository.ReportsFolder + widget.ReportPath;
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: the report does not exist");
 
-                string content = "";
                 ReportView view = null, modelView = null;
+                Report report = null;
+                ReportExecution execution = getWidgetViews(widget, out report, ref view, ref modelView);
 
-                var executions = DashboardExecutions;
-                lock (executions)
-                {
-                    //remove executions older than 2 hours
-                    executions.RemoveAll(i => i.Report.ExecutionEndDate != DateTime.MinValue && i.Report.ExecutionEndDate < DateTime.Now.AddHours(-2));
-                    //check if report has been modified
-                    var lastDateTime = System.IO.File.GetLastWriteTime(filePath);
-                    executions.RemoveAll(i => i.Report.FilePath == filePath && i.Report.LastModification != lastDateTime);
-
-                    //find existing execution
-                    foreach (var exec in executions.Where(i => i.Report.FilePath == filePath))
-                    {
-                        exec.Report.GetWidgetViewToParse(exec.Report.ExecutionView.Views, widget.GUID, ref view, ref modelView);
-                        if (view != null)
-                        {
-                            execution = exec;
-                            break;
-                        }
-                    }
-
-                    if (execution == null)
-                    {
-                        //create execution
-                        repository = Repository.CreateFast();
-                        report = Report.LoadFromFile(filePath, repository);
-
-                        report.ExecutionContext = ReportExecutionContext.WebReport;
-                        report.SecurityContext = WebUser;
-                        //Set url
-                        report.WebUrl = GetWebUrl(Request, Response);
-
-                        execution = new ReportExecution() { Report = report };
-                        executions.Add(execution);
-                    }
-                    else
-                    {
-                        report = execution.Report;
-                    }
-
-                    if (view == null)
-                    {
-                        report.GetWidgetViewToParse(report.Views, widget.GUID, ref view, ref modelView);
-                    }
-
-                    if (view == null) throw new Exception("Error: the widget does not exist");
-
-                    //Set execution view from the new root...
-                    report.CurrentViewGUID = report.GetRootView(view).GUID;
-                }
-
+                //Execute if necessary
                 lock (execution)
                 {
                     if (!report.IsExecuting && (force || report.ExecutionEndDate == DateTime.MinValue || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
@@ -949,11 +956,25 @@ namespace SealWebServer.Controllers
                 }
 
                 //Reset pointers and parse
+                string content = "";
                 lock (execution)
                 {
                     try
                     {
                         report.Status = ReportStatus.RenderingDisplay;
+
+                        if (format == "html") {
+                            report.Format = ReportFormat.html;
+                            report.Status = ReportStatus.RenderingResult;
+                            report.ExecutionViewResultFormat = ReportFormat.html.ToString();
+                        }
+                        else if (format == "htmlprint" || format.StartsWith("pdf"))
+                        {
+                            report.Format = ReportFormat.print;
+                            report.Status = ReportStatus.RenderingResult;
+                            report.ExecutionViewResultFormat = ReportFormat.print.ToString();
+                        }
+
                         report.CurrentModelView = modelView;
                         if (modelView != null && modelView.Model != null && modelView.Model.Pages.Count > 0)
                         {
@@ -1002,6 +1023,76 @@ namespace SealWebServer.Controllers
 
                 return Json(result);
             }
+        }
+
+
+        /// <summary>
+        /// Export the dashboard into a file: HTML, PDF, XLSX
+        /// </summary>
+        public ActionResult SWExportDashboards(string dashboards, string format)
+        {
+            writeDebug("SWExportDashboards");
+            ActionResult result = null;
+            try
+            {
+                if (!CheckAuthentication()) return _loginContentResult;
+
+                if (!string.IsNullOrEmpty(format) && dashboards != null && dashboards.Length > 0)
+                {
+                    if (format == "pdf")
+                    {
+                        var pdfConverter = SealPdfConverter.Create();
+                        string path = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.pdf"));
+                        pdfConverter.ConvertHTMLToPDF("http://localhost:17178/seal/Main?Format=pdf", path);
+                        return getFileResult(path, null);
+                    }
+                    else if (format == "excel")
+                    {
+                        var dashboardsToExport = new Dictionary<Dashboard, List<ReportView>>();
+                        var ids = dashboards.Split(',');
+                        foreach (var dashboard in WebUser.UserDashboards.Where(i => ids.Contains(i.GUID)).OrderBy(i => i.Order))
+                        {
+                            var views = new List<ReportView>();
+                            foreach (var item in dashboard.Items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order))
+                            {
+                                var widget = DashboardWidgetsPool.Widgets.ContainsKey(item.WidgetGUID) ? DashboardWidgetsPool.Widgets[item.WidgetGUID] : null;
+                                if (widget != null)
+                                {
+                                    ReportView view = null, modelView = null;
+                                    Report report = null;
+                                    ReportExecution execution = getWidgetViews(widget, out report, ref view, ref modelView);
+
+                                    if (report.Cancel) break;
+                                    if (view != null)
+                                    {
+                                        view.Tag = item.DisplayGroupName;
+                                        views.Add(view);
+                                    }
+                                }
+                            }
+                            dashboardsToExport.Add(dashboard, views);
+                        }
+
+                        if (dashboardsToExport.Count == 0) throw new Exception("No dashboard to export...");
+
+                        var converter = SealExcelConverter.Create();
+                        string path = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.xlsx"));
+                        converter.ConvertDashboardsToExcel(dashboardsToExport, path);
+                        return getFileResult(path, null);
+                    }
+
+                    var repository = Repository.CreateFast();
+                    repository.ExportFormat = format;
+                    repository.ExportIds = dashboards;
+                    result = View("Main", repository);
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+
+            return result;
         }
 
         #endregion
