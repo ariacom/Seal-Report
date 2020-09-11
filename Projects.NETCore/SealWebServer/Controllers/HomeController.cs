@@ -192,7 +192,16 @@ namespace SealWebServer.Controllers
             try
             {
                 if (Repository == null) CreateRepository();
-                result = View(Repository);
+                var model = new MainModel() { Repository = Repository };
+#if NETCOREAPP
+                model.ServerPath = WebRootPath;
+                model.BaseURL = Request.PathBase.Value;
+#else
+                model.ServerPath = Request.PhysicalApplicationPath;
+                model.BaseURL = Request.ApplicationPath;
+#endif
+
+                result = View(model);
             }
             catch (Exception ex)
             {

@@ -166,6 +166,7 @@ namespace Seal.Model
         }
 
         //Run-time
+
         /// <summary>
         /// Current report name
         /// </summary>

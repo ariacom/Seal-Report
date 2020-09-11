@@ -38,6 +38,11 @@ namespace Seal.Model
         #endregion
 
         /// <summary>
+        /// True if the converter is used for Dashboard conversion
+        /// </summary>
+        public bool ForDashboard = false;
+
+        /// <summary>
         /// Creates a basic SealExcelConverter
         /// </summary>
         public static SealExcelConverter Create()
@@ -86,7 +91,7 @@ namespace Seal.Model
         /// </summary>
         public virtual string ConvertDashboardsToExcel(object dashboards, string destination)
         {
-            //PlaceHolder2
+            //PlaceHolder3
             throw new Exception("The Excel Converter is not implemented in the open source version...\r\nA commercial component is available at https://ariacom.com\r\n");
         }
 

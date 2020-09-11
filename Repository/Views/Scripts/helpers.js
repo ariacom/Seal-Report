@@ -467,4 +467,3 @@ function submitViewParameter(executionId, viewId, parameterName, parameterValue)
         $("#header_form").submit();
     }
 }
-

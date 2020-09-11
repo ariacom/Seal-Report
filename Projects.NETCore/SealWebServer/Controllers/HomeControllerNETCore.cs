@@ -113,7 +113,7 @@ namespace SealWebServer.Controllers
 
         private ActionResult getFileResult(string path, Report report)
         {
-            FileContentResult result = null;
+            FileContentResult result;
             if (Path.GetExtension(path) == ".htm" || Path.GetExtension(path) == ".html")
             {
                 result = File(System.IO.File.ReadAllBytes(path), "text/html");
@@ -142,6 +142,13 @@ namespace SealWebServer.Controllers
             return appPath + (appPath.EndsWith("/") ? "" : "/");
         }
 
+        private string WebRootPath
+        {
+            get
+            {
+                return _env.WebRootPath;
+            }
+        }
 
         private string getContextDetail(HttpRequest request, SecurityUser user)
         {

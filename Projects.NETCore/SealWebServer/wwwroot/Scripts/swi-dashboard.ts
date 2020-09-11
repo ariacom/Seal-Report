@@ -5,6 +5,8 @@
 var _da: SWIDashboard;
 var _daEditor: DashboardEditorInterface;
 var hasEditor: boolean;
+declare var exportFormat: string;
+declare var exportIds: string[];
 
 declare var Muuri: any;
 declare function redrawNVD3Charts();
@@ -27,7 +29,7 @@ function loadLayout(grid, serializedLayout) {
     for (var i = 0; i < layout.length; i++) {
         itemId = layout[i];
         itemIndex = currentItemIds.indexOf(itemId);
-        if (itemIndex > -1 && newItems.indexOf(currentItems[itemIndex])==-1) {
+        if (itemIndex > -1 && newItems.indexOf(currentItems[itemIndex]) == -1) {
             newItems.push(currentItems[itemIndex])
         }
     }
@@ -92,6 +94,7 @@ class SWIDashboard {
         SWIUtil.ShowHideControl(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable);
         SWIUtil.EnableButton(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
+        SWIUtil.EnableButton($("#export-nav-item"), spinnerHidden);
     }
 
     private handleDashboardResult(data: any) {
@@ -101,9 +104,9 @@ class SWIDashboard {
         //Set description and hyper link
         var nameLink: JQuery = panelHeader.find("a");
         nameLink.attr("title", data.description);
-        if (data.path) {
+        if (data.path && !_main._exporting) {
             nameLink.attr("path", data.path);
-            nameLink.attr("viewGUID", data.viewGUID);            
+            nameLink.attr("viewGUID", data.viewGUID);
             nameLink.unbind('click').on("click", function (e) {
                 _gateway.ExecuteReport($(e.currentTarget).attr("path"), false, $(e.currentTarget).attr("viewGUID"), null);
             });
@@ -147,16 +150,16 @@ class SWIDashboard {
 
         //Redraw...
         for (var i = 0; i < _da._grids.length; i++) {
-            _da._grids[i].refreshItems().layout(); 
+            _da._grids[i].refreshItems().layout();
         }
 
         initNavCells(data.executionguid, "#" + data.itemguid);
         initRestrictions("#" + data.itemguid);
     }
 
-    private refreshDashboardItem(guid: string, itemguid: string, force : boolean) {
-        clearTimeout(_da._refreshTimers[itemguid]); 
-        _gateway.GetDashboardResult(guid, itemguid, force, function (data) {
+    private refreshDashboardItem(guid: string, itemguid: string, force: boolean) {
+        clearTimeout(_da._refreshTimers[itemguid]);
+        _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
         });
     }
@@ -168,6 +171,7 @@ class SWIDashboard {
         $("[did='" + guid + "']").children(".spinner-menu").show();
         SWIUtil.ShowHideControl($("#dashboard-add-widget"), false);
         SWIUtil.EnableButton($("#dashboards-nav-item"), false);
+        SWIUtil.EnableButton($("#export-nav-item"), false);
 
         //re-init order
         $('.grid' + guid).each(function (index, element) {
@@ -204,7 +208,7 @@ class SWIDashboard {
                         //Group name 
                         var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name");
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
-                        var groupDrag = $("<h4 style='margin:0px 5px'>").append(groupSpan);
+                        var groupDrag = $("<h3 style='margin:0px 5px'>").append(groupSpan);
                         groupDrag.attr("group-order", item.GroupOrder)
                         content.append(groupDrag);
                         content.append(groupInput);
@@ -219,7 +223,7 @@ class SWIDashboard {
                 }
 
                 //Dashboard item
-                var panel = $("<div class='item panel panel-" + item.Color + "'>");
+                var panel = $("<div class='item panel panel-" + item.Color + "' style='page-break-inside:avoid;'>");
                 panel.attr("id", item.GUID);
                 panel.attr("did", dashboard.GUID);
                 var panelHeader = $("<div class='panel-heading text-left' style='padding-right:2px;'>");
@@ -252,7 +256,7 @@ class SWIDashboard {
                 panel.append(panelBody);
 
                 panelBody.append($("<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>"));
-                panelBody.append($("<h4 style='display:inline'></h4>").html(SWIUtil.tr("Processing")+"..."));
+                panelBody.append($("<h4 style='display:inline'></h4>").html(SWIUtil.tr("Processing") + "..."));
 
                 _da.refreshDashboardItem(guid, item.GUID, false);
 
@@ -262,34 +266,36 @@ class SWIDashboard {
                 panel.css("overflow", "auto");
 
                 //Panel buttons
-                panelHeader
-                    .mouseenter(function (e) {
+                if (!_main._exporting) {
+                    panelHeader
+                        .mouseenter(function (e) {
+                            var panelHeading = $(this).closest('.panel-heading');
+                            if (!panelHeading.children(".fa-spinner").is(":visible")) {
+                                var tl = getTopLeft($(this)[0]);
+                                var buttons = $(this).children("div");
+                                buttons.css("position", "absolute");
+                                buttons.css("left", tl[0] + $(this).width() - Math.max(buttons.width(), buttons.height()) + 15);
+                                buttons.css("top", tl[1] + 10);
+                                buttons.show();
+                            }
+
+                        })
+                        .mouseleave(function () {
+                            $(this).children("div").hide();
+                        });
+
+                    //Refresh item
+                    refreshButton.unbind('click').on("click", function (e) {
+                        SWIUtil.HideMessages();
+                        var dashboardGuid = $(this).closest('.panel').attr('did');
+                        var itemGuid = $(this).closest('.panel').attr('id');
+
                         var panelHeading = $(this).closest('.panel-heading');
-                        if (!panelHeading.children(".fa-spinner").is(":visible")) {
-                            var tl = getTopLeft($(this)[0]);
-                            var buttons = $(this).children("div");
-                            buttons.css("position", "absolute");
-                            buttons.css("left", tl[0] + $(this).width() - Math.max(buttons.width(), buttons.height()) + 15);
-                            buttons.css("top", tl[1] + 10);
-                            buttons.show();
-                        }
+                        panelHeading.children(".fa-spinner").show();
 
-                    })
-                    .mouseleave(function () {
-                        $(this).children("div").hide();
+                        _da.refreshDashboardItem(dashboardGuid, itemGuid, true);
                     });
-
-                //Refresh item
-                refreshButton.unbind('click').on("click", function (e) {
-                    SWIUtil.HideMessages();
-                    var dashboardGuid = $(this).closest('.panel').attr('did');
-                    var itemGuid = $(this).closest('.panel').attr('id');
-
-                    var panelHeading = $(this).closest('.panel-heading');
-                    panelHeading.children(".fa-spinner").show();
-
-                    _da.refreshDashboardItem(dashboardGuid, itemGuid, true);
-                });
+                }
 
                 grid.append(panel);
             } //for
@@ -309,6 +315,13 @@ class SWIDashboard {
             $("#menu-dashboard").empty();
             $("#content-dashboard").empty();
 
+            //filter in case of export
+            var data2: any[] = [];
+            for (var i = 0; i < data.length; i++) {
+                if (_main._exporting && exportIds.indexOf(data[i].GUID) == -1) continue;
+                data2.push(data[i]);
+            }
+            data = data2;
             //Init array
             for (var i = 0; i < data.length; i++) {
                 var dashboard = data[i];
@@ -326,12 +339,15 @@ class SWIDashboard {
                 var dashboard = data[i];
 
                 var menu = $("<a data-toggle='pill' href='#" + dashboard.GUID + "' did='" + dashboard.GUID + "'>");
+                if (_main._exportingPrint) menu = $("<h1>");
+
                 if (dashboard.IsPersonal) menu.addClass("dashboard-personal");
                 menu.text(dashboard.DisplayName);
                 menu.attr("title", dashboard.FullName);
                 var li = $("<li>");
+                if (_main._exportingPrint) li = $("<div>");
 
-                if (_main._profile.managedashboards) {
+                if (_main._profile.managedashboards && !_main._exporting) {
                     //Drag and drop for menu
                     li.on("dragstart", function (e) {
                         _da._lastGUID = $(this).children("a").attr("did");
@@ -351,32 +367,39 @@ class SWIDashboard {
                 }
 
                 //Spinner menu
-                menu.append($("<i class='fa fa-spinner fa-spin fa-1x fa-fw spinner-menu'></i>"));
+                if (!_main._exportingPrint) {
+                    menu.append($("<i class='fa fa-spinner fa-spin fa-1x fa-fw spinner-menu'></i>"));
 
-                var isActive = (dashboard.GUID == _da._lastGUID);
-                if (isActive) li.addClass("active");
-                $("#menu-dashboard").append(li.append(menu));
+                    var isActive = (dashboard.GUID == _da._lastGUID);
+                    if (isActive) li.addClass("active");
+                    $("#menu-dashboard").append(li.append(menu));
+                }
 
-                //Click on a dashboard pill
-                menu.unbind('click').click(function (e) {
-                    var id = $(this).attr("did");
-                    _da._lastGUID = id;
-                    _da._dashboard = _da._dashboards[id];
-                    _da.enableControls();
-                    _gateway.SetLastDashboard(_da._lastGUID, null);
-                    _main._profile.dashboard = _da._lastGUID;
+                if (!_main._exporting) {
+                    //Click on a dashboard pill
+                    menu.unbind('click').click(function (e) {
+                        var id = $(this).attr("did");
+                        _da._lastGUID = id;
+                        _da._dashboard = _da._dashboards[id];
+                        _da.enableControls();
+                        _gateway.SetLastDashboard(_da._lastGUID, null);
+                        _main._profile.dashboard = _da._lastGUID;
 
-                    SWIUtil.ShowHideControl($(".item,.group-name"), false);
+                        SWIUtil.ShowHideControl($(".item,.group-name"), false);
 
-                    setTimeout(function () {
-                        SWIUtil.ShowHideControl($(".item,.group-name"), true);
-                        redrawNVD3Charts();
-                        redrawDataTables();
-                        _da.reorderItems(true);
-                    }, 400);
-                });
+                        setTimeout(function () {
+                            SWIUtil.ShowHideControl($(".item,.group-name"), true);
+                            redrawNVD3Charts();
+                            redrawDataTables();
+                            _da.reorderItems(true);
+                        }, 400);
+                    });
+                }
 
-                var content = $("<div id='" + dashboard.GUID + "' class='tab-pane fade'>");
+                var content = $("<div id='" + dashboard.GUID + "'>");
+                if (_main._exportingPrint) $("#content-dashboard").append(menu);    
+                else content.addClass("tab-pane fade")
+
                 $("#content-dashboard").append(content);
 
                 if (isActive) content.addClass("in active");
@@ -405,7 +428,7 @@ class SWIDashboard {
                     //Add
                     SWIUtil.ShowHideControl($("#dashboard-add").parent(), data.length > 0);
                     $("#dashboard-add").unbind('click').on("click", function (e) {
-                        if (!$("#dashboard-user").val()) return;
+                        if ($("#dashboard-user").val() == "") return;
                         $("#dashboard-dialog").modal('hide');
                         _gateway.AddDashboard($("#dashboard-user").val(), function (data) {
                             _da._lastGUID = null;
@@ -435,6 +458,58 @@ class SWIDashboard {
                     $("#dashboard-dialog").modal();
                 });
             });
+
+            //Export
+            $("#export-nav-item").unbind('click').on("click", function (e) {
+                SWIUtil.HideMessages();
+                _gateway.GetUserDashboards(function (data) {
+                    var select = $("#export-dashboards");
+                    select.unbind("change").selectpicker("destroy").empty();
+                    for (var j = 0; j < data.length; j++) {
+                        var pubDashboard = data[j];
+                        select.append(SWIUtil.GetOption(pubDashboard.GUID, pubDashboard.FullName, ""));
+                    }
+                    select.selectpicker({
+                        "liveSearch": true
+                    });
+
+                    select = $("#export-format");
+                    select.unbind("change").selectpicker("destroy").empty();
+                    select.append(SWIUtil.GetOption("html", SWIUtil.tr("HTML"), "html"));
+                    select.append(SWIUtil.GetOption("htmlprint", SWIUtil.tr("HTML Print"), ""));
+                    select.append(SWIUtil.GetOption("pdf", SWIUtil.tr("PDF"), ""));
+                    select.append(SWIUtil.GetOption("pdflandscape", SWIUtil.tr("PDF Landscape"), ""));
+                    select.append(SWIUtil.GetOption("excel", SWIUtil.tr("Excel"), ""));
+                    select.selectpicker("refresh");
+                    //                    select.selectpicker('refresh');
+
+                    $("#dashboard-export").unbind('click').on("click", function (e) {
+                        SWIUtil.HideMessages();
+                        if ($("#export-dashboards").val() == "") return;
+
+                        _gateway.ExportDashboards($("#export-dashboards").val(), $("#export-format").val());
+                        /*
+                                                var win = window.open(window.location.href + "?InitFormat=" + $("#export-format").val() + "&Dashboards=" + $("#export-dashboards").val(), '_blank');
+                                                if (win) win.focus();
+                        
+                                                //                _gateway.ExportDashboards(function (data) {
+                                                //                });*/
+                    });
+
+                    $("#export-dialog").modal();
+                });
+            });
+
+            //Export 
+            if (_main._exporting) {
+                $(document).ajaxStop(function () {
+                    _da.reorderItems(false);
+                    var wnvPdfConverter: any;
+                    if (typeof wnvPdfConverter != "undefined") {
+                        wnvPdfConverter.startConversion();
+                    }
+                });
+            }
 
             if (hasEditor) {
                 _daEditor.initMenu();

@@ -1163,15 +1163,6 @@ namespace Seal.Model
             return result;
         }
 
-        /// <summary>
-        /// Format used for dashboard export
-        /// </summary>
-        public string ExportFormat = "";
-
-        /// <summary>
-        /// List of dashboard ids to export
-        /// </summary>
-        public string ExportIds = "";
 
         #endregion
     }

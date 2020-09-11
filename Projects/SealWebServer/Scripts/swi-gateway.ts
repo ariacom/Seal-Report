@@ -381,7 +381,7 @@ class SWIGateway {
         f.append($('<input />').attr('name', 'format').attr('value', format));
         f.children('input').attr('type', 'hidden');
         f.submit();
-
+    }
 /*
         $.post(_server + "DashboardsExport", {
             dashboards: dashboards,
@@ -389,6 +389,5 @@ class SWIGateway {
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });*/
-    }
-
+  
 }

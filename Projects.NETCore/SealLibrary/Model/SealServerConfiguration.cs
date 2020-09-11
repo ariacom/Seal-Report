@@ -469,6 +469,19 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Read the file content and replace the configuration keywords
+        /// </summary>
+        public string GetAttachedFileContent(string fileName)
+        {
+            string result = File.ReadAllText(fileName);
+            foreach (var item in FileReplacePatterns.Where(i => i.FileName == Path.GetFileName(fileName)))
+            {
+                result = result.Replace(item.OldValue, item.NewValue);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Defines a pattern to replace in a file 
         /// </summary>
         public class FileReplacePattern

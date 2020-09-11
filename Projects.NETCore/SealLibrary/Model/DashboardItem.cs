@@ -110,6 +110,7 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public string DisplayGroupName { get; set; }
+
         [XmlIgnore]
         private DashboardWidget _widget;
 

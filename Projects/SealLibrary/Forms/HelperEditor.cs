@@ -468,6 +468,16 @@ namespace Seal.Forms
                         _configuration.ExcelConfigurations = new List<string>();
                         _configuration.ExcelConverter = null;
                     }
+                    if (context.PropertyDescriptor.Name == "HelperResetDashboardPDFConfigurations")
+                    {
+                        _configuration.DashboardPdfConfigurations = new List<string>();
+                        _configuration.DashboardPdfConverter = null;
+                    }
+                    else if (context.PropertyDescriptor.Name == "HelperResetDashboardExcelConfigurations")
+                    {
+                        _configuration.DashboardExcelConfigurations = new List<string>();
+                        _configuration.DashboardExcelConverter = null;
+                    }
                 }
                 else if (_reportSchedule != null)
                 {

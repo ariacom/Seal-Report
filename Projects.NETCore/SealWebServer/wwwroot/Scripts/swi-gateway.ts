@@ -236,11 +236,12 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
-    public GetDashboardResult(guid: string, itemguid: string, force :boolean, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public GetDashboardResult(guid: string, itemguid: string, force: boolean, format: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetDashboardResult", {
             guid: guid,
             itemguid: itemguid,
-            force : force
+            force: force,
+            format: format
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
@@ -372,6 +373,22 @@ class SWIGateway {
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
+    }
+
+    public ExportDashboards(dashboards: string, format: string) {
+        var f = this.getExecForm("SWExportDashboards");
+        f.append($('<input />').attr('name', 'dashboards').attr('value', dashboards));
+        f.append($('<input />').attr('name', 'format').attr('value', format));
+        f.children('input').attr('type', 'hidden');
+        f.submit();
+
+/*
+        $.post(_server + "DashboardsExport", {
+            dashboards: dashboards,
+            format: format
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });*/
     }
 
 }

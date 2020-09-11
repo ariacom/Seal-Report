@@ -2133,7 +2133,6 @@ namespace Seal.Model
                 executeTasks(ExecutionStep.BeforeRendering);
                 string path = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)) + ".xlsx");
                 result = Report.ExecutionView.ConvertToExcel(path);
-
             }
             finally
             {
