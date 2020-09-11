@@ -31,6 +31,8 @@ var SWIMain = /** @class */ (function () {
         this._searchMode = false;
         this._clipboardCut = false;
         this._folderpath = "\\";
+        this._exporting = false;
+        this._exportingPrint = false;
     }
     SWIMain.prototype.Process = function () {
         $waitDialog = $("#wait-dialog");
@@ -40,6 +42,13 @@ var SWIMain = /** @class */ (function () {
         $outputPanel = $("#output-panel");
         $propertiesPanel = $("#properties-panel");
         $elementDropDown = $("#element-dropdown");
+        //Dashboard export
+        _main._exporting = (exportFormat != "");
+        _main._exportingPrint = (exportFormat == "htmlprint" || exportFormat == "pdf" || exportFormat == "pdflandscape");
+        if (_main._exporting) {
+            $(".hide-export").css("display", "none");
+            $("#main-dashboard").css("padding-top", "15px");
+        }
         $(".navbar-right").hide();
         $waitDialog.modal('show');
         $("#search-pattern").keypress(function (e) {
@@ -125,7 +134,7 @@ var SWIMain = /** @class */ (function () {
         if (_editor) {
             _editor.brand();
         }
-        if (_main._profile.lastview == "dashboards") {
+        if (_main._profile.lastview == "dashboards" || _main._exporting) {
             _main.showDashboard(true);
         }
         else {

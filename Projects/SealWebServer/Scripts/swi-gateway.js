@@ -22,6 +22,13 @@ function failure(xhr, status, error) {
 var SWIGateway = /** @class */ (function () {
     function SWIGateway() {
         this._execForm = null;
+        /*
+                $.post(_server + "DashboardsExport", {
+                    dashboards: dashboards,
+                    format: format
+                })
+                    .done(function (data) { callbackHandler(data, callback, errorcb); })
+                    .fail(function (xhr, status, error) { failure(xhr, status, error); });*/
     }
     SWIGateway.prototype.getExecForm = function (action) {
         if (this._execForm == null)
@@ -339,13 +346,6 @@ var SWIGateway = /** @class */ (function () {
         f.append($('<input />').attr('name', 'format').attr('value', format));
         f.children('input').attr('type', 'hidden');
         f.submit();
-        /*
-                $.post(_server + "DashboardsExport", {
-                    dashboards: dashboards,
-                    format: format
-                })
-                    .done(function (data) { callbackHandler(data, callback, errorcb); })
-                    .fail(function (xhr, status, error) { failure(xhr, status, error); });*/
     };
     return SWIGateway;
 }());

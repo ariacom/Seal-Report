@@ -136,12 +136,12 @@ DashboardItemGroupName;\General\KPI.sdax;Additional information;;Autres informat
 DashboardItemGroupName;\General\KPI.sdax;Last Amount;;Dernier Montant
 WidgetName;\Overview - Sales.srex;Sales per month;;Ventes par mois
 WidgetName;\Overview - Sales.srex;Sales per month;;Ventes par mois
-WidgetName;\Overview - Sales.srex;Sales for 1995;;Ventes pour 1995
+WidgetName;\Overview - Sales.srex;Sales for 1997;;Ventes pour 1997
 WidgetName;\Overview - Sales.srex;Sales per category;;Ventes par catégorie
 WidgetName;\Overview - Sales.srex;Orders;;Commandes
-WidgetDescription;\Overview - Sales.srex;Chart of sales per category for 1995 ;;Graphes des ventes par catégorie pour 1995
-WidgetDescription;\Overview - Sales.srex;Chart of sales, discounts and progressions for 1995;;Graphes des ventes, réductions et progressions pour 1995 
-WidgetDescription;\Overview - Sales.srex;Table of sales, discounts and progressions for 1995 ;;Tableau des ventes, réductions et progressions pour 1995
+WidgetDescription;\Overview - Sales.srex;Chart of sales per category for 1997;;Graphes des ventes par catégorie pour 1997
+WidgetDescription;\Overview - Sales.srex;Chart of sales, discounts and progressions for 1997;;Graphes des ventes, réductions et progressions pour 1997
+WidgetDescription;\Overview - Sales.srex;Table of sales, discounts and progressions for 1997;;Tableau des ventes, réductions et progressions pour 1997
 WidgetDescription;\Overview - Sales.srex;Pie chart of sales per category;;Graphe camembert des ventes par catégorie
 WidgetName;\Samples\12-KPI.srex;Product Sales;;Ventes Produits
 WidgetName;\Samples\13-KPI Published.srex;KPI Customers;;KPI Clients

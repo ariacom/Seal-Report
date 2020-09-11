@@ -23,4 +23,232 @@ _ed.common.js</ScriptFiles><TaskFolderName>Seal Report</TaskFolderName><AuditEna
         }&#xD;
     }&#xD;
 }&#xD;
-</Script></CommonScript></CommonScripts><PdfServicePassword /><PdfWebServiceURL /><DefaultCulture /><CsvSeparator /><WebApplicationName>/seal</WebApplicationName><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>
+</Script></CommonScript></CommonScripts><PdfServicePassword /><PdfWebServiceURL /><DashboardPdfConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;HtmlToPdfConverter xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;HtmlViewerWidth&gt;1024&lt;/HtmlViewerWidth&gt;&#xD;
+  &lt;HtmlViewerHeight&gt;0&lt;/HtmlViewerHeight&gt;&#xD;
+  &lt;HtmlViewerZoom&gt;100&lt;/HtmlViewerZoom&gt;&#xD;
+  &lt;ClipHtmlView&gt;false&lt;/ClipHtmlView&gt;&#xD;
+  &lt;LicenseKey&gt;VNrJ28rbzcvCydvKztXL28jK1crJ1cLCwsLbyw==&lt;/LicenseKey&gt;&#xD;
+  &lt;JavaScriptEnabled&gt;true&lt;/JavaScriptEnabled&gt;&#xD;
+  &lt;Enable3DTransformations&gt;false&lt;/Enable3DTransformations&gt;&#xD;
+  &lt;EnableWebGL&gt;false&lt;/EnableWebGL&gt;&#xD;
+  &lt;EnableAccelerated2DCanvas&gt;false&lt;/EnableAccelerated2DCanvas&gt;&#xD;
+  &lt;EnablePersistentStorage&gt;false&lt;/EnablePersistentStorage&gt;&#xD;
+  &lt;LocalFilesAccessEnabled&gt;true&lt;/LocalFilesAccessEnabled&gt;&#xD;
+  &lt;SvgFontsEnabled&gt;false&lt;/SvgFontsEnabled&gt;&#xD;
+  &lt;WebFontsEnabled&gt;true&lt;/WebFontsEnabled&gt;&#xD;
+  &lt;EnableHttp2&gt;false&lt;/EnableHttp2&gt;&#xD;
+  &lt;PostScriptFontsEnabled&gt;true&lt;/PostScriptFontsEnabled&gt;&#xD;
+  &lt;ExtensionsEnabled&gt;false&lt;/ExtensionsEnabled&gt;&#xD;
+  &lt;DownloadAllResources&gt;false&lt;/DownloadAllResources&gt;&#xD;
+  &lt;PrerenderEnabled&gt;false&lt;/PrerenderEnabled&gt;&#xD;
+  &lt;InterruptSlowJavaScript&gt;false&lt;/InterruptSlowJavaScript&gt;&#xD;
+  &lt;MaxHtmlViewerHeight&gt;0&lt;/MaxHtmlViewerHeight&gt;&#xD;
+  &lt;MinHtmlViewerHeight&gt;0&lt;/MinHtmlViewerHeight&gt;&#xD;
+  &lt;InitialHtmlViewerHeight&gt;0&lt;/InitialHtmlViewerHeight&gt;&#xD;
+  &lt;DefaultHtmlEncoding /&gt;&#xD;
+  &lt;ImagePartSize&gt;32000&lt;/ImagePartSize&gt;&#xD;
+  &lt;TriggeringMode&gt;ConversionDelay&lt;/TriggeringMode&gt;&#xD;
+  &lt;ConversionDelay&gt;20&lt;/ConversionDelay&gt;&#xD;
+  &lt;ManualTriggeringConversionDelay&gt;2&lt;/ManualTriggeringConversionDelay&gt;&#xD;
+  &lt;NavigationTimeout&gt;60&lt;/NavigationTimeout&gt;&#xD;
+  &lt;PersistentHttpRequestHeaders&gt;true&lt;/PersistentHttpRequestHeaders&gt;&#xD;
+  &lt;XPSupplementalLanguages&gt;false&lt;/XPSupplementalLanguages&gt;&#xD;
+&lt;/HtmlToPdfConverter&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfDocumentOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;AutoCloseExternalDocs&gt;true&lt;/AutoCloseExternalDocs&gt;&#xD;
+  &lt;LeftMargin&gt;10&lt;/LeftMargin&gt;&#xD;
+  &lt;RightMargin&gt;10&lt;/RightMargin&gt;&#xD;
+  &lt;TopMargin&gt;10&lt;/TopMargin&gt;&#xD;
+  &lt;BottomMargin&gt;10&lt;/BottomMargin&gt;&#xD;
+  &lt;X&gt;0&lt;/X&gt;&#xD;
+  &lt;Y&gt;0&lt;/Y&gt;&#xD;
+  &lt;Width&gt;-1&lt;/Width&gt;&#xD;
+  &lt;Height&gt;-1&lt;/Height&gt;&#xD;
+  &lt;TopSpacing&gt;0&lt;/TopSpacing&gt;&#xD;
+  &lt;BottomSpacing&gt;0&lt;/BottomSpacing&gt;&#xD;
+  &lt;BackColor /&gt;&#xD;
+  &lt;PdfCompressionLevel&gt;Normal&lt;/PdfCompressionLevel&gt;&#xD;
+  &lt;JpegCompressionEnabled&gt;true&lt;/JpegCompressionEnabled&gt;&#xD;
+  &lt;JpegCompressionLevel&gt;10&lt;/JpegCompressionLevel&gt;&#xD;
+  &lt;CompressCrossReference&gt;false&lt;/CompressCrossReference&gt;&#xD;
+  &lt;PdfPageSize&gt;&#xD;
+    &lt;Width&gt;595&lt;/Width&gt;&#xD;
+    &lt;Height&gt;842&lt;/Height&gt;&#xD;
+  &lt;/PdfPageSize&gt;&#xD;
+  &lt;PdfStandardSubset&gt;Full&lt;/PdfStandardSubset&gt;&#xD;
+  &lt;ColorSpace&gt;RGB&lt;/ColorSpace&gt;&#xD;
+  &lt;ColorProfile&gt;Custom&lt;/ColorProfile&gt;&#xD;
+  &lt;FitWidth&gt;true&lt;/FitWidth&gt;&#xD;
+  &lt;FitHeight&gt;false&lt;/FitHeight&gt;&#xD;
+  &lt;StretchToFit&gt;false&lt;/StretchToFit&gt;&#xD;
+  &lt;SinglePage&gt;false&lt;/SinglePage&gt;&#xD;
+  &lt;AutoSizePdfPage&gt;true&lt;/AutoSizePdfPage&gt;&#xD;
+  &lt;AvoidTextBreak&gt;true&lt;/AvoidTextBreak&gt;&#xD;
+  &lt;AvoidImageBreak&gt;false&lt;/AvoidImageBreak&gt;&#xD;
+  &lt;PdfPageOrientation&gt;Portrait&lt;/PdfPageOrientation&gt;&#xD;
+  &lt;ShowHeader&gt;false&lt;/ShowHeader&gt;&#xD;
+  &lt;ShowFooter&gt;false&lt;/ShowFooter&gt;&#xD;
+  &lt;EmbedFonts&gt;true&lt;/EmbedFonts&gt;&#xD;
+  &lt;LiveUrlsEnabled&gt;true&lt;/LiveUrlsEnabled&gt;&#xD;
+  &lt;InteractiveHiddenElements&gt;false&lt;/InteractiveHiddenElements&gt;&#xD;
+  &lt;InternalLinksEnabled&gt;true&lt;/InternalLinksEnabled&gt;&#xD;
+  &lt;TiledRenderingEnabled&gt;true&lt;/TiledRenderingEnabled&gt;&#xD;
+  &lt;EnhancedGraphicsQuality&gt;true&lt;/EnhancedGraphicsQuality&gt;&#xD;
+  &lt;TransparentImagesEnabled&gt;true&lt;/TransparentImagesEnabled&gt;&#xD;
+  &lt;ImagesScalingEnabled&gt;false&lt;/ImagesScalingEnabled&gt;&#xD;
+  &lt;NoSizeElementsEnabled&gt;false&lt;/NoSizeElementsEnabled&gt;&#xD;
+  &lt;TransparencyEnabled&gt;true&lt;/TransparencyEnabled&gt;&#xD;
+  &lt;TableHeaderRepeatEnabled&gt;true&lt;/TableHeaderRepeatEnabled&gt;&#xD;
+  &lt;TableFooterRepeatEnabled&gt;true&lt;/TableFooterRepeatEnabled&gt;&#xD;
+  &lt;StackRepeatedTableHeaders&gt;true&lt;/StackRepeatedTableHeaders&gt;&#xD;
+  &lt;StackRepeatedTableFooters&gt;true&lt;/StackRepeatedTableFooters&gt;&#xD;
+&lt;/PdfDocumentOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfSecurityOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;CanAssembleDocument&gt;true&lt;/CanAssembleDocument&gt;&#xD;
+  &lt;CanCopyContent&gt;true&lt;/CanCopyContent&gt;&#xD;
+  &lt;CanCopyAccessibilityContent&gt;true&lt;/CanCopyAccessibilityContent&gt;&#xD;
+  &lt;CanEditAnnotations&gt;true&lt;/CanEditAnnotations&gt;&#xD;
+  &lt;CanEditContent&gt;true&lt;/CanEditContent&gt;&#xD;
+  &lt;CanFillFormFields&gt;true&lt;/CanFillFormFields&gt;&#xD;
+  &lt;CanPrint&gt;true&lt;/CanPrint&gt;&#xD;
+  &lt;CanPrintHighResolution&gt;true&lt;/CanPrintHighResolution&gt;&#xD;
+  &lt;KeySize&gt;EncryptKey128Bit&lt;/KeySize&gt;&#xD;
+  &lt;EncryptionAlgorithm&gt;RC4&lt;/EncryptionAlgorithm&gt;&#xD;
+  &lt;OwnerPassword /&gt;&#xD;
+  &lt;UserPassword /&gt;&#xD;
+&lt;/PdfSecurityOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfHeaderOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;HeaderBackColor /&gt;&#xD;
+  &lt;HeaderHeight&gt;40&lt;/HeaderHeight&gt;&#xD;
+  &lt;PageNumberingStartIndex&gt;0&lt;/PageNumberingStartIndex&gt;&#xD;
+  &lt;PageNumberingPageCountIncrement&gt;0&lt;/PageNumberingPageCountIncrement&gt;&#xD;
+&lt;/PdfHeaderOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfFooterOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;FooterBackColor /&gt;&#xD;
+  &lt;FooterHeight&gt;20&lt;/FooterHeight&gt;&#xD;
+  &lt;PageNumberingStartIndex&gt;0&lt;/PageNumberingStartIndex&gt;&#xD;
+  &lt;PageNumberingPageCountIncrement&gt;0&lt;/PageNumberingPageCountIncrement&gt;&#xD;
+&lt;/PdfFooterOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfDocumentInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;CreatedDate&gt;0001-01-01T00:00:00&lt;/CreatedDate&gt;&#xD;
+&lt;/PdfDocumentInfo&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;PdfBookmarkOptions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;AutoBookmarksEnabled&gt;false&lt;/AutoBookmarksEnabled&gt;&#xD;
+  &lt;HierarchicalBookmarks&gt;true&lt;/HierarchicalBookmarks&gt;&#xD;
+  &lt;AllowDefaultTitle&gt;true&lt;/AllowDefaultTitle&gt;&#xD;
+  &lt;DefaultTitle&gt;Bookmark&lt;/DefaultTitle&gt;&#xD;
+  &lt;MaxTitleLength&gt;-1&lt;/MaxTitleLength&gt;&#xD;
+&lt;/PdfBookmarkOptions&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;ViewerPreferences xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;HideToolbar&gt;false&lt;/HideToolbar&gt;&#xD;
+  &lt;HideMenuBar&gt;false&lt;/HideMenuBar&gt;&#xD;
+  &lt;HideWindowUI&gt;false&lt;/HideWindowUI&gt;&#xD;
+  &lt;FitWindow&gt;false&lt;/FitWindow&gt;&#xD;
+  &lt;CenterWindow&gt;false&lt;/CenterWindow&gt;&#xD;
+  &lt;DisplayDocTitle&gt;false&lt;/DisplayDocTitle&gt;&#xD;
+  &lt;NonFullScreenPageMode&gt;UseNone&lt;/NonFullScreenPageMode&gt;&#xD;
+  &lt;Direction&gt;L2R&lt;/Direction&gt;&#xD;
+  &lt;PageMode&gt;UseNone&lt;/PageMode&gt;&#xD;
+  &lt;PageLayout&gt;OneColumn&lt;/PageLayout&gt;&#xD;
+&lt;/ViewerPreferences&gt;</string><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;&#xD;
+&lt;SealPdfCfg xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;&#xD;
+  &lt;ConverterScript&gt;@using Winnovative
+@using Seal.Converter
+@using System.Drawing
+@using System.IO
+@{		
+	//Full documentation of the converter at https://www.winnovative-software.com/Help/html_to_pdf/Index.aspx
+	Seal.Converter.PdfConverter converterModel = Model;
+    Seal.Model.Repository repository = converterModel.Repository; 
+	Seal.Model.ReportView view = converterModel.View; //If view == null, the conversion is for Dashboards
+	HtmlToPdfConverter converter = converterModel.Converter;
+
+    // Header 
+    converter.PdfDocumentOptions.ShowHeader = true;
+	var headerImagePath = Path.Combine(repository.ViewImagesFolder, repository.Configuration.LogoName);
+	if (System.IO.File.Exists(headerImagePath)) {
+		ImageElement headerImage =  new ImageElement(0, 0, headerImagePath);
+		converter.PdfHeaderOptions.AddElement(headerImage);
+	}
+	else {
+		TextElement logoText = new TextElement(0, 0, repository.Configuration.WebProductName, new Font(new System.Drawing.FontFamily("Arial"), 12, FontStyle.Italic, GraphicsUnit.Point));
+		logoText.TextAlign = HorizontalTextAlign.Left;
+		logoText.EmbedSysFont = true;
+		converter.PdfHeaderOptions.AddElement(logoText);
+	}
+
+    var title = (view != null ? view.Report.ExecutionName : repository.TranslateReport("Dashboard"));
+    TextElement headerText = new TextElement(0, 10, title, new Font(new System.Drawing.FontFamily("Arial"), 16, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point));
+	headerText.TextAlign = (title.Length &amp;gt; 25 ? HorizontalTextAlign.Right : HorizontalTextAlign.Center);
+	headerText.EmbedSysFont = true;
+	converter.PdfHeaderOptions.AddElement(headerText);
+
+	float documentWidth = converter.PdfDocumentOptions.PdfPageSize.Width - converter.PdfDocumentOptions.LeftMargin - converter.PdfDocumentOptions.RightMargin;
+	if (converter.PdfDocumentOptions.PdfPageOrientation == PdfPageOrientation.Landscape) 
+	{
+		documentWidth = converter.PdfDocumentOptions.PdfPageSize.Height - converter.PdfDocumentOptions.LeftMargin - converter.PdfDocumentOptions.RightMargin;
+	}	
+
+    //Table of contents: Style 1 for Tab Pages, Style 2 for Model Pages
+    converter.TableOfContentsOptions.Title = repository.TranslateReport("Table of Contents");
+    converter.TableOfContentsOptions.TitleStyle = "font-family:'Arial'; font-size:28px; font-weight:normal";
+
+    converter.TableOfContentsOptions.SetItemStyle(1, "font-family:'Arial'; font-size:20px; font-weight:bold; font-style:normal;");
+    converter.TableOfContentsOptions.SetPageNumberStyle(1, "font-family:'Arial'; font-size:20px; font-weight:bold; font-style:normal;");
+
+    converter.TableOfContentsOptions.SetItemStyle(2, "font-family:'Arial'; font-size:18px; font-weight:normal; font-style:normal;");
+    converter.TableOfContentsOptions.SetPageNumberStyle(2, "font-family:'Arial'; font-size:18px; font-weight:normal; font-style:normal;");
+
+    // Header line 
+	LineElement headerLine = new LineElement(0, converter.PdfHeaderOptions.HeaderHeight - 4, documentWidth, converter.PdfHeaderOptions.HeaderHeight - 4);
+	headerLine.ForeColor = Color.Gray;
+	converter.PdfHeaderOptions.AddElement(headerLine);	    
+
+	// Footer 
+	converter.PdfDocumentOptions.ShowFooter = true;
+	TextElement footerText = new TextElement(0, 6, repository.TranslateReport("Page &amp;amp;p; of &amp;amp;P;"), new Font(new System.Drawing.FontFamily("Arial"), 9, GraphicsUnit.Point));
+	footerText.TextAlign = HorizontalTextAlign.Right;
+	footerText.ForeColor = Color.Gray;
+	footerText.EmbedSysFont = true;
+	converter.PdfFooterOptions.AddElement(footerText);
+
+	TextElement footerText2 = new TextElement(0, 6, DateTime.Now.ToString("d", repository.CultureInfo) + " " + DateTime.Now.ToString("t", repository.CultureInfo), new Font(new FontFamily("Arial"), 9, GraphicsUnit.Point));
+	footerText2.TextAlign = HorizontalTextAlign.Left;
+	footerText2.ForeColor = Color.Gray;
+	footerText2.EmbedSysFont = true;
+	converter.PdfFooterOptions.AddElement(footerText2);	
+
+	// Footer line 
+	LineElement footerLine = new LineElement(0, 4, documentWidth, 4);
+    footerLine.ForeColor = Color.Gray;
+	converter.PdfFooterOptions.AddElement(footerLine);     
+}&lt;/ConverterScript&gt;&#xD;
+  &lt;DocumentScript&gt;@using Winnovative&#xD;
+@using Seal.Converter&#xD;
+@using System.Drawing&#xD;
+@{		&#xD;
+	//Full documentation of the converter at https://www.winnovative-software.com/Help/html_to_pdf/Index.aspx&#xD;
+	Seal.Converter.PdfConverter converterModel = Model;&#xD;
+    Seal.Model.Repository repository = converterModel.Repository; &#xD;
+	Seal.Model.ReportView view = converterModel.View; //If view == null, the conversion is for Dashboards&#xD;
+	HtmlToPdfConverter converter = converterModel.Converter;&#xD;
+	Document document = converterModel.Document;&#xD;
+&#xD;
+    if (document == null) {&#xD;
+        throw new Exception("Document is not initialized, make sure that the property 'Use PDF Client Library' is set to False in the Server Configuration");&#xD;
+    }&#xD;
+&#xD;
+	/* Uncomment to draw a sample text	&#xD;
+	for (int i = 0; i &amp;lt; document.Pages.Count; i++)&#xD;
+	{&#xD;
+		PdfPage page = document.Pages[i];&#xD;
+		TextElement text = new TextElement(200, 300, "This is a text sample...", new System.Drawing.Font(new System.Drawing.FontFamily("Arial"), 24, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point));&#xD;
+		text.ForeColor = Color.Orange;&#xD;
+		text.TextAngle = 45;&#xD;
+		page.AddElement(text);&#xD;
+	}	&#xD;
+    */&#xD;
+}&lt;/DocumentScript&gt;&#xD;
+&lt;/SealPdfCfg&gt;</string></DashboardPdfConfigurations><DefaultCulture /><CsvSeparator /><WebApplicationName>/seal</WebApplicationName><WebApplicationPoolName>Seal Application Pool</WebApplicationPoolName><WebPublicationDirectory>C:\inetpub\wwwroot\Seal Report</WebPublicationDirectory><InstallationDirectory /></SealServerConfiguration>

@@ -208,11 +208,12 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
-    SWIGateway.prototype.GetDashboardResult = function (guid, itemguid, force, callback, errorcb) {
+    SWIGateway.prototype.GetDashboardResult = function (guid, itemguid, force, format, callback, errorcb) {
         $.post(_server + "SWIGetDashboardResult", {
             guid: guid,
             itemguid: itemguid,
-            force: force
+            force: force,
+            format: format
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
@@ -331,6 +332,20 @@ var SWIGateway = /** @class */ (function () {
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
+    };
+    SWIGateway.prototype.ExportDashboards = function (dashboards, format) {
+        var f = this.getExecForm("SWExportDashboards");
+        f.append($('<input />').attr('name', 'dashboards').attr('value', dashboards));
+        f.append($('<input />').attr('name', 'format').attr('value', format));
+        f.children('input').attr('type', 'hidden');
+        f.submit();
+        /*
+                $.post(_server + "DashboardsExport", {
+                    dashboards: dashboards,
+                    format: format
+                })
+                    .done(function (data) { callbackHandler(data, callback, errorcb); })
+                    .fail(function (xhr, status, error) { failure(xhr, status, error); });*/
     };
     return SWIGateway;
 }());
