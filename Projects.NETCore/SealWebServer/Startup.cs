@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +38,8 @@ namespace SealWebServer
             DebugMode = Configuration.GetValue<Boolean>($"{SealConfigurationKey}:DebugMode", false);
             RunScheduler = Configuration.GetValue<Boolean>($"{SealConfigurationKey}:RunScheduler", false);
             SessionTimeout = Configuration.GetValue<int>($"{SealConfigurationKey}:SessionTimeout", 60);
-
+            PathBaseProxy = Configuration.GetValue<string>($"{SealConfigurationKey}:PathBaseProxy", null);
+            
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventServer, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");
@@ -56,6 +59,7 @@ namespace SealWebServer
         public static int SessionTimeout = 60;
         public static bool DebugMode = false;
         public static bool RunScheduler = false;
+        public static string PathBaseProxy = null;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -73,6 +77,18 @@ namespace SealWebServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
         {
+            if (!string.IsNullOrEmpty(PathBaseProxy))
+            {
+                app.Use((context, next) =>
+                {
+                    context.Request.PathBase = new PathString(PathBaseProxy);
+                    return next();
+                });
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.All
+                });
+            }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
@@ -88,7 +104,6 @@ namespace SealWebServer
                     pattern: "{action=Main}",
                     new { controller = "Home", action = "Main" });
             });
-
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
 
             Console.CancelKeyPress += (sender, eventArgs) =>
