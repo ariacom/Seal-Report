@@ -14,22 +14,20 @@
     <title>@repository.Configuration.WebProductName</title>
     <meta charset="utf-8" />
 
-    <link rel='shortcut icon' href='@(model.AttachImageFile("faviconWebServer.ico"))' type='image/x-icon' />
-    @Html.Raw(model.AttachCSSFile("datatables.min.css"))
-    @if (!model.Exporting)
-    {
-        @Html.Raw(model.AttachCSSFile("font-awesome.min.css"))
-    }
-    @Html.Raw(model.AttachCSSFile("jstree-style.min.css"))
-    @Html.Raw(model.AttachCSSFile("bootstrap-select.min.css"))
-    @Html.Raw(model.AttachCSSFile("bootstrap-datetimepicker.min.css"))
-    @Html.Raw(model.AttachCSSFile("sealweb.css"))
-    @Html.Raw(model.AttachCSSFile("nv.d3.min.css"))
+    <link href="~/Images/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <link rel="stylesheet" href="~/Content/datatables.min.css" />
+    <link rel="stylesheet" href="~/Content/font-awesome.min.css" />
+    <link rel='stylesheet' href='~/Content/jstree-style.min.css' />
+    <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
+    <link rel='stylesheet' href='~/Content/bootstrap-datetimepicker.min.css' />
+    <link rel="stylesheet" href="~/Content/sealweb.css" />
+    <link rel="stylesheet" href="~/Content/nv.d3.min.css" />
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.CssFiles))
     {
-        @Html.Raw(model.AttachCSSFile(fileName))
+        <link rel="stylesheet" href="~/Content/@fileName" />
     }
-    @Html.Raw(model.AttachCSSFile("seal.css"))
+    <link rel="stylesheet" href="~/Content/seal.css" />
 
 </head>
 <body>
@@ -292,53 +290,44 @@
         </div>
     </div>
 
-    @Html.Raw(model.AttachScriptFile("datatables.min.js"))
-    @Html.Raw(model.AttachScriptFile("jstree.min.js"))
-    @Html.Raw(model.AttachScriptFile("bootstrap-select.min.js"))
-    @Html.Raw(model.AttachScriptFile("moment.min.js"))
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/jstree.min.js"></script>
+    <script src="~/Scripts/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        @Html.Raw(model.AttachScriptFile("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js"))
-        @Html.Raw(model.AttachScriptFile("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js"))
+        <script src="~/Scripts/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+        <script src="~/Scripts/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
     }
-    @Html.Raw(model.AttachScriptFile("bootstrap-datetimepicker.min.js"))
-    @Html.Raw(model.AttachScriptFile("datetime-moment.js"))
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/datetime-moment.js"></script>
 
     <!-- muuri -->
-    @Html.Raw(model.AttachScriptFile("web-animations.min.js"))
-    @Html.Raw(model.AttachScriptFile("hammer.min.js"))
-    @Html.Raw(model.AttachScriptFile("muuri.min.js"))
+    <script src='~/Scripts/web-animations.min.js'></script>
+    <script src='~/Scripts/hammer.min.js'></script>
+    <script src='~/Scripts/muuri.min.js'></script>
 
     <!-- libraries for widgets execution -->
-    @Html.Raw(model.AttachScriptFile("helpers.js"))
-    @Html.Raw(model.AttachScriptFile("d3.min.js"))
+    <script src="~/Scripts/helpers.js"></script>
+    <script src="~/Scripts/d3.min.js"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        @Html.Raw(model.AttachScriptFile("d3-time.v1.min.js"))
-        @Html.Raw(model.AttachScriptFile("d3-time-format.v2.min.js"))
-        @Html.Raw(model.AttachScriptFile("d3/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js"))
+        <script src="~/Scripts/d3-time.v1.min.js"></script>
+        <script src="~/Scripts/d3-time-format.v2.min.js"></script>
+        <script src="~/Scripts/@("d3/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
     }
-    @Html.Raw(model.AttachScriptFile("nv.d3.min.js"))
-    @if (model.HasChartJS)
+    <script src="~/Scripts/nv.d3.min.js"></script>
+    <script src="~/Scripts/chartNVD3.js"></script>
+    <script src="~/Scripts/Chart.min.js"></script>
+    <script src="~/Scripts/plotly-latest.min.js"></script>
+    @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        @Html.Raw(model.AttachScriptFile("Chart.min.js"))
-    }
-    @if (model.HasChartJS)
-    {
-        @Html.Raw(model.AttachScriptFile("chartNVD3.js"))
-    }
-    @if (model.HasChartJS)
-    {
-        @Html.Raw(model.AttachScriptFile("plotly-latest.min.js"))
-        if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
-        {
-            @Html.Raw(model.AttachScriptFile("plotly/plotly-locale-" + repository.CultureInfo.TwoLetterISOLanguageName + ".js"))
-        }
+        <script src="~/Scripts/plotly/@("plotly-locale-" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
     }
 
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
     {
-        @Html.Raw(model.AttachScriptFile(fileName))
+        <script type='text/javascript' src='~/Scripts/@fileName'></script>
     }
 
     <script type="text/javascript">
@@ -470,22 +459,22 @@
 
     @if (!model.HasMinifiedScripts())
     {
-        @Html.Raw(model.AttachScriptFile("swi-utils.js"))
-        @Html.Raw(model.AttachScriptFile("swi-gateway.js"))
-        @Html.Raw(model.AttachScriptFile("swi-dashboard.js"))
-        @Html.Raw(model.AttachScriptFile("swi-main.js"))
+        <script src="~/Scripts/swi-utils.js"></script>
+        <script src="~/Scripts/swi-gateway.js"></script>
+        <script src="~/Scripts/swi-dashboard.js"></script>
+        <script src="~/Scripts/swi-main.js"></script>
 
         if (model.HasEditor() && !model.Exporting)
         {
-            @Html.Raw(model.AttachScriptFile("swi-button-group.js"))
-            @Html.Raw(model.AttachScriptFile("swi-editor.js"))
-            @Html.Raw(model.AttachScriptFile("swi-properties.js"))
-            @Html.Raw(model.AttachScriptFile("swi-dashboard-editor.js"))
+            <script src="~/Scripts/swi-button-group.js"></script>
+            <script src="~/Scripts/swi-editor.js"></script>
+            <script src="~/Scripts/swi-properties.js"></script>
+            <script src="~/Scripts/swi-dashboard-editor.js"></script>
         }
     }
     else
     {
-        @Html.Raw(model.AttachScriptFile("swi.js"))
+        <script src="~/Scripts/swi.js"></script>
     }
 
 </body>

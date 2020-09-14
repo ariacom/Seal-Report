@@ -23,9 +23,10 @@ function failure(xhr, status, error) {
 
 class SWIGateway {
     private _execForm: JQuery = null;
-    private getExecForm(action : string): JQuery {
-        if (this._execForm == null) this._execForm = $('<form method="post" target="_blank"/>').appendTo('body');
+    private getExecForm(action : string, target : string): JQuery {
+        if (this._execForm == null) this._execForm = $('<form method="post"/>').appendTo('body');
         this._execForm.find("input").remove();
+        this._execForm.attr('target', target);
         this._execForm.attr('action', _server + action);
         return this._execForm;
     }
@@ -135,7 +136,7 @@ class SWIGateway {
     }
 
     public ExecuteReport(path: string, render: boolean, viewGUID: string, outputGUID: string) {
-        var f = this.getExecForm("SWExecuteReport");
+        var f = this.getExecForm("SWExecuteReport", "_blank");
         f.append($('<input />').attr('name', 'path').attr('value', path));
         f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -145,7 +146,7 @@ class SWIGateway {
     }
 
     public ExecuteReportDefinition(report: any, render: boolean, viewGUID: string, outputGUID: string) {
-        var f = this.getExecForm("SWExecuteReportDefinition");
+        var f = this.getExecForm("SWExecuteReportDefinition", "_blank");
         f.append($('<input />').attr('name', 'report').attr('value', report));
         f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -155,7 +156,7 @@ class SWIGateway {
     }
 
     public ViewFile(path: string) {
-        var f = this.getExecForm("SWViewFile");
+        var f = this.getExecForm("SWViewFile", "_blank");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.submit();
     }
@@ -376,7 +377,7 @@ class SWIGateway {
     }
 
     public ExportDashboards(dashboards: string, format: string) {
-        var f = this.getExecForm("SWExportDashboards");
+        var f = this.getExecForm("SWExportDashboards", format == "htmlprint" ? "_blank" : "");
         f.append($('<input />').attr('name', 'dashboards').attr('value', dashboards));
         f.append($('<input />').attr('name', 'format').attr('value', format));
         f.children('input').attr('type', 'hidden');

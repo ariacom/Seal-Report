@@ -1055,7 +1055,7 @@ namespace SealWebServer.Controllers
                 var model = getHtmlMainModel(dashboards);
                 if (!string.IsNullOrEmpty(format) && dashboards != null && dashboards.Length > 0)
                 {
-                    if (format == "pdf")
+                    if (format == "pdf" || format == "pdflandscape")
                     {
                         var reference = Helper.NewGUID();
                         lock (_pdfToExport)
@@ -1064,8 +1064,15 @@ namespace SealWebServer.Controllers
                             _pdfToExport.Add(reference, model);
                         }
                         var pdfConverter = Repository.Configuration.DashboardPdfConverter;
+                        pdfConverter.SourceFormat = format;
                         string destinationPath = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.pdf"));
-                        pdfConverter.ConvertHTMLToPDF(Request.Url.AbsoluteUri + "2?reference=" + reference, destinationPath);
+#if NETCOREAPP
+                    var uri =  Microsoft.AspNetCore.Http.Extensions.UriHelper.GetDisplayUrl(Request);
+#else
+                        var uri = Request.Url.AbsoluteUri;
+                        model.BaseURL = Request.ApplicationPath;
+#endif
+                        pdfConverter.ConvertHTMLToPDF(uri + "2?reference=" + reference, destinationPath);
                         return getFileResult(destinationPath, null);
                     }
                     else if (format == "excel")
@@ -1101,8 +1108,9 @@ namespace SealWebServer.Controllers
                         if (dashboardsToExport.Count == 0) throw new Exception("No dashboard to export...");
 
                         var excelConverter = Repository.Configuration.DashboardExcelConverter;
+                        excelConverter.Dashboards = dashboardsToExport;
                         string path = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.xlsx"));
-                        excelConverter.ConvertDashboardsToExcel(dashboardsToExport, path);
+                        excelConverter.ConvertToExcel(path);
                         return getFileResult(path, null);
                     }
 

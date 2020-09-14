@@ -683,6 +683,10 @@ namespace Seal.Model
             {
                 ExcelConfigurations = ExcelConverter.GetConfigurations();
             }
+            if (DashboardExcelConverterEdited)
+            {
+                DashboardExcelConfigurations = DashboardExcelConverter.GetConfigurations();
+            }
 #if !DEBUG && !NETCOREAPP
             //Set installation path, used by, to define schedules
             if (Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealServerManager.ToLower() || Path.GetFileName(Application.ExecutablePath).ToLower() == Repository.SealReportDesigner.ToLower())

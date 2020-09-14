@@ -38,6 +38,11 @@ namespace Seal.Model
 
         #endregion
 
+        /// <summary>
+        /// Optional source format
+        /// </summary>
+        public string SourceFormat = "";
+
         public static SealPdfConverter Create()
         {
             SealPdfConverter result = null;

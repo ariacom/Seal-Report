@@ -309,6 +309,91 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Current default configuration values for Dashboard Pdf converter
+        /// </summary>
+        public List<string> DashboardPdfConfigurations { get; set; } = new List<string>();
+        public bool ShouldSerializeDashboardPdfConfigurations() { return DashboardPdfConfigurations.Count > 0; }
+
+        private SealPdfConverter _dashboardPdfConverter = null;
+        /// <summary>
+        /// Editor Helper: All the default options applied to the PDF conversion from the HTML result.
+        /// </summary>
+        [XmlIgnore]
+        public SealPdfConverter DashboardPdfConverter
+        {
+            get
+            {
+                if (_dashboardPdfConverter == null)
+                {
+                    _dashboardPdfConverter = SealPdfConverter.Create();
+                    _dashboardPdfConverter.SetConfigurations(DashboardPdfConfigurations, null);
+                    
+                }
+                return _dashboardPdfConverter;
+            }
+            set { _dashboardPdfConverter = value; }
+        }
+
+        /// <summary>
+        /// True if the Pdf configurations were edited
+        /// </summary>
+        public bool DashboardPdfConverterEdited
+        {
+            get { return _dashboardPdfConverter != null; }
+        }
+
+        /// <summary>
+        /// Current default configuration values for Excel converter
+        /// </summary>
+        public List<string> DashboardExcelConfigurations { get; set; } = new List<string>();
+        public bool ShouldSerializeDashboardExcelConfigurations() { return DashboardExcelConfigurations.Count > 0; }
+
+        private SealExcelConverter _dashboardExcelConverter = null;
+        /// <summary>
+        /// Editor Helper: All the default options applied to the Excel conversion from the view
+        /// </summary>
+        [XmlIgnore]
+        public SealExcelConverter DashboardExcelConverter
+        {
+            get
+            {
+                if (_dashboardExcelConverter == null)
+                {
+                    _dashboardExcelConverter = SealExcelConverter.Create();
+                    _dashboardExcelConverter.ForDashboard = true;
+                    _dashboardExcelConverter.SetConfigurations(DashboardExcelConfigurations, null);
+                    
+                }
+                return _dashboardExcelConverter;
+            }
+            set { _dashboardExcelConverter = value; }
+        }
+
+        /// <summary>
+        /// True if the Excel configurations were edited
+        /// </summary>
+        public bool DashboardExcelConverterEdited
+        {
+            get { return _dashboardExcelConverter != null; }
+        }
+
+        /// <summary>
+        /// Editor Helper: Reset PDF configuration values to their default values
+        /// </summary>
+        public string HelperResetDashboardPDFConfigurations
+        {
+            get { return "<Click to reset the Dashboard PDF configuration values to their default values>"; }
+        }
+
+        /// <summary>
+        /// Editor Helper: Reset Excel configuration values to their default values
+        /// </summary>
+        public string HelperResetDashboardExcelConfigurations
+        {
+            get { return "<Click to reset the Dashboard Excel configuration values to their default values>"; }
+        }
+
+        /// <summary>
         /// All common scripts
         /// </summary>
         [XmlIgnore]
@@ -446,9 +531,17 @@ namespace Seal.Model
             {
                 PdfConfigurations = PdfConverter.GetConfigurations();
             }
+            if (DashboardPdfConverterEdited)
+            {
+                DashboardPdfConfigurations = DashboardPdfConverter.GetConfigurations();
+            }
             if (ExcelConverterEdited)
             {
                 ExcelConfigurations = ExcelConverter.GetConfigurations();
+            }
+            if (DashboardExcelConverterEdited)
+            {
+                DashboardExcelConfigurations = DashboardExcelConverter.GetConfigurations();
             }
 #if !DEBUG && !NETCOREAPP
             //Set installation path, used by, to define schedules

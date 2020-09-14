@@ -308,7 +308,7 @@ function showPopupNavMenu(source, content, forChart, executionguid) {
     }
 
     //For web add option to navigate in another tab
-    if (urlPrefix != "") {
+    if (urlPrefix != "" && inReport) {
         content = content.replace(new RegExp('</a>', 'g'), '<span class="external-navigation glyphicon glyphicon-share"></span></a>');
     }
 

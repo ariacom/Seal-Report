@@ -46,9 +46,10 @@ namespace Seal.Model
         /// </summary>
         public string DashboardIds = "";
 
-        public bool HasChartJS = false;
-        public bool HasNVD3 = false;
-        public bool HasPlotly = false;
+        /// <summary>
+        /// User defined object
+        /// </summary>
+        public object Tag;
 
         /// <summary>
         /// Is it for dashboards export
@@ -59,38 +60,6 @@ namespace Seal.Model
             {
                 return !string.IsNullOrEmpty(Format);
             }
-        }
-        /// <summary>
-        /// Attach CSS file
-        /// </summary>
-        public string AttachCSSFile(string fileName)
-        {
-            if (!Exporting) return string.Format("<link rel='stylesheet' href='{0}/Content/{1}'/>", BaseURL, fileName);
-            string result = "<style type='text/css'>\r\n";
-            result += Repository.Configuration.GetAttachedFileContent(Path.Combine(Path.Combine(ServerPath, "Content"), fileName));
-            result += "\r\n</style>\r\n";
-            return result;
-        }
-
-        /// <summary>
-        /// Attach Script file
-        /// </summary>
-        public string AttachScriptFile(string fileName)
-        {
-            if (!Exporting) return string.Format("<script src='{0}/Scripts/{1}'></script>", BaseURL, fileName);
-            string result = "<script type='text/javascript'>\r\n";
-            result += Repository.Configuration.GetAttachedFileContent(Path.Combine(Path.Combine(ServerPath, "Scripts"), fileName));
-            result += "\r\n</script>\r\n";
-            return result;
-        }
-
-        /// <summary>
-        /// Attach Image file
-        /// </summary>
-        public string AttachImageFile(string fileName)
-        {
-            if (!Exporting) return string.Format("{0}/Images/{1}", BaseURL, fileName);
-            return Helper.HtmlMakeImageSrcData(Path.Combine(Path.Combine(ServerPath, "Images"), fileName));
         }
     }
 }

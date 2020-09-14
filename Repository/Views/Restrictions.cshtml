@@ -3,6 +3,10 @@
     Report report = Model;
     ReportView view = report.CurrentView;
 }
+
+<!--restrictions_div-->
+@if (report.GenerateHTMLDisplay)
+{
     <form id="form_@view.IdSuffix" execguid="@report.ExecutionGUID" method="post" action="">
         @Include(view.GetPartialTemplateKey("Restrictions.iShared", view), view)
         @if (view.ExecutionPromptedRestrictions.Exists(i => !i.TriggerExecution))
@@ -16,3 +20,4 @@
             </div>
         }
     </form>
+}

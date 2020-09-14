@@ -30,10 +30,11 @@ var SWIGateway = /** @class */ (function () {
                     .done(function (data) { callbackHandler(data, callback, errorcb); })
                     .fail(function (xhr, status, error) { failure(xhr, status, error); });*/
     }
-    SWIGateway.prototype.getExecForm = function (action) {
+    SWIGateway.prototype.getExecForm = function (action, target) {
         if (this._execForm == null)
-            this._execForm = $('<form method="post" target="_blank"/>').appendTo('body');
+            this._execForm = $('<form method="post"/>').appendTo('body');
         this._execForm.find("input").remove();
+        this._execForm.attr('target', target);
         this._execForm.attr('action', _server + action);
         return this._execForm;
     };
@@ -127,7 +128,7 @@ var SWIGateway = /** @class */ (function () {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.ExecuteReport = function (path, render, viewGUID, outputGUID) {
-        var f = this.getExecForm("SWExecuteReport");
+        var f = this.getExecForm("SWExecuteReport", "_blank");
         f.append($('<input />').attr('name', 'path').attr('value', path));
         f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -136,7 +137,7 @@ var SWIGateway = /** @class */ (function () {
         f.submit();
     };
     SWIGateway.prototype.ExecuteReportDefinition = function (report, render, viewGUID, outputGUID) {
-        var f = this.getExecForm("SWExecuteReportDefinition");
+        var f = this.getExecForm("SWExecuteReportDefinition", "_blank");
         f.append($('<input />').attr('name', 'report').attr('value', report));
         f.append($('<input />').attr('name', 'render').attr('value', JSON.stringify(render)));
         f.append($('<input />').attr('name', 'viewGUID').attr('value', viewGUID));
@@ -145,7 +146,7 @@ var SWIGateway = /** @class */ (function () {
         f.submit();
     };
     SWIGateway.prototype.ViewFile = function (path) {
-        var f = this.getExecForm("SWViewFile");
+        var f = this.getExecForm("SWViewFile", "_blank");
         f.append($('<input />').attr('type', 'hidden').attr('name', 'path').attr('value', path));
         f.submit();
     };
@@ -341,7 +342,7 @@ var SWIGateway = /** @class */ (function () {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
     SWIGateway.prototype.ExportDashboards = function (dashboards, format) {
-        var f = this.getExecForm("SWExportDashboards");
+        var f = this.getExecForm("SWExportDashboards", format == "htmlprint" ? "_blank" : "");
         f.append($('<input />').attr('name', 'dashboards').attr('value', dashboards));
         f.append($('<input />').attr('name', 'format').attr('value', format));
         f.children('input').attr('type', 'hidden');

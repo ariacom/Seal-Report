@@ -12,6 +12,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Diagnostics;
+using System.Text;
 
 namespace SealWebServer.Controllers
 {
@@ -962,21 +963,12 @@ namespace SealWebServer.Controllers
                     try
                     {
                         report.Status = ReportStatus.RenderingDisplay;
-
-                        if (!string.IsNullOrEmpty(format))
+                        if (!string.IsNullOrEmpty(format) && format == "htmlprint")
                         {
-                            if (format == "html")
-                            {
-                                report.Format = ReportFormat.html;
-                                report.Status = ReportStatus.RenderingResult;
-                                report.ExecutionViewResultFormat = ReportFormat.html.ToString();
-                            }
-                            else if (format == "htmlprint" || format.StartsWith("pdf"))
-                            {
-                                report.Format = ReportFormat.print;
-                                report.Status = ReportStatus.RenderingResult;
-                                report.ExecutionViewResultFormat = ReportFormat.print.ToString();
-                            }
+                            //Only html print is supported
+                            report.Format = ReportFormat.print;
+                            report.Status = ReportStatus.RenderingResult;
+                            report.ExecutionViewResultFormat = ReportFormat.print.ToString();
                         }
 
                         report.CurrentModelView = modelView;
@@ -1028,10 +1020,29 @@ namespace SealWebServer.Controllers
                 return Json(result);
             }
         }
+        #endregion
+
+
+        #region Dashboards Export
+
+        static Dictionary<string, MainModel> _pdfToExport = new Dictionary<string, MainModel>();
+        MainModel getHtmlMainModel(string dashboards)
+        {
+            var model = new MainModel() { Repository = Repository, Format = "htmlprint", DashboardIds = dashboards };
+
+#if NETCOREAPP
+                    model.ServerPath = WebRootPath;
+                    model.BaseURL = Request.PathBase.Value;
+#else
+            model.ServerPath = Request.PhysicalApplicationPath;
+            model.BaseURL = Request.ApplicationPath;
+#endif
+            return model;
+        }
 
 
         /// <summary>
-        /// Export the dashboard into a file: HTML, PDF, XLSX
+        /// Export the dashboard into a file: PDF, XLSX
         /// </summary>
         public ActionResult SWExportDashboards(string dashboards, string format)
         {
@@ -1041,62 +1052,68 @@ namespace SealWebServer.Controllers
             {
                 if (!CheckAuthentication()) return _loginContentResult;
 
+                var model = getHtmlMainModel(dashboards);
                 if (!string.IsNullOrEmpty(format) && dashboards != null && dashboards.Length > 0)
                 {
-                    var model = new MainModel() { Repository = Repository, Format = format, DashboardIds = dashboards };
-                    var dashboardsToExport = new Dictionary<Dashboard, List<ReportView>>();
-                    var ids = dashboards.Split(',');
-                    foreach (var dashboard in WebUser.UserDashboards.Where(i => ids.Contains(i.GUID)).OrderBy(i => i.Order))
+                    if (format == "pdf" || format == "pdflandscape")
                     {
-                        var views = new List<ReportView>();
-                        foreach (var item in dashboard.Items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order))
+                        var reference = Helper.NewGUID();
+                        lock (_pdfToExport)
                         {
-                            var widget = DashboardWidgetsPool.Widgets.ContainsKey(item.WidgetGUID) ? DashboardWidgetsPool.Widgets[item.WidgetGUID] : null;
-                            if (widget != null)
-                            {
-                                ReportView view = null, modelView = null;
-                                Report report = null;
-                                ReportExecution execution = getWidgetViews(widget, out report, ref view, ref modelView);
-
-                                if (report.Cancel) break;
-                                if (view != null)
-                                {
-                                    view.Tag = item.DisplayGroupName;
-                                    views.Add(view);
-                                    if (view.Model.HasChartJSSerie) model.HasChartJS = true;
-                                    if (view.Model.HasNVD3Serie) model.HasNVD3= true;
-                                    if (view.Model.HasPlotlySerie) model.HasPlotly = true;
-                                }
-                            }
+                            model.Tag = WebUser;
+                            _pdfToExport.Add(reference, model);
                         }
-                        dashboardsToExport.Add(dashboard, views);
-                    }
-
-                    if (dashboardsToExport.Count == 0) throw new Exception("No dashboard to export...");
-
-
-                    if (format == "pdf")
-                    {
-                        var pdfConverter = SealPdfConverter.Create();
-                        string path = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.pdf"));
-                        pdfConverter.ConvertHTMLToPDF("http://localhost:17178/seal/Main?Format=pdf", path);
-                        return getFileResult(path, null);
+                        var pdfConverter = Repository.Configuration.DashboardPdfConverter;
+                        pdfConverter.SourceFormat = format;
+                        string destinationPath = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.pdf"));
+#if NETCOREAPP
+                    var uri =  Microsoft.AspNetCore.Http.Extensions.UriHelper.GetDisplayUrl(Request);
+#else
+                        var uri = Request.Url.AbsoluteUri;
+                        model.BaseURL = Request.ApplicationPath;
+#endif
+                        pdfConverter.ConvertHTMLToPDF(uri + "2?reference=" + reference, destinationPath);
+                        return getFileResult(destinationPath, null);
                     }
                     else if (format == "excel")
                     {
-                        var converter = SealExcelConverter.Create();
+                        var dashboardsToExport = new Dictionary<Dashboard, List<ReportView>>();
+                        var ids = dashboards.Split(',');
+                        foreach (var dashboard in WebUser.UserDashboards.Where(i => ids.Contains(i.GUID)).OrderBy(i => i.Order))
+                        {
+                            var views = new List<ReportView>();
+                            foreach (var item in dashboard.Items.OrderBy(i => i.GroupOrder).ThenBy(i => i.GroupName).ThenBy(i => i.Order))
+                            {
+                                if (item.Widget != null)
+                                {
+                                    ReportView view = null, modelView = null;
+                                    Report report = null;
+                                    ReportExecution execution = getWidgetViews(item.Widget, out report, ref view, ref modelView);
+                                    if (report.Cancel) break;
+                                    if (modelView != null) 
+                                    {
+                                        views.Add(modelView);
+                                        modelView.Tag = item;
+                                    }
+                                    else if (view != null)
+                                    {
+                                        views.Add(view);
+                                        view.Tag = item;
+                                    }
+                                }
+                            }
+                            dashboardsToExport.Add(dashboard, views);
+                        }
+
+                        if (dashboardsToExport.Count == 0) throw new Exception("No dashboard to export...");
+
+                        var excelConverter = Repository.Configuration.DashboardExcelConverter;
+                        excelConverter.Dashboards = dashboardsToExport;
                         string path = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.xlsx"));
-                        converter.ConvertDashboardsToExcel(dashboardsToExport, path);
+                        excelConverter.ConvertToExcel(path);
                         return getFileResult(path, null);
                     }
 
-#if NETCOREAPP
-                    model.ServerPath = WebRootPath;
-                    model.BaseURL = Request.PathBase.Value;
-#else
-                    model.ServerPath = Request.PhysicalApplicationPath;
-                    model.BaseURL = Request.ApplicationPath;
-#endif
                     result = View("Main", model);
                 }
             }
@@ -1108,6 +1125,42 @@ namespace SealWebServer.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Generate the dashboard in HTML Print for PDF conversion
+        /// </summary>
+        public ActionResult SWExportDashboards2(string reference)
+        {
+            writeDebug("SWExportDashboards2");
+            ActionResult result = new EmptyResult();
+            try
+            {
+                MainModel model = null;
+                lock (_pdfToExport)
+                {
+                    if (_pdfToExport.ContainsKey(reference))
+                    {
+                        model = _pdfToExport[reference];
+                        _pdfToExport.Remove(reference);
+                    }
+                }
+
+                if (model != null)
+                {
+
+                    setSessionValue(SessionRepository, model.Repository);
+                    setSessionValue(SessionUser, model.Tag);
+                    if (!CheckAuthentication()) return _loginContentResult;
+
+                    result = View("Main", model);
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+
+            return result;
+        }
         #endregion
     }
 }
