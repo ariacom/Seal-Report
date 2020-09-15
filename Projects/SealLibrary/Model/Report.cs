@@ -522,31 +522,6 @@ namespace Seal.Model
                 ExecutionErrorStackTrace = ex.StackTrace;
             }
 
-            //Init enum values
-            foreach (var restriction in AllRestrictions.Where(i => i.IsEnumRE))
-            {
-                restriction.SetEnumHtmlIds();
-            }
-
-            //First selection for enum values
-            foreach (var restriction in AllRestrictions.Where(i => i.IsEnumRE && i.FirstSelection != FirstEnumSelection.None))
-            {
-                restriction.EnumValues.Clear();
-                if (restriction.FirstSelection == FirstEnumSelection.All)
-                {
-                    restriction.EnumValues.AddRange(from v in restriction.EnumRE.Values select v.Id);
-                }
-                else if (restriction.FirstSelection == FirstEnumSelection.First && restriction.EnumRE.Values.Count > 0)
-                {
-                    restriction.EnumValues.Add(restriction.EnumRE.Values.First().Id);
-                }
-                if (restriction.FirstSelection == FirstEnumSelection.Last && restriction.EnumRE.Values.Count > 0)
-                {
-                    restriction.EnumValues.Add(restriction.EnumRE.Values.Last().Id);
-                }
-                restriction.FirstSelection = FirstEnumSelection.None;
-            }
-
             //Init scripts
 
             //Load converter assembly
@@ -598,6 +573,31 @@ namespace Seal.Model
                     ExecutionErrors += string.Format("Error executing report init script:\r\n{0}\r\n", ex2.Message);
                     ExecutionErrorStackTrace = ex2.StackTrace;
                 }
+            }
+
+            //Init enum values
+            foreach (var restriction in AllRestrictions.Where(i => i.IsEnumRE))
+            {
+                restriction.SetEnumHtmlIds();
+            }
+
+            //First selection for enum values
+            foreach (var restriction in AllRestrictions.Where(i => i.IsEnumRE && i.FirstSelection != FirstEnumSelection.None))
+            {
+                restriction.EnumValues.Clear();
+                if (restriction.FirstSelection == FirstEnumSelection.All)
+                {
+                    restriction.EnumValues.AddRange(from v in restriction.EnumRE.Values select v.Id);
+                }
+                else if (restriction.FirstSelection == FirstEnumSelection.First && restriction.EnumRE.Values.Count > 0)
+                {
+                    restriction.EnumValues.Add(restriction.EnumRE.Values.First().Id);
+                }
+                if (restriction.FirstSelection == FirstEnumSelection.Last && restriction.EnumRE.Values.Count > 0)
+                {
+                    restriction.EnumValues.Add(restriction.EnumRE.Values.Last().Id);
+                }
+                restriction.FirstSelection = FirstEnumSelection.None;
             }
         }
 

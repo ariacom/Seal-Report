@@ -1646,7 +1646,7 @@ namespace Seal.Model
             }
             else if (_operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty)
             {
-                _LINQText += (_operator == Operator.IsNotEmpty ? "" : "!") + string.Format("string.IsNullOrEmpty({0})", LINQColumnName);
+                _LINQText += (_operator == Operator.IsNotEmpty ? "!" : "") + string.Format("string.IsNullOrEmpty({0})", LINQColumnName);
             }
             else
             {

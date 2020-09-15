@@ -33,8 +33,9 @@
                 item.Report.ExecutionMessages,&#xD;
                 item.Report.HasErrors ? "Yes" : "No",&#xD;
                 (item.Report.ExecutionErrors + Helper.AddNotEmpty("\r\n",((ReportView)item.Tag).Error))&#xD;
-                );&#xD;
+                );                             &#xD;
         }&#xD;
+        &#xD;
     }&#xD;
     &#xD;
     if (report != null &amp;&amp; report.Tag2 != null) {&#xD;
