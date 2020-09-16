@@ -4,9 +4,14 @@
     ReportView view = report.CurrentView;
     int index = 0;
     var views = view.Views.OrderBy(i => i.SortOrder).ToList();
+    var gridLayout = view.Report.GenerateHTMLDisplay ? view.GetValue("grid_layout") : view.GetValue("grid_layout_print");
+    if (string.IsNullOrWhiteSpace(gridLayout))
+    {
+        gridLayout = view.GetValue("grid_layout");
+    }
 }
 <div class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
-    @foreach (string row in view.GetGridLayoutRows(view.GetValue("grid_layout").Trim()))
+    @foreach (string row in view.GetGridLayoutRows(gridLayout.Trim()))
     {
         <div class="row">
             @foreach (string col in view.GetGridLayoutColumns(row))

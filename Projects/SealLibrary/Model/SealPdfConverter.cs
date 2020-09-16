@@ -43,6 +43,11 @@ namespace Seal.Model
         /// </summary>
         public string SourceFormat = "";
 
+        /// <summary>
+        /// Dashboards to convert if the converter is for Dashboards export
+        /// </summary>
+        public List<Dashboard> Dashboards;
+
         public static SealPdfConverter Create()
         {
             SealPdfConverter result = null;

@@ -30,6 +30,17 @@
 "(col-sm-9);col-sm-3 right;|Row 1 for one child view right aligned"
 }
     });
+    Template.Parameters.Add(new Parameter()
+    {
+        Name = "grid_layout_print",
+        Type = ViewParameterType.Text,
+        TextValue = "",
+        DisplayName = "Grid layout for HTML and Print result",
+        Description = "Grid layout used when generating the HTML result. Typically Restrictions Views may be hidden as they will be empty. It follows the 'Grid layout' definition.",
+        TextSamples = new string[] {
+"col-sm-0;col-sm-12;|Hide the first view if it contains the restrictions"
+}
+    });
     Template.Parameters.Add(new Parameter() { Name = "grid_cell_class", DisplayName = "Grid cell additional CSS Class", Description = "Additional CSS class attribute of a grid cell.", Enums = new string[] { "text-center", "bg-success", "bg-danger" }, UseOnlyEnumValues = false });
     Template.Parameters.Add(new Parameter() { Name = "grid_cell_css", DisplayName = "Grid cell CSS Style", Description = "CSS style attribute of a grid cell.", Enums = new string[] { "border: 2px solid blue;", "font-size: 10px;" }, UseOnlyEnumValues = false });
 

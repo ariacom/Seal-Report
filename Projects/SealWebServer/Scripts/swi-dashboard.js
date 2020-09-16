@@ -4,6 +4,7 @@
 var _da;
 var _daEditor;
 var hasEditor;
+var wnvPdfConverter;
 //Muuri layout
 function loadLayout(grid, serializedLayout) {
     var layout = JSON.parse(serializedLayout);
@@ -34,6 +35,7 @@ var SWIDashboard = /** @class */ (function () {
         this._grids = [];
         this._gridsById = [];
         this._refreshTimers = [];
+        this._pendingRequest = 0;
     }
     SWIDashboard.prototype.reorderItems = function (init) {
         if (!_da || !_da._dashboard)
@@ -133,9 +135,32 @@ var SWIDashboard = /** @class */ (function () {
         initRestrictions("#" + data.itemguid);
     };
     SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force) {
+        _da._pendingRequest++;
         clearTimeout(_da._refreshTimers[itemguid]);
         _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
+            _da._pendingRequest--;
+            setTimeout(function () {
+                if (_da._pendingRequest <= 0 && typeof wnvPdfConverter != "undefined") {
+                    wnvPdfConverter.startConversion();
+                }
+            }, 2000);
+            if (_main._exporting) {
+                setTimeout(function () {
+                    if (_da._pendingRequest <= 0) {
+                        _da._pendingRequest = 0;
+                        //Redraw all...
+                        $.each(_da._ids, function (index, value) {
+                            _da._dashboard = _da._dashboards[value];
+                            _da.reorderItems(false);
+                        });
+                        //var wnvPdfConverter: any;
+                        if (typeof wnvPdfConverter != "undefined") {
+                            wnvPdfConverter.startConversion();
+                        }
+                    }
+                }, 1000);
+            }
         });
     };
     SWIDashboard.prototype.initDashboardItems = function (guid) {
@@ -371,7 +396,8 @@ var SWIDashboard = /** @class */ (function () {
                         select.append(SWIUtil.GetOption(pubDashboard.GUID, pubDashboard.FullName, ""));
                     }
                     select.selectpicker({
-                        "liveSearch": true
+                        "liveSearch": true,
+                        "actionsBox": true
                     });
                     //Add
                     SWIUtil.ShowHideControl($("#dashboard-add").parent(), data.length > 0);
@@ -416,7 +442,8 @@ var SWIDashboard = /** @class */ (function () {
                         select.append(SWIUtil.GetOption(pubDashboard.GUID, pubDashboard.FullName, pubDashboard.GUID));
                     }
                     select.selectpicker({
-                        "liveSearch": true
+                        "liveSearch": true,
+                        "actionsBox": true
                     });
                     select = $("#export-format");
                     select.unbind("change").selectpicker("destroy").empty();
@@ -434,22 +461,6 @@ var SWIDashboard = /** @class */ (function () {
                     $("#export-dialog").modal();
                 });
             });
-            //Export End
-            if (_main._exporting) {
-                $(document).ajaxStop(function () {
-                    setTimeout(function () {
-                        //Redraw all...
-                        $.each(_da._ids, function (index, value) {
-                            _da._dashboard = _da._dashboards[value];
-                            _da.reorderItems(false);
-                        });
-                        var wnvPdfConverter;
-                        if (typeof wnvPdfConverter != "undefined") {
-                            wnvPdfConverter.startConversion();
-                        }
-                    }, 500);
-                });
-            }
             if (hasEditor) {
                 _daEditor.initMenu();
             }

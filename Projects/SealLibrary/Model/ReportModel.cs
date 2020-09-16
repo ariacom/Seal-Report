@@ -2307,8 +2307,9 @@ model.ResultTable = query2.CopyToDataTable2();
                 var subModel = currentSubModels.FirstOrDefault(i => i.SourceGUID == table.LINQSourceGUID);
                 if (subModel == null)
                 {
-                    subModel = new ReportModel() { SourceGUID = table.LINQSourceGUID, Name = Source.Name };
+                    subModel = new ReportModel() { SourceGUID = table.LINQSourceGUID };
                 }
+                subModel.Name = table.Source.Name;
                 subModel.MasterModel = this;
                 subModel.Report = Report;
                 subModel.InitReferences();
@@ -2356,6 +2357,9 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     subModel.addHiddenElement(restr.MetaColumnGUID);
                 }
+
+                //clear sort
+                foreach (var el in subModel.Elements) el.SortOrder = "";
 
                 subModel.InitReferences();
             }

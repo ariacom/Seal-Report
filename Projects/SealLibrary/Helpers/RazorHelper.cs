@@ -195,7 +195,6 @@ namespace Seal.Helpers
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
             {
-                string result = "";
                 if (string.IsNullOrEmpty(key))
                 {
                     if (model != null)
@@ -212,7 +211,7 @@ namespace Seal.Helpers
                 {
                     Compile(GetFullScript(script, model), model.GetType(), key);
                 }
-                result = Engine.Razor.Run(key, model.GetType(), model);
+                string result = Engine.Razor.Run(key, model.GetType(), model);
                 return string.IsNullOrEmpty(result) ? "" : result;
             }
             return script;

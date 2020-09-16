@@ -206,7 +206,7 @@ namespace Seal.Model
         [Category("Report Scheduler Settings"), DisplayName("Task Folder Name"), Description("Name of the Task Scheduler folder containg the schedules of the reports if the Windows Task Scheduler is used. Warning: Changing this name will affect all existing schedules !"), Id(2, 2)]
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
-       bool _auditEnabled = false;
+        bool _auditEnabled = false;
         /// <summary>
         /// If true, the Audit script is executed for the follwing events: login, logout, report execution and management, folder management, file management, dashboard management.
         /// </summary>
@@ -298,7 +298,7 @@ namespace Seal.Model
         /// <summary>
         /// If true, the client library is used to perform the HTML to PDF conversion (mainly useful for .NETCore distribution). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services.
         /// </summary>
-        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for .NETCore or Azure). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services."), Category("PDF Converter: Client Library"), Id(1, 6)]
+        [DisplayName("Use PDF Client Library"), Description("If true, the HtmlToPdfClient library is used by default to perform the HTML to PDF conversion (mainly useful for .NETCore or Azure). This requires the installation of the HTML to PDF Server on a Windows machine or on Azur Services. If the value is modified, restart the Server Manager to update the default PDF Scripts."), Category("PDF Converter: Client Library"), Id(1, 6)]
         [DefaultValue(false)]
         public bool PdfUseClient { get; set; } = false;
 
@@ -457,6 +457,13 @@ namespace Seal.Model
             set { _dashboardPdfConverter = value; }
         }
 
+        public SealPdfConverter GetDashboardPdfConverter()
+        {
+            var dashboardPdfConverter = SealPdfConverter.Create();
+            dashboardPdfConverter.SetConfigurations(DashboardPdfConfigurations, null);
+            return dashboardPdfConverter;
+        }
+
         /// <summary>
         /// True if the Pdf configurations were edited
         /// </summary>
@@ -578,7 +585,7 @@ namespace Seal.Model
         /// <summary>
         /// If true, the Web site is published with the NET Core distribution.
         /// </summary>
-        [Category("Web Server IIS Publication"), DisplayName("Use NET Core Distribution"), Description("If true, the Web site is published with the NET Core distribution.") ,Id(1, 3)]
+        [Category("Web Server IIS Publication"), DisplayName("Use NET Core Distribution"), Description("If true, the Web site is published with the NET Core distribution."), Id(1, 3)]
         [DefaultValue(false)]
         public bool WebNETCore { get; set; } = false;
 

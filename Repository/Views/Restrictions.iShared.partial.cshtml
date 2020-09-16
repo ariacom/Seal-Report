@@ -10,101 +10,103 @@
     var id = "restrictions_" + view.IdSuffix;
 }
 
-<div id="@id" class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
-    <div class="panel-group" role="tablist">
-        @Raw(view.GetValue("restrictions_header"))
-        <!--rows of xx restrictions -->
-        @for (int row = 0; row <= restrictions.Count / restrictionPerRow; row++)
-        {
-            <div class="row">
-                @for (int i = restrictionPerRow * row; i < restrictions.Count && i < restrictionPerRow * (row + 1); i++)
-                {
-                    var restriction = restrictions[i];
-                    var trigger = restriction.TriggerExecution;
-                    <div class="col-sm-@(12 / restrictionPerRow)">
-                        <div class="form-group restrictions_group @(view.Template.ForViewRestrictions ? "view_restriction" : "main_restriction")">
-                            @if (restriction.OperatorStyle == RestrictionOperatorStyle.Visible)
-                            {
-                                <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select">
-                                    @foreach (Operator op in restriction.AllowedDisplayOperators)
-                                    {
-                                        if (restriction.ChangeOperator || restriction.Operator == op)
-                                        {
-                                            <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(op)))</option>
-                                        }
-                                    }
-                                </select>
-                            }
-                            else
-                            {
-                                <input type="hidden" name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" value="@restriction.Operator" />
-                                if (restriction.OperatorStyle == RestrictionOperatorStyle.NotModifiable)
+@if (report.GenerateHTMLDisplay)
+{
+    <div id="@id" class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
+        <div class="panel-group" role="tablist">
+            @Raw(view.GetValue("restrictions_header"))
+            <!--rows of xx restrictions -->
+            @for (int row = 0; row <= restrictions.Count / restrictionPerRow; row++)
+            {
+                <div class="row">
+                    @for (int i = restrictionPerRow * row; i < restrictions.Count && i < restrictionPerRow * (row + 1); i++)
+                    {
+                        var restriction = restrictions[i];
+                        var trigger = restriction.TriggerExecution;
+                        <div class="col-sm-@(12 / restrictionPerRow)">
+                            <div class="form-group restrictions_group @(view.Template.ForViewRestrictions ? "view_restriction" : "main_restriction")">
+                                @if (restriction.OperatorStyle == RestrictionOperatorStyle.Visible)
                                 {
-                                    var opLabel = restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(restriction.Operator);
-                                    <button type="button" class="btn btn-default form-control" style="text-align:left;overflow:hidden" title="@Raw(Helper.ToHtml(opLabel))">
-                                        @Raw(Helper.ToHtml(opLabel))
-                                    </button>
-
-                                }
-                            }
-
-                            @if (restriction.IsEnumRE)
-                            {
-                                if (restriction.EnumLayout == RestrictionLayout.RadioToggleButton)
-                                {
-                                    <div class="btn-group" data-toggle="buttons" id='@restriction.OptionValueHtmlId'>
-                                        @foreach (var enumDef in restriction.PromptedEnumValues)
+                                    <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select">
+                                        @foreach (Operator op in restriction.AllowedDisplayOperators)
                                         {
-                                            <label class="btn btn-default @(restriction.EnumValues.Contains(enumDef.Id) ? "active" : "")">
-                                                <input type="@(restriction.Prompt == PromptType.PromptOneValue ? "radio" : "checkbox")" name='@restriction.OptionValueHtmlId' id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' class='@(trigger ? "trigger_enum" : "")' @(restriction.EnumValues.Contains(enumDef.Id) ? "checked" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))
-                                            </label>
-                                        }
-                                    </div>
-                                }
-                                else
-                                {
-                                    <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum @(trigger ? "trigger_enum" : "") @(restriction.EnumRE.HasDynamicDisplay ? "enum_dynamic"  :"")" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple") @Raw(restriction.EnumLayout == RestrictionLayout.SelectWithFilter ? " data-live-search='true'" : "") data-actions-box="true" dependencies="@Helper.ToJS(restriction.EnumRE.HasDependencies)" filterchars="@restriction.EnumRE.FilterChars" message="@Raw(restriction.GetEnumMessage())">
-                                        @foreach (var enumDef in restriction.PromptedEnumValues)
-                                        {
-                                            <option id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
+                                            if (restriction.ChangeOperator || restriction.Operator == op)
+                                            {
+                                                <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(op)))</option>
+                                            }
                                         }
                                     </select>
                                 }
-                            }
-                            else
-                            {
-                                for (int j = 1; j <= 4; j++)
+                                else
                                 {
-                                    if (restriction.IsDateTime)
+                                    <input type="hidden" name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" value="@restriction.Operator" />
+                                    if (restriction.OperatorStyle == RestrictionOperatorStyle.NotModifiable)
                                     {
-                                        <div class="form-group">
-                                            <div class='input-group date @(restriction.HasTimeRe ? "datepicker_datetime" : "datepicker_date") @(trigger ? "trigger" : "")'>
-                                                <input type='text' class="form-control @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                            </div>
-                                        </div>
+                                        var opLabel = restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(restriction.Operator);
+                                        <button type="button" class="btn btn-default form-control" style="text-align:left;overflow:hidden" title="@Raw(Helper.ToHtml(opLabel))">
+                                            @Raw(Helper.ToHtml(opLabel))
+                                        </button>
+
                                     }
-                                    else if (j == 1 && restriction.InputRows1 > 0)
+                                }
+
+                                @if (restriction.IsEnumRE)
+                                {
+                                    if (restriction.EnumLayout == RestrictionLayout.RadioToggleButton)
                                     {
-                                        <textarea class="form-control @(trigger ? "trigger" : "")" rows="@restriction.InputRows1" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId">@restriction.GetHtmlValue(j)</textarea>
+                                        <div class="btn-group" data-toggle="buttons" id='@restriction.OptionValueHtmlId'>
+                                            @foreach (var enumDef in restriction.PromptedEnumValues)
+                                            {
+                                                <label class="btn btn-default @(restriction.EnumValues.Contains(enumDef.Id) ? "active" : "")">
+                                                    <input type="@(restriction.Prompt == PromptType.PromptOneValue ? "radio" : "checkbox")" name='@restriction.OptionValueHtmlId' id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' class='@(trigger ? "trigger_enum" : "")' @(restriction.EnumValues.Contains(enumDef.Id) ? "checked" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))
+                                                </label>
+                                            }
+                                        </div>
                                     }
                                     else
                                     {
-                                        <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "") @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
-                                    }
-                                    if ((restriction.Prompt == PromptType.PromptOneValue) || (restriction.Prompt == PromptType.PromptTwoValues && j == 2))
-                                    {
-                                        break;
+                                        <select name="@(restriction.OptionValueHtmlId)" id="@(restriction.OptionValueHtmlId)" opid="@restriction.OperatorHtmlId" class="form-control enum @(trigger ? "trigger_enum" : "") @(restriction.EnumRE.HasDynamicDisplay ? "enum_dynamic" : "")" @(restriction.Prompt == PromptType.PromptOneValue ? "" : "multiple") @Raw(restriction.EnumLayout == RestrictionLayout.SelectWithFilter ? " data-live-search='true'" : "") data-actions-box="true" dependencies="@Helper.ToJS(restriction.EnumRE.HasDependencies)" filterchars="@restriction.EnumRE.FilterChars" message="@Raw(restriction.GetEnumMessage())">
+                                            @foreach (var enumDef in restriction.PromptedEnumValues)
+                                            {
+                                                <option id='@(restriction.OptionHtmlId + enumDef.HtmlId)' value='@(restriction.OptionHtmlId + enumDef.HtmlId)' @(restriction.EnumValues.Contains(enumDef.Id) ? "selected" : "")>@Raw(Helper.ToHtml(restriction.GetEnumDisplayValue(enumDef.Id)))</option>
+                                            }
+                                        </select>
                                     }
                                 }
-                            }
-                            <span class='glyphicon glyphicon-refresh spinning' style="top:20%;right:45%;position:absolute;display:none;z-index:1000"></span>
-                        </div>
-                    </div> <!--col-->}
-            </div> <!--row-->}
-        @Raw(view.GetValue("restrictions_footer"))
+                                else
+                                {
+                                    for (int j = 1; j <= 4; j++)
+                                    {
+                                        if (restriction.IsDateTime)
+                                        {
+                                            <div class="form-group">
+                                                <div class='input-group date @(restriction.HasTimeRe ? "datepicker_datetime" : "datepicker_date") @(trigger ? "trigger" : "")'>
+                                                    <input type='text' class="form-control @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (j == 1 && restriction.InputRows1 > 0)
+                                        {
+                                            <textarea class="form-control @(trigger ? "trigger" : "")" rows="@restriction.InputRows1" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId">@restriction.GetHtmlValue(j)</textarea>
+                                        }
+                                        else
+                                        {
+                                            <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "") @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" />
+                                        }
+                                        if ((restriction.Prompt == PromptType.PromptOneValue) || (restriction.Prompt == PromptType.PromptTwoValues && j == 2))
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+                                <span class='glyphicon glyphicon-refresh spinning' style="top:20%;right:45%;position:absolute;display:none;z-index:1000"></span>
+                            </div>
+                        </div> <!--col-->}
+                </div> <!--row-->}
+            @Raw(view.GetValue("restrictions_footer"))
+        </div>
     </div>
-</div>
-
+}

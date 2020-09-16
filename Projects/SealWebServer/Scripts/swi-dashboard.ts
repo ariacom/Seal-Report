@@ -15,6 +15,8 @@ declare function getTopLeft(item: any);
 declare function initNavCells(executionGUID: string, parentSelector: string);
 declare function initRestrictions(parent: any);
 
+var wnvPdfConverter: any;
+
 //Muuri layout
 function loadLayout(grid, serializedLayout) {
     var layout = JSON.parse(serializedLayout);
@@ -50,6 +52,7 @@ class SWIDashboard {
     public _lastGUID;
     public _dragType;
     public _dragData;
+    public _pendingRequest = 0;
 
     public reorderItems(init: boolean) {
         if (!_da || !_da._dashboard) return;
@@ -159,9 +162,34 @@ class SWIDashboard {
     }
 
     private refreshDashboardItem(guid: string, itemguid: string, force: boolean) {
+        _da._pendingRequest++;
         clearTimeout(_da._refreshTimers[itemguid]);
         _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
+            _da._pendingRequest--;
+            setTimeout(function () {
+                if (_da._pendingRequest <= 0 && typeof wnvPdfConverter != "undefined") {
+                    wnvPdfConverter.startConversion();
+                }
+            }, 2000);
+
+            if (_main._exporting) {
+                setTimeout(function () {
+                    if (_da._pendingRequest <= 0) {
+                        _da._pendingRequest = 0;
+                        //Redraw all...
+                        $.each(_da._ids, function (index, value) {
+                            _da._dashboard = _da._dashboards[value];
+                            _da.reorderItems(false);
+                        });
+                        //var wnvPdfConverter: any;
+                        if (typeof wnvPdfConverter != "undefined") {
+                            wnvPdfConverter.startConversion();
+                        }
+                    }
+                }, 1000);
+            }
+
         });
     }
 
@@ -424,7 +452,8 @@ class SWIDashboard {
                         select.append(SWIUtil.GetOption(pubDashboard.GUID, pubDashboard.FullName, ""));
                     }
                     select.selectpicker({
-                        "liveSearch": true
+                        "liveSearch": true,
+                        "actionsBox" : true
                     });
 
                     //Add
@@ -472,7 +501,8 @@ class SWIDashboard {
                         select.append(SWIUtil.GetOption(pubDashboard.GUID, pubDashboard.FullName, pubDashboard.GUID));
                     }
                     select.selectpicker({
-                        "liveSearch": true
+                        "liveSearch": true,
+                        "actionsBox": true
                     });
 
                     select = $("#export-format");
@@ -492,23 +522,6 @@ class SWIDashboard {
                     $("#export-dialog").modal();
                 });
             });
-
-            //Export End
-            if (_main._exporting) {
-                $(document).ajaxStop(function () {
-                    setTimeout(function () {
-                        //Redraw all...
-                        $.each(_da._ids, function (index, value) {
-                            _da._dashboard = _da._dashboards[value];
-                            _da.reorderItems(false);
-                        });
-                        var wnvPdfConverter: any;
-                        if (typeof wnvPdfConverter != "undefined") {
-                            wnvPdfConverter.startConversion();
-                        }
-                    }, 500);
-                });
-            }
 
             if (hasEditor) {
                 _daEditor.initMenu();

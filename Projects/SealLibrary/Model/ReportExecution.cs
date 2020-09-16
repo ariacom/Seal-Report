@@ -2152,13 +2152,9 @@ namespace Seal.Model
         /// <summary>
         /// Update the current selected enum values during the report execution
         /// </summary>
-        public ReportRestriction UpdateEnumValues(string enumId, string values, bool checkAllRestrictions = false)
+        public ReportRestriction UpdateEnumValues(string enumId, string values)
         {
             var restriction = Report.ExecutionCommonRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
-            if (restriction == null && checkAllRestrictions)
-            {
-                restriction = Report.AllRestrictions.FirstOrDefault(i => i.OptionValueHtmlId == enumId);
-            }
 
             if (restriction != null && restriction.EnumRE != null)
             {

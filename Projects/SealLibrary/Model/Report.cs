@@ -2060,6 +2060,10 @@ namespace Seal.Model
                 foreach (ReportModel model in Models)
                 {
                     result.AddRange(model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions));
+                    foreach (var subModel in model.LINQSubModels)
+                    {
+                        result.AddRange(subModel.Restrictions.Union(subModel.AggregateRestrictions).Union(subModel.CommonRestrictions));
+                    }
                 }
                 return result;
             }
