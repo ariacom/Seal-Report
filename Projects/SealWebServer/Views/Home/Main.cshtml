@@ -35,10 +35,8 @@
     <input type="text" style="display:none">
     <input type="password" style="display:none">
 
-    @if (!model.Exporting)
-    {
-        @Html.Partial("~/Views/Home/Menu.cshtml")
-    }
+    @Html.Partial("~/Views/Home/Menu.cshtml")
+
     <!--Reports view -->
     <div id="main-container" class="container-fluid folderview" style="padding-top:62px; display:none;">
         <div class="row">
