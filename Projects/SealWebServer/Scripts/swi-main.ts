@@ -272,6 +272,7 @@ class SWIMain {
             _gateway.Logout(function (e) {
                 _main._connected = false;
                 $("#main-container").css("display", "none");
+                $("#main-dashboard").css("display", "none");
                 _main.showLogin();
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             });

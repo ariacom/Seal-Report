@@ -443,7 +443,7 @@ namespace Seal.Forms
                     }
                     else if (context.PropertyDescriptor.Name == "HelperResetPDFConfigurations")
                     {
-                        _reportView.PdfConfigurations = new List<string>();
+                        _reportView.PdfConfigurations = _reportView.Report.Repository.Configuration.PdfConfigurations.ToList();
                         _reportView.PdfConverter = null;
                         _reportView.Information = Helper.FormatMessage("The PDF configuration values have been reset");
                         setModified();

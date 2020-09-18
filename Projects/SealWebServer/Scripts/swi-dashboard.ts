@@ -92,7 +92,7 @@ class SWIDashboard {
         });
     }
 
-    private enableControls() {
+    public enableControls() {
         var addWidget = $("#dashboard-add-widget");
         var spinnerHidden = !$(".spinner-menu").is(":visible");
         SWIUtil.ShowHideControl(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable);

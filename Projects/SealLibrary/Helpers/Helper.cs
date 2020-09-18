@@ -653,7 +653,7 @@ namespace Seal.Helpers
 
         }
 
-        public static Object Clone(Object source)
+        public static object Clone(Object source)
         {
             XmlSerializer serializer = new XmlSerializer(source.GetType());
             MemoryStream ms = new MemoryStream();
@@ -664,7 +664,7 @@ namespace Seal.Helpers
 
         public static DbConnection DbConnectionFromConnectionString(ConnectionType connectionType, string connectionString)
         {
-            DbConnection connection = null;
+            DbConnection connection;
             if (connectionType == ConnectionType.MSSQLServer)
             {
                 connection = new SqlConnection(connectionString);
