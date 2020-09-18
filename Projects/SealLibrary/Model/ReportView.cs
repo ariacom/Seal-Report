@@ -866,24 +866,7 @@ namespace Seal.Model
         public List<string> PdfConfigurations { get; set; } = new List<string>();
         public bool ShouldSerializePdfConfigurations()
         {
-            bool result = false;
-            if (Report.Repository.Configuration.PdfConfigurations.Count == 0)
-            {
-                result = PdfConfigurations.Count > 0;
-            }
-            else
-            {
-                for (int i = 0; i < PdfConfigurations.Count && i < Report.Repository.Configuration.PdfConfigurations.Count; i++)
-                {
-                    if (PdfConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.PdfConfigurations[i].Trim().Replace("\r\n", "\n"))
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-
-            return result;
+            return PdfConverter.ShouldSerialize();
         }
 
         /// <summary>
@@ -924,24 +907,7 @@ namespace Seal.Model
         public List<string> ExcelConfigurations { get; set; } = new List<string>();
         public bool ShouldSerializeExcelConfigurations()
         {
-            bool result = false;
-
-            if (Report.Repository.Configuration.ExcelConfigurations.Count == 0)
-            {
-                result = ExcelConfigurations.Count > 0;
-            }
-            else
-            {
-                for (int i = 0; i < ExcelConfigurations.Count && i < Report.Repository.Configuration.ExcelConfigurations.Count; i++)
-                {
-                    if (ExcelConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.ExcelConfigurations[i].Trim().Replace("\r\n", "\n"))
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-            return result;
+            return ExcelConverter.ShouldSerialize();
         }
 
         private SealExcelConverter _excelConverter = null;
@@ -958,8 +924,6 @@ namespace Seal.Model
                 if (_excelConverter == null)
                 {
                     _excelConverter = SealExcelConverter.Create();
-                    if (ExcelConfigurations.Count == 0) ExcelConfigurations = Repository.Instance.Configuration.ExcelConfigurations.ToList();
-
                     _excelConverter.SetConfigurations(ExcelConfigurations, this);
                     _excelConverter.EntityHandler = HelperEditor.HandlerInterface; //!NETCore
                     UpdateEditorAttributes();

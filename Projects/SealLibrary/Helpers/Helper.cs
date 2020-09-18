@@ -54,6 +54,22 @@ namespace Seal.Helpers
             }
         }
 
+        static public bool ArePropertiesIdentical(object obj1, object obj2, string skipEmptySuffix = "")
+        {
+            bool result = true;
+            foreach (PropertyDescriptor item in TypeDescriptor.GetProperties(obj1))
+            {
+                if (!string.IsNullOrEmpty(skipEmptySuffix) && string.IsNullOrEmpty(item.GetValue(obj1).ToString()) && item.Name.EndsWith(skipEmptySuffix)) continue;
+
+                if (item.GetValue(obj1).ToString() != item.GetValue(obj2).ToString())
+                {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
+        }
+
 
         static public void CopyPropertiesDifferentObjects(object src, object dest)
         {

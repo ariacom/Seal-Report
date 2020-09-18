@@ -102,6 +102,14 @@ namespace Seal.Model
             return new List<string>();
         }
 
+        /// <summary>
+        /// True if the configuration should be serialized
+        /// </summary>
+        public virtual bool ShouldSerialize()
+        {
+            return false;
+        }
+
         public virtual void ConfigureTemplateEditor(TemplateTextEditorForm frm, string propertyName, ref string template, ref string language) { } //!NETCore
 
         public IEntityHandler EntityHandler = null; //!NETCore

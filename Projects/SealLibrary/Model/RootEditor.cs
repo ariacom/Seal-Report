@@ -48,7 +48,7 @@ namespace Seal.Model
         {
             foreach (var property in Properties.Where(i => i.IsBrowsable))
             {
-                if (property.DefaultValue == null && (property.GetValue(this) is String))
+                if (property.DefaultValue == null && (property.GetValue(this) is string))
                 {
                     property.DefaultValue = "";
                 }
