@@ -58,7 +58,7 @@ namespace Seal.Model
                 GetProperty("FinalScript").SetIsBrowsable(!IsSubModel);
                 if (Source.IsNoSQL)
                 {
-                    GetProperty("LoadScript").SetDisplayName("Load Script");
+                    GetProperty("LoadScript").SetDisplayName("LINQ Load Script");
                     GetProperty("LoadScript").SetDescription("The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used.");
                 }
                 else
@@ -2387,12 +2387,28 @@ model.ResultTable = query2.CopyToDataTable2();
                         if (restriction == null)
                         {
                             restriction = ReportRestriction.CreateReportRestriction();
+                            restriction.PivotPosition = PivotPosition.Row;
                             restriction.MetaColumnGUID = restr.MetaColumnGUID;
                             subModel.Restrictions.Add(restriction);
                             if (!string.IsNullOrEmpty(subModel.Restriction)) subModel.Restriction += "\r\nAND ";
                             subModel.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
                         }
-                        Helper.CopyProperties(restr, restriction, new string[] { "GUID" });
+                        restriction.DisplayNameEl = restr.DisplayNameEl;
+                        restriction.Prompt = restr.Prompt;
+                        restriction.Operator = restr.Operator;
+                        restriction.Value1 = restr.Value1;
+                        restriction.Value2 = restr.Value2;
+                        restriction.Value3 = restr.Value3;
+                        restriction.Value4 = restr.Value4;
+                        restriction.Date1 = restr.Date1;
+                        restriction.Date2 = restr.Date2;
+                        restriction.Date3 = restr.Date3;
+                        restriction.Date4 = restr.Date4;
+                        restriction.Date1Keyword = restr.Date1Keyword;
+                        restriction.Date2Keyword = restr.Date2Keyword;
+                        restriction.Date3Keyword = restr.Date3Keyword;
+                        restriction.Date4Keyword = restr.Date4Keyword;
+                        restriction.EnumValues = restr.EnumValues.ToList();
                     }
                 }
 

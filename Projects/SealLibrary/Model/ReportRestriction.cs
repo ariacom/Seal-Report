@@ -35,101 +35,113 @@ namespace Seal.Model
             {
                 //Disable all properties
                 foreach (var property in Properties) property.SetIsBrowsable(false);
+
+                bool isSubModelRestriction = false;
+                if (Model.IsSubModel && Model.MasterModel.SubModelsSetRestr && Model.MasterModel.Restrictions.Union(Model.MasterModel.AggregateRestrictions).Union(Model.MasterModel.CommonRestrictions).FirstOrDefault(i => i.IsIdenticalForPrompt(this))!= null) 
+                {
+                    isSubModelRestriction = true; ;
+                }
+
                 //Then enable
-                GetProperty("Prompt").SetIsBrowsable(true);
-                GetProperty("Required").SetIsBrowsable(true);
-                GetProperty("Operator").SetIsBrowsable(!IsInputValue && !IsCommonValue);
-                GetProperty("OperatorStyle").SetIsBrowsable(!IsInputValue && !IsCommonValue);
-                GetProperty("ShowName").SetIsBrowsable(IsInputValue || IsCommonValue);
-                GetProperty("DisplayNameEl").SetIsBrowsable(true);
+                if (!isSubModelRestriction)
+                {
+                    GetProperty("Prompt").SetIsBrowsable(true);
+                    GetProperty("Required").SetIsBrowsable(true);
+                    GetProperty("Operator").SetIsBrowsable(!IsInputValue && !IsCommonValue);
+                    GetProperty("OperatorStyle").SetIsBrowsable(!IsInputValue && !IsCommonValue);
+                    GetProperty("ShowName").SetIsBrowsable(IsInputValue || IsCommonValue);
+                    GetProperty("DisplayNameEl").SetIsBrowsable(!isSubModelRestriction);
+
+                    GetProperty("CaseSensitive").SetIsBrowsable(!IsSQL && IsText);
+
+                    GetProperty("FormatRe").SetIsBrowsable(!IsEnum);
+                    GetProperty("TypeRe").SetIsBrowsable(true);
+                    GetProperty("OperatorLabel").SetIsBrowsable(!IsInputValue && !IsCommonValue);
+                    GetProperty("EnumGUIDRE").SetIsBrowsable(true);
+                    GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
+                    GetProperty("DisplayOrderRE").SetIsBrowsable(true);
+                    GetProperty("TriggerExecution").SetIsBrowsable(true);
+                    //Conditional
+                    if (IsEnum)
+                    {
+                        GetProperty("EnumValue").SetIsBrowsable(!isSubModelRestriction);
+                        GetProperty("FirstSelection").SetIsBrowsable(true);
+                        GetProperty("EnumLayout").SetIsBrowsable(true);
+                    }
+                    else if (IsDateTime)
+                    {
+                        GetProperty("Date1").SetIsBrowsable(true);
+                        GetProperty("Date2").SetIsBrowsable(true);
+                        GetProperty("Date3").SetIsBrowsable(true);
+                        GetProperty("Date4").SetIsBrowsable(true);
+                        GetProperty("Date1Keyword").SetIsBrowsable(true);
+                        GetProperty("Date2Keyword").SetIsBrowsable(true);
+                        GetProperty("Date3Keyword").SetIsBrowsable(true);
+                        GetProperty("Date4Keyword").SetIsBrowsable(true);
+                    }
+                    else
+                    {
+                        GetProperty("Value1").SetIsBrowsable(true);
+                        GetProperty("Value2").SetIsBrowsable(true);
+                        GetProperty("Value3").SetIsBrowsable(true);
+                        GetProperty("Value4").SetIsBrowsable(true);
+                    }
+
+                    if (!IsEnum)
+                    {
+                        GetProperty("NumericStandardFormatRe").SetIsBrowsable(IsNumeric);
+                        GetProperty("DateTimeStandardFormatRe").SetIsBrowsable(IsDateTime);
+                    }
+
+                    //Readonly
+                    foreach (var property in Properties) property.SetIsReadOnly(false);
+
+                    GetProperty("FormatRe").SetIsReadOnly((IsNumeric && NumericStandardFormat != NumericStandardFormat.Custom) || (IsDateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom));
+                    if (_operator == Operator.IsNull || _operator == Operator.IsNotNull || _operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty)
+                    {
+                        GetProperty("Value1").SetIsReadOnly(true);
+                        GetProperty("Date1").SetIsReadOnly(true);
+                        GetProperty("Date1Keyword").SetIsReadOnly(true);
+                        GetProperty("EnumValue").SetIsReadOnly(true);
+                    }
+
+                    if (IsGreaterSmallerOperator || _operator == Operator.IsNull || _operator == Operator.IsNotNull || _operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty || _operator == Operator.ValueOnly)
+                    {
+                        GetProperty("Value2").SetIsReadOnly(true);
+                        GetProperty("Date2").SetIsReadOnly(true);
+                        GetProperty("Date2Keyword").SetIsReadOnly(true);
+                    }
+
+                    if (_operator == Operator.Between || _operator == Operator.NotBetween || IsGreaterSmallerOperator || _operator == Operator.IsNull || _operator == Operator.IsNotNull || _operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty || _operator == Operator.ValueOnly)
+                    {
+                        GetProperty("Value3").SetIsReadOnly(true);
+                        GetProperty("Date3").SetIsReadOnly(true);
+                        GetProperty("Date3Keyword").SetIsReadOnly(true);
+
+                        GetProperty("Value4").SetIsReadOnly(true);
+                        GetProperty("Date4").SetIsReadOnly(true);
+                        GetProperty("Date4Keyword").SetIsReadOnly(true);
+                    }
+
+                    GetProperty("Required").SetIsReadOnly(Prompt == PromptType.None);
+                    GetProperty("ChangeOperator").SetIsReadOnly(Prompt == PromptType.None);
+
+                    //Aggregate restriction
+                    if (PivotPosition == PivotPosition.Data && !(MetaColumn != null && MetaColumn.IsAggregate))
+                    {
+                        GetProperty("AggregateFunction").SetIsBrowsable(true);
+                    }
+
+                    if (!GetProperty("Date1Keyword").IsReadOnly) GetProperty("Date1").SetIsReadOnly(HasDateKeyword(Date1Keyword));
+                    if (!GetProperty("Date2Keyword").IsReadOnly) GetProperty("Date2").SetIsReadOnly(HasDateKeyword(Date2Keyword));
+                    if (!GetProperty("Date3Keyword").IsReadOnly) GetProperty("Date3").SetIsReadOnly(HasDateKeyword(Date3Keyword));
+                    if (!GetProperty("Date4Keyword").IsReadOnly) GetProperty("Date4").SetIsReadOnly(HasDateKeyword(Date4Keyword));
+                }
+
                 GetProperty("SQL").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom Expression");
                 GetProperty("SQL").SetDescription(IsSQL ? "If not empty, overwrite the default SQL used for the restriction in the WHERE clause." : "If not empty, overwrite the default LINQ Expression used for the restriction in the LINQ query.");
-                GetProperty("CaseSensitive").SetIsBrowsable(!IsSQL && IsText);                
-
-                GetProperty("FormatRe").SetIsBrowsable(!IsEnum);
-                GetProperty("TypeRe").SetIsBrowsable(true);
-                GetProperty("OperatorLabel").SetIsBrowsable(!IsInputValue && !IsCommonValue);
-                GetProperty("EnumGUIDRE").SetIsBrowsable(true);
-                GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
-                GetProperty("DisplayOrderRE").SetIsBrowsable(true);
                 GetProperty("AllowAPI").SetIsBrowsable(true);
-                GetProperty("TriggerExecution").SetIsBrowsable(true);
-                //Conditional
-                if (IsEnum)
-                {
-                    GetProperty("EnumValue").SetIsBrowsable(true);
-                    GetProperty("FirstSelection").SetIsBrowsable(true);
-                    GetProperty("EnumLayout").SetIsBrowsable(true);
-                }
-                else if (IsDateTime)
-                {
-                    GetProperty("Date1").SetIsBrowsable(true);
-                    GetProperty("Date2").SetIsBrowsable(true);
-                    GetProperty("Date3").SetIsBrowsable(true);
-                    GetProperty("Date4").SetIsBrowsable(true);
-                    GetProperty("Date1Keyword").SetIsBrowsable(true);
-                    GetProperty("Date2Keyword").SetIsBrowsable(true);
-                    GetProperty("Date3Keyword").SetIsBrowsable(true);
-                    GetProperty("Date4Keyword").SetIsBrowsable(true);
-                }
-                else
-                {
-                    GetProperty("Value1").SetIsBrowsable(true);
-                    GetProperty("Value2").SetIsBrowsable(true);
-                    GetProperty("Value3").SetIsBrowsable(true);
-                    GetProperty("Value4").SetIsBrowsable(true);
-                }
-
-                if (!IsEnum)
-                {
-                    GetProperty("NumericStandardFormatRe").SetIsBrowsable(IsNumeric);
-                    GetProperty("DateTimeStandardFormatRe").SetIsBrowsable(IsDateTime);
-                }
-
-                //Readonly
-                foreach (var property in Properties) property.SetIsReadOnly(false);
-
-                GetProperty("FormatRe").SetIsReadOnly((IsNumeric && NumericStandardFormat != NumericStandardFormat.Custom) || (IsDateTime && DateTimeStandardFormat != DateTimeStandardFormat.Custom));
-                if (_operator == Operator.IsNull || _operator == Operator.IsNotNull || _operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty)
-                {
-                    GetProperty("Value1").SetIsReadOnly(true);
-                    GetProperty("Date1").SetIsReadOnly(true);
-                    GetProperty("Date1Keyword").SetIsReadOnly(true);
-                    GetProperty("EnumValue").SetIsReadOnly(true);
-                }
-
-                if (IsGreaterSmallerOperator || _operator == Operator.IsNull || _operator == Operator.IsNotNull || _operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty || _operator == Operator.ValueOnly)
-                {
-                    GetProperty("Value2").SetIsReadOnly(true);
-                    GetProperty("Date2").SetIsReadOnly(true);
-                    GetProperty("Date2Keyword").SetIsReadOnly(true);
-                }
-
-                if (_operator == Operator.Between || _operator == Operator.NotBetween || IsGreaterSmallerOperator || _operator == Operator.IsNull || _operator == Operator.IsNotNull || _operator == Operator.IsEmpty || _operator == Operator.IsNotEmpty || _operator == Operator.ValueOnly)
-                {
-                    GetProperty("Value3").SetIsReadOnly(true);
-                    GetProperty("Date3").SetIsReadOnly(true);
-                    GetProperty("Date3Keyword").SetIsReadOnly(true);
-
-                    GetProperty("Value4").SetIsReadOnly(true);
-                    GetProperty("Date4").SetIsReadOnly(true);
-                    GetProperty("Date4Keyword").SetIsReadOnly(true);
-                }
-
-                GetProperty("Required").SetIsReadOnly(Prompt == PromptType.None);
-                GetProperty("ChangeOperator").SetIsReadOnly(Prompt == PromptType.None);
-
-                //Aggregate restriction
-                if (PivotPosition == PivotPosition.Data && !(MetaColumn != null && MetaColumn.IsAggregate))
-                {
-                    GetProperty("AggregateFunction").SetIsBrowsable(true);
-                }
-
-                if (!GetProperty("Date1Keyword").IsReadOnly) GetProperty("Date1").SetIsReadOnly(HasDateKeyword(Date1Keyword));
-                if (!GetProperty("Date2Keyword").IsReadOnly) GetProperty("Date2").SetIsReadOnly(HasDateKeyword(Date2Keyword));
-                if (!GetProperty("Date3Keyword").IsReadOnly) GetProperty("Date3").SetIsReadOnly(HasDateKeyword(Date3Keyword));
-                if (!GetProperty("Date4Keyword").IsReadOnly) GetProperty("Date4").SetIsReadOnly(HasDateKeyword(Date4Keyword));
 
                 TypeDescriptor.Refresh(this);
             }

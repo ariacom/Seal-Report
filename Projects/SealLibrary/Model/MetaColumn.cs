@@ -166,9 +166,9 @@ namespace Seal.Model
         /// <summary>
         /// The order number used to sort the column in the tree view (by table and by category)
         /// </summary>
-        [DefaultValue(0)]
+        [DefaultValue(1)]
         [Category("Display"), DisplayName("Display Order"), Description("The order number used to sort the column in the tree view (by table and by category)."), Id(4, 2)]
-        public int DisplayOrder { get; set; } = 0;
+        public int DisplayOrder { get; set; } = 1;
         public bool ShouldSerializeDisplayOrder() { return DisplayOrder != 0; }
 
         /// <summary>
@@ -424,7 +424,11 @@ namespace Seal.Model
         [XmlIgnore]
         public string ColumnName
         {
-            get { return Name.Split('.').Last(); }
+            get
+            {
+                if (_name == null) return "";
+                return _name.Split('.').Last();
+            }
         }
 
         /// <summary>

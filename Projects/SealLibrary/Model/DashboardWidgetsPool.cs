@@ -52,8 +52,7 @@ namespace Seal.Model
 
                         getWidgets(_widgets, _reports, repository.ReportsFolder, repository);
                         //Remove reports deleted
-                        var keys = _widgets.Keys.ToList();
-                        foreach (var key in keys)
+                        foreach (var key in _widgets.Keys.ToList())
                         {
                             if (!File.Exists(repository.ReportsFolder + _widgets[key].ReportPath)) _widgets.Remove(key);
                         }

@@ -140,27 +140,6 @@ var SWIDashboard = /** @class */ (function () {
         _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
             _da._pendingRequest--;
-            setTimeout(function () {
-                if (_da._pendingRequest <= 0 && typeof wnvPdfConverter != "undefined") {
-                    wnvPdfConverter.startConversion();
-                }
-            }, 2000);
-            if (_main._exporting) {
-                setTimeout(function () {
-                    if (_da._pendingRequest <= 0) {
-                        _da._pendingRequest = 0;
-                        //Redraw all...
-                        $.each(_da._ids, function (index, value) {
-                            _da._dashboard = _da._dashboards[value];
-                            _da.reorderItems(false);
-                        });
-                        //var wnvPdfConverter: any;
-                        if (typeof wnvPdfConverter != "undefined") {
-                            wnvPdfConverter.startConversion();
-                        }
-                    }
-                }, 1000);
-            }
         });
     };
     SWIDashboard.prototype.initDashboardItems = function (guid) {
@@ -460,6 +439,25 @@ var SWIDashboard = /** @class */ (function () {
                     });
                     $("#export-dialog").modal();
                 });
+            });
+            //Export end
+            $(document).ajaxStop(function () {
+                if (_main._exporting) {
+                    setTimeout(function () {
+                        if (_da._pendingRequest <= 0) {
+                            _da._pendingRequest = 0;
+                            //Redraw all...
+                            $.each(_da._ids, function (index, value) {
+                                _da._dashboard = _da._dashboards[value];
+                                _da.reorderItems(false);
+                            });
+                            //var wnvPdfConverter: any;
+                            if (typeof wnvPdfConverter != "undefined") {
+                                wnvPdfConverter.startConversion();
+                            }
+                        }
+                    }, 1000);
+                }
             });
             if (hasEditor) {
                 _daEditor.initMenu();
