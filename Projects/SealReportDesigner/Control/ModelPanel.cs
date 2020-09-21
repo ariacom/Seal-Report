@@ -253,7 +253,6 @@ namespace Seal.Controls
             }
         }
 
-
         void btn_MouseDown(object sender, MouseEventArgs e)
         {
             Button button = (Button)sender;
@@ -365,7 +364,9 @@ namespace Seal.Controls
                 if (element.MetaColumn == node.Tag)
                 {
                     elementTreeView.SelectedNode = node;
-                    elementTreeView.SelectedNode.EnsureVisible();
+                    node.EnsureVisible();
+                    node.BackColor = SystemColors.Highlight;
+                    node.ForeColor = Color.White;
                     elementTreeView.Focus();
                     return true;
                 }
@@ -373,6 +374,16 @@ namespace Seal.Controls
             }
             return false;
         }
+
+        private void ElementTreeView_BeforeSelect(object sender, TreeViewCancelEventArgs e)
+        {
+            if (elementTreeView.SelectedNode != null)
+            {
+                elementTreeView.SelectedNode.ForeColor = Color.Black;
+                elementTreeView.SelectedNode.BackColor = Color.White;
+            }
+        }
+
 
         void resizeControls()
         {

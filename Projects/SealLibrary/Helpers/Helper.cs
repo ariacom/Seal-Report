@@ -46,10 +46,11 @@ namespace Seal.Helpers
             else return value.ToString();
         }
 
-        static public void CopyProperties(object src, object dest)
+        static public void CopyProperties(object src, object dest, string[] skipNames = null)
         {
             foreach (PropertyDescriptor item in TypeDescriptor.GetProperties(src))
             {
+                if (skipNames != null && skipNames.Contains(item.Name)) continue;
                 item.SetValue(dest, item.GetValue(src));
             }
         }

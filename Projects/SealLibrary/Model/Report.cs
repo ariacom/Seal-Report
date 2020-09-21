@@ -1956,9 +1956,16 @@ namespace Seal.Model
                         foreach (ReportRestriction restriction in _executionCommonRestrictions)
                         {
                             ReportRestriction modelRestriction = model.Restrictions.Union(model.AggregateRestrictions).Union(model.CommonRestrictions).FirstOrDefault(i => i != restriction && i.IsIdenticalForPrompt(restriction));
-                            if (modelRestriction != null)
+                            if (modelRestriction != null) modelRestriction.HtmlIndex = restriction.HtmlIndex;
+
+                            if (model.IsLINQ)
                             {
-                                modelRestriction.HtmlIndex = restriction.HtmlIndex;
+                                //Apply also for sub-models
+                                foreach (ReportModel subModel in model.LINQSubModels)
+                                {
+                                    ReportRestriction subModelRestriction = subModel.Restrictions.Union(subModel.AggregateRestrictions).Union(subModel.CommonRestrictions).FirstOrDefault(i => i != restriction && i.IsIdenticalForPrompt(restriction));
+                                    if (subModelRestriction != null) subModelRestriction.HtmlIndex = restriction.HtmlIndex;
+                                }
                             }
                         }
                     }

@@ -75,7 +75,8 @@ namespace Seal.Model
                 GetProperty("SqlOrderBy").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("SqlCTE").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("LINQQueryScript").SetIsBrowsable(Source.IsNoSQL);
-                GetProperty("AggregateSubModels").SetIsBrowsable(Source.IsNoSQL);
+                GetProperty("SubModelsSetRestr").SetIsBrowsable(Source.IsNoSQL);
+                GetProperty("SubModelsSetAggr").SetIsBrowsable(Source.IsNoSQL);
 
                 GetProperty("PreSQL").SetIsBrowsable(!Source.IsNoSQL);
                 GetProperty("PostSQL").SetIsBrowsable(!Source.IsNoSQL);
@@ -185,26 +186,48 @@ namespace Seal.Model
         [DefaultValue("")]
         public string LoadScript { get; set; }
 
-        private bool _aggregateSubModels = true;
+        private bool _subModelsSetRestr = true;
         /// <summary>
-        /// If true, aggregates are propagated to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates). 
+        /// If true, restrictions and theirs values defined for the LINQ model are automatically copied to the sub-models.
         /// </summary>
-        [Category("Model Definition"), DisplayName("Use aggregates in Sub-Models"), Description("If true, aggregates are propagated to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates)."), Id(6, 1)]
+        [Category("Sub-Models Generation"), DisplayName("Synchronize restrictions"), Description("If true, restrictions and theirs values defined for the LINQ model are automatically copied to the sub-models."), Id(1, 3)]
         [DefaultValue(true)]
-        public bool AggregateSubModels
+        public bool SubModelsSetRestr
         {
             get
             {
-                return _aggregateSubModels;
+                return _subModelsSetRestr;
             }
             set
             {
-                bool updateModels = (_aggregateSubModels != value);
-                _aggregateSubModels = value;
+                bool updateModels = (Report != null && _subModelsSetRestr != value);
+                _subModelsSetRestr = value;
                 if (updateModels) BuildQuery(false, true);
             }
         }
-        public bool ShouldSerializeAggregateSubModels() { return !_aggregateSubModels; }
+        public bool ShouldSerializeSubModelsSetRestr() { return !_subModelsSetRestr; }
+
+
+        private bool _subModelsSetAggr = true;
+        /// <summary>
+        /// If true, aggregates are copied to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates). 
+        /// </summary>
+        [Category("Sub-Models Generation"), DisplayName("Synchronize aggregates"), Description("If true, aggregates are copied to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates)."), Id(5, 3)]
+        [DefaultValue(true)]
+        public bool SubModelsSetAggr
+        {
+            get
+            {
+                return _subModelsSetAggr;
+            }
+            set
+            {
+                bool updateModels = (Report != null &&  _subModelsSetAggr != value);
+                _subModelsSetAggr = value;
+                if (updateModels) BuildQuery(false, true);
+            }
+        }
+        public bool ShouldSerializeSubModelsSetAggr() { return !_subModelsSetAggr; }
 
         /// <summary>
         /// Optional Razor Script to modify the model after its generation
@@ -2336,7 +2359,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     }
                     subModel.Elements.Add(element2);
                     element2.Name = element.Name;
-                    element2.PivotPosition = AggregateSubModels ? element.PivotPosition : PivotPosition.Row;
+                    element2.PivotPosition = SubModelsSetAggr ? element.PivotPosition : PivotPosition.Row;
                     element2.AggregateFunction = element.AggregateFunction;
                 }
 
@@ -2356,6 +2379,21 @@ model.ResultTable = query2.CopyToDataTable2();
                 foreach (var restr in Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))
                 {
                     subModel.addHiddenElement(restr.MetaColumnGUID);
+
+                    if (SubModelsSetRestr)
+                    {
+                        //propagate restrictions
+                        var restriction = subModel.Restrictions.FirstOrDefault(i => i.MetaColumnGUID == restr.MetaColumnGUID);
+                        if (restriction == null)
+                        {
+                            restriction = ReportRestriction.CreateReportRestriction();
+                            restriction.MetaColumnGUID = restr.MetaColumnGUID;
+                            subModel.Restrictions.Add(restriction);
+                            if (!string.IsNullOrEmpty(subModel.Restriction)) subModel.Restriction += "\r\nAND ";
+                            subModel.Restriction += ReportRestriction.kStartRestrictionChar + restriction.GUID + ReportRestriction.kStopRestrictionChar;
+                        }
+                        Helper.CopyProperties(restr, restriction, new string[] { "GUID" });
+                    }
                 }
 
                 //clear sort
