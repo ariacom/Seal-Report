@@ -883,6 +883,12 @@ model.ResultTable = query2.CopyToDataTable2();
         public bool ExecResultPagesBuilt = false;
 
         /// <summary>
+        /// Page Ids got from previous execution
+        /// </summary>
+        [XmlIgnore]
+        public List<string> PreviousPageIds = new List<string>();
+
+        /// <summary>
         /// Check NVD3 Chart and set the ExecNVD3ChartType property
         /// </summary>
         public void CheckNVD3ChartIntegrity()
@@ -1457,7 +1463,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 foreach (var table in FromTables.Where(i => i.IsSQL && !Source.MetaData.Joins.Exists(j => j.LeftTableGUID == i.GUID || j.RightTableGUID == i.GUID)).ToList())
                 {
                     //but we need at least one table per source
-                    if (FromTables.Exists(i => i != table && i.Source == table.Source)) FromTables.Remove(table);
+                    if (FromTables.Exists(i => i != table && i.Source.GUID == table.Source.GUID)) FromTables.Remove(table);
                 }
             }
         }

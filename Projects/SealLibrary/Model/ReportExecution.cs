@@ -660,6 +660,10 @@ namespace Seal.Model
                     if (model.ResultTable == null || !Report.RenderOnly)
                     {
                         Report.LogMessage("Model '{0}': Loading result table...", model.Name);
+
+                        //Keep page Ids from previous execution as they may be requested by a Widget Pagination...
+                        model.PreviousPageIds = (from page in model.Pages select page.PageId).ToList();
+
                         await model.FillResultTableAsync(_runningModels, _runningSubTables);
 
                         if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
@@ -859,6 +863,7 @@ namespace Seal.Model
         }
 
         bool _processSubReports = false;
+        Dictionary<ReportModel, List<string>> _previousPageIds = new Dictionary<ReportModel, List<string>>(); 
         private void buildPages(ReportModel model)
         {
             _processSubReports = model.Elements.Exists(i => i.MetaColumn.SubReports.Count > 0);
@@ -898,6 +903,10 @@ namespace Seal.Model
                     //Create Page table
                     currentPage.Pages = pageValues;
                     model.Pages.Add(currentPage);
+
+                    //set previous page ids if exists
+                    if (model.PreviousPageIds.Count >= model.Pages.Count) currentPage.PageId = model.PreviousPageIds[model.Pages.Count - 1];
+
                     //Set navigation values if any
                     setSubReportNavigation(pageValues, hiddenValues);
                 }

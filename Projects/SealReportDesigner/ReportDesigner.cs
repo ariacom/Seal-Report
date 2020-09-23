@@ -371,6 +371,11 @@ namespace Seal
             if (currentNode == null) return;
 
             var model = currentNode.Tag as ReportModel;
+
+            var index = model.IsLINQ ? 17 : (model.IsSQLModel ? 15 : 10);
+            currentNode.ImageIndex = index;
+            currentNode.SelectedImageIndex = index;
+
             if (model != null && model.IsLINQ)
             {
                 foreach (var subModel in model.LINQSubModels)
@@ -432,6 +437,10 @@ namespace Seal
                 }
 
                 currentNode.Expand();
+            }
+            else if (model != null && !model.IsLINQ)
+            {
+                currentNode.Nodes.Clear();
             }
         }
 

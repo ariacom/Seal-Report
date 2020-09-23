@@ -727,6 +727,7 @@ namespace SealWebServer.Controllers
                     if (view != null && view.ModelView != null)
                     {
                         var page = view.ModelView.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
+                        if (page == null && view.ModelView.Model.Pages.Count > 0) page = view.ModelView.Model.Pages.First();
                         if (page != null)
                         {
                             return Json(page.DataTable.GetLoadTableData(view, parameters), JsonRequestBehavior.AllowGet);

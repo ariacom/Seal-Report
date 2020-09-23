@@ -493,6 +493,15 @@ namespace SealWebServer.Controllers
                 //Audit
                 Audit.LogAudit(AuditType.Logout, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
+                //Clear session
+                DashboardExecutions.Clear();
+                UploadedFiles.Clear();
+                NavigationContext.Navigations.Clear();
+                setSessionValue(SessionUser, null);
+                setSessionValue(SessionNavigationContext, null);
+                setSessionValue(SessionDashboardExecutions, null);
+                setSessionValue(SessionUploadedFiles, null);
+
                 return Json(new { }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -948,7 +957,7 @@ namespace SealWebServer.Controllers
                         report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
                         execution.Execute();
                     }
-                    while (report.IsExecuting) Thread.Sleep(100);
+                    while (report.IsExecuting && !report.Cancel) Thread.Sleep(100);
                 }
 
                 if (report.HasErrors)

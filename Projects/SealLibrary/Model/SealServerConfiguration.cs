@@ -357,7 +357,7 @@ namespace Seal.Model
                 if (_pdfConverter == null)
                 {
                     _pdfConverter = SealPdfConverter.Create();
-                    _pdfConverter.SetConfigurations(PdfConfigurations, null);
+                    _pdfConverter.SetConfigurations(PdfConfigurations, new ReportView());
                     UpdateEditorAttributes();
                 }
                 return _pdfConverter;
@@ -450,6 +450,7 @@ namespace Seal.Model
                 {
                     _dashboardPdfConverter = SealPdfConverter.Create();
                     _dashboardPdfConverter.SetConfigurations(DashboardPdfConfigurations, null);
+                    _dashboardPdfConverter.Dashboards = new List<Dashboard>();
                     UpdateEditorAttributes();
                 }
                 return _dashboardPdfConverter;

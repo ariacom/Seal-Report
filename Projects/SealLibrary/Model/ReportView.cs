@@ -109,13 +109,6 @@ namespace Seal.Model
                 childView.ParentView = this;
                 childView.Report = Report;
                 childView.InitReferences();
-
-                //backward compatibility for CSV before 4.0...
-                if (childView.TemplateName == "Model CSV Excel" && TemplateName == ReportViewTemplate.ReportName)
-                {
-                    InitParameters(false);
-                    SetParameter(Parameter.ReportFormatParameter, ReportFormat.csv.ToString());
-                }
             }
         }
 
@@ -134,15 +127,6 @@ namespace Seal.Model
                 parameters.Add(parameter);
                 if (resetValues) parameter.Value = configParameter.Value;
                 parameter.InitFromConfiguration(configParameter);
-            }
-
-            if (TemplateName == "Report")
-            {
-                //backward compatibility for format before 4.0...
-                if (initialParameters.Exists(i => i.Name == "excel_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "excel");
-                else if (initialParameters.Exists(i => i.Name == "pdf_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "pdf");
-                else if (initialParameters.Exists(i => i.Name == "print_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "print");
-                if (initialParameters.Exists(i => i.Name == "display_messages" && i.Value == "True")) SetParameter("messages_mode", "enabledshown");
             }
         }
 

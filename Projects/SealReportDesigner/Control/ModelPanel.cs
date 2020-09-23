@@ -597,8 +597,13 @@ namespace Seal.Controls
                         Model.Restriction = "";
                         Model.AggregateRestrictions.Clear();
                         Model.AggregateRestriction = "";
+                        if (Model.IsLINQ)
+                        {
+                            Model.LINQSubModels.Clear();
+                            Model.LINQSubTables.Clear();
+                        }
 
-                        MainForm.RefreshNode();
+                        MainForm.UpdateModelNode();
                     }
                     else
                     {
