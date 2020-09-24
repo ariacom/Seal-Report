@@ -92,10 +92,6 @@ namespace SealWebServer.Controllers
             }
             var user = new SecurityUser(Repository.Security);
 
-            //Load profile
-            if (System.IO.File.Exists(user.ProfilePath)) user.Profile = SecurityUserProfile.LoadFromFile(user.ProfilePath);
-            user.Profile.Path = user.ProfilePath;
-
             setSessionValue(SessionUser, user);
             //Clear previous Session variables
             setSessionValue(SessionNavigationContext, null);
@@ -842,7 +838,7 @@ namespace SealWebServer.Controllers
                         execution.Execute();
                         while (report.IsExecuting) Thread.Sleep(100);
 
-                        foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0)) //*&& i.Model.Restrictions.Exists(j => j.GUID == restriction.GUID)*))
+                        foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0))
                         {
                             bool parseView = hasInputValue; //Parse all if input value involved
 

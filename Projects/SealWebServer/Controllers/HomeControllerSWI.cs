@@ -39,6 +39,9 @@ namespace SealWebServer.Controllers
                     Authenticate();
 
                     if (!WebUser.IsAuthenticated) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
+                    //Load profile
+                    if (System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
+                    WebUser.Profile.Path = WebUser.ProfilePath;
                 }
 
                 //Audit
