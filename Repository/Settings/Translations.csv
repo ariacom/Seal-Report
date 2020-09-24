@@ -114,6 +114,7 @@ Report;ThisHour;;CetteHeure
 Report;Today;;Aujourdhui
 Report;Total;;Total
 Report;Use the date format '{0}' or one of the following keywords:;;Utiliser le format de date '{0}' ou bien l'un des mots clés suivants:
+Report;Refresh;;Rafraîchir
 Report;View CSV Result;;Afficher le résultat CSV
 Report;View Excel Result;;Afficher le résultat Excel
 Report;View HTML Result;;Afficher le résultat HTML

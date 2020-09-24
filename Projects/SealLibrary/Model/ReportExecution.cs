@@ -623,6 +623,18 @@ namespace Seal.Model
                 var tasks = new List<Task>();
                 foreach (ReportModel model in Report.ExecutionModels.Where(i => i.ExecutionSet == set))
                 {
+                    //Skip models having view restriction not triggered
+                    if (model.ExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Contains(i)))
+                    {
+                        if (Report.ExecutionTriggerView == null || !model.ExecutionRestrictions.Exists(i => Report.ExecutionTriggerView.Restrictions.Contains(i)))
+                        {
+                            //And the model was not triggered, 
+                            //check force_execution flag
+                            if (!model.ExecutionRestrictions.Exists(i => Report.AllViews.Exists(j => j.TemplateName == ReportViewTemplate.RestrictionsName && j.GetBoolValue("force_execution") && j.Restrictions.Contains(i)))) {
+                                continue;
+                            }
+                        }
+                    }
                     tasks.Add(buildResultTables(model));
                 }
                 await Task.WhenAll(tasks);
