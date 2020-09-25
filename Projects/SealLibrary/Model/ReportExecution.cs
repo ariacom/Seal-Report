@@ -629,8 +629,8 @@ namespace Seal.Model
                         if (Report.ExecutionTriggerView == null || !model.ExecutionRestrictions.Exists(i => Report.ExecutionTriggerView.Restrictions.Contains(i)))
                         {
                             //And the model was not triggered, 
-                            //check force_execution flag
-                            if (!model.ExecutionRestrictions.Exists(i => Report.AllViews.Exists(j => j.TemplateName == ReportViewTemplate.RestrictionsName && j.GetBoolValue("force_execution") && j.Restrictions.Contains(i)))) {
+                            //check if the model has a view with force_execution flag
+                            if (!Report.AllViews.Exists(j => j.Model == model && j.GetBoolValue(Parameter.ForceExecutionParameter))) { 
                                 continue;
                             }
                         }

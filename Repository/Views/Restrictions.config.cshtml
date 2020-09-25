@@ -4,16 +4,17 @@
 
     //Template Name
     Template.Name = ReportViewTemplate.RestrictionsName;
-    Template.Description = "Render report restrictions to trigger dynamic contain";
+    Template.Description = "Render selected report restrictions (named View Restrictions) to display involved models dynamically through restriction triggers or Refresh button.";
 
     //If true, the view can be configured for report restrictions
     Template.ForViewRestrictions = true;
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "restrictions_per_row", DisplayName = "Display: Restrictions per row", NumericValue = 1, Description = "Defines the number of prompted restrictions to be displayed per row (between 1 and 12)." });
-    Template.Parameters.Add(new Parameter() { Name = "restrictions_header", DisplayName = "Display: Restrictions header", Description = "Additional HTML added before the restrictions.", Enums = new string[] { "", "<h4>Please enter restriction values</h4>" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "restrictions_footer", DisplayName = "Display: Restrictions footer", Description = "Additional HTML added after the restrictions.", Enums = new string[] { "", "<p>Execute this report to view the result expected...</p>" }, UseOnlyEnumValues = false });
-    Template.Parameters.Add(new Parameter() { Name = "force_execution", DisplayName = "Options: Force execution", BoolValue = false, Description = "If true, the models that have a prompted view restriction will be executed and display the first time the report is executed." });
+    Template.Parameters.Add(new Parameter() { Name = "restrictions_header", DisplayName = "Display: Restrictions header", Description = "Additional HTML added before the restrictions.", Enums = new string[] { "", "<h4>Please enter restriction values</h4>", "<hr>" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "restrictions_footer", DisplayName = "Display: Restrictions footer", Description = "Additional HTML added after the restrictions.", Enums = new string[] { "", "<p>Execute this report to view the result expected...</p>","<hr>" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "button_text", Value = "Refresh", DisplayName = "Button text", Description = "Text of the button.", Enums = new string[] { "Update", "Refresh" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "target", DisplayName = "Target window", Description = "If not empty, the report is fully executed in a new window.", Enums = new string[] { "", "_blank" }, UseOnlyEnumValues = false });
 
     //Allowed template parent names
     Template.ParentNames = new List<string>() { "Report", "Tab Page", "Container" };

@@ -47,13 +47,6 @@ namespace Seal.Model
                 childView.ParentView = this;
                 childView.Report = Report;
                 childView.InitReferences();
-
-                //backward compatibility for CSV before 4.0...
-                if (childView.TemplateName == "Model CSV Excel" && TemplateName == ReportViewTemplate.ReportName)
-                {
-                    InitParameters(false);
-                    SetParameter(Parameter.ReportFormatParameter, ReportFormat.csv.ToString());
-                }
             }
         }
 
@@ -72,15 +65,6 @@ namespace Seal.Model
                 parameters.Add(parameter);
                 if (resetValues) parameter.Value = configParameter.Value;
                 parameter.InitFromConfiguration(configParameter);
-            }
-
-            if (TemplateName == "Report")
-            {
-                //backward compatibility for format before 4.0...
-                if (initialParameters.Exists(i => i.Name == "excel_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "excel");
-                else if (initialParameters.Exists(i => i.Name == "pdf_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "pdf");
-                else if (initialParameters.Exists(i => i.Name == "print_layout" && i.Value == "True")) SetParameter(Parameter.ReportFormatParameter, "print");
-                if (initialParameters.Exists(i => i.Name == "display_messages" && i.Value == "True")) SetParameter("messages_mode", "enabledshown");
             }
         }
 
@@ -778,24 +762,7 @@ namespace Seal.Model
         public List<string> PdfConfigurations { get; set; } = new List<string>();
         public bool ShouldSerializePdfConfigurations()
         {
-            bool result = false;
-            if (Report.Repository.Configuration.PdfConfigurations.Count == 0)
-            {
-                result = PdfConfigurations.Count > 0;
-            }
-            else
-            {
-                for (int i = 0; i < PdfConfigurations.Count && i < Report.Repository.Configuration.PdfConfigurations.Count; i++)
-                {
-                    if (PdfConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.PdfConfigurations[i].Trim().Replace("\r\n", "\n"))
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-
-            return result;
+            return PdfConverter.ShouldSerialize();
         }
 
         /// <summary>
@@ -833,24 +800,7 @@ namespace Seal.Model
         public List<string> ExcelConfigurations { get; set; } = new List<string>();
         public bool ShouldSerializeExcelConfigurations()
         {
-            bool result = false;
-
-            if (Report.Repository.Configuration.ExcelConfigurations.Count == 0)
-            {
-                result = ExcelConfigurations.Count > 0;
-            }
-            else
-            {
-                for (int i = 0; i < ExcelConfigurations.Count && i < Report.Repository.Configuration.ExcelConfigurations.Count; i++)
-                {
-                    if (ExcelConfigurations[i].Trim().Replace("\r\n", "\n") != Report.Repository.Configuration.ExcelConfigurations[i].Trim().Replace("\r\n", "\n"))
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-            return result;
+            return ExcelConverter.ShouldSerialize();
         }
 
         private SealExcelConverter _excelConverter = null;
@@ -865,8 +815,6 @@ namespace Seal.Model
                 if (_excelConverter == null)
                 {
                     _excelConverter = SealExcelConverter.Create();
-                    if (ExcelConfigurations.Count == 0) ExcelConfigurations = Repository.Instance.Configuration.ExcelConfigurations.ToList();
-
                     _excelConverter.SetConfigurations(ExcelConfigurations, this);
                     
                 }

@@ -24,7 +24,7 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
-    <TypeScriptToolsVersion>3.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.9</TypeScriptToolsVersion>
     <Use64BitIISExpress>true</Use64BitIISExpress>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>

@@ -717,6 +717,8 @@ namespace Seal
         bool _pdfExpanded = false, _excelExpanded = false, _configurationExpanded = true, _widgetExpanded = false;
         private void mainTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            if (_lastDragOverNode != null) return;
+
             modelPanel.Visible = false;
             mainPropertyGrid.Visible = false;
 
@@ -1536,8 +1538,10 @@ namespace Seal
             }
         }
 
+        TreeNode _lastDragOverNode = null;
         private void mainTreeView_DragDrop(object sender, DragEventArgs e)
         {
+            _lastDragOverNode = null;
             if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
             {
                 TreeNode targetNode = ((TreeView)sender).GetNodeAt(((TreeView)sender).PointToClient(new Point(e.X, e.Y)));
@@ -1555,6 +1559,7 @@ namespace Seal
                         SetModified();
                         init(sourceView);
                         e.Effect = DragDropEffects.Move;
+                        mainTreeView.SelectedNode = sourceNode;
                     }
                     else if (sourceNode.Parent == targetNode.Parent)
                     {
@@ -1582,6 +1587,7 @@ namespace Seal
                         SetModified();
                         mainTreeView.Sort();
                         e.Effect = DragDropEffects.Move;
+                        mainTreeView.SelectedNode = sourceNode;
                     }
                 }
                 else if (sourceNode != null && targetNode != null && sourceNode.Tag is ReportTask && targetNode.Tag is ReportTask)
@@ -1611,6 +1617,7 @@ namespace Seal
                     SetModified();
                     mainTreeView.Sort();
                     e.Effect = DragDropEffects.Move;
+                    mainTreeView.SelectedNode = sourceNode;
                 }
             }
         }
@@ -1645,9 +1652,15 @@ namespace Seal
                         e.Effect = DragDropEffects.Move;
                     }
                 }
+
+                _lastDragOverNode = null;
+                if (targetNode != null && e.Effect == DragDropEffects.Move)
+                {
+                    _lastDragOverNode = targetNode;
+                    mainTreeView.SelectedNode = targetNode;
+                }
             }
         }
-
         private void mainTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (selectedEntity is ReportTask)

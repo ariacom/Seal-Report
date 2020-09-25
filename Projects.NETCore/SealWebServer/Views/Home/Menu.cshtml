@@ -7,40 +7,43 @@
     var menuStyle = "";
 </script>
 
-<nav class="navbar navbar-default navbar-inverse navbar-fixed-top hide-export">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">@repository.TranslateWeb("Toggle navigation")</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div>
-                <a id="brand-id" class="navbar-brand" href="#">@repository.Configuration.WebProductName</a>
-                <button id="dashboard-toggle" type="button" class="btn btn-sm btn-primary" style="display:none; margin-top:10px;"><span class="glyphicon glyphicon-th-list"></span></button>
-            </div>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">
-            <ul class="nav navbar-nav pull-xs-right navbar-right">
-                <li class="nav-item"><a id="profile-nav-item">@repository.TranslateWeb("Profile")</a></li>
-                <li class="nav-item"><a id="disconnect-nav-item">@repository.TranslateWeb("Disconnect")</a></li>
-            </ul>
-            <form class="navbar-form navbar-right folderview" style="display:none;">
-                <div class="input-group">
-                    <input id="search-pattern" type="text" class="form-control input-sm col-sm-1" placeholder="@repository.TranslateWeb("Search")" />
-                    <span class="input-group-btn">
-                        <button id="search-nav-item" type="button" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-search"></span></button>
-                    </span>
+@if (!model.Exporting)
+{
+    <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">@repository.TranslateWeb("Toggle navigation")</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div>
+                    <a id="brand-id" class="navbar-brand" href="#">@repository.Configuration.WebProductName</a>
+                    <button id="dashboard-toggle" type="button" class="btn btn-sm btn-primary" style="display:none; margin-top:10px;"><span class="glyphicon glyphicon-th-list"></span></button>
                 </div>
-            </form>
-            <ul class="nav navbar-nav pull-xs-right navbar-right">
-                <li class="nav-item"><a id="refresh-nav-item" style="font-size:20px" class="navbar-white fa fa-refresh" title="@repository.TranslateWeb("Refresh")"></a></li>
-                <li class="nav-item hidden-xs folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="navbar-white fa fa-folder-open"></a></li>
-                <li class="nav-item hidden-xs dashboardview" style="display:none;" title="@repository.TranslateWeb("Manage Dashboards")"><a id="dashboards-nav-item" style="font-size:20px" class="navbar-white fa fa-th"></a></li>
-                <li class="nav-item hidden-xs dashboardview" style="display:none;" title="@repository.TranslateWeb("Export Dashboards")"><a id="export-nav-item" style="font-size:20px" class="navbar-white fa fa-download"></a></li>
-                <li class="nav-item hidden-xs dashboardview" style="display:none;" title="@repository.TranslateWeb("Add widgets to the dashboard")"><a id="dashboard-add-widget" style="font-size:20px" class="navbar-white fa fa-plus-square"></a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div><!--/.container-fluid -->
-</nav>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false">
+                <ul class="nav navbar-nav pull-xs-right navbar-right">
+                    <li class="nav-item"><a id="profile-nav-item">@repository.TranslateWeb("Profile")</a></li>
+                    <li class="nav-item"><a id="disconnect-nav-item">@repository.TranslateWeb("Disconnect")</a></li>
+                </ul>
+                <form class="navbar-form navbar-right folderview" style="display:none;">
+                    <div class="input-group">
+                        <input id="search-pattern" type="text" class="form-control input-sm col-sm-1" placeholder="@repository.TranslateWeb("Search")" />
+                        <span class="input-group-btn">
+                            <button id="search-nav-item" type="button" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div>
+                </form>
+                <ul class="nav navbar-nav pull-xs-right navbar-right">
+                    <li class="nav-item"><a id="refresh-nav-item" style="font-size:20px" class="navbar-white fa fa-refresh" title="@repository.TranslateWeb("Refresh")"></a></li>
+                    <li class="nav-item hidden-xs folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="navbar-white fa fa-folder-open"></a></li>
+                    <li class="nav-item hidden-xs dashboardview" style="display:none;" title="@repository.TranslateWeb("Manage Dashboards")"><a id="dashboards-nav-item" style="font-size:20px" class="navbar-white fa fa-th"></a></li>
+                    <li class="nav-item hidden-xs dashboardview" style="display:none;" title="@repository.TranslateWeb("Export Dashboards")"><a id="export-nav-item" style="font-size:20px" class="navbar-white fa fa-download"></a></li>
+                    <li class="nav-item hidden-xs dashboardview" style="display:none;" title="@repository.TranslateWeb("Add widgets to the dashboard")"><a id="dashboard-add-widget" style="font-size:20px" class="navbar-white fa fa-plus-square"></a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
+}

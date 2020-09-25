@@ -448,7 +448,6 @@ namespace SealWebServer.Controllers
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: report or file does not exist");
                 repository = Repository.CreateFast();
                 report = Report.LoadFromFile(filePath, repository);
-
                 var execution = initReportExecution(report, viewGUID, outputGUID, false);
                 execution.RenderHTMLDisplayForViewer();
                 return getFileResult(report.HTMLDisplayFilePath, report);
@@ -498,7 +497,6 @@ namespace SealWebServer.Controllers
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
                 //Clear session
                 DashboardExecutions.Clear();
-                UploadedFiles.Clear();
                 NavigationContext.Navigations.Clear();
                 setSessionValue(SessionUser, null);
                 setSessionValue(SessionNavigationContext, null);
@@ -1103,7 +1101,7 @@ namespace SealWebServer.Controllers
                                     Report report = null;
                                     ReportExecution execution = getWidgetViews(item.Widget, out report, ref view, ref modelView);
                                     if (report.Cancel) break;
-                                    if (modelView != null) 
+                                    if (modelView != null)
                                     {
                                         views.Add(modelView);
                                         modelView.Tag = item;

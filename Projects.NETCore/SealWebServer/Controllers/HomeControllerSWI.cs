@@ -39,6 +39,9 @@ namespace SealWebServer.Controllers
                     Authenticate();
 
                     if (!WebUser.IsAuthenticated) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
+                    //Load profile
+                    if (System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
+                    WebUser.Profile.Path = WebUser.ProfilePath;
                 }
 
                 //Audit
@@ -493,6 +496,14 @@ namespace SealWebServer.Controllers
                 //Audit
                 Audit.LogAudit(AuditType.Logout, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
+                //Clear session
+                DashboardExecutions.Clear();
+                NavigationContext.Navigations.Clear();
+                setSessionValue(SessionUser, null);
+                setSessionValue(SessionNavigationContext, null);
+                setSessionValue(SessionDashboardExecutions, null);
+                setSessionValue(SessionUploadedFiles, null);
+
                 return Json(new { });
             }
             catch (Exception ex)
@@ -948,7 +959,7 @@ namespace SealWebServer.Controllers
                         report.ExecutionView.SetParameter(Parameter.ReportFormatParameter, ReportFormat.html.ToString());
                         execution.Execute();
                     }
-                    while (report.IsExecuting) Thread.Sleep(100);
+                    while (report.IsExecuting && !report.Cancel) Thread.Sleep(100);
                 }
 
                 if (report.HasErrors)
@@ -1055,6 +1066,7 @@ namespace SealWebServer.Controllers
                 var model = getHtmlMainModel(dashboards);
                 if (!string.IsNullOrEmpty(format) && dashboards != null && dashboards.Length > 0)
                 {
+                    var ids = dashboards.Split(',');
                     if (format == "pdf" || format == "pdflandscape")
                     {
                         var reference = Helper.NewGUID();
@@ -1063,8 +1075,9 @@ namespace SealWebServer.Controllers
                             model.Tag = WebUser;
                             _pdfToExport.Add(reference, model);
                         }
-                        var pdfConverter = Repository.Configuration.DashboardPdfConverter;
+                        var pdfConverter = Repository.Configuration.GetDashboardPdfConverter();
                         pdfConverter.SourceFormat = format;
+                        pdfConverter.Dashboards = WebUser.UserDashboards.Where(i => ids.Contains(i.GUID)).OrderBy(i => i.Order).ToList();
                         string destinationPath = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.pdf"));
 #if NETCOREAPP
                     var uri =  Microsoft.AspNetCore.Http.Extensions.UriHelper.GetDisplayUrl(Request);
@@ -1078,7 +1091,6 @@ namespace SealWebServer.Controllers
                     else if (format == "excel")
                     {
                         var dashboardsToExport = new Dictionary<Dashboard, List<ReportView>>();
-                        var ids = dashboards.Split(',');
                         foreach (var dashboard in WebUser.UserDashboards.Where(i => ids.Contains(i.GUID)).OrderBy(i => i.Order))
                         {
                             var views = new List<ReportView>();

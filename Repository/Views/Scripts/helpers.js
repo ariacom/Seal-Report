@@ -70,20 +70,31 @@ function executeFromTrigger(source) {
         container.addClass("disabled");
         container.children(".glyphicon").css("display", "inline");
         if (urlPrefix !== "") {
-            $.post(urlPrefix + action, form.serialize() + "&execution_guid=" + form.attr("execguid"))
-                .done(function (data) {
-                    //Update each view involved
-                    data.forEach(function (value) {
-                        if (form.attr("id") != $(value).attr("id")) {
-                            var viewId = "#" + $(value).attr("id");
-                            $(viewId).html($(value).html());
-                            initRestrictions(viewId);
-                        }
+            //trigger in a new report
+            if (form.attr("target")) {
+                form.attr("action", urlPrefix + "ActionExecuteFromTrigger");
+                form.submit();
+                container.removeClass("disabled");
+                container.children(".glyphicon").css("display", "none");
+                inExecution = false;
+                return;
+            }
+            else {
+                $.post(urlPrefix + action, form.serialize() + "&execution_guid=" + form.attr("execguid") + "&form_id=" + form.attr("id"))
+                    .done(function (data) {
+                        //Update each view involved
+                        data.forEach(function (value) {
+                            if (form.attr("id") != $(value).attr("id")) {
+                                var viewId = "#" + $(value).attr("id");
+                                $(viewId).html($(value).html());
+                                initRestrictions(viewId);
+                            }
+                        });
+                        container.removeClass("disabled");
+                        container.children(".glyphicon").css("display", "none");
+                        inExecution = false;
                     });
-                    container.removeClass("disabled");
-                    container.children(".glyphicon").css("display", "none");
-                    inExecution = false;
-                });
+            }
         }
         else {
             $("#id_load").val(form.attr("id"));
@@ -235,20 +246,32 @@ function initRestrictions(parent) {
         form.addClass("disabled");
         button.removeClass("btn-success").addClass("btn-warning");
         if (urlPrefix !== "") {
-            $.post(urlPrefix + action, form.serialize() + "&execution_guid=" + form.attr("execguid"))
-                .done(function (data) {
-                    //Update each view involved
-                    data.forEach(function (value) {
-                        if (form.attr("id") != $(value).attr("id")) {
-                            var viewId = "#" + $(value).attr("id");
-                            $(viewId).html($(value).html());
-                            initRestrictions(viewId);
-                        }
+            //trigger in a new report
+            if (form.attr("target")) {
+                form.attr("action", urlPrefix + "ActionExecuteFromTrigger");
+                form.submit();
+                form.removeClass("disabled");
+                button.removeClass("btn-warning").addClass("btn-success");
+                inExecution = false;
+                return;
+            }
+            else {
+                //trigger to update current views
+                $.post(urlPrefix + action, form.serialize() + "&execution_guid=" + form.attr("execguid") + "&form_id=" + formId)
+                    .done(function (data) {
+                        //Update each view involved
+                        data.forEach(function (value) {
+                            if (form.attr("id") != $(value).attr("id")) {
+                                var viewId = "#" + $(value).attr("id");
+                                $(viewId).html($(value).html());
+                                initRestrictions(viewId);
+                            }
+                        });
+                        form.removeClass("disabled");
+                        button.removeClass("btn-warning").addClass("btn-success");
+                        inExecution = false;
                     });
-                    form.removeClass("disabled");
-                    button.removeClass("btn-warning").addClass("btn-success");
-                    inExecution = false;
-                });
+            }
         }
         else {
             setTimeout(function () {

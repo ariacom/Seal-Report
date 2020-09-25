@@ -1293,7 +1293,7 @@ namespace Seal.Model
             else
             {
                 var colName = LINQColumnName;
-                if (IsText && !CaseSensitive && string.IsNullOrEmpty(SQL)) colName += ".ToLower()"; 
+                if (IsText && !CaseSensitive && string.IsNullOrEmpty(SQL)) colName += ".ToLower()";
                 foreach (var val in GetVals(value))
                 {
                     Helper.AddValue(ref LINQText, separator, string.Format("{0}{1}{2}{3}{4}", prefix, colName, LINQOperator, GetLINQValue(val, finalDate, _operator), LINQSuffix));
@@ -1471,7 +1471,7 @@ namespace Seal.Model
                 //Other cases
                 if (_operator == Operator.Contains)
                 {
-                    LINQOperator =  ".Contains(";
+                    LINQOperator = ".Contains(";
                     LINQSuffix = ")";
                 }
                 else if (_operator == Operator.NotContains)
@@ -1513,13 +1513,13 @@ namespace Seal.Model
                         }
                     }
                     else
-                    {                        
+                    {
                         if (HasValue1) addLINQOperator(ref val, Value1, FinalDate1, LINQOperator, LINQSuffix);
                         if (HasValue2) addLINQOperator(ref val, Value2, FinalDate2, LINQOperator, LINQSuffix);
                         if (HasValue3) addLINQOperator(ref val, Value3, FinalDate3, LINQOperator, LINQSuffix);
                         if (HasValue4) addLINQOperator(ref val, Value4, FinalDate4, LINQOperator, LINQSuffix);
                     }
-                    _LINQText += val+")";
+                    _LINQText += val + ")";
                 }
                 else
                 {
@@ -1556,11 +1556,17 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True is the restriction is for a restriction view
+        /// </summary>
         [XmlIgnore]
+        public bool IsViewRestriction = false;
+
         string _displayText;
         /// <summary>
         /// Display text of the full restriction (label and value)
         /// </summary>
+        [XmlIgnore]
         public string DisplayText
         {
             get
@@ -1570,11 +1576,11 @@ namespace Seal.Model
             }
         }
 
-        [XmlIgnore]
         string _SQLText;
         /// <summary>
         /// SQL of the restriction 
         /// </summary>
+        [XmlIgnore]
         public string SQLText
         {
             get
@@ -1584,11 +1590,11 @@ namespace Seal.Model
             }
         }
 
-        [XmlIgnore]
         string _LINQText;
         /// <summary>
         /// LINQ of the restriction 
         /// </summary>
+        [XmlIgnore]
         public string LINQText
         {
             get
@@ -1745,23 +1751,28 @@ namespace Seal.Model
             return (IsCommonRestrictionValue && restriction.IsCommonRestrictionValue && Name == restriction.Name) || (!IsCommonRestrictionValue && !restriction.IsCommonRestrictionValue && MetaColumnGUID == restriction.MetaColumnGUID && DisplayNameEl == restriction.DisplayNameEl);
         }
 
+        /// <summary>
+        /// Copy restriction property from another prompted restriction
+        /// </summary>
+        /// <param name="restriction"></param>
         public void CopyForPrompt(ReportRestriction restriction)
         {
-                HtmlIndex = restriction.HtmlIndex;
-                Prompt = restriction.Prompt;
-                Operator = restriction.Operator;
-                Value1 = restriction.Value1;
-                Date1 = restriction.Date1;
-                Date1Keyword = restriction.Date1Keyword;
-                Value2 = restriction.Value2;
-                Date2 = restriction.Date2;
-                Date2Keyword = restriction.Date2Keyword;
-                Value3 = restriction.Value3;
-                Date3 = restriction.Date3;
-                Date3Keyword = restriction.Date3Keyword;
-                Value4 = restriction.Value4;
-                Date4 = restriction.Date4;
-                Date4Keyword = restriction.Date4Keyword;
+            HtmlIndex = restriction.HtmlIndex;
+            Prompt = restriction.Prompt;
+            Operator = restriction.Operator;
+            Value1 = restriction.Value1;
+            Date1 = restriction.Date1;
+            Date1Keyword = restriction.Date1Keyword;
+            Value2 = restriction.Value2;
+            Date2 = restriction.Date2;
+            Date2Keyword = restriction.Date2Keyword;
+            Value3 = restriction.Value3;
+            Date3 = restriction.Date3;
+            Date3Keyword = restriction.Date3Keyword;
+            Value4 = restriction.Value4;
+            Date4 = restriction.Date4;
+            Date4Keyword = restriction.Date4Keyword;
+            EnumValues = restriction.EnumValues.ToList();
         }
     }
 }

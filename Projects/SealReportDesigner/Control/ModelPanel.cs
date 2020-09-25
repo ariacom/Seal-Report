@@ -302,13 +302,6 @@ namespace Seal.Controls
                 });
                 if (!Model.IsSubModel) menu.Items.Add(item);
 
-                item = new ToolStripMenuItem("Remove all elements");
-                item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
-                {
-                    removeElementFromPanel(button, true);
-                });
-                if (!Model.IsSubModel) menu.Items.Add(item);
-
                 item = new ToolStripMenuItem("Copy");
                 item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                 {
@@ -323,8 +316,31 @@ namespace Seal.Controls
                     else restrictionsPanel.AddRestriction(element.MetaColumn, true);
                 });
                 menu.Items.Add(item);
+
                 if (!Model.IsSubModel)
                 {
+                    menu.Items.Add(new ToolStripSeparator());
+                    item = new ToolStripMenuItem("Remove all elements");
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                    {
+                        removeElementFromPanel(button, true);
+                    });
+                    menu.Items.Add(item);
+
+                    item = new ToolStripMenuItem("Clear all Sort Orders");
+                    item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
+                    {
+                        ElementPanel panel = (ElementPanel)button.Parent;
+                        foreach (var control in panel.Controls)
+                        {
+                            ReportElement el = ((Button)control).Tag as ReportElement;
+                            if (el != null) el.SortOrder = ReportElement.kNoSortKeyword;
+                        }
+                        btn_MouseDown(button, null);
+                        MainForm.IsModified = true;
+                    });
+                    menu.Items.Add(item);
+
                     menu.Items.Add(new ToolStripSeparator());
                     item = new ToolStripMenuItem("Smart copy...");
                     item.Click += new EventHandler(delegate (object sender2, EventArgs e2)

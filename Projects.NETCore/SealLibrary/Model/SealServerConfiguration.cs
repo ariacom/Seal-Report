@@ -116,7 +116,7 @@ namespace Seal.Model
         /// </summary>
         public string TaskFolderName { get; set; } = Repository.SealRootProductName + " Report";
 
-       bool _auditEnabled = false;
+        bool _auditEnabled = false;
         /// <summary>
         /// If true, the Audit script is executed for the follwing events: login, logout, report execution and management, folder management, file management, dashboard management.
         /// </summary>
@@ -242,7 +242,7 @@ namespace Seal.Model
                 if (_pdfConverter == null)
                 {
                     _pdfConverter = SealPdfConverter.Create();
-                    _pdfConverter.SetConfigurations(PdfConfigurations, null);
+                    _pdfConverter.SetConfigurations(PdfConfigurations, new ReportView());
                     
                 }
                 return _pdfConverter;
@@ -327,11 +327,19 @@ namespace Seal.Model
                 {
                     _dashboardPdfConverter = SealPdfConverter.Create();
                     _dashboardPdfConverter.SetConfigurations(DashboardPdfConfigurations, null);
+                    _dashboardPdfConverter.Dashboards = new List<Dashboard>();
                     
                 }
                 return _dashboardPdfConverter;
             }
             set { _dashboardPdfConverter = value; }
+        }
+
+        public SealPdfConverter GetDashboardPdfConverter()
+        {
+            var dashboardPdfConverter = SealPdfConverter.Create();
+            dashboardPdfConverter.SetConfigurations(DashboardPdfConfigurations, null);
+            return dashboardPdfConverter;
         }
 
         /// <summary>

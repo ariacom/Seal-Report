@@ -272,6 +272,7 @@ class SWIMain {
             _gateway.Logout(function (e) {
                 _main._connected = false;
                 $("#main-container").css("display", "none");
+                $("#main-dashboard").css("display", "none");
                 _main.showLogin();
                 if (SWIUtil.IsMobile()) $('.navbar-toggle').click();
             });
@@ -389,6 +390,7 @@ class SWIMain {
         $(document).ajaxStart(function () {
             $("#refresh-nav-item").addClass("fa-spin");
         });
+
         $(document).ajaxStop(function () {
             $("#refresh-nav-item").removeClass("fa-spin");
         });

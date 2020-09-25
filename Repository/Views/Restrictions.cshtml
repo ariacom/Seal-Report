@@ -7,17 +7,20 @@
 <!--restrictions_div-->
 @if (report.GenerateHTMLDisplay)
 {
-    <form id="form_@view.IdSuffix" execguid="@report.ExecutionGUID" method="post" action="">
-        @Include(view.GetPartialTemplateKey("Restrictions.iShared", view), view)
-        @if (view.ExecutionPromptedRestrictions.Exists(i => !i.TriggerExecution))
-        {
-            <div class="text-right container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")" style="margin-top:-20px">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <button id="button_@view.IdSuffix" class="update_view_restrictions btn btn-success">@report.Translate("Refresh")</button>
-                    </div>
+<form id="form_@view.IdSuffix" execguid="@report.ExecutionGUID" method="post" target="@view.GetValue("target")">
+    <input type="hidden" name="execution_guid" id="execution_guid" value="@report.ExecutionGUID" />
+    <input type="hidden" name="form_id" id="form_id" value="form_@view.IdSuffix" />
+    <input type="hidden" name="target" id="target" value="@view.GetValue("target")" />
+    @Include(view.GetPartialTemplateKey("Restrictions.iShared", view), view)
+    @if (view.ExecutionPromptedRestrictions.Exists(i => !i.TriggerExecution))
+    {
+        <div class="text-right container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")" style="margin-top:-20px">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button id="button_@view.IdSuffix" class="update_view_restrictions btn btn-success">@report.Translate(view.GetValue("button_text"))</button>
                 </div>
             </div>
-        }
-    </form>
+        </div>
+    }
+</form>
 }

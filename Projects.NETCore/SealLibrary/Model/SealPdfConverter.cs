@@ -23,6 +23,11 @@ namespace Seal.Model
         /// </summary>
         public string SourceFormat = "";
 
+        /// <summary>
+        /// Dashboards to convert if the converter is for Dashboards export
+        /// </summary>
+        public List<Dashboard> Dashboards;
+
         public static SealPdfConverter Create()
         {
             SealPdfConverter result = null;
@@ -75,6 +80,14 @@ namespace Seal.Model
         public virtual List<string> GetConfigurations()
         {
             return new List<string>();
+        }
+
+        /// <summary>
+        /// True if the configuration should be serialized
+        /// </summary>
+        public virtual bool ShouldSerialize()
+        {
+            return false;
         }
 
 

@@ -92,10 +92,6 @@ namespace SealWebServer.Controllers
             }
             var user = new SecurityUser(Repository.Security);
 
-            //Load profile
-            if (System.IO.File.Exists(user.ProfilePath)) user.Profile = SecurityUserProfile.LoadFromFile(user.ProfilePath);
-            user.Profile.Path = user.ProfilePath;
-
             setSessionValue(SessionUser, user);
             //Clear previous Session variables
             setSessionValue(SessionNavigationContext, null);
@@ -228,6 +224,7 @@ namespace SealWebServer.Controllers
                     Report report = execution.Report;
                     WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Information, string.Format("Starting report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
                     report.IsNavigating = false;
+                    report.ExecutionTriggerView = null;
                     initInputRestrictions(execution, report);
                     while (execution.IsConvertingToExcel) Thread.Sleep(100);
                     execution.Execute();
@@ -726,6 +723,7 @@ namespace SealWebServer.Controllers
                     if (view != null && view.ModelView != null)
                     {
                         var page = view.ModelView.Model.Pages.FirstOrDefault(i => i.PageId == pageid);
+                        if (page == null && view.ModelView.Model.Pages.Count > 0) page = view.ModelView.Model.Pages.First();
                         if (page != null)
                         {
                             return Json(page.DataTable.GetLoadTableData(view, parameters));
@@ -791,7 +789,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Return the list of values for a Enumerated list with a filter for a report execution
         /// </summary>
-        public ActionResult ActionExecuteFromTrigger(string execution_guid)
+        public ActionResult ActionExecuteFromTrigger(string execution_guid, string form_id)
         {
             writeDebug("ActionExecuteFromTrigger");
             var views = new List<string>();
@@ -800,12 +798,14 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
 
                 ReportExecution execution = getExecution(execution_guid);
-                if (execution != null)
+                if (!string.IsNullOrEmpty(form_id) && execution != null)
                 {
                     lock (execution)
                     {
 
                         var report = execution.Report;
+                        report.ExecutionTriggerView = report.AllViews.FirstOrDefault(i => form_id.EndsWith(i.IdSuffix));
+
                         initInputRestrictions(execution, report);
 
                         //Get all restrictions involved
@@ -840,7 +840,7 @@ namespace SealWebServer.Controllers
                         execution.Execute();
                         while (report.IsExecuting) Thread.Sleep(100);
 
-                        foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0)) //*&& i.Model.Restrictions.Exists(j => j.GUID == restriction.GUID)*))
+                        foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0))
                         {
                             bool parseView = hasInputValue; //Parse all if input value involved
 
