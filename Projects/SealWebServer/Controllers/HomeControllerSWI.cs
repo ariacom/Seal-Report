@@ -946,10 +946,14 @@ namespace SealWebServer.Controllers
                 ReportView view = null, modelView = null;
                 Report report = null;
                 ReportExecution execution = getWidgetViews(widget, out report, ref view, ref modelView);
+                report.ExecutionTriggerView = null;
+                report.ForWidget = true;
 
                 //Execute if necessary
                 lock (execution)
                 {
+                    execution.GetReportModelsToExecute(); //This clear models executed beside the widget...
+
                     if (!report.IsExecuting && (force || report.ExecutionEndDate == DateTime.MinValue || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
                     {
                         //Disable basics

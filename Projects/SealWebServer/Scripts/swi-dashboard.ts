@@ -40,6 +40,18 @@ function loadLayout(grid, serializedLayout) {
     else grid.layout(true);
 }
 
+function redrawDashboard() {
+    setTimeout(function () {
+        redrawNVD3Charts();
+        redrawDataTables();
+        _da.reorderItems(true);
+        if ($(".item").css("opacity") != "1") $(".item,.group-name,h1").css("opacity", "0.6");
+    }, 400);
+    setTimeout(function () {
+        $(".item,.group-name,h1").css("opacity", "1");
+    }, 800);
+}
+
 
 class SWIDashboard {
     public _dashboards = [];
@@ -66,14 +78,16 @@ class SWIDashboard {
                 grid = new Muuri('#' + gridId, {
                     dragEnabled: hasEditor && _da._dashboard.Editable,
                     layoutOnInit: true,
+                    layoutOnResize: 200,
                     layoutDuration: 600,
+                    layout: {
+                        fillGaps: true,
+                    },
                     dragStartPredicate: {
                         distance: 10,
                         delay: 80
                     },
-                    dragSort: function () {
-                        return hasEditor ? _da._grids : [];
-                    }
+                    dragSort: true,
                 });
                 _da._gridsById[gridId] = grid;
 
@@ -152,11 +166,6 @@ class SWIDashboard {
         //Auto-refresh
         if (data.refresh > 0) _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false) }, 1000 * data.refresh);
 
-        //Redraw...
-        for (var i = 0; i < _da._grids.length; i++) {
-            _da._grids[i].refreshItems().layout();
-        }
-
         initNavCells(data.executionguid, "#" + data.itemguid);
         initRestrictions("#" + data.itemguid);
     }
@@ -167,6 +176,11 @@ class SWIDashboard {
         _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
             _da._pendingRequest--;
+
+            if (_da._pendingRequest <= 0) {
+                //Redraw...
+                redrawDashboard();
+            }
         });
     }
 
@@ -212,7 +226,7 @@ class SWIDashboard {
 
                     if (item.GroupName != "") {
                         //Group name 
-                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name");
+                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name").css("opacity","0.2");
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
                         var groupDrag = $("<h3 style='margin:0px 5px'>").append(groupSpan);
                         groupDrag.attr("group-order", item.GroupOrder)
@@ -229,7 +243,7 @@ class SWIDashboard {
                 }
 
                 //Dashboard item
-                var panel = $("<div class='item panel panel-" + item.Color + "' style='page-break-inside:avoid;'>");
+                var panel = $("<div class='item panel panel-" + item.Color + "' style='opacity: 0.2;page-break-inside:avoid;'>");
                 panel.attr("id", item.GUID);
                 panel.attr("did", dashboard.GUID);
                 var panelHeader = $("<div class='panel-heading text-left' style='padding-right:2px;'>");
@@ -346,7 +360,10 @@ class SWIDashboard {
                 var dashboard = data[i];
 
                 var menu = $("<a data-toggle='pill' href='#" + dashboard.GUID + "' did='" + dashboard.GUID + "'>");
-                if (_main._exportingPrint) menu = $("<h1>");
+                if (_main._exportingPrint) {
+                    menu = $("<h1>");
+                    menu.css("opacity", "0.2");
+                }
 
                 if (dashboard.IsPersonal) menu.addClass("dashboard-personal");
                 menu.text(dashboard.DisplayName);

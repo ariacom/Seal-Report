@@ -609,19 +609,19 @@ namespace Seal.Model
         /// </summary>
         Dictionary<string, MetaTable> _runningSubTables = new Dictionary<string, MetaTable>();
 
-        async Task buildModelsAsync()
+        /// <summary>
+        /// List of models to execute after cleaning of models involved in View Restrictions
+        /// </summary>
+        public List<ReportModel> GetReportModelsToExecute()
         {
-            Report.LogMessage("Starting to build models...");
-
-            _runningModels.Clear();
-            _runningSubTables.Clear();
-            //Build SQL and Fill Result table
-            var sets = (from model in Report.ExecutionModels orderby model.ExecutionSet select model.ExecutionSet).Distinct();
-            foreach (var set in sets)
+            var result = new List<ReportModel>();
+            if ((RootReport != null && RootReport.IsNavigating) ||  Report.ExecutionTriggerView != null)
             {
-                Report.LogMessage("Build models of Execution Set {0}...", set);
-                var tasks = new List<Task>();
-                foreach (ReportModel model in Report.ExecutionModels.Where(i => i.ExecutionSet == set))
+                //Navigation or trigger view, we execute all the models
+                result = Report.ExecutionModels;
+            }
+            else {
+                foreach (ReportModel model in Report.ExecutionModels)
                 {
                     //Skip models having view restriction not triggered
                     if (model.ExecutionRestrictions.Exists(i => Report.ExecutionViewRestrictions.Contains(i)))
@@ -630,11 +630,35 @@ namespace Seal.Model
                         {
                             //And the model was not triggered, 
                             //check if the model has a view with force_execution flag
-                            if (!Report.AllViews.Exists(j => j.Model == model && j.GetBoolValue(Parameter.ForceExecutionParameter))) { 
+                            if (!Report.AllViews.Exists(j => j.Model == model && j.GetBoolValue(Parameter.ForceExecutionParameter)))
+                            {
+                                model.Pages.Clear();
+                                model.ResultTable = null;
                                 continue;
                             }
                         }
                     }
+                    result.Add(model);
+                }
+            }
+            return result;
+        }
+
+        async Task buildModelsAsync()
+        {
+            Report.LogMessage("Starting to build models...");
+
+            _runningModels.Clear();
+            _runningSubTables.Clear();
+            var models = GetReportModelsToExecute();
+            //Build SQL and Fill Result table
+            var sets = (from model in models orderby model.ExecutionSet select model.ExecutionSet).Distinct();
+            foreach (var set in sets)
+            {
+                Report.LogMessage("Build models of Execution Set {0}...", set);
+                var tasks = new List<Task>();
+                foreach (ReportModel model in models.Where(i => i.ExecutionSet == set))
+                {
                     tasks.Add(buildResultTables(model));
                 }
                 await Task.WhenAll(tasks);

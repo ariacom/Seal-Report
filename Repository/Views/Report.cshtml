@@ -139,6 +139,8 @@
             selectTime: '@Raw(report.TranslateToJS("Select Time"))'
         };
 
+        function redrawDashboard() { }
+
         $.fn.dataTable.moment(shortDateFormat);
         $.fn.dataTable.moment(shortDateTimeFormat);
         $.extend( true, $.fn.dataTable.defaults, {

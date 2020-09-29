@@ -808,6 +808,7 @@ namespace SealWebServer.Controllers
                     {
                         //Trigger in another window
                         execution = initReportExecution(report, "", "", false);
+                        report.ForWidget = false;
                         //Reapply restrictions
                         initInputRestrictions(report);
                         //Apply input restrictions if any

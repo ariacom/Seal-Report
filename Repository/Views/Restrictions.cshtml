@@ -7,10 +7,10 @@
 <!--restrictions_div-->
 @if (report.GenerateHTMLDisplay)
 {
-<form id="form_@view.IdSuffix" execguid="@report.ExecutionGUID" method="post" target="@view.GetValue("target")">
+<form id="form_@view.IdSuffix" execguid="@report.ExecutionGUID" method="post" target="" target_report="@view.GetValue("target_report")" target_dashboard="@view.GetValue("target_dashboard")">
     <input type="hidden" name="execution_guid" id="execution_guid" value="@report.ExecutionGUID" />
     <input type="hidden" name="form_id" id="form_id" value="form_@view.IdSuffix" />
-    <input type="hidden" name="target" id="target" value="@view.GetValue("target")" />
+    <input type="hidden" name="target" id="target" value="" />
     @Include(view.GetPartialTemplateKey("Restrictions.iShared", view), view)
     @if (view.ExecutionPromptedRestrictions.Exists(i => !i.TriggerExecution))
     {

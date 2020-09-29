@@ -541,7 +541,7 @@ namespace Seal
         {
             //refresh repository
             _repository = Repository.Create();
-            _report = Report.LoadFromFile(path, _repository);
+            _report = Report.LoadFromFile(path, _repository, true, true);
             if (_report != null)
             {
                 addMRU(path);

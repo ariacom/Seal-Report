@@ -108,7 +108,18 @@ namespace Seal.Model
 
         public static string GetParentPath(string path)
         {
-            return path.StartsWith(PersonalPrefix) ? (PersonalPrefix + System.IO.Path.GetDirectoryName(path.Substring(1))) : System.IO.Path.GetDirectoryName(path);
+            var result = "";
+            if (path.StartsWith(PersonalPrefix))
+            {
+
+                result = path.Length > 1 ? PersonalPrefix + Path.GetDirectoryName(path.Substring(1)) : PersonalPrefix;
+                if (result == PersonalPrefix + Path.DirectorySeparatorChar.ToString()) result = PersonalPrefix;
+            }
+            else
+            {
+                result = Path.GetDirectoryName(path);
+            }
+            return result;
         }
 
         public string Combine(string newName)

@@ -32,11 +32,22 @@
     });
     Template.Parameters.Add(new Parameter()
     {
+        Name = "grid_layout_dashboard",
+        Type = ViewParameterType.Text,
+        TextValue = "",
+        DisplayName = "Grid layout for Dashboard result",
+        Description = "Grid layout used when generating the HTML for Dashboard Widget result. Typically Restrictions Views are shown and Model Views may be hidden. It follows the 'Grid layout' definition.",
+        TextSamples = new string[] {
+"col-sm-12;col-sm-0;|Hide the second view if it contains the model table or chart"
+}
+    });
+    Template.Parameters.Add(new Parameter()
+    {
         Name = "grid_layout_print",
         Type = ViewParameterType.Text,
         TextValue = "",
         DisplayName = "Grid layout for HTML and Print result",
-        Description = "Grid layout used when generating the HTML result. Typically Restrictions Views may be hidden as they will be empty. It follows the 'Grid layout' definition.",
+        Description = "Grid layout used when generating the HTML Print result. Typically Restrictions Views may be hidden as they will be empty. It follows the 'Grid layout' definition.",
         TextSamples = new string[] {
 "col-sm-0;col-sm-12;|Hide the first view if it contains the restrictions"
 }
@@ -46,5 +57,5 @@
 
     //Allowed template parent names
     Template.ParentNames = new List<string>
-() { "Report", "Tab Page", "Container" };
+    () { "Report", "Tab Page", "Container" };
 }

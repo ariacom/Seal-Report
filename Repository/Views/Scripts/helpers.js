@@ -70,9 +70,12 @@ function executeFromTrigger(source) {
         container.addClass("disabled");
         container.children(".glyphicon").css("display", "inline");
         if (urlPrefix !== "") {
+            var target = (inReport ? form.attr("target_report") : form.attr("target_dashboard")).replace("<view_id>", form.attr("id"));
             //trigger in a new report
-            if (form.attr("target")) {
-                form.attr("action", urlPrefix + "ActionExecuteFromTrigger");
+            if (target) {
+                form.attr("action", urlPrefix + action);
+                form.attr("target", target);
+                form.find("#target").val(target);
                 form.submit();
                 container.removeClass("disabled");
                 container.children(".glyphicon").css("display", "none");
@@ -93,6 +96,7 @@ function executeFromTrigger(source) {
                         container.removeClass("disabled");
                         container.children(".glyphicon").css("display", "none");
                         inExecution = false;
+                        redrawDashboard();
                     });
             }
         }
@@ -247,8 +251,12 @@ function initRestrictions(parent) {
         button.removeClass("btn-success").addClass("btn-warning");
         if (urlPrefix !== "") {
             //trigger in a new report
-            if (form.attr("target")) {
-                form.attr("action", urlPrefix + "ActionExecuteFromTrigger");
+            var target = (inReport ? form.attr("target_report") : form.attr("target_dashboard")).replace("<view_id>", form.attr("id"));
+            //trigger in a new report
+            if (target) {
+                form.attr("action", urlPrefix + action);
+                form.attr("target", target);
+                form.find("#target").val(target);
                 form.submit();
                 form.removeClass("disabled");
                 button.removeClass("btn-warning").addClass("btn-success");
@@ -270,6 +278,7 @@ function initRestrictions(parent) {
                         form.removeClass("disabled");
                         button.removeClass("btn-warning").addClass("btn-success");
                         inExecution = false;
+                        redrawDashboard();
                     });
             }
         }
