@@ -374,7 +374,7 @@
                 responsive: {
                     details: {
                         renderer: function (api, rowIdx, columns) {
-                            dtRenderer(api, rowIdx, columns);
+                            return dtRenderer(api, rowIdx, columns);
                         }
                     }
                 },
