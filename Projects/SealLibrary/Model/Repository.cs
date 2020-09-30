@@ -338,6 +338,9 @@ namespace Seal.Model
             {
                 result = new Repository();
                 result.Init(path);
+
+                //Assign default instance
+                if (_instance == null) _instance = result;
             }
             if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'. Please check your configuration file or copy your repository files in '{1}'.", RepositoryConfigurationPath, Repository.DefaultRepository));
 
@@ -390,13 +393,18 @@ namespace Seal.Model
                 {
                     try
                     {
-                        var source = MetaSource.LoadFromFile(file, this);
+                        var source = MetaSource.LoadFromFile(file);
                         Sources.Add(source);
                     }
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.Message);
                     }
+                }
+
+                foreach (var source in Sources)
+                {
+                    source.InitReferences(this);
                 }
             }
 

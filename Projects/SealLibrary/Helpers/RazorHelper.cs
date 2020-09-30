@@ -222,7 +222,6 @@ namespace Seal.Helpers
         {
             lock (lockObject)
             {
-
                 if (!string.IsNullOrEmpty(script) && !Engine.Razor.IsTemplateCached(key, modelType))
                 {
                     LoadRazorAssemblies();

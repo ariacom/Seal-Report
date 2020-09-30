@@ -398,7 +398,8 @@ namespace Seal
             {
                 if (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower())
                 {
-                    _source = MetaSource.LoadFromFile(path, _repository);
+                    _source = MetaSource.LoadFromFile(path);
+                    _source.InitReferences(_repository);
                     _device = null;
                 }
                 else if (Path.GetDirectoryName(path).ToLower() == _repository.DevicesEmailFolder.ToLower())

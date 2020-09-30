@@ -1965,7 +1965,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 joinClause = joinClause.Replace(string.Format("{0}[\"", col.MetaTable.Name), string.Format("{0}[\"", col.MetaTable.LINQResultName));
                             }
 
-                            lastTable = string.Format("{0}join {1} on {2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
+                            lastTable = string.Format("{0}join {1} on\r\n{2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
                         }
 
                         tablesUsed.Add(leftTable);

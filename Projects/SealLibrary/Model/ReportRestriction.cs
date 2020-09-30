@@ -55,7 +55,6 @@ namespace Seal.Model
                     GetProperty("CaseSensitive").SetIsBrowsable(!IsSQL && IsText);
 
                     GetProperty("FormatRe").SetIsBrowsable(!IsEnum);
-                    GetProperty("TypeRe").SetIsBrowsable(true);
                     GetProperty("OperatorLabel").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                     GetProperty("EnumGUIDRE").SetIsBrowsable(true);
                     GetProperty("InputRows").SetIsBrowsable((IsText || IsNumeric) && !IsEnum);
@@ -138,6 +137,7 @@ namespace Seal.Model
                     if (!GetProperty("Date4Keyword").IsReadOnly) GetProperty("Date4").SetIsReadOnly(HasDateKeyword(Date4Keyword));
                 }
 
+                GetProperty("TypeRe").SetIsBrowsable(true);
                 GetProperty("SQL").SetIsBrowsable(!IsInputValue && !IsCommonValue);
                 GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom Expression");
                 GetProperty("SQL").SetDescription(IsSQL ? "If not empty, overwrite the default SQL used for the restriction in the WHERE clause." : "If not empty, overwrite the default LINQ Expression used for the restriction in the LINQ query.");

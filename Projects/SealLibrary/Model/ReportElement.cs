@@ -46,12 +46,11 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("SQL").SetIsBrowsable(true);
                 GetProperty("ForceAggregate").SetIsBrowsable(PivotPosition != PivotPosition.Data);
+                GetProperty("TypeEd").SetIsBrowsable(true);
                 if (!Model.IsSubModel)
                 {
                     GetProperty("DisplayNameEl").SetIsBrowsable(true);
-                    GetProperty("SQL").SetIsBrowsable(true);
                     GetProperty("SortOrder").SetIsBrowsable(true);
-                    GetProperty("TypeEd").SetIsBrowsable(true);
                     GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
                     GetProperty("ShowSubTotals").SetIsBrowsable(PivotPosition == PivotPosition.Row);
 
