@@ -143,7 +143,7 @@ Report;Toggle Period;;Changer la période
 Report;Select Time;;Sélectionner l'heure
 Report;Subtotal;;Sous-total
 Web;Add;;Ajouter
-Web;Add dashboards;;Ajouter des Dashboards
+Web;Add dashboards;;Ajouter les Dashboards
 Web;Add widgets to the dashboard;;Ajouter des Widgets au Dashboard
 Web;Aggregate;;Agrégat
 Web;Auto-Refresh (seconds);;Actualiser (secondes)
@@ -254,6 +254,7 @@ Web;Recur every;;Récurrent tous les
 Web;Refresh;;Rafraîchir
 Web;Remove;;Supprimer
 Web;Remove all;;Tout supprimer
+Web;Remove dashboards;;Enlever les Dashboards
 Web;Rename;;Renommer
 Web;Rename folder;;Renommer le répertoire
 Web;Rename, move or copy;;Renommer, déplacer ou copier
@@ -284,7 +285,7 @@ Web;This Widget has an error. Please consider to remove it from your Dashboard..
 Web;To;;Destinataire
 Web;Total aggr.;;Aggr. totaux
 Web;Type;;Type
-Web;Update the dashboards view;;Changer la vue des Dashboards
+Web;Update dashboards displayed in your view;;Modifier les Dashboards affichés dans votre vue
 Web;User groups;;Groupes utilisateur
 Web;User name;;Nom d'utilisateur
 Web;Users;;Utilisateurs
@@ -449,7 +450,6 @@ WebJS;Public edition;;Edition publique
 WebJS;Public execution;;Exécution publique
 WebJS;Radar;;Radar
 WebJS;Remove;;Effacer
-WebJS;Remove the dashboard from your view;;Enlever le Dashboard de la vue
 WebJS;Remove widget from dashboard;;Enlever le Widget du Dashboard
 WebJS;Rename;;Renommer
 WebJS;Report;;Rapport
@@ -487,7 +487,7 @@ WebJS;The dashboard has been deleted;;Le Dashboard a été effacé
 WebJS;The dashboard has been moved;;Le Dashboard a été déplacé
 WebJS;The dashboard has been renamed;;Le Dashboard a été renommé
 WebJS;The dashboards have been added to your view;;Les Dashboards ont été ajoutés à votre vue
-WebJS;The dashboard has been removed from your view;;Le Dashboard a été enlevé de votre vue
+WebJS;The dashboards have been removed from your view;;Les Dashboards ont été enlevés de votre vue
 WebJS;The folder has been created;;Le répertoire a été créé
 WebJS;The folder has been deleted;;Le répertoire a été effacé
 WebJS;The folder has been renamed;;Le répertoire a été renommé

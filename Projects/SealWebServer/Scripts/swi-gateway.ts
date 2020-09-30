@@ -256,9 +256,9 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
-    public RemoveDashboard(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+    public RemoveDashboard(guids: string[], callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIRemoveDashboard", {
-            guid: guid
+            guids: guids
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });

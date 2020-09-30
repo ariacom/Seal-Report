@@ -226,9 +226,9 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
-    SWIGateway.prototype.RemoveDashboard = function (guid, callback, errorcb) {
+    SWIGateway.prototype.RemoveDashboard = function (guids, callback, errorcb) {
         $.post(_server + "SWIRemoveDashboard", {
-            guid: guid
+            guids: guids
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });

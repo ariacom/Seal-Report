@@ -674,7 +674,7 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
 
                 //Public Dashboards not selected 
-                return Json(WebUser.GetDashboards().Where(i => !WebUser.Profile.Dashboards.Contains(i.GUID)).OrderBy(i => i.Order).ToArray(), JsonRequestBehavior.AllowGet);
+                return Json(WebUser.GetDashboards().Where(i => !WebUser.Profile.Dashboards.Contains(i.GUID)).OrderBy(i => i.DisplayName).ToArray(), JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -761,7 +761,7 @@ namespace SealWebServer.Controllers
 
                 if (!WebUser.ManageDashboards) throw new Exception("No right to add dashboards");
 
-                if (guids != null)
+                if (guids != null && guids.Length > 0)
                 {
                     foreach (var guid in guids) WebUser.Profile.Dashboards.Add(guid);
                     WebUser.SaveProfile();
@@ -776,9 +776,9 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Remove the dashboard from the logged user view
+        /// Remove dashboards from the logged user view
         /// </summary>
-        public ActionResult SWIRemoveDashboard(string guid)
+        public ActionResult SWIRemoveDashboard(string[] guids)
         {
             writeDebug("SWIRemoveDashboard");
             try
@@ -789,11 +789,18 @@ namespace SealWebServer.Controllers
 
                 if (!WebUser.ManageDashboards) throw new Exception("No right to remove dashboard");
 
-                if (WebUser.Profile.Dashboards.Contains(guid))
+                if (guids != null && guids.Length > 0)
                 {
-                    WebUser.Profile.Dashboards.Remove(guid);
+                    foreach (var guid in guids)
+                    {
+                        if (WebUser.Profile.Dashboards.Contains(guid))
+                        {
+                            WebUser.Profile.Dashboards.Remove(guid);
+                        }
+                    }
                     WebUser.SaveProfile();
                 }
+
 
                 return Json(new object { }, JsonRequestBehavior.AllowGet);
             }

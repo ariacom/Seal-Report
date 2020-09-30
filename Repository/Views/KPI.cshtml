@@ -97,7 +97,7 @@
                         }
                     }
 
-                    <span class="text-center btn @buttonColor @buttonSize" title="@Raw(headerValue)" style="margin-top:5px;">
+                    <span class="text-center btn @buttonColor @buttonSize" title="@Raw(headerValue)" style="margin-top:5px;cursor:default;">
                         <span class="@buttonIcon" aria-hidden="true"></span> @Raw(headerValue) <strong>@Raw(lastValue)</strong>
                         @if (trendPercentage != null)
                         {
@@ -107,7 +107,7 @@
 
                     if (!string.IsNullOrEmpty(goalValue))
                     {
-                        <span class="text-center label @goalColor" title="@Raw(headerValue)" style="margin-top:0px;font-size: 12px;">
+                        <span class="text-center label @goalColor" title="@Raw(headerValue)" style="margin-top:0px;font-size:12px;">
                             <span class="glyphicon @goalIcon" aria-hidden="true"></span> @Raw(goalValue) @Raw(goalPercentage != null ? string.Format("({0:+0;-0;0} %)", Convert.ToInt32(goalPercentage.Value)) : "")
                         </span>
                     }

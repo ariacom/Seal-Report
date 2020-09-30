@@ -236,13 +236,14 @@
                     <h4 class="modal-title">@repository.TranslateWeb("Manage Dashboards")</h4>
                 </div>
                 <div class="modal-body">
-                    <h5>@repository.TranslateWeb("Update the dashboards view")</h5>
+                    <h5>@repository.TranslateWeb("Update dashboards displayed in your view")</h5>
                     <div class="form-group">
                         <select id="dashboard-user" data-width="60%" multiple="multiple"></select>
                         <button id="dashboard-add" type="button" class="btn btn-primary">@repository.TranslateWeb("Add dashboards")</button>
                     </div>
                     <div class="form-group">
-                        <button id="dashboard-remove" type="button" class="btn btn-primary"></button>
+                        <select id="dashboard-toremove" data-width="60%" multiple="multiple"></select>
+                        <button id="dashboard-remove" type="button" class="btn btn-primary">@repository.TranslateWeb("Remove dashboards")</button>
                     </div>
                 </div>
                 <div class="modal-footer">
