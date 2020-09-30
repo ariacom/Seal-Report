@@ -27,6 +27,19 @@ function loadLayout(grid, serializedLayout) {
     else
         grid.layout(true);
 }
+function redrawDashboard() {
+    $("#nav_popupmenu").css("opacity", "0");
+    setTimeout(function () {
+        redrawNVD3Charts();
+        redrawDataTables();
+        _da.reorderItems(true);
+        if ($(".item").css("opacity") != "1")
+            $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "0.6");
+    }, 500);
+    setTimeout(function () {
+        $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "1");
+    }, 900);
+}
 var SWIDashboard = /** @class */ (function () {
     function SWIDashboard() {
         this._dashboards = [];
@@ -49,15 +62,14 @@ var SWIDashboard = /** @class */ (function () {
             if (!grid) {
                 grid = new Muuri('#' + gridId, {
                     dragEnabled: hasEditor && _da._dashboard.Editable,
-                    layoutOnInit: true,
-                    layoutDuration: 600,
+                    layout: {
+                        fillGaps: true,
+                    },
                     dragStartPredicate: {
                         distance: 10,
                         delay: 80
                     },
-                    dragSort: function () {
-                        return hasEditor ? _da._grids : [];
-                    }
+                    dragSort: true,
                 });
                 _da._gridsById[gridId] = grid;
                 if (hasEditor && _da._dashboard.Editable) {
@@ -127,19 +139,20 @@ var SWIDashboard = /** @class */ (function () {
         //Auto-refresh
         if (data.refresh > 0)
             _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false); }, 1000 * data.refresh);
-        //Redraw...
-        for (var i = 0; i < _da._grids.length; i++) {
-            _da._grids[i].refreshItems().layout();
-        }
         initNavCells(data.executionguid, "#" + data.itemguid);
         initRestrictions("#" + data.itemguid);
     };
     SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force) {
         _da._pendingRequest++;
         clearTimeout(_da._refreshTimers[itemguid]);
+        $("#nav_popupmenu").css("opacity", "0");
         _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
             _da._pendingRequest--;
+            if (_da._pendingRequest <= 0) {
+                //Redraw...
+                redrawDashboard();
+            }
         });
     };
     SWIDashboard.prototype.initDashboardItems = function (guid) {
@@ -178,7 +191,7 @@ var SWIDashboard = /** @class */ (function () {
                     }
                     if (item.GroupName != "") {
                         //Group name 
-                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name");
+                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name").css("opacity", "0.2");
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
                         var groupDrag = $("<h3 style='margin:0px 5px'>").append(groupSpan);
                         groupDrag.attr("group-order", item.GroupOrder);
@@ -192,7 +205,7 @@ var SWIDashboard = /** @class */ (function () {
                     currentGroup = item.GroupName;
                 }
                 //Dashboard item
-                var panel = $("<div class='item panel panel-" + item.Color + "' style='page-break-inside:avoid;'>");
+                var panel = $("<div class='item panel panel-" + item.Color + "' style='opacity: 0.2;page-break-inside:avoid;'>");
                 panel.attr("id", item.GUID);
                 panel.attr("did", dashboard.GUID);
                 var panelHeader = $("<div class='panel-heading text-left' style='padding-right:2px;'>");
@@ -279,6 +292,7 @@ var SWIDashboard = /** @class */ (function () {
             }
             data = data2;
             //Init array
+            _da._ids = [];
             for (var i = 0; i < data.length; i++) {
                 var dashboard = data[i];
                 _da._dashboards[dashboard.GUID] = dashboard;
@@ -294,8 +308,10 @@ var SWIDashboard = /** @class */ (function () {
             for (var i = 0; i < data.length; i++) {
                 var dashboard = data[i];
                 var menu = $("<a data-toggle='pill' href='#" + dashboard.GUID + "' did='" + dashboard.GUID + "'>");
-                if (_main._exportingPrint)
+                if (_main._exportingPrint) {
                     menu = $("<h1>");
+                    menu.css("opacity", "0.2");
+                }
                 if (dashboard.IsPersonal)
                     menu.addClass("dashboard-personal");
                 menu.text(dashboard.DisplayName);
@@ -339,13 +355,8 @@ var SWIDashboard = /** @class */ (function () {
                         _da.enableControls();
                         _gateway.SetLastDashboard(_da._lastGUID, null);
                         _main._profile.dashboard = _da._lastGUID;
-                        SWIUtil.ShowHideControl($(".item,.group-name"), false);
-                        setTimeout(function () {
-                            SWIUtil.ShowHideControl($(".item,.group-name"), true);
-                            redrawNVD3Charts();
-                            redrawDataTables();
-                            _da.reorderItems(true);
-                        }, 400);
+                        $(".item,.group-name").css("opacity", "0.2");
+                        redrawDashboard();
                     });
                 }
                 var content = $("<div id='" + dashboard.GUID + "'>");
@@ -368,6 +379,7 @@ var SWIDashboard = /** @class */ (function () {
             $("#dashboards-nav-item").unbind('click').on("click", function (e) {
                 SWIUtil.HideMessages();
                 _gateway.GetDashboards(function (data) {
+                    //Add
                     var select = $("#dashboard-user");
                     select.unbind("change").selectpicker("destroy").empty();
                     for (var j = 0; j < data.length; j++) {
@@ -378,7 +390,6 @@ var SWIDashboard = /** @class */ (function () {
                         "liveSearch": true,
                         "actionsBox": true
                     });
-                    //Add
                     SWIUtil.ShowHideControl($("#dashboard-add").parent(), data.length > 0);
                     $("#dashboard-add").unbind('click').on("click", function (e) {
                         if ($("#dashboard-user").val() == "")
@@ -391,16 +402,26 @@ var SWIDashboard = /** @class */ (function () {
                         });
                     });
                     //Remove
+                    select = $("#dashboard-toremove");
+                    select.unbind("change").selectpicker("destroy").empty();
+                    $.each(_da._ids, function (index, value) {
+                        var removeDashboard = _da._dashboards[value];
+                        if (removeDashboard)
+                            select.append(SWIUtil.GetOption(removeDashboard.GUID, removeDashboard.FullName, ""));
+                    });
+                    select.selectpicker({
+                        "liveSearch": true,
+                        "actionsBox": true
+                    });
                     SWIUtil.ShowHideControl($("#dashboard-remove").parent(), _da._dashboard);
                     if (_da._dashboard) {
                         $("#dashboard-remove")
-                            .text("'" + _da._dashboard.FullName + "' : " + SWIUtil.tr("Remove the dashboard from your view"))
                             .unbind('click').on("click", function (e) {
                             $("#dashboard-dialog").modal('hide');
-                            _gateway.RemoveDashboard(_da._dashboard.GUID, function (data) {
+                            _gateway.RemoveDashboard($("#dashboard-toremove").val(), function (data) {
                                 _da._lastGUID = null;
                                 _da.init();
-                                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The dashboard has been removed from your view"), 5000);
+                                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The dashboards have been removed from your view"), 5000);
                             });
                         });
                     }

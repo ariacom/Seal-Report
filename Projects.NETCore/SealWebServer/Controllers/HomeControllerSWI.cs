@@ -448,7 +448,6 @@ namespace SealWebServer.Controllers
                 if (!System.IO.File.Exists(filePath)) throw new Exception("Error: report or file does not exist");
                 repository = Repository.CreateFast();
                 report = Report.LoadFromFile(filePath, repository);
-
                 var execution = initReportExecution(report, viewGUID, outputGUID, false);
                 execution.RenderHTMLDisplayForViewer();
                 return getFileResult(report.HTMLDisplayFilePath, report);
@@ -675,7 +674,7 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
 
                 //Public Dashboards not selected 
-                return Json(WebUser.GetDashboards().Where(i => !WebUser.Profile.Dashboards.Contains(i.GUID)).OrderBy(i => i.Order).ToArray());
+                return Json(WebUser.GetDashboards().Where(i => !WebUser.Profile.Dashboards.Contains(i.GUID)).OrderBy(i => i.DisplayName).ToArray());
             }
             catch (Exception ex)
             {
@@ -762,7 +761,7 @@ namespace SealWebServer.Controllers
 
                 if (!WebUser.ManageDashboards) throw new Exception("No right to add dashboards");
 
-                if (guids != null)
+                if (guids != null && guids.Length > 0)
                 {
                     foreach (var guid in guids) WebUser.Profile.Dashboards.Add(guid);
                     WebUser.SaveProfile();
@@ -777,9 +776,9 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Remove the dashboard from the logged user view
+        /// Remove dashboards from the logged user view
         /// </summary>
-        public ActionResult SWIRemoveDashboard(string guid)
+        public ActionResult SWIRemoveDashboard(string[] guids)
         {
             writeDebug("SWIRemoveDashboard");
             try
@@ -790,11 +789,18 @@ namespace SealWebServer.Controllers
 
                 if (!WebUser.ManageDashboards) throw new Exception("No right to remove dashboard");
 
-                if (WebUser.Profile.Dashboards.Contains(guid))
+                if (guids != null && guids.Length > 0)
                 {
-                    WebUser.Profile.Dashboards.Remove(guid);
+                    foreach (var guid in guids)
+                    {
+                        if (WebUser.Profile.Dashboards.Contains(guid))
+                        {
+                            WebUser.Profile.Dashboards.Remove(guid);
+                        }
+                    }
                     WebUser.SaveProfile();
                 }
+
 
                 return Json(new object { });
             }
@@ -947,10 +953,14 @@ namespace SealWebServer.Controllers
                 ReportView view = null, modelView = null;
                 Report report = null;
                 ReportExecution execution = getWidgetViews(widget, out report, ref view, ref modelView);
+                report.ExecutionTriggerView = null;
+                report.ForWidget = true;
 
                 //Execute if necessary
                 lock (execution)
                 {
+                    execution.GetReportModelsToExecute(); //This clear models executed beside the widget...
+
                     if (!report.IsExecuting && (force || report.ExecutionEndDate == DateTime.MinValue || report.ExecutionEndDate < DateTime.Now.AddSeconds(-1 * report.WidgetCache)))
                     {
                         //Disable basics
@@ -1102,7 +1112,7 @@ namespace SealWebServer.Controllers
                                     Report report = null;
                                     ReportExecution execution = getWidgetViews(item.Widget, out report, ref view, ref modelView);
                                     if (report.Cancel) break;
-                                    if (modelView != null) 
+                                    if (modelView != null)
                                     {
                                         views.Add(modelView);
                                         modelView.Tag = item;

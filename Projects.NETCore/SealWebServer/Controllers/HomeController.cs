@@ -225,7 +225,7 @@ namespace SealWebServer.Controllers
                     WebHelper.WriteLogEntryWebDetail(EventLogEntryType.Information, string.Format("Starting report '{0}'", report.FilePath), getContextDetail(Request, WebUser));
                     report.IsNavigating = false;
                     report.ExecutionTriggerView = null;
-                    initInputRestrictions(execution, report);
+                    initInputRestrictions(report);
                     while (execution.IsConvertingToExcel) Thread.Sleep(100);
                     execution.Execute();
                     return new EmptyResult();
@@ -789,7 +789,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Return the list of values for a Enumerated list with a filter for a report execution
         /// </summary>
-        public ActionResult ActionExecuteFromTrigger(string execution_guid, string form_id)
+        public ActionResult ActionExecuteFromTrigger(string execution_guid, string form_id, string target)
         {
             writeDebug("ActionExecuteFromTrigger");
             var views = new List<string>();
@@ -800,13 +800,27 @@ namespace SealWebServer.Controllers
                 ReportExecution execution = getExecution(execution_guid);
                 if (!string.IsNullOrEmpty(form_id) && execution != null)
                 {
+                    var report = execution.Report;
+                    report.ExecutionTriggerView = report.AllViews.FirstOrDefault(i => form_id.EndsWith(i.IdSuffix));
+
+                    if (!string.IsNullOrEmpty(target))
+                    {
+                        //Trigger in another window
+                        execution = initReportExecution(report, "", "", false);
+                        report.ForWidget = false;
+                        //Reapply restrictions
+                        initInputRestrictions(report);
+                        //Apply input restrictions if any
+                        if (report.InputRestrictions.Count > 0) execution.CheckInputRestrictions();
+                        execution.Execute();
+                        while (report.IsExecuting && !report.Cancel) Thread.Sleep(100);
+                        return getFileResult(report.HTMLDisplayFilePath, report);
+                    }
+
                     lock (execution)
                     {
 
-                        var report = execution.Report;
-                        report.ExecutionTriggerView = report.AllViews.FirstOrDefault(i => form_id.EndsWith(i.IdSuffix));
-
-                        initInputRestrictions(execution, report);
+                        initInputRestrictions(report);
 
                         //Get all restrictions involved
                         bool hasInputValue = false;
@@ -838,7 +852,7 @@ namespace SealWebServer.Controllers
                         //Execute the report
                         report.IsNavigating = false;
                         execution.Execute();
-                        while (report.IsExecuting) Thread.Sleep(100);
+                        while (report.IsExecuting && !report.Cancel) Thread.Sleep(100);
 
                         foreach (var view in execution.Report.AllViews.Where(i => i.Model != null || i.RestrictionsGUID.Count > 0))
                         {
@@ -1097,7 +1111,7 @@ namespace SealWebServer.Controllers
             }
         }
 
-        void initInputRestrictions(ReportExecution execution, Report report)
+        void initInputRestrictions(Report report)
         {
             report.InputRestrictions.Clear();
 
@@ -1257,15 +1271,13 @@ namespace SealWebServer.Controllers
             ReportExecution execution = new ReportExecution() { Report = report };
 
             setSessionValue(report.ExecutionGUID, execution);
-            int index = RequestUrl.ToLower().IndexOf("swexecutereport");
-            if (index == -1) throw new Exception("Invalid URL");
             report.WebUrl = GetWebUrl(Request, Response);
 
             //Purge temp files here
             FileHelper.PurgeTempApplicationDirectory();
 
             report.InitForExecution();
-            initInputRestrictions(execution, report);
+            initInputRestrictions(report);
             //Apply input restrictions if any
             if (report.InputRestrictions.Count > 0) execution.CheckInputRestrictions();
 

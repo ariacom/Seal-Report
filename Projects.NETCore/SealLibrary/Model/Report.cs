@@ -452,22 +452,26 @@ namespace Seal.Model
                 fileName = ResultFileName;
                 fileFolder = FileHelper.TempApplicationDirectory;
 
-                if (ForOutput && OutputToExecute.Device is OutputFolderDevice && !OutputToExecute.ZipResult)
+                lock (Repository.PathLock)
                 {
-                    //no need to get unique file name
-                    if (Format != ReportFormat.pdf && Format != ReportFormat.excel)
+                    if (ForOutput && OutputToExecute.Device is OutputFolderDevice && !OutputToExecute.ZipResult)
                     {
-                        fileFolder = OutputFolderDeviceResultFolder;
+                        //no need to get unique file name
+                        if (Format != ReportFormat.pdf && Format != ReportFormat.excel)
+                        {
+                            fileFolder = OutputFolderDeviceResultFolder;
+                        }
+                        ResultFilePath = Path.Combine(fileFolder, Path.GetFileNameWithoutExtension(fileName)) + "." + ResultExtension;
                     }
-                    ResultFilePath = Path.Combine(fileFolder, Path.GetFileNameWithoutExtension(fileName)) + "." + ResultExtension;
+                    else
+                    {
+                        //get unique file name in the result folder
+                        ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension, true);
+                    }
+                    //Display path is always an HTML one...
+                    HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
+                    Debug.WriteLine(string.Format("ResultFilePath:{0} HTMLDisplayFilePath:{1} for {2}", ResultFilePath, HTMLDisplayFilePath, OutputToExecute != null ? OutputToExecute.Name : ""));
                 }
-                else
-                {
-                    //get unique file name in the result folder
-                    ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension);
-                }
-                //Display path is always an HTML one...
-                HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"));
 
                 //Clear some cache values...
                 _displayNameEx = null;
@@ -913,6 +917,12 @@ namespace Seal.Model
         public ReportExecutionContext ExecutionContext = ReportExecutionContext.DesignerReport;
 
         /// <summary>
+        /// True is the report is being executed and rendered for Dashboard Widget
+        /// </summary>
+        [XmlIgnore]
+        public bool ForWidget = false;
+
+        /// <summary>
         /// Current result format generated durin a View Result: html, print, csv, pdf, excel
         /// </summary>
         [XmlIgnore]
@@ -1132,7 +1142,7 @@ namespace Seal.Model
         /// Load a report from a file
         /// </summary>
         /// <returns>the report loaded and initialized</returns>
-        static public Report LoadFromFile(string path, Repository repository, bool refreshEnums = true)
+        static public Report LoadFromFile(string path, Repository repository, bool refreshEnums = true, bool forEdition = false)
         {
             Report result = null;
             try
@@ -1147,6 +1157,13 @@ namespace Seal.Model
                 result.LastModification = File.GetLastWriteTime(path);
 
                 result.LoadErrors = "";
+
+                if (!forEdition && result.Sources.Count > 1)
+                {
+                    //Remove sources not involved in execution
+                    result.Sources.RemoveAll(i => !result.Models.Exists(j => j.SourceGUID == i.GUID || j.SourceGUID == i.MetaSourceGUID) && !result.Tasks.Exists(j => j.SourceGUID == i.GUID));
+                }
+
                 foreach (ReportSource source in result.Sources)
                 {
                     source.Report = result;
