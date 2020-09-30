@@ -32,6 +32,7 @@ namespace Seal.Forms
         const string RestrictionsKeyword = "[Restrictions]";
         const string ViewsKeyword = "[Views]";
         const string OutputsKeyword = "[Outputs]";
+        const string SchedulesKeyword = "[Schedules]";
         const string TasksKeyword = "[Tasks]";
         const string TasksFolderKeyword = "[Tasks Script]";
 
@@ -94,6 +95,12 @@ namespace Seal.Forms
                 addRadioButton.Text = "Add the output to the destination reports selected";
                 updateRadioButton.Text = "Update selected properties to the destination outputs selected";
             }
+            else if (_source is ReportSchedule)
+            {
+                sourceName = "[Schedule Properties] ";
+                addRadioButton.Visible = false;
+                updateRadioButton.Text = "Update selected properties to the destination schedules selected";
+            }
             else if (_source is TasksFolder)
             {
                 sourceName = "[Tasks Script] ";
@@ -118,7 +125,7 @@ namespace Seal.Forms
                         if (displayAtt.DisplayName.ToLower() == "view name") continue;
                     }
 
-                    properties.Add(new PropertyItem() { Name = string.Format("[{0}] {1}", catAtt.Category, displayAtt.DisplayName.Replace("\t","")), Object = property });
+                    properties.Add(new PropertyItem() { Name = string.Format("[{0}] {1}", catAtt.Category, displayAtt.DisplayName.Replace("\t", "")), Object = property });
                 }
             }
 
@@ -266,6 +273,7 @@ namespace Seal.Forms
                 else if (_source is ReportView) return ViewsKeyword;
                 else if (_source is ReportTask) return TasksKeyword;
                 else if (_source is ReportOutput) return OutputsKeyword;
+                else if (_source is ReportSchedule) return SchedulesKeyword;
                 else if (_source is TasksFolder) return TasksFolderKeyword;
             }
             return "";
@@ -363,6 +371,17 @@ namespace Seal.Forms
             else if (destinationName.StartsWith(OutputsKeyword))
             {
                 foreach (var item in report.Outputs.Where(i => i != _source))
+                {
+                    string name = string.Format("[{0}] {1} ", fileName, item.Name);
+                    if (_destinationItems.FirstOrDefault(i => i.Object == item) == null)
+                    {
+                        _destinationItems.Add(new PropertyItem() { Name = name, Object = item });
+                    }
+                }
+            }
+            else if (destinationName.StartsWith(SchedulesKeyword))
+            {
+                foreach (var item in report.Schedules.Where(i => i != _source))
                 {
                     string name = string.Format("[{0}] {1} ", fileName, item.Name);
                     if (_destinationItems.FirstOrDefault(i => i.Object == item) == null)
@@ -473,6 +492,10 @@ namespace Seal.Forms
             else if (destinationName.StartsWith(OutputsKeyword))
             {
                 _destinationItems.RemoveAll(i => i.Object != null && ((ReportOutput)i.Object).Report == report);
+            }
+            else if (destinationName.StartsWith(SchedulesKeyword))
+            {
+                _destinationItems.RemoveAll(i => i.Object != null && ((ReportSchedule)i.Object).Report == report);
             }
             applyFilter();
         }
@@ -810,7 +833,7 @@ namespace Seal.Forms
                                     //Keep previous widget GUID
                                     if (string.IsNullOrEmpty(view.WidgetDefinition.GUID)) view.WidgetDefinition.GUID = Guid.NewGuid().ToString();
                                     var guid = view.WidgetDefinition.GUID;
-                                    view.WidgetDefinition = (DashboardWidget) Helper.Clone(descriptor.GetValue(_source));
+                                    view.WidgetDefinition = (DashboardWidget)Helper.Clone(descriptor.GetValue(_source));
                                     view.WidgetDefinition.GUID = guid;
                                 }
                                 else if (descriptor.Name == "PartialTemplates")
@@ -818,7 +841,7 @@ namespace Seal.Forms
                                     view.PartialTemplates.Clear();
                                     foreach (var pt in (List<ReportViewPartialTemplate>)descriptor.GetValue(_source))
                                     {
-                                        view.PartialTemplates.Add((ReportViewPartialTemplate) Helper.Clone(pt));
+                                        view.PartialTemplates.Add((ReportViewPartialTemplate)Helper.Clone(pt));
                                     }
                                 }
                                 else
@@ -911,6 +934,24 @@ namespace Seal.Forms
                         }
                     }
                 }
+
+                //Source is Report Schedule
+                else if (_source is ReportSchedule)
+                {
+                    ReportSchedule scheduleSource = _source as ReportSchedule;
+                    //Update schedules
+                    ReportSchedule schedule = destinationObject.Object as ReportSchedule;
+                    if (!reportsToSave.Contains(schedule.Report)) reportsToSave.Add(schedule.Report);
+                    foreach (var property in propertiesCheckedListBox.CheckedItems.OfType<PropertyItem>().Where(i => i.Object != null))
+                    {
+                        PropertyDescriptor descriptor = property.Object as PropertyDescriptor;
+                        if (descriptor != null)
+                        {
+                            descriptor.SetValue(schedule, descriptor.GetValue(_source));
+                        }
+                    }
+                }
+
             }
 
             foreach (var report in reportsToSave)

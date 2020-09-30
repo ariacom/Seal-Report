@@ -1032,6 +1032,11 @@ namespace Seal
                 }
                 else if (entity is ReportSchedule)
                 {
+                    if (Report.Repository.Configuration.UseSealScheduler)
+                    {
+                        addSmartCopyItem("Smart copy...", entity);
+                    }
+
                     addRemoveRootItem("Remove " + Helper.QuoteSingle(((RootComponent)entity).Name), entity);
                 }
                 else if (entity is ReportSource)
@@ -1333,6 +1338,11 @@ namespace Seal
             else if (selectedEntity is ReportOutput)
             {
                 form = new SmartCopyForm("Smart copy of " + ((ReportOutput)selectedEntity).Name, selectedEntity, _report);
+                form.ShowDialog();
+            }
+            else if (selectedEntity is ReportSchedule)
+            {
+                form = new SmartCopyForm("Smart copy of " + ((ReportSchedule)selectedEntity).Name, selectedEntity, _report);
                 form.ShowDialog();
             }
             else if (selectedEntity is TasksFolder)

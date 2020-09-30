@@ -40,6 +40,8 @@ namespace Seal.Model
         public const string EnumValuesKeyword = "{EnumValues_";
         public const string JoinAutoName = "<AutomaticJoinName>";
 
+        public static object PathLock = new object();
+
         public const string SealWebPublishTemp = "temp";
 
         /// <summary>

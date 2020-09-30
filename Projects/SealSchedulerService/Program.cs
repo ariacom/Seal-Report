@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Seal.Helpers;
+using Seal.Model;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
@@ -14,12 +17,23 @@ namespace SealSchedulerService
         /// </summary>
         static void Main()
         {
+#if RELEASE
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
                 new SchedulerService()
             };
             ServiceBase.Run(ServicesToRun);
+#else
+            try
+            {
+                SealReportScheduler.Instance.Run();
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, ex.Message);
+            }
+#endif
         }
     }
 }

@@ -493,22 +493,26 @@ namespace Seal.Model
                 fileName = ResultFileName;
                 fileFolder = FileHelper.TempApplicationDirectory;
 
-                if (ForOutput && OutputToExecute.Device is OutputFolderDevice && !OutputToExecute.ZipResult)
+                lock (Repository.PathLock)
                 {
-                    //no need to get unique file name
-                    if (Format != ReportFormat.pdf && Format != ReportFormat.excel)
+                    if (ForOutput && OutputToExecute.Device is OutputFolderDevice && !OutputToExecute.ZipResult)
                     {
-                        fileFolder = OutputFolderDeviceResultFolder;
+                        //no need to get unique file name
+                        if (Format != ReportFormat.pdf && Format != ReportFormat.excel)
+                        {
+                            fileFolder = OutputFolderDeviceResultFolder;
+                        }
+                        ResultFilePath = Path.Combine(fileFolder, Path.GetFileNameWithoutExtension(fileName)) + "." + ResultExtension;
                     }
-                    ResultFilePath = Path.Combine(fileFolder, Path.GetFileNameWithoutExtension(fileName)) + "." + ResultExtension;
+                    else
+                    {
+                        //get unique file name in the result folder
+                        ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension, true);
+                    }
+                    //Display path is always an HTML one...
+                    HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"), "", true);
+                    Debug.WriteLine(string.Format("ResultFilePath:{0} HTMLDisplayFilePath:{1} for {2}", ResultFilePath, HTMLDisplayFilePath, OutputToExecute != null ? OutputToExecute.Name : ""));
                 }
-                else
-                {
-                    //get unique file name in the result folder
-                    ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(fileFolder, fileName), "." + ResultExtension);
-                }
-                //Display path is always an HTML one...
-                HTMLDisplayFilePath = FileHelper.GetUniqueFileName(Path.Combine(GenerationFolder, FileHelper.GetResultFilePrefix(ResultFilePath) + ".html"));
 
                 //Clear some cache values...
                 _displayNameEx = null;

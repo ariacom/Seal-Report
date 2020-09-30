@@ -95,17 +95,17 @@ namespace Seal.Helpers
             return result;
         }
 
-        public static string GetUniqueFileName(string filePath, string newExtension = "")
+        public static string GetUniqueFileName(string filePath, string newExtension = "", bool lockFile = false)
         {
-            return GetUniqueFileName(Path.GetDirectoryName(filePath), Path.GetFileName(filePath), newExtension);
+            return GetUniqueFileName(Path.GetDirectoryName(filePath), Path.GetFileName(filePath), newExtension, lockFile);
         }
 
-        public static string GetTempUniqueFileName(string filePath, string newExtension = "")
+        public static string GetTempUniqueFileName(string filePath, string newExtension = "", bool lockFile = false)
         {
-            return GetUniqueFileName(TempApplicationDirectory, Path.GetFileName(filePath), newExtension);
+            return GetUniqueFileName(TempApplicationDirectory, Path.GetFileName(filePath), newExtension, lockFile);
         }
 
-        public static string GetUniqueFileName(string directory, string fileName, string newExtension = "")
+        public static string GetUniqueFileName(string directory, string fileName, string newExtension = "", bool lockFile = false)
         {
             int cnt = 0;
             string result = "";
@@ -117,6 +117,16 @@ namespace Seal.Helpers
                 if (!File.Exists(result)) break;
                 cnt += 1;
             }
+
+            if (lockFile)
+            {
+                try
+                {
+                    File.WriteAllText(result, "");
+                }
+                catch { }
+            }
+
             return result;
         }
 

@@ -121,10 +121,10 @@ namespace Seal.Model
         /// </summary>
         public void RenderResult()
         {
-            string result = "";
             Report.PdfConversion = (Report.Format == ReportFormat.pdf);
 
             Report.Status = ReportStatus.RenderingResult;
+            string result;
             if (Report.HasExternalViewer && Report.Format != ReportFormat.pdf)
             {
                 //use the children to render in a new extension file
@@ -147,11 +147,14 @@ namespace Seal.Model
             catch (Exception ex)
             {
                 //unable to write in the result file -> get one from temp or web publish...
-                string newFolder = FileHelper.TempApplicationDirectory;
-                string newPath = FileHelper.GetUniqueFileName(Path.Combine(newFolder, Report.ResultFileName), "." + Report.ResultExtension);
-                Report.ExecutionErrors += string.Format("Unable to write to '{0}'.\r\nChanging report result to '{1}'.\r\n{2}\r\n", Report.ResultFilePath, newPath, ex.Message);
-                Report.ResultFilePath = newPath;
-                File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                lock (Repository.PathLock)
+                {
+                    string newFolder = FileHelper.TempApplicationDirectory;
+                    string newPath = FileHelper.GetUniqueFileName(Path.Combine(newFolder, Report.ResultFileName), "." + Report.ResultExtension, true);
+                    Report.ExecutionMessages += string.Format("Unable to write to '{0}'.\r\nChanging report result to '{1}'.\r\n{2}\r\n", Report.ResultFilePath, newPath, ex.Message);
+                    Report.ResultFilePath = newPath;
+                    File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                }
             }
 
             if (Report.Format == ReportFormat.pdf)
