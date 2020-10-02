@@ -276,37 +276,39 @@ namespace Seal.Forms
 
                         var sr = new SubReport() { Path = path.Replace(_metaColumn.Source.Repository.RepositoryPath, Repository.SealRepositoryKeyword), Name = entityName + " Detail" };
                         //And the restriction, try to find out the table primary keys
-                        try
+                        if (_metaColumn.Source.IsSQL)
                         {
-                            DataTable schemaTables = ((OleDbConnection)_metaColumn.Source.GetOpenConnection()).GetOleDbSchemaTable(OleDbSchemaGuid.Primary_Keys, null);
-                            Helper.DisplayDataTable(schemaTables);
-                            foreach (DataRow row in schemaTables.Rows)
+                            try
                             {
-                                string schema = "";
-                                if (schemaTables.Columns.Contains("TABLE_SCHEMA")) schema = row["TABLE_SCHEMA"].ToString();
-                                else if (schemaTables.Columns.Contains("TABLE_SCHEM")) schema = row["TABLE_SCHEM"].ToString();
-                                string fullName = (!string.IsNullOrEmpty(schema) ? _metaColumn.Source.GetTableName(schema) + "." : "") + _metaColumn.Source.GetTableName(row["TABLE_NAME"].ToString());
-                                if (row["TABLE_NAME"].ToString() == _metaColumn.MetaTable.Name || fullName == _metaColumn.MetaTable.Name)
+                                DataTable schemaTables = ((OleDbConnection)_metaColumn.Source.GetOpenConnection()).GetOleDbSchemaTable(OleDbSchemaGuid.Primary_Keys, null);
+                                Helper.DisplayDataTable(schemaTables);
+                                foreach (DataRow row in schemaTables.Rows)
                                 {
-                                    var col = _metaColumn.MetaTable.Columns.FirstOrDefault(i => i.Name.ToLower() == row["COLUMN_NAME"].ToString().ToLower() || i.Name.ToLower().EndsWith("." + row["COLUMN_NAME"].ToString().ToLower()));
-                                    if (col != null)
+                                    string schema = "";
+                                    if (schemaTables.Columns.Contains("TABLE_SCHEMA")) schema = row["TABLE_SCHEMA"].ToString();
+                                    else if (schemaTables.Columns.Contains("TABLE_SCHEM")) schema = row["TABLE_SCHEM"].ToString();
+                                    string fullName = (!string.IsNullOrEmpty(schema) ? _metaColumn.Source.GetTableName(schema) + "." : "") + _metaColumn.Source.GetTableName(row["TABLE_NAME"].ToString());
+                                    if (row["TABLE_NAME"].ToString() == _metaColumn.MetaTable.Name || fullName == _metaColumn.MetaTable.Name)
                                     {
-                                        sr.Restrictions.Add(col.GUID);
-                                    }
-                                    else
-                                    {
-                                        //not all pk available....
-                                        sr.Restrictions.Clear();
-                                        break;
+                                        var col = _metaColumn.MetaTable.Columns.FirstOrDefault(i => i.Name.ToLower() == row["COLUMN_NAME"].ToString().ToLower() || i.Name.ToLower().EndsWith("." + row["COLUMN_NAME"].ToString().ToLower()));
+                                        if (col != null)
+                                        {
+                                            sr.Restrictions.Add(col.GUID);
+                                        }
+                                        else
+                                        {
+                                            //not all pk available....
+                                            sr.Restrictions.Clear();
+                                            break;
+                                        }
                                     }
                                 }
                             }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-
                         string message = "";
                         if (sr.Restrictions.Count == 0)
                         {
@@ -350,11 +352,12 @@ namespace Seal.Forms
                         dlg.Title = "Select a Sub-Report having prompted restrictions";
                         dlg.CheckFileExists = true;
                         dlg.CheckPathExists = true;
-                        dlg.InitialDirectory = _metaColumn.Source.Repository.SubReportsFolder;
+                        var repository = Repository.Create();
+                        dlg.InitialDirectory = repository.SubReportsFolder;
                         if (dlg.ShowDialog() == DialogResult.OK)
                         {
-                            Report report = Report.LoadFromFile(dlg.FileName, _metaColumn.Source.Repository, false);
-                            var sr = new SubReport() { Path = report.FilePath.Replace(_metaColumn.Source.Repository.RepositoryPath, Repository.SealRepositoryKeyword), Name = Path.GetFileNameWithoutExtension(dlg.FileName) };
+                            Report report = Report.LoadFromFile(dlg.FileName, repository, false);
+                            var sr = new SubReport() { Path = report.FilePath.Replace(repository.RepositoryPath, Repository.SealRepositoryKeyword), Name = Path.GetFileNameWithoutExtension(dlg.FileName) };
 
                             bool tableOk = false;
                             var restrList = new List<ReportRestriction>();

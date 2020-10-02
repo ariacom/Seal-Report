@@ -44,9 +44,9 @@ namespace Seal.Model
                 GetProperty("SubReports").SetIsBrowsable(true);
                 GetProperty("SubReports").SetDisplayName("Sub-Reports: " + (SubReports.Count == 0 ? "None" : SubReports.Count.ToString() + " Items(s)"));
 
-                GetProperty("HelperCreateSubReport").SetIsBrowsable(IsSQL);
-                GetProperty("HelperAddSubReport").SetIsBrowsable(IsSQL);
-                GetProperty("HelperOpenSubReportFolder").SetIsBrowsable(IsSQL);
+                GetProperty("HelperCreateSubReport").SetIsBrowsable(true);
+                GetProperty("HelperAddSubReport").SetIsBrowsable(true);
+                GetProperty("HelperOpenSubReportFolder").SetIsBrowsable(true);
                 GetProperty("HelperCheckColumn").SetIsBrowsable(IsSQL);
                 GetProperty("HelperCreateEnum").SetIsBrowsable(true);
                 GetProperty("HelperShowValues").SetIsBrowsable(true);
