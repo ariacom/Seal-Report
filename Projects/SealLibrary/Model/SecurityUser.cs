@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
+using System.Web.UI.WebControls;
 
 namespace Seal.Model
 {
@@ -368,6 +369,30 @@ namespace Seal.Model
                 return _manageDashboards.Value;
             }
         }
+
+        private List<SecurityDashboardOrder> _defaultDashboards = null;
+        /// <summary>
+        /// True if the usercan manage dashboards
+        /// </summary>
+        public List<SecurityDashboardOrder> DefaultDashboards
+        {
+            get
+            {
+                if (_defaultDashboards == null)
+                {
+                    _defaultDashboards = new List<SecurityDashboardOrder>();
+                    foreach (var group in SecurityGroups)
+                    {
+                        foreach (var dOrder in group.DefaultDashboards)
+                        {
+                            if (!_defaultDashboards.Exists(i => i.GUID == dOrder.GUID)) _defaultDashboards.Add(dOrder);
+                        }
+                    }
+                }
+                return _defaultDashboards;
+            }
+        }
+
 
         private bool? _hasPersonalDashboardFolder = null;
         /// <summary>
@@ -974,15 +999,24 @@ namespace Seal.Model
                 var result = new List<Dashboard>();
                 var dashboards = GetDashboards();
                 int order = 1;
-                foreach (var guid in Profile.Dashboards)
+
+                if (ManageDashboards)
                 {
-                    var d = dashboards.FirstOrDefault(i => i.GUID == guid);
-                    if (d != null)
+                    //Get dashboard from profile
+                    foreach (var guid in Profile.Dashboards)
                     {
-                        d.Order = order++;
-                        if (result.FirstOrDefault(i => i.FullName == d.FullName) != null) d.FullName += " [" + Path.GetFileNameWithoutExtension(d.Path) + "]";
-                        result.Add(d);
+                        var d = dashboards.FirstOrDefault(i => i.GUID == guid);
+                        if (d != null)
+                        {
+                            d.Order = order++;
+                            if (result.FirstOrDefault(i => i.FullName == d.FullName) != null) d.FullName += " [" + Path.GetFileNameWithoutExtension(d.Path) + "]";
+                            result.Add(d);
+                        }
                     }
+                }
+                else
+                {
+                    result = GetDashboards();
                 }
                 return result;
             }

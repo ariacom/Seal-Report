@@ -5,8 +5,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Seal.Model;
-using Seal.Helpers;
 using System.IO;
+
 
 namespace Seal.Forms
 {
@@ -18,9 +18,7 @@ namespace Seal.Forms
         }
         public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
         {
-            bool limit = true;
-            limit = false;
-            return limit; //true will limit to list. false will show the list, but allow free-form entry
+            return false; //true will limit to list. false will show the list, but allow free-form entry
         }
 
 
@@ -32,7 +30,6 @@ namespace Seal.Forms
                 choices.Add(Path.GetFileName(folder));
             }
             return new StandardValuesCollection(choices);
-        }   
+        }
     }
-
 }

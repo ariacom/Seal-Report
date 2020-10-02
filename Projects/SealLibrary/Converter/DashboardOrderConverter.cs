@@ -2,15 +2,19 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
-using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Seal.Model;
+using Seal.Helpers;
+using System.IO;
+using System.Windows.Diagnostics;
+using System.Linq;
+using System;
 using System.Globalization;
 
 namespace Seal.Forms
 {
-    public class MetaSourceConverter : StringConverter
+    public class DashboardOrderConverter : StringConverter
     {
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {
@@ -23,22 +27,16 @@ namespace Seal.Forms
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            string[] choices = new string[] { "No Source" };
-            var component = context.Instance as ReportComponent;
-            if (component != null)
+            var instance = context.Instance as SecurityDashboardOrder;
+            List<string> choices = new List<string>();
+
+            //public
+            foreach (var dashboard in instance.SecurityGroup.Dashboards.OrderBy(i => i.Name))
             {
-                //No SQL Source are not allowed for SQL Model
-                bool useNoSQL = true;
-                if (context.Instance is ReportModel)
-                {
-                    if (((ReportModel)context.Instance).IsSQLModel) useNoSQL = false;
-                }
-                choices = (from s in component.Report.Sources.Where(i => (i.IsNoSQL && useNoSQL) || !i.IsNoSQL) select s.Name).ToArray();
+                choices.Add(dashboard.Name);
             }
-
-            return new StandardValuesCollection(choices.OrderBy(i => i).ToList());
+            return new StandardValuesCollection(choices);
         }
-
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destType)
         {
             return destType == typeof(string);
@@ -48,11 +46,11 @@ namespace Seal.Forms
         {
             if (context != null)
             {
-                var component = context.Instance as ReportComponent;
-                if (component != null && value != null)
+                var instance = context.Instance as SecurityDashboardOrder;
+                if (instance != null && value != null)
                 {
-                    ReportSource source = component.Report.Sources.FirstOrDefault(i => i.GUID == value.ToString() || i.MetaSourceGUID == value.ToString());
-                    if (source != null) return source.Name;
+                    Dashboard dashboard = instance.SecurityGroup.Dashboards.FirstOrDefault(i => i.GUID == value.ToString());
+                    if (dashboard != null) return dashboard.FullName;
                 }
             }
             return base.ConvertTo(context, culture, value, destType);
@@ -65,14 +63,14 @@ namespace Seal.Forms
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            var component = context.Instance as ReportComponent;
-            if (component != null && value != null)
+            var instance = context.Instance as SecurityDashboardOrder;
+            if (instance != null && value != null)
             {
-                ReportSource source = component.Report.Sources.FirstOrDefault(i => i.Name == value.ToString());
-                if (source != null) return source.GUID;
+                Dashboard dashboard = instance.SecurityGroup.Dashboards.FirstOrDefault(i => i.FullName == value.ToString());
+                if (dashboard != null) return dashboard.GUID;
             }
             return base.ConvertFrom(context, culture, value);
         }
-    }
 
+    }
 }

@@ -16,7 +16,7 @@ namespace Seal.Model
     public class SecurityUserProfile
     {
         /// <summary>
-        /// List of dashboard identifers to display to the user
+        /// List of dashboard identifiers to display to the user
         /// </summary>
         public List<string> Dashboards { get; set; } = new List<string>();
 

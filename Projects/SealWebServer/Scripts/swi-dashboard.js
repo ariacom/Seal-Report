@@ -430,6 +430,16 @@ var SWIDashboard = /** @class */ (function () {
                             });
                         });
                     }
+                    //Reset view
+                    $("#dashboard-reset")
+                        .unbind('click').on("click", function (e) {
+                        $("#dashboard-dialog").modal('hide');
+                        _gateway.ResetDashboard(function (data) {
+                            _da._lastGUID = null;
+                            _da.init();
+                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your view has been reset to the default dashboards"), 5000);
+                        });
+                    });
                     if (hasEditor) {
                         _daEditor.initDashboardMenu();
                     }

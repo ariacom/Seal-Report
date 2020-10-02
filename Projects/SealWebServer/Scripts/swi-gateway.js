@@ -233,6 +233,11 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
+    SWIGateway.prototype.ResetDashboard = function (callback, errorcb) {
+        $.post(_server + "SWIResetDashboard", {})
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
+    };
     SWIGateway.prototype.CreateDashboard = function (name, path, callback, errorcb) {
         $.post(_server + "SWICreateDashboard", {
             name: name,

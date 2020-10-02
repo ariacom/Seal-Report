@@ -4,9 +4,15 @@
 //
 using DynamicTypeDescriptor;
 using Seal.Forms;
+using Seal.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing.Design;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace Seal.Model
 {
@@ -36,6 +42,7 @@ namespace Seal.Model
                 GetProperty("Sources").SetIsBrowsable(true);
                 GetProperty("DashboardFolders").SetIsBrowsable(true);
                 GetProperty("PersonalDashboardFolder").SetIsBrowsable(true);
+                GetProperty("DefaultDashboards").SetIsBrowsable(true);
                 GetProperty("ManageDashboards").SetIsBrowsable(true);
                 GetProperty("DashboardsScript").SetIsBrowsable(true);
                 GetProperty("Widgets").SetIsBrowsable(true);
@@ -86,7 +93,6 @@ namespace Seal.Model
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(ViewType.ReportsDashboards)]
         public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
-
 
         /// <summary>
         /// Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
@@ -151,21 +157,28 @@ namespace Seal.Model
         /// <summary>
         /// If true, the user can modify his current dashboard view (e.g. add/remove dashboards in his view or change orders).
         /// </summary>
-        [Category("Dashboards Security"), DisplayName("Manage Dashboards View"), Description("If true, the user can modify his current dashboard view (e.g. add/remove dashboards in his view or change orders)."), Id(1, 3)]
+        [Category("Dashboards Security"), DisplayName("\tManage Dashboards View"), Description("If true, the user can modify his current dashboard view (e.g. add/remove dashboards in his view or change orders)."), Id(1, 3)]
         [DefaultValue(true)]
         public bool ManageDashboards { get; set; } = true;
 
         /// <summary>
+        /// The default Dashboards displayed to the user.
+        /// </summary>
+        [Category("Dashboards Security"), DisplayName("Dashboards in Default View"), Description("The default Dashboards displayed to the user."), Id(2, 3)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+        public List<SecurityDashboardOrder> DefaultDashboards { get; set; } = new List<SecurityDashboardOrder>();
+
+        /// <summary>
         /// If true, users of the group have a personal folder to create personal dashboards.
         /// </summary>
-        [Category("Dashboards Security"), DisplayName("Personal Dashboard Folder"), Description("If true, users of the group have a personal folder to create personal dashboards."), Id(2, 3)]
+        [Category("Dashboards Security"), DisplayName("Personal Dashboard Folder"), Description("If true, users of the group have a personal folder to create personal dashboards."), Id(5, 3)]
         [DefaultValue(false)]
         public bool PersonalDashboardFolder { get; set; } = false;
 
         /// <summary>
         /// The dashboard folder configurations for this group used for Web Publication of dashboards. By default, repository dashboard folders have no right.
         /// </summary>
-        [Category("Dashboards Security"), DisplayName("\tDashboard Folders"), Description("The dashboard folder configurations for this group used for Web Publication of dashboards. By default, repository dashboard folders have no right."), Id(3, 3)]
+        [Category("Dashboards Security"), DisplayName("\tDashboard Folders"), Description("The dashboard folder configurations for this group used for Web Publication of dashboards. By default, repository dashboard folders have no right."), Id(7, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityDashboardFolder> DashboardFolders { get; set; } = new List<SecurityDashboardFolder>();
         public bool ShouldSerializeDashboardFolders() { return DashboardFolders.Count > 0; }
@@ -173,7 +186,7 @@ namespace Seal.Model
         /// <summary>
         /// For the Dashboard Manager: Widget rights for the group. Set rights to widgets through the security tags or names assigned. By default all widgets can be selected.
         /// </summary>
-        [Category("Dashboards Security"), DisplayName("Widgets"), Description("For the Dashboard Manager: Widget rights for the group. Set rights to widgets through the security tags or names assigned. By default all widgets can be selected."), Id(4, 3)]
+        [Category("Dashboards Security"), DisplayName("Widgets"), Description("For the Dashboard Manager: Widget rights for the group. Set rights to widgets through the security tags or names assigned. By default all widgets can be selected."), Id(9, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<SecurityWidget> Widgets { get; set; } = new List<SecurityWidget>();
         public bool ShouldSerializeWidgets() { return Widgets.Count > 0; }
@@ -181,7 +194,7 @@ namespace Seal.Model
         /// <summary>
         /// Optional script executed to define/modify the dashboards published for the user. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
         /// </summary>
-        [Category("Dashboards Security"), DisplayName("Dashboards Script"), Description("Optional script executed to define/modify the dashboards published for the user. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(5, 3)]
+        [Category("Dashboards Security"), DisplayName("\tDashboards Script"), Description("Optional script executed to define/modify the dashboards published for the user. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(11, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string DashboardsScript { get; set; }
 
@@ -197,5 +210,53 @@ namespace Seal.Model
         /// </summary>
         [Category("Options"), DisplayName("Logo file name"), Description("The logo file name used for to generate the reports. If empty, the default logo is used."), Id(3, 5)]
         public string LogoName { get; set; }
+
+
+        public void InitDashboardOrders()
+        {
+            foreach (var dOrder in DefaultDashboards)
+            {
+                dOrder.Dashboard = Dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
+                dOrder.SecurityGroup = this;
+            }
+            DefaultDashboards.RemoveAll(i => Dashboards== null);
+        }
+
+        List<Dashboard> _dashboards = null;
+        /// <summary>
+        /// List of dashboards available for this group (used for editor)
+        /// </summary>
+        [XmlIgnore]
+        public List<Dashboard> Dashboards
+        {
+            get
+            {
+                if (_dashboards == null)
+                {
+                    _dashboards = new List<Dashboard>();
+                    foreach (var f in DashboardFolders.Where(i => i.Right != DashboardFolderRight.None))
+                    {
+                        var dir = Path.Combine(Repository.Instance.DashboardPublicFolder, FileHelper.CleanFilePath(f.Name));
+                        if (Directory.Exists(dir))
+                        {
+                            foreach (var p in Directory.GetFiles(dir, "*." + Repository.SealDashboardExtension))
+                            {
+                                try
+                                {
+                                    var dashboard = Dashboard.LoadFromFile(p);
+                                    dashboard.FullName = string.Format("{0}\\{1}", Path.GetFileName(dir), dashboard.Name);
+                                    _dashboards.Add(dashboard);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine(ex.Message);
+                                }
+                            }
+                        }
+                    }
+                }
+                return _dashboards;
+            }
+        }
     }
 }

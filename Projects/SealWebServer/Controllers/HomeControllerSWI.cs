@@ -811,6 +811,35 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// Reset dashboards of the logged user view
+        /// </summary>
+        public ActionResult SWIResetDashboard()
+        {
+            writeDebug("SWIResetDashboard");
+            try
+            {
+                checkSWIAuthentication();
+
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                if (!WebUser.ManageDashboards) throw new Exception("No right to remove dashboard");
+
+                WebUser.Profile.Dashboards.Clear();
+                foreach (var dOrder in WebUser.DefaultDashboards.OrderBy(i => i.Order))
+                {
+                    WebUser.Profile.Dashboards.Add(dOrder.GUID);
+                }
+                WebUser.SaveProfile();
+
+                return Json(new object { }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
         /// Change the order between two dashboards in the current logged user view
         /// </summary>
         public ActionResult SWISwapDashboardOrder(string guid1, string guid2)

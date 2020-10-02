@@ -264,6 +264,13 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
+    public ResetDashboard(callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIResetDashboard", {
+        })
+            .done(function (data) { callbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { failure(xhr, status, error); });
+    }
+
     public CreateDashboard(name: string, path: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWICreateDashboard", {
             name: name,

@@ -136,6 +136,14 @@ namespace Seal.Forms
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
+            else if (CollectionItemType == typeof(SecurityDashboardOrder))
+            {
+                frmCollectionEditorForm.Text = "Dashboards Orders Collection Editor";
+                ((SecurityGroup)Context.Instance).InitDashboardOrders();
+                allowAdd = ((SecurityGroup)Context.Instance).Dashboards.Count > 0;
+                allowRemove = true;
+                _useHandlerInterface = false;
+            }
             else if (CollectionItemType == typeof(SubReport))
             {
                 frmCollectionEditorForm.Text = "Sub-Reports Collection Editor";
@@ -186,7 +194,7 @@ namespace Seal.Forms
                 FieldInfo fieldInfo = formType.GetField("removeButton", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (fieldInfo != null)
                 {
-                    System.Windows.Forms.Control removeButton = (System.Windows.Forms.Control)fieldInfo.GetValue(frmCollectionEditorForm);
+                    Control removeButton = (Control)fieldInfo.GetValue(frmCollectionEditorForm);
                     removeButton.Hide();
                 }
             }
@@ -197,7 +205,7 @@ namespace Seal.Forms
                 FieldInfo fieldInfo = formType.GetField("addButton", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (fieldInfo != null)
                 {
-                    System.Windows.Forms.Control addButton = (System.Windows.Forms.Control)fieldInfo.GetValue(frmCollectionEditorForm);
+                    Control addButton = (Control)fieldInfo.GetValue(frmCollectionEditorForm);
                     addButton.Hide();
                 }
             }
@@ -233,7 +241,13 @@ namespace Seal.Forms
                 result.Report = (Report)Context.Instance;
                 instance = result;
             }
-
+            else if (instance is SecurityDashboardOrder && Context.Instance is SecurityGroup)
+            {
+                var dashboardOrder = (SecurityDashboardOrder)instance;
+                dashboardOrder.SecurityGroup = (SecurityGroup)Context.Instance;
+                dashboardOrder.GUID = ((SecurityGroup)Context.Instance).Dashboards[0].GUID;
+                dashboardOrder.Order = ((SecurityGroup)Context.Instance).DefaultDashboards.Count + 1;
+            }
             return instance;
         }
 
@@ -253,7 +267,7 @@ namespace Seal.Forms
                 var restr = value as ReportRestriction;
                 if (restr.MetaColumn == null && string.IsNullOrEmpty(restr.Name)) result = restr.DisplayNameEl; //Report input value
                 else if (restr.MetaColumn == null) result = restr.Name; //Common restriction
-                else if (restr.Model != null)  result = string.Format("{0} ({1})", restr.DisplayNameEl, restr.Model.Name);
+                else if (restr.Model != null) result = string.Format("{0} ({1})", restr.DisplayNameEl, restr.Model.Name);
             }
             else if (value is Parameter) result = ((Parameter)value).DisplayName;
             else if (value is SecurityGroup) result = ((SecurityGroup)value).Name;
@@ -263,6 +277,7 @@ namespace Seal.Forms
             else if (value is SecurityDevice) result = ((SecurityDevice)value).DisplayName;
             else if (value is SecurityWidget) result = ((SecurityWidget)value).DisplayName;
             else if (value is SecurityDashboardFolder) result = ((SecurityDashboardFolder)value).DisplayName;
+            else if (value is SecurityDashboardOrder) result = ((SecurityDashboardOrder)value).Dashboard.FullName;
             else if (value is SecurityConnection) result = ((SecurityConnection)value).DisplayName;
             else if (value is SubReport) result = ((SubReport)value).Name;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;
