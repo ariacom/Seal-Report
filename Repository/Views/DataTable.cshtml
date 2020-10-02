@@ -18,7 +18,7 @@
 
 @if (table != null && table.RowCount > 0 && table.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
 {
-    <script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         var dt = $('#@("dt_" + view.IdSuffix)');
         try {
@@ -66,11 +66,12 @@
                         }
                 </text>}
                 });
+                initNavCells('@report.ExecutionGUID', '[viewid="@(view.ViewId)"]');
             }
     }
     catch (e) { };
     });
-    </script>
+</script>
 
     <table id='@("dt_" + view.IdSuffix)' viewid='@view.ViewId' @Raw(view.AddAttribute("class", "data_table_class")) @Raw(view.AddAttribute("style", "data_table_css"))>
         @if (view.HasValue("data_table_caption"))
