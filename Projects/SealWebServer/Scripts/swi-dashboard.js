@@ -38,6 +38,7 @@ function redrawDashboard() {
     }, 500);
     setTimeout(function () {
         $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "1");
+        _da.enableControls();
     }, 900);
 }
 var SWIDashboard = /** @class */ (function () {
@@ -87,12 +88,14 @@ var SWIDashboard = /** @class */ (function () {
         });
     };
     SWIDashboard.prototype.enableControls = function () {
-        var addWidget = $("#dashboard-add-widget");
+        var addWidget = $("#add-widget-nav-item");
+        var exportDashboard = $("#export-nav-item");
         var spinnerHidden = !$(".spinner-menu").is(":visible");
         SWIUtil.ShowHideControl(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable);
         SWIUtil.EnableButton(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
-        SWIUtil.EnableButton($("#export-nav-item"), spinnerHidden);
+        SWIUtil.ShowHideControl(exportDashboard, _da._dashboard);
+        SWIUtil.EnableButton(exportDashboard, _da._dashboard && spinnerHidden);
     };
     SWIDashboard.prototype.handleDashboardResult = function (data) {
         var panel = $("#" + data.itemguid);
@@ -160,7 +163,7 @@ var SWIDashboard = /** @class */ (function () {
         if (!dashboard)
             return;
         $("[did='" + guid + "']").children(".spinner-menu").show();
-        SWIUtil.ShowHideControl($("#dashboard-add-widget"), false);
+        SWIUtil.ShowHideControl($("#add-widget-nav-item"), false);
         SWIUtil.EnableButton($("#dashboards-nav-item"), false);
         SWIUtil.EnableButton($("#export-nav-item"), false);
         //re-init order
@@ -356,7 +359,9 @@ var SWIDashboard = /** @class */ (function () {
                         _gateway.SetLastDashboard(_da._lastGUID, null);
                         _main._profile.dashboard = _da._lastGUID;
                         $(".item,.group-name").css("opacity", "0.2");
-                        redrawDashboard();
+                        if (_da._pendingRequest <= 0) {
+                            redrawDashboard();
+                        }
                     });
                 }
                 var content = $("<div id='" + dashboard.GUID + "'>");

@@ -786,7 +786,7 @@ if (cell.IsTitle)
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
 	helper.LoadTableFromDataSource(
-        ""DataSourceName"", //the name of the source Data Source defined in the Repository
+        ""DataSourceName"", //the name of the Report Data Source
         ""SourceSelectStatement"", //SQL Select Statement to get the source table
         ""DestinationTableName"", //destination table name
         false, //if true, the table is loaded for all connections defined in the Source

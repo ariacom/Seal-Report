@@ -89,6 +89,7 @@ namespace Seal.Model
                         newReport = rootReport.Clone();
                     }
                     newReport.ExecutionGUID = Guid.NewGuid().ToString();
+
                     string src = parameters.Get("src");
                     string dst = parameters.Get("dst");
                     string val = parameters.Get("val");

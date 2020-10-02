@@ -111,10 +111,18 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the source has been initialized from the repository
+        /// </summary>
+        [XmlIgnore]
+        public bool Loaded = false;
+
+        /// <summary>
         /// Load the available MetaSources defined in the repository
         /// </summary>
         public void LoadRepositoryMetaSources(Repository repository)
         {
+            if (Loaded) return;
+
             foreach (var connection in Connections)
             {
                 connection.IsEditable = true;
@@ -187,6 +195,8 @@ namespace Seal.Model
                 Connections.Add(MetaConnection.Create(this));
                 ConnectionGUID = Connections[0].GUID;
             }
+
+            Loaded = true;
         }
 
         /// <summary>

@@ -50,6 +50,7 @@ function redrawDashboard() {
     }, 500);
     setTimeout(function () {
         $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "1");
+        _da.enableControls();
     }, 900);
 }
 
@@ -105,12 +106,15 @@ class SWIDashboard {
     }
 
     public enableControls() {
-        var addWidget = $("#dashboard-add-widget");
+        var addWidget = $("#add-widget-nav-item");
+        var exportDashboard = $("#export-nav-item");
+
         var spinnerHidden = !$(".spinner-menu").is(":visible");
         SWIUtil.ShowHideControl(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable);
         SWIUtil.EnableButton(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
-        SWIUtil.EnableButton($("#export-nav-item"), spinnerHidden);
+        SWIUtil.ShowHideControl(exportDashboard, _da._dashboard);
+        SWIUtil.EnableButton(exportDashboard, _da._dashboard && spinnerHidden);
     }
 
     private handleDashboardResult(data: any) {
@@ -189,7 +193,7 @@ class SWIDashboard {
         if (!dashboard) return;
 
         $("[did='" + guid + "']").children(".spinner-menu").show();
-        SWIUtil.ShowHideControl($("#dashboard-add-widget"), false);
+        SWIUtil.ShowHideControl($("#add-widget-nav-item"), false);
         SWIUtil.EnableButton($("#dashboards-nav-item"), false);
         SWIUtil.EnableButton($("#export-nav-item"), false);
 
@@ -409,8 +413,10 @@ class SWIDashboard {
                         _da.enableControls();
                         _gateway.SetLastDashboard(_da._lastGUID, null);
                         _main._profile.dashboard = _da._lastGUID;
-                        $(".item,.group-name").css("opacity","0.2");
-                        redrawDashboard();
+                        $(".item,.group-name").css("opacity", "0.2");
+                        if (_da._pendingRequest <= 0) {
+                            redrawDashboard();
+                        }
                     });
                 }
 
