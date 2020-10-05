@@ -322,7 +322,7 @@ var SWIDashboard = /** @class */ (function () {
                 var li = $("<li>");
                 if (_main._exportingPrint)
                     li = $("<div>");
-                if (_main._profile.managedashboards && !_main._exporting) {
+                if (_main._profile.managedashboards && !_main._exporting && !_main._profile.defaultdashboards) {
                     //Drag and drop for menu
                     li.on("dragstart", function (e) {
                         _da._lastGUID = $(this).children("a").attr("did");
@@ -336,7 +336,7 @@ var SWIDashboard = /** @class */ (function () {
                     li.on("drop", function (e) {
                         _da._dragType = "";
                         var did = $(this).children("a").attr("did");
-                        _gateway.SwapDashboardOrder(_da._lastGUID, did, function (data) {
+                        _gateway.SwapDashboardOrder(_da._lastGUID, did, function () {
                             _da.init();
                         });
                     });
@@ -351,7 +351,7 @@ var SWIDashboard = /** @class */ (function () {
                 }
                 //Click on a dashboard pill
                 if (!_main._exporting) {
-                    menu.unbind('click').click(function (e) {
+                    menu.unbind('click').click(function () {
                         var id = $(this).attr("did");
                         _da._lastGUID = id;
                         _da._dashboard = _da._dashboards[id];
@@ -381,63 +381,67 @@ var SWIDashboard = /** @class */ (function () {
                     _da.initDashboardItems(data[i].GUID);
             }
             //Manage
-            $("#dashboards-nav-item").unbind('click').on("click", function (e) {
+            $("#dashboards-nav-item").unbind('click').on("click", function () {
                 SWIUtil.HideMessages();
                 _gateway.GetDashboards(function (data) {
+                    $("#dashboard-view-label").html(_main._profile.defaultdashboards ? SWIUtil.tr("The default dashboards View is displayed") : SWIUtil.tr("Your personal dashboards View is displayed"));
+                    $("#dashboard-swapview").html(_main._profile.defaultdashboards ? SWIUtil.tr("Display your personal dashboards View") : SWIUtil.tr("Display the default dashboards View"));
                     //Add
-                    var select = $("#dashboard-user");
-                    select.unbind("change").selectpicker("destroy").empty();
-                    for (var j = 0; j < data.length; j++) {
-                        var pubDashboard = data[j];
-                        select.append(SWIUtil.GetOption(pubDashboard.GUID, pubDashboard.FullName, ""));
-                    }
-                    select.selectpicker({
-                        "liveSearch": true,
-                        "actionsBox": true
-                    });
-                    SWIUtil.ShowHideControl($("#dashboard-add").parent(), data.length > 0);
-                    $("#dashboard-add").unbind('click').on("click", function (e) {
-                        if ($("#dashboard-user").val() == "")
-                            return;
-                        $("#dashboard-dialog").modal('hide');
-                        _gateway.AddDashboard($("#dashboard-user").val(), function (data) {
-                            _da._lastGUID = null;
-                            _da.init();
-                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The dashboards have been added to your view"), 5000);
+                    SWIUtil.ShowHideControl($("#dashboard-add").parent(), !_main._profile.defaultdashboards && data.length > 0);
+                    if (!_main._profile.defaultdashboards) {
+                        var select = $("#dashboard-user");
+                        select.unbind("change").selectpicker("destroy").empty();
+                        for (var j = 0; j < data.length; j++) {
+                            var pubDashboard = data[j];
+                            select.append(SWIUtil.GetOption(pubDashboard.GUID, pubDashboard.FullName, ""));
+                        }
+                        select.selectpicker({
+                            "liveSearch": true,
+                            "actionsBox": true
                         });
-                    });
-                    //Remove
-                    select = $("#dashboard-toremove");
-                    select.unbind("change").selectpicker("destroy").empty();
-                    $.each(_da._ids, function (index, value) {
-                        var removeDashboard = _da._dashboards[value];
-                        if (removeDashboard)
-                            select.append(SWIUtil.GetOption(removeDashboard.GUID, removeDashboard.FullName, ""));
-                    });
-                    select.selectpicker({
-                        "liveSearch": true,
-                        "actionsBox": true
-                    });
-                    SWIUtil.ShowHideControl($("#dashboard-remove").parent(), _da._dashboard);
-                    if (_da._dashboard) {
-                        $("#dashboard-remove")
-                            .unbind('click').on("click", function (e) {
+                        $("#dashboard-add").unbind('click').on("click", function () {
+                            if ($("#dashboard-user").val() == "")
+                                return;
                             $("#dashboard-dialog").modal('hide');
-                            _gateway.RemoveDashboard($("#dashboard-toremove").val(), function (data) {
+                            _gateway.AddDashboard($("#dashboard-user").val(), function () {
+                                _da._lastGUID = null;
+                                _da.init();
+                                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The dashboards have been added to your view"), 5000);
+                            });
+                        });
+                    }
+                    //Remove
+                    SWIUtil.ShowHideControl($("#dashboard-remove").parent(), !_main._profile.defaultdashboards && _da._dashboard);
+                    if (_da._dashboard && !_main._profile.defaultdashboards) {
+                        select = $("#dashboard-toremove");
+                        select.unbind("change").selectpicker("destroy").empty();
+                        $.each(_da._ids, function (index, value) {
+                            var removeDashboard = _da._dashboards[value];
+                            if (removeDashboard)
+                                select.append(SWIUtil.GetOption(removeDashboard.GUID, removeDashboard.FullName, ""));
+                        });
+                        select.selectpicker({
+                            "liveSearch": true,
+                            "actionsBox": true
+                        });
+                        $("#dashboard-remove")
+                            .unbind('click').on("click", function () {
+                            $("#dashboard-dialog").modal('hide');
+                            _gateway.RemoveDashboard($("#dashboard-toremove").val(), function () {
                                 _da._lastGUID = null;
                                 _da.init();
                                 SWIUtil.ShowMessage("alert-success", SWIUtil.tr("The dashboards have been removed from your view"), 5000);
                             });
                         });
                     }
-                    //Reset view
-                    $("#dashboard-reset")
-                        .unbind('click').on("click", function (e) {
+                    //Swap view
+                    $("#dashboard-swapview")
+                        .unbind('click').on("click", function () {
                         $("#dashboard-dialog").modal('hide');
-                        _gateway.ResetDashboard(function (data) {
+                        _gateway.SwapDashboardView(function () {
                             _da._lastGUID = null;
+                            _main._profile.defaultdashboards = !_main._profile.defaultdashboards;
                             _da.init();
-                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your view has been reset to the default dashboards"), 5000);
                         });
                     });
                     if (hasEditor) {
@@ -447,7 +451,7 @@ var SWIDashboard = /** @class */ (function () {
                 });
             });
             //Export
-            $("#export-nav-item").unbind('click').on("click", function (e) {
+            $("#export-nav-item").unbind('click').on("click", function () {
                 SWIUtil.HideMessages();
                 _gateway.GetUserDashboards(function (data) {
                     var select = $("#export-dashboards");

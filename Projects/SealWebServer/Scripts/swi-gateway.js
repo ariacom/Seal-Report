@@ -233,8 +233,8 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
-    SWIGateway.prototype.ResetDashboard = function (callback, errorcb) {
-        $.post(_server + "SWIResetDashboard", {})
+    SWIGateway.prototype.SwapDashboardView = function (callback, errorcb) {
+        $.post(_server + "SWISwapDashboardView", {})
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };

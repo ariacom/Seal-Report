@@ -16,6 +16,11 @@ namespace Seal.Model
     public class SecurityUserProfile
     {
         /// <summary>
+        /// True to display the default dashboards, if false Dashboards are used.
+        /// </summary>
+        public bool ViewDefaultDashboards { get; set; } = true;
+
+        /// <summary>
         /// List of dashboard identifiers to display to the user
         /// </summary>
         public List<string> Dashboards { get; set; } = new List<string>();

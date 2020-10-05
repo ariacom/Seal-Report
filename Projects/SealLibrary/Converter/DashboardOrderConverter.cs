@@ -33,7 +33,7 @@ namespace Seal.Forms
             //public
             foreach (var dashboard in instance.SecurityGroup.Dashboards.OrderBy(i => i.Name))
             {
-                choices.Add(dashboard.Name);
+                choices.Add(dashboard.FullName);
             }
             return new StandardValuesCollection(choices);
         }

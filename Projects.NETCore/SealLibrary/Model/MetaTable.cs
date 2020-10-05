@@ -113,7 +113,7 @@ namespace Seal.Model
                 var initialParameters = Parameters.ToList();
                 Parameters.Clear();
 
-                var defaultParameters = IsSubTable ? RootTable.Parameters : TableTemplate.DefaultParameters;
+                var defaultParameters = IsSubTable && RootTable != null ? RootTable.Parameters : TableTemplate.DefaultParameters;
                 foreach (var configParameter in defaultParameters)
                 {
                     Parameter parameter = initialParameters.FirstOrDefault(i => i.Name == configParameter.Name);
@@ -176,7 +176,7 @@ namespace Seal.Model
             get
             {
                 string result = null;
-                if (IsSubTable) result = RootTable.DefaultDefinitionScript;
+                if (IsSubTable && RootTable != null) result = RootTable.DefaultDefinitionScript;
                 else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultDefinitionScript;
                 return result ?? "";
             }
@@ -191,7 +191,7 @@ namespace Seal.Model
             get
             {
                 string result = null;
-                if (IsSubTable) result = RootTable.LoadScript ?? RootTable.DefaultLoadScript;
+                if (IsSubTable && RootTable != null) result = RootTable.LoadScript ?? RootTable.DefaultLoadScript;
                 else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultLoadScript;
                 return result ?? "";
             }

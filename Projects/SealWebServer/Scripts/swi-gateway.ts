@@ -264,8 +264,8 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
-    public ResetDashboard(callback: (data: any) => void, errorcb?: (data: any) => void) {
-        $.post(_server + "SWIResetDashboard", {
+    public SwapDashboardView(callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWISwapDashboardView", {
         })
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });

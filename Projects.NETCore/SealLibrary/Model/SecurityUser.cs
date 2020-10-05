@@ -352,7 +352,7 @@ namespace Seal.Model
 
         private bool? _manageDashboards = null;
         /// <summary>
-        /// True if the usercan manage dashboards
+        /// True if the user can manage dashboards
         /// </summary>
         public bool ManageDashboards
         {
@@ -369,6 +369,36 @@ namespace Seal.Model
                 return _manageDashboards.Value;
             }
         }
+
+        private List<SecurityDashboardOrder> _defaultDashboards = null;
+        /// <summary>
+        /// True if the usercan manage dashboards
+        /// </summary>
+        public List<SecurityDashboardOrder> DefaultDashboardOrders
+        {
+            get
+            {
+                if (_defaultDashboards == null)
+                {
+                    var allOrders = new List<SecurityDashboardOrder>();
+                    foreach (var group in SecurityGroups)
+                    {
+                        foreach (var dOrder in group.DefaultDashboards)
+                        {
+                            allOrders.Add(dOrder);
+                        }
+                    }
+                    //Unique and sort 
+                    _defaultDashboards = new List<SecurityDashboardOrder>();
+                    foreach (var dOrder in allOrders.OrderBy(i => i.Order))
+                    {
+                        if (!_defaultDashboards.Exists(i => i.GUID == dOrder.GUID)) _defaultDashboards.Add(dOrder);
+                    }
+                }
+                return _defaultDashboards;
+            }
+        }
+
 
         private bool? _hasPersonalDashboardFolder = null;
         /// <summary>
@@ -966,7 +996,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// List of loaded dashboards
+        /// List of dashboards viewed by the user
         /// </summary>
         public List<Dashboard> UserDashboards
         {
@@ -974,17 +1004,30 @@ namespace Seal.Model
             {
                 var result = new List<Dashboard>();
                 var dashboards = GetDashboards();
-                int order = 1;
-                foreach (var guid in Profile.Dashboards)
+
+                var orders = DefaultDashboardOrders.ToList();
+                if (ManageDashboards && !Profile.ViewDefaultDashboards)
                 {
-                    var d = dashboards.FirstOrDefault(i => i.GUID == guid);
+                    //Get dashboard from profile
+                    int order = 1;
+                    orders.Clear();
+                    foreach (var guid in Profile.Dashboards)
+                    {
+                        orders.Add(new SecurityDashboardOrder() { GUID = guid, Order = order++ }); 
+                    }
+                }
+
+                foreach (var dOrder in orders.OrderBy(i => i.Order))
+                {
+                    var d = dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
                     if (d != null)
                     {
-                        d.Order = order++;
+                        d.Order = dOrder.Order;
                         if (result.FirstOrDefault(i => i.FullName == d.FullName) != null) d.FullName += " [" + Path.GetFileNameWithoutExtension(d.Path) + "]";
                         result.Add(d);
                     }
                 }
+
                 return result;
             }
         }

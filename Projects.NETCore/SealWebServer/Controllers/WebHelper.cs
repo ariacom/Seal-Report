@@ -18,6 +18,8 @@ namespace SealWebServer.Controllers
     /// </summary>
     public class WebHelper
     {
+        const string WebServerLogEntry = "Seal Web Server";
+
         /// <summary>
         /// Log an Exception
         /// </summary>
@@ -35,7 +37,7 @@ namespace SealWebServer.Controllers
                 message.Append(detail);
             }
             catch { }
-            Helper.WriteLogEntry("Seal Web Server", EventLogEntryType.Error, message.ToString());
+            Helper.WriteLogEntry(WebServerLogEntry, EventLogEntryType.Error, message.ToString());
         }
 
         /// <summary>
@@ -43,7 +45,7 @@ namespace SealWebServer.Controllers
         /// </summary>
         public static void WriteLogEntryWeb(EventLogEntryType type, string message, params object[] args)
         {
-            Helper.WriteLogEntry("Seal Web Server", type, message, args);
+            Helper.WriteLogEntry(WebServerLogEntry, type, message, args);
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace SealWebServer.Controllers
         /// </summary>
         public static void WriteLogEntryWebDetail(EventLogEntryType type, string message, string detail)
         {
-            Helper.WriteLogEntry("Seal Web Server", type, message + detail);
+            Helper.WriteLogEntry(WebServerLogEntry, type, message + detail);
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace SealWebServer.Controllers
         /// </summary>
         public static void WriteLogEntryWebDebug(string message, string detail)
         {
-            Helper.WriteLogEntry("Seal Web Server", EventLogEntryType.Information, message + detail);
+            Helper.WriteLogEntry(WebServerLogEntry, EventLogEntryType.Information, message + detail);
         }
 
     }

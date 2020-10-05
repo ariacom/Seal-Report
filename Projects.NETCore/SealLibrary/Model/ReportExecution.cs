@@ -168,6 +168,7 @@ namespace Seal.Model
                         folder = Report.OutputFolderDeviceResultFolder;
                     }
                     string newPath = Path.Combine(folder, Path.GetFileNameWithoutExtension(Report.ResultFilePath)) + ".pdf";
+                    Report.ExecutionView.PdfConverter.Dashboards = null;
                     Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(Report.ResultFilePath, newPath);
                     Report.ResultFilePath = newPath;
                 }
@@ -2158,6 +2159,7 @@ namespace Seal.Model
             {
                 string source = GeneratePrintResult();
                 newPath = Path.Combine(Path.GetDirectoryName(source), Path.GetFileNameWithoutExtension(source)) + ".pdf";
+                Report.ExecutionView.PdfConverter.Dashboards = null;
                 Report.ExecutionView.PdfConverter.ConvertHTMLToPDF(source, newPath);
             }
             finally

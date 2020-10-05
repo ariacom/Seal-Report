@@ -313,7 +313,9 @@ namespace SealWebServer.Controllers
 
                         report.ExecutionContext = ReportExecutionContext.WebReport;
                         report.SecurityContext = WebUser;
-                        report.CurrentViewGUID = report.ViewGUID;
+
+                        if (execution.RootReport != null && execution.RootReport.GUID == report.GUID) report.CurrentViewGUID = execution.RootReport.CurrentViewGUID; //Drill, take view of root report
+                        else report.CurrentViewGUID = report.ViewGUID; //Sub-report, take the default view
 
                         report.InitForExecution();
                         execution.RenderHTMLDisplayForViewer();

@@ -380,7 +380,7 @@ namespace Seal.Model
         /// <summary>
         /// Load the MetaSource from a file
         /// </summary>
-        static public MetaSource LoadFromFile(string path, Repository repository)
+        static public MetaSource LoadFromFile(string path)
         {
             MetaSource result = null;
             try
@@ -393,7 +393,6 @@ namespace Seal.Model
                 result.Name = Path.GetFileNameWithoutExtension(path);
                 result.FilePath = path;
                 result.LastModification = File.GetLastWriteTime(path);
-                result.InitReferences(repository);
             }
             catch (Exception ex)
             {

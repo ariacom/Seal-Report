@@ -20,6 +20,7 @@ namespace Seal.Model
         public ViewType viewtype;
         public SWIDashboardFolder[] dashboardfolders;
         public bool managedashboards = false;
+        public bool defaultdashboards = true;
         public string usertag;
     }
 

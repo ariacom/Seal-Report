@@ -74,6 +74,7 @@ namespace SealWebServer.Controllers
                     lastview = view,
                     dashboardfolders = WebUser.DashboardFolders.ToArray(),
                     managedashboards = WebUser.ManageDashboards,
+                    defaultdashboards = WebUser.Profile.ViewDefaultDashboards,
                     usertag = WebUser.Tag
                 });
             }
@@ -502,6 +503,7 @@ namespace SealWebServer.Controllers
                 setSessionValue(SessionNavigationContext, null);
                 setSessionValue(SessionDashboardExecutions, null);
                 setSessionValue(SessionUploadedFiles, null);
+                CreateWebUser();
 
                 return Json(new { });
             }
@@ -555,7 +557,8 @@ namespace SealWebServer.Controllers
                     group = WebUser.SecurityGroupsDisplay,
                     culture = Repository.CultureInfo.EnglishName,
                     viewtype = WebUser.ViewType,
-                    managedashboards = WebUser.ManageDashboards
+                    managedashboards = WebUser.ManageDashboards,
+                    defaultdashboards = WebUser.Profile.ViewDefaultDashboards
                 });
             }
             catch
@@ -787,7 +790,7 @@ namespace SealWebServer.Controllers
 
                 if (!CheckAuthentication()) return Content(_loginContent);
 
-                if (!WebUser.ManageDashboards) throw new Exception("No right to remove dashboard");
+                if (!WebUser.ManageDashboards) throw new Exception("No right to remove dashboards");
 
                 if (guids != null && guids.Length > 0)
                 {
@@ -811,6 +814,30 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// Swap the view of the logged user
+        /// </summary>
+        public ActionResult SWISwapDashboardView()
+        {
+            writeDebug("SWISwapDashboardView");
+            try
+            {
+                checkSWIAuthentication();
+
+                if (!CheckAuthentication()) return Content(_loginContent);
+
+                if (!WebUser.ManageDashboards) throw new Exception("No right to manage dashboards");
+                WebUser.Profile.ViewDefaultDashboards = !WebUser.Profile.ViewDefaultDashboards;
+                WebUser.SaveProfile();
+
+                return Json(new object { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
         /// Change the order between two dashboards in the current logged user view
         /// </summary>
         public ActionResult SWISwapDashboardOrder(string guid1, string guid2)
@@ -820,7 +847,7 @@ namespace SealWebServer.Controllers
             {
                 checkSWIAuthentication();
 
-                if (!WebUser.ManageDashboards) throw new Exception("No right to swap dashboard");
+                if (!WebUser.ManageDashboards) throw new Exception("No right to swap dashboards");
 
                 if (WebUser.Profile.Dashboards.Contains(guid1) && WebUser.Profile.Dashboards.Contains(guid2))
                 {

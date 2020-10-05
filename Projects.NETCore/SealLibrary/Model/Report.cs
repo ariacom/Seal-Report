@@ -18,6 +18,7 @@ using System.Xml;
 using RazorEngine.Templating;
 using System.ComponentModel;
 using System.Drawing.Design;
+using Renci.SshNet.Sftp;
 
 namespace Seal.Model
 {
@@ -1139,10 +1140,31 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Load report sources from their repository sources.
+        /// By default, only report sources involved in models or tasks are loaded.
+        /// </summary>
+        public void LoadSources(bool forceLoadAll = false)
+        {
+            var sourcesToLoad = Sources.ToList();
+            if (!forceLoadAll && Sources.Count > 1)
+            {
+                //Remove sources not involved in execution
+                sourcesToLoad.RemoveAll(i => !Models.Exists(j => j.SourceGUID == i.GUID || j.SourceGUID == i.MetaSourceGUID) && !Tasks.Exists(j => j.SourceGUID == i.GUID));
+            }
+
+            foreach (ReportSource source in sourcesToLoad)
+            {
+                source.Report = this;
+                source.LoadRepositoryMetaSources(Repository);
+            }
+
+            CheckLinkedTablesSources();
+        }
+
+        /// <summary>
         /// Load a report from a file
         /// </summary>
-        /// <returns>the report loaded and initialized</returns>
-        static public Report LoadFromFile(string path, Repository repository, bool refreshEnums = true, bool forEdition = false)
+        static public Report LoadFromFile(string path, Repository repository, bool refreshEnums = true, bool forEdition = false, int retries = 0)
         {
             Report result = null;
             try
@@ -1187,7 +1209,13 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Unable to read the file '{0}'.\r\n{1}\r\n", path, ex.Message, ex.StackTrace));
+                if (ex is IOException && retries < 3)
+                {
+                    //File is perhaps locked during a save...try again
+                    Thread.Sleep(2000);
+                    result = LoadFromFile(path, repository, refreshEnums, forEdition, ++retries);
+                }
+                else throw new Exception(string.Format("Unable to read the file '{0}'.\r\n{1}\r\n", path, ex.Message, ex.StackTrace));
             }
             return result;
         }
@@ -2365,7 +2393,7 @@ namespace Seal.Model
                     result = view;
                     break;
                 }
-                result = FindView(view.Views, guid);
+                if (view.Views.Count > 0) result = FindView(view.Views, guid);
 
                 if (result != null) break;
             }
@@ -2423,7 +2451,7 @@ namespace Seal.Model
             ReportView result = null;
             foreach (var view in Views)
             {
-                if (FindView(view.Views, child.GUID) == child)
+                if (view.GUID == child.GUID || FindView(view.Views, child.GUID) == child)
                 {
                     result = view;
                     break;
@@ -2561,6 +2589,7 @@ namespace Seal.Model
         /// </summary>
         public ReportSource GetReportSource(string sourceName)
         {
+            LoadSources(true);
             return Sources.FirstOrDefault(i => i.Name == sourceName);
         }
 

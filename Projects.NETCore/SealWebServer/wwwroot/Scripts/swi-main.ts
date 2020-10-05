@@ -694,7 +694,7 @@ class SWIMain {
         span.removeClass("glyphicon-th-list");
         if (show) {
             $(".folderview").hide();
-            $(".dashboardview").show();           
+            $(".dashboardview").show(); 
             SWIUtil.ShowHideControl($(".dashboardvieweditor"), hasEditor && _main._profile.dashboardfolders.length != 0);
             span.addClass("glyphicon-th-list");
             $("#dashboard-toggle").attr("title", SWIUtil.tr2("View reports"));

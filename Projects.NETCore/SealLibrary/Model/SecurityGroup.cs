@@ -2,9 +2,15 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
+using Seal.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing.Design;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace Seal.Model
 {
@@ -39,7 +45,6 @@ namespace Seal.Model
         /// Define if the group can view Reports and Dashboards
         /// </summary>
         public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
-
 
         /// <summary>
         /// Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
@@ -91,6 +96,11 @@ namespace Seal.Model
         public bool ManageDashboards { get; set; } = true;
 
         /// <summary>
+        /// The default Dashboards displayed to the user.
+        /// </summary>
+        public List<SecurityDashboardOrder> DefaultDashboards { get; set; } = new List<SecurityDashboardOrder>();
+
+        /// <summary>
         /// If true, users of the group have a personal folder to create personal dashboards.
         /// </summary>
         public bool PersonalDashboardFolder { get; set; } = false;
@@ -121,6 +131,54 @@ namespace Seal.Model
         /// The logo file name used for to generate the reports. If empty, the default logo is used.
         /// </summary>
         public string LogoName { get; set; }
+
+
+        public void InitDashboardOrders()
+        {
+            foreach (var dOrder in DefaultDashboards)
+            {
+                dOrder.Dashboard = Dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
+                dOrder.SecurityGroup = this;
+            }
+            DefaultDashboards.RemoveAll(i => Dashboards== null);
+        }
+
+        List<Dashboard> _dashboards = null;
+        /// <summary>
+        /// List of dashboards available for this group (used for editor)
+        /// </summary>
+        [XmlIgnore]
+        public List<Dashboard> Dashboards
+        {
+            get
+            {
+                if (_dashboards == null)
+                {
+                    _dashboards = new List<Dashboard>();
+                    foreach (var f in DashboardFolders.Where(i => i.Right != DashboardFolderRight.None))
+                    {
+                        var dir = Path.Combine(Repository.Instance.DashboardPublicFolder, FileHelper.CleanFilePath(f.Name));
+                        if (Directory.Exists(dir))
+                        {
+                            foreach (var p in Directory.GetFiles(dir, "*." + Repository.SealDashboardExtension))
+                            {
+                                try
+                                {
+                                    var dashboard = Dashboard.LoadFromFile(p);
+                                    dashboard.FullName = string.Format("{0}\\{1}", Path.GetFileName(dir), dashboard.Name);
+                                    _dashboards.Add(dashboard);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine(ex.Message);
+                                }
+                            }
+                        }
+                    }
+                }
+                return _dashboards;
+            }
+        }
     }
 }
 

@@ -61,6 +61,7 @@ namespace Seal.NETCoreSync
             result = result.Replace("using System.Windows.Forms.Design;\r\n", "");
             result = result.Replace("using DynamicTypeDescriptor;\r\n", "");
             result = result.Replace("using Seal.Forms;\r\n", "");
+            result = result.Replace("using System.Web.UI.WebControls;\r\n", "");
             result = result.Replace("using Ionic.Zip;\r\n", "");
             result = result.Replace("UpdateEditorAttributes();", "");
             result = result.Replace(", ITreeSort", "");

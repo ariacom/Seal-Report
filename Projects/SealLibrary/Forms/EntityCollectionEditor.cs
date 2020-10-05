@@ -10,6 +10,7 @@ using Seal.Model;
 using System.ComponentModel.Design;
 using System.Reflection;
 using System.Drawing;
+using System.Linq;
 
 namespace Seal.Forms
 {
@@ -245,8 +246,9 @@ namespace Seal.Forms
             {
                 var dashboardOrder = (SecurityDashboardOrder)instance;
                 dashboardOrder.SecurityGroup = (SecurityGroup)Context.Instance;
-                dashboardOrder.GUID = ((SecurityGroup)Context.Instance).Dashboards[0].GUID;
-                dashboardOrder.Order = ((SecurityGroup)Context.Instance).DefaultDashboards.Count + 1;
+                dashboardOrder.GUID = (from d in dashboardOrder.SecurityGroup.Dashboards.Where(i => !dashboardOrder.SecurityGroup.DefaultDashboards.Exists(j => j.GUID == i.GUID)) select d.GUID).FirstOrDefault();
+                if (dashboardOrder.GUID == null) dashboardOrder.GUID = dashboardOrder.SecurityGroup.Dashboards[0].GUID;
+                dashboardOrder.Order = dashboardOrder.SecurityGroup.DefaultDashboards.Count + 1;
             }
             return instance;
         }
