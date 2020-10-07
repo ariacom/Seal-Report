@@ -125,7 +125,7 @@ namespace SealWebServer.Controllers
             Audit.LogAudit(AuditType.EventError, WebUser, null, detail, ex.Message);
             WebHelper.WriteWebException(ex, detail);
 #if DEBUG
-            var content = Content(string.Format("<b>Sorry, we got an unexpected exception.</b><br>{0}<br>{1}<br>{2}", ex.Message, RequestUrl, ex.StackTrace));
+            var content = Content(string.Format("<b>Sorry, we got an unexpected exception.</b><br>{0}<br>{1}<br>{2}", ex.Message.Replace(Repository.RepositoryPath, ""), RequestUrl, ex.StackTrace));
 #else
             var content = Content("<p style='font-family:Helvetica,Arial,sans-serif;'><b>Sorry, we got an unexpected exception.</b><br>Please consult log files on the server machine to have more information (Logs Repository folder and Windows Event Logs on Windows machine)...");
 #endif
@@ -300,8 +300,8 @@ namespace SealWebServer.Controllers
                     {
                         execution = NavigationContext.Navigate(nav, execution.RootReport);
                         Report report = execution.Report;
-                        //Check rights if not in subreports folder
-                        if (!report.FilePath.StartsWith(report.Repository.SubReportsFolder))
+                        //Check rights if not in subreports or personal folders
+                        if (!string.IsNullOrEmpty(Path.GetDirectoryName(report.FilePath)) && !report.FilePath.StartsWith(report.Repository.SubReportsFolder) && !report.FilePath.StartsWith(Repository.PersonalFolder))
                         {
                             var path = report.FilePath.Replace(report.Repository.ReportsFolder, "");
                             SWIFolder folder = getParentFolder(path);
@@ -925,7 +925,7 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(ex is LoginException ? AuditType.LoginFailure : AuditType.EventError, WebUser, null, detail, ex.Message);
                 WebHelper.WriteWebException(ex, detail);
             }
-            return Json(new { error = ex.Message, authenticated = (WebUser != null && WebUser.IsAuthenticated) }, JsonRequestBehavior.AllowGet);
+            return Json(new { error = ex.Message.Replace(Repository.RepositoryPath, ""), authenticated = (WebUser != null && WebUser.IsAuthenticated) }, JsonRequestBehavior.AllowGet);
         }
 
         ReportExecution getExecution(string execution_guid)
@@ -949,16 +949,17 @@ namespace SealWebServer.Controllers
 
         SWIFolder getParentFolder(string path)
         {
-            path = FileHelper.ConvertOSFilePath(path);
             if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+            if (path.Contains("..\\") || path.Contains("../")) throw new Exception("Error: invalid path");
+            path = FileHelper.ConvertOSFilePath(path);
             return getFolder(SWIFolder.GetParentPath(path));
         }
         SWIFolder getFolder(string path)
         {
-            checkSWIAuthentication();
-            path = FileHelper.ConvertOSFilePath(path);
             if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
-            if (path.Contains(".." + Path.DirectorySeparatorChar.ToString())) throw new Exception("Error: invalid path");
+            checkSWIAuthentication();
+            if (path.Contains("..\\") || path.Contains("../")) throw new Exception("Error: invalid path");
+            path = FileHelper.ConvertOSFilePath(path);
 
             SWIFolder result = WebUser.AllFolders.FirstOrDefault(i => i.path == path);
             if (result != null)
@@ -1059,13 +1060,19 @@ namespace SealWebServer.Controllers
 
         SWIFile getFileDetail(string path)
         {
-            path = FileHelper.ConvertOSFilePath(path);
             if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
+            path = FileHelper.ConvertOSFilePath(path);
             var folderDetail = getFolderDetail(SWIFolder.GetParentPath(path));
-
             var fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
-            if (fileDetail == null) throw new Exception("Error: file not found");
-
+            if (fileDetail == null)
+            {
+                folderDetail = getFolderDetail(SWIFolder.GetParentPath(path), true);
+                fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
+            }
+            if (fileDetail == null)
+            {
+                throw new Exception("Error: file not found");
+            }
             return fileDetail;
         }
 

@@ -73,7 +73,7 @@ class SWIDashboard {
 
         if (init) _da._gridsById = []; //Force rebuild of grids
         _da._grids = [];
-        $('.grid' + _da._dashboard.GUID).each(function (index, element) {
+        $('.grid' + _da._dashboard.GUID).each(function () {
             var gridId = $(this).attr("id");
             var grid = _da._gridsById[gridId];
             if (!grid) {
@@ -198,7 +198,7 @@ class SWIDashboard {
         SWIUtil.EnableButton($("#export-nav-item"), false);
 
         //re-init order
-        $('.grid' + guid).each(function (index, element) {
+        $('.grid' + guid).each(function () {
             var gridId = $(this).attr("id");
             _da._gridOrders[gridId] = null;
             _da._gridsById[gridId] = null;
@@ -534,7 +534,7 @@ class SWIDashboard {
                     select.append(SWIUtil.GetOption("excel", SWIUtil.tr("Excel"), ""));
                     select.selectpicker("refresh");
 
-                    $("#dashboard-export").unbind('click').on("click", function (e) {
+                    $("#dashboard-export").unbind('click').on("click", function () {
                         SWIUtil.HideMessages();
                         if ($("#export-dashboards").val() == "") return;
                         _gateway.ExportDashboards($("#export-dashboards").val(), $("#export-format").val());

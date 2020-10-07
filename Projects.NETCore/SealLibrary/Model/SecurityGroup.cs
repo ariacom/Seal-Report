@@ -47,6 +47,11 @@ namespace Seal.Model
         public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
 
         /// <summary>
+        /// If true, Dashboards are shown first when the user login
+        /// </summary>
+        public bool ViewDashboardsFirst { get; set; } = false;
+
+        /// <summary>
         /// Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
         /// </summary>
         public string FoldersScript { get; set; }
@@ -91,7 +96,7 @@ namespace Seal.Model
         public bool ShouldSerializeColumns() { return Columns.Count > 0; }
 
         /// <summary>
-        /// If true, the user can modify his current dashboard view (e.g. add/remove dashboards in his view or change orders).
+        /// If true, the user can define a Personal Dashboards View (e.g. add/remove dashboards in his view or change orders).
         /// </summary>
         public bool ManageDashboards { get; set; } = true;
 

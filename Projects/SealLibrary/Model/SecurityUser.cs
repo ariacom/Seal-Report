@@ -2,7 +2,6 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. http://www.apache.org/licenses/LICENSE-2.0..
 //
-using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using Seal.Helpers;
 using System;
 using System.Collections.Generic;
@@ -303,6 +302,29 @@ namespace Seal.Model
             }
         }
 
+        private bool? _viewDashboardsFirst = null;
+        /// <summary>
+        /// If true, Dashboards are shown first when the user login
+        /// </summary>
+        public bool ViewDashboardsFirst
+        {
+            get
+            {
+                if (_viewDashboardsFirst == null)
+                {
+                    _viewDashboardsFirst = false;
+                    foreach (var group in SecurityGroups)
+                    {
+                        if (group.ViewDashboardsFirst)
+                        {
+                            _viewDashboardsFirst = true;
+                            break;
+                        }
+                    }
+                }
+                return _viewDashboardsFirst.Value;
+            }
+        }
 
         private bool? _showAllFolder = null;
         /// <summary>
@@ -821,7 +843,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// List if security group names in a string
+        /// List of security group names in a string
         /// </summary>
         public string SecurityGroupsDisplay
         {
@@ -832,6 +854,33 @@ namespace Seal.Model
                 {
                     if (!string.IsNullOrEmpty(result)) result += ";";
                     result += group.Name;
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// List of default dashboards names in a string
+        /// </summary>
+        public string DefaultDashboardsViewDisplay
+        {
+            get
+            {
+                string result = "";
+                var dashboards = new List<Dashboard>();
+                foreach (var group in SecurityGroups)
+                {
+                    dashboards.AddRange(group.Dashboards);
+                }
+
+                foreach (var dOrder in DefaultDashboardOrders.OrderBy(i => i.Order))
+                {
+                    var d = dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
+                    if (d != null)
+                    {
+                        if (!string.IsNullOrEmpty(result)) result += ";";
+                        result += d.Name;
+                    }
                 }
                 return result;
             }

@@ -323,6 +323,7 @@
                                 - if the user has personal folders,<br />
                                 - which columns, data sources, connections or devices can be selected with the <b>Web Report Designer</b>,<br />
                                 - which dashboards folders are published,<br />
+                                - if the user has a personal dashboards view,<br />
                                 - if the user has a personal folder for dashboards,<br />
                                 - which widgets can be selected from the <b>Dashboard Manager</b>.<br /><br />
 
@@ -333,13 +334,22 @@
                                 For the <b>Reports</b> folders<br />
                                 <ul>
                                     <li>
-                                        <b>Folders</b>: the highest right is used (No right, Execute reports / View files, Execute reports and outputs / View files, Edit schedules / View files, Edit reports / Manage files).
+                                        <b>Folders</b>: The highest right is used (No right, Execute reports / View files, Execute reports and outputs / View files, Edit schedules / View files, Edit reports / Manage files).
                                     </li>
                                     <li>
-                                        <b>Personal folder</b>: the highest right is used (No personal folder, Personal folder for files only, Personal folder for reports and files).
+                                        <b>Personal folder</b>: The highest right is used (No personal folder, Personal folder for files only, Personal folder for reports and files).
                                     </li>
                                     <li>
-                                        <b>View type</b>: the union of the views (Reports, Dashboards).
+                                        <b>Show all folders</b>: True if one group has this flag set to true.
+                                    </li>
+                                    <li>
+                                        <b>View type</b>: The union of the views (Reports, Dashboards).
+                                    </li>
+                                    <li>
+                                        <b>View Dashboards first</b>: True if one group has this flag set to true.
+                                    </li>
+                                    <li>
+                                        <b>Folders and Folder Detail Scripts</b> are executed sequentially sorted by group name.
                                     </li>
                                 </ul>
 
@@ -356,10 +366,16 @@
                                 For the <b>Dashboards</b> publication<br />
                                 <ul>
                                     <li>
-                                        <b>Dashboards Folders</b>: the union of the Dashboards folders published with their highest right.
+                                        <b>Dashboards Folders</b>: The union of the Dashboards folders published with their highest right.
                                     </li>
                                     <li>
-                                        <b>Manage Dashboards View</b>: Is true if one group has the right to Manage Dashboards View.
+                                        <b>Dashboards Scripts</b> are executed sequentially sorted by group name.
+                                    </li>
+                                    <li>
+                                        <b>Personal Dashboard View</b>: Is true if one group has this flag set to true.
+                                    </li>
+                                    <li>
+                                        <b>Dashboards in Default View</b>: The union of the Dashboards listed for each group.
                                     </li>
                                     <li>
                                         <b>Personal Dashboard Folder</b>: Is true if one group has a personal Dashboard Folder.

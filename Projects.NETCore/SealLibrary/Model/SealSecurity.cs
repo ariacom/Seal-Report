@@ -220,13 +220,15 @@ namespace Seal.Model
                 result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
                 result.AppendFormat("    View Type: {0}\r\n", Helper.GetEnumDescription(group.ViewType.GetType(), group.ViewType));
                 result.AppendLine();
+                result.AppendFormat("    Dashboards first: {0}\r\n", group.ViewDashboardsFirst ? "yes" : "no");
+                result.AppendLine();
                 result.AppendFormat("    Personal Folder: {0}\r\n", Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight));
                 result.AppendLine();
                 result.AppendFormat("    Show all folders: {0}\r\n", group.ShowAllFolders ? "yes" : "no");
                 result.AppendLine();
-                result.AppendFormat("    Dashboard Personal Folder: {0}\r\n", group.PersonalDashboardFolder? "yes" : "no");
+                result.AppendFormat("    Dashboard Personal View: {0}\r\n", group.ManageDashboards ? "yes" : "no");
                 result.AppendLine();
-                result.AppendFormat("    Manage Dashboards View: {0}\r\n", group.ManageDashboards ? "yes" : "no");
+                result.AppendFormat("    Dashboard Personal Folder: {0}\r\n", group.PersonalDashboardFolder? "yes" : "no");
                 result.AppendLine();
                 result.AppendFormat("    SQL Models: {0}\r\n", group.SqlModel ? "yes" : "no");
                 result.AppendLine();

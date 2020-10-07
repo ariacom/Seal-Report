@@ -259,6 +259,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Editor Helper: Reset PDF configuration values to their default values
+        /// </summary>
+        public string HelperResetPDFConfigurations
+        {
+            get { return "<Click to reset the PDF configuration values to their default values>"; }
+        }
+
+        /// <summary>
         /// Current default configuration values for Excel converter
         /// </summary>
         public List<string> ExcelConfigurations { get; set; } = new List<string>();
@@ -290,14 +298,6 @@ namespace Seal.Model
         public bool ExcelConverterEdited
         {
             get { return _excelConverter != null; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Reset PDF configuration values to their default values
-        /// </summary>
-        public string HelperResetPDFConfigurations
-        {
-            get { return "<Click to reset the PDF configuration values to their default values>"; }
         }
 
         /// <summary>
@@ -351,6 +351,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Editor Helper: Reset PDF configuration values to their default values
+        /// </summary>
+        public string HelperResetDashboardPDFConfigurations
+        {
+            get { return "<Click to reset the Dashboard PDF configuration values to their default values>"; }
+        }
+
+        /// <summary>
         /// Current default configuration values for Excel converter
         /// </summary>
         public List<string> DashboardExcelConfigurations { get; set; } = new List<string>();
@@ -383,14 +391,6 @@ namespace Seal.Model
         public bool DashboardExcelConverterEdited
         {
             get { return _dashboardExcelConverter != null; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Reset PDF configuration values to their default values
-        /// </summary>
-        public string HelperResetDashboardPDFConfigurations
-        {
-            get { return "<Click to reset the Dashboard PDF configuration values to their default values>"; }
         }
 
         /// <summary>

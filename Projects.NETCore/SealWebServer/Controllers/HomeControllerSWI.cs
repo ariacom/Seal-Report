@@ -54,7 +54,7 @@ namespace SealWebServer.Controllers
 
                 //Set default view
                 string view = getCookie(SealLastViewCookieName);
-                if (string.IsNullOrEmpty(view)) view = "reports";
+                if (string.IsNullOrEmpty(view)) view = WebUser.ViewDashboardsFirst ? "dashboards" : "reports";
                 //Check rights
                 if (WebUser.ViewType == Seal.Model.ViewType.Reports && view == "dashboards") view = "reports";
                 else if (WebUser.ViewType == Seal.Model.ViewType.Dashboards && view == "reports") view = "dashboards";
@@ -236,6 +236,7 @@ namespace SealWebServer.Controllers
                 SWIFolder folderSource = getFolder(source);
                 SWIFolder folderDest = getFolder(destination);
                 if (folderSource.manage != 2 || folderDest.manage != 2) throw new Exception("Error: no right to rename this folder");
+                if (!Directory.Exists(Path.GetDirectoryName(folderDest.GetFullPath()))) throw new Exception("Error: create the parent directory first");
                 Directory.Move(folderSource.GetFullPath(), folderDest.GetFullPath());
                 Audit.LogAudit(AuditType.FolderRename, WebUser, folderSource.GetFullPath(), string.Format("Rename to '{0}'", folderDest.GetFullPath()));
                 return Json(new object { });

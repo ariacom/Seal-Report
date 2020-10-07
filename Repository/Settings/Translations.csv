@@ -232,7 +232,7 @@ Web;Months;;Mois
 Web;Name;;Nom
 Web;New;;Nouveau
 Web;New dashboard name;;Nouveau nom du Dashboard
-Web;New folder name;;Nouveau nom de répertoire
+Web;New folder path;;Nouveau répertoire
 Web;No Email destination specified in the schedule;;L'adresse Email n'est pas renseignée
 Web;No file name specified in the schedule;;Le nom du fichier n'est pas renseigné
 Web;OK;;OK
@@ -256,7 +256,7 @@ Web;Remove;;Supprimer
 Web;Remove all;;Tout supprimer
 Web;Remove dashboards;;Enlever les Dashboards
 Web;Rename;;Renommer
-Web;Rename folder;;Renommer le répertoire
+Web;Rename or move folder;;Renommer ou déplacer le répertoire
 Web;Rename, move or copy;;Renommer, déplacer ou copier
 Web;Rename, move or copy dashboard;;Renommer, déplacer ou copier le Dashboard
 Web;Repeat every;;Répéter tous les

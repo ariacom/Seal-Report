@@ -374,6 +374,16 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Editor Helper: Reset PDF configuration values to their default values
+        /// </summary>
+        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(2, 5)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperResetPDFConfigurations
+        {
+            get { return "<Click to reset the PDF configuration values to their default values>"; }
+        }
+
+        /// <summary>
         /// Current default configuration values for Excel converter
         /// </summary>
         public List<string> ExcelConfigurations { get; set; } = new List<string>();
@@ -385,7 +395,7 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Default Excel Configuration"), Description("All the default options applied to the Excel conversion from the view."), Category("PDF and Excel Converter Configuration"), Id(2, 5)]
+        [DisplayName("Default Excel Configuration"), Description("All the default options applied to the Excel conversion from the view."), Category("PDF and Excel Converter Configuration"), Id(9, 5)]
         public SealExcelConverter ExcelConverter
         {
             get
@@ -407,16 +417,6 @@ namespace Seal.Model
         public bool ExcelConverterEdited
         {
             get { return _excelConverter != null; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Reset PDF configuration values to their default values
-        /// </summary>
-        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset PDF configurations"), Description("Reset PDF configuration values to their default values."), Id(9, 5)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-        public string HelperResetPDFConfigurations
-        {
-            get { return "<Click to reset the PDF configuration values to their default values>"; }
         }
 
         /// <summary>
@@ -474,6 +474,16 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Editor Helper: Reset PDF configuration values to their default values
+        /// </summary>
+        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset Dashboard PDF configurations"), Description("Reset Dashboard PDF configuration values to their default values."), Id(21, 5)]
+        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
+        public string HelperResetDashboardPDFConfigurations
+        {
+            get { return "<Click to reset the Dashboard PDF configuration values to their default values>"; }
+        }
+
+        /// <summary>
         /// Current default configuration values for Excel converter
         /// </summary>
         public List<string> DashboardExcelConfigurations { get; set; } = new List<string>();
@@ -485,7 +495,7 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [DisplayName("Dashboard Excel Configuration"), Description("All options applied to the Excel conversion for a Dashboard."), Category("PDF and Excel Converter Configuration"), Id(21, 5)]
+        [DisplayName("Dashboard Excel Configuration"), Description("All options applied to the Excel conversion for a Dashboard."), Category("PDF and Excel Converter Configuration"), Id(22, 5)]
         public SealExcelConverter DashboardExcelConverter
         {
             get
@@ -508,16 +518,6 @@ namespace Seal.Model
         public bool DashboardExcelConverterEdited
         {
             get { return _dashboardExcelConverter != null; }
-        }
-
-        /// <summary>
-        /// Editor Helper: Reset PDF configuration values to their default values
-        /// </summary>
-        [Category("PDF and Excel Converter Configuration"), DisplayName("Reset Dashboard PDF configurations"), Description("Reset Dashboard PDF configuration values to their default values."), Id(22, 5)]
-        [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
-        public string HelperResetDashboardPDFConfigurations
-        {
-            get { return "<Click to reset the Dashboard PDF configuration values to their default values>"; }
         }
 
         /// <summary>
