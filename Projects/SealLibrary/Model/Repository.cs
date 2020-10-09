@@ -860,7 +860,7 @@ namespace Seal.Model
         }
 
 
-        public List<string> GetInstalledTranslationCultures()
+        public List<string> GetInstalledTranslationLanguages()
         {
             var result = new List<string>();
             if (Translations.Count > 0)

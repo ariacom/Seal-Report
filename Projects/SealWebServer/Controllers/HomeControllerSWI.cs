@@ -579,14 +579,26 @@ namespace SealWebServer.Controllers
             try
             {
                 checkSWIAuthentication();
+                var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
 
                 var cultures = Repository.Configuration.WebCultures;
-                if (cultures.Count == 0) cultures = Repository.GetInstalledTranslationCultures();
+                if (cultures.Count == 0)
+                {
+                    var langs = Repository.GetInstalledTranslationLanguages();
+                    foreach (var lang in langs)
+                    {
+                        foreach (var cultureInfo in allCultures.Where(i => i.TwoLetterISOLanguageName == lang))
+                        {
+                            cultures.Add(cultureInfo.EnglishName);
+                        }
+                    }
+                }
+
                 var result = new List<SWIItem>();
                 foreach (var culture in cultures)
                 {
-                    var cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.EnglishName == culture);
-                    if (cultureInfo == null) cultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures).FirstOrDefault(i => i.Name == culture);
+                    var cultureInfo = allCultures.FirstOrDefault(i => i.EnglishName == culture);
+                    if (cultureInfo == null) cultureInfo = allCultures.FirstOrDefault(i => i.Name == culture);
                     if (cultureInfo != null) result.Add(new SWIItem() { id = cultureInfo.EnglishName, val = string.Format("{0} - {1}", cultureInfo.NativeName, cultureInfo.EnglishName) });
                 }
                 return Json(result.OrderBy(i => i.val).ToArray(), JsonRequestBehavior.AllowGet);
