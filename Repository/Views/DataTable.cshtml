@@ -18,13 +18,13 @@
 
 @if (table != null && table.RowCount > 0 && table.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
 {
-<script type="text/javascript">
+    <script type="text/javascript">
     $(document).ready(function () {
         var dt = $('#@("dt_" + view.IdSuffix)');
         try {
             if (dt != null && @Helper.ToJS(enabled) && !@Helper.ToJS(report.PrintLayout))
             {
-            var dto = dt.DataTable({
+                var dto = dt.DataTable({
                 responsive: @view.GetBoolValueJS("data_tables_responsive"),
                 ordering: @view.GetBoolValueJS("data_tables_sort_enabled"),
                 paging: @view.GetBoolValueJS("data_tables_pagination_enabled"),
@@ -67,11 +67,17 @@
                 </text>}
                 });
                 initNavCells('@report.ExecutionGUID', '[viewid="@(view.ViewId)"]');
+                dt.on('length.dt', function () {
+                    redrawDashboard();
+                });
+                dt.on('page.dt', function () {
+                    redrawDashboard();
+                });
             }
     }
     catch (e) { };
     });
-</script>
+    </script>
 
     <table id='@("dt_" + view.IdSuffix)' viewid='@view.ViewId' @Raw(view.AddAttribute("class", "data_table_class")) @Raw(view.AddAttribute("style", "data_table_css"))>
         @if (view.HasValue("data_table_caption"))
