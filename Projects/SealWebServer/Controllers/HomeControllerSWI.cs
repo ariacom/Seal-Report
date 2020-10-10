@@ -154,6 +154,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWIGetFolderDetail");
             try
             {
+                checkSWIAuthentication();
                 var folderDetail = getFolderDetail(path, true);
                 setCookie(SealLastFolderCookieName, path);
                 return Json(folderDetail, JsonRequestBehavior.AllowGet);
@@ -172,6 +173,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWISearch");
             try
             {
+                checkSWIAuthentication();
                 SWIFolder folder = getFolder(path);
                 var files = new List<SWIFile>();
                 path = folder.GetFullPath();

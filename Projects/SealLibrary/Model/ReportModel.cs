@@ -1980,15 +1980,18 @@ model.ResultTable = query2.CopyToDataTable2();
             }
 
             //add extra where clause
-            foreach (var table in extraWhereTables)
+            if (!IsLINQ)
             {
-                if (!string.IsNullOrWhiteSpace(table.WhereSQL))
+                foreach (var table in extraWhereTables)
                 {
-                    string where = RazorHelper.CompileExecute(table.WhereSQL, table);
-                    if (!string.IsNullOrWhiteSpace(where))
+                    if (!string.IsNullOrWhiteSpace(table.WhereSQL))
                     {
-                        if (execWhereClause.Length != 0) execWhereClause.Append("\r\nAND ");
-                        execWhereClause.AppendFormat("({0})", where);
+                        string where = RazorHelper.CompileExecute(table.WhereSQL, table);
+                        if (!string.IsNullOrWhiteSpace(where))
+                        {
+                            if (execWhereClause.Length != 0) execWhereClause.Append("\r\nAND ");
+                            execWhereClause.AppendFormat("({0})", where);
+                        }
                     }
                 }
             }

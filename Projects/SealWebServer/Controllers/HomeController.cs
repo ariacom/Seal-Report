@@ -1066,11 +1066,16 @@ namespace SealWebServer.Controllers
             var fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
             if (fileDetail == null)
             {
+                writeDebug(string.Format("Debug1 {0} {1} {2}", path, folderDetail.folder.path, folderDetail.files.Length));
                 folderDetail = getFolderDetail(SWIFolder.GetParentPath(path), true);
+                writeDebug(string.Format("Debug2 {0} {1} {2}", path, folderDetail.folder.path, folderDetail.files.Length));
                 fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
             }
             if (fileDetail == null)
             {
+                string val = "";
+                foreach (var f in folderDetail.files) val += f.path + ";";
+                writeDebug(string.Format("Debug3 {0} {1}\r\n{2}", path, folderDetail.folder.path, val));
                 throw new Exception("Error: file not found");
             }
             return fileDetail;

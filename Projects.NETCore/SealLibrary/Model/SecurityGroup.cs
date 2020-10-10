@@ -184,6 +184,28 @@ namespace Seal.Model
                 return _dashboards;
             }
         }
+
+
+        /// <summary>
+        /// List of default dashboards names in a string
+        /// </summary>
+        public string DefaultDashboardsViewDisplay
+        {
+            get
+            {
+                string result = "";
+                foreach (var dOrder in DefaultDashboards.OrderBy(i => i.Order))
+                {
+                    var d = Dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
+                    if (d != null)
+                    {
+                        if (!string.IsNullOrEmpty(result)) result += ";";
+                        result += d.Name;
+                    }
+                }
+                return result;
+            }
+        }
     }
 }
 

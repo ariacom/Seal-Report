@@ -114,7 +114,7 @@ class SWIDashboard {
         SWIUtil.EnableButton(addWidget, hasEditor && _da._dashboard && _da._dashboard.Editable && spinnerHidden);
         SWIUtil.EnableButton($("#dashboards-nav-item"), spinnerHidden);
         SWIUtil.ShowHideControl(exportDashboard, _da._dashboard);
-        SWIUtil.EnableButton(exportDashboard, _da._dashboard && spinnerHidden);       
+        SWIUtil.EnableButton(exportDashboard, _da._dashboard && spinnerHidden);
     }
 
     private handleDashboardResult(data: any) {
@@ -188,6 +188,7 @@ class SWIDashboard {
         });
     }
 
+
     public initDashboardItems(guid: string) {
         var dashboard = _da._dashboards[guid];
         if (!dashboard) return;
@@ -230,7 +231,7 @@ class SWIDashboard {
 
                     if (item.GroupName != "") {
                         //Group name 
-                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name").css("opacity","0.2");
+                        var groupSpan = $("<span for='gn" + item.GUID + "'>").text(item.DisplayGroupName).attr("group-name", item.GroupName).addClass("group-name").css("opacity", "0.2");
                         var groupInput = $("<input type='text' id='gn" + item.GUID + "' style='width:250px;' hidden>");
                         var groupDrag = $("<h3 style='margin:0px 5px'>").append(groupSpan);
                         groupDrag.attr("group-order", item.GroupOrder)
@@ -378,7 +379,7 @@ class SWIDashboard {
 
                 if (_main._profile.managedashboards && !_main._exporting && !_main._profile.defaultdashboards) {
                     //Drag and drop for menu
-                    li.on("dragstart", function (e) {
+                    li.on("dragstart", function () {
                         _da._lastGUID = $(this).children("a").attr("did");
                         _da._dragType = "menu";
                     });
@@ -386,7 +387,7 @@ class SWIDashboard {
                     li.on("dragover", function (e) {
                         if (_da._dragType == "menu") e.preventDefault();
                     });
-                    li.on("drop", function (e) {
+                    li.on("drop", function () {
                         _da._dragType = "";
                         var did = $(this).children("a").attr("did");
                         _gateway.SwapDashboardOrder(_da._lastGUID, did, function () {

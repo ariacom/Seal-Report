@@ -860,6 +860,33 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// List of default dashboards names in a string
+        /// </summary>
+        public string DefaultDashboardsViewDisplay
+        {
+            get
+            {
+                string result = "";
+                var dashboards = new List<Dashboard>();
+                foreach (var group in SecurityGroups)
+                {
+                    dashboards.AddRange(group.Dashboards);
+                }
+
+                foreach (var dOrder in DefaultDashboardOrders.OrderBy(i => i.Order))
+                {
+                    var d = dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);
+                    if (d != null)
+                    {
+                        if (!string.IsNullOrEmpty(result)) result += ";";
+                        result += d.Name;
+                    }
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Returns true if the user belongs to a group given by a name
         /// </summary>
         public bool BelongsToGroup(string groupName)

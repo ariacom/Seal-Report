@@ -78,7 +78,7 @@
                     $.post(sealServer + "SWIGetRootFolders")
                         .done(function (data) {
                             if (!data.error) {
-                                $("#folders_label").html("SWIGetRootFolders Done: " + data.folders.length + " subfolders<br>" + JSON.stringify(data));
+                                $("#folders_label").html("SWIGetRootFolders Done: " + data.length + " subfolders<br>" + JSON.stringify(data));
 
                             }
                             else {
@@ -163,10 +163,9 @@
                     form.append($('<input />').attr('name', 'r1_enum_values').attr('value', "2,3,4,7"));
                     form.append($('<input />').attr('name', 'r2_name').attr('value', "Order Date"));
                     form.append($('<input />').attr('name', 'r2_operator').attr('value', "Equal"));
-                    form.append($('<input />').attr('name', 'r2_value_1').attr('value', "19940809 00:00:00"));
-                    form.append($('<input />').attr('name', 'r2_value_2').attr('value', "19940810 00:00:00"));
-                    form.append($('<input />').attr('name', 'r2_value_3').attr('value', "19940811 00:00:00"));
-                    form.append($('<input />').attr('name', 'r2_value_4').attr('value', "19940812 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_1').attr('value', "19960709 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_2').attr('value', "19961121 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_3').attr('value', "19970314 00:00:00"));
                     form.append($('<input />').attr('name', 'r3_name').attr('value', "Customer Contact"));
                     form.append($('<input />').attr('name', 'r3_operator').attr('value', "Contains"));
                     form.append($('<input />').attr('name', 'r3_value_1').attr('value', "ar"));
@@ -214,10 +213,9 @@
                     form.append($('<input />').attr('name', 'r1_enum_values').attr('value', "2,3,4,7"));
                     form.append($('<input />').attr('name', 'r2_name').attr('value', "Order Date"));
                     form.append($('<input />').attr('name', 'r2_operator').attr('value', "Equal"));
-                    form.append($('<input />').attr('name', 'r2_value_1').attr('value', "19940809 00:00:00"));
-                    form.append($('<input />').attr('name', 'r2_value_2').attr('value', "19940810 00:00:00"));
-                    form.append($('<input />').attr('name', 'r2_value_3').attr('value', "19940811 00:00:00"));
-                    form.append($('<input />').attr('name', 'r2_value_4').attr('value', "19940812 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_1').attr('value', "19960709 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_2').attr('value', "19961121 00:00:00"));
+                    form.append($('<input />').attr('name', 'r2_value_3').attr('value', "19970314 00:00:00"));
                     form.append($('<input />').attr('name', 'r3_name').attr('value', "Customer Contact"));
                     form.append($('<input />').attr('name', 'r3_operator').attr('value', "Contains"));
                     form.append($('<input />').attr('name', 'r3_value_1').attr('value', "ar"));
@@ -249,10 +247,10 @@
 
             $("#set_up_button")
                 .click(function () {
-                    $.post(sealServer + "SWISetUserProfile", { culture: "it-IT" /* or Italian (Italy) */ })
+                    $.post(sealServer + "SWISetUserProfile", { culture: "fr-FR" })
                         .done(function (data) {
                             if (!data.error) {
-                                $("#set_up_label").html("SWISetUserProfile Done: culture set to Italian (Italy).");
+                                $("#set_up_label").html("SWISetUserProfile Done: culture set to French (France).");
                             }
                             else {
                                 $("#set_up_label").text("Error: " + data.error);

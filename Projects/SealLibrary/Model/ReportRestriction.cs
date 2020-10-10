@@ -37,7 +37,7 @@ namespace Seal.Model
                 foreach (var property in Properties) property.SetIsBrowsable(false);
 
                 bool isSubModelRestriction = false;
-                if (Model.IsSubModel && Model.MasterModel.SubModelsSetRestr && Model.MasterModel.Restrictions.Union(Model.MasterModel.AggregateRestrictions).Union(Model.MasterModel.CommonRestrictions).FirstOrDefault(i => i.IsIdenticalForPrompt(this)) != null)
+                if (Model != null && Model.IsSubModel && Model.MasterModel.SubModelsSetRestr && Model.MasterModel.Restrictions.Union(Model.MasterModel.AggregateRestrictions).Union(Model.MasterModel.CommonRestrictions).FirstOrDefault(i => i.IsIdenticalForPrompt(this)) != null)
                 {
                     isSubModelRestriction = true; ;
                 }
