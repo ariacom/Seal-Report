@@ -42,6 +42,7 @@ function loadLayout(grid, serializedLayout) {
 
 function redrawDashboard() {
     $("#nav_popupmenu").css("opacity", "0");
+    if ($(".item").css("opacity") == "1") $(".item,.group-name,h1").css("opacity", "0.4");
     setTimeout(function () {
         redrawNVD3Charts();
         redrawDataTables();

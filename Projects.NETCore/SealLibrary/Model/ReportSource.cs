@@ -118,11 +118,13 @@ namespace Seal.Model
                     MetaSourceName = source.Name;
                     foreach (var item in source.Connections)
                     {
+                        item.Source = source;
                         item.IsEditable = false;
                         Connections.Add(item);
                     }
                     foreach (var item in source.MetaData.Tables)
                     {
+                        item.Source = source;
                         item.IsEditable = false;
                         MetaData.Tables.Add(item);
                     }
@@ -133,11 +135,13 @@ namespace Seal.Model
                     }
                     foreach (var item in source.MetaData.Joins)
                     {
+                        item.Source = source;
                         item.IsEditable = false;
                         MetaData.Joins.Add(item);
                     }
                     foreach (var item in source.MetaData.Enums)
                     {
+                        item.Source = source;
                         item.IsEditable = false;
                         MetaData.Enums.Add(item);
                     }

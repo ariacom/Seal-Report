@@ -31,7 +31,6 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("ViewType").SetIsBrowsable(true);
-                GetProperty("ViewDashboardsFirst").SetIsBrowsable(true);
                 GetProperty("Folders").SetIsBrowsable(true);
                 GetProperty("FoldersScript").SetIsBrowsable(true);
                 GetProperty("FolderDetailScript").SetIsBrowsable(true);
@@ -94,13 +93,6 @@ namespace Seal.Model
         [TypeConverter(typeof(NamedEnumConverter))]
         [DefaultValue(ViewType.ReportsDashboards)]
         public ViewType ViewType { get; set; } = ViewType.ReportsDashboards;
-
-        /// <summary>
-        /// If true, Dashboards are shown first when the user login
-        /// </summary>
-        [Category("Definition"), DisplayName("\t\tView Dashboards first"), Description("If true, Dashboards are shown first when the user login for the first time."), Id(7, 1)]
-        [DefaultValue(false)]
-        public bool ViewDashboardsFirst { get; set; } = false;
 
         /// <summary>
         /// Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name.
@@ -222,6 +214,7 @@ namespace Seal.Model
 
         public void InitDashboardOrders()
         {
+            _dashboards = null;
             foreach (var dOrder in DefaultDashboards)
             {
                 dOrder.Dashboard = Dashboards.FirstOrDefault(i => i.GUID == dOrder.GUID);

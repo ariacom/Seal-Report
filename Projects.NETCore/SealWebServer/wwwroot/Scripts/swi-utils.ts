@@ -152,4 +152,15 @@ module SWIUtil {
             }
         });
     }
+
+    export function StartSpinning() {
+        $("#refresh-nav-item").addClass("fa-spin");
+        $("#refresh-nav-item").css("display", "inline-block");
+    }
+
+    export function StopSpinning() {
+        $("#refresh-nav-item").removeClass("fa-spin");
+        $("#refresh-nav-item").css("display", "block");
+    }
+
 }

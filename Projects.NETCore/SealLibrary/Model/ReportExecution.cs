@@ -362,7 +362,7 @@ namespace Seal.Model
         public void SetError(string error, params object[] args)
         {
             //strings are supposed to be thread-safe...
-            Report.LogMessage(error, args);
+            Report.LogMessage(Report.ExecutionContext == ReportExecutionContext.WebReport || Report.ExecutionContext == ReportExecutionContext.WebReport ? "Unexpected Error: Check details on the Server log files" : error, args);
             Report.ExecutionErrors += string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), string.Format(error, args));
         }
 

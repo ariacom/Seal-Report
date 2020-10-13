@@ -5,7 +5,9 @@
 using DynamicTypeDescriptor;
 using Seal.Forms;
 using Seal.Helpers;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Seal.Model

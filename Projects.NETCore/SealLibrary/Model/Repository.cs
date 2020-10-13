@@ -733,8 +733,20 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Translations file name pattern
+        /// Current list of public dashboard folders
         /// </summary>
+        public List<string> GetPublicDashboardFolders()
+        {
+            List<string> result = new List<string>();
+            foreach (var folder in Directory.GetDirectories(Repository.Instance.DashboardPublicFolder))
+            {
+                result.Add(Path.GetFileName(folder));
+            }
+            return result;
+        }
+        /// <summary>
+                 /// Translations file name pattern
+                 /// </summary>
         public string TranslationsPattern
         {
             get { return "Translations*.csv"; }

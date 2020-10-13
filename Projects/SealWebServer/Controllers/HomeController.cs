@@ -1034,7 +1034,7 @@ namespace SealWebServer.Controllers
 
                     files.Add(new SWIFile()
                     {
-                        path = folder.Combine(Path.GetFileName(newPath)),
+                        path = FileHelper.ConvertOSFilePath(folder.Combine(Path.GetFileName(newPath))),
                         name = Repository.TranslateFileName(newPath) + (FileHelper.IsSealReportFile(newPath) ? "" : Path.GetExtension(newPath)),
                         last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
                         isreport = FileHelper.IsSealReportFile(newPath),
@@ -1061,21 +1061,16 @@ namespace SealWebServer.Controllers
         SWIFile getFileDetail(string path)
         {
             if (string.IsNullOrEmpty(path)) throw new Exception("Error: path must be supplied");
-            path = FileHelper.ConvertOSFilePath(path);
             var folderDetail = getFolderDetail(SWIFolder.GetParentPath(path));
+            path = FileHelper.ConvertOSFilePath(path);
             var fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
             if (fileDetail == null)
             {
-                writeDebug(string.Format("Debug1 {0} {1} {2}", path, folderDetail.folder.path, folderDetail.files.Length));
                 folderDetail = getFolderDetail(SWIFolder.GetParentPath(path), true);
-                writeDebug(string.Format("Debug2 {0} {1} {2}", path, folderDetail.folder.path, folderDetail.files.Length));
                 fileDetail = folderDetail.files.FirstOrDefault(i => i.path == path);
             }
             if (fileDetail == null)
             {
-                string val = "";
-                foreach (var f in folderDetail.files) val += f.path + ";";
-                writeDebug(string.Format("Debug3 {0} {1}\r\n{2}", path, folderDetail.folder.path, val));
                 throw new Exception("Error: file not found");
             }
             return fileDetail;

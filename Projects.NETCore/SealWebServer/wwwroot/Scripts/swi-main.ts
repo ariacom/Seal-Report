@@ -107,6 +107,11 @@ class SWIMain {
 
     private loginSuccess(data: any) {
         _main._connected = true;
+        if (_main._profile && _main._profile.culture && _main._profile.culture != data.culture) {
+            $("body").css("opacity", "0.1");
+            location.reload(true);
+        }
+
         _main._profile = data;
         _main._folder = null;
         _main._searchMode = false;
@@ -388,11 +393,11 @@ class SWIMain {
         _main.resize();
 
         $(document).ajaxStart(function () {
-            $("#refresh-nav-item").addClass("fa-spin");
+            SWIUtil.StartSpinning();
         });
 
         $(document).ajaxStop(function () {
-            $("#refresh-nav-item").removeClass("fa-spin");
+            SWIUtil.StopSpinning();
         });
     }
 
@@ -517,14 +522,15 @@ class SWIMain {
     public LoadReports(path: string) {
         if (!path) return;
 
-        $("#refresh-nav-item").addClass("fa-spin");
+        SWIUtil.StartSpinning();
+
         _gateway.GetFolderDetail(path, function (data) {
             _main._searchMode = false;
             _main._folder = data.folder;
             _main._folder.isEmpty = (data.files.length == 0 && $folderTree.jstree("get_selected", true)[0].children.length == 0);
             _main.buildReportsTable(data);
             _main._profile.folder = path;
-            $("#refresh-nav-item").removeClass("fa-spin");
+            SWIUtil.StopSpinning();
         });
     }
 

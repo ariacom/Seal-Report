@@ -48,12 +48,14 @@ namespace SealWebServer.Controllers
                 Audit.LogAudit(AuditType.Login, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
 
-                //Set culture from cookie
-                string culture = getCookie(SealCultureCookieName);
+                //Set culture
+                string culture = WebUser.Profile.Culture;
+                if (string.IsNullOrEmpty(culture) || string.IsNullOrEmpty(WebUser.WebUserName)) culture = getCookie(SealCultureCookieName);
                 if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
 
                 //Set default view
-                string view = getCookie(SealLastViewCookieName);
+                string view = WebUser.Profile.View;
+                if (string.IsNullOrEmpty(view) || string.IsNullOrEmpty(WebUser.WebUserName)) view = getCookie(SealLastViewCookieName);
                 if (string.IsNullOrEmpty(view)) view = WebUser.ViewDashboardsFirst ? "dashboards" : "reports";
                 //Check rights
                 if (WebUser.ViewType == Seal.Model.ViewType.Reports && view == "dashboards") view = "reports";
@@ -400,7 +402,7 @@ namespace SealWebServer.Controllers
 
                 var execution = initReportExecution(report, viewGUID, outputGUID, true);
                 execution.Execute();
-                while (report.Status != ReportStatus.Executed && !report.HasErrors) Thread.Sleep(100);
+                while (report.Status != ReportStatus.Executed && !report.HasErrors && !report.Cancel) Thread.Sleep(100);
 
                 ActionResult result = null;
                 if (!string.IsNullOrEmpty(outputGUID))
@@ -531,9 +533,14 @@ namespace SealWebServer.Controllers
                     if (!Repository.SetCultureInfo(culture)) throw new Exception("Invalid culture name:" + culture);
                     WebUser.ClearCache();
                     setCookie(SealCultureCookieName, culture);
+                    WebUser.Profile.Culture = culture;
                 }
 
-                if (!string.IsNullOrEmpty(defaultView)) setCookie(SealLastViewCookieName, defaultView);
+                if (!string.IsNullOrEmpty(defaultView)) {
+                    setCookie(SealLastViewCookieName, defaultView);
+                    WebUser.Profile.View = defaultView;
+                }
+                WebUser.SaveProfile();
 
                 return Json(new { }, JsonRequestBehavior.AllowGet);
             }

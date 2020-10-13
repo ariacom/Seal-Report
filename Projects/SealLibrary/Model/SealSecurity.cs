@@ -263,8 +263,6 @@ namespace Seal.Model
                 result.AppendLine(string.Format("Security Group: {0}\r\n", group.Name));
                 result.AppendFormat("    View Type: {0}\r\n", Helper.GetEnumDescription(group.ViewType.GetType(), group.ViewType));
                 result.AppendLine();
-                result.AppendFormat("    Dashboards first: {0}\r\n", group.ViewDashboardsFirst ? "yes" : "no");
-                result.AppendLine();
                 result.AppendFormat("    Personal Folder: {0}\r\n", Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight));
                 result.AppendLine();
                 result.AppendFormat("    Show all folders: {0}\r\n", group.ShowAllFolders ? "yes" : "no");

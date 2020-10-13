@@ -16,6 +16,16 @@ namespace Seal.Model
     public class SecurityUserProfile
     {
         /// <summary>
+        /// Culture of the user
+        /// </summary>
+        public string Culture { get; set; }
+
+        /// <summary>
+        /// View of the user: dashboards or reports
+        /// </summary>
+        public string View { get; set; }
+
+        /// <summary>
         /// True to display the default dashboards, if false Dashboards are used.
         /// </summary>
         public bool ViewDefaultDashboards { get; set; } = true;

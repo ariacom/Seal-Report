@@ -11,6 +11,7 @@ using System.ComponentModel.Design;
 using System.Reflection;
 using System.Drawing;
 using System.Linq;
+using System.IO;
 
 namespace Seal.Forms
 {
@@ -133,7 +134,7 @@ namespace Seal.Forms
             else if (CollectionItemType == typeof(SecurityDashboardFolder))
             {
                 frmCollectionEditorForm.Text = "Security Dashboard Folders Collection Editor";
-                allowAdd = true;
+                allowAdd = Repository.Instance.GetPublicDashboardFolders().Count > 0;
                 allowRemove = true;
                 _useHandlerInterface = false;
             }
@@ -241,6 +242,15 @@ namespace Seal.Forms
                 result.ChangeOperator = false;
                 result.Report = (Report)Context.Instance;
                 instance = result;
+            }
+            else if (instance is SecurityDashboardFolder && Context.Instance is SecurityGroup)
+            {
+                var dashboardFolder = (SecurityDashboardFolder)instance;
+                SecurityGroup securityGroup = (SecurityGroup)Context.Instance;
+                var folders = Repository.Instance.GetPublicDashboardFolders();
+
+                dashboardFolder.Name = (from d in folders.Where(i => !securityGroup.DashboardFolders.Exists(j => j.Name == i)) select d).FirstOrDefault();
+                if (dashboardFolder.Name == null) dashboardFolder.Name = securityGroup.DashboardFolders[0].Name;
             }
             else if (instance is SecurityDashboardOrder && Context.Instance is SecurityGroup)
             {

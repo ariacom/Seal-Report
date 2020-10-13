@@ -109,7 +109,7 @@ namespace Seal.Model
 
         public static string GetParentPath(string path)
         {
-            var result = "";
+            string result;
             if (path.StartsWith(PersonalPrefix))
             {
 

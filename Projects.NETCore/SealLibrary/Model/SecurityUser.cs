@@ -302,29 +302,10 @@ namespace Seal.Model
             }
         }
 
-        private bool? _viewDashboardsFirst = null;
         /// <summary>
         /// If true, Dashboards are shown first when the user login
         /// </summary>
-        public bool ViewDashboardsFirst
-        {
-            get
-            {
-                if (_viewDashboardsFirst == null)
-                {
-                    _viewDashboardsFirst = false;
-                    foreach (var group in SecurityGroups)
-                    {
-                        if (group.ViewDashboardsFirst)
-                        {
-                            _viewDashboardsFirst = true;
-                            break;
-                        }
-                    }
-                }
-                return _viewDashboardsFirst.Value;
-            }
-        }
+        public bool ViewDashboardsFirst = false;
 
         private bool? _showAllFolder = null;
         /// <summary>

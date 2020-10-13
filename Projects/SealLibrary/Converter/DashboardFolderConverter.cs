@@ -24,12 +24,7 @@ namespace Seal.Forms
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
         {
-            List<string> choices = new List<string>();
-            foreach (var folder in Directory.GetDirectories(Repository.Instance.DashboardPublicFolder))
-            {
-                choices.Add(Path.GetFileName(folder));
-            }
-            return new StandardValuesCollection(choices);
+            return new StandardValuesCollection(Repository.Instance.GetPublicDashboardFolders());
         }
     }
 }

@@ -65,7 +65,6 @@ Rules applied if a user belongs to several groups:
 - Personal folder: the highest right is used (No personal folder, Personal folder for files only, Personal folder for reports and files)
 - Show all folders: true if one group has this flag set to true
 - View type: the union of the views (Reports, Dashboards)
-- View Dashboards first: true if one group has this flag set to true
 - Folders and Folder Detail Scripts are executed sequentially sorted by group name
 
 Web Report Designer Security

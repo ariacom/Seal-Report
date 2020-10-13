@@ -184,6 +184,9 @@ table.dataTable {
     font-style: italic;
 }
 
+#refresh-nav-item {
+    font-size: 20px;
+}
 /* spin speed */
 #refresh-nav-item.fa-spin {
     animation-duration: 1s;
