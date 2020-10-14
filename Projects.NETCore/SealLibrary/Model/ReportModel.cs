@@ -1829,12 +1829,6 @@ model.ResultTable = query2.CopyToDataTable2();
                         }
                         else
                         {
-                            //Replace table name in the Join clause
-                            foreach (var col in join.RightTable.Columns.Union(join.LeftTable.Columns))
-                            {
-                                joinClause = joinClause.Replace(string.Format("{0}[\"", col.MetaTable.Name), string.Format("{0}[\"", col.MetaTable.LINQResultName));
-                            }
-
                             lastTable = string.Format("{0}join {1} on\r\n{2}\r\n", lastTable, join.RightTable.LINQExpressionName, joinClause);
                         }
 
@@ -2242,17 +2236,27 @@ model.ResultTable = query2.CopyToDataTable2();
                     element2.AggregateFunction = element.AggregateFunction;
                 }
 
-                //elements used to perform the LINQ joins
+                //elements used to perform the LINQ joins: we parse all columns defined in the sources involved
                 foreach (var join in ExecTableJoins)
                 {
-                    foreach (var col in join.LeftTable.Columns.Union(join.RightTable.Columns).Where(i => i.Source.GUID == source.GUID))
+                    var sources = new List<MetaSource>();
+                    if (!sources.Contains(join.LeftTable.Source)) sources.Add(join.LeftTable.Source);
+                    if (!sources.Contains(join.RightTable.Source)) sources.Add(join.RightTable.Source);
+                    foreach (var s in sources)
                     {
-                        if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.AliasName, Helper.QuoteDouble(col.Name))))
+                        foreach (var t in s.MetaData.Tables)
                         {
-                            subModel.addHiddenElement(col.GUID);
+                            foreach (var col in t.Columns)
+                            {
+                                if (join.Clause.Contains(string.Format("{0}[{1}]", col.MetaTable.LINQResultName, Helper.QuoteDouble(col.Name))))
+                                {
+                                    subModel.addHiddenElement(col.GUID);
+                                }
+                            }
                         }
                     }
                 }
+
 
                 //elements used to perform the LINQ restrictions
                 foreach (var restr in Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))

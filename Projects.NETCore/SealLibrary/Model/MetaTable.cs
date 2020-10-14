@@ -363,7 +363,11 @@ namespace Seal.Model
         {
             get
             {
-                return string.Format("{0}", IsSQL ? Regex.Replace(Source.Name, "[^A-Za-z]", "") : AliasName);
+                var sourceName = "";
+                if (Source is ReportSource) sourceName = ((ReportSource)Source).MetaSourceName;
+                if (string.IsNullOrEmpty(sourceName)) sourceName = Source.Name;
+
+                return string.Format("{0}", IsSQL ? Regex.Replace(sourceName, "[^A-Za-z]", "") : AliasName);
             }
         }
 

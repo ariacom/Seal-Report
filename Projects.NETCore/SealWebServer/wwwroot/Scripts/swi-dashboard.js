@@ -29,19 +29,21 @@ function loadLayout(grid, serializedLayout) {
 }
 function redrawDashboard() {
     $("#nav_popupmenu").css("opacity", "0");
-    if ($(".item").css("opacity") == "1")
-        $(".item,.group-name,h1").css("opacity", "0.4");
-    setTimeout(function () {
-        redrawNVD3Charts();
-        redrawDataTables();
-        _da.reorderItems(true);
-        if ($(".item").css("opacity") != "1")
-            $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "0.6");
-    }, 500);
-    setTimeout(function () {
-        $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "1");
-        _da.enableControls();
-    }, 900);
+    if (_da._pendingRequest <= 0) {
+        if ($(".item").css("opacity") == "1")
+            $(".item,.group-name,h1").css("opacity", "0.4");
+        setTimeout(function () {
+            redrawNVD3Charts();
+            redrawDataTables();
+            _da.reorderItems(true);
+            if ($(".item").css("opacity") != "1")
+                $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "0.6");
+        }, 500);
+        setTimeout(function () {
+            $(".item,.group-name,h1,#nav_popupmenu").css("opacity", "1");
+            _da.enableControls();
+        }, 900);
+    }
 }
 var SWIDashboard = /** @class */ (function () {
     function SWIDashboard() {
@@ -154,10 +156,8 @@ var SWIDashboard = /** @class */ (function () {
         _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
             _da._pendingRequest--;
-            if (_da._pendingRequest <= 0) {
-                //Redraw...
-                redrawDashboard();
-            }
+            //Redraw...
+            redrawDashboard();
         });
     };
     SWIDashboard.prototype.initDashboardItems = function (guid) {
@@ -361,9 +361,7 @@ var SWIDashboard = /** @class */ (function () {
                         _gateway.SetLastDashboard(_da._lastGUID, null);
                         _main._profile.dashboard = _da._lastGUID;
                         $(".item,.group-name").css("opacity", "0.2");
-                        if (_da._pendingRequest <= 0) {
-                            redrawDashboard();
-                        }
+                        redrawDashboard();
                     });
                 }
                 var content = $("<div id='" + dashboard.GUID + "'>");

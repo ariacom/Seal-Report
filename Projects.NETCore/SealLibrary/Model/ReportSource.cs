@@ -24,11 +24,22 @@ namespace Seal.Model
         /// </summary>
         public string MetaSourceGUID { get; set; }
 
+        private string _metaSourceName;
         /// <summary>
         /// Name
         /// </summary>
         [XmlIgnore]
-        public string MetaSourceName { get; private set; }
+        public string MetaSourceName { 
+            get
+            {
+                if (string.IsNullOrEmpty(_metaSourceName) && !string.IsNullOrEmpty(MetaSourceGUID))
+                {
+                    var metaSource = Repository.Sources.FirstOrDefault(i => i.GUID == MetaSourceGUID);
+                    if (metaSource != null) _metaSourceName = metaSource.Name;
+                }
+                return _metaSourceName;
+            }
+        }
 
         /// <summary>
         /// Reference to the default repository connection
@@ -115,7 +126,7 @@ namespace Seal.Model
                     IsDefault = source.IsDefault;
                     IsNoSQL = source.IsNoSQL;
                     InitScript = source.InitScript;
-                    MetaSourceName = source.Name;
+                    _metaSourceName = source.Name;
                     foreach (var item in source.Connections)
                     {
                         item.Source = source;
