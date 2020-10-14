@@ -95,7 +95,7 @@ namespace Seal.Forms
             _exitOnClose = exitOnClose;
         }
 
-        public void ViewReport(Report report, Repository repository, bool render, string viewGUID, string outputGUID, string originalFilePath, string taskGUID = null)
+        public void ViewReport(Report report, bool render, string viewGUID, string outputGUID, string originalFilePath, string taskGUID = null)
         {
             Show();
             Text = Path.GetFileNameWithoutExtension(originalFilePath) + " - " + Repository.SealRootProductName + " Report Viewer";

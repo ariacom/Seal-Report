@@ -107,8 +107,11 @@ namespace Seal.Forms
                     {
                         for (int i = 0; i < join.LeftTable.Columns.Count && i < join.RightTable.Columns.Count; i++)
                         {
-                            if (join.Source.IsSQL) samples.Add(string.Format("{0}={1}", join.LeftTable.Columns[i].Name, join.RightTable.Columns[i].Name));
-                            else samples.Add(string.Format("{0} equals {1}", join.LeftTable.Columns[i].RawLINQColumnName, join.RightTable.Columns[i].RawLINQColumnName));
+                            if (join.LeftTable.Columns[i].Type == join.RightTable.Columns[i].Type)
+                            {
+                                if (join.Source.IsSQL) samples.Add(string.Format("{0}={1}", join.LeftTable.Columns[i].Name, join.RightTable.Columns[i].Name));
+                                else samples.Add(string.Format("{0} equals {1}", join.LeftTable.Columns[i].RawLINQColumnName, join.RightTable.Columns[i].RawLINQColumnName));
+                            }
                         }
                     }
 
@@ -117,7 +120,7 @@ namespace Seal.Forms
                     {
                         forceValueToEdit = true;
                         if (join.Source.IsSQL) valueToEdit = string.Format("{0}.<ColumnName> = {1}.<ColumnName>", join.LeftTable.AliasName, join.RightTable.AliasName);
-                        else valueToEdit = string.Format("Helper.ToString({0}[\"<ColumnName>\"]) equals Helper.ToString({1}[\"<ColumnName>\"])", join.LeftTable.AliasName, join.RightTable.AliasName);
+                        else valueToEdit = string.Format("Helper.ToString({0}[\"<ColumnName>\"]) equals Helper.ToString({1}[\"<ColumnName>\"])", join.LeftTable.LINQResultName, join.RightTable.LINQResultName);
                     }
                 }
                 else if (context.Instance is MetaEnum)

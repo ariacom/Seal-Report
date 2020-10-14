@@ -56,7 +56,7 @@ namespace Seal
                     }
                 }
                 var reportViewer = new ReportViewerForm(true, Properties.Settings.Default.ShowScriptErrors);
-                reportViewer.ViewReport(report, report.Repository, false, viewGUID, outputGUID, report.FilePath);
+                reportViewer.ViewReport(report, false, viewGUID, outputGUID, report.FilePath);
 
                 Application.Run();
             }

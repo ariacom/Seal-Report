@@ -239,7 +239,7 @@ namespace Seal.Model
 @{{
 DataTable aDataTable = new DataTable();
 var query = from {0} in aDataTable.AsEnumerable() join {1} in aDataTable.AsEnumerable() on {2} select {0};
-}}", LeftTable.AliasName, RightTable.AliasName, Clause);
+}}", LeftTable.LINQResultName, RightTable.LINQResultName, Clause);
                     try
                     {
                         RazorHelper.Compile(RazorHelper.GetFullScript(linq, null), typeof(MetaJoin), Helper.NewGUID());

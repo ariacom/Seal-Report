@@ -442,6 +442,8 @@ namespace Seal
             {
                 currentNode.Nodes.Clear();
             }
+
+            toolStripHelper.SetHelperButtons(model);
         }
 
         #endregion
@@ -1502,7 +1504,7 @@ namespace Seal
             {
                 _reportViewer = new ReportViewerForm(false, Properties.Settings.Default.ShowScriptErrors);
             }
-            _reportViewer.ViewReport(_report.Clone(), _repository, render, viewGUID, outputGUID, _report.FilePath, taskGUID);
+            _reportViewer.ViewReport(_report.Clone(), render, viewGUID, outputGUID, _report.FilePath, taskGUID);
             _canRender = true;
             FileHelper.PurgeTempApplicationDirectory();
         }

@@ -442,7 +442,7 @@ namespace Seal.Model
                 var converter = "String";
                 if (Type == ColumnType.DateTime) converter = "DateTime";
                 else if (Type == ColumnType.Numeric) converter = "Double";
-                return string.Format("Helper.To{0}({1}[{2}])", converter, MetaTable.AliasName, Helper.QuoteDouble(Name));
+                return string.Format("Helper.To{0}({1}[{2}])", converter, MetaTable.LINQResultName, Helper.QuoteDouble(Name));
             }
         }
         /// <summary>
