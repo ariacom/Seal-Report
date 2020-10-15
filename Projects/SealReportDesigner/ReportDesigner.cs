@@ -17,6 +17,7 @@ using Seal.Forms;
 using System.Diagnostics;
 using System.Collections;
 using Microsoft.Win32.TaskScheduler;
+using System.Text.RegularExpressions;
 
 namespace Seal
 {
@@ -1162,9 +1163,9 @@ namespace Seal
             else
             {
                 //Set column names
-                foreach (var el in model.Elements) el.SQLColumnName = el.MetaColumn.Name.Replace(el.MetaColumn.MetaTable.AliasName + ".", "");
-                foreach (var re in model.Restrictions) re.SQLColumnName = re.MetaColumn.Name.Replace(re.MetaColumn.MetaTable.AliasName + ".", "");
-                foreach (var re in model.AggregateRestrictions) re.SQLColumnName = re.MetaColumn.Name.Replace(re.MetaColumn.MetaTable.AliasName + ".", "");
+                foreach (var el in model.Elements) el.SQLColumnName = Regex.Replace(el.MetaColumn.Name.Replace(el.MetaColumn.MetaTable.AliasName + ".", ""), "[^A-Za-z]", "");
+                foreach (var re in model.Restrictions) re.SQLColumnName = Regex.Replace(re.MetaColumn.Name.Replace(re.MetaColumn.MetaTable.AliasName + ".", ""), "[^A-Za-z]", "");
+                foreach (var re in model.AggregateRestrictions) re.SQLColumnName = Regex.Replace(re.MetaColumn.Name.Replace(re.MetaColumn.MetaTable.AliasName + ".", ""), "[^A-Za-z]", "");
 
                 model.BuildQuery(true);
                 model.Table = MetaTable.Create();

@@ -1023,7 +1023,7 @@ namespace SealWebServer.Controllers
 
                 if (report.HasErrors)
                 {
-                    throw new Exception(report.Translate("This report has execution errors. Please check details in the Repository Logs Files or in the Event Viewer..."));
+                    throw new Exception(report.Translate("This report has execution errors. Please check details in the Logs Files..."));
                 }
 
                 //Reset pointers and parse

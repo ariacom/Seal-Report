@@ -103,7 +103,7 @@ Report;Table of Contents;;Sommaire
 Report;Task executed...;;Tâche exécutée
 Report;Tasks executed...;;Tâches exécutées
 Report;The report has been generated.;;Le rapport a été généré.
-Report;This report has execution errors. Please check details in the Repository Logs Files or in the Event Viewer...;;Ce rapport a des erreurs d'exécutions. Veuillez consulter les détails dans les fichiers journaux du Repository ou dans le journal des événements Windows.
+Report;This report has execution errors. Please check details in the Logs Files...;;Ce rapport a des erreurs d'exécutions. Veuillez consulter les détails dans les journaux.
 Report;ThisMonth;;CeMois
 Report;ThisWeek;;CetteSemaine
 Report;ThisYear;;CetteAnnée

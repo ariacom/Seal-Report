@@ -638,7 +638,7 @@ namespace Seal.Model
         {
             get
             {
-                return !string.IsNullOrEmpty(WebUrl) && !HasValidationErrors && !string.IsNullOrEmpty(ExecutionErrors) ? Translate("This report has execution errors. Please check details in the Repository Logs Files or in the Event Viewer...") : ExecutionErrors;
+                return !string.IsNullOrEmpty(WebUrl) && !HasValidationErrors && !string.IsNullOrEmpty(ExecutionErrors) ? Translate("This report has execution errors. Please check details in the Logs Files...") : ExecutionErrors;
             }
         }
 

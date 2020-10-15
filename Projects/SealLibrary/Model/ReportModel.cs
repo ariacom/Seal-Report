@@ -222,7 +222,7 @@ namespace Seal.Model
             }
             set
             {
-                bool updateModels = (Report != null &&  _subModelsSetAggr != value);
+                bool updateModels = (Report != null && _subModelsSetAggr != value);
                 _subModelsSetAggr = value;
                 if (updateModels) BuildQuery(false, true);
             }
@@ -1566,14 +1566,6 @@ model.ResultTable = query2.CopyToDataTable2();
                         if (table != null && !FromTables.Contains(table) && (restriction.HasValue || forceRestrictionsTables) && restriction.Operator != Operator.ValueOnly) FromTables.Add(table);
                     }
 
-                    if (IsLINQ)
-                    {
-                        //For LINQ, keep only SQL tables having joins defined...
-                        filterLINQFromTables();
-                        //and build group by tables
-                        foreach (var table in FromTables) Helper.AddValue(ref execGroupByLINQ, ",", table.LINQResultName);
-                    }
-
                     //Clear group by clause if not necessary
                     if (noGroupBy) execGroupByClause = new StringBuilder();
 
@@ -1585,6 +1577,14 @@ model.ResultTable = query2.CopyToDataTable2();
                     buildOrderClause(GetElements(PivotPosition.Data), orderColumns, ref execOrderByClause, ref execOrderByNameClause, noGroupBy);
 
                     bool joinsOK = buildFromClause();
+                    if (IsLINQ)
+                    {
+                        //For LINQ, keep only SQL tables having joins defined...
+                        filterLINQFromTables();
+                        //and build group by tables
+                        foreach (var table in FromTables) Helper.AddValue(ref execGroupByLINQ, ",", table.LINQResultName);
+                    }
+
                     if (!joinsOK && IsLINQ)
                     {
                         //Try to add SQL tables joins from the same source...
@@ -1641,7 +1641,15 @@ model.ResultTable = query2.CopyToDataTable2();
 
                         LINQSelect = !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("from {0}", execFromClause);
                         if (execWhereClause.Length > 0) LINQSelect += string.Format("\r\nwhere\r\n{0}\r\n", execWhereClause);
-                        if (execGroupByClause.Length > 0) LINQSelect += string.Format("\r\ngroup new {{ {0} }} by new {{\r\n{1}\r\n}} into g\r\n", execGroupByLINQ, execGroupByClause);
+
+                        if (!noGroupBy)
+                        {
+                            LINQSelect += string.Format("\r\ngroup new {{ {0} }} by ", execGroupByLINQ);
+                            if (execGroupByClause.Length == 0) LINQSelect += "1"; //Case no dimension for aggregate
+                            else if (execGroupByClause.Length > 0) LINQSelect += string.Format("new {{\r\n{0}\r\n}}", execGroupByClause); //With dimensions
+                            LINQSelect += " into g\r\n";
+                        }
+
                         if (execHavingClause.Length > 0) LINQSelect += string.Format("\r\nwhere\r\n{0}\r\n", execHavingClause);
                         if (execOrderByClause.Length > 0) LINQSelect += string.Format("\r\norderby {0}\r\n", execOrderByClause);
                         LINQSelect += string.Format("\r\nselect new {{\r\n{0}\r\n}}", execSelectClause);
@@ -1678,6 +1686,16 @@ model.ResultTable = query2.CopyToDataTable2();
                 }
                 filterLINQFromTables();
                 AdditionalFromTables.Clear();
+            }
+
+            //For LINQ, remove duplicate tables given the same Data Source                    
+            if (IsLINQ)
+            {
+                var tables = new List<MetaTable>();
+                foreach (var table in FromTables) {
+                    if (!tables.Exists(i => i.LINQResultName == table.LINQResultName)) tables.Add(table);
+                }
+                FromTables = tables;
             }
 
             List<MetaTable> extraWhereTables = FromTables.Where(i => !string.IsNullOrEmpty(i.WhereSQL)).ToList();
@@ -2069,6 +2087,9 @@ model.ResultTable = query2.CopyToDataTable2();
                             {
                                 //we take only the joins that can reach a table different than the new reached table
                                 var joins = path.joinsToUse[key].Where(i => i.RightTableGUID != newTable.GUID).ToArray();
+                                //If LINQ, filter, we do not take joins giving the same Source
+                                if (IsLINQ) joins = joins.Where(i => i.LeftTable.LINQResultName != newTable.LINQResultName && i.RightTable.LINQResultName != newTable.LINQResultName).ToArray();
+
                                 if (joins.Length > 0) newJoinPath.joinsToUse.Add(key, joins);
                             }
                         }
@@ -2077,6 +2098,8 @@ model.ResultTable = query2.CopyToDataTable2();
                         newJoinPath.currentTable = newTable;
                         newJoinPath.joins.Add(join);
                         newJoinPath.tablesToUse.Remove(newTable);
+                        //If LINQ, remove all tables giving the same Source
+                        if (IsLINQ) newJoinPath.tablesToUse.RemoveAll(i => i.LINQResultName == newTable.LINQResultName);
 
                         JoinTables(newJoinPath, resultPath);
 
@@ -2386,7 +2409,6 @@ model.ResultTable = query2.CopyToDataTable2();
                         }
                     }
                 }
-
 
                 //elements used to perform the LINQ restrictions
                 foreach (var restr in Restrictions.Union(AggregateRestrictions).Where(i => i.MetaColumn != null && i.MetaColumn.MetaTable != null && i.MetaColumn.MetaTable.LINQSourceGUID == subModel.SourceGUID))

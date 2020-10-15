@@ -604,11 +604,14 @@ namespace Seal.Controls
 
                     if (result == DialogResult.Yes)
                     {
+
+
                         if (Model.IsSQLModel) Model.RefreshMetaTable(true);
 
                         initTreeView();
                         Model.Elements.Clear();
                         Model.Restrictions.Clear();
+                        Model.AggregateRestrictions.Clear();
                         Model.InitEditor();
                         Model.Restriction = "";
                         Model.AggregateRestrictions.Clear();
@@ -620,6 +623,7 @@ namespace Seal.Controls
                         }
 
                         MainForm.UpdateModelNode();
+                        ElementsToPanels();
                     }
                     else
                     {
