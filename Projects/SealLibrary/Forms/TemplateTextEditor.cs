@@ -1175,6 +1175,8 @@ if (cell.IsTitle)
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the script to define the table";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+
+                        if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
                     }
                     else if (context.PropertyDescriptor.Name == "LoadScript")
                     {
@@ -1184,6 +1186,8 @@ if (cell.IsTitle)
                         frm.ObjectForCheckSyntax = context.Instance;
                         frm.Text = "Edit the default script to load the table";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+
+                        if (context.PropertyDescriptor.IsReadOnly && string.IsNullOrEmpty(valueToEdit)) valueToEdit = template;
                     }
                 }
                 else if (context.Instance is ReportModel)

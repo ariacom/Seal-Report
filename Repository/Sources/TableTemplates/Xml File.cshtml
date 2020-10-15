@@ -3,35 +3,56 @@
     MetaTable table = Model;
 
     //Parameters for this table
-    table.Parameters.Add(new Parameter() { Name = "xml_path", Value = @"%SEALREPOSITORY%\Reports\Overview - Sales.srex", DisplayName = "XML File Path", Description = "The XML file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%\Reports\Overview - Sales.srex" }, UseOnlyEnumValues = false });
-    table.Parameters.Add(new Parameter() { Name = "xml_node_name", Value = "", DisplayName = "Node name", Description = "The node name to load from the XML. The child nodes can be defined as table columns." });
+    table.Parameters.Add(new Parameter() { Name = "xml_path", Value = @"%SEALREPOSITORY%\Reports\Overview - Sales.srex", DisplayName = "XML File Path", Description = "The XML file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%\Sources\Northwind.scfx" }, UseOnlyEnumValues = false });
+    table.Parameters.Add(new Parameter() { Name = "xml_node_name", Value = "", DisplayName = "Node name", Description = "The node name to load from the XML. The child nodes are then defined as table columns.", Enums = new string[] { "MetaColumn" }, UseOnlyEnumValues = false });
 
     table.DefinitionScript = @"@using System.Data
+@using System.Xml.Linq
 @{
     MetaTable metaTable = Model;
 
-    metaTable.NoSQLTable = new DataTable( metaTable.GetValue(""xml_node_name""));
-    //Define table columns from the child nodes
-    metaTable.NoSQLTable.Columns.Add(new DataColumn(""GUID"", typeof(string)));
-    metaTable.NoSQLTable.Columns.Add(new DataColumn(""Name"", typeof(string)));
+    var nodeName = metaTable.GetValue(""xml_node_name"");
+    var path = metaTable.GetValue(""xml_path"").Replace(Repository.SealRepositoryKeyword, Repository.Instance.RepositoryPath);
+    var xml = XDocument.Load(path);
 
+    metaTable.NoSQLTable = new DataTable(nodeName);
+
+    //Load the XML file and define the columns
+    var node = xml.Root.Descendants(nodeName).FirstOrDefault();
+    if (node != null) {
+        foreach (var el in node.Elements())
+        {
+            metaTable.NoSQLTable.Columns.Add(new DataColumn(el.Name.LocalName, typeof(string)));
+        }
+    }
     metaTable.LogMessage(""{0} column(s) defined"", metaTable.NoSQLTable.Columns.Count);
 }";
 
     table.LoadScript = @"@using System.IO
 @using System.Data
+@using System.Xml.Linq
 @{
     MetaTable metaTable = Model;
 
+    var nodeName = metaTable.GetValue(""xml_node_name"");
     var path = metaTable.GetValue(""xml_path"").Replace(Repository.SealRepositoryKeyword, Repository.Instance.RepositoryPath);
     if (metaTable.NoSQLCacheTable != null && File.GetLastWriteTime(path) <= metaTable.LoadDate) {
         metaTable.LogMessage(""Getting table from the load done at {0}."", metaTable.LoadDate);
         metaTable.NoSQLTable = metaTable.NoSQLCacheTable;
     }
     else {
-        StringReader sr = new StringReader(File.ReadAllText(path));
-        metaTable.NoSQLTable.ReadXml(sr);
-        metaTable.LogMessage(""{0} record(s) loaded"", metaTable.NoSQLTable.Rows.Count);
+		var xml = XDocument.Load(path);
+		//Load the values in the table
+		foreach (var node in xml.Root.Descendants(nodeName))
+		{
+			var values = new List<string>();
+			foreach (DataColumn col in metaTable.NoSQLTable.Columns) {
+				var element = node.Elements().FirstOrDefault(i => i.Name == col.ColumnName);
+				values.Add(element != null ? element.Value : """");
+			}
+			metaTable.NoSQLTable.Rows.Add(values.ToArray());
+		}    
+		metaTable.LogMessage(""{0} record(s) loaded"", metaTable.NoSQLTable.Rows.Count);
     }
 }";
 }

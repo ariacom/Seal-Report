@@ -164,6 +164,7 @@ Web;Check SQL;;Vérifier le SQL
 Web;Close;;Fermer
 Web;Color;;Couleur
 Web;Connection;;Connexion
+Web;PDF Conversion delay;;Délai pour la conversion PDF
 Web;Copy;;Copier
 Web;Create a new dashboard;;Créer un nouveau Dashboard
 Web;Create in folder;;Créer dans le répertoire
@@ -172,9 +173,11 @@ Web;Culture;;Culture
 Web;Custom SQL;;SQL Spécifique
 Web;Custom;;Spécifique
 Web;Cut;;Couper
+Web;Dashboard;;Dashboard
 Web;Dashboard name;;Nom du Dashboard
 Web;Dashboard Widget publication name;;Nom du Widget publié
 Web;Dashboard Widget description;;Description du Widget
+Web;Dashboards to export;;Dashboards à exporter
 Web;Days;;Jours
 Web;Days of the week;;Jours de la semaine
 Web;Default body;;Message par défaut
@@ -204,6 +207,8 @@ Web;Error: This report name exists already.;;Erreur: Ce nom de rapport existe d�
 Web;Execute;;Exécuter
 Web;Execute now;;Exécuter maintenant
 Web;Execution;;Exécution
+Web;Export;;Exporter
+Web;Export Dashboards;;Exporter les Dashboards
 Web;File name;;Nom du fichier
 Web;Folder;;Répertoire
 Web;Folders;;Répertoire
@@ -282,6 +287,7 @@ Web;Start date;;Date de départ
 Web;Subject;;Sujet
 Web;The maximum number of users has been reached for your license ({0}). Please try to login later...;;Le nombre maximum de connexions a été atteint pour votre licence ({0}). Merci d'essayer plus tard...
 Web;This Widget has an error. Please consider to remove it from your Dashboard...;;Ce Widget est en erreur. Vous pouvez éventuellement l'enlever de votre Dashboard... 
+Web;Title;;Titre
 Web;To;;Destinataire
 Web;Total aggr.;;Aggr. totaux
 Web;Type;;Type

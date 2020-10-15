@@ -225,7 +225,10 @@ namespace Seal.Model
             get
             {
                 string result = null;
-                if (IsSubTable && RootTable != null) result = RootTable.DefaultDefinitionScript;
+                if (IsSubTable && RootTable != null)
+                {
+                    result = string.IsNullOrEmpty(RootTable.DefinitionScript) ? RootTable.DefaultDefinitionScript : RootTable.DefinitionScript;
+                }
                 else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultDefinitionScript;
                 return result ?? "";
             }
@@ -240,8 +243,14 @@ namespace Seal.Model
             get
             {
                 string result = null;
-                if (IsSubTable && RootTable != null) result = RootTable.LoadScript ?? RootTable.DefaultLoadScript;
-                else if (TableTemplate != null && TemplateName != null) result = TableTemplate.DefaultLoadScript;
+                if (IsSubTable && RootTable != null)
+                {
+                    result = string.IsNullOrEmpty(RootTable.LoadScript) ? RootTable.DefaultLoadScript : RootTable.LoadScript;
+                }
+                else if (TableTemplate != null && TemplateName != null)
+                {
+                    result = TableTemplate.DefaultLoadScript;
+                }
                 return result ?? "";
             }
         }
@@ -440,7 +449,7 @@ namespace Seal.Model
                 if (Source is ReportSource) sourceName = ((ReportSource)Source).MetaSourceName;
                 if (string.IsNullOrEmpty(sourceName)) sourceName = Source.Name;
 
-                return string.Format("{0}", IsSQL ? Regex.Replace(sourceName, "[^A-Za-z]", "") : AliasName);
+                return Regex.Replace(IsSQL ? sourceName : AliasName, "[^A-Za-z]", "");
             }
         }
 

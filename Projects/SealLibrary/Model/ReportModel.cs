@@ -2563,7 +2563,7 @@ model.ResultTable = query2.CopyToDataTable2();
 
                         //Thread.Sleep(5000); //For DEV
 
-                        dataTable.TableName = subTable.AliasName;
+                        dataTable.TableName = subTable.LINQResultName;
                         subTable.NoSQLTable = dataTable;
                     }
                 }

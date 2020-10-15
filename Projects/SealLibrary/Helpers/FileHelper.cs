@@ -108,7 +108,7 @@ namespace Seal.Helpers
         public static string GetUniqueFileName(string directory, string fileName, string newExtension = "", bool lockFile = false)
         {
             int cnt = 0;
-            string result = "";
+            string result;
             while (true)
             {
                 result = Path.Combine(directory, Path.GetFileNameWithoutExtension(fileName));
