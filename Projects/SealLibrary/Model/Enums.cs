@@ -586,6 +586,8 @@ namespace Seal.Model
     {
         [Description("Visible and modifiable")]
         Visible,
+        [Description("Visible with Nulls and modifiable")]
+        VisibleWithNulls,
         [Description("Visible but not modifiable")]
         NotModifiable,
         [Description("Not visible")]

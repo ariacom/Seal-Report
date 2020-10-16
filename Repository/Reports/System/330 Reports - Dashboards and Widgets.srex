@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><CurrentViewGUID>4c64cd65-eb56-43cf-b9eb-4c44391a3d0f</CurrentViewGUID><GUID>9a55139e-2f2e-406e-8bce-a61371fcc0e7</GUID><ViewGUID>4c64cd65-eb56-43cf-b9eb-4c44391a3d0f</ViewGUID><Sources><ReportSource><GUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</GUID><Name>Dashboards and Widgets</Name><Connections><MetaConnection><GUID>5216e238-323f-4891-985c-e9c4196ecf49</GUID><Name>connection</Name><ConnectionString /></MetaConnection></Connections><ConnectionGUID>5216e238-323f-4891-985c-e9c4196ecf49</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData><Tables><MetaTable><GUID>f09f5456-f125-403b-bfa1-16583f103a7d</GUID><Name>Widgets</Name><DefinitionScript>@using System.Data&#xD;
+@{&#xD;
+    MetaTable metaTable = Model;&#xD;
+                ReportExecutionLog log = metaTable;&#xD;
+&#xD;
+    //Script executed to define the result table columns that will be loaded by the 'Load Script'&#xD;
+    //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...&#xD;
+    DataTable table = new DataTable();&#xD;
+    table.Columns.Add(new DataColumn("name", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("description", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("ReportName", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("ReportPath", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("Dynamic", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("Icon", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("Color", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("Width", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("Height", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("Refresh", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("ExecReportPath", typeof(string)));&#xD;
+    table.Columns.Add(new DataColumn("ExecViewGUID", typeof(string)));&#xD;
+    &#xD;
+    metaTable.NoSQLTable = table;&#xD;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);&#xD;
+}&#xD;
+</DefinitionScript><LoadScript>@using System.Data&#xD;
+@{&#xD;
+    MetaTable metaTable = Model;&#xD;
+    DataTable table = metaTable.NoSQLTable;&#xD;
+    ReportExecutionLog log = metaTable;&#xD;
+    ReportModel reportModel = metaTable.NoSQLModel;&#xD;
+    Report report = (reportModel != null ? reportModel.Report : null);&#xD;
+&#xD;
+    foreach (var item in DashboardWidgetsPool.Widgets) {&#xD;
+        var widget = item.Value;&#xD;
+        table.Rows.Add(&#xD;
+            widget.Name, &#xD;
+            widget.Description, &#xD;
+            widget.ReportName, &#xD;
+            widget.ReportPath, &#xD;
+            widget.Dynamic ? "Yes" : "No", &#xD;
+            widget.Icon, &#xD;
+            widget.Color, &#xD;
+            widget.Width &lt;= 0 ? "" : widget.Width.ToString(), &#xD;
+            widget.Height &lt;= 0 ? "" : widget.Height.ToString(), &#xD;
+            widget.Refresh &lt;= 0 ? "" : widget.Refresh.ToString(),&#xD;
+            widget.ExecReportPath,&#xD;
+            widget.ExecViewGUID&#xD;
+            );&#xD;
+    }&#xD;
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);&#xD;
+}&#xD;
+</LoadScript><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>cf8cf340-8651-489a-bbbe-6bf04a989ae1</GUID><Name>name</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Name</DisplayName></MetaColumn><MetaColumn><GUID>be4246b9-f0f7-4717-bdae-35aa6959a27d</GUID><Name>description</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Description</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>4f888c97-5e10-42c6-b15a-4a44ba57d6b4</GUID><Name>ReportName</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Report Name</DisplayName><DisplayOrder>3</DisplayOrder></MetaColumn><MetaColumn><GUID>1d2b9826-9810-4fa0-ae3c-1b7442bf4065</GUID><Name>ReportPath</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Report Path</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>79f80d00-1c6b-42e1-aed1-6b62803447e8</GUID><Name>Dynamic</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Dynamic</DisplayName><DisplayOrder>5</DisplayOrder></MetaColumn><MetaColumn><GUID>26b4238e-635b-4236-8618-1ba2519411a7</GUID><Name>Icon</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Icon</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>fa8157d6-78e7-4234-aad8-fc2ffc6d9842</GUID><Name>Color</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Color</DisplayName><DisplayOrder>7</DisplayOrder></MetaColumn><MetaColumn><GUID>8ef86620-7d06-40eb-9437-6722c98f97eb</GUID><Name>Width</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Width</DisplayName><DisplayOrder>8</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>9d2720b2-f995-47e1-856a-f9f2c51b992c</GUID><Name>Height</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Height</DisplayName><DisplayOrder>9</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>dd8b3ece-f78a-42d1-9340-e25510c344bc</GUID><Name>Refresh</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Refresh</DisplayName><DisplayOrder>10</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>4d8b9c01-c50d-44ed-9a0f-5ab0b2e1916c</GUID><Name>ExecReportPath</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Exec Report Path</DisplayName><DisplayOrder>11</DisplayOrder></MetaColumn><MetaColumn><GUID>be737447-b34d-4b9e-83a8-7ffd54b3c439</GUID><Name>ExecViewGUID</Name><Type>Text</Type><Category>Widgets</Category><DisplayName>Exec View GUID</DisplayName><DisplayOrder>12</DisplayOrder></MetaColumn></Columns></MetaTable><MetaTable><GUID>1fdc73b2-dd85-4f6c-9913-ca3505eff329</GUID><Name>Dashboards</Name><TemplateName>Generic</TemplateName><DefinitionScript>@using System.Data&#xD;
+@{&#xD;
+    MetaTable metaTable = Model;&#xD;
+    ReportModel reportModel = metaTable.NoSQLModel;&#xD;
+    Report report = (reportModel != null ? reportModel.Report : null);&#xD;
+    List&lt;ReportRestriction&gt; restrictions = (reportModel != null ? reportModel.Restrictions : null);&#xD;
+&#xD;
+    metaTable.NoSQLTable = new DataTable();&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Name", typeof(string)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Path", typeof(string)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Widget Items Count", typeof(int)));&#xD;
+&#xD;
+    metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);&#xD;
+}</DefinitionScript><LoadScript>@using System.Data&#xD;
+@using System.IO&#xD;
+@{&#xD;
+    MetaTable metaTable = Model;&#xD;
+    ReportModel reportModel = metaTable.NoSQLModel;&#xD;
+    Report report = (reportModel != null ? reportModel.Report : null);&#xD;
+    List&lt;ReportRestriction&gt; restrictions = (reportModel != null ? reportModel.Restrictions : null);    &#xD;
+    &#xD;
+    foreach (var folder in Directory.GetDirectories(metaTable.Source.Repository.DashboardPublicFolder))&#xD;
+    {&#xD;
+        foreach (var p in Directory.GetFiles(folder, "*." + Repository.SealDashboardExtension))&#xD;
+        {&#xD;
+            var dashboard = Dashboard.LoadFromFile(p);&#xD;
+            metaTable.NoSQLTable.Rows.Add(&#xD;
+                dashboard.Name, &#xD;
+                dashboard.Path.Replace(metaTable.Source.Repository.RepositoryPath,""),&#xD;
+                dashboard.Items.Count&#xD;
+                );&#xD;
+        }&#xD;
+    }    &#xD;
+    metaTable.LogMessage("{0} record(s) loaded", metaTable.NoSQLTable.Rows.Count);&#xD;
+}</LoadScript><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>fb0de2fc-ae5e-4860-8355-0f10f05556a5</GUID><Name>Name</Name><Type>Text</Type><Category>Dashboards</Category><DisplayName>Name</DisplayName></MetaColumn><MetaColumn><GUID>35360d94-8fd9-4fd7-85d4-b90d263e8f6e</GUID><Name>Path</Name><Type>Text</Type><Category>Dashboards</Category><DisplayName>Path</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>bc270bbc-cf31-47ea-9516-745384393d85</GUID><Name>Widget Items Count</Name><Type>Numeric</Type><Category>Dashboards</Category><DisplayName>Widget Items Count</DisplayName><DisplayOrder>3</DisplayOrder><Format>N0</Format></MetaColumn></Columns></MetaTable><MetaTable><GUID>906ff9f2-2c76-45d7-947c-6df2273c14c6</GUID><Name>Dashboard Items</Name><TemplateName>Generic</TemplateName><DefinitionScript>@using System.Data
+@{
+    MetaTable metaTable = Model;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List&lt;ReportRestriction&gt; restrictions = (reportModel != null ? reportModel.Restrictions : null);
+
+    metaTable.NoSQLTable = new DataTable();
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Dashboard Name", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Dashboard Path", typeof(string)));
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Group Order", typeof(int)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Group Name", typeof(string)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Order", typeof(int)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Icon", typeof(string)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Width", typeof(string)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Height", typeof(string)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Dynamic", typeof(string)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Refresh", typeof(string)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Widget Name", typeof(string)));&#xD;
+    metaTable.NoSQLTable.Columns.Add(new DataColumn("Widget Report Name", typeof(string)));&#xD;
+
+    metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}</DefinitionScript><LoadScript>@using System.Data
+@using System.IO
+@{
+    MetaTable metaTable = Model;
+    ReportModel reportModel = metaTable.NoSQLModel;
+    Report report = (reportModel != null ? reportModel.Report : null);
+    List&lt;ReportRestriction&gt; restrictions = (reportModel != null ? reportModel.Restrictions : null);    
+    
+    foreach (var folder in Directory.GetDirectories(metaTable.Source.Repository.DashboardPublicFolder))
+    {
+        foreach (var p in Directory.GetFiles(folder, "*." + Repository.SealDashboardExtension))
+        {
+            var dashboard = Dashboard.LoadFromFile(p);
+            string items = "";
+            foreach (var item in dashboard.Items) {&#xD;
+                var widget = DashboardWidgetsPool.Widgets.ContainsKey(item.WidgetGUID) ? DashboardWidgetsPool.Widgets[item.WidgetGUID] : null;&#xD;
+                if (widget != null)&#xD;
+                {&#xD;
+                    metaTable.NoSQLTable.Rows.Add(&#xD;
+                        dashboard.Name, &#xD;
+                        dashboard.Path.Replace(metaTable.Source.Repository.RepositoryPath,""),&#xD;
+                        item.GroupOrder,&#xD;
+                        item.GroupName,&#xD;
+                        item.Order,&#xD;
+                        item.Icon,&#xD;
+                        item.Width == -1 ? "" : item.Width.ToString(),&#xD;
+                        item.Height == -1 ? "" : item.Height.ToString(),&#xD;
+                        item.Dynamic == null ? "" : (item.Dynamic.Value ? "Yes" : "no"),&#xD;
+                        item.Refresh &lt;= 0 ? "" : item.Refresh.ToString(),&#xD;
+                        widget.Name,&#xD;
+                        widget.ReportName&#xD;
+                        );&#xD;
+                }&#xD;
+            }                        
+        }
+    }    
+    metaTable.LogMessage("{0} record(s) loaded", metaTable.NoSQLTable.Rows.Count);
+}</LoadScript><Alias>DashboardsCopy</Alias><DynamicColumns>true</DynamicColumns><Columns><MetaColumn><GUID>7c484d01-4517-472d-8f86-07416ee96ce7</GUID><Name>Dashboard Name</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Dashboard Name</DisplayName></MetaColumn><MetaColumn><GUID>6ccf6c23-629d-4d5f-89e9-99eb9728f787</GUID><Name>Dashboard Path</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Dashboard Path</DisplayName><DisplayOrder>2</DisplayOrder></MetaColumn><MetaColumn><GUID>b8a6979d-f423-46e5-a093-edab53b30275</GUID><Name>Order</Name><Type>Numeric</Type><Category>Dashboard Items</Category><DisplayName>Order</DisplayName><DisplayOrder>5</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>8b161e68-ae3c-4f74-bdf7-f406f4432513</GUID><Name>Group Name</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Group Name</DisplayName><DisplayOrder>4</DisplayOrder></MetaColumn><MetaColumn><GUID>93d5d3fa-6ee3-47c3-a97c-91636573423e</GUID><Name>Group Order</Name><Type>Numeric</Type><Category>Dashboard Items</Category><DisplayName>Group Order</DisplayName><DisplayOrder>3</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>53a928c0-cde6-4661-ab01-88eba474ca9f</GUID><Name>Icon</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Icon</DisplayName><DisplayOrder>6</DisplayOrder></MetaColumn><MetaColumn><GUID>b4d05bd1-c293-455f-a739-c896b4553da5</GUID><Name>Width</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Width</DisplayName><DisplayOrder>7</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>ab511d1b-c223-483d-b515-e47115c4694c</GUID><Name>Height</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Height</DisplayName><DisplayOrder>8</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>a4745ee1-e93d-44e6-bd7b-bd488763e3fa</GUID><Name>Dynamic</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Dynamic</DisplayName><DisplayOrder>9</DisplayOrder></MetaColumn><MetaColumn><GUID>d1b8107e-c5bf-4ce5-a9c4-abc8cba4068e</GUID><Name>Refresh</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Refresh</DisplayName><DisplayOrder>10</DisplayOrder><Format>N0</Format></MetaColumn><MetaColumn><GUID>24c37f05-61dc-4246-9f9d-0fdfb358ce68</GUID><Name>Widget Name</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Widget Name</DisplayName><DisplayOrder>11</DisplayOrder></MetaColumn><MetaColumn><GUID>a997ff48-7c46-4eb7-97f3-1cf26ed732fb</GUID><Name>Widget Report Name</Name><Type>Text</Type><Category>Dashboard Items</Category><DisplayName>Widget Report Name</DisplayName><DisplayOrder>12</DisplayOrder></MetaColumn></Columns></MetaTable></Tables></MetaData></ReportSource></Sources><Models><ReportModel><GUID>f31eea7f-e982-44e1-8d12-0d304f372949</GUID><Name>Widgets</Name><SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID><LINQSubTables><MetaTable><GUID>f09f5456-f125-403b-bfa1-16583f103a7d</GUID><Name>Widgets</Name></MetaTable></LINQSubTables><Elements><ReportElement><GUID>6743137e-39dc-4b77-bdef-8349db4dddc5</GUID><Name>name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>cf8cf340-8651-489a-bbbe-6bf04a989ae1</MetaColumnGUID></ReportElement><ReportElement><GUID>8829fcf0-817b-4c1e-9ebe-aebc04f7e8bd</GUID><Name>description</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>be4246b9-f0f7-4717-bdae-35aa6959a27d</MetaColumnGUID></ReportElement><ReportElement><GUID>424f73b3-2acf-41ea-b707-1de01245bf4d</GUID><Name>ReportName</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>4f888c97-5e10-42c6-b15a-4a44ba57d6b4</MetaColumnGUID></ReportElement><ReportElement><GUID>8d665962-8445-45f1-96e0-4650ae220cd4</GUID><Name>ReportPath</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>1d2b9826-9810-4fa0-ae3c-1b7442bf4065</MetaColumnGUID></ReportElement><ReportElement><GUID>3e1155eb-05dc-40ec-a64c-b2e6614fe8af</GUID><Name>Dynamic</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>79f80d00-1c6b-42e1-aed1-6b62803447e8</MetaColumnGUID></ReportElement><ReportElement><GUID>002b9b21-d36a-419f-83ca-337b35fe1520</GUID><Name>Icon</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>26b4238e-635b-4236-8618-1ba2519411a7</MetaColumnGUID></ReportElement><ReportElement><GUID>2133a512-bfc5-4e12-9490-da06d5559576</GUID><Name>Color</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>fa8157d6-78e7-4234-aad8-fc2ffc6d9842</MetaColumnGUID></ReportElement><ReportElement><GUID>30061637-0f5b-4859-a6a3-c320e226eea4</GUID><Name>Width</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>8ef86620-7d06-40eb-9437-6722c98f97eb</MetaColumnGUID></ReportElement><ReportElement><GUID>0f16f7fc-2ae3-4a06-b3de-fb59e2799cad</GUID><Name>Height</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>9d2720b2-f995-47e1-856a-f9f2c51b992c</MetaColumnGUID></ReportElement><ReportElement><GUID>57d1e38e-f3fd-480d-9a87-1398353583b0</GUID><Name>Refresh</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>dd8b3ece-f78a-42d1-9340-e25510c344bc</MetaColumnGUID></ReportElement><ReportElement><GUID>1d4b82a2-7218-40da-a95e-f93e3a1b2f6c</GUID><Name>ExecReportPath</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>4d8b9c01-c50d-44ed-9a0f-5ab0b2e1916c</MetaColumnGUID></ReportElement><ReportElement><GUID>0a96f80c-fb85-4779-a452-e671c1276e72</GUID><Name>ExecViewGUID</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>be737447-b34d-4b9e-83a8-7ffd54b3c439</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>892d5982-7bc0-46cd-a2cd-044f45d49e08</GUID><Name>Dashboards</Name><SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID><LINQSubTables><MetaTable><GUID>1fdc73b2-dd85-4f6c-9913-ca3505eff329</GUID><Name>Dashboards</Name><TemplateName>Generic</TemplateName></MetaTable></LINQSubTables><Elements><ReportElement><GUID>edaf4a56-997d-4e6d-9d57-46e4f050bc6f</GUID><Name>Name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>fb0de2fc-ae5e-4860-8355-0f10f05556a5</MetaColumnGUID></ReportElement><ReportElement><GUID>1ad7ded1-dc99-42fa-8661-86f2ba41bbc5</GUID><Name>Path</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>35360d94-8fd9-4fd7-85d4-b90d263e8f6e</MetaColumnGUID></ReportElement><ReportElement><GUID>acefcdc9-11ff-4c03-b470-2018ed539e7d</GUID><Name>Widget Items Count</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>bc270bbc-cf31-47ea-9516-745384393d85</MetaColumnGUID></ReportElement></Elements></ReportModel><ReportModel><GUID>13cb09f7-a466-4ef7-a194-b686e2e81560</GUID><Name>Dashboard Items</Name><SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID><LINQSubTables><MetaTable><GUID>906ff9f2-2c76-45d7-947c-6df2273c14c6</GUID><Name>Dashboard Items</Name><TemplateName>Generic</TemplateName><DefinitionScript /></MetaTable></LINQSubTables><Elements><ReportElement><GUID>dc41794c-3445-470a-8aa7-97deb078a139</GUID><Name>Dashboard Name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>7c484d01-4517-472d-8f86-07416ee96ce7</MetaColumnGUID></ReportElement><ReportElement><GUID>b44ae169-dbac-4777-a00f-0e4a066968bf</GUID><Name>Dashboard Path</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>6ccf6c23-629d-4d5f-89e9-99eb9728f787</MetaColumnGUID></ReportElement><ReportElement><GUID>2bf3bcbe-a725-440b-80dd-edc31138beb8</GUID><Name>Group Order</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>93d5d3fa-6ee3-47c3-a97c-91636573423e</MetaColumnGUID></ReportElement><ReportElement><GUID>8001254c-704a-42c0-a21c-99fe1bdf2bb8</GUID><Name>Group Name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>8b161e68-ae3c-4f74-bdf7-f406f4432513</MetaColumnGUID></ReportElement><ReportElement><GUID>1486631e-b54b-4f55-b075-e362c6172d80</GUID><Name>Order</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>b8a6979d-f423-46e5-a093-edab53b30275</MetaColumnGUID></ReportElement><ReportElement><GUID>2c752294-18e7-4731-a026-ffcaa636f033</GUID><Name>Icon</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>53a928c0-cde6-4661-ab01-88eba474ca9f</MetaColumnGUID></ReportElement><ReportElement><GUID>9e6520b1-6374-45ed-be7a-5e98117f09c5</GUID><Name>Width</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>b4d05bd1-c293-455f-a739-c896b4553da5</MetaColumnGUID></ReportElement><ReportElement><GUID>e54c76ad-b64d-464f-a957-e3e4f2b4848a</GUID><Name>Height</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>ab511d1b-c223-483d-b515-e47115c4694c</MetaColumnGUID></ReportElement><ReportElement><GUID>3e6f402c-33b6-4d21-9e66-f234ef5bd941</GUID><Name>Dynamic</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>a4745ee1-e93d-44e6-bd7b-bd488763e3fa</MetaColumnGUID></ReportElement><ReportElement><GUID>95f311fb-0fbf-40a1-b11b-b009fe21930c</GUID><Name>Refresh</Name><DisplayName /><Format>N0</Format><PivotPosition>Row</PivotPosition><MetaColumnGUID>d1b8107e-c5bf-4ce5-a9c4-abc8cba4068e</MetaColumnGUID></ReportElement><ReportElement><GUID>70769267-4185-4a4f-9dea-79acfeea4699</GUID><Name>Widget Name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>24c37f05-61dc-4246-9f9d-0fdfb358ce68</MetaColumnGUID></ReportElement><ReportElement><GUID>3f3df4aa-631f-4d33-aa66-53ca45e2a2ff</GUID><Name>Widget Report Name</Name><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>a997ff48-7c46-4eb7-97f3-1cf26ed732fb</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Tasks><ReportTask><GUID>19057207-b155-4461-be99-5bfff288134c</GUID><Name>Load all widgets</Name><CancelReport>false</CancelReport><SourceGUID>4ca9e7c2-1db3-45bb-b305-c83f687683f7</SourceGUID><Script>@{&#xD;
+    DashboardWidgetsPool.ForceReload();&#xD;
+}&#xD;
+</Script><SortOrder>1</SortOrder></ReportTask></Tasks><Views><ReportView><GUID>4c64cd65-eb56-43cf-b9eb-4c44391a3d0f</GUID><Name>View</Name><Views><ReportView><GUID>9dc4e4a2-b9e7-4f58-b624-40018bcd2692</GUID><Name>Tab Control</Name><Views><ReportView><GUID>3984fbf0-343d-4c98-8b23-f41e6748031a</GUID><Name>Widgets</Name><Views><ReportView><GUID>9778b461-972e-470d-a849-77247ed04f42</GUID><Name>Widgets</Name><Views><ReportView><GUID>10fccc0c-ae50-4465-a5c8-8d3a8c9a23c7</GUID><Name>Model Container</Name><Views><ReportView><GUID>2dbc3c4a-9ee8-4693-81f4-285092bd63fb</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>f952d73d-be9c-4fcb-9474-f14b36fb7157</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>0e81bb56-0de6-4efa-8dc0-39dfea3540ea</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>a1f01991-e3ec-413b-a2ee-923e48db4e4b</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>480e562c-8737-4b00-8d92-e6e19e55e2d1</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>f31eea7f-e982-44e1-8d12-0d304f372949</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>fb4ac2eb-bd0c-4e25-98c9-609dec964273</GUID><Name>Dashboards</Name><Views><ReportView><GUID>3be74754-cc7b-4f47-9ca0-81ceed97fa8a</GUID><Name>Model</Name><Views><ReportView><GUID>c66ba85b-58d3-4ffe-9910-d705a3977855</GUID><Name>Model Container</Name><Views><ReportView><GUID>39a44cbc-5639-456c-bfca-1bae0d89d9de</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>6c24f353-370a-4bd0-87cc-f3fa8c96f4e8</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>bcf3bb1a-5754-4148-9290-a002a0207111</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>27acc2f9-e235-4737-9d22-c5ef609d94f1</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>bf292bba-0d6f-4bcb-a505-8a018e1e457d</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>892d5982-7bc0-46cd-a2cd-044f45d49e08</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>e63c8b78-0091-40c9-b424-aedbfaa44194</GUID><Name>Dashboard Widget Items</Name><Views><ReportView><GUID>17857cd4-8884-4b28-b073-75b857985479</GUID><Name>Model</Name><Views><ReportView><GUID>9c4eea92-3365-4d30-82c7-b4ac788f25f1</GUID><Name>Model Container</Name><Views><ReportView><GUID>3b6244a7-fdb2-4df0-b2d5-bf9730bd58ff</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView><ReportView><GUID>f62ac0e0-3e98-4261-8a07-f3214a219e91</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView><ReportView><GUID>4a9899dd-eac1-4ce3-a205-7a319645231e</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView><ReportView><GUID>fa0a044c-8f0e-4cfd-82a0-21a35acac7b6</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>4</SortOrder></ReportView><ReportView><GUID>333c33e3-d37e-46d1-a1e6-95b965dbf1bb</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>5</SortOrder></ReportView></Views><TemplateName>Model Container</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>13cb09f7-a466-4ef7-a194-b686e2e81560</ModelGUID><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Tab Page</TemplateName><SortOrder>2</SortOrder></ReportView></Views><TemplateName>Tab Control</TemplateName><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><Parameters><Parameter><Name>messages_mode</Name><Value>enabledshownexec</Value></Parameter><Parameter><Name>restrictions_per_row</Name><Value>6</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><Cancel>false</Cancel></Report>
