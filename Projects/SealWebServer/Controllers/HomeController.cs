@@ -809,7 +809,9 @@ namespace SealWebServer.Controllers
                     if (!string.IsNullOrEmpty(target))
                     {
                         //Trigger in another window
+                        var rootReport = execution.RootReport;
                         execution = initReportExecution(report, "", "", false);
+                        execution.RootReport = rootReport;
                         report.ForWidget = false;
                         //Reapply restrictions
                         initInputRestrictions(report);
