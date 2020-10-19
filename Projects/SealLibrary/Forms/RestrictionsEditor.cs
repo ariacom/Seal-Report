@@ -36,7 +36,7 @@ namespace Seal.Forms
                 if (_view != null)
                 {
                     foreach( var model in _view.Report.Models) model.InitCommonRestrictions();
-                    var restrictions = _view.Report.AllExecutionRestrictions.ToList();
+                    var restrictions = _view.Report.AllRestrictions.ToList();
                     MultipleSelectForm frm = new MultipleSelectForm("Please select the Restrictions", restrictions, "DisplayNameWithModel");
                     //select existing values
                     for (int i = 0; i < frm.checkedListBox.Items.Count; i++)

@@ -21,7 +21,7 @@
     &lt;input type="hidden" id="new-widget-color" name="new-widget-color" value="@widgetColor" /&gt;&#xD;
     &lt;input type="hidden" id="new-widget-icon" name="new-widget-icon" value="@widgetIcon" /&gt;    &#xD;
 }&#xD;
-</CustomTemplate><SortOrder>1</SortOrder><WidgetDefinition><GUID>8011ee42-6fdd-4a7c-9523-56c8a4e2e2e8</GUID><Name /></WidgetDefinition></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>d83191da-dc1b-47a0-8450-2e39a2d1ae84</ModelGUID><SortOrder>6</SortOrder><WidgetDefinition><GUID>543885a5-209b-40b1-bde8-cacee8d81510</GUID><Name>Last Amount</Name><Tag>KPI</Tag><Dynamic>true</Dynamic><Icon>glyphicon glyphicon-tag</Icon><Color>success</Color><Refresh>5</Refresh></WidgetDefinition></ReportView></Views><TemplateName>Container</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
+</CustomTemplate><SortOrder>1</SortOrder><WidgetDefinition><GUID>8011ee42-6fdd-4a7c-9523-56c8a4e2e2e8</GUID><Name /></WidgetDefinition></ReportView></Views><TemplateName>Model</TemplateName><ModelGUID>d83191da-dc1b-47a0-8450-2e39a2d1ae84</ModelGUID><SortOrder>6</SortOrder><WidgetDefinition><GUID>543885a5-209b-40b1-bde8-cacee8d81510</GUID><Name>Last Amount</Name><Tag>KPI</Tag><Dynamic>true</Dynamic><Icon>glyphicon glyphicon-tag</Icon><Color>success</Color><Refresh>30</Refresh></WidgetDefinition></ReportView></Views><TemplateName>Container</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
     int index = 0;

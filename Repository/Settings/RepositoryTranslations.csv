@@ -132,8 +132,7 @@ DashboardName;\Sales\Product Sales.sdax;Product Sales;;Vente Produits
 DashboardItemGroupName;\Sales\Product Sales.sdax;Detail;;Détail
 DashboardName;\General\KPI.sdax;KPI;;KPI
 DashboardItemName;\General\KPI.sdax;KPI Sales / category;;KPI Ventes / catégorie
-DashboardItemGroupName;\General\KPI.sdax;Additional information;;Autres informations
-DashboardItemGroupName;\General\KPI.sdax;Last Amount;;Dernier Montant
+DashboardItemGroupName;\General\KPI.sdax;Quick Search;;Recherche rapide
 WidgetName;\Overview - Sales.srex;Sales per month;;Ventes par mois
 WidgetName;\Overview - Sales.srex;Sales per month;;Ventes par mois
 WidgetName;\Overview - Sales.srex;Sales for 1997;;Ventes pour 1997
@@ -150,5 +149,7 @@ WidgetName;\Samples\13-KPI Published.srex;Sales per employee;;Ventes par employ�
 WidgetName;\Samples\13-KPI Published.srex;KPI Orders;;KPI Commandes
 WidgetName;\Samples\13-KPI Published.srex;KPI Products;;KPI Produits
 WidgetName;\Samples\13-KPI Published.srex;Last Amount;;Dernier Montant
+WidgetName;\Samples\19-Restrictions Views - Widgets.srex;Orders Search;;Recherche commande
+WidgetName;\Samples\19-Restrictions Views - Widgets.srex;Orders Search - New Window;;Recherche commande - Nouvelle fenêtre
 GeneralText;CellScript;Download;;Télécharger
 GeneralText;CellScript;Visit;;Visiter

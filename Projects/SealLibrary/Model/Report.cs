@@ -114,8 +114,11 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// The view used by default to execute the report.
+        /// </summary>
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Current view"), Description("The current view used to execute the report."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Current view"), Description("The view used by default to execute the report."), Id(2, 1)]
         [TypeConverter(typeof(ReportViewConverter))]
         public string ViewGUID { get; set; }
 
@@ -406,7 +409,7 @@ namespace Seal.Model
         /// Current identifier of the report's execution
         /// </summary>
         [XmlIgnore]
-        public string ExecutionGUID = Guid.NewGuid().ToString();
+        public string ExecutionGUID = Helper.NewGUID();
 
         /// <summary>
         /// Current folder use for the file generation during execution

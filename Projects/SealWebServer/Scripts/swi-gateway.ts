@@ -384,6 +384,7 @@ class SWIGateway {
     }
 
     public ExportDashboards(dashboards: string, format: string, title: string, delay: number) {
+        if (!delay) delay = -1;
         var f = this.getExecForm("SWExportDashboards", "_blank");
         f.append($('<input />').attr('name', 'dashboards').attr('value', dashboards));
         f.append($('<input />').attr('name', 'format').attr('value', format));

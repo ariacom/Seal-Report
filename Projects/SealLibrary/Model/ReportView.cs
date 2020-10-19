@@ -38,6 +38,8 @@ namespace Seal.Model
                 //Then enable
                 GetProperty("ModelGUID").SetIsBrowsable(Template.ForReportModel);
                 GetProperty("RestrictionsToSelect").SetIsBrowsable(Template.ForViewRestrictions);
+                GetProperty("RestrictionViewGUID").SetIsBrowsable(Template.ForViewRestrictions);
+                
                 GetProperty("ReferenceViewGUID").SetIsBrowsable(true);
                 GetProperty("TemplateName").SetIsBrowsable(true);
                 GetProperty("TemplateDescription").SetIsBrowsable(true);
@@ -491,7 +493,7 @@ namespace Seal.Model
         public List<ReportRestriction> Restrictions { 
             get
             {
-                return Report.AllExecutionRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i =>i.DisplayOrderRE).ToList();
+                return Report.AllRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i =>i.DisplayOrderRE).ToList();
             }
         }
 
@@ -522,10 +524,18 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// When a new Window is specified, Root View executed from the Restriction View. If empty, the default report execution view is used.
+        /// </summary>
+        [DefaultValue(null)]
+        [Category("Definition"), DisplayName("New window: View to execute"), Description("When a new Window is specified, Root View executed from the Restriction View. If empty, the default report execution view is used."), Id(4, 1)]
+        [TypeConverter(typeof(ReportViewConverter))]
+        public string RestrictionViewGUID { get; set; }
+
+        /// <summary>
         /// If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
         /// </summary>
         [DefaultValue(null)]
-        [DisplayName("Reference View"), Description("If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'."), Category("Definition"), Id(4, 1)]
+        [DisplayName("Reference View"), Description("If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'."), Category("Definition"), Id(5, 1)]
         [TypeConverter(typeof(ReportViewConverter))]
         public string ReferenceViewGUID { get; set; }
         public bool ShouldSerializeReferenceViewGUID() { return !string.IsNullOrEmpty(ReferenceViewGUID); }

@@ -59,7 +59,7 @@ namespace Seal.Forms
             {
                 var list = getViewList(context.PropertyDescriptor, report);
                 choices = (from s in list select s.Name).ToList();
-                if (context.PropertyDescriptor.Name == "ReferenceViewGUID" || context.PropertyDescriptor.Name == "ExecViewGUID")
+                if (context.PropertyDescriptor.Name == "ReferenceViewGUID" || context.PropertyDescriptor.Name == "ExecViewGUID" || context.PropertyDescriptor.Name == "RestrictionViewGUID")
                 {
                     choices.Insert(0, "");
                 }
