@@ -1328,32 +1328,36 @@ namespace Seal.Model
         {
             GUID = Guid.NewGuid().ToString();
 
-            var newValues = new Dictionary<string, string>();
+            var viewNewValues = new Dictionary<string, string>();
+            var restrNewValues = new Dictionary<string, string>();
 
             foreach (var view in AllViews)
             {
                 var newGUID = Guid.NewGuid().ToString();
-                newValues.Add(view.GUID, newGUID);
+                viewNewValues.Add(view.GUID, newGUID);
                 //Set new GUIDs
                 view.GUID = newGUID;
-                if (!string.IsNullOrEmpty(view.WidgetDefinition.GUID)) view.WidgetDefinition.GUID = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(view.WidgetDefinition.GUID)) view.WidgetDefinition.GUID = Helper.NewGUID();
             }
 
-            //Reference views
-            foreach (var view in AllViews.Where(i => !string.IsNullOrEmpty(i.ReferenceViewGUID)))
+            foreach (var view in AllViews)
             {
-                view.ReferenceViewGUID = newValues[view.ReferenceViewGUID];
-                if (!string.IsNullOrEmpty(view.WidgetDefinition.ExecViewGUID)) view.WidgetDefinition.ExecViewGUID = newValues[view.WidgetDefinition.ExecViewGUID];
+                //Reference views
+                if (!string.IsNullOrEmpty(view.ReferenceViewGUID)) view.ReferenceViewGUID = viewNewValues[view.ReferenceViewGUID];
+                //Widgets
+                if (!string.IsNullOrEmpty(view.WidgetDefinition.ExecViewGUID)) view.WidgetDefinition.ExecViewGUID = viewNewValues[view.WidgetDefinition.ExecViewGUID];
+                //Restriction Views
+                if (!string.IsNullOrEmpty(view.RestrictionViewGUID)) view.RestrictionViewGUID = viewNewValues[view.RestrictionViewGUID];
             }
 
             //Current view of the report
-            ViewGUID = newValues[ViewGUID];
+            ViewGUID = viewNewValues[ViewGUID];
             CurrentViewGUID = ViewGUID;
 
             //Output views
             foreach (var output in Outputs)
             {
-                output.ViewGUID = newValues[output.ViewGUID];
+                output.ViewGUID = viewNewValues[output.ViewGUID];
             }
 
             //No schedule
