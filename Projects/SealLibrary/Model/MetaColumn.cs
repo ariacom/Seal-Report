@@ -114,7 +114,7 @@ namespace Seal.Model
         /// </summary>
         protected ColumnType _type = ColumnType.Default;
         [DefaultValue(ColumnType.Default)]
-        [Category("Definition"), DisplayName("Data Type"), Description("Data type of the column."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Data type"), Description("Data type of the column."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ColumnType Type
         {
@@ -167,7 +167,7 @@ namespace Seal.Model
         /// The order number used to sort the column in the tree view (by table and by category)
         /// </summary>
         [DefaultValue(1)]
-        [Category("Display"), DisplayName("Display Order"), Description("The order number used to sort the column in the tree view (by table and by category)."), Id(4, 2)]
+        [Category("Display"), DisplayName("Display order"), Description("The order number used to sort the column in the tree view (by table and by category)."), Id(4, 2)]
         public int DisplayOrder { get; set; } = 1;
         public bool ShouldSerializeDisplayOrder() { return DisplayOrder != 0; }
 
@@ -232,7 +232,7 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)
         /// </summary>
-        [Category("Options"), DisplayName("Custom Format"), Description("If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)."), Id(3, 3)]
+        [Category("Options"), DisplayName("Custom format"), Description("If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)."), Id(3, 3)]
         [TypeConverter(typeof(CustomFormatConverter))]
         public string Format
         {

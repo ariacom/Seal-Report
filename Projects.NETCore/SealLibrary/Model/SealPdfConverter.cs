@@ -19,9 +19,19 @@ namespace Seal.Model
     {
 
         /// <summary>
-        /// Optional source format
+        /// Flag set before the dashboard conversion: true for Landscape
         /// </summary>
-        public string SourceFormat = "";
+        public bool IsLandscapeParameter = false;
+
+        /// <summary>
+        /// Title set before the dashboard conversion
+        /// </summary>
+        public string TitleParameter = "";
+
+        /// <summary>
+        /// Conversion delay set before the dashboard conversion : Additional delay for the conversion
+        /// </summary>
+        public int ConversionDelayParameter = 2;
 
         /// <summary>
         /// Dashboards to convert if the converter is for Dashboards export

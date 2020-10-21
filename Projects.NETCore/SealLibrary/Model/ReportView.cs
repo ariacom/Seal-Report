@@ -424,7 +424,7 @@ namespace Seal.Model
         public List<ReportRestriction> Restrictions { 
             get
             {
-                return Report.AllExecutionRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i =>i.DisplayOrderRE).ToList();
+                return Report.AllRestrictions.Where(i => RestrictionsGUID.Contains(i.GUID)).OrderBy(i =>i.DisplayOrderRE).ToList();
             }
         }
 
@@ -451,6 +451,11 @@ namespace Seal.Model
             get { return "<Click to select restrictions>"; }
             set { } //keep set for modification handler
         }
+
+        /// <summary>
+        /// When a new Window is specified, Root View executed from the Restriction View. If empty, the default report execution view is used.
+        /// </summary>
+        public string RestrictionViewGUID { get; set; }
 
         /// <summary>
         /// If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 

@@ -800,28 +800,48 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
 
                 ReportExecution execution = getExecution(execution_guid);
+                var report = execution.Report;
+                report.ExecutionTriggerView = execution.Report.AllViews.FirstOrDefault(i => form_id.EndsWith(i.IdSuffix));
+
                 if (!string.IsNullOrEmpty(form_id) && execution != null)
                 {
-                    var report = execution.Report;
-                    report.ExecutionTriggerView = report.AllViews.FirstOrDefault(i => form_id.EndsWith(i.IdSuffix));
-
                     if (!string.IsNullOrEmpty(target))
                     {
                         //Trigger in another window
-                        execution = initReportExecution(report, "", "", false);
-                        report.ForWidget = false;
+                        var rootReport = execution.RootReport;
+                        var triggerViewGUID = report.ExecutionTriggerView.GUID;
+                        report.IsNavigating = false;
+                        report.PreInputRestrictions.Clear();
                         //Reapply restrictions
                         initInputRestrictions(report);
                         //Apply input restrictions if any
                         if (report.InputRestrictions.Count > 0) execution.CheckInputRestrictions();
+
+                        //Reset context for navigation, remove previous, keep root
+                        var keys = NavigationContext.Navigations.Where(i => i.Value.Execution.RootReport.ExecutionGUID == report.ExecutionGUID).ToArray();
+                        foreach (var key in keys) NavigationContext.Navigations.Remove(key.Key);
+
+                        //Clone the report for a new execution
+                        report = report.Clone(); //New executionGUID
+                        report.ExecutionTriggerView = execution.Report.AllViews.FirstOrDefault(i => i.GUID == triggerViewGUID);
+                        //Set execution view
+                        if (report.ExecutionTriggerView != null) report.CurrentViewGUID = string.IsNullOrEmpty(report.ExecutionTriggerView.RestrictionViewGUID) ? report.ViewGUID : report.ExecutionTriggerView.RestrictionViewGUID;
+
+                        execution = initReportExecution(report, report.CurrentViewGUID, "", false);
+                        report.IsNavigating = false;
+                        report.ForWidget = false;
                         execution.Execute();
                         while (report.IsExecuting && !report.Cancel) Thread.Sleep(100);
+
+                        //Set navigation context
+                        NavigationContext.SetNavigation(execution);
+
                         return getFileResult(report.HTMLDisplayFilePath, report);
                     }
 
+
                     lock (execution)
                     {
-
                         initInputRestrictions(report);
 
                         //Get all restrictions involved

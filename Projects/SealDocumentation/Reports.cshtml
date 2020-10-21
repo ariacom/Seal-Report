@@ -19,12 +19,14 @@
                                 <li><a href="#lineModels_3">Restrictions</a></li>
                                 <li><a href="#lineModels_4">Charts</a></li>
                                 <li><a href="#lineModels_5">SQL Model</a></li>
+                                <li><a href="#lineModels_LINQ">LINQ Model</a></li>
                             </ul>
                         </li>
                         <li>
                             <a href="#lineViews">Views</a>
                             <ul class="nav">
                                 <li><a href="#lineViews_1">Templates</a></li>
+                                <li><a href="#lineViews_rv">Restrictions View</a></li>
                                 <li><a href="#lineViews_2">Widget Publication</a></li>
                             </ul>
                         </li>
@@ -66,7 +68,7 @@
                                         A <strong>Report</strong> is edited with the <b>Report Designer</b> and stored in a file (*.srex) either in the <i>\Reports</i> Repository sub-folder or on the file system.<br>
                                         A report references repository <strong>Data Sources</strong> but it may have its own Data Sources definitions.<br />
                                         A report contains <strong>Models</strong> to define how to generate the Result Set (Data Table) and Series from the database.<br />
-                                        Once the result got from the database, report <strong>Views</strong> are used to generate a HTML document using Razor parsing and rendering.<br />
+                                        Once the result got from the database (for SQL Source) or from script (for LINQ Source), report <strong>Views</strong> are used to generate a HTML document using Razor parsing and rendering.<br />
                                         In addition, <strong>Outputs</strong> and <strong>Schedules</strong> can be defined to automate report generation (<eg>e.g. Sending an Email every morning</eg>).<br />
                                         Report allows also to perform <strong>Tasks</strong> to execute SQL or Razor Scripts.
                                     </p>
@@ -100,9 +102,9 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                A <strong>Model</strong> defines how to build the SQL Select Statement to get the result set from the database.<br />
+                                A <strong>Model</strong> defines how to build the SQL Select or the LINQ Query Statement to get the result set from the database.<br />
                                 A report can contain several models referencing different data sources (one data source per model).<br />
-                                Once got from the database, the result set is processed in a <b>Summary Table</b> and several Pages containing a <b>Page Table</b>, a <b>Data Table</b> and <b>Series</b> if a chart is defined.<br />
+                                Once got from the database or from the LINQ query, the result set is processed in a <b>Summary Table</b> and several Pages containing a <b>Page Table</b>, a <b>Data Table</b> and <b>Series</b> if a chart is defined.<br />
                                 The <strong>Data Source</strong> chosen defines which elements and restrictions are available to define the model.<br />
                             </p>
                             <div class="bs-callout bs-callout-warning">
@@ -134,7 +136,7 @@
                                 <code>Select Clause</code>,<code>From Clause</code>,<code>Order By Clause</code>,<code>Group By Clause</code>,<code>Common Table Expression Clause</code><br />
                             </p>
                             <p>
-                                As a model can depend on other model generation (<eg>e.g. you may use the ResultTable of another model in one of the <code>Load Scripts</code>, but you want to be sure that is has been executed</eg>), the <code>Execution Set</code> property allows to define when the model is generated during the report execution.<br />
+                                As a model can depend on other model generation (<eg>e.g. you may use the ResultTable of another model in one of the <code>Load Scripts</code>, but you want to be sure that is has been executed</eg>), the <code>Execution set</code> property allows to define when the model is generated during the report execution.<br />
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Samples</h4>
@@ -146,6 +148,12 @@
                                 Like tables in <strong>Data Source</strong>, <code>Pre/Post SQL Statements</code> can be executed just before and after the SELECT statement is executed.<br />
                                 Finally ,the model definition allows to configure build timeout and join preferences, and to edit all the <a href="Sources.cshtml#lineTables_3">Common Restrictions</a> found in the SQL generated for the model (use the property <code>Common Restrictions</code>).
                             </p>
+                            <div class="col-md-12 text-center">
+                                <div class="caption">
+                                    <b>Model components generated for a SQL Data Source</b>
+                                </div>
+                                <img src="images/model-sql.png" alt="" class="img-thumbnail img-rounded">
+                            </div>
                         </div>
                     </div>
                     <!-- end row -->
@@ -164,10 +172,10 @@
                                 If you are not familiar with cross tables, please check "Cross Table" or "Excel Pivot Table" on the internet to learn what is a cross table, a dimension and a measure.
                             </div>
                             <p>
-                                Once chosen, the element can have a custom <code>Name</code>, and <code>Sort Order</code>.<br>
+                                Once chosen, the element can have a custom <code>Name</code>, and <code>Sort order</code>.<br>
                                 The sort priority is the following: First <b>Page</b> elements, then <b>Row/Column</b> elements  and finally <b>Data</b> elements.<br>
 
-                                In addition, the element <code>Data Type</code> and <code>Format</code> can be modified to change the display result.<br />
+                                In addition, the element <code>Data type</code> and <code>Format</code> can be modified to change the display result.<br />
                             </p>
                             <p><strong>Properties for Data element</strong></p>
                             <ul>
@@ -175,7 +183,7 @@
                                     <code>Aggregate</code> to choose which aggregation will be done: Sum, Average, Count, Min, Max.
                                 </li>
                                 <li>
-                                    <code>Calculation Options</code> to change the display in % of the row, column or total.
+                                    <code>Calculation option</code> to change the display in % of the row, column or total.
                                 </li>
                                 <li>
                                     <code>Totals</code> to add extra line or column containing the total of the other cells in the result table.
@@ -190,12 +198,12 @@
                                     Once modified, be sure that the new SQL generated is still correct (F8).<br />
                                 </li>
                                 <li>
-                                    <code>Cell Script</code> to execute a razor script when the table cell is generated.<br />
+                                    <code>Cell script</code> to execute a razor script when the table cell is generated.<br />
                                     The script can modify cell presentation and value (<eg>e.g. Setting the font color in red if the value is negative, calculating a progression or a running total, etc.</eg>).<br />
                                     Using cell scripts can be time consuming as the script is executed for each cell of the tables generated.
                                 </li>
                                 <li>
-                                    <code>Custom Enumerated List</code> to force an existing enumerated list to use its display and sort.
+                                    <code>Custom enumerated list</code> to force an existing enumerated list to use its display and sort.
                                 </li>
                             </ul>
                             <div class="bs-callout bs-callout-demo">
@@ -205,9 +213,9 @@
                                 Change <b>Country</b> by a <b>CASE WHEN Country='France' THEN 'Other' ELSE Country END</b> Clause to categorize your countries.
                             </div>
                             <div class="bs-callout bs-callout-demo">
-                                <h4>Cell Script</h4>
+                                <h4>Cell script</h4>
                                 <a class="btn btn-primary live-sample">Live Sample: 50-Cell Script - Progression and running totals</a><br />
-                                Two columns have been added in the report model with custom Cell Script: One to calculate the Progression and the other one to calculate the Running Total.
+                                Two columns have been added in the report model with custom Cell script: One to calculate the Progression and the other one to calculate the Running Total.
                             </div>
                         </div>
                         <!-- end col -->
@@ -232,7 +240,7 @@
                             </pre>
                             </div>
                             <p>
-                                A restriction inherits from an element, thus several properties are common: <code>Name</code>, <code>Data Type</code>, <code>Custom SQL</code>, <code>Custom Enumerated List</code>.<br />
+                                A restriction inherits from an element, thus several properties are common: <code>Name</code>, <code>Data type</code>, <code>Custom SQL</code>, <code>Custom enumerated list</code>.<br />
                                 The operators available for the <code>Operator</code> property depend on the element type (Text, Numeric or Date &amp; Time).
                             </p>
                             <p>
@@ -250,7 +258,8 @@
                             <p>
                                 <strong>Prompting the value at execution</strong><br />
                                 When the report is executed, the restriction value can be prompted to end-user by modifying the <code>Prompt Restriction</code> property.<br />
-                                In this case, the flags <code>Is Required</code> and <code>Can Change Operator</code> can be set.<br />
+                                In this case, the properties <code>Trigger execution</code>, <code>Is Required</code> and <code>Operator style</code> can be set.<br />
+                                If the restriction has an Enumerated List, other properties allow to control its display layout (<code>Enum Layout</code>) and the values selected the first time (<code>First selection</code>).
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Sharing prompted restrictions amongst models</h4>
@@ -262,7 +271,7 @@
                                 If the <code>Operator</code> is <b>'Value Only'</b>, the SQL generated for the restriction will not include the column name and operator and set only the value.<br />
                             </p>
                             <div class="bs-callout bs-callout-demo">
-                                In the SQL, the restriction <strong>[Country Egals 'France']</strong> will be replaced by <b>Customer.Country = 'France'</b>, but if the <code>Operator</code> is set to <b>'Value only'</b>, the name of the operator is taken from <code>Operator Label</code> and the SQL generated is <b>'France'</b><br />
+                                In the SQL, the restriction <strong>[Country Egals 'France']</strong> will be replaced by <b>Customer.Country = 'France'</b>, but if the <code>Operator</code> is set to <b>'Value only'</b>, the name of the operator is taken from <code>Operator label</code> and the SQL generated is <b>'France'</b><br />
                             </div>
                         </div>
                         <!-- end col -->
@@ -277,13 +286,13 @@
                                 According to the library chosen, the look and functionalities are different.
                             </p>
                             <div class="bs-callout bs-callout-warning">
-                                To define a simple chart, select one <b>Row/Column</b> element and set the <code>Serie Definition</code> property to <b>Axis</b>, then select a <b>Data</b> element and define the serie with <code>Chart JS Serie</code> or <code>NVD3 Serie</code> or <code>Plotly Serie</code>.
+                                To define a simple chart, select one <b>Row/Column</b> element and set the <code>Serie Definition</code> property to <b>Axis</b>, then select a <b>Data</b> element and define the serie with <code>Chart JS serie</code> or <code>NVD3 serie</code> or <code>Plotly serie</code>.
                             </div>
                             <p>
                                 Instead of being an axis, a dimension can be a <b>Splitter</b> to create several series when the value changes (<eg>e.g. to create one serie per country</eg>).<br /><br />
                                 For <i>Date &amp; Time</i> or <i>Numeric</i> axis element, if the flag <code>Use value for axis</code> is true, the values of the dimension element is used to build the axis values, otherwise the X values are linear.<br /><br />
 
-                                Other properties allow to control <code>Sort Type</code> and <code>Sort Order</code> of the chart (<eg>e.g. to show the biggest Bars at the start or at the end</eg>) and to define a secondary <code>Y Axis Type</code> (<eg>e.g. to have a serie for amount for Primary Y, and another for quantities for Secondary Y shown on the same chart</eg>).
+                                Other properties allow to control <code>Sort type</code> and <code>Sort order</code> of the chart (<eg>e.g. to show the biggest Bars at the start or at the end</eg>) and to define a secondary <code>Y Axis Type</code> (<eg>e.g. to have a serie for amount for Primary Y, and another for quantities for Secondary Y shown on the same chart</eg>).
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Charts Samples</h4>
@@ -320,6 +329,39 @@
                                 <a class="btn btn-primary live-sample">Live Sample: 08-SQL Model - Common Restrictions</a><br />
                                 This report shows a simple SQL Model based on the query of the Northwind database sample.<br />
                                 A Common Restriction and a Common Value are defined in the SQL and prompted at execution.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                    <div id="lineModels_LINQ" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>LINQ Model</h4>
+                            <p>
+                                A <strong>LINQ Model</strong> is a model based on a <a href="Sources.cshtml#lineNoSQL"><b>LINQ Data Source</b></a>.<br />
+                                It is managed as a normal model except that the Seal engine will generate a <b>LINQ Query</b> instead of an <b>SQL Statement</b> to get the result table.
+                            </p>
+                            <p>
+                                For each model, the engine will generate 0 to many <b>Sub-Models</b> and 0 to many <b>Sub-Tables</b>.<br />
+                                One <b>Sub-Model</b> is created for each SQL Data Source involved (by an element or a restriction part of the model).<br />
+                                One <b>Sub-Table</b> is created for each No SQL Table involved (by an element or a restriction part of the model).<br />
+                                These <b>Sub-Models</b> are models referencing a SQL Data Source and can be edited as normal models (<eg>e.g. adding restrictions, configuring joins, etc.</eg>) except that elements are fixed and cannot be removed.<br />
+                                The <b>Sub-Tables</b> properties may also be edited and customized.
+                            </p>
+                            <p>
+                                The <code>LINQ Load Script</code> and <code>LINQ Query Script template</code> properties of the model allow to customize the query generated by the engine.<br>
+                                Elements and restrictions of the model can also have a <code>Custom expression</code> to overwrite the default expression generated (<eg>e.g. to create a formula</eg>).
+                            </p>
+                            <div class="col-md-12 text-center">
+                                <div class="caption">
+                                    <b>Model components generated for a LINQ Data Source</b>
+                                </div>
+                                <img src="images/model-linq.png" alt="" class="img-thumbnail img-rounded">
+                            </div>
+                            <p>&nbsp;</p>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Report Restrictions in LINQ</h4>
+                                Restrictions are shared amongst the <strong>LINQ Model</strong> and its <b>Sub-Models</b>.<br />
+                                For performance reasons, it is recommended to set the restrictions in the <b>Sub-Models</b> of the <strong>LINQ Model</strong>, thus the database engine will perform the filter on the result set.
                             </div>
                         </div>
                     </div>
@@ -381,6 +423,7 @@
                                 <li><b>Tab Control</b>: A Tab Control container. Only Tab Page children can be defined from this view.</li>
                                 <li><b>Tab Page</b>: Container for a given page of the parent Tab Control. The name of the view is used for the Tab.</li>
                                 <li><b>Free</b>: Empty view that can be used freely to add HTML or text during the rendering.</li>
+                                <li><b>Restrictions</b>: Render some selected report restrictions (named View Restrictions) to display model Views dynamically through restriction Triggers or a Refresh button.</li>
                             </ul>
                             <p>
                                 From a Model view, the following children are supported and are applied per page result:
@@ -388,9 +431,9 @@
                             <ul>
                                 <li><b>Page Table</b>: Render the Page table of the page result.</li>
                                 <li><b>Data Table</b>: Render the Data table of the page result (use of the <a href="https://datatables.net/" target="_blank">DataTables</a> JavaScript Component).</li>
-                                <li><b>Chart JS:</b> Render the Chart JS Series of the page result</li>
-                                <li><b>NVD3 Chart</b>: Render the NVD3 Series of the page result</li>
-                                <li><b>Plotly Chart</b>: Render the Plotly Series of the page result</li>
+                                <li><b>Chart JS:</b> Render the Chart JS series of the page result</li>
+                                <li><b>NVD3 Chart</b>: Render the NVD3 series of the page result</li>
+                                <li><b>Plotly Chart</b>: Render the Plotly series of the page result</li>
                                 <li><b>KPI</b>: Display a Key Performance Indicator. The KPI is built from a data table result with at least 2 columns: 1 for the dimension, 1 for the measure (with optional columns to define the goal if the column name has the _GOAL suffix).</li>
                                 <li><b>Model Container</b>: A grid container for the page result (refer to Bootstrap 3 grid at <a href="https://getbootstrap.com/docs/3.4/css/#grid" target="_blank">https://getbootstrap.com/docs/3.4/css/#grid</a>). </li>
                             </ul>
@@ -419,8 +462,8 @@
                             </div>
 
                             <div class="bs-callout bs-callout-info">
-                                <h4>Reference View</h4>
-                                If your report contains several views sharing the same configuration, you can configure one view and reference it from the other views using the <code>Reference View</code> property.<br />
+                                <h4>Reference view</h4>
+                                If your report contains several views sharing the same configuration, you can configure one view and reference it from the other views using the <code>Reference view</code> property.<br />
                                 <eg>e.g. All tables of the report have no sort, all JS Charts have the same size, etc.</eg>
                             </div>
 
@@ -429,6 +472,25 @@
                                 It is easy to create your own view templates.<br />
                                 Just add two  *.cshtml files in the <i>\Views</i> Repository sub-folder: one for the main script and one for the configuration.
                             </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineViews_rv" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Restriction Views</h4>
+                            <p>
+                                By default, all prompted restrictions are displayed in a panel located at the top of the report.<br />
+                                Using a <strong>Restriction View</strong> allows to show them in any part of the report result.<br />
+                                Once the restriction triggered or the <b>Refresh</b> button pressed, the model views impacted by the new restriction value are updated in the report result.<br />
+                            </p>
+                            <p>
+                                The <code>Restrictions</code> property allow to choose the prompted restrictions involved in the view.<br />
+                                If one of the restrictions of the view has the <code>Trigger execution</code> flag set to <b>False</b>, a <b>Refresh</b> button is also displayed to allow the execution.
+                            </p>
+                            <p>
+                                If the properties <code>Target Window for Report</code> (for a Report context) or <code>Target Window for Report</code> (for a Dashboard Widget context) are set, the execution occurs in a new window using the optional view defined in <code>New Window: View to execute</code>.
+                            </p>
                         </div>
                         <!-- end col -->
                     </div>
@@ -525,6 +587,12 @@
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Widgets Navigation</h4>
                                 From the <b>Report Designer</b>, use the <srmenu>Tools->Go to next widget in the report</srmenu> menu or <srmenu>CTRL+W</srmenu> to navigate between the different Widgets published contained in the report.
+                            </div>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>System Report for listing Dashboards and Widgets</h4>
+                                <ul>
+                                    <li>330 Reports - Dashboards and Widgets</li>
+                                </ul>
                             </div>
                         </div>
                         <!-- end col -->
@@ -868,21 +936,41 @@
                                 Step 2: Build Models
                             </h4>
                             <p>
-                                Models are grouped and executed sequentially using the <code>Execution Set</code> property.<br />
-                                Models having the same <code>Execution Set</code> are executed in parallel (one model per thread).<br>
-                                For each model:
+                                Models are grouped and executed sequentially using the <code>Execution set</code> property.<br />
+                                Models having the same <code>Execution set</code> are executed in parallel (one model per thread).<br>
                             </p>
+                            <h5>
+                                Step 2-1: For each model having a <b>SQL Source</b>:
+                            </h5>
                             <ul>
                                 <li>
                                     Fill the model result table (<em><strong>DataTable</strong></em>)<br>
-                                    If SQL Source: Run the '<em>Pre Load Script</em>' if any, build SQL, query the database, run the '<em>Post Load Script</em>' if any.<br>
-                                    If No SQL Source: Build table definition using table source '<em>Definition Script</em>' and load it using either  the table source '<em>Default Load Script</em>' or the model '<em>Load Script</em>'.
+                                    Run the '<em>Pre Load Script</em>' if any, generate the SQL statement, query the database to fill the result table (<em><strong>DataTable</strong></em>), run the '<em>Post Load Script</em>' if any.<br>
                                 </li>
                                 <li>Build the model pages: Create the pages (<em><strong>ResultPage</strong></em>) containing the page table (<em><strong>ResultTable</strong></em>) and data table (<em><strong>ResultTable</strong></em>)</li>
-                                <li>Create the model Summary Table (<em><strong>ResultTable</strong></em>)</li>
-                                <li>Process the totals in the result tables</li>
-                                <li>Handle the '<em>Cell Script</em>' for each cell (<em><strong>ResultCell</strong></em>) in the Data tables and then in the Summary table.</li>
-                                <li>Calculate the series (this involves calls to '<em>Cell Script</em>' if any)</li>
+                                <li>Create the model Summary Table (<em><strong>ResultTable</strong></em>).</li>
+                                <li>Process the totals in the result tables.</li>
+                                <li>Handle the '<em>Cell script</em>' for each cell (<em><strong>ResultCell</strong></em>) in the Data tables and then in the Summary table.</li>
+                                <li>Calculate the series (this involves calls to '<em>Cell script</em>' if any).</li>
+                                <li>Perform final sort.</li>
+                                <li>Execute any '<em>Final Script</em>' defined in the models.</li>
+                            </ul>
+                            <h5>
+                                Step 2-2: For each model having a <b>LINQ Source</b>:
+                            </h5>
+                            <ul>
+                                <li>
+                                    Fill the model result table (<em><strong>DataTable</strong></em>):<br>
+                                    Init <b>Sub-Models</b> and <b>Sub-Tables</b> based on the model definition.<br />
+                                    For each sub-model (which have always a SQL Data Source), build the result table (<em><strong>DataTable</strong></em>) as described in the step 2-1.<br />
+                                    For each sub-table, build the result table (<em><strong>DataTable</strong></em>) definition using table source '<em>Definition Script</em>' and load it using either the table source '<em>Default Load Script</em>' or the model '<em>Load Script</em>'.<br />
+                                    Generate the LINQ query and execute it to fill the result table (<em><strong>DataTable</strong></em>) using result tables of the <b>Sub-Models</b> and the <b>Sub-Tables</b>.
+                                </li>
+                                <li>Build the model pages: Create the pages (<em><strong>ResultPage</strong></em>) containing the page table (<em><strong>ResultTable</strong></em>) and data table (<em><strong>ResultTable</strong></em>)</li>
+                                <li>Create the model Summary Table (<em><strong>ResultTable</strong></em>).</li>
+                                <li>Process the totals in the result tables.</li>
+                                <li>Handle the '<em>Cell script</em>' for each cell (<em><strong>ResultCell</strong></em>) in the Data tables and then in the Summary table.</li>
+                                <li>Calculate the series (this involves calls to '<em>Cell script</em>' if any).</li>
                                 <li>Perform final sort.</li>
                                 <li>Execute any '<em>Final Script</em>' defined in the models.</li>
                             </ul>

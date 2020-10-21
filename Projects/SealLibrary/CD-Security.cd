@@ -9,12 +9,12 @@
     </Compartments>
     <AssociationLine Name="Providers" Type="Seal.Model.SecurityProvider" FixedToPoint="true">
       <Path>
-        <Point X="7.125" Y="3.941" />
-        <Point X="7.125" Y="5" />
+        <Point X="6.875" Y="3.941" />
+        <Point X="6.875" Y="4.75" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAEQEMMgIAAUAQAAgAEIAYAABjAAUFACAKDIIAAwEAQ=</HashCode>
+      <HashCode>AAEQEMMgIAAUAQAAgAEIAQAABjAAUEACAKBIIAAwEAQ=</HashCode>
       <FileName>Model\SealSecurity.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -23,19 +23,32 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Seal.Model.SecurityProvider" Collapsed="true">
-    <Position X="6.5" Y="5" Width="1.5" />
+    <Position X="6.25" Y="4.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAIAAAAAAEAUAAEAACQAQAAAAAIAAAgIDADAAgAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAAAUAAEAAAQAQAAAAAAAAAgIBABAAgAAI=</HashCode>
       <FileName>Model\SecurityProvider.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Seal.Model.SecurityGroup">
     <Position X="8.75" Y="3.25" Width="2" />
+    <Members>
+      <Field Name="_dashboards" Hidden="true" />
+      <Property Name="DefaultDashboardsViewDisplay" Hidden="true" />
+      <Method Name="InitDashboardOrders" Hidden="true" />
+      <Method Name="ShouldSerializeColumns" Hidden="true" />
+      <Method Name="ShouldSerializeConnections" Hidden="true" />
+      <Method Name="ShouldSerializeDashboardFolders" Hidden="true" />
+      <Method Name="ShouldSerializeDevices" Hidden="true" />
+      <Method Name="ShouldSerializeFolders" Hidden="true" />
+      <Method Name="ShouldSerializeSources" Hidden="true" />
+      <Method Name="ShouldSerializeWidgets" Hidden="true" />
+      <Method Name="UpdateEditorAttributes" Hidden="true" />
+    </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
@@ -51,7 +64,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAACCQYAAYAAAAAAgAAQAQRAQAAIAAwAADChAAAA=</HashCode>
+      <HashCode>AgAAACCCQYAAYQAAEAAgAARAwRAaAAIAAwAADChACCA=</HashCode>
       <FileName>Model\SecurityGroup.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -67,18 +80,18 @@
       <Compartment Name="Properties" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAEBggAAAAACAAIAAAAAIEIAABAAAAAAAAMQAAAAAAA=</HashCode>
+      <HashCode>AAABggAAAAACAAIAAAAAIAAAABAAAAAAAAMQAAAAAAA=</HashCode>
       <FileName>Model\SecurityFolder.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Seal.Model.SecurityUser" Collapsed="true">
-    <Position X="8.75" Y="7.5" Width="2" />
+    <Position X="6.25" Y="6.75" Width="1.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AUAIA1STEIAhdUEQSAACIRYgkAEKMYIAHFBOSEIBgIQ=</HashCode>
+      <HashCode>A8IIglTTEIChfUEQWAACMRZokAELsYIIXFBOSEaBgKU=</HashCode>
       <FileName>Model\SecurityUser.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -88,7 +101,7 @@
   <Class Name="Seal.Model.SecurityDashboardFolder" Collapsed="true">
     <Position X="12.25" Y="3.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAMAAAAAAAAAAAAAAAACQAABAAAQAAAACAAAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAACQAABAAAQAAAACAAAAAAAA=</HashCode>
       <FileName>Model\SecurityDashboardFolder.cs</FileName>
     </TypeIdentifier>
   </Class>

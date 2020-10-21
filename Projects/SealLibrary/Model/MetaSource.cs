@@ -95,7 +95,7 @@ namespace Seal.Model
         /// The connection currently used for this data source
         /// </summary>
         [DefaultValue(null)]
-        [Category("General"), DisplayName("Current Connection"), Description("The connection currently used for this data source"), Id(1, 1)]
+        [Category("General"), DisplayName("Current connection"), Description("The connection currently used for this data source"), Id(1, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
         public string ConnectionGUID
         {

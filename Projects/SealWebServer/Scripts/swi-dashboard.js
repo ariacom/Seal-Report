@@ -145,19 +145,22 @@ var SWIDashboard = /** @class */ (function () {
         $("#rb" + data.itemguid).attr("title", data.lastexec);
         //Auto-refresh
         if (data.refresh > 0)
-            _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false); }, 1000 * data.refresh);
+            _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false, true); }, 1000 * data.refresh);
         initNavCells(data.executionguid, "#" + data.itemguid);
         initRestrictions("#" + data.itemguid);
     };
-    SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force) {
-        _da._pendingRequest++;
+    SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force, forTimer) {
+        if (!forTimer)
+            _da._pendingRequest++;
         clearTimeout(_da._refreshTimers[itemguid]);
         $("#nav_popupmenu").css("opacity", "0");
         _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
-            _da._pendingRequest--;
-            //Redraw...
-            redrawDashboard();
+            if (!forTimer) {
+                _da._pendingRequest--;
+                //Redraw...
+                redrawDashboard();
+            }
         });
     };
     SWIDashboard.prototype.initDashboardItems = function (guid) {
@@ -237,7 +240,7 @@ var SWIDashboard = /** @class */ (function () {
                 panel.append(panelBody);
                 panelBody.append($("<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>"));
                 panelBody.append($("<h4 style='display:inline'></h4>").html(SWIUtil.tr("Processing") + "..."));
-                _da.refreshDashboardItem(guid, item.GUID, false);
+                _da.refreshDashboardItem(guid, item.GUID, false, false);
                 //Size
                 if (item.Width > 0)
                     panel.width(item.Width);
@@ -268,7 +271,7 @@ var SWIDashboard = /** @class */ (function () {
                         var itemGuid = $(this).closest('.panel').attr('id');
                         var panelHeading = $(this).closest('.panel-heading');
                         panelHeading.children(".fa-spinner").show();
-                        _da.refreshDashboardItem(dashboardGuid, itemGuid, true);
+                        _da.refreshDashboardItem(dashboardGuid, itemGuid, true, false);
                     });
                 }
                 grid.append(panel);

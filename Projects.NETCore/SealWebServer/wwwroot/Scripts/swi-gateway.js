@@ -339,10 +339,14 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
-    SWIGateway.prototype.ExportDashboards = function (dashboards, format) {
+    SWIGateway.prototype.ExportDashboards = function (dashboards, format, title, delay) {
+        if (!delay)
+            delay = -1;
         var f = this.getExecForm("SWExportDashboards", "_blank");
         f.append($('<input />').attr('name', 'dashboards').attr('value', dashboards));
         f.append($('<input />').attr('name', 'format').attr('value', format));
+        f.append($('<input />').attr('name', 'title').attr('value', title));
+        f.append($('<input />').attr('name', 'delay').attr('value', delay));
         f.children('input').attr('type', 'hidden');
         f.submit();
     };

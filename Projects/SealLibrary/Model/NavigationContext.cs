@@ -134,12 +134,12 @@ namespace Seal.Model
             {
                 var link = report.NavigationLinks[linkGUID];
                 link.Parameters = parameters;
-                if (link.Cell != null && link.Cell.Element != null) //Cell Navigation Script
+                if (link.Cell != null && link.Cell.Element != null) //Cell navigation script
                 {
                     RazorHelper.CompileExecute(link.Cell.Element.NavigationScript, link);
                     result = link.ScriptResult;
                 }
-                else if (link.Cell == null && link.Report != null) //Report Navigation Script
+                else if (link.Cell == null && link.Report != null) //Report navigation script
                 {
                     RazorHelper.CompileExecute(link.Report.NavigationScript, link);
                     result = link.ScriptResult;

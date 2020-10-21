@@ -334,8 +334,8 @@ namespace Seal.Model
             get
             {
                 if (Operator == Operator.ValueOnly) return AllowedOperators.Where(i => i == Operator.ValueOnly).ToList();
+                if (OperatorStyle == RestrictionOperatorStyle.Visible) return AllowedOperators.Where(i => i != Operator.ValueOnly && i != Operator.IsNull && i != Operator.IsNotNull).ToList();
                 return AllowedOperators.Where(i => i != Operator.ValueOnly).ToList();
-
             }
         }
 

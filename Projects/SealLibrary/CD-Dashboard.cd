@@ -20,11 +20,12 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Seal.Model.DashboardItem">
-    <Position X="5" Y="2.75" Width="1.5" />
+    <Position X="4.75" Y="2.75" Width="1.5" />
     <Members>
       <Field Name="_widget" Hidden="true" />
       <Property Name="DisplayGroupName" Hidden="true" />
       <Property Name="DisplayName" Hidden="true" />
+      <Field Name="JSonSerialization" Hidden="true" />
       <Method Name="SetWidget" Hidden="true" />
       <Method Name="ShouldSerializeColor" Hidden="true" />
       <Method Name="ShouldSerializeDynamic" Hidden="true" />
@@ -38,8 +39,13 @@
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
+    <AssociationLine Name="Widget" Type="Seal.Model.DashboardWidget">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.183" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAFAFAAABEBMACABACAARESgAACAIgAAAAAAgAEAAAE=</HashCode>
+      <HashCode>AAFAFAAABEBMACABACAARESgAACAIhAAAAAAgAEAAAE=</HashCode>
       <FileName>Model\DashboardItem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -47,11 +53,12 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Seal.Model.DashboardWidget">
-    <Position X="7.5" Y="2.75" Width="1.5" />
+    <Position X="7.25" Y="2.75" Width="1.5" />
     <Members>
       <Field Name="_name" Hidden="true" />
       <Method Name="InitEditor" Hidden="true" />
       <Field Name="LastModification" Hidden="true" />
+      <Field Name="NoExecView" Hidden="true" />
       <Field Name="ReportName" Hidden="true" />
       <Field Name="ReportPath" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
@@ -62,19 +69,19 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AABAIAAABABwAAAFIAAAgGQAABAAABAAAAAEgBEAAAA=</HashCode>
+      <HashCode>EABBIAAABABwAAAFIAAAgGQAABAAAAAAAAgEgBEAAAA=</HashCode>
       <FileName>Model\DashboardWidget.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Seal.Model.ReportView" Collapsed="true">
-    <Position X="10.5" Y="2.75" Width="1.5" />
+    <Position X="10.25" Y="2.75" Width="1.25" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>I3A1FCbUZMUNCUCGZgRIAWYCRJoDNkYURZxpIIjGAYY=</HashCode>
+      <HashCode>I2Q1FCbQZOUtCUCDZARoAWYCBBtDFk4URZzpoKjGAaY=</HashCode>
       <FileName>Model\ReportView.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -83,9 +90,9 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Seal.Model.Report" Collapsed="true">
-    <Position X="10.5" Y="4.25" Width="1.5" />
+    <Position X="10.25" Y="4.25" Width="1.25" />
     <TypeIdentifier>
-      <HashCode>z1jT9fuu3KKzrK0gV7YHqi5XTOiXIOvItzhdLq90OB4=</HashCode>
+      <HashCode>71jTtf+u3KCzrKkA177FqijTTPiXIPnItxhdLq90GR4=</HashCode>
       <FileName>Model\Report.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>

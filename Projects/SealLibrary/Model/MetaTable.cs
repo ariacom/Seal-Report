@@ -324,14 +324,14 @@ namespace Seal.Model
         /// <summary>
         /// Duration in seconds to keep the result DataTable in cache after a load. If 0, the table is always reloaded.
         /// </summary>
-        [Category("Definition"), DisplayName("Cache Duration"), Description("Duration in seconds to keep the result DataTable in cache after a load. If 0, the table is always reloaded."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Cache duration"), Description("Duration in seconds to keep the result DataTable in cache after a load. If 0, the table is always reloaded."), Id(5, 1)]
         [DefaultValue(0)]
         public int CacheDuration { get; set; } = 0;
 
         /// <summary>
         /// If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified.
         /// </summary>
-        [Category("Definition"), DisplayName("Table Alias"), Description("If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Table alias"), Description("If not empty, table alias name used in the SQL statement. The table alias is necessary if a SQL Statement is specified."), Id(5, 1)]
         public string Alias { get; set; }
 
         bool _dynamicColumns = false;

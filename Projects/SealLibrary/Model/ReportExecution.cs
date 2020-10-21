@@ -511,7 +511,7 @@ namespace Seal.Model
         void setRestriction(ReportRestriction restriction)
         {
             string op = Report.GetInputRestriction(restriction.OperatorHtmlId);
-            if (!string.IsNullOrEmpty(op) && restriction.ChangeOperator)
+            if (!string.IsNullOrEmpty(op) && (restriction.OperatorStyle == RestrictionOperatorStyle.Visible || restriction.OperatorStyle == RestrictionOperatorStyle.VisibleWithNulls))
             {
                 //Change operator only if allowed and not value only
                 if (op != Operator.ValueOnly.ToString()) restriction.Operator = (Operator)Enum.Parse(typeof(Operator), op);
@@ -659,7 +659,7 @@ namespace Seal.Model
             var sets = (from model in models orderby model.ExecutionSet select model.ExecutionSet).Distinct();
             foreach (var set in sets)
             {
-                Report.LogMessage("Build models of Execution Set {0}...", set);
+                Report.LogMessage("Build models of Execution set {0}...", set);
                 var tasks = new List<Task>();
                 foreach (ReportModel model in models.Where(i => i.ExecutionSet == set))
                 {
@@ -1433,7 +1433,7 @@ namespace Seal.Model
             }
             catch (Exception ex)
             {
-                Report.ExecutionMessages += string.Format("Error got when executing Cell Script for '{0}' in model '{1}'\r\n{2}\r\n", cell.Element.DisplayNameEl, cell.Element.Model.Name, ex.Message);
+                Report.ExecutionMessages += string.Format("Error got when executing Cell script for '{0}' in model '{1}'\r\n{2}\r\n", cell.Element.DisplayNameEl, cell.Element.Model.Name, ex.Message);
             }
         }
 

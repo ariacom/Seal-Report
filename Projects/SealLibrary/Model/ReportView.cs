@@ -455,7 +455,7 @@ namespace Seal.Model
         /// <summary>
         /// The description of the template
         /// </summary>
-        [DisplayName("Template Description"), Description("The description of the template."), Category("Definition"), Id(2, 1)]
+        [DisplayName("Template description"), Description("The description of the template."), Category("Definition"), Id(2, 1)]
         public string TemplateDescription
         {
             get
@@ -535,7 +535,7 @@ namespace Seal.Model
         /// If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'. 
         /// </summary>
         [DefaultValue(null)]
-        [DisplayName("Reference View"), Description("If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'."), Category("Definition"), Id(5, 1)]
+        [DisplayName("Reference view"), Description("If set, the values of the properties of the view may be taken from the reference view. This apply to parameters having their default value (including Excel and PDF configuration), custom template texts with 'Use custom template text' set to 'false'."), Category("Definition"), Id(5, 1)]
         [TypeConverter(typeof(ReportViewConverter))]
         public string ReferenceViewGUID { get; set; }
         public bool ShouldSerializeReferenceViewGUID() { return !string.IsNullOrEmpty(ReferenceViewGUID); }

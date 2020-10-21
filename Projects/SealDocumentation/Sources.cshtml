@@ -34,7 +34,13 @@
                                 <li><a href="#lineEnums_2">Dynamic display</a></li>
                             </ul>
                         </li>
-                        <li><a href="#lineNoSQL">No SQL Data Source</a></li>
+                        <li>
+                            <a href="#lineNoSQL">LINQ Data Sources</a>
+                            <ul class="nav">
+                                <li><a href="#lineNoSQL_1">No SQL Table</a></li>
+                                <li><a href="#lineNoSQL_2">Joins and Table Links</a></li>
+                            </ul>
+                        </li>
                     </ul>
                     <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
                     <p style="margin-left:20px;">
@@ -97,7 +103,7 @@
                                 A <strong>Data Source</strong> can have one to many Connections (<eg>e.g. dev, test, production, etc.</eg>).
                             </p>
                             <div class="bs-callout bs-callout-danger">
-                                Make sure that your database driver (32bit or 64bit depending on your Seal Report installation) is installed on the machine you are running the <b>Server Manager</b>.<br />
+                                Make sure that your database driver is installed on the machine you are running the <b>Server Manager</b>.<br />
                             </div>
                             <p>
                                 Use the <code>Database Type</code> property to define your database type. This type may be used by the engine in different ways (<eg>e.g. using Serial Date for Ms Access</eg>).<br />
@@ -124,7 +130,7 @@
                         <div class="col-md-12">
                             <h4>Tables</h4>
                             <p>
-                                A table is defined either by its <code>Name</code> or  by a <code>SQL Statement</code> and <code>Table Alias</code> (<eg>e.g. 'Orders' or '(select * from Orders) OrdersAlias'</eg>).<br />
+                                A table is defined either by its <code>Name</code> or  by a <code>SQL Statement</code> and <code>Table alias</code> (<eg>e.g. 'Orders' or '(select * from Orders) OrdersAlias'</eg>).<br />
                                 Table columns can be dynamically populated using the database catalog.
                             </p>
                             <div class="bs-callout bs-callout-warning">
@@ -161,7 +167,7 @@
                     <!-- end row -->
                     <div id="lineTables_3" class="row" style="padding-top:35px">
                         <div class="col-md-12">
-                            <h4>Common Restrictions and Values</h4>
+                            <h4>Common restrictions and values</h4>
                             <p>
                                 All SQL involved in the table definition (<code>Name</code>, <code>SQL Statement</code>, <code>Pre SQL Statement</code>, etc.) can contain the keywords <b>'{CommonRestriction_&#60;RestrictionName&#62;}'</b> or <b>'{CommonValue_&#60;RestrictionName&#62;}'</b> where <b>&#60;RestrictionName&#62;</b>
                                 is the name of the restriction.<br />
@@ -195,7 +201,7 @@
                         <div class="col-md-12">
                             <h4>Columns</h4>
                             <p>
-                                A <strong>column</strong> is defined with its SQL (<code>Name</code>), its <code>Data Type</code> and how it is display in the <b>Report Designer</b> (<code>Display Name</code> and <code>Category Name</code> properties) and in the report result (<code>Format</code> property).<br><br>
+                                A <strong>column</strong> is defined with its SQL (<code>Name</code>), its <code>Data type</code> and how it is display in the <b>Report Designer</b> (<code>Display Name</code> and <code>Category Name</code> properties) and in the report result (<code>Format</code> property).<br><br>
 
                                 In certain cases, a column can reference an enumerated list with the  <code>Enumerated List</code> property (<eg>e.g. the value 0 will be display with 'No', 1 with 'Yes'</eg>).<br>
                                 <ck>Check <a href="#lineEnums">Enumerated Lists</a> for more information</ck>.
@@ -300,7 +306,7 @@
                         <div class="col-md-12">
                             <h4>Dynamic enums</h4>
                             <p>
-                                <strong>Enumerated list</strong> can be also loaded from the database using <code>SQL Select Statement</code>.<br />
+                                <strong>Enumerated list</strong> can be also loaded from the database using <code>SQL Select Statement</code> and/or a <code>Razor Script</code>.<br />
                                 The select statement can have up to 5 columns to define dynamic enumerated list.<br />
                                 <ul>
                                     <li>the first column is used for the identifier</li>
@@ -309,6 +315,7 @@
                                     <li>the fourth optional column defines a custom CSS Style applied to the result cell</li>
                                     <li>the fifth optional column defines a custom CSS Class applied to the result cell</li>
                                 </ul>
+                                The <code>Script</code> can be used to create or modify the <strong>Enumerated list</strong> values.<br />
                                 Changing the CSS style or class can be useful to change the color depending on the value (<eg>e.g. green if OK, red if KO</eg>).<br /><br />
                             </p>
                             <div class="bs-callout bs-callout-danger">
@@ -361,7 +368,7 @@
                 <section id="lineNoSQL" class="section">
                     <div class="row">
                         <div class="col-md-12 left-align">
-                            <h2 class="dark-text">No SQL Data Source <hr></h2>
+                            <h2 class="dark-text">LINQ Data Sources <hr></h2>
                         </div>
                         <!-- end col -->
                     </div>
@@ -369,14 +376,48 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                A <strong>No SQL Data Source</strong> can provide data that cannot be queried from a database engine.<br />
+                                A <strong>LINQ Data Source</strong> can provide data that cannot be queried from a database engine.<br />
+                                The Seal engine generates dynamically a <b>LINQ query</b> including the elements seleted, the restrictions and the joins involved.<br />
                                 Depending on the data fetched, it may require advanced C#/.Net skills.
-                            <p>
-                            <p>
-                                The <strong>Data Source</strong> contains the <code>Definition Script</code> to define the main table and the <code>Load Script</code> to load the data.<br>
-                                The table is called <b>SealMasterTable</b>.<br />
-                                Once the table is defined, the columns can be used in report models as normal columns coming from a database. The scripts manage a .Net object DataTable. Restrictions are handled in the server by using filter capacities of the DataTable.
                             </p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineNoSQL_1" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>No SQL Table</h4>
+                            <p>
+                                A <strong>LINQ Data Source</strong> contains <b>No SQL Tables</b> based on the templates defined in the repository.<br />
+                                A <b>No SQL table</b> is then defined with a <code>Definition Script</code> to insert the columns in the main table and the <code>Load script</code> to load the data.<br><br />
+                                Once the table is defined, the columns can be used in report models as normal columns coming from a database.<br />
+                                The scripts manage a <b>.Net DataTable Object</b>.<br />
+                                Restrictions are handled in the server by using filter capacities of the DataTable.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Table Templates</h4>
+                                <i>Adomd OLAP MDX, CSV, Excel, HTTPCLient JSON, XML, RSS</i> are template files defined in <i>/Sources/TableTemplates</i> Repository sub-folder.<br />
+                                By default use the <i>Generic</i> template.<br />
+                                It is easy to create and add a template in this folder.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineNoSQL_2" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Joins and Table Links</h4>
+                            <p>
+                                Like in SQL, <b>Joins</b> can be defined between tables using a dedicated <code>Join clause</code> coded in C#.<br />
+                                This clause will be used by the engine to generate the LINQ query when several tables are involved.
+                            </p>
+                            <p>
+                                In addition to <b>No SQL Tables</b>, a <strong>LINQ Data Source</strong> can have <b>Table Links</b> that reference tables defined in other <b>SQL or LINQ Data Sources</b> installed in the Repository.<br />
+    <b>Joins</b> can then be defined using the <b>Tables</b> referenced by the <b>Table Link</b>.
+</p>
+                            <div class="bs-callout bs-callout-info">
+                                Defining <b>Table Links</b> and <b>Joins</b> allow to join different <b>Data Sources</b> (<eg>e.g. Performing a report that shows data from a SQ database and an Excel sheet</eg>).
+                            </div>
                         </div>
                         <!-- end col -->
                     </div>
@@ -384,16 +425,14 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="bs-callout bs-callout-demo">
-                                <h4>No SQL Source Sample</h4>
+                                <h4>LINQ Source Sample</h4>
                                 <a class="btn btn-primary live-sample">Live Sample: 40-No SQL Source - Excel and CSV Sources</a><br />
                                 This report defines two No SQL Sources: One loaded from an Excel Sheet, one from a CSV file.<br /><br />
-                                <a class="btn btn-primary live-sample">Live Sample: 41-No SQL Source RSS</a><br />
-                                This report shows how to read RSS BBC Feeds to fill the DataTable.<br />
-                                A simple model is defined with 3 elements and 3 restrictions.<br />
-                                Note that the connection strings are used to store the URL of the feeds.<br><br />
-                                <code>Definition Script</code> property of the SealMasterTable.
+                                <a class="btn btn-primary">Repository Data Source Sample: LINQ Sources</a><br />
+                                This source contains several <b>No SQL Tables</b> based on the <b>Table Templates</b> available.<br /><br />
+                                The table <b>XML RSS News</b> shows how to read RSS BBC Feeds to fill the DataTable.<br />
+                                <code>Definition Script</code> property of the table.
                                 <pre class="brush: csharp">
-@@using Seal.Model
 @@using System.Data
 @@{
     MetaTable metaTable = Model;
@@ -410,10 +449,8 @@
 }
 </pre><br />
 
-                                <code>Load Script</code> property of the SealMasterTable.
+                                <code>Load script</code> property of the table.
                                 <pre class="brush: csharp">
-@@using Seal.Model
-@@using Seal.Helpers
 @@using System.Data
 @@using System.Text
 @@using System.Collections
@@ -424,11 +461,11 @@
     //Just feed the table from the RSS data
     MetaTable metaTable = Model;
     DataTable table = metaTable.NoSQLTable;
-    ReportExecutionLog log = metaTable;
 
-    log.LogMessage("Loading RSS feed from {0}", Model.Source.Connection.FullConnectionString);
-    var reader = XmlReader.Create(Model.Source.Connection.FullConnectionString);
-    var feed = SyndicationFeed.Load(reader);
+	var url = metaTable.GetValue("rss_url");
+    metaTable.LogMessage("Loading RSS feed from {0}", url);
+	var reader = XmlReader.Create(url);
+	var feed = SyndicationFeed.Load(reader);
     foreach (var item in feed.Items)
     {
         string link = item.Links.Count > 0 ? item.Links[0].Uri.AbsoluteUri : "";
@@ -441,9 +478,16 @@
         //Values must match the table definition
         table.Rows.Add(item.Id, item.PublishDate.DateTime, item.Title.Text, item.Summary.Text, link, categories, titleWithLink);
     }
-    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+    metaTable.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }
                     </pre>
+                                <br />Example of a <code>Join clause</code> between Northwind tables and a Excel Sheet table.
+                                <pre class="brush: csharp">
+new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
+equals 
+new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(ExcelEmployeeObjective["year"].ToString()) }
+                    </pre>
+
                             </div>
                         </div>
                         <!-- end row -->

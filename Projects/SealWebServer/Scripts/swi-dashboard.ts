@@ -169,22 +169,24 @@ class SWIDashboard {
         $("#rb" + data.itemguid).attr("title", data.lastexec);
 
         //Auto-refresh
-        if (data.refresh > 0) _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false) }, 1000 * data.refresh);
+        if (data.refresh > 0) _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false, true) }, 1000 * data.refresh);
 
         initNavCells(data.executionguid, "#" + data.itemguid);
         initRestrictions("#" + data.itemguid);
     }
 
-    private refreshDashboardItem(guid: string, itemguid: string, force: boolean) {
-        _da._pendingRequest++;
+    private refreshDashboardItem(guid: string, itemguid: string, force: boolean, forTimer: boolean) {
+        if (!forTimer) _da._pendingRequest++;
         clearTimeout(_da._refreshTimers[itemguid]);
         $("#nav_popupmenu").css("opacity", "0");
 
         _gateway.GetDashboardResult(guid, itemguid, force, exportFormat, function (data) {
             _da.handleDashboardResult(data);
-            _da._pendingRequest--;
-            //Redraw...
-            redrawDashboard();
+            if (!forTimer) {
+                _da._pendingRequest--;
+                //Redraw...
+                redrawDashboard();
+            }
         });
     }
 
@@ -282,7 +284,7 @@ class SWIDashboard {
                 panelBody.append($("<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>"));
                 panelBody.append($("<h4 style='display:inline'></h4>").html(SWIUtil.tr("Processing") + "..."));
 
-                _da.refreshDashboardItem(guid, item.GUID, false);
+                _da.refreshDashboardItem(guid, item.GUID, false, false);
 
                 //Size
                 if (item.Width > 0) panel.width(item.Width);
@@ -317,7 +319,7 @@ class SWIDashboard {
                         var panelHeading = $(this).closest('.panel-heading');
                         panelHeading.children(".fa-spinner").show();
 
-                        _da.refreshDashboardItem(dashboardGuid, itemGuid, true);
+                        _da.refreshDashboardItem(dashboardGuid, itemGuid, true, false);
                     });
                 }
 

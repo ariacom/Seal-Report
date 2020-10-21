@@ -244,7 +244,7 @@ if (cell.IsTitle)
     Report report = (reportModel != null ? reportModel.Report : null);
     List<ReportRestriction> restrictions = (reportModel != null ? reportModel.Restrictions : null);
 
-    //Default Script executed to fill the model result table from a non SQL source (if the model 'Load Script' is empty)
+    //Default Script executed to fill the model result table from a non SQL source (if the model 'Load script' is empty)
     //Insert values in the table, values must match the table columns defined in 'Definition Script'
     //NOTE 1: Other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
     //NOTE 2: This script should remain empty/blank if the 'Definition Script' insert the data in the table.
@@ -309,7 +309,7 @@ if (cell.IsTitle)
     //Script executed before the model result table is loaded from the database
     //You can change the model restrictions or elements before the load of the table
     //Note that other assemblies can be used by saving the .dll in the Repository 'Assemblies' sub-folder...
-    log.LogMessage(""Processing the model 'Pre Load Script'"");
+    log.LogMessage(""Processing the model 'Pre load script'"");
     //restrictions[0].Value1 = ""1994""; 
     //restrictions[0].Date1 = DateTime.Now.AddYears(-20);
     //model.GetRestrictionByName(""Order Year"").Value1 = ""2015"";
@@ -389,7 +389,7 @@ if (cell.IsTitle)
     var pathCell = link.Cell.ContextCurrentLine[0];
     //pathCell = link.Cell.ContextCurrentLine.FirstOrDefault(i => i.Element.ColumnName.StartsWith(""col_name""));
     link.ScriptResult = pathCell.Value.ToString();
-    //Or in the link tag set in the Cell Script
+    //Or in the link tag set in the Cell script
     link.ScriptResult = link.Tag;
 
 
@@ -412,7 +412,7 @@ if (cell.IsTitle)
         }
     }
 
-    //The script will be executed for cell having the following initialization in a 'Cell Script': 
+    //The script will be executed for cell having the following initialization in a 'Cell script': 
     //cell.AddNavigationFileDownload(""Download"" + cell.DisplayValue);
 }
 ";
@@ -431,7 +431,7 @@ if (cell.IsTitle)
     if (link.Text == ""download"") {
         //Sample 1 to return a file from a disk path
         link.ScriptResult = ""C:\\temp\\aFile.pdf"";
-        //Or in the link tag set in the Cell Script
+        //Or in the link tag set in the Cell script
         link.ScriptResult = link.Tag;
     }
     else if (link.Text == ""html"") {
@@ -1227,7 +1227,7 @@ if (cell.IsTitle)
                     else if (context.PropertyDescriptor.Name == "LINQQueryScript")
                     {
                         template = ReportModel.DefaultLINQScriptTemplate;
-                        frm.Text = "Edit the LINQ Query script template used to generate the model (assign query2 from query)";
+                        frm.Text = "Edit the LINQ Query Script template used to generate the model (assign query2 from query)";
                         List<string> samples = new List<string>();
                         samples.Add("var query2 = query.Take(3); //Take the first 3 rows");
                         samples.Add("var query2 = query.Skip(2); //Skip the first 2 rows");

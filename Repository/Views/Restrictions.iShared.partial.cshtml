@@ -30,7 +30,7 @@
                                     <select name="@restriction.OperatorHtmlId" id="@restriction.OperatorHtmlId" class="form-control operator_select">
                                         @foreach (Operator op in restriction.AllowedDisplayOperators)
                                         {
-                                            if (restriction.ChangeOperator || restriction.Operator == op)
+                                            if ((restriction.OperatorStyle == RestrictionOperatorStyle.Visible || restriction.OperatorStyle == RestrictionOperatorStyle.VisibleWithNulls) || restriction.Operator == op)
                                             {
                                                 <option value="@op.ToString()" @(restriction.Operator == op ? "selected" : "")>@Raw(Helper.ToHtml(restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(op)))</option>
                                             }
@@ -43,7 +43,7 @@
                                     if (restriction.OperatorStyle == RestrictionOperatorStyle.NotModifiable)
                                     {
                                         var opLabel = restriction.DisplayNameElTranslated + (restriction.Required ? "*" : "") + " " + restriction.GetOperatorLabel(restriction.Operator);
-                                        <button type="button" class="btn btn-default form-control" style="text-align:left;overflow:hidden" title="@Raw(Helper.ToHtml(opLabel))">
+                                        <button type="button" class="btn btn-default form-control" style="text-align:left;overflow:hidden;cursor:default;" title="@Raw(Helper.ToHtml(opLabel))">
                                             @Raw(Helper.ToHtml(opLabel))
                                         </button>
 

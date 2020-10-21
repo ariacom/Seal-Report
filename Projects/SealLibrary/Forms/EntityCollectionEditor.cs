@@ -239,7 +239,6 @@ namespace Seal.Forms
                 var result = ReportRestriction.CreateReportRestriction();
                 result.TypeRe = ColumnType.Text;
                 result.Operator = Operator.Equal;
-                result.ChangeOperator = false;
                 result.Report = (Report)Context.Instance;
                 instance = result;
             }

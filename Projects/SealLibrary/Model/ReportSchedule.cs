@@ -505,7 +505,7 @@ namespace Seal.Model
         /// <summary>
         /// The destination (To) email addresses used for the email notification in case of success. One per line or separated by semi-column.
         /// </summary>
-        [Category("Email Notification in case of success"), DisplayName("TO addresses"), Description("The destination (To) email addresses used for the email notification in case of success. One per line or separated by semi-column."), Id(2, 3)]
+        [Category("Email notification in case of success"), DisplayName("TO addresses"), Description("The destination (To) email addresses used for the email notification in case of success. One per line or separated by semi-column."), Id(2, 3)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string NotificationEmailTo
         {
@@ -520,19 +520,19 @@ namespace Seal.Model
         /// <summary>
         /// The subject of the email sent in case of success. If empty, the report name is used.
         /// </summary>
-        [Category("Email Notification in case of success"), DisplayName("Subject"), Description("The subject of the email sent in case of success. If empty, the report name is used."), Id(3, 3)]
+        [Category("Email notification in case of success"), DisplayName("Subject"), Description("The subject of the email sent in case of success. If empty, the report name is used."), Id(3, 3)]
         public string NotificationEmailSubject { get; set; }
 
         /// <summary>
         /// The body of the email sent in case of success. If empty, a default text is used.
         /// </summary>
-        [Category("Email Notification in case of success"), DisplayName("Body"), Description("The body of the email sent in case of success. If empty, a default text is used."), Id(4, 3)]
+        [Category("Email notification in case of success"), DisplayName("Body"), Description("The body of the email sent in case of success. If empty, a default text is used."), Id(4, 3)]
         public string NotificationEmailBody { get; set; }
 
         /// <summary>
         /// The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address.
         /// </summary>
-        [Category("Email Notification in case of success"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(5, 3)]
+        [Category("Email notification in case of success"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(5, 3)]
         public string NotificationEmailFrom { get; set; }
 
         int _errorNumberOfRetries = 0;
@@ -562,7 +562,7 @@ namespace Seal.Model
         /// <summary>
         /// The destination (To) email addresses used for the email in case of error. One per line or separated by semi-column.
         /// </summary>
-        [Category("Failover: Email Notification in case of error"), DisplayName("TO addresses"), Description("The destination (To) email addresses used for the email in case of error. One per line or separated by semi-column."), Id(2, 7)]
+        [Category("Failover: Email notification in case of error"), DisplayName("TO addresses"), Description("The destination (To) email addresses used for the email in case of error. One per line or separated by semi-column."), Id(2, 7)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string ErrorEmailTo
         {
@@ -573,7 +573,7 @@ namespace Seal.Model
         /// <summary>
         /// Specify if the email is sent for the first, the last or for each failure
         /// </summary>
-        [Category("Failover: Email Notification in case of error"), DisplayName("Send Email mode"), Description("Specify if the email is sent for the first, the last or for each failure."), Id(3, 7)]
+        [Category("Failover: Email notification in case of error"), DisplayName("Send Email mode"), Description("Specify if the email is sent for the first, the last or for each failure."), Id(3, 7)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public FailoverEmailMode ErrorEmailSendMode { get; set; } = FailoverEmailMode.All;
         public bool ShouldSerializeErrorEmailSendMode() { return !string.IsNullOrEmpty(ErrorEmailTo); }
@@ -581,13 +581,13 @@ namespace Seal.Model
         /// <summary>
         /// The subject of the email sent in case of error. If empty, the report name is used.
         /// </summary>
-        [Category("Failover: Email Notification in case of error"), DisplayName("Subject"), Description("The subject of the email sent in case of error. If empty, the report name is used."), Id(4, 7)]
+        [Category("Failover: Email notification in case of error"), DisplayName("Subject"), Description("The subject of the email sent in case of error. If empty, the report name is used."), Id(4, 7)]
         public string ErrorEmailSubject { get; set; }
 
         /// <summary>
         /// The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address.
         /// </summary>
-        [Category("Failover: Email Notification in case of error"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(5, 7)]
+        [Category("Failover: Email notification in case of error"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of error. If empty the default address configured in the device is used. Make sure that the SMTP server allows the new address."), Id(5, 7)]
         public string ErrorEmailFrom { get; set; }
 
         /// <summary>

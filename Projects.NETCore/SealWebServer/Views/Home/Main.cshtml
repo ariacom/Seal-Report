@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@repository.Configuration.WebProductName</title>
+    <title>@(string.IsNullOrEmpty(model.Title) ? repository.Configuration.WebProductName : model.Title)</title>
     <meta charset="utf-8" />
 
     <link href="~/Images/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
@@ -266,19 +266,39 @@
                     <h4 class="modal-title">@repository.TranslateWeb("Export Dashboards")</h4>
                 </div>
                 <div class="modal-body">
-                    <h5>@repository.TranslateWeb("Dashboards to export")</h5>
-                    <div class="form-group">
-                        <select id="export-dashboards" multiple="multiple"></select>
-                    </div>
-                    <h5>@repository.TranslateWeb("Format")</h5>
-                    <div class="form-group">
-                        <select id="export-format" data-width="60%"></select>
+                    <div class="row">
+                        <div class="form-horizontal col-sm-10" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-sm-6" for="export-dashboards">@repository.TranslateWeb("Dashboards to export")</label>
+                                <div class="col-sm-6">
+                                    <select id="export-dashboards" multiple="multiple"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-6" for="export-format">@repository.TranslateWeb("Format")</label>
+                                <div class="col-sm-6">
+                                    <select id="export-format"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-6" for="export-title">@repository.TranslateWeb("Title")</label>
+                                <div class="col-sm-6">
+                                    <input id="export-title" class="form-control" value="@repository.TranslateWeb("Dashboard")">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-6" for="export-delay">@repository.TranslateWeb("PDF Conversion delay")</label>
+                                <div class="col-sm-6">
+                                    <input id="export-delay" class="form-control numeric_input" value="5">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button id="dashboard-export" type="button" class="btn btn-primary" data-dismiss="modal">@repository.TranslateWeb("Export")</button>
+                    <div class="modal-footer">
+                        <button id="dashboard-export" type="button" class="btn btn-primary" data-dismiss="modal">@repository.TranslateWeb("Export")</button>
+                    </div>
                 </div>
-            </div>
         </div>
     </div>
 

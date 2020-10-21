@@ -531,11 +531,12 @@ class SWIDashboard {
                     select.append(SWIUtil.GetOption("pdflandscape", SWIUtil.tr("PDF Landscape"), ""));
                     select.append(SWIUtil.GetOption("excel", SWIUtil.tr("Excel"), ""));
                     select.selectpicker("refresh");
+                    SWIUtil.InitNumericInput();
 
                     $("#dashboard-export").unbind('click').on("click", function () {
                         SWIUtil.HideMessages();
                         if ($("#export-dashboards").val() == "") return;
-                        _gateway.ExportDashboards($("#export-dashboards").val(), $("#export-format").val());
+                        _gateway.ExportDashboards($("#export-dashboards").val(), $("#export-format").val(), $("#export-title").val(), $("#export-delay").val());
                     });
 
                     $("#export-dialog").modal();

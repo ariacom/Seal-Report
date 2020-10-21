@@ -110,7 +110,7 @@ namespace Seal.Model
         /// The source used to build the model
         /// </summary>
         [DefaultValue(null)]
-        [Category("Model Definition"), DisplayName("Source"), Description("The source used to build the model."), Id(1, 1)]
+        [Category("Model definition"), DisplayName("Source"), Description("The source used to build the model."), Id(1, 1)]
         [TypeConverter(typeof(MetaSourceConverter))]
         public string SourceGUID { get; set; }
 
@@ -119,7 +119,7 @@ namespace Seal.Model
         /// The connection used to build the model
         /// </summary>
         [DefaultValue(ReportSource.DefaultReportConnectionGUID)]
-        [DisplayName("Connection"), Description("The connection used to build the model."), Category("Model Definition"), Id(2, 1)]
+        [DisplayName("Connection"), Description("The connection used to build the model."), Category("Model definition"), Id(2, 1)]
         [TypeConverter(typeof(SourceConnectionConverter))]
         public string ConnectionGUID
         {
@@ -157,7 +157,7 @@ namespace Seal.Model
         /// <summary>
         /// List of common restrictions and values involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount')
         /// </summary>
-        [Category("Model Definition"), DisplayName("Common Restrictions and Values"), Description("List of common restrictions and values involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount')"), Id(3, 1)]
+        [Category("Model definition"), DisplayName("Common restrictions and values"), Description("List of common restrictions and values involved in the model. Common Restrictions or Values are defined in the SQL (Pre, Post, Table SQL, Where Clause, etc.) with the '{CommonRestriction_' or '{CommonValue_' keywords (e.g. {CommonRestriction_Amount} to create a common restriction named 'Amount')"), Id(3, 1)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
         public List<ReportRestriction> CommonRestrictions { get; set; } = new List<ReportRestriction>();
         public bool ShouldSerializeCommonRestrictions() { return CommonRestrictions.Count > 0; }
@@ -165,7 +165,7 @@ namespace Seal.Model
         /// <summary>
         /// Optional Razor Script to modify the result table of the model just before the database load
         /// </summary>
-        [Category("Model Definition"), DisplayName("Pre Load Script"), Description("Optional Razor Script to modify the result table of the model just before the database load."), Id(4, 1)]
+        [Category("Model definition"), DisplayName("Pre Load Script"), Description("Optional Razor Script to modify the result table of the model just before the database load."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string PreLoadScript { get; set; }
@@ -173,7 +173,7 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrites default query script template used to generate the LINQ query
         /// </summary>
-        [Category("Model Definition"), DisplayName("LINQ Query Script Template"), Description("If not empty, overwrites default query script template used to generate the LINQ query."), Id(5, 1)]
+        [Category("Model definition"), DisplayName("LINQ Query Script template"), Description("If not empty, overwrites default query script template used to generate the LINQ query."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string LINQQueryScript { get; set; }
@@ -181,7 +181,7 @@ namespace Seal.Model
         /// <summary>
         /// The Razor Script used to load the data in the table. If empty, the load script defined in the master table is used.
         /// </summary>
-        [Category("Model Definition"), DisplayName("Load Script"), Description("The Razor Script used to load the data in the table. If empty, the LINQ Query generated is used."), Id(5, 1)]
+        [Category("Model definition"), DisplayName("Load Script"), Description("The Razor Script used to load the data in the table. If empty, the LINQ Query generated is used."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string LoadScript { get; set; }
@@ -190,7 +190,7 @@ namespace Seal.Model
         /// <summary>
         /// If true, restrictions and theirs values defined for the LINQ model are automatically copied to the sub-models.
         /// </summary>
-        [Category("Sub-Models Generation"), DisplayName("Synchronize restrictions"), Description("If true, restrictions and theirs values defined for the LINQ model are automatically copied to the sub-models."), Id(1, 3)]
+        [Category("Sub-Models generation"), DisplayName("Synchronize restrictions"), Description("If true, restrictions and theirs values defined for the LINQ model are automatically copied to the sub-models."), Id(1, 3)]
         [DefaultValue(true)]
         public bool SubModelsSetRestr
         {
@@ -212,7 +212,7 @@ namespace Seal.Model
         /// <summary>
         /// If true, aggregates are copied to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates). 
         /// </summary>
-        [Category("Sub-Models Generation"), DisplayName("Synchronize aggregates"), Description("If true, aggregates are copied to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates)."), Id(5, 3)]
+        [Category("Sub-Models generation"), DisplayName("Synchronize aggregates"), Description("If true, aggregates are copied to sub-models elements, otherwise the sub-models elements have no aggregate. This may impact the final performances and results (especially for Count or Average aggregates)."), Id(5, 3)]
         [DefaultValue(true)]
         public bool SubModelsSetAggr
         {
@@ -232,7 +232,7 @@ namespace Seal.Model
         /// <summary>
         /// Optional Razor Script to modify the model after its generation
         /// </summary>
-        [Category("Model Definition"), DisplayName("Final Script"), Description("Optional Razor Script to modify the model after its generation."), Id(6, 1)]
+        [Category("Model definition"), DisplayName("Final Script"), Description("Optional Razor Script to modify the model after its generation."), Id(6, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string FinalScript { get; set; }
@@ -240,28 +240,28 @@ namespace Seal.Model
         /// <summary>
         /// During the models generation, the models of the same Set Number are generated in parallel at the same time. The models with Set 1 are executed first at the same time, then models with Set 2, etc. This can be used if models depends on other models.
         /// </summary>
-        [Category("Model Definition"), DisplayName("Execution Set"), Description("During the models generation, the models of the same Set Number are generated in parallel at the same time. The models with Set 1 are executed first at the same time, then models with Set 2, etc. This can be used if models depends on other models."), Id(7, 1)]
+        [Category("Model definition"), DisplayName("Execution set"), Description("During the models generation, the models of the same Set Number are generated in parallel at the same time. The models with Set 1 are executed first at the same time, then models with Set 2, etc. This can be used if models depends on other models."), Id(7, 1)]
         [DefaultValue(1)]
         public int ExecutionSet { get; set; } = 1;
 
         /// <summary>
         /// If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization).
         /// </summary>
-        [Category("Model Definition"), DisplayName("Share result table"), Description("If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization)."), Id(8, 1)]
+        [Category("Model definition"), DisplayName("Share result table"), Description("If true and several models have the same SQL or Script definiton, one result table is generated and shared for those models (Optimization)."), Id(8, 1)]
         [DefaultValue(true)]
         public bool ShareResultTable { get; set; } = true;
 
         /// <summary>
         /// If true, the query is printed in the report messages (for debug purpose).
         /// </summary>
-        [Category("Model Definition"), DisplayName("Print Query"), Description("If true, the LINQ or SQL Query is printed in the report messages (for debug purpose)."), Id(9, 1)]
+        [Category("Model definition"), DisplayName("Print query"), Description("If true, the LINQ or SQL Query is printed in the report messages (for debug purpose)."), Id(9, 1)]
         [DefaultValue(false)]
         public bool PrintQuery { get; set; } = false;
 
         /// <summary>
         /// If true and the table has column values, the first line used for titles is generated in the table header
         /// </summary>
-        [Category("Model Definition"), DisplayName("Show First Header Line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(10, 1)]
+        [Category("Model definition"), DisplayName("Show first header line"), Description("If true and the table has column values, the first line used for titles is generated in the table header."), Id(10, 1)]
         [DefaultValue(true)]
         public bool ShowFirstLine { get; set; } = true;
 
@@ -389,7 +389,7 @@ namespace Seal.Model
         /// Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
         /// </summary>
         [DefaultValue(2000)]
-        [Category("Join Preferences"), DisplayName("Build Timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL or LINQ Query (may be used if many joins are defined)."), Id(11, 4)]
+        [Category("Join preferences"), DisplayName("Build timeout (ms)"), Description("Timeout in milliseconds to set the maximum duration used to build the SQL or LINQ Query (may be used if many joins are defined)."), Id(11, 4)]
         public int BuildTimeout { get; set; } = 2000;
 
         /// <summary>
@@ -399,9 +399,9 @@ namespace Seal.Model
         public bool ShouldSerializeJoinsToUse() { return JoinsToUse.Count > 0; }
 
         /// <summary>
-        /// Helper to select Join Preferences
+        /// Helper to select Join preferences
         /// </summary>
-        [Category("Join Preferences"), DisplayName("Joins to use"), Description("If specified, Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used."), Id(2, 4)]
+        [Category("Join preferences"), DisplayName("Joins to use"), Description("If specified, Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used."), Id(2, 4)]
         [Editor(typeof(JoinsEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public string JoinsToSelect
@@ -413,7 +413,7 @@ namespace Seal.Model
         /// <summary>
         /// Helper to view joins evaluated for the model
         /// </summary>
-        [Category("Join Preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(4, 4)]
+        [Category("Join preferences"), DisplayName("View joins evaluated"), Description("List all joins evaluated for the model. This may be used to understand if a join definition is missing in the source."), Id(4, 4)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperViewJoins
         {
@@ -2481,12 +2481,9 @@ model.ResultTable = query2.CopyToDataTable2();
                 subTable.NoSQLTable = null;
                 subTable.TemplateName = table.TemplateName;
                 subTable.CacheDuration = table.CacheDuration;
-                //Init default properties
-                if (subTable.Parameters.Count == 0)
-                {
-                    subTable.InitParameters();
-                    foreach (var parameter in subTable.Parameters) parameter.Value = table.GetValue(parameter.Name);
-                }
+                //Init default parameters
+                subTable.InitParameters();
+
                 LINQSubTables.Add(subTable);
             }
         }
@@ -2535,7 +2532,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     subTable.Log = Report;
                     subTable.NoSQLModel = this;
-                    var table = Source.MetaData.Tables.FirstOrDefault(i => i.GUID == subTable.GUID);
+                    var table = subTable.Source.MetaData.Tables.FirstOrDefault(i => i.GUID == subTable.GUID);
                     if (table != null)
                     {
                         Report.LogMessage("Model '{0}': Building No SQL Table '{1}'", Name, subTable.Name);
@@ -2641,7 +2638,7 @@ model.ResultTable = query2.CopyToDataTable2();
             Pages.Clear();
 
             //Pre-load script
-            if (!Source.IsNoSQL) ExecuteLoadScript(PreLoadScript, "Pre Load Script", this);
+            if (!Source.IsNoSQL) ExecuteLoadScript(PreLoadScript, "Pre load script", this);
 
             ExecutionError = "";
 

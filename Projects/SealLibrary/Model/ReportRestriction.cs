@@ -123,7 +123,9 @@ namespace Seal.Model
                     }
 
                     GetProperty("Required").SetIsReadOnly(Prompt == PromptType.None);
-                    GetProperty("ChangeOperator").SetIsReadOnly(Prompt == PromptType.None);
+                    GetProperty("OperatorStyle").SetIsReadOnly(Prompt == PromptType.None);
+                    GetProperty("TriggerExecution").SetIsReadOnly(Prompt == PromptType.None);
+
 
                     //Aggregate restriction
                     if (PivotPosition == PivotPosition.Data && !(MetaColumn != null && MetaColumn.IsAggregate))
@@ -139,7 +141,7 @@ namespace Seal.Model
 
                 GetProperty("TypeRe").SetIsBrowsable(true);
                 GetProperty("SQL").SetIsBrowsable(!IsInputValue && !IsCommonValue);
-                GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom Expression");
+                GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom expression");
                 GetProperty("SQL").SetDescription(IsSQL ? "If not empty, overwrite the default SQL used for the restriction in the WHERE clause." : "If not empty, overwrite the default LINQ Expression used for the restriction in the LINQ query.");
                 GetProperty("AllowAPI").SetIsBrowsable(true);
 
@@ -209,25 +211,8 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, overwrite the operator display text
         /// </summary>
-        [Category("Definition"), DisplayName("Operator Label"), Description("If not empty, overwrite the operator display text."), Id(11, 1)]
+        [Category("Definition"), DisplayName("Operator label"), Description("If not empty, overwrite the operator display text."), Id(11, 1)]
         public string OperatorLabel { get; set; }
-
-        bool _changeOperator = true;
-        /// <summary>
-        /// If true, the operator can be changed when the restriction is prompted. Deprecated, kept for backward compatibility and will be removed in future versions, if false -> OperatorStyle is set to RestrictionOperatorStyle.NotModifiable
-        /// </summary>
-        public bool ChangeOperator
-        {
-            get { return _changeOperator; }
-            set
-            {
-                if (!value)
-                {
-                    OperatorStyle = RestrictionOperatorStyle.NotModifiable;
-                }
-                _changeOperator = true; //Back to default
-            }
-        }
 
         /// <summary>
         /// How the element name and restriction operator is displayed or not.
@@ -267,7 +252,7 @@ namespace Seal.Model
         /// Sort order used for the display of the prompted restrictions when the report is executed.
         /// </summary>
         [DefaultValue(1)]
-        [Category("Definition"), DisplayName("Display Order"), Description("Order used for the display of the prompted restrictions when the report is executed."), Id(20, 1)]
+        [Category("Definition"), DisplayName("Display order"), Description("Order used for the display of the prompted restrictions when the report is executed."), Id(20, 1)]
         public int DisplayOrderRE
         {
             get { return DisplayOrder; }
@@ -485,7 +470,7 @@ namespace Seal.Model
         /// <summary>
         /// Value used for the restriction. Multiple values can be set (one per line).
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 1"), Description("Value used for the restriction. Multiple values can be set (one per line)."), Id(1, 3)]
+        [Category("Restriction values"), DisplayName("Value 1"), Description("Value used for the restriction. Multiple values can be set (one per line)."), Id(1, 3)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string Value1
         {
@@ -501,7 +486,7 @@ namespace Seal.Model
         /// <summary>
         /// Second value used for the restriction
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 2"), Description("Second value used for the restriction."), Id(3, 3)]
+        [Category("Restriction values"), DisplayName("Value 2"), Description("Second value used for the restriction."), Id(3, 3)]
         public string Value2
         {
             get { return _value2; }
@@ -516,7 +501,7 @@ namespace Seal.Model
         /// <summary>
         /// Third value used for the restriction
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 3"), Description("Third value used for the restriction."), Id(5, 3)]
+        [Category("Restriction values"), DisplayName("Value 3"), Description("Third value used for the restriction."), Id(5, 3)]
         public string Value3
         {
             get { return _value3; }
@@ -531,7 +516,7 @@ namespace Seal.Model
         /// <summary>
         /// Fourth value used for the restriction
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 4"), Description("Fourth value used for the restriction."), Id(7, 3)]
+        [Category("Restriction values"), DisplayName("Value 4"), Description("Fourth value used for the restriction."), Id(7, 3)]
         public string Value4
         {
             get { return _value4; }
@@ -627,7 +612,7 @@ namespace Seal.Model
         /// <summary>
         /// Helper to edit the enumerated values
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value"), Description("Value used for the restriction."), Id(1, 3)]
+        [Category("Restriction values"), DisplayName("Value"), Description("Value used for the restriction."), Id(1, 3)]
         [Editor(typeof(RestrictionEnumValuesEditor), typeof(UITypeEditor))]
         [XmlIgnore]
         public string EnumValue
@@ -639,7 +624,7 @@ namespace Seal.Model
         /// <summary>
         /// Value used for the restriction (DateTime)
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 1"), Description("Value used for the restriction."), Id(1, 3)]
+        [Category("Restriction values"), DisplayName("Value 1"), Description("Value used for the restriction."), Id(1, 3)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date1 { get; set; }
         public bool ShouldSerializeDate1() { return Date1 != DateTime.MinValue; }
@@ -647,7 +632,7 @@ namespace Seal.Model
         /// <summary>
         /// Second value used for the restriction (DateTime)
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 2"), Description("Second value used for the restriction."), Id(3, 3)]
+        [Category("Restriction values"), DisplayName("Value 2"), Description("Second value used for the restriction."), Id(3, 3)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date2 { get; set; }
         public bool ShouldSerializeDate2() { return Date2 != DateTime.MinValue; }
@@ -655,7 +640,7 @@ namespace Seal.Model
         /// <summary>
         /// Third value used for the restriction (DateTime)
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 3"), Description("Third value used for the restriction."), Id(5, 3)]
+        [Category("Restriction values"), DisplayName("Value 3"), Description("Third value used for the restriction."), Id(5, 3)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date3 { get; set; }
         public bool ShouldSerializeDate3() { return Date3 != DateTime.MinValue; }
@@ -663,7 +648,7 @@ namespace Seal.Model
         /// <summary>
         /// Fourth value used for the restriction (DateTime)
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 4"), Description("Fourth value used for the restriction."), Id(7, 3)]
+        [Category("Restriction values"), DisplayName("Value 4"), Description("Fourth value used for the restriction."), Id(7, 3)]
         [TypeConverter(typeof(RestrictionDateConverter))]
         public DateTime Date4 { get; set; }
         public bool ShouldSerializeDate4() { return Date4 != DateTime.MinValue; }
@@ -672,28 +657,28 @@ namespace Seal.Model
         /// <summary>
         /// Date1 Keyword value
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 1 Keyword"), Description(DateKeywordDescription), Id(2, 3)]
+        [Category("Restriction values"), DisplayName("Value 1 keyword"), Description(DateKeywordDescription), Id(2, 3)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date1Keyword { get; set; }
 
         /// <summary>
         /// Date2 Keyword value
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 2 Keyword"), Description(DateKeywordDescription), Id(4, 3)]
+        [Category("Restriction values"), DisplayName("Value 2 keyword"), Description(DateKeywordDescription), Id(4, 3)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date2Keyword { get; set; }
 
         /// <summary>
         /// Date3 Keyword value
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 3 Keyword"), Description(DateKeywordDescription), Id(6, 3)]
+        [Category("Restriction values"), DisplayName("Value 3 keyword"), Description(DateKeywordDescription), Id(6, 3)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date3Keyword { get; set; }
 
         /// <summary>
         /// Date4 Keyword value
         /// </summary>
-        [Category("Restriction Values"), DisplayName("Value 4 Keyword"), Description(DateKeywordDescription), Id(8, 3)]
+        [Category("Restriction values"), DisplayName("Value 4 keyword"), Description(DateKeywordDescription), Id(8, 3)]
         [TypeConverter(typeof(DateKeywordConverter))]
         public string Date4Keyword { get; set; }
 
@@ -702,7 +687,7 @@ namespace Seal.Model
         /// Layout of the restriction for the values of the enumerated list: Either a select list or buttons (for a small number of values).
         /// </summary>
         [DefaultValue(RestrictionLayout.SelectWithFilter)]
-        [Category("Restriction Values"), DisplayName("Enum layout"), Description("Layout of the restriction for the values of the enumerated list: Either a select list or buttons (for a small number of values)."), Id(9, 3)]
+        [Category("Restriction values"), DisplayName("Enum layout"), Description("Layout of the restriction for the values of the enumerated list: Either a select list or buttons (for a small number of values)."), Id(9, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public RestrictionLayout EnumLayout { get; set; } = RestrictionLayout.SelectWithFilter;
         public bool ShouldSerializeEnumLayout() { return EnumLayout != RestrictionLayout.SelectWithFilter; }
@@ -711,7 +696,7 @@ namespace Seal.Model
         /// If set, the values are selected for the first report execution: All values, first or last value. This may be used for dynamic list.
         /// </summary>
         [DefaultValue(FirstEnumSelection.None)]
-        [Category("Restriction Values"), DisplayName("First selection"), Description("If set, the values are selected for the first report execution: All values, first or last value. This may be used for dynamic list."), Id(10, 3)]
+        [Category("Restriction values"), DisplayName("First selection"), Description("If set, the values are selected for the first report execution: All values, first or last value. This may be used for dynamic list."), Id(10, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public FirstEnumSelection FirstSelection { get; set; } = FirstEnumSelection.None;
         public bool ShouldSerializeFirstSelection() { return FirstSelection != FirstEnumSelection.None; }
@@ -720,7 +705,7 @@ namespace Seal.Model
         /// If set, the values are selected for the first report execution: All values, first or last value. This may be used for dynamic list.
         /// </summary>
         [DefaultValue(false)]
-        [Category("Restriction Values"), DisplayName("Trigger execution"), Description("If true, the report is executed or updated when a value is selected."), Id(12, 3)]
+        [Category("Restriction values"), DisplayName("Trigger execution"), Description("If true, the report is executed or updated when a value is selected."), Id(12, 3)]
         public bool TriggerExecution { get; set; } = false;
         public bool ShouldSerializeTriggerExecution() { return TriggerExecution; }
 
@@ -742,7 +727,7 @@ namespace Seal.Model
         /// Data type of the restriction
         /// </summary>
         [DefaultValue(ColumnType.Default)]
-        [Category("Advanced"), DisplayName("Data Type"), Description("Data type of the restriction."), Id(2, 4)]
+        [Category("Advanced"), DisplayName("Data type"), Description("Data type of the restriction."), Id(2, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ColumnType TypeRe
         {
@@ -803,7 +788,7 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, specify the format of the restriction display values (.Net Format Strings)
         /// </summary>
-        [Category("Advanced"), DisplayName("Custom Format"), Description("If not empty, specify the format of the restriction display values (.Net Format Strings)."), Id(5, 4)]
+        [Category("Advanced"), DisplayName("Custom format"), Description("If not empty, specify the format of the restriction display values (.Net Format Strings)."), Id(5, 4)]
         [TypeConverter(typeof(CustomFormatConverter))]
         public string FormatRe
         {
@@ -830,7 +815,7 @@ namespace Seal.Model
         /// If defined, the restriction values are selected using the enumerated list
         /// </summary>
         [DefaultValue(null)]
-        [Category("Advanced"), DisplayName("Custom Enumerated List"), Description("If defined, the restriction values are selected using the enumerated list."), Id(9, 4)]
+        [Category("Advanced"), DisplayName("Custom enumerated list"), Description("If defined, the restriction values are selected using the enumerated list."), Id(9, 4)]
         [TypeConverter(typeof(MetaEnumConverter))]
         public string EnumGUIDRE
         {
@@ -1442,7 +1427,7 @@ namespace Seal.Model
         static public string[] GetVals(string value)
         {
             if (string.IsNullOrEmpty(value)) return new string[0];
-
+            value = value.Trim();
             if (value.Contains("\n")) return value.Replace("\r", "").Split('\n');
             else return new string[] { value };
         }

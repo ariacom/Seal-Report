@@ -87,7 +87,7 @@ namespace Seal.Model
                     GetProperty("AxisUseValues").SetIsReadOnly(SerieDefinition != SerieDefinition.Axis);
                     GetProperty("CalculationOption").SetIsReadOnly(!IsNumeric);
                 }
-                GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom Expression");
+                GetProperty("SQL").SetDisplayName(IsSQL ? "Custom SQL" : "Custom expression");
                 GetProperty("SQL").SetDescription(IsSQL ? "If not empty, overwrite the default SQL used for the element in the SELECT statement." : "If not empty, overwrite the default LINQ Expression used for the element in the SELECT LINQ query.");
 
                 TypeDescriptor.Refresh(this);
@@ -237,7 +237,7 @@ namespace Seal.Model
         /// Sort order in the result tables. Page elements are sorted first, then Row, Column and Data elements.
         /// </summary>
         [DefaultValue(kAutomaticAscSortKeyword)]
-        [Category("Definition"), DisplayName("Sort Order"), Description("Sort order in the result tables. Page elements are sorted first, then Row, Column and Data elements."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Sort order"), Description("Sort order in the result tables. Page elements are sorted first, then Row, Column and Data elements."), Id(2, 1)]
         [TypeConverter(typeof(SortOrderConverter))]
         public string SortOrder { get; set; } = kAutomaticAscSortKeyword;
 
@@ -245,7 +245,7 @@ namespace Seal.Model
         /// Data type of the column
         /// </summary>
         [DefaultValue(ColumnType.Default)]
-        [Category("Options"), DisplayName("Data Type"), Description("Data type of the column."), Id(1, 3)]
+        [Category("Options"), DisplayName("Data type"), Description("Data type of the column."), Id(1, 3)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ColumnType TypeEd
         {
@@ -400,7 +400,7 @@ namespace Seal.Model
         /// Aggregate function applied to the Data element
         /// </summary>
         [DefaultValue(AggregateFunction.Sum)]
-        [Category("Data Options"), DisplayName("Aggregate"), Description("Aggregate function applied to the Data element."), Id(1, 4)]
+        [Category("Data options"), DisplayName("Aggregate"), Description("Aggregate function applied to the Data element."), Id(1, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public AggregateFunction AggregateFunction
         {
@@ -413,7 +413,7 @@ namespace Seal.Model
         /// For numeric Data elements, define calculation option applied on the element in the table
         /// </summary>
         [DefaultValue(CalculationOption.No)]
-        [Category("Data Options"), DisplayName("Calculation Option"), Description("For numeric Data elements, define calculation option applied on the element in the table."), Id(2, 4)]
+        [Category("Data options"), DisplayName("Calculation option"), Description("For numeric Data elements, define calculation option applied on the element in the table."), Id(2, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public CalculationOption CalculationOption
         {
@@ -439,7 +439,7 @@ namespace Seal.Model
         /// For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed.
         /// </summary>
         [DefaultValue(ShowTotal.No)]
-        [Category("Data Options"), DisplayName("Show Total"), Description("For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed."), Id(3, 4)]
+        [Category("Data options"), DisplayName("Show total"), Description("For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed."), Id(3, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ShowTotal ShowTotal
         {
@@ -455,7 +455,7 @@ namespace Seal.Model
         /// Aggregate function applied for the totals
         /// </summary>
         [DefaultValue(AggregateFunction.Sum)]
-        [Category("Data Options"), DisplayName("Total Aggregate"), Description("Aggregate function applied for the totals."), Id(4, 4)]
+        [Category("Data options"), DisplayName("Total aggregate"), Description("Aggregate function applied for the totals."), Id(4, 4)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public AggregateFunction TotalAggregateFunction { get; set; } = AggregateFunction.Sum;
 
@@ -498,7 +498,7 @@ namespace Seal.Model
         /// Definition of the serie for the element in the Chart JS chart
         /// </summary>
         [DefaultValue(ChartJSSerieDefinition.None)]
-        [Category("Chart"), DisplayName("Chart JS Serie"), Description("Definition of the serie for the element in the Chart JS chart."), Id(2, 2)]
+        [Category("Chart"), DisplayName("Chart JS serie"), Description("Definition of the serie for the element in the Chart JS chart."), Id(2, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public ChartJSSerieDefinition ChartJSSerie
         {
@@ -515,7 +515,7 @@ namespace Seal.Model
         /// Definition of the serie for the element in the NVD3 chart
         /// </summary>
         [DefaultValue(NVD3SerieDefinition.None)]
-        [Category("Chart"), DisplayName("NVD3 Serie"), Description("Definition of the serie for the element in the NVD3 chart."), Id(3, 2)]
+        [Category("Chart"), DisplayName("NVD3 serie"), Description("Definition of the serie for the element in the NVD3 chart."), Id(3, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public NVD3SerieDefinition Nvd3Serie
         {
@@ -532,7 +532,7 @@ namespace Seal.Model
         /// Definition of the serie for the element in the Plotly chart
         /// </summary>
         [DefaultValue(PlotlySerieDefinition.None)]
-        [Category("Chart"), DisplayName("Plotly Serie"), Description("Definition of the serie for the element in the Plotly chart."), Id(4, 2)]
+        [Category("Chart"), DisplayName("Plotly serie"), Description("Definition of the serie for the element in the Plotly chart."), Id(4, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public PlotlySerieDefinition PlotlySerie
         {
@@ -549,7 +549,7 @@ namespace Seal.Model
         /// Defines how the serie is sorted in the chart
         /// </summary>
         [DefaultValue(SerieSortType.Y)]
-        [Category("Chart"), DisplayName("Sort Type"), Description("Defines how the serie is sorted in the chart."), Id(5, 2)]
+        [Category("Chart"), DisplayName("Sort type"), Description("Defines how the serie is sorted in the chart."), Id(5, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public SerieSortType SerieSortType
         {
@@ -565,7 +565,7 @@ namespace Seal.Model
         /// Defines if the serie is sorted ascending or descending in the chart
         /// </summary>
         [DefaultValue(PointSortOrder.Ascending)]
-        [Category("Chart"), DisplayName("Sort Order"), Description("Defines if the serie is sorted ascending or descending in the chart."), Id(6, 2)]
+        [Category("Chart"), DisplayName("Sort order"), Description("Defines if the serie is sorted ascending or descending in the chart."), Id(6, 2)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public PointSortOrder SerieSortOrder { get; set; } = PointSortOrder.Ascending;
 
@@ -574,14 +574,14 @@ namespace Seal.Model
         /// Not used (FUTURE). Definition of the X axis of the serie (Primary or Secondary).
         /// </summary>
         [DefaultValue(AxisType.Primary)]
-        [Category("Chart"), DisplayName("X Axis Type"), Description("Definition of the X axis of the serie (Primary or Secondary)."), Id(7, 2)]
+        [Category("Chart"), DisplayName("X axis type"), Description("Definition of the X axis of the serie (Primary or Secondary)."), Id(7, 2)]
         public AxisType XAxisType { get; set; } = AxisType.Primary;
 
         /// <summary>
         /// Definition of the Y axis of the serie (Primary or Secondary)
         /// </summary>
         [DefaultValue(AxisType.Primary)]
-        [Category("Chart"), DisplayName("Y Axis Type"), Description("Definition of the Y axis of the serie (Primary or Secondary)."), Id(8, 2)]
+        [Category("Chart"), DisplayName("Y axis type"), Description("Definition of the Y axis of the serie (Primary or Secondary)."), Id(8, 2)]
         public AxisType YAxisType { get; set; } = AxisType.Primary;
 
         /// <summary>
@@ -665,14 +665,14 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, the script is executed to calculate custom cell value and CSS
         /// </summary>
-        [Category("Advanced"), DisplayName("Cell Script"), Description("If not empty, the script is executed to calculate custom cell value and CSS."), Id(3, 5)]
+        [Category("Advanced"), DisplayName("Cell script"), Description("If not empty, the script is executed to calculate custom cell value and CSS."), Id(3, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string CellScript { get; set; }
 
         /// <summary>
         /// Optional Razor Script executed if script navigation links have been added in the CellScript
         /// </summary>
-        [Category("Advanced"), DisplayName("Cell Navigation Script"), Description("Optional Razor Script executed if script navigation links have been added in the 'Cell Script'."), Id(4, 5)]
+        [Category("Advanced"), DisplayName("Cell navigation script"), Description("Optional Razor Script executed if script navigation links have been added in the 'Cell script'."), Id(4, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
         public string NavigationScript { get; set; }
@@ -681,7 +681,7 @@ namespace Seal.Model
         /// If defined, the enumerated list is used for the display and for sorting
         /// </summary>
         [DefaultValue(null)]
-        [Category("Advanced"), DisplayName("Custom Enumerated List"), Description("If defined, the enumerated list is used for the display and for sorting."), Id(5, 5)]
+        [Category("Advanced"), DisplayName("Custom enumerated list"), Description("If defined, the enumerated list is used for the display and for sorting."), Id(5, 5)]
         [TypeConverter(typeof(MetaEnumConverter))]
         public string EnumGUIDEL
         {

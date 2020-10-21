@@ -70,8 +70,8 @@ namespace Seal.Forms
             }
             else if (SelectedEntity is MetaJoin)
             {
-                AddHelperButton("Edit Join Clause", "Edit the Join SQL or LINQ clause", Keys.F8);
-                AddHelperButton("Check Join", "Check the join", Keys.F7);
+                AddHelperButton("Edit Join clause", "Edit the Join SQL or LINQ clause", Keys.F8);
+                AddHelperButton("Check join", "Check the join", Keys.F7);
             }
             else if (SelectedEntity is ReportModel)
             {
@@ -190,7 +190,7 @@ namespace Seal.Forms
                     else if (SelectedEntity is MetaJoin)
                     {
                         if (key == Keys.F7) ((MetaJoin)SelectedEntity).CheckJoin();
-                        if (key == Keys.F8) EditProperty("Join Clause");
+                        if (key == Keys.F8) EditProperty("Join clause");
                     }
                     else if (SelectedEntity is ReportTask)
                     {

@@ -35,6 +35,10 @@ namespace Seal.Model
         /// </summary>
         public string BaseURL = "";
 
+        /// <summary>
+        /// Title used for dashboard export
+        /// </summary>
+        public string Title= "";
 
         /// <summary>
         /// Format used for dashboard export

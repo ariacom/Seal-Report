@@ -327,7 +327,7 @@ namespace Seal.Controls
                     });
                     menu.Items.Add(item);
 
-                    item = new ToolStripMenuItem("Clear all Sort Orders");
+                    item = new ToolStripMenuItem("Clear all Sort orders");
                     item.Click += new EventHandler(delegate (object sender2, EventArgs e2)
                     {
                         ElementPanel panel = (ElementPanel)button.Parent;

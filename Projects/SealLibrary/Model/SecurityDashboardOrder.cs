@@ -50,7 +50,7 @@ namespace Seal.Model
         /// <summary>
         /// A numeric value to sort the Dashboards in the default view
         /// </summary>
-        [Category("Definition"), DisplayName("Sort Order"), Description("A numeric value to sort the Dashboards in the default view."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Sort order"), Description("A numeric value to sort the Dashboards in the default view."), Id(3, 1)]
         public int Order { get; set; } = 1;
 
         [XmlIgnore]

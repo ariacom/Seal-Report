@@ -87,7 +87,7 @@ namespace Seal.Model
         /// Left table GUID for the join definition
         /// </summary>
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Left Table"), Description("Left table for the join definition."), Id(4, 1)]
+        [Category("Definition"), DisplayName("Left table"), Description("Left table for the join definition."), Id(4, 1)]
         [TypeConverter(typeof(SourceTableConverter))]
         public string LeftTableGUID
         {
@@ -123,7 +123,7 @@ namespace Seal.Model
         /// Right table GUID for the join definition
         /// </summary>
         [DefaultValue(null)]
-        [Category("Definition"), DisplayName("Right Table"), Description("Right table for the join definition."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Right table"), Description("Right table for the join definition."), Id(5, 1)]
         [TypeConverter(typeof(SourceTableConverter))]
         public string RightTableGUID
         {
@@ -155,9 +155,9 @@ namespace Seal.Model
 
         private string _clause;
         /// <summary>
-        /// SQL Clause or LINQ Clause (for No SQL Source) 0used to define the join between the 2 tables.
+        /// SQL Clause or LINQ Clause (for No SQL Source) used to define the join between the 2 tables.
         /// </summary>
-        [Category("Definition"), DisplayName("Join Clause"), Description("SQL Clause or LINQ Clause (for No SQL Source) 0used to define the join between the 2 tables."), Id(6, 1)]
+        [Category("Definition"), DisplayName("Join clause"), Description("SQL Clause or LINQ Clause (for No SQL Source) used to define the join between the 2 tables."), Id(6, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         public string Clause
         {
@@ -171,7 +171,7 @@ namespace Seal.Model
         /// The type of join used to link the 2 tables
         /// </summary>
         [DefaultValue(JoinType.Inner)]
-        [Category("Definition"), DisplayName("Join Type"), Description("The type of join used to link the 2 tables."), Id(2, 1)]
+        [Category("Definition"), DisplayName("Join type"), Description("The type of join used to link the 2 tables."), Id(2, 1)]
         [TypeConverter(typeof(NamedEnumConverter))]
         public JoinType JoinType
         {
@@ -186,7 +186,7 @@ namespace Seal.Model
         /// Indicates if the join can also be used in the other direction (left-right or right-left)
         /// </summary>
         [DefaultValue(true)]
-        [Category("Definition"), DisplayName("Is Bi-Directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left)."), Id(3, 1)]
+        [Category("Definition"), DisplayName("Is bi-directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left)."), Id(3, 1)]
         public bool IsBiDirectional { get; set; } = true;
 
         /// <summary>
@@ -287,7 +287,7 @@ var query = from {0} in aDataTable.AsEnumerable() join {1} in aDataTable.AsEnume
         /// <summary>
         /// Editor Helper: Check the join in the database
         /// </summary>
-        [Category("Helpers"), DisplayName("Check Join"), Description("Check the join."), Id(1, 10)]
+        [Category("Helpers"), DisplayName("Check join"), Description("Check the join."), Id(1, 10)]
         [Editor(typeof(HelperEditor), typeof(UITypeEditor))]
         public string HelperCheckJoin
         {

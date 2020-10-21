@@ -134,24 +134,24 @@ namespace Seal.Forms
             sortedProperties.Add(new PropertyItem() { Name = sourceName + "Select/Unselect All", Object = null });
             if (_source is ReportModel)
             {
-                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Model Definition]")));
+                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Model definition]")));
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[SQL]")));
-                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Join Preferences]")));
+                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Join preferences]")));
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Options]")));
             }
             else if (_source is ReportRestriction)
             {
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Definition]")));
-                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Restriction Values]")));
+                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Restriction values]")));
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Advanced]")));
-                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Data Options]")));
+                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Data options]")));
             }
             else if (_source is ReportElement)
             {
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Definition]")));
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Chart]")));
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Options]")));
-                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Data Options]")));
+                sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Data options]")));
                 sortedProperties.AddRange(properties.Where(i => i.Name.StartsWith("[Advanced]")));
             }
             else if (_source is ReportView)

@@ -1023,7 +1023,7 @@ namespace SealWebServer.Controllers
 
                 if (report.HasErrors)
                 {
-                    throw new Exception(report.Translate("This report has execution errors. Please check details in the Repository Logs Files or in the Event Viewer..."));
+                    throw new Exception(report.Translate("This report has execution errors. Please check details in the Logs Files..."));
                 }
 
                 //Reset pointers and parse
@@ -1112,17 +1112,19 @@ namespace SealWebServer.Controllers
 
 
         /// <summary>
-        /// Export the dashboard into a file: PDF, XLSX
+        /// Export the dashboard into a file: HTML, PDF, XLSX
         /// </summary>
-        public ActionResult SWExportDashboards(string dashboards, string format)
+        public ActionResult SWExportDashboards(string dashboards, string format, string title, int delay)
         {
             writeDebug("SWExportDashboards");
             ActionResult result = null;
             try
             {
                 if (!CheckAuthentication()) return _loginContentResult;
+                if (string.IsNullOrEmpty(title)) title = "Dashboard";
 
                 var model = getHtmlMainModel(dashboards);
+                model.Title = Translate(title);
                 if (!string.IsNullOrEmpty(format) && dashboards != null && dashboards.Length > 0)
                 {
                     var ids = dashboards.Split(',');
@@ -1135,9 +1137,11 @@ namespace SealWebServer.Controllers
                             _pdfToExport.Add(reference, model);
                         }
                         var pdfConverter = Repository.Configuration.GetDashboardPdfConverter();
-                        pdfConverter.SourceFormat = format;
+                        pdfConverter.IsLandscapeParameter = (format == "pdflandscape");
+                        pdfConverter.TitleParameter = model.Title;
+                        pdfConverter.ConversionDelayParameter = delay;
                         pdfConverter.Dashboards = WebUser.UserDashboards.Where(i => ids.Contains(i.GUID)).OrderBy(i => i.Order).ToList();
-                        string destinationPath = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.pdf"));
+                        string destinationPath = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, FileHelper.CleanFilePath(model.Title) + ".pdf"));
 #if NETCOREAPP
                     var uri =  Microsoft.AspNetCore.Http.Extensions.UriHelper.GetDisplayUrl(Request);
 #else
@@ -1180,7 +1184,7 @@ namespace SealWebServer.Controllers
 
                         var excelConverter = Repository.Configuration.DashboardExcelConverter;
                         excelConverter.Dashboards = dashboardsToExport;
-                        string path = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, "Dashboard.xlsx"));
+                        string path = FileHelper.GetUniqueFileName(Path.Combine(FileHelper.TempApplicationDirectory, FileHelper.CleanFilePath(model.Title) + ".xlsx"));
                         excelConverter.ConvertToExcel(path);
                         return getFileResult(path, null);
                     }

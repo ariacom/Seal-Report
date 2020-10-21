@@ -313,7 +313,7 @@ namespace Seal.Model
         /// If true, the result file will be compressed in a zip file
         /// </summary>
         [DefaultValue(false)]
-        [Category("Zip Options"), DisplayName("Zip result"), Description("If true, the result file will be compressed in a zip file."), Id(2, 5)]
+        [Category("Zip options"), DisplayName("Zip result"), Description("If true, the result file will be compressed in a zip file."), Id(2, 5)]
         public bool ZipResult
         {
             get
@@ -337,7 +337,7 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, the Zip result file will be protected with the password
         /// </summary>
-        [Category("Zip Options"), DisplayName("Zip password"), Description("If not empty, the Zip result file will be protected with the password."), Id(3, 5)]
+        [Category("Zip options"), DisplayName("Zip password"), Description("If not empty, the Zip result file will be protected with the password."), Id(3, 5)]
         public string ZipPassword
         {
             get
@@ -358,20 +358,20 @@ namespace Seal.Model
         /// <summary>
         /// If not empty, the output is generated with a security context having the name specified
         /// </summary>
-        [Category("Security and Publication"), DisplayName("User name"), Description("If not empty, the output is generated with a security context having the name specified."), Id(1, 6)]
+        [Category("Security and publication"), DisplayName("User name"), Description("If not empty, the output is generated with a security context having the name specified."), Id(1, 6)]
         public string UserName { get; set; }
 
         /// <summary>
         /// If not empty, the output is generated with a security context having the groups specified. One group name per line or separated by semi-column.
         /// </summary>
-        [Category("Security and Publication"), DisplayName("User groups"), Description("If not empty, the output is generated with a security context having the groups specified. One group name per line or separated by semi-column."), Id(2, 6)]
+        [Category("Security and publication"), DisplayName("User groups"), Description("If not empty, the output is generated with a security context having the groups specified. One group name per line or separated by semi-column."), Id(2, 6)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         public string UserGroups { get; set; }
 
         /// <summary>
         /// The culture used to generate the report. If empty, the culture from the groups is used, then the default culture.
         /// </summary>
-        [Category("Security and Publication"), DisplayName("Culture"), Description("The culture used to generate the report. If empty, the culture from the groups is used, then the default culture."), Id(3, 6)]
+        [Category("Security and publication"), DisplayName("Culture"), Description("The culture used to generate the report. If empty, the culture from the groups is used, then the default culture."), Id(3, 6)]
         [TypeConverter(typeof(Forms.CultureInfoConverter))]
         public string UserCulture { get; set; }
 
@@ -379,14 +379,14 @@ namespace Seal.Model
         /// For the Web Report Server: If true, the output can be executed by all users having the execute right on the report. If false, only the user owner can execute the schedule.
         /// </summary>
         [DefaultValue(true)]
-        [Category("Security and Publication"), DisplayName("Public Execution"), Description("For the Web Report Server: If true, the output can be executed by all users having the execute right on the report. If false, only the user owner can execute the schedule."), Id(4, 6)]
+        [Category("Security and publication"), DisplayName("Public execution"), Description("For the Web Report Server: If true, the output can be executed by all users having the execute right on the report. If false, only the user owner can execute the schedule."), Id(4, 6)]
         public bool PublicExec { get; set; } = true;
 
         /// <summary>
         /// For the Web Report Server Designer: If true, the output and shedule can be edited by all users having the schedule right on the report. If false, only the user owner can edit the schedule.
         /// </summary>
         [DefaultValue(true)]
-        [Category("Security and Publication"), DisplayName("Public Edit"), Description("For the Web Report Server Designer: If true, the output and shedule can be edited by all users having the schedule right on the report. If false, only the user owner can edit the schedule."), Id(4, 6)]
+        [Category("Security and publication"), DisplayName("Public edit"), Description("For the Web Report Server Designer: If true, the output and shedule can be edited by all users having the schedule right on the report. If false, only the user owner can edit the schedule."), Id(4, 6)]
         public bool PublicEdit { get; set; } = true;
 
         /// <summary>

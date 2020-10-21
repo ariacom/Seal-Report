@@ -65,6 +65,9 @@
                                             <b>Dynamic SQL sources</b>: Use either your SQL or let the Seal engine build dynamically the SQL used to query your database.
                                         </li>
                                         <li>
+                                            <b>LINQ queries</b>: Join and query any Data Sources (SQL, Excel, XML, Olap Cube, HTTP JSon, etc.) with the power of LINQ queries.
+                                        </li>
+                                        <li>
                                             <b>Native Pivot Tables</b>: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
                                         </li>
                                         <li>
@@ -121,14 +124,14 @@
                             <strong>For use:</strong>
                             <ul>
                                 <li>Windows 7, 2008, Windows 8, 2012, Windows 10 or greater</li>
-                                <li>.Net Framework 4.5</li>
-                                <li>Database OLE DB or ODBC Drivers</li>
+                                <li>.Net Framework 4.7.2</li>
+                                <li>Database OLE DB, ODBC or MS SQLServer Drivers</li>
                                 <li>For the Web Report Server: Internet Information Server with Application Development/ASP.Net 4.5 or greater</li>
                                 <li>.NET Core 3.1 for the .NET Core deployment (Web Report Server and the Seal Report Scheduler).</li>
                             </ul>
                             <strong>For development:</strong>
                             <ul>
-                                <li>Visual Studio 2017 or greater</li>
+                                <li>Visual Studio 2019 or greater</li>
                             </ul>
                             <p>Seal Report is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a></p>
                         </div>
@@ -150,7 +153,7 @@
 
                             <div class="bs-callout bs-callout-info">
                                 <h4>Download</h4>
-                                Get the last product releases (including 32bit and a 64bit setup) and source codes at <a href="https://github.com/ariacom/Seal-Report/releases" target="_blank">Github</a>.
+                                Get the last product releases and source codes at <a href="https://github.com/ariacom/Seal-Report/releases" target="_blank">Github</a>.
                             </div>
                             <h2>Installation</h2>
                             <p>
@@ -220,21 +223,19 @@
                                     <thead>
                                         <tr>
                                             <th>Platform</th>
-                                            <th>32bit support<sup>1</sup></th>
                                             <th>Server Manager</th>
                                             <th>Report Designer</th>
                                             <th>Task Scheduler</th>
                                             <th>Scheduler Service</th>
                                             <th>Web Report Server</th>
-                                            <th>Web Report Designer<sup>2</sup></th>
-                                            <th>Dashboard Manager<sup>2</sup></th>
-                                            <th>PDF and Excel Converter<sup>3</sup></th>
+                                            <th>Web Report Designer<sup>1</sup></th>
+                                            <th>Dashboard Manager<sup>1</sup></th>
+                                            <th>PDF and Excel Converter<sup>2</sup></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td><b>Windows<br />.Net</b></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
@@ -249,7 +250,6 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
@@ -261,16 +261,14 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"><sup> 4</sup></td>
+                                            <td><span class="glyphicon glyphicon-ok"><sup> 3</sup></td>
                                         </tr>
                                         <tr>
                                             <td><b>Azure (Windows)<br />.Net</b></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -285,19 +283,17 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
                                             <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"><sup> 4</sup></td>
+                                            <td><span class="glyphicon glyphicon-ok"><sup> 3</sup></td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <b>Remarks:</b>
                                 <i>
                                     <ol>
-                                        <li>Support execution of all the <b>Northwind</b> Samples reports.</li>
                                         <li>Requires the <a href="https://ariacom.com/SealWebLicense" target="_blank">Web Report Designer and Dashboard Manager</a> commercial component.</li>
                                         <li>Requires the <a href="https://ariacom.com/SealConverterLicense" target="_blank">PDF and Excel Converter</a> commercial component.</li>
                                         <li>Requires a separate <a href="https://ariacom.com/SealConverterInstallation" target="_blank">PDF Server</a> on a Windows computer.</li>
@@ -405,7 +401,7 @@
                                     <strong>Dashboards:</strong> dashboards files(*.sdax) edited and published by the Web Report Server.
                                 </li>
                                 <li>
-                                    <strong>Databases:</strong> dedicated folder for local database files (e.g. an MS Access file).
+                                    <strong>Databases:</strong> dedicated folder for local database files (e.g. an MS Access file, an Excel file).
                                 </li>
                                 <li>
                                     <strong>Devices:</strong> the device configurations (*.scfx) used by the report output. 3 types of devices are available: Folder, File Server (FTP, SFTP), Email to send it to a user by SMTP.
@@ -417,7 +413,7 @@
                                     <strong>Reports:</strong> the reports (*.srex), files and sub-folders published by the Web Report Server. The Reports root folder is the parent of all folders, files and reports published.
                                 </li>
                                 <li>
-                                    <strong>Security:</strong> the security defined for the Web Report Server (Security.xml) and a sub-folder containing the security providers (*.cshtml) available.
+                                    <strong>Security:</strong> the security defined for the <b>Web Report Server</b> (Security.xml) and a sub-folder containing the security providers (*.cshtml) available.
                                 </li>
                                 <li>
                                     <strong>Settings:</strong> the Server configuration (Configuration.xml) and the translation files (*.csv).
@@ -426,10 +422,13 @@
                                     <strong>Sources:</strong> the data source files (*.scfx) available for the reports. These data sources are shared amongst all the reports.
                                 </li>
                                 <li>
+                                    <strong>Sources\TableTemplates:</strong> table templates (*.cshtml) referenced by No SQL tables defined in LINQ Data Sources.
+                                </li>
+                                <li>
                                     <strong>SpecialFolders\Personal:</strong> dedicated folder to store personal folders for each user. The folder contains reports, dashboards, files and the user's profile (_profile.xml).
                                 </li>
                                 <li>
-                                    <strong>SpecialFolders\Schedules:</strong> report schedules (*.xml) when the Seal Report Scheduler is used. One file per schedule.
+                                    <strong>SpecialFolders\Schedules:</strong> report schedules (*.xml) when the <b>Seal Report Scheduler</b> is used. One file per schedule.
                                 </li>
                                 <li>
                                     <strong>SubReports:</strong> the sub-reports (*.srex) referenced by an element in a data source. Sub-Reports allow master-detail navigation from a report result.

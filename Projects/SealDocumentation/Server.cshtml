@@ -19,6 +19,7 @@
                             <ul class="nav">
                                 <li><a href="#lineSecurity_1">Providers</a></li>
                                 <li><a href="#lineSecurity_2">Groups</a></li>
+                                <li><a href="#lineSecurity_pub">Custom Publications</a></li>
                             </ul>
                         </li>
                         <li><a href="#lineSWI">Seal Web Interface</a></li>
@@ -213,6 +214,11 @@
                         </div>
                         <!-- end col -->
                     </div>
+                    <p>
+                        If a user has the right to view Dashboards, he can display either his <b>default dashboards View</b> or his <b>personal dashboards View</b>.<br />
+                        The <b>default dashboards View</b> shows the default dashboards defined and sorted in the user's security groups.<br />
+                        Having a <b>personal dashboards View</b> allows the user to add/remove published dashboards (<eg>The user is interested in only 2 dashboards amongst 5 published and he wants to sort them</eg>).
+                    </p>
                     <div class="bs-callout bs-callout-danger">
                         <h4>Web Report Designer and Dashboard Manager</h4>
                         The <b>Dashboard Manager</b> is a commercial component available at <a href="https://ariacom.com/SealWeblicense" target="_blank">https://ariacom.com</a> and is not part of the Open Source version.<br />
@@ -412,6 +418,31 @@
                         </div>
                         <!-- end col -->
                     </div>
+                    <div id="lineSecurity_pub" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Custom Publications</h4>
+                            <p>
+                                In addition to the security applied on report and dashboard folders, dedicated scripts (properties of a <b>Security Group</b>) allow to modify the reports or dashboards published to the logged user.<br />
+                                <ul>
+                                    <li>
+                                        <code>Folder Script</code>: Optional script executed to define/modify the folders published in the <b>Web Report Server</b>.
+                                    </li>
+                                    <li>
+                                        <code>Folder Detail Script</code>: Optional script executed to define/modify the reports published in the <b>Web Report Server</b> for a given folder.
+                                    </li>
+                                    <li>
+                                        <code>Dashboards Script</code>: Optional script executed to define/modify the dashboards published for the user.
+                                    </li>
+                                </ul>
+                            </p>
+                            <p>
+                                If the user belongs to several groups, scripts are executed sequentially sorted by group name.
+                            </p>
+                        </div>
+
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
                 </section>
                 <!-- end section -->
                 <section id="lineSWI" class="section">

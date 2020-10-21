@@ -267,7 +267,7 @@ namespace Seal.Model
         /// <summary>
         /// A Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions). 
         /// </summary>
-        [Category("Scripts"), DisplayName("Report Execution Init script"), Description("A Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions)."), Id(2, 2)]
+        [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("A Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions)."), Id(2, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         public string InitScript { get; set; } = "";
         public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }

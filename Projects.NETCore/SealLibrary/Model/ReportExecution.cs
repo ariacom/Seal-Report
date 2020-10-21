@@ -575,7 +575,7 @@ namespace Seal.Model
                     setRestriction(restriction);
                 }
 
-                foreach (ReportModel model in Report.ExecutionModels)
+                foreach (ReportModel model in Report.Models)
                 {
                     foreach (ReportRestriction restriction in model.AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                     {
@@ -619,7 +619,7 @@ namespace Seal.Model
         public List<ReportModel> GetReportModelsToExecute()
         {
             var result = new List<ReportModel>();
-            if ((RootReport != null && RootReport.IsNavigating) ||  Report.ExecutionTriggerView != null)
+            if ((!Report.ForWidget && RootReport != null && RootReport.IsNavigating) ||  Report.ExecutionTriggerView != null)
             {
                 //Navigation or trigger view, we execute all the models
                 result = Report.ExecutionModels;

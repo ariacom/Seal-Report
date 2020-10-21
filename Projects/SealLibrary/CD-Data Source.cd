@@ -6,7 +6,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AQAAcQMkIAJTAQEEFAQCBpFAiJUANPhCgEFCAKhBtAA=</HashCode>
+      <HashCode>AQAAMQMwIARyAQEEFAwAhpFAiJUAFPBAgkFCAChBMAA=</HashCode>
       <FileName>Model\MetaSource.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -18,16 +18,10 @@
   </Class>
   <Class Name="Seal.Model.MetaTable" Collapsed="true">
     <Position X="7.5" Y="2.25" Width="1.5" />
-    <Members>
-      <Field Name="_columns" Hidden="true" />
-    </Members>
     <TypeIdentifier>
-      <HashCode>QgAgGQEAC9JgAQQAQCQGOBQI4DsAIEAYQwhABKgQgMg=</HashCode>
+      <HashCode>QgBwGQAALwJgCQUAQCQkKTQI4DsgMEgcQ4gUBihAgOw=</HashCode>
       <FileName>Model\MetaTable.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_columns" />
-    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Columns" />
     </ShowAsCollectionAssociation>
@@ -36,7 +30,7 @@
   <Class Name="Seal.Model.MetaConnection" Collapsed="true">
     <Position X="5" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAYAESAAAkAAAQAAEAAIIAQAABEAYEEKQaKAAIBAAAA=</HashCode>
+      <HashCode>QAIAESIAQkAAAQAAEQAIIAQIABEAAEACQaCAAABAIAA=</HashCode>
       <FileName>Model\MetaConnection.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -44,42 +38,57 @@
     <Position X="5" Y="2.25" Width="1.5" />
     <AssociationLine Name="Enums" Type="Seal.Model.MetaEnum" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="6.312" Y="2.812" />
-        <Point X="6.312" Y="3.596" />
-        <Point X="7.5" Y="3.596" />
+        <Point X="5.938" Y="2.812" />
+        <Point X="5.938" Y="4.596" />
+        <Point X="7.5" Y="4.596" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="TableLinks" Type="Seal.Model.MetaTableLink" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.188" Y="2.812" />
+        <Point X="6.188" Y="3.531" />
+        <Point X="7.5" Y="3.531" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>BAAAEAAAAgAAACACACAAQQAAASAMAAAKAAAAAAAAAAA=</HashCode>
+      <HashCode>BAAAAAAAAgAAASACAAAAQAAAACAEAAAKAAAAKABAAAA=</HashCode>
       <FileName>Model\MetaData.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Tables" />
       <Property Name="Joins" />
       <Property Name="Enums" />
+      <Property Name="TableLinks" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Seal.Model.MetaEnum" Collapsed="true">
-    <Position X="7.5" Y="3.25" Width="1.5" />
+    <Position X="7.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ADAAGAAAAlAEASCBQAAAICYAMDABIEACEoh1IIgAACA=</HashCode>
+      <HashCode>ADAAGAAAAlAEASCAQAAAMCYAIBABAEACAoD1IAAgAAA=</HashCode>
       <FileName>Model\MetaEnum.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Seal.Model.MetaJoin" Collapsed="true">
-    <Position X="7.5" Y="4.25" Width="1.5" />
+    <Position X="7.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAgEEgCAkEAYRAAAAgAIAQAABAIIEAgAABAAIiAmIE=</HashCode>
+      <HashCode>AAAgEEgCAkEAIRAAAAgAIAQAABAIAEAgAABAAAiAmIE=</HashCode>
       <FileName>Model\MetaJoin.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Seal.Model.MetaColumn" Collapsed="true">
     <Position X="7.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEESUBBAEkAohVSQACAgAiQAMRgYJEBEAwHBYIKBCUA=</HashCode>
+      <HashCode>AEESUBBAAkAggVSQACBgAiQIMRgIIEBEAwDBYAKBCUA=</HashCode>
       <FileName>Model\MetaColumn.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Seal.Model.MetaTableLink" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAkAAAACAAAABIAAAAAAAAAAAAAAAIAAACAA=</HashCode>
+      <FileName>Model\MetaTableLink.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
