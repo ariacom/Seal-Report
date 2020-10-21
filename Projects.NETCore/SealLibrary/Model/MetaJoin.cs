@@ -116,7 +116,7 @@ namespace Seal.Model
 
         private string _clause;
         /// <summary>
-        /// SQL Clause or LINQ Clause (for No SQL Source) 0used to define the join between the 2 tables.
+        /// SQL Clause or LINQ Clause (for No SQL Source) used to define the join between the 2 tables.
         /// </summary>
         public string Clause
         {

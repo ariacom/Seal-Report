@@ -98,7 +98,7 @@
                                     <li>In SQL Server - stored in database, in one table, shared between the nodes.</li>
                                 </ul>
                                 <div>To store the session in SQL Server, change the configuration in appsettings.json file:</div>
-                                <pre class="brush: sql;">
+                                <pre class="brush: csharp;">
                                     "SealConfiguration": {
                                         "SessionProvider": {
                                             "SqlServer": {
@@ -111,11 +111,11 @@
                                 </pre>
                                 <h5>SQL Server session storage</h5>
                                 <div>To use SQL Server option, besides the configuration, the session table has to be created in the database using the following the .net core tool:</div>
-                                <pre class="brush: csharp;">
+                                <pre class="brush: bash;">
                                     dotnet  tool  install --global  dotnet-sql-cache
                                 </pre>
                                 <div>When the tool is installed, run the command according to the CLI:</div>
-                                <pre class="brush: sql;">
+                                <pre class="brush: bash;">
                                     Usage: dotnet sql-cache create [arguments] [options]
                                     Arguments:                                    
                                     [connectionString] The connection string to connect to the database.
@@ -285,7 +285,7 @@
 
                             <div class="bs-callout bs-callout-demo">
                                 Script sample for the Basic Authentication Provider, the security group is added to the logged user at line 15:
-                                <pre class="brush: sql; highlight: [15]">
+                                <pre class="brush: csharp; highlight: [15]">
 @@using Seal.Model
 @@using Seal.Helpers
 @@{
@@ -439,7 +439,18 @@
                                 If the user belongs to several groups, scripts are executed sequentially sorted by group name.
                             </p>
                         </div>
-
+                        <div class="bs-callout bs-callout-demo">
+                            Script sample to filter reports in the <b>/Samples</b> folder:
+                                                                   <pre class="brush: csharp; highlight: [5]">
+@@{
+    SecurityUser user = Model;
+     if (user.FolderDetail.folder.path == @@"\Samples") {
+        //Sample to filter reports
+        user.FolderDetail.files = user.FolderDetail.files.Where(i => i.name.Contains("Charts")).ToArray(); 
+    }
+}
+                            </pre>
+                        </div>
                         <!-- end col -->
                     </div>
                     <!-- end row -->

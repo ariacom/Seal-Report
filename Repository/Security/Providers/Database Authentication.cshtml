@@ -7,7 +7,6 @@
 
     provider.Script = @"@using System.Data
 @using System.Data.Common
-@using Seal.Helpers
 @{
     SecurityUser user = Model;
 	//Database authentication script: use the user name and password to authenticate the user and set his name and security groups...
@@ -17,7 +16,7 @@
 	user.Name = user.WebUserName; //Display name
 	//user.PersonalFolderName -> may be set to defined the personal folder name
 
-	DbConnection connection = Helper.DbConnectionFromConnectionString(Helper.GetOleDbConnectionString(user.Security.GetValue(""oledb_connection_string""), user.WebUserName, user.WebPassword));
+	DbConnection connection = Helper.DbConnectionFromConnectionString(ConnectionType.OleDb, Helper.GetOleDbConnectionString(user.Security.GetValue(""oledb_connection_string""), user.WebUserName, user.WebPassword));
 	connection.Open();
     //Add default group but the security groups can be got from the database as shown below
     user.AddDefaultSecurityGroup();
@@ -30,21 +29,20 @@
     //OR may come from Northwind: e.g. group=city coming from the employee table
     //Note that we can also use the user name and password to connect to the database
 	//User=Fuller,Password=Andrew will return group Tacoma 
-	string connectionString = ""Provider=Microsoft.Jet.OLEDB.4.0;Data Source="" + user.Security.Repository.RepositoryPath + ""\\Databases\\Northwind.mdb;Persist Security Info=False"";
-	DbConnection connection =  Helper.DbConnectionFromConnectionString(connectionString);
-	connection.Open();
-	DbCommand command = connection.CreateCommand();
+	string connectionString = ""Server=localhost;Database=Northwind;Trusted_Connection=True"";
+	DbConnection sqlConnection =  Helper.DbConnectionFromConnectionString(ConnectionType.MSSQLServer, connectionString);
+	sqlConnection.Open();
+	DbCommand command = sqlConnection.CreateCommand();
     command.CommandText = string.Format(""select city from Employees where lastname={0} and firstname={1}"", Helper.QuoteSingle(user.WebUserName), Helper.QuoteSingle(user.WebPassword));
-	object group = command.ExecuteScalar();
-	if (group != null && group != DBNull.Value)
+	object groupName = command.ExecuteScalar();
+	if (groupName != null && groupName != DBNull.Value)
 	{
-        user.AddSecurityGroup((string)group);	
+        user.AddSecurityGroup((string)groupName);	
     }
 	else 
 	{
 		user.Error = ""User unknown from the database."";
-	}
-    */
+	}*/    
 }
-}";    
+";    
 }

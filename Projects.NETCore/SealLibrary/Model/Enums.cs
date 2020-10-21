@@ -274,7 +274,7 @@ namespace Seal.Model
         Splitter,
         [Description("Splitter for Both Axes")]
         SplitterBoth,
-        [Description("! Not used from v4: NVD3 Serie")]
+        [Description("! Not used from v4: NVD3 serie")]
         NVD3Serie,
     };
 

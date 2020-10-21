@@ -80,23 +80,6 @@ namespace Seal.Model
         /// </summary>
         public string OperatorLabel { get; set; }
 
-        bool _changeOperator = true;
-        /// <summary>
-        /// If true, the operator can be changed when the restriction is prompted. Deprecated, kept for backward compatibility and will be removed in future versions, if false -> OperatorStyle is set to RestrictionOperatorStyle.NotModifiable
-        /// </summary>
-        public bool ChangeOperator
-        {
-            get { return _changeOperator; }
-            set
-            {
-                if (!value)
-                {
-                    OperatorStyle = RestrictionOperatorStyle.NotModifiable;
-                }
-                _changeOperator = true; //Back to default
-            }
-        }
-
         /// <summary>
         /// How the element name and restriction operator is displayed or not.
         /// </summary>
@@ -1248,7 +1231,7 @@ namespace Seal.Model
         static public string[] GetVals(string value)
         {
             if (string.IsNullOrEmpty(value)) return new string[0];
-
+            value = value.Trim();
             if (value.Contains("\n")) return value.Replace("\r", "").Split('\n');
             else return new string[] { value };
         }

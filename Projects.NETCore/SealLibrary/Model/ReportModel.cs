@@ -273,7 +273,7 @@ namespace Seal.Model
         public bool ShouldSerializeJoinsToUse() { return JoinsToUse.Count > 0; }
 
         /// <summary>
-        /// Helper to select Join Preferences
+        /// Helper to select Join preferences
         /// </summary>
         [XmlIgnore]
         public string JoinsToSelect
@@ -2351,12 +2351,9 @@ model.ResultTable = query2.CopyToDataTable2();
                 subTable.NoSQLTable = null;
                 subTable.TemplateName = table.TemplateName;
                 subTable.CacheDuration = table.CacheDuration;
-                //Init default properties
-                if (subTable.Parameters.Count == 0)
-                {
-                    subTable.InitParameters();
-                    foreach (var parameter in subTable.Parameters) parameter.Value = table.GetValue(parameter.Name);
-                }
+                //Init default parameters
+                subTable.InitParameters();
+
                 LINQSubTables.Add(subTable);
             }
         }
@@ -2405,7 +2402,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     subTable.Log = Report;
                     subTable.NoSQLModel = this;
-                    var table = Source.MetaData.Tables.FirstOrDefault(i => i.GUID == subTable.GUID);
+                    var table = subTable.Source.MetaData.Tables.FirstOrDefault(i => i.GUID == subTable.GUID);
                     if (table != null)
                     {
                         Report.LogMessage("Model '{0}': Building No SQL Table '{1}'", Name, subTable.Name);
@@ -2511,7 +2508,7 @@ model.ResultTable = query2.CopyToDataTable2();
             Pages.Clear();
 
             //Pre-load script
-            if (!Source.IsNoSQL) ExecuteLoadScript(PreLoadScript, "Pre Load Script", this);
+            if (!Source.IsNoSQL) ExecuteLoadScript(PreLoadScript, "Pre load script", this);
 
             ExecutionError = "";
 
