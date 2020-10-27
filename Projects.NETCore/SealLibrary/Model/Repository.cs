@@ -641,7 +641,7 @@ namespace Seal.Model
             get
             {
 #if NETCOREAPP
-                return Path.Combine(RepositoryPath, "Assemblies\\NETCore"); 
+                return Path.Combine(RepositoryPath, "Assemblies/NETCore"); 
 #else
                 return Path.Combine(RepositoryPath, "Assemblies");
 #endif
