@@ -72,7 +72,7 @@
     &#xD;
     foreach (var folder in Directory.GetDirectories(metaTable.Source.Repository.DashboardPublicFolder))&#xD;
     {&#xD;
-        foreach (var p in Directory.GetFiles(folder, "*." + Repository.SealDashboardExtension))&#xD;
+        foreach (var p in Directory.GetFiles(folder, "*.sdax"))&#xD;
         {&#xD;
             var dashboard = Dashboard.LoadFromFile(p);&#xD;
             metaTable.NoSQLTable.Rows.Add(&#xD;
@@ -115,7 +115,7 @@
     
     foreach (var folder in Directory.GetDirectories(metaTable.Source.Repository.DashboardPublicFolder))
     {
-        foreach (var p in Directory.GetFiles(folder, "*." + Repository.SealDashboardExtension))
+        foreach (var p in Directory.GetFiles(folder, "*.sdax"))
         {
             var dashboard = Dashboard.LoadFromFile(p);
             string items = "";

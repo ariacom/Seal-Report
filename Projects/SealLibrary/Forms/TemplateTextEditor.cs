@@ -812,7 +812,7 @@ if (cell.IsTitle)
                 "Execute a program and display Standard Output and Errors",
 @"ReportTask task = Model;
     var helper = new TaskHelper(task);
-	helper.ExecuteProcess(@""executablePath"");
+	helper.ExecuteProcess(@""executablePath"",""argument"",@""workingDirectory"");
 "
                 ),
             new Tuple<string, string>(

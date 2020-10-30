@@ -3,7 +3,7 @@
     MetaTable table = Model;
 
     //Parameters for this table
-    table.Parameters.Add(new Parameter() { Name = "xml_path", Value = @"%SEALREPOSITORY%\Reports\Overview - Sales.srex", DisplayName = "XML File Path", Description = "The XML file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%\Sources\Northwind.scfx" }, UseOnlyEnumValues = false });
+    table.Parameters.Add(new Parameter() { Name = "xml_path", Value = @"%SEALREPOSITORY%\Reports\Overview - Sales.srex", DisplayName = "XML File Path", Description = "The XML file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Sources/Northwind.scfx" }, UseOnlyEnumValues = false });
     table.Parameters.Add(new Parameter() { Name = "xml_node_name", Value = "", DisplayName = "Node name", Description = "The node name to load from the XML. The child nodes are then defined as table columns.", Enums = new string[] { "MetaColumn" }, UseOnlyEnumValues = false });
 
     table.DefinitionScript = @"@using System.Data

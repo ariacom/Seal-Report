@@ -3,7 +3,7 @@
     MetaTable table = Model;
 
     //Parameters for this table
-    table.Parameters.Add(new Parameter() { Name = "excel_path", Value = "", DisplayName = "Excel File Path", Description = "The Excel file path (*.xlsx). The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%\Databases\databank.worldbank.org_health_population.xlsx" }, UseOnlyEnumValues = false });
+    table.Parameters.Add(new Parameter() { Name = "excel_path", Value = "", DisplayName = "Excel File Path", Description = "The Excel file path (*.xlsx). The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Databases/databank.worldbank.org_health_population.xlsx" }, UseOnlyEnumValues = false });
     table.Parameters.Add(new Parameter() { Name = "excel_tab", Value = "", DisplayName = "Tab name", Description = "The Tab name of the Excel Sheet used to load the table. If empty, the first tab is used." });
     table.Parameters.Add(new Parameter() { Name = "excel_start_row", NumericValue = 1, DisplayName = "Start row", Description = "The start row of the tab to define the table." });
     table.Parameters.Add(new Parameter() { Name = "excel_start_col", NumericValue = 1, DisplayName = "Start column", Description = "The start column of the tab to define the table." });

@@ -3,7 +3,7 @@
     MetaTable table = Model;
 
     //Parameters for this table
-    table.Parameters.Add(new Parameter() { Name = "csv_path", Value = "", DisplayName = "CSV File Path", Description = "The CSV file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%\Settings\Translations.csv" }, UseOnlyEnumValues = false });
+    table.Parameters.Add(new Parameter() { Name = "csv_path", Value = "", DisplayName = "CSV File Path", Description = "The CSV file path. The path can contain the '%SEALREPOSITORY%' keyword to specify the repository path.", Enums = new string[] { @"%SEALREPOSITORY%/Settings/Translations.csv" }, UseOnlyEnumValues = false });
     table.Parameters.Add(new Parameter() { Name = "csv_sep", Value = "", DisplayName = "Separator", Description = "The separator character of the CSV field. If empty, the default separator is used.", Enums = new string[] { ",", ";", "\\t" }, UseOnlyEnumValues = false });
     table.Parameters.Add(new Parameter() { Name = "csv_encoding", Value = "UTF8", DisplayName = "File encoding", Description = "The CSV File Encoding.", Enums = new string[] { "Default", "UTF8", "Unicode", "ASCII" }, UseOnlyEnumValues = true });
     table.Parameters.Add(new Parameter() { Name = "csv_vb", BoolValue = true, DisplayName = "Use Microsoft VB Parser", Description = "If true, the Microsoft VB Parser is used instead of the standard parser." });

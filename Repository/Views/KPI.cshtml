@@ -74,9 +74,9 @@
                         trendPercentage = 100 * (valueEnd - valueStart) / valueStart;
                         val = trendPercentage.Value;
                     }
-                    buttonColor = getValueFromRange(view.GetValue("kpi_trend_color"), view.GetBoolValue("kpi_trend_color_useval") ? Convert.ToInt32(valueEnd) : val);
+                    buttonColor = getValueFromRange(view.GetValue("kpi_trend_color"), view.GetBoolValue("kpi_trend_color_useval") ? Convert.ToDouble(valueEnd) : val);
                     newWidgetColor = buttonColor.Replace("btn-", "");
-                    buttonIcon = getValueFromRange(view.GetValue("kpi_trend_icon"), view.GetBoolValue("kpi_trend_icon_useval") ? Convert.ToInt32(valueEnd) : val);
+                    buttonIcon = getValueFromRange(view.GetValue("kpi_trend_icon"), view.GetBoolValue("kpi_trend_icon_useval") ? Convert.ToDouble(valueEnd) : val);
                     newWidgetIcon = buttonIcon;
 
                     //Check if a Goal is defined

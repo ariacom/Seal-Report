@@ -23,7 +23,7 @@
                 var colors = null;
                 if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecChartJSType == "pie" || reportModel.ExecChartJSType == "polarArea" ? page.PrimaryXDimensions.Count : page.Series.Count) <= 10 ? "1" : "2")0().range();
                 else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
-                else if (colorsDef == "d3c") colors = d3.scale.category20c().range(); 
+                else if (colorsDef == "d3c") colors = d3.scale.category20c().range();
                 else colors = @Raw(view.GetValue("plotly_colors"));
 
                 var @chartId = $("#@chartId")[0];
@@ -49,7 +49,7 @@
                             labels: [@Raw(page.ChartXLabels)],
                             values: [@Raw(serie.ChartYSerieValues)],
                             hoverinfo: 'text',
-                            textinfo: 'percent',
+                            textinfo: '@view.GetValue("plotly_pie_textinfo")',
                             </text>
                             }
                             else
@@ -73,12 +73,12 @@
                     var text = data[0].values.map(function (v, i) {
                         var valStr = "";
                         if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) valStr = d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(new Date(v));
-                        else valStr = d3.format('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(v).valueFormat() + '<br>' + d3.format('Raw(Helper.ToJS(@reportModel.ExecD3PrimaryYAxisFormat))')(v / total * 100).valueFormat() + '%';
+                        else valStr = d3.format('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(v).valueFormat() + '<br>' + d3.format('Raw(Helper.ToJS(@reportModel.ExecD3PrimaryYAxisFormat))')((v / total * 100).toFixed(2)).valueFormat() + '%';
                         return data[0].labels[i] + '<br>' + valStr;
                     });
                     data[0].text = text;
                 }
-
+                
                 var layout =
                     {
                     autosize: true,
@@ -88,6 +88,7 @@
                         @Raw(view.GetValueIfNotEmpty("range:[", "plotly_xaxis_range", "],"))
                         title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("plotly_xaxis_title"))))',
                         tickformat: '@Raw(Helper.ToJS((reportModel.ExecPlotlyChartType == "bar" && @view.GetValue("plotly_bar_orientation") == "h" ? reportModel.ExecD3PrimaryYAxisFormat : reportModel.ExecD3XAxisFormat)))',
+                        @Raw(!reportModel.ExecChartIsNumericAxis && !reportModel.ExecChartIsDateTimeAxis ? "type: 'category'," : "")
                     },
                     yaxis: {
                         @Raw(view.GetValueIfNotEmpty("range:[", "plotly_yaxis_range", "],"))

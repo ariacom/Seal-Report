@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><GUID>b2f8bfdd-c19d-43a8-83a1-88d6bd0a3bc4</GUID><Sources><ReportSource><GUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>918dd2c7-c7a5-4377-9cbd-feae7b7838f8</GUID><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns></MetaTable></Tables></MetaData><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource><ReportSource><GUID>cd0caa1f-cd7a-4e0c-9a70-f247ca33721f</GUID><Name>RSS No SQL Source (Repository)</Name><ConnectionGUID>1</ConnectionGUID><IsNoSQL>true</IsNoSQL><MetaData /><MetaSourceGUID>a9f32151-1da0-474e-8ef0-5b3dee810058</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</GUID><Name>model table</Name><SourceGUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</SourceGUID><Elements><ReportElement><GUID>287860fc-f508-4c69-95f5-e2ebff863bd6</GUID><Name>Employees.LastName</Name><Category>Master</Category><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Views><ReportView><GUID>48434652-2e24-4390-ab3c-116b5c9dcf41</GUID><Name>view</Name><Views><ReportView><GUID>e7e2dec4-038a-4c78-b9cc-33e9e9b2a5b0</GUID><Name>Container Blue Border</Name><Views><ReportView><GUID>a891be9a-d648-4b3a-89ec-662c88449b85</GUID><Name>Text1 Left Row1</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><GUID>b2f8bfdd-c19d-43a8-83a1-88d6bd0a3bc4</GUID><ViewGUID>48434652-2e24-4390-ab3c-116b5c9dcf41</ViewGUID><Sources><ReportSource><GUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</GUID><Name>Northwind (Repository)</Name><ConnectionGUID>1</ConnectionGUID><MetaData><Tables><MetaTable><GUID>918dd2c7-c7a5-4377-9cbd-feae7b7838f8</GUID><Alias>SealMasterTable</Alias><DynamicColumns>true</DynamicColumns></MetaTable></Tables></MetaData><MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID></ReportSource></Sources><Models><ReportModel><GUID>2135e6c3-ccd4-4fdd-9803-9d48ca5d3ceb</GUID><Name>model table</Name><SourceGUID>6c60d82e-58fa-4b37-b794-0599b63f2eb2</SourceGUID><Elements><ReportElement><GUID>287860fc-f508-4c69-95f5-e2ebff863bd6</GUID><Name>Employees.LastName</Name><Category>Master</Category><DisplayName /><PivotPosition>Row</PivotPosition><AggregateFunction>Count</AggregateFunction><MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID></ReportElement></Elements></ReportModel></Models><Views><ReportView><GUID>48434652-2e24-4390-ab3c-116b5c9dcf41</GUID><Name>view</Name><Views><ReportView><GUID>e7e2dec4-038a-4c78-b9cc-33e9e9b2a5b0</GUID><Name>Container Blue Border</Name><Views><ReportView><GUID>a891be9a-d648-4b3a-89ec-662c88449b85</GUID><Name>Text1 Left Row1</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
@@ -40,51 +40,15 @@
 
 &lt;h1&gt;@view.Name&lt;/h1&gt;
 
-</CustomTemplate><SortOrder>1</SortOrder><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView><ReportView><GUID>7ed9648b-f8cc-43b4-8292-9b36482f46e9</GUID><Name>Text7</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
+</CustomTemplate><SortOrder>1</SortOrder></ReportView><ReportView><GUID>7ed9648b-f8cc-43b4-8292-9b36482f46e9</GUID><Name>Text7</Name><TemplateName>Free</TemplateName><UseCustomTemplate>true</UseCustomTemplate><CustomTemplate>@{
     Report report = Model;
     ReportView view = report.CurrentView;
 }
 
 &lt;h1&gt;@view.Name&lt;/h1&gt;
 
-</CustomTemplate><SortOrder>2</SortOrder><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView></Views><TemplateName>Container</TemplateName><CustomTemplate /><Parameters><Parameter><Name>grid_layout</Name><Value>(col-sm-6);col-sm-6 text-right;
+</CustomTemplate><SortOrder>2</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><CustomTemplate /><Parameters><Parameter><Name>grid_layout</Name><Value>(col-sm-6);col-sm-6 text-right;
 col-sm-12;</Value></Parameter><Parameter><Name>grid_cell_class</Name><Value>bg-success</Value></Parameter><Parameter><Name>grid_cell_css</Name><Value>border: solid red 2px</Value></Parameter></Parameters><SortOrder>6</SortOrder></ReportView></Views><TemplateName>Container</TemplateName><CustomTemplate /><Parameters><Parameter><Name>grid_layout</Name><Value>col-sm-4;(col-sm-4);col-sm-4 text-right;
 (col-sm-4);col-sm-4 text-center;(col-sm-4);
 col-sm-4;(col-sm-4);col-sm-4 text-right;
-col-sm-6;col-sm-6;</Value></Parameter><Parameter><Name>grid_cell_css</Name><Value>border: 2px solid blue;</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>1</SortOrder><ExcelConfigurations><string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SealExcelCfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;RootConfigurationScript /&gt;
-  &lt;RootMainScript /&gt;
-  &lt;RootHeaderScript /&gt;
-  &lt;ConfigurationScript /&gt;
-  &lt;MainScript /&gt;
-  &lt;HeaderScript /&gt;
-  &lt;SummaryScript /&gt;
-  &lt;PageScript /&gt;
-  &lt;ChartScript /&gt;
-  &lt;DataScript /&gt;
-&lt;/SealExcelCfg&gt;</string></ExcelConfigurations></ReportView></Views><ViewGUID>48434652-2e24-4390-ab3c-116b5c9dcf41</ViewGUID></Report>
+col-sm-6;col-sm-6;</Value></Parameter><Parameter><Name>grid_cell_css</Name><Value>border: 2px solid blue;</Value></Parameter></Parameters><SortOrder>1</SortOrder></ReportView></Views><TemplateName>Report</TemplateName><SortOrder>1</SortOrder></ReportView></Views><Cancel>false</Cancel></Report>

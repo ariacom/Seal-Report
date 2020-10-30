@@ -2004,16 +2004,23 @@ namespace Seal.Model
                 if (_executionCommonRestrictions == null)
                 {
                     _executionCommonRestrictions = new List<ReportRestriction>();
-                    foreach (ReportRestriction restriction in AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI).OrderBy(i => i.DisplayOrder))
+                    var allRestrictions = AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI).OrderBy(i => i.DisplayOrder);
+                    foreach (ReportRestriction restriction in allRestrictions)
                     {
                         if (restriction.IsInputValue || !_executionCommonRestrictions.Exists(i => i.IsIdenticalForPrompt(restriction)))
                         {
-                            //Check that the restriction is not displayed in a restriction view
-                            if (AllViews.Exists(i => i.Template.ForViewRestrictions && i.RestrictionsGUID.Contains(restriction.GUID)))
+                            //Check that the restriction (or one identical) is not displayed in a restriction view
+                            bool inRestrictionView = false;
+                            foreach (var view in AllViews.Where(i => i.Template.ForViewRestrictions))
                             {
-                                continue;
+                                foreach (var restr2 in allRestrictions.Where(i => i.IsIdenticalForPrompt(restriction))) 
+                                {
+                                    if (view.RestrictionsGUID.Contains(restr2.GUID)) inRestrictionView = true;
+                                }
                             }
-
+                            if (inRestrictionView) continue;
+                          
+                            //Ok, add it
                             _executionCommonRestrictions.Add(restriction);
                         }
                     }

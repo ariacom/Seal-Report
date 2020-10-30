@@ -860,6 +860,7 @@ namespace Seal.Model
         public List<string> PdfConfigurations { get; set; } = new List<string>();
         public bool ShouldSerializePdfConfigurations()
         {
+            if (TemplateName != ReportViewTemplate.ReportName) return false;
             return PdfConverter.ShouldSerialize();
         }
 
@@ -1250,7 +1251,7 @@ namespace Seal.Model
                 }
             }
         }
-        private void initAxisProperties(ResultPage page, List<ResultCell[]> XDimensions)
+        private void initAxisProperties(List<ResultCell[]> XDimensions)
         {
             bool hasPie = Model.Elements.Exists(i => (i.Nvd3Serie == NVD3SerieDefinition.PieChart || i.ChartJSSerie == ChartJSSerieDefinition.Pie || i.ChartJSSerie == ChartJSSerieDefinition.PolarArea || i.PlotlySerie == PlotlySerieDefinition.Pie) && i.PivotPosition == PivotPosition.Data);
             var dimensions = XDimensions.FirstOrDefault();
@@ -1270,7 +1271,7 @@ namespace Seal.Model
             }
         }
 
-        private Dictionary<object, object> initXValues(ResultPage page, List<ResultCell[]> XDimensions)
+        private Dictionary<object, object> initXValues(List<ResultCell[]> XDimensions)
         {
             Dictionary<object, object> result = new Dictionary<object, object>();
             foreach (var dimensions in XDimensions)
@@ -1297,8 +1298,8 @@ namespace Seal.Model
         private void initChartXValues(ResultPage page)
         {
             //Build list of X Values
-            page.PrimaryXValues = initXValues(page, page.PrimaryXDimensions);
-            page.SecondaryXValues = initXValues(page, page.SecondaryXDimensions);
+            page.PrimaryXValues = initXValues(page.PrimaryXDimensions);
+            page.SecondaryXValues = initXValues(page.SecondaryXDimensions);
         }
 
         ResultSerie _serieForSort = null;
@@ -1329,7 +1330,7 @@ namespace Seal.Model
         {
             if (page.ChartInitDone) return;
 
-            initAxisProperties(page, page.PrimaryXDimensions);
+            initAxisProperties(page.PrimaryXDimensions);
             //Sort series if necessary, only one serie is used for sorting...
             if (!Model.ExecChartIsNumericAxis && !Model.ExecChartIsDateTimeAxis)
             {
