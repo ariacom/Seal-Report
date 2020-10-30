@@ -1385,11 +1385,14 @@ namespace Seal.Model
                 result.Append(Helper.QuoteSingle(HttpUtility.JavaScriptStringEncode(xval)));
                 if (xval.Length > page.AxisXLabelMaxLen) page.AxisXLabelMaxLen = xval.Length;
 
-                var navigation = Model.GetNavigation(((ResultCell[])key)[0], true);
-                if (!string.IsNullOrEmpty(navigation))
+                if (((ResultCell[])key).Length > 0)
                 {
-                    if (navs.Length != 0) navs.Append(",");
-                    navs.AppendFormat("\"{0}\"", navigation);
+                    var navigation = Model.GetNavigation(((ResultCell[])key)[0], true);
+                    if (!string.IsNullOrEmpty(navigation))
+                    {
+                        if (navs.Length != 0) navs.Append(",");
+                        navs.AppendFormat("\"{0}\"", navigation);
+                    }
                 }
             }
 
