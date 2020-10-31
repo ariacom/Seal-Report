@@ -1570,6 +1570,38 @@ namespace Seal.Model
             model.ExecuteLoadScript(model.FinalScript, "Final Script", model);
         }
 
+        private void buildNoAxisSerie(ResultPage page, ResultData data)
+        {
+            var firstData = data.Data.First(i => i.Element.IsSerie);
+            firstData.Element.AxisUseValues = false;
+            ResultSerie serie = page.Series.FirstOrDefault();
+            if (serie == null)
+            {
+                serie = new ResultSerie() { Element = firstData.Element, SplitterValues = "", SplitterCells = new ResultCell[0] { } };
+                page.Series.Add(serie);
+            }
+
+            int dimIndex = 0;
+            foreach (var dataCell in data.Data.Where(i => i.Element.IsSerie))
+            {
+                if (page.PrimaryXDimensions.Count == dimIndex)
+                {
+                    var newXValue = new ResultCell() { Value = dataCell.Element.DisplayNameElTranslated, Element = dataCell.Element };
+                    page.PrimaryXDimensions.Add(new ResultCell[1] { newXValue });
+                }
+                var xPrimaryDimensions = page.PrimaryXDimensions[dimIndex++];
+                ResultSerieValue serieValue = serie.Values.FirstOrDefault(i => i.XDimensionValues == xPrimaryDimensions);
+                if (serieValue == null)
+                {
+                    serieValue = new ResultSerieValue() { XDimensionValues = xPrimaryDimensions };
+                    serieValue.Yvalue = new ResultTotalCell() { Element = firstData.Element, IsSerie = true };
+                    serie.Values.Add(serieValue);
+                }
+
+                serieValue.Yvalue.Cells.Add(new ResultCell() { Element = firstData.Element, Value = dataCell.Value, ContextRow = dataCell.ContextRow, ContextCol = dataCell.ContextCol });
+            }
+        }
+
         private void buildSeries(ReportModel model)
         {
             foreach (ResultPage page in model.Pages)
@@ -1589,17 +1621,22 @@ namespace Seal.Model
                         if (Report.Cancel) break;
 
                         ResultCell[] xPrimaryDimensions = GetXSerieCells(AxisType.Primary, data.Row, data.Column, model);
+                        ResultCell[] xSecondaryDimensions = GetXSerieCells(AxisType.Secondary, data.Row, data.Column, model);
+
+                        if (xPrimaryDimensions.Length == 0 && xSecondaryDimensions.Length == 0)
+                        {
+                            //No axis handling: Create only one serie based on element names
+                            buildNoAxisSerie(page, data);
+                            break;
+                        }
 
                         int primaryIndex = FindDimension(xPrimaryDimensions, page.PrimaryXDimensions);
                         xPrimaryDimensions = page.PrimaryXDimensions[primaryIndex];
                         setSubReportNavigation(xPrimaryDimensions, data.Hidden);
 
-                        ResultCell[] xSecondaryDimensions = GetXSerieCells(AxisType.Secondary, data.Row, data.Column, model);
                         int secondaryIndex = FindDimension(xSecondaryDimensions, page.SecondaryXDimensions);
                         xSecondaryDimensions = page.SecondaryXDimensions[secondaryIndex];
                         setSubReportNavigation(xSecondaryDimensions, data.Hidden);
-
-                        bool noAxis = (xPrimaryDimensions.Length == 0 && xSecondaryDimensions.Length == 0);
 
                         ResultCell[] primarySplitterCells = GetSplitterSerieCells(AxisType.Primary, data.Row, data.Column, model);
                         string primarySplitterValues = Helper.ConcatCellValues(primarySplitterCells, ",");
@@ -1612,31 +1649,20 @@ namespace Seal.Model
                             ResultCell[] xValues = (serieElement.XAxisType == AxisType.Primary ? xPrimaryDimensions : xSecondaryDimensions);
                             string splitterValue = (serieElement.XAxisType == AxisType.Primary ? primarySplitterValues : secondarySplitterValues);
                             ResultCell[] splitterCells = (serieElement.XAxisType == AxisType.Primary ? primarySplitterCells : secondarySplitterCells);
-                            ResultSerie serie = noAxis ? page.Series.FirstOrDefault() : page.Series.FirstOrDefault(i => i.Element == serieElement && i.SplitterValues == splitterValue);
+                            ResultSerie serie = page.Series.FirstOrDefault(i => i.Element == serieElement && i.SplitterValues == splitterValue);
                             if (serie == null)
                             {
                                 serie = new ResultSerie() { Element = serieElement, SplitterValues = splitterValue, SplitterCells = splitterCells };
                                 page.Series.Add(serie);
                             }
 
-                            ResultSerieValue serieValue = noAxis ? serie.Values.FirstOrDefault() : serie.Values.FirstOrDefault(i => i.XDimensionValues == xValues);
+                            ResultSerieValue serieValue = serie.Values.FirstOrDefault(i => i.XDimensionValues == xValues);
                             if (serieValue == null)
                             {
                                 serieValue = new ResultSerieValue() { XDimensionValues = xValues };
                                 serieValue.Yvalue = new ResultTotalCell() { Element = serieElement, IsSerie = true };
                                 serie.Values.Add(serieValue);
                             }
-
-                            if (noAxis)
-                            {
-                                //No axis, add dimension from the measure name
-                                var newXValue = new ResultCell() { Value = serieElement.DisplayNameElTranslated, Element = serieElement };
-                                var newList = serieValue.XDimensionValues.ToList();
-                                newList.Add(newXValue);
-                                serieValue.XDimensionValues = newList.ToArray();
-                                if (page.PrimaryXDimensions.Count == 0) page.PrimaryXDimensions.Add(new ResultCell[1] { newXValue });
-                            }
-
                             serieValue.Yvalue.Cells.Add(new ResultCell() { Element = serieElement, Value = dataCell.Value, ContextRow = dataCell.ContextRow, ContextCol = dataCell.ContextCol });
                         }
                     }
