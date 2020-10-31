@@ -15,30 +15,30 @@
                         <li>
                             <a href="#lineTables">Tables and Columns</a>
                             <ul class="nav">
-                                <li><a href="#lineTables_1">Pre and Post SQL</a></li>
-                                <li><a href="#lineTables_2">WHERE Clause</a></li>
-                                <li><a href="#lineTables_3">Common Restrictions</a></li>
+                                <li><a href="#lineTables_pps">Pre and Post SQL</a></li>
+                                <li><a href="#lineTables_wc">WHERE Clause</a></li>
+                                <li><a href="#lineTables_cr">Common Restrictions</a></li>
                             </ul>
                         </li>
                         <li>
                             <a href="#lineColumns">Columns</a>
                             <ul class="nav">
-                                <li><a href="#lineColumns_1">Drill and Sub-Reports</a></li>
+                                <li><a href="#lineColumns_ds">Drill and Sub-Reports</a></li>
                             </ul>
                         </li>
                         <li><a href="#lineJoins">Joins</a></li>
                         <li>
                             <a href="#lineEnums">Enumerated Lists</a>
                             <ul class="nav">
-                                <li><a href="#lineEnums_1">Dynamic enums</a></li>
-                                <li><a href="#lineEnums_2">Dynamic display</a></li>
+                                <li><a href="#lineEnums_de">Dynamic enums</a></li>
+                                <li><a href="#lineEnums_dd">Dynamic display</a></li>
                             </ul>
                         </li>
                         <li>
                             <a href="#lineNoSQL">LINQ Data Sources</a>
                             <ul class="nav">
-                                <li><a href="#lineNoSQL_1">No SQL Table</a></li>
-                                <li><a href="#lineNoSQL_2">Joins and Table Links</a></li>
+                                <li><a href="#lineNoSQL_nst">No SQL Table</a></li>
+                                <li><a href="#lineNoSQL_jtl">Joins and Table Links</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -140,7 +140,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineTables_1" class="row" style="padding-top:35px">
+                    <div id="lineTables_pps" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Pre and Post SQL Statement</h4>
                             <p>
@@ -152,7 +152,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineTables_2" class="row" style="padding-top:35px">
+                    <div id="lineTables_wc" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Additional WHERE Clause</h4>
                             <p>
@@ -165,15 +165,15 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineTables_3" class="row" style="padding-top:35px">
+                    <div id="lineTables_cr" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Common restrictions and values</h4>
                             <p>
                                 All SQL involved in the table definition (<code>Name</code>, <code>SQL Statement</code>, <code>Pre SQL Statement</code>, etc.) can contain the keywords <b>'{CommonRestriction_&#60;RestrictionName&#62;}'</b> or <b>'{CommonValue_&#60;RestrictionName&#62;}'</b> where <b>&#60;RestrictionName&#62;</b>
                                 is the name of the restriction.<br />
-                                Once defined, the common restriction can be defined in the models involving the table using the <code>Common Restrictions</code> property of the <a href="~/Reports.cshtml#lineModels_1">model definition</a>.<br />
+                                Once defined, the common restriction can be defined in the models involving the table using the <code>Common Restrictions</code> property of the <a href="~/Reports.cshtml#lineModels_def">model definition</a>.<br />
                                 <strong>Common restrictions</strong> are used to inject values prompted by the end-user in the form 'ColumnName=Value' or 'ValueOnly' if the restriction has the operator ValueOnly.<br />
-                                <ck>Check <a href="~/Reports.cshtml#lineModels_3">Restrictions</a> for more information</ck>.<br />
+                                <ck>Check <a href="~/Reports.cshtml#lineModels_restr">Restrictions</a> for more information</ck>.<br />
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 Use common restrictions if you have performance issue and you want to filter a huge table defined with sub-select.<br />
@@ -210,7 +210,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineColumns_1" class="row" style="padding-top:35px">
+                    <div id="lineColumns_ds" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Drill and Sub-Reports Navigation</h4>
                             <p>
@@ -302,7 +302,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineEnums_1" class="row" style="padding-top:35px">
+                    <div id="lineEnums_de" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Dynamic enums</h4>
                             <p>
@@ -327,7 +327,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineEnums_2" class="row" style="padding-top:35px">
+                    <div id="lineEnums_dd" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Dynamic display for prompted restrictions</h4>
                             <p>
@@ -384,7 +384,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineNoSQL_1" class="row" style="padding-top:35px">
+                    <div id="lineNoSQL_nst" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>No SQL Table</h4>
                             <p>
@@ -404,7 +404,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineNoSQL_2" class="row" style="padding-top:35px">
+                    <div id="lineNoSQL_jtl" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Joins and Table Links</h4>
                             <p>

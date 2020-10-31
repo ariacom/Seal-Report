@@ -14,27 +14,27 @@
                         <li>
                             <a href="#lineModels">Models</a>
                             <ul class="nav">
-                                <li><a href="#lineModels_1">Definition</a></li>
-                                <li><a href="#lineModels_2">Elements</a></li>
-                                <li><a href="#lineModels_3">Restrictions</a></li>
-                                <li><a href="#lineModels_4">Charts</a></li>
-                                <li><a href="#lineModels_5">SQL Model</a></li>
-                                <li><a href="#lineModels_LINQ">LINQ Model</a></li>
+                                <li><a href="#lineModels_def">Definition</a></li>
+                                <li><a href="#lineModels_el">Elements</a></li>
+                                <li><a href="#lineModels_restr">Restrictions</a></li>
+                                <li><a href="#lineModels_charts">Charts</a></li>
+                                <li><a href="#lineModels_sqlm">SQL Model</a></li>
+                                <li><a href="#lineModels_linq">LINQ Model</a></li>
                             </ul>
                         </li>
                         <li>
                             <a href="#lineViews">Views</a>
                             <ul class="nav">
-                                <li><a href="#lineViews_1">Templates</a></li>
+                                <li><a href="#lineViews_template">Templates</a></li>
                                 <li><a href="#lineViews_rv">Restrictions View</a></li>
-                                <li><a href="#lineViews_2">Widget Publication</a></li>
+                                <li><a href="#lineViews_widget">Widget Publication</a></li>
                             </ul>
                         </li>
                         <li>
                             <a href="#lineOutput">Output and Schedules</a>
                             <ul class="nav">
-                                <li><a href="#lineOutput_1">Devices</a></li>
-                                <li><a href="#lineOutput_2">Schedules</a></li>
+                                <li><a href="#lineOutput_device">Devices</a></li>
+                                <li><a href="#lineOutput_schedule">Schedules</a></li>
                             </ul>
                         </li>
                         <li><a href="#lineTasks">Tasks</a></li>
@@ -42,8 +42,8 @@
                         <li>
                             <a href="#lineConverter">Converter</a>
                             <ul class="nav">
-                                <li><a href="#lineConverter_1">PDF</a></li>
-                                <li><a href="#lineConverter_2">Excel</a></li>
+                                <li><a href="#lineConverter_pdf">PDF</a></li>
+                                <li><a href="#lineConverter_excel">Excel</a></li>
                             </ul>
                         </li>
                         <li><a href="#lineCopy">Smart Copy</a></li>
@@ -126,7 +126,7 @@
                         </div>
                         <!-- end col -->
                     </div>
-                    <div id="lineModels_1" class="row" style="padding-top:35px">
+                    <div id="lineModels_def" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Model Definition</h4>
                             <p>
@@ -146,7 +146,7 @@
                             </div>
                             <p>
                                 Like tables in <strong>Data Source</strong>, <code>Pre/Post SQL Statements</code> can be executed just before and after the SELECT statement is executed.<br />
-                                Finally ,the model definition allows to configure build timeout and join preferences, and to edit all the <a href="Sources.cshtml#lineTables_3">Common Restrictions</a> found in the SQL generated for the model (use the property <code>Common Restrictions</code>).
+                                Finally ,the model definition allows to configure build timeout and join preferences, and to edit all the <a href="Sources.cshtml#lineTables_cr">Common Restrictions</a> found in the SQL generated for the model (use the property <code>Common Restrictions</code>).
                             </p>
                             <div class="col-md-12 text-center">
                                 <div class="caption">
@@ -157,7 +157,7 @@
                         </div>
                     </div>
                     <!-- end row -->
-                    <div id="lineModels_2" class="row" style="padding-top:35px">
+                    <div id="lineModels_el" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Elements</h4>
                             <p>
@@ -221,7 +221,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineModels_3" class="row" style="padding-top:35px">
+                    <div id="lineModels_restr" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Restrictions</h4>
                             <p>
@@ -277,7 +277,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineModels_4" class="row" style="padding-top:35px">
+                    <div id="lineModels_charts" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Charts</h4>
                             <p>
@@ -294,6 +294,11 @@
 
                                 Other properties allow to control <code>Sort type</code> and <code>Sort order</code> of the chart (<eg>e.g. to show the biggest Bars at the start or at the end</eg>) and to define a secondary <code>Y Axis Type</code> (<eg>e.g. to have a serie for amount for Primary Y, and another for quantities for Secondary Y shown on the same chart</eg>).
                             </p>
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Charts with No Axis</h4>
+                                It is also possible to define a chart without axis.<br />
+                                In this case the name of the data elements are used to build a linear axis (<eg>e.g. create a pie chart with Amount and Discount elements</eg>)
+                            </div>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Charts Samples</h4>
                                 <a class="btn btn-primary live-sample">Live Sample: 04-Charts Gallery - Basics</a> <a class="btn btn-primary live-sample">Live Sample: 05-Charts Gallery - Advanced</a><br />
@@ -303,7 +308,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineModels_5" class="row" style="padding-top:35px">
+                    <div id="lineModels_sqlm" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>SQL Model</h4>
                             <p>
@@ -314,7 +319,7 @@
                                 The option <code>Use raw SQL</code> indicates to use directly the <b>SQL Select Statement</b> to generate the result table instead of using a 'select * from (<b>SQL Select Statement</b>) a' statement.<br />
                                 In this case, aggregations, restrictions and custom SQL cannot be used.<br /><br />
 
-                                Note that the <b>SQL Select Statement</b> may contain <a href="Sources.cshtml#lineTables_3">Common Restrictions</a>.<br />
+                                Note that the <b>SQL Select Statement</b> may contain <a href="Sources.cshtml#lineTables_cr">Common Restrictions</a>.<br />
 
                                 <div class="bs-callout bs-callout-warning">
                                     <h4>Converting a model</h4>
@@ -333,7 +338,7 @@
                         </div>
                     </div>
                     <!-- end row -->
-                    <div id="lineModels_LINQ" class="row" style="padding-top:35px">
+                    <div id="lineModels_linq" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>LINQ Model</h4>
                             <p>
@@ -408,7 +413,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineViews_1" class="row" style="padding-top:35px">
+                    <div id="lineViews_template" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Templates</h4>
                             <p>
@@ -495,7 +500,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineViews_2" class="row" style="padding-top:35px">
+                    <div id="lineViews_widget" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Widget Publication for Dashboards</h4>
                             <p>
@@ -635,7 +640,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineOutput_1" class="row" style="padding-top:35px">
+                    <div id="lineOutput_device" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Devices</h4>
                             <p>
@@ -665,7 +670,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineOutput_2" class="row" style="padding-top:35px">
+                    <div id="lineOutput_schedule" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Schedules</h4>
                             <p>
@@ -819,7 +824,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineConverter_1" class="row" style="padding-top:35px">
+                    <div id="lineConverter_pdf" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>PDF Converter</h4>
                             <p>
@@ -834,7 +839,7 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
-                    <div id="lineConverter_2" class="row" style="padding-top:35px">
+                    <div id="lineConverter_excel" class="row" style="padding-top:35px">
                         <div class="col-md-12">
                             <h4>Excel Converter</h4>
                             <p>
@@ -851,7 +856,7 @@
                                     <li>Execution of the <code>Root Script: Header</code> script to create the document header.</li>
                                     <li>Creation of the document.</li>
                                     <li>Parsing of all children views and execution of theirs <code>View Script: Main</code> script.</li>
-                                    <li>Cleanup and final options.</li>
+                                    <li>Clean-up and final options.</li>
                                 </ul>
                             </div>
                             <br />
@@ -906,7 +911,7 @@
                                 <h4>Find and replace using Notepad</h4>
                                 As all Seal Report files are XML, you can easily edit them with your favorite <b>NotePad</b> and use its find/replace features.<br />
                                 Just save the file and reload the Report (or the Data Source) to check your modifications.<br />
-                                This may be also useful to copy MetData, change Data Source GUID, etc.
+                                This may be also useful to copy MetaData, change Data Source GUID, etc.
                             </div>
                             <!-- end col -->
                         </div>
