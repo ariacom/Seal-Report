@@ -148,6 +148,17 @@ var SWIDashboard = /** @class */ (function () {
             _da._refreshTimers[data.itemguid] = setTimeout(function () { _da.refreshDashboardItem(data.dashboardguid, data.itemguid, false, true); }, 1000 * data.refresh);
         initNavCells(data.executionguid, "#" + data.itemguid);
         initRestrictions("#" + data.itemguid);
+        //Handle overflow for restrictions
+        var selects = "#" + data.itemguid + " .enum,#" + data.itemguid + " .operator_select";
+        $(selects).on('show.bs.dropdown', function () {
+            $('.muuri-item').css("overflow", "visible");
+            $('.muuri-item').css("z-index", "0");
+            $(this).closest(".muuri-item").css("z-index", "1");
+        });
+        $(selects).on('hidden.bs.dropdown', function () {
+            $('.muuri-item').css("overflow", "auto");
+            $('.muuri-item').css("z-index", "1");
+        });
     };
     SWIDashboard.prototype.refreshDashboardItem = function (guid, itemguid, force, forTimer) {
         if (!forTimer)
