@@ -98,6 +98,13 @@ namespace Seal.Model
                     Report report = Report.LoadFromFile(reportPath, repository, false);
                     if (string.IsNullOrEmpty(report.LoadErrors))
                     {
+                        //clean previous widgets for this report
+                        foreach (var key in _widgets.Keys.ToList())
+                        {
+                            if (report.FilePath.Replace(repository.ReportsFolder, "") == _widgets[key].ReportPath) _widgets.Remove(key);
+                        }
+
+                        //then add again
                         foreach (ReportView view in report.Views) getWidgets(widgets, reports, view, repository);
                     }
                     else Debug.WriteLine(report.LoadErrors);

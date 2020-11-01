@@ -26,7 +26,7 @@
                             <a href="#lineViews">Views</a>
                             <ul class="nav">
                                 <li><a href="#lineViews_template">Templates</a></li>
-                                <li><a href="#lineViews_rv">Restrictions View</a></li>
+                                <li><a href="#lineViews_rv">Restrictions Views</a></li>
                                 <li><a href="#lineViews_widget">Widget Publication</a></li>
                             </ul>
                         </li>
@@ -428,7 +428,7 @@
                                 <li><b>Tab Control</b>: A Tab Control container. Only Tab Page children can be defined from this view.</li>
                                 <li><b>Tab Page</b>: Container for a given page of the parent Tab Control. The name of the view is used for the Tab.</li>
                                 <li><b>Free</b>: Empty view that can be used freely to add HTML or text during the rendering.</li>
-                                <li><b>Restrictions</b>: Render some selected report restrictions (named View Restrictions) to display model Views dynamically through restriction Triggers or a Refresh button.</li>
+                                <li><b>Restrictions</b>: Render some selected report restrictions (named View Restrictions) to display model Views dynamically through restriction Triggers or a Refresh button (refer to <a href="~/Reports.cshtml#lineViews_rv">Restriction Views</a>).</li>
                             </ul>
                             <p>
                                 From a Model view, the following children are supported and are applied per page result:
@@ -497,8 +497,20 @@
                                 If the properties <code>Target Window for Report</code> (for a Report context) or <code>Target Window for Report</code> (for a Dashboard Widget context) are set, the execution occurs in a new window using the optional view defined in <code>New Window: View to execute</code>.
                             </p>
                         </div>
-                        <!-- end col -->
                     </div>
+                    <div class="bs-callout bs-callout-info">
+                        <h4>Restriction Views in Dashboards</h4>
+                        Like a normal <b>Report View</b>, a <strong>Restriction View</strong> can be defined in a <b>Dashboard Widget</b>.<br />
+                        All other <b>Widgets</b> part of the <b>Dashboard</b> having a model impacted by the restrictions will also be updated and refreshed.
+                    </div>
+                    <div class="bs-callout bs-callout-demo">
+                        <h4>Samples</h4>
+                        <a class="btn btn-primary live-sample">Live Sample: 31-Restrictions Views - Report</a><br />
+                        This report shows different ways to use <strong>Restriction Views</strong> in a report result.<br /><br />
+                        <a class="btn btn-primary live-sample">Live Sample: 32-Restrictions Views - Widgets</a><br />
+                        This report defines several <b>Dashboard Widgets</b> having <strong>Restriction Views</strong>. These <b>Widgets</b> are part of the <b>Restrictions</b> Dashboard.
+                    </div>
+                    <!-- end col -->
                     <!-- end row -->
                     <div id="lineViews_widget" class="row" style="padding-top:35px">
                         <div class="col-md-12">
@@ -800,7 +812,7 @@
                     <div class="bs-callout bs-callout-demo">
                         <h4>Input Values Samples</h4>
                         <a class="btn btn-primary live-sample">Live Sample: 4-Input Values/400-Input Values - Connection and threshold</a><br />
-                        This reports shows the use of 2 input values.
+                        This reports show the use of 2 input values.
                     </div>
                 </section>
                 <!-- end section -->

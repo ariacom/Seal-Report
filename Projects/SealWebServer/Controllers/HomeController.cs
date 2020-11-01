@@ -801,6 +801,8 @@ namespace SealWebServer.Controllers
                 if (!CheckAuthentication()) return _loginContentResult;
 
                 ReportExecution execution = getExecution(execution_guid);
+                if (execution == null) throw new Exception(string.Format("Unable to find execution id {0}", execution_guid));
+
                 var report = execution.Report;
                 report.ExecutionTriggerView = execution.Report.AllViews.FirstOrDefault(i => form_id.EndsWith(i.IdSuffix));
 
@@ -843,6 +845,7 @@ namespace SealWebServer.Controllers
 
                     lock (execution)
                     {
+                        report.IsNavigating = false;
                         initInputRestrictions(report);
 
                         //Get all restrictions involved

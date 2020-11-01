@@ -382,7 +382,7 @@ function showPopupNavMenu(source, content, forChart, executionguid) {
     if (!forChart && source.height() > 30) posTop -= (source.height() - 30);
     posLeft += Math.min(0, window.innerWidth + scrollLeft - $popup.width() - posLeft);
     posTop += Math.min(0, window.innerHeight + scrollTop - $popup.height() - posTop - 50);
-
+    if ($(source).hasClass("text-right")) posLeft += source.width() - 120;
     $popup
         .show()
         .css({

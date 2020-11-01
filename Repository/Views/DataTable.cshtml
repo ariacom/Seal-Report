@@ -25,6 +25,7 @@
             if (dt != null && @Helper.ToJS(enabled) && !@Helper.ToJS(report.PrintLayout))
             {
                 var dto = dt.DataTable({
+                dom: "@Raw(view.GetValue("data_tables_dom"))",
                 responsive: @view.GetBoolValueJS("data_tables_responsive"),
                 ordering: @view.GetBoolValueJS("data_tables_sort_enabled"),
                 paging: @view.GetBoolValueJS("data_tables_pagination_enabled"),

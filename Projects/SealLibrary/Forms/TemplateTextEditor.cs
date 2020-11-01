@@ -575,18 +575,22 @@ if (cell.IsTitle)
         const string razorConfigurationInitScriptTemplate = @"@using System.Data
 @{
     Report report = Model;
-	ReportExecutionLog log = Model;
 
     //Script executed when the report is initialized at execution
-    if (log != null) {
-        log.LogMessage(""Executing configuration 'Init Script'"");
 
-        //...
-    }
+    report.LogMessage(""Executing configuration 'Init Script'"");
+
+    // e.g. to change default css style and class of the data tables generation
+    //ResultCell.DefaultCellCssClass = ""info"";
+    //ResultCell.DefaultCellCssStyle = ""color:blue;"";
+    //ResultCell.DefaultNumericTitleCssClass = ""danger text-right"";
+    //ResultCell.DefaultDateTimeTitleCssStyle = ""font-size:20px;color:blue;"";
+    //ResultCell.DefaultNumericCellCssClass = ""text-right"";
 
     // e.g. to change the Thousand Separator or the Decimal Separator
-    	//report.ExecutionView.CultureInfo.NumberFormat.NumberGroupSeparator = ""'"";
-        //report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ""."";	    
+    //report.ExecutionView.CultureInfo.NumberFormat.NumberGroupSeparator = ""'"";
+    //report.ExecutionView.CultureInfo.NumberFormat.NumberDecimalSeparator = ""."";	    
+
 }
 ";
 
